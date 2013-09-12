@@ -1,0 +1,6 @@
+{{ object.creator }}
+{{ object.title }}
+{{ object.comment }}
+{{ object.number_of_queries }}
+{{ object.created }}
+{{ object.updated }}

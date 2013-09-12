@@ -1,0 +1,122 @@
+{% extends "forms/upload.html" %}
+
+{% block content %}
+
+<style type="text/css">
+
+#separator-activity {
+    border-top:solid;
+    border-width:2px;
+    border-color:#909090;
+    margin-left:40px;
+    margin-right:40px;
+    background-color:#FFFFFF;
+    -moz-box-shadow: 0 0 5px #888;
+    -webkit-box-shadow: 0 0 5px#888;
+    box-shadow: 0 0 5px #888;
+}
+
+.error {
+	color:#FFFFFF;
+	font-weight:bold;
+	text-align:center;
+	font-size:.8em;
+	padding-top:10px;
+	padding-bottom:10px;
+}
+.instruction {
+	text-align:center;
+	font-weight:bold;
+	font-size:.8em;
+	padding-top:10px;
+	padding-bottom:10px;
+}
+
+#id_title, #id_comment {
+	border:0;
+	background:none;
+	outline:0;
+}
+#id_title {
+	font-size:1.5em;
+}
+#id_comment {
+	font-size:1em;
+	width:428px;
+}
+
+#corpus-title, #corpus-comment, #corpus-picture {
+	margin-left:20px;
+	margin-right:20px;
+}
+#corpus-title {
+	border-bottom:solid;
+	border-width:1px;
+}
+
+#corpus-comment {
+	border:dotted;
+	border-width:1px;
+}
+.submit {
+	text-align:center;
+}
+
+.default-pic {
+	height:50px;
+	width:70px;
+	overflow:hidden;
+}
+
+</style>
+
+<div class="container-fluid", id="separator-activity">
+
+{% if form.errors %}
+	<div class="row-fluid">
+		<h4 class="error">Please correct the error{{ form.errors|pluralize }} below.</h4>
+	</div>
+{% endif %}
+
+<div class="row-fluid">
+	<h4>Add a corpus</h4>
+</div>
+
+<br>
+
+<form action="" method="post">
+    <div class="row-fluid">
+    	<div class="span6" id="corpus-title">
+    	{{ form.title }}
+    	</div>
+    </div>
+    <br>
+    <div class="row-fluid">
+    	<div class="span6" id="corpus-comment"> 
+    	{{ form.comment }}
+   		</div>
+    </div>
+    <br>
+    <div class="row-fluid" id="corpus-picture">
+    	<img class="default-pic" src="{{MEDIA_URL}}generics/corpora/{{picture}}"/>
+    	{{ form.picture }}
+    </div>
+
+    <br><br>
+
+{% if form.errors %} {{ form.errors }}
+<div class="submit">
+    {% csrf_token %}
+    <button type="submit" value="Download" class="btn btn-primary">Add corpus</button>
+	</div>
+{% else %}
+    <div class="submit">
+    {% csrf_token %}
+    <button type="submit" value="Download" class="btn btn-success">Add corpus</button>
+	</div>
+{% endif %}
+</form>
+
+</div>
+
+{% endblock %}

@@ -1,0 +1,94 @@
+{% extends "base.html" %}
+
+{% block wrap %}
+
+<style type="text/css">
+
+#main-frame-sub {
+	-moz-box-shadow: 0 0 5px #888;
+	-webkit-box-shadow: 0 0 5px#888;
+	box-shadow: 0 0 5px #888;
+	margin-left:50px;
+	margin-right:50px;
+	margin-top:20px;
+	background-color:#F8F8FF;
+}
+
+.prof-pic {
+	width:100px;
+	height:100px;
+	border-radius:50px;
+	overflow:hidden;
+	margin-top:30px;
+	margin-left:15px;
+	margin-bottom:30px;
+}
+
+#info {
+	margin-top:25px;
+	margin-left:-20px;
+	margin-bottom:30px;
+	line-height:80%;
+}
+
+.login {
+	font-size:.9em;
+	color:#585858;
+	line-height:150%;
+}
+
+.email {
+	text-decoration:underline;
+	color:#000066;
+	font-size:1.4em;
+}
+
+#separator-activity {
+	border-top:solid;
+	border-width:2px;
+	border-color:#909090;
+	margin-left:50px;
+	margin-right:50px;
+	background-color:#FFFFFF;
+	-moz-box-shadow: 0 0 5px #888;
+	-webkit-box-shadow: 0 0 5px#888;
+	box-shadow: 0 0 5px #888;
+}
+
+.title {
+	color:#CD5C5C;
+	font-size:1.3em;
+	margin-top:24px;
+}
+
+</style>
+
+<div class="container-fluid" id="main-frame-sub">
+	<div class="row-fluid" id="header">
+		<div class="span2">
+			<img class="prof-pic" src="{{MEDIA_URL}}photos/{{content.picture}}" alt="Profile Picture" width=150 height=150/>
+		</div>
+		<div class="span4" id="info">
+			<h3 class="name"> {{ content.user.first_name }} {{ content.user.last_name }} </h3>
+			<p class="email"> {{ content.user.email }} </p>
+			<p class="login"> Last active on {{ content.user.last_login }} <p>
+		</div>
+	</div>
+</div>
+<div class="container-fluid" id="separator-activity">
+	<div class="row-fluid">
+		<p class="title"> {{ content.user.first_name}}'s projects: </p>
+		<ul>
+		</ul>
+	</div>
+	<div class="row-fluid">
+		<p class="title"> {{ content.user.first_name}}'s latest activity: </p>
+		<ul>
+		</ul>
+	</div>
+</div>
+
+
+<!-- latest activity, associated with which projects -->
+
+{% endblock %}

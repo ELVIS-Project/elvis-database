@@ -1,0 +1,115 @@
+
+{% extends "base.html" %}
+
+{% block wrap %}
+
+<style>
+.date-input {
+	font-size:9px;
+	font-family:Verdana, Arial, Helvetica, sans-serif;
+	padding:0;
+	margin:0;
+	height:10px;
+	width:40px;
+}
+
+input {
+	font-size:9px;
+	font-family:Verdana, Arial, Helvetica, sans-serif;
+	font-weight:bold;
+	padding:0;
+	margin:0;
+	height:10px;
+	width:250px;
+}
+
+#search-header {
+	border-top:solid;
+	border-bottom:solid;
+	border-width:2px;
+	border-color:#909090;
+	margin-top:20px;
+}
+
+.span3, .span1, .span2, .span4 {
+	margin-top:10px;
+}
+
+.category-check {
+}
+.category-check:clicked + .category {
+  background-color:#EE82EE;
+  font-weight:bold;
+}
+
+.category:clicked {
+	background-color:#EE82EE;
+}
+
+.dropdown-menu li:hover .sub-menu {
+    visibility: visible;
+}
+.dropdown:hover .dropdown-menu {
+    display: block;
+}
+
+</style>
+
+{% with search="/search_results/" %}
+	<form action="{{search}}" method="get">
+{% endwith %}
+<div class="container-fluid">
+	<div class="row-fluid" id="search-header">
+		<div class="span3" id="search-box">
+			<input class="input" type="text" value="" name="search" id="search-all" size="400" placeholder="search by keyword"/>
+		</div>
+		<div class="span3">
+			<div class="pull-right">Filter by year:
+			<input class="date-input" type="text" value="" name="start-year" id="start-year" size="10" placeholder="start"/> <input class="date-input" type="text" value="" name="end-year" id="end-year" size="10" placeholder="end" /></div>
+		</div>
+		<div class="span2">
+			<div class="pull-right">Search in:  
+				<div class="dropdown">
+					<a class="dropdown-toggle" data-toggle="dropdown" href="#">Category <i class="icon-chevron-down"></i></a>
+					<ul class="dropdown-menu">
+						<li class="category"><span class="a">Corpora</span></li>  
+                        <li class="category"><span class="a">Composers</span></li> 
+                        <li class="category"><span class="a">Movements</span></li>  
+                        <li class="category"><span class="a">Pieces</span></li> 
+                        <li class="category"><span class="a">Tags</span></li>  
+                        <li class="divider"></li>  
+                        <li class="category"><span class="a">Discussions</span></li>  
+                        <li class="category"><span class="a">Users</span></li>
+					</ul>
+				</div>
+
+			</div>
+		</div>
+		<div class="span3" id="voices-box">
+			<div class="pull-right">Number of voices: <input class="date-input" type="text" value="" name="num-voices" id="num-voices" size="10"/></div>
+		</div>
+	</div>
+	<div class="row-fluid">
+		<input type="submit" value="go!"/>
+		<input type="reset" name="reset">
+	</div>
+</div>
+</form>
+<script src="//ajax.googleapis.com/ajax/libs/jquery/1.8.1/jquery.min.js"></script>
+<script src="{{ STATIC_URL }}js/bootstrap.js"></script>
+    <script type="text/javascript">  
+        $(document).ready(function () {  
+            $('.dropdown-toggle').dropdown();  
+        });  
+   </script>
+
+   <script type="text/javascript">
+   	$('li[class="category"]').click(function(){
+   		$(this).css("background-color:#EE82EE")
+	});
+   </script>
+
+ {% block content %}
+ {% endblock %}
+
+{% endblock %}

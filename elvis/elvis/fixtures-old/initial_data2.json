@@ -1,0 +1,518 @@
+[
+{
+  "model":"auth.user",
+  "pk":40,
+  "fields": {
+    "username": "Morgane"
+  }
+},
+{
+  "model":"auth.user",
+  "pk":41,
+  "fields": {
+    "username": "Cristina"
+  }
+},
+ {
+    "model": "elvis.corpus",
+    "pk": 1,
+    "fields": {
+      "old_id": 1,
+      "creator": 41,
+      "title": "JazzCorpus",
+      "comment": "First corpus created because I love jazzy things."
+    }
+  },
+  {
+    "model": "elvis.corpus",
+    "pk": 2,
+    "fields": {
+      "old_id": 1,
+      "creator": 40,
+      "title": "SwingCorpus",
+      "comment": "People love to swing dance."
+    }
+  },
+   {
+    "model": "elvis.composer",
+    "pk": 3,
+    "fields": {
+      "old_id": 3,
+      "name": "Art Tatum"
+    }
+  },
+  {
+    "model": "elvis.composer",
+    "pk": 4,
+    "fields": {
+      "old_id": 4,
+      "name": "Felonious Sphere Monk",
+      "birth_date": "1917-10-10",
+      "death_date": "1982-02-17"
+    }
+  },
+  {
+    "model": "elvis.composer",
+    "pk": 5,
+    "fields": {
+      "old_id": 5,
+      "name": "Miles Davis",
+      "birth_date": "1926-05-26",
+      "death_date": "1991-09-28"
+    }
+  },
+  {
+    "model": "elvis.composer",
+    "pk": 6,
+    "fields": {
+      "old_id": 6,
+      "name": "Caravan Palace",
+      "birth_date": "1926-05-26",
+      "death_date": "2013-08-18"
+    }
+  },
+  {
+    "model": "elvis.composer",
+    "pk": 7,
+    "fields": {
+      "old_id": 7,
+      "name": "Parov Stelar",
+      "birth_date": "1990-10-14",
+      "death_date": "2013-10-10"
+    }
+  },
+  {
+    "model": "elvis.composer",
+    "pk": 8,
+    "fields": {
+      "old_id": 8,
+      "name": "Frank Sinatra",
+      "birth_date": "1915-12-12",
+      "death_date": "1998-05-14"
+    }
+  },
+  {
+    "model": "elvis.piece",
+    "pk": 9,
+    "fields": {
+      "old_id": 9,
+      "title": "Monks Dream",
+      "uploader": 40,
+      "corpus":1,
+      "composer":4,
+      "date_of_composition":"1962-11-12",
+      "number_of_voices":3,
+      "tags": "",
+      "attachments":50,
+      "comment": ""
+    }
+  },
+  {
+    "model": "elvis.piece",
+    "pk": 10,
+    "fields": {
+      "old_id": 10,
+      "title": "Body and Soul",
+      "uploader": 40,
+      "corpus":1,
+      "composer":4,
+      "date_of_composition":"1963-05-10",
+      "number_of_voices":4,
+      "tags": "",
+      "attachments":51,
+      "comment": ""
+    }
+  },
+  {
+    "model": "elvis.piece",
+    "pk": 11,
+    "fields": {
+      "old_id": 11,
+      "title": "Five Spot Blues",
+      "uploader": 40,
+      "corpus":1,
+      "composer":4,
+      "date_of_composition":"1940-05-08",
+      "number_of_voices":3,
+      "tags": "",
+      "attachments":52,
+      "comment": ""
+    }
+  },
+  {
+    "model": "elvis.piece",
+    "pk": 12,
+    "fields": {
+      "old_id": 12,
+      "title": "Freddie Freeloader",
+      "uploader": 41,
+      "corpus":1,
+      "composer":5,
+      "date_of_composition":"1990-03-01",
+      "number_of_voices":6,
+      "tags": "",
+      "attachments":53,
+      "comment": ""
+    }
+  },
+    {
+    "model": "elvis.piece",
+    "pk": 13,
+    "fields": {
+      "old_id": 13,
+      "title": "So What",
+      "uploader": 41,
+      "corpus":1,
+      "composer":5,
+      "date_of_composition":"1981-04-01",
+      "number_of_voices":6,
+      "tags": "",
+      "attachments":54,
+      "comment": ""
+    }
+  },
+  {
+    "model": "elvis.piece",
+    "pk": 14,
+    "fields": {
+      "old_id": 14,
+      "title": "Autumn Leaves",
+      "uploader": 41,
+      "corpus":1,
+      "composer":3,
+      "date_of_composition":"1950-04-01",
+      "number_of_voices":7,
+      "tags": "",
+      "attachments":55,
+      "comment": ""
+    }
+  },
+    {
+    "model": "elvis.piece",
+    "pk": 15,
+    "fields": {
+      "old_id": 15,
+      "title": "Blue in Green",
+      "uploader": 41,
+      "corpus":1,
+      "composer":3,
+      "date_of_composition":"1950-08-11",
+      "number_of_voices":6,
+      "tags": "",
+      "attachments":56,
+      "comment": ""
+    }
+  },
+    {
+    "model": "elvis.piece",
+    "pk": 16,
+    "fields": {
+      "old_id": 16,
+      "title": "Witchcraft",
+      "uploader": 41,
+      "corpus":1,
+      "composer":3,
+      "date_of_composition":"1950-03-21",
+      "number_of_voices":4,
+      "tags": "",
+      "attachments":57,
+      "comment": ""
+    }
+  },
+   {
+    "model": "elvis.movement",
+    "pk": 17,
+    "fields": {
+      "old_id": 17,
+      "title": "MDMov",
+      "uploader": 40,
+      "piece":9,
+      "corpus":1,
+      "composer":4,
+      "date_of_composition":"1962-12-11",
+      "number_of_voices":3,
+      "tags": "",
+      "attachments":58,
+      "comment": ""
+    }
+  },
+  {
+    "model": "elvis.movement",
+    "pk": 18,
+    "fields": {
+      "old_id": 18,
+      "title": "BSMov",
+      "uploader": 40,
+      "piece":10,
+      "corpus":1,
+      "composer":4,
+      "date_of_composition":"1963-05-10",
+      "number_of_voices":4,
+      "tags": "",
+      "attachments":59,
+      "comment": ""
+    }
+  },
+  {
+    "model": "elvis.movement",
+    "pk": 19,
+    "fields": {
+      "old_id": 19,
+      "title": "FSBMov",
+      "uploader": 40,
+      "piece":11,
+      "corpus":1,
+      "composer":4,
+      "date_of_composition":"1940-05-08",
+      "number_of_voices":3,
+      "tags": "",
+      "attachments":60,
+      "comment": ""
+    }
+  },
+  {
+    "model": "elvis.movement",
+    "pk": 20,
+    "fields": {
+      "old_id": 20,
+      "title": "FFMov",
+      "uploader": 41,
+      "piece":12,
+      "corpus":1,
+      "composer":5,
+      "date_of_composition":"1990-03-01",
+      "number_of_voices":6,
+      "tags": "",
+      "attachments":61,
+      "comment": ""
+    }
+  },
+    {
+    "model": "elvis.movement",
+    "pk": 21,
+    "fields": {
+      "old_id": 21,
+      "title": "SWMov",
+      "uploader": 41,
+      "piece":13,
+      "corpus":1,
+      "composer":5,
+      "date_of_composition":"1981-04-01",
+      "number_of_voices":6,
+      "tags": "",
+      "attachments":62,
+      "comment": ""
+    }
+  },
+  {
+    "model": "elvis.movement",
+    "pk": 22,
+    "fields": {
+      "old_id": 22,
+      "title": "ALMov",
+      "uploader": 41,
+      "piece":14,
+      "corpus":1,
+      "composer":3,
+      "date_of_composition":"1950-04-01",
+      "number_of_voices":7,
+      "tags": "",
+      "attachments":63,
+      "comment": ""
+    }
+  },
+  {
+    "model": "elvis.movement",
+    "pk": 23,
+    "fields": {
+      "old_id": 23,
+      "title": "BGMov",
+      "uploader": 41,
+      "piece":15,
+      "corpus":1,
+      "composer":3,
+      "date_of_composition":"1950-08-11",
+      "number_of_voices":6,
+      "tags": "",
+      "attachments":64,
+      "comment": ""
+    }
+  },
+  {
+    "model": "elvis.movement",
+    "pk": 24,
+    "fields": {
+      "old_id": 24,
+      "title": "WMov",
+      "uploader": 41,
+      "piece":16,
+      "corpus":1,
+      "composer":3,
+      "date_of_composition":"1950-03-21",
+      "number_of_voices":4,
+      "tags": "",
+      "attachments":65,
+      "comment": ""
+    }
+  },
+  { 
+  "model":"elvis.attachment",
+  "pk":50,
+  "fields": {
+    "old_id":50,
+    "attachment":"monksdream.txt",
+    "uploader":40,
+    "description":""
+  }
+},
+{ 
+  "model":"elvis.attachment",
+  "pk":51,
+  "fields": {
+    "old_id":51,
+    "attachment":"bodyandsoul.txt",
+    "uploader":40,
+    "description":""
+  }
+},
+{ 
+  "model":"elvis.attachment",
+  "pk":52,
+  "fields": {
+    "old_id":52,
+    "attachment":"fivespotblues.txt",
+    "uploader":40,
+    "description":""
+  }
+},
+{ 
+  "model":"elvis.attachment",
+  "pk":53,
+  "fields": {
+    "old_id":53,
+    "attachment":"freddiefreeloader.txt",
+    "uploader":40,
+    "description":""
+  }
+},
+{ 
+  "model":"elvis.attachment",
+  "pk":54,
+  "fields": {
+    "old_id":54,
+    "attachment":"sowhat.txt",
+    "uploader":40,
+    "description":""
+  }
+},
+{ 
+  "model":"elvis.attachment",
+  "pk":55,
+  "fields": {
+    "old_id":55,
+    "attachment":"autumnleaves.txt",
+    "uploader":40,
+    "description":""
+  }
+},
+{ 
+  "model":"elvis.attachment",
+  "pk":56,
+  "fields": {
+    "old_id":56,
+    "attachment":"blueingreen.txt",
+    "uploader":40,
+    "description":""
+  }
+},
+{ 
+  "model":"elvis.attachment",
+  "pk":57,
+  "fields": {
+    "old_id":57,
+    "attachment":"witchcraft.txt",
+    "uploader":40,
+    "description":""
+  }
+},
+{ 
+  "model":"elvis.attachment",
+  "pk":58,
+  "fields": {
+    "old_id":58,
+    "attachment":"monksdream.txt",
+    "uploader":40,
+    "description":""
+  }
+},
+{ 
+  "model":"elvis.attachment",
+  "pk":59,
+  "fields": {
+    "old_id":59,
+    "attachment":"bodyandsoul.txt",
+    "uploader":40,
+    "description":""
+  }
+},
+{ 
+  "model":"elvis.attachment",
+  "pk":60,
+  "fields": {
+    "old_id":60,
+    "attachment":"fivespotblues.txt",
+    "uploader":40,
+    "description":""
+  }
+},
+{ 
+  "model":"elvis.attachment",
+  "pk":60,
+  "fields": {
+    "old_id":60,
+    "attachment":"freddiefreeloader.txt",
+    "uploader":40,
+    "description":""
+  }
+},
+{ 
+  "model":"elvis.attachment",
+  "pk":60,
+  "fields": {
+    "old_id":60,
+    "attachment":"sowhat.txt",
+    "uploader":40,
+    "description":""
+  }
+},
+{ 
+  "model":"elvis.attachment",
+  "pk":60,
+  "fields": {
+    "old_id":60,
+    "attachment":"autumnleaves.txt",
+    "uploader":40,
+    "description":""
+  }
+},
+{ 
+  "model":"elvis.attachment",
+  "pk":60,
+  "fields": {
+    "old_id":60,
+    "attachment":"blueingreen.txt",
+    "uploader":40,
+    "description":""
+  }
+},
+{ 
+  "model":"elvis.attachment",
+  "pk":60,
+  "fields": {
+    "old_id":60,
+    "attachment":"witchcraft.txt",
+    "uploader":40,
+    "description":""
+  }
+}
+]

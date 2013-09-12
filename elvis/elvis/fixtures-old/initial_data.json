@@ -1,0 +1,1646 @@
+[
+{
+  "model":"elvis.project",
+  "pk":998,
+  "fields": {
+    "name":"New Elvis Website",
+    "description": "The goal is to create a more user-friendly website for elvis users equipped with better search/upload/download capabilities and a more aesthetic interface.",
+    "users":[400,480,5003]
+  }
+},
+{
+  "model": "elvis.project",
+  "pk":999,
+  "fields": {
+    "name": "Quantifying Repetition",
+    "description": "How do we quantify repetition? What IS repetition? Investigating the epistemology of repetition.",
+    "users":[5007,440,470]
+  }
+},
+{
+  "model": "elvis.project",
+  "pk":995,
+  "fields": {
+    "name": "Group Coordination",
+    "description": "Used for discussion of meetings, ideas, brainstorming, ad hoc discussions.",
+    "users":[400, 401, 402, 403, 404, 407, 408, 409, 5001, 5003, 5007, 5008]
+  }
+},
+{
+  "model":"elvis.todo",
+  "pk":9980,
+  "fields": {
+    "description": "Implement tag hierarchy search",
+    "project": 998
+  }
+},
+{
+  "model":"elvis.todo",
+  "pk":9981,
+  "fields": {
+    "description": "Integrate haystack/search engine",
+    "project": 998,
+    "assigned_to": 40
+  }
+},
+{
+  "model":"elvis.todo",
+  "pk":9983,
+  "fields": {
+    "description": "Ensure that users can save pieces as they browse for future download",
+    "project": 998,
+    "assigned_to": 500
+  }
+},
+{
+  "model":"elvis.todo",
+  "pk":9991,
+  "fields": {
+    "description": "Design repetition-finding algorithm that is compatible with encoded music",
+    "project": 999,
+    "assigned_to": 507
+  }
+},
+{
+  "model":"elvis.todo",
+  "pk":9992,
+  "fields": {
+    "description": "Test repetition-finding algorithm against manually-curated repetitions",
+    "project": 999,
+    "assigned_to": 44
+  }
+},
+{
+  "model":"elvis.discussion",
+  "pk":770,
+  "fields": {
+    "name": "What is the best way to implement the tag hierarchy?",
+    "project": 998,
+    "first_comment": "The tag hierarchy is currently very messy...what should we do about it?",
+    "first_user": 5006
+  }
+},
+{
+  "model":"elvis.comment",
+  "pk":7701,
+  "fields": {
+    "text": "Having a fixed vocabulary for the tags would make it more efficient to search and would reduce noise from random ad hoc tags.",
+    "user": 5008,
+    "discussion":770
+  }
+},
+{
+  "model":"elvis.comment",
+  "pk":7702,
+  "fields": {
+    "text": "Maybe get rid of it?",
+    "user": 5000,
+    "discussion":770
+  }
+},
+{
+  "model":"elvis.comment",
+  "pk":7711,
+  "fields": {
+    "text": "That's a bad idea.",
+    "user": 5000,
+    "discussion":771
+  }
+},
+{
+	"model":"auth.user",
+	"pk":40,
+	"fields": {
+		"username": "morgciot",
+    "first_name": "Morgane",
+    "last_name": "Ciot",
+    "email":"morgane.ciot@mail.mcgill.ca"
+	}
+},
+{
+	"model":"auth.user",
+	"pk":41,
+	"fields": {
+		"username": "crispaletta",
+    "first_name": "Cristina",
+    "last_name": "Paletta",
+    "email":"cristina.paletta@mail.mcgill.ca"
+	}
+},
+{
+  "model":"auth.user",
+  "pk":42,
+  "fields": {
+    "username": "hannahwillz",
+    "first_name": "Hannah",
+    "last_name": "Williams",
+    "email":"hannah.williams@mail.mcgill.ca"
+  }
+},
+{
+  "model":"auth.user",
+  "pk":43,
+  "fields": {
+    "username": "loradail",
+    "first_name": "Laura",
+    "last_name": "Dale",
+    "email":"laura.dale@mail.mcgill.ca"
+  }
+},
+{
+  "model":"auth.user",
+  "pk":44,
+  "fields": {
+    "username": "juliearrowsmith",
+    "first_name": "Julie",
+    "last_name": "Arrowsmith",
+    "email":"julie.arrowsmith@mail.mcgill.ca"
+  }
+},
+{
+  "model":"auth.user",
+  "pk":47,
+  "fields": {
+    "username": "annabanana",
+    "first_name": "Anna",
+    "last_name": "Zeira",
+    "email":"anna.zeira@mail.mcgill.ca"
+  }
+},
+{
+  "model":"auth.user",
+  "pk":48,
+  "fields": {
+    "username": "fatmarge",
+    "first_name": "Marge",
+    "last_name": "The Cat",
+    "email":"marge.fat@mail.mcgill.ca"
+  }
+},
+{
+  "model":"auth.user",
+  "pk":49,
+  "fields": {
+    "username": "nicob",
+    "first_name": "Nicole",
+    "last_name": "Bernardi",
+    "email":"nicole.bernardi@mail.mcgill.ca"
+  }
+},
+{
+  "model":"auth.user",
+  "pk":501,
+  "fields": {
+    "username": "alexbohner",
+    "first_name": "Alex",
+    "last_name": "Bohn",
+    "email":"alex.bohn@mail.mcgill.ca"
+  }
+},
+{
+  "model":"auth.user",
+  "pk":503,
+  "fields": {
+    "username": "dwhit",
+    "first_name": "David",
+    "last_name": "Whitney",
+    "email":"david.whitney@mail.mcgill.ca"
+  }
+},
+{
+  "model":"auth.user",
+  "pk":507,
+  "fields": {
+    "username": "kbreezy",
+    "first_name": "Kris",
+    "last_name": "Brown",
+    "email":"kris.brown@mail.mcgill.ca"
+  }
+},
+{
+  "model":"auth.user",
+  "pk":508,
+  "fields": {
+    "username": "hungarianoak",
+    "first_name": "Warren",
+    "last_name": "Robinson",
+    "email":"warren.robinson@mail.mcgill.ca"
+  }
+},
+{
+  "model":"elvis.userprofile",
+  "pk":400,
+  "fields": {
+    "user": 40,
+    "picture": "morgypic.png"
+  }
+},
+{
+  "model":"elvis.userprofile",
+  "pk":410,
+  "fields": {
+    "user": 41,
+    "picture": "cristpic.png"
+  }
+},
+{
+  "model":"elvis.userprofile",
+  "pk":420,
+  "fields": {
+    "user": 42,
+    "picture": "hanpic.png"
+  }
+},
+{
+  "model":"elvis.userprofile",
+  "pk":440,
+  "fields": {
+    "user": 44,
+    "picture": "julpic.png"
+  }
+},
+{
+  "model":"elvis.userprofile",
+  "pk":470,
+  "fields": {
+    "user": 47,
+    "picture": "anpic.png"
+  }
+},
+{
+  "model":"elvis.userprofile",
+  "pk":480,
+  "fields": {
+    "user": 48,
+    "picture": "marpic.png"
+  }
+},
+{
+  "model":"elvis.userprofile",
+  "pk":490,
+  "fields": {
+    "user": 49,
+    "picture": "nicpic.png"
+  }
+},
+{
+  "model":"elvis.userprofile",
+  "pk":5001,
+  "fields": {
+    "user": 501,
+    "picture": "alexpic.png"
+  }
+},
+{
+  "model":"elvis.userprofile",
+  "pk":5003,
+  "fields": {
+    "user": 503,
+    "picture": "davpic.png"
+  }
+},
+{
+  "model":"elvis.userprofile",
+  "pk":5007,
+  "fields": {
+    "user": 507,
+    "picture": "krispic.png"
+  }
+},
+{
+  "model":"elvis.userprofile",
+  "pk":5008,
+  "fields": {
+    "user": 508,
+    "picture": "warrenpic.png"
+  }
+},
+{
+    "model": "elvis.corpus",
+    "pk": 1,
+    "fields": {
+      "old_id": 1,
+      "creator": 410,
+      "title": "Music21: Schumann",
+      "comment": "Created from sample of Music21 corpus.",
+      "picture": "jazz.png"
+    }
+  },
+  {
+    "model": "elvis.corpus",
+    "pk": 2,
+    "fields": {
+      "old_id": 1,
+      "creator": 400,
+      "title": "Music21: Beethoven",
+      "comment": "Created from sample of Music21 corpus",
+      "picture": "renoir.png"
+    }
+  },
+   {
+    "model": "elvis.corpus",
+    "pk": 20202,
+    "fields": {
+      "old_id": 1,
+      "creator": 400,
+      "title": "Music21: Bach",
+      "comment": "Created from sample of Music21 corpus",
+      "picture": "grandejatte.png"
+    }
+  },
+   {
+    "model": "elvis.corpus",
+    "pk": 30303,
+    "fields": {
+      "old_id": 1,
+      "creator": 400,
+      "title": "Music21: Mozart",
+      "comment": "Created from sample of Music21 corpus",
+      "picture": "jazz.png"
+    }
+  },
+   {
+    "model": "elvis.corpus",
+    "pk": 40404,
+    "fields": {
+      "old_id": 1,
+      "creator": 400,
+      "title": "Music21: Ciconia",
+      "comment": "Created from sample of Music21 corpus",
+      "picture": "monet.png"
+    }
+  },
+   {
+    "model": "elvis.corpus",
+    "pk": 50505,
+    "fields": {
+      "old_id": 1,
+      "creator": 400,
+      "title": "Music21: Haydn",
+      "comment": "Created from sample of Music21 corpus",
+      "picture": "piano.png"
+    }
+  },
+   {
+    "model": "elvis.corpus",
+    "pk": 70707,
+    "fields": {
+      "old_id": 1,
+      "creator": 400,
+      "title": "Music21: Luca",
+      "comment": "Created from sample of Music21 corpus",
+      "picture": "starrynight.png"
+    }
+  },
+   {
+    "model": "elvis.composer",
+    "pk": 3,
+    "fields": {
+      "old_id": 3,
+      "name": "Ludwig van Beethoven",
+      "birth_date": "1770-12-17",
+      "death_date": "1827-03-26",
+      "picture":"beethoven.png"
+    }
+  },
+  {
+    "model": "elvis.composer",
+    "pk": 4,
+    "fields": {
+      "old_id": 4,
+      "name": "Johann Sebastian Bach",
+      "birth_date": "1685-03-31",
+      "death_date": "1750-07-28",
+      "picture": "bach.png"
+    }
+  },
+  {
+    "model": "elvis.composer",
+    "pk": 5,
+    "fields": {
+      "old_id": 5,
+      "name": "Robert Alexander Schumann",
+      "birth_date": "1810-06-08",
+      "death_date": "1856-07-29",
+      "picture": "schumann.png"
+    }
+  },
+  {
+    "model": "elvis.composer",
+    "pk": 6,
+    "fields": {
+      "old_id": 6,
+      "name": "Joseph Haydn",
+      "birth_date": "1732-03-31",
+      "death_date": "1806-05-31",
+      "picture": "haydn.png"
+    }
+  },
+  {
+    "model": "elvis.composer",
+    "pk": 8,
+    "fields": {
+      "old_id": 8,
+      "name": "Johannes Ciconia",
+      "birth_date": "1370-12-12",
+      "death_date": "1412-07-14",
+      "picture": "ciconia.png"
+    }
+  },
+   {
+    "model": "elvis.composer",
+    "pk": 60606,
+    "fields": {
+      "old_id": 8,
+      "name": "Wolfgang Amadeus Mozart",
+      "birth_date": "1756-01-27",
+      "death_date": "1791-12-05",
+      "picture": "mozart.png"
+    }
+  },
+   {
+    "model": "elvis.piece",
+    "pk": 9,
+    "fields": {
+      "old_id": 9,
+      "title": "BWV1.6",
+      "uploader": 40,
+      "corpus":20202,
+      "composer":4,
+      "date_of_composition":"1761-11-12",
+      "number_of_voices":3,
+      "attachments":[50],
+      "comment": "",
+      "number_of_downloads":0
+    }
+  },
+  {
+    "model": "elvis.piece",
+    "pk": 90909,
+    "fields": {
+      "old_id": 9,
+      "title": "BWV10.7",
+      "uploader": 40,
+      "corpus":20202,
+      "composer":4,
+      "date_of_composition":"1761-11-13",
+      "number_of_voices":3,
+      "attachments":[50050],
+      "comment": "",
+      "number_of_downloads":0
+    }
+  },
+  {
+    "model": "elvis.piece",
+    "pk": 909091,
+    "fields": {
+      "old_id": 9,
+      "title": "BWV101.7",
+      "uploader": 40,
+      "corpus":20202,
+      "composer":4,
+      "date_of_composition":"1761-11-14",
+      "number_of_voices":3,
+      "attachments":[50051],
+      "comment": "",
+      "number_of_downloads":0
+    }
+  },
+  {
+    "model": "elvis.piece",
+    "pk": 909092,
+    "fields": {
+      "old_id": 9,
+      "title": "BWV102.7",
+      "uploader": 40,
+      "corpus":20202,
+      "composer":4,
+      "date_of_composition":"1761-11-16",
+      "number_of_voices":3,
+      "attachments":[50052],
+      "comment": "",
+      "number_of_downloads":0
+    }
+  },
+  {
+    "model": "elvis.piece",
+    "pk": 909093,
+    "fields": {
+      "old_id": 9,
+      "title": "BWV103.6",
+      "uploader": 40,
+      "corpus":20202,
+      "composer":4,
+      "date_of_composition":"1761-11-20",
+      "number_of_voices":3,
+      "attachments":[50053],
+      "comment": "",
+      "number_of_downloads":0
+    }
+  },
+  {
+    "model": "elvis.piece",
+    "pk": 909094,
+    "fields": {
+      "old_id": 9,
+      "title": "BWV104.6",
+      "uploader": 40,
+      "corpus":20202,
+      "composer":4,
+      "date_of_composition":"1761-12-12",
+      "number_of_voices":3,
+      "attachments":[50054],
+      "comment": "",
+      "number_of_downloads":0
+    }
+  },
+  {
+    "model": "elvis.piece",
+    "pk": 909095,
+    "fields": {
+      "old_id": 9,
+      "title": "BWV108.6",
+      "uploader": 40,
+      "corpus":20202,
+      "composer":4,
+      "date_of_composition":"1761-05-02",
+      "number_of_voices":3,
+      "attachments":[50055],
+      "comment": "",
+      "number_of_downloads":0
+    }
+  },
+  {
+    "model": "elvis.piece",
+    "pk": 909096,
+    "fields": {
+      "old_id": 9,
+      "title": "BWV11.6",
+      "uploader": 40,
+      "corpus":20202,
+      "composer":4,
+      "date_of_composition":"1755-11-12",
+      "number_of_voices":3,
+      "attachments":[50056],
+      "comment": "",
+      "number_of_downloads":0
+    }
+  },
+  {
+    "model": "elvis.piece",
+    "pk": 10,
+    "fields": {
+      "old_id": 10,
+      "title": "Opus18no1",
+      "uploader": 40,
+      "corpus":2,
+      "composer":3,
+      "date_of_composition":"1783-05-10",
+      "number_of_voices":4,
+      "comment": "",
+      "number_of_downloads":0
+    }
+  },
+    {
+    "model": "elvis.piece",
+    "pk": 101011,
+    "fields": {
+      "old_id": 10,
+      "title": "Opus59no1",
+      "uploader": 40,
+      "corpus":2,
+      "composer":3,
+      "date_of_composition":"1783-05-12",
+      "number_of_voices":4,
+      "comment": "",
+      "number_of_downloads":0
+    }
+  },
+    {
+    "model": "elvis.piece",
+    "pk": 101012,
+    "fields": {
+      "old_id": 10,
+      "title": "Opus59no2",
+      "uploader": 40,
+      "corpus":2,
+      "composer":3,
+      "date_of_composition":"1783-03-21",
+      "number_of_voices":4,
+      "comment": "",
+      "number_of_downloads":0
+    }
+  },
+    {
+    "model": "elvis.piece",
+    "pk": 101013,
+    "fields": {
+      "old_id": 10,
+      "title": "Opus132",
+      "uploader": 40,
+      "corpus":2,
+      "composer":3,
+      "date_of_composition":"1773-06-10",
+      "number_of_voices":4,
+      "comment": "",
+      "number_of_downloads":0
+    }
+  },
+      {
+    "model": "elvis.piece",
+    "pk": 101014,
+    "fields": {
+      "old_id": 10,
+      "title": "Opus133",
+      "uploader": 40,
+      "corpus":2,
+      "composer":3,
+      "date_of_composition":"1773-08-11",
+      "number_of_voices":4,
+      "comment": "",
+      "number_of_downloads":0
+    }
+  },
+      {
+    "model": "elvis.piece",
+    "pk": 101015,
+    "fields": {
+      "old_id": 10,
+      "title": "Opus18no3",
+      "uploader": 40,
+      "corpus":2,
+      "composer":3,
+      "date_of_composition":"1772-12-01",
+      "number_of_voices":4,
+      "comment": "",
+      "number_of_downloads":0
+    }
+  },
+    {
+    "model": "elvis.piece",
+    "pk": 101016,
+    "fields": {
+      "old_id": 10,
+      "title": "Opus18no4",
+      "uploader": 40,
+      "corpus":2,
+      "composer":3,
+      "date_of_composition":"1770-04-28",
+      "number_of_voices":4,
+      "comment": "",
+      "number_of_downloads":0
+    }
+  },
+  {
+    "model": "elvis.piece",
+    "pk": 11,
+    "fields": {
+      "old_id": 11,
+      "title": "Quod Jactatur",
+      "uploader": 40,
+      "corpus":40404,
+      "composer":8,
+      "date_of_composition":"1399-05-08",
+      "number_of_voices":2,
+      "comment": "",
+      "number_of_downloads":0
+    }
+  },
+  {
+    "model": "elvis.piece",
+    "pk": 12,
+    "fields": {
+      "old_id": 12,
+      "title": "Opus74no1",
+      "uploader": 41,
+      "corpus":50505,
+      "composer":6,
+      "date_of_composition":"1800-03-01",
+      "number_of_voices":5,
+      "comment": "",
+      "number_of_downloads":0
+    }
+  },
+   {
+    "model": "elvis.piece",
+    "pk": 120012,
+    "fields": {
+      "old_id": 12,
+      "title": "Opus74no2",
+      "uploader": 41,
+      "corpus":50505,
+      "composer":6,
+      "date_of_composition":"1800-03-29",
+      "number_of_voices":5,
+      "comment": "",
+      "number_of_downloads":0
+    }
+  },
+    {
+    "model": "elvis.piece",
+    "pk": 13,
+    "fields": {
+      "old_id": 13,
+      "title": "K155",
+      "uploader": 41,
+      "corpus":30303,
+      "composer":60606,
+      "date_of_composition":"1766-04-01",
+      "number_of_voices":4,
+      "comment": "",
+      "number_of_downloads":0
+    }
+  },
+    {
+    "model": "elvis.piece",
+    "pk": 13156,
+    "fields": {
+      "old_id": 13,
+      "title": "K156",
+      "uploader": 41,
+      "corpus":30303,
+      "composer":60606,
+      "date_of_composition":"1766-05-02",
+      "number_of_voices":4,
+      "comment": "",
+      "number_of_downloads":0
+    }
+  },
+    {
+    "model": "elvis.piece",
+    "pk": 13458,
+    "fields": {
+      "old_id": 13,
+      "title": "K458",
+      "uploader": 41,
+      "corpus":30303,
+      "composer":60606,
+      "date_of_composition":"1763-06-03",
+      "number_of_voices":4,
+      "comment": "",
+      "number_of_downloads":0
+    }
+  },
+    {
+    "model": "elvis.piece",
+    "pk": 13080,
+    "fields": {
+      "old_id": 13,
+      "title": "K80",
+      "uploader": 41,
+      "corpus":30303,
+      "composer":60606,
+      "date_of_composition":"1766-12-01",
+      "number_of_voices":4,
+      "comment": "",
+      "number_of_downloads":0
+    }
+  },
+  {
+    "model": "elvis.piece",
+    "pk": 14,
+    "fields": {
+      "old_id": 14,
+      "title": "Opus41no1",
+      "uploader": 41,
+      "corpus":1,
+      "composer":5,
+      "date_of_composition":"1812-04-01",
+      "number_of_voices":5,
+      "comment": "",
+      "number_of_downloads":0
+    }
+  },
+
+   {
+    "model": "elvis.movement",
+    "pk": 17,
+    "fields": {
+      "old_id": 17,
+      "title": "Movement1",
+      "uploader": 40,
+      "piece":10,
+      "corpus":2,
+      "composer":3,
+      "date_of_composition":"1962-12-11",
+      "number_of_voices":3,
+      "attachments":[51],
+      "comment": "",
+      "number_of_downloads":0
+    }
+  },
+  {
+    "model": "elvis.movement",
+    "pk": 170017,
+    "fields": {
+      "old_id": 17,
+      "title": "Movement2",
+      "uploader": 40,
+      "piece":10,
+      "corpus":2,
+      "composer":3,
+      "date_of_composition":"1962-12-11",
+      "number_of_voices":3,
+      "attachments":[51001],
+      "comment": "",
+      "number_of_downloads":0
+    }
+  },
+     {
+    "model": "elvis.movement",
+    "pk": 170018,
+    "fields": {
+      "old_id": 17,
+      "title": "Movement3",
+      "uploader": 40,
+      "piece":10,
+      "corpus":2,
+      "composer":3,
+      "date_of_composition":"1962-12-11",
+      "number_of_voices":3,
+      "attachments":[51002],
+      "comment": "",
+      "number_of_downloads":0
+    }
+  },
+     {
+    "model": "elvis.movement",
+    "pk": 170018,
+    "fields": {
+      "old_id": 17,
+      "title": "Movement4",
+      "uploader": 40,
+      "piece":10,
+      "corpus":2,
+      "composer":3,
+      "date_of_composition":"1962-12-11",
+      "number_of_voices":3,
+      "attachments":[51003],
+      "comment": "",
+      "number_of_downloads":0
+    }
+  },
+     {
+    "model": "elvis.movement",
+    "pk": 170019,
+    "fields": {
+      "old_id": 17,
+      "title": "Movement1",
+      "uploader": 40,
+      "piece":101011,
+      "corpus":2,
+      "composer":3,
+      "date_of_composition":"1962-12-11",
+      "number_of_voices":3,
+      "attachments":[52],
+      "comment": "",
+      "number_of_downloads":0
+    }
+  },
+  {
+    "model": "elvis.movement",
+    "pk": 170020,
+    "fields": {
+      "old_id": 17,
+      "title": "Movement2",
+      "uploader": 40,
+      "piece":101011,
+      "corpus":2,
+      "composer":3,
+      "date_of_composition":"1962-12-11",
+      "number_of_voices":3,
+      "attachments":[52001],
+      "comment": "",
+      "number_of_downloads":0
+    }
+  },
+     {
+    "model": "elvis.movement",
+    "pk": 170021,
+    "fields": {
+      "old_id": 17,
+      "title": "Movement3",
+      "uploader": 40,
+      "piece":101011,
+      "corpus":2,
+      "composer":3,
+      "date_of_composition":"1962-12-11",
+      "number_of_voices":3,
+      "attachments":[52002],
+      "comment": "",
+      "number_of_downloads":0
+    }
+  },
+     {
+    "model": "elvis.movement",
+    "pk": 170022,
+    "fields": {
+      "old_id": 17,
+      "title": "Movement4",
+      "uploader": 40,
+      "piece":101011,
+      "corpus":2,
+      "composer":3,
+      "date_of_composition":"1962-12-11",
+      "number_of_voices":3,
+      "attachments":[52003],
+      "comment": "",
+      "number_of_downloads":0
+    }
+  },
+     {
+    "model": "elvis.movement",
+    "pk": 170023,
+    "fields": {
+      "old_id": 17,
+      "title": "Movement1",
+      "uploader": 40,
+      "piece":101012,
+      "corpus":2,
+      "composer":3,
+      "date_of_composition":"1962-12-11",
+      "number_of_voices":3,
+      "attachments":[53],
+      "comment": "",
+      "number_of_downloads":0
+    }
+  },
+  {
+    "model": "elvis.movement",
+    "pk": 170024,
+    "fields": {
+      "old_id": 17,
+      "title": "Movement2",
+      "uploader": 40,
+      "piece":101012,
+      "corpus":2,
+      "composer":3,
+      "date_of_composition":"1962-12-11",
+      "number_of_voices":3,
+      "attachments":[53001],
+      "comment": "",
+      "number_of_downloads":0
+    }
+  },
+     {
+    "model": "elvis.movement",
+    "pk": 170025,
+    "fields": {
+      "old_id": 17,
+      "title": "Movement3",
+      "uploader": 40,
+      "piece":101012,
+      "corpus":2,
+      "composer":3,
+      "date_of_composition":"1962-12-11",
+      "number_of_voices":3,
+      "attachments":[53002],
+      "comment": "",
+      "number_of_downloads":0
+    }
+  },
+     {
+    "model": "elvis.movement",
+    "pk": 170026,
+    "fields": {
+      "old_id": 17,
+      "title": "Movement4",
+      "uploader": 40,
+      "piece":101012,
+      "corpus":2,
+      "composer":3,
+      "date_of_composition":"1962-12-11",
+      "number_of_voices":3,
+      "attachments":[53004],
+      "comment": "",
+      "number_of_downloads":0
+    }
+  },
+  {
+    "model": "elvis.movement",
+    "pk": 18,
+    "fields": {
+      "old_id": 18,
+      "title": "Movement1",
+      "uploader": 40,
+      "piece":12,
+      "corpus":50505,
+      "composer":6,
+      "date_of_composition":"1962-12-11",
+      "number_of_voices":3,
+      "attachments":[54],
+      "comment": "",
+      "number_of_downloads":0
+    }
+  },
+    {
+    "model": "elvis.movement",
+    "pk": 180018,
+    "fields": {
+      "old_id": 18,
+      "title": "Movement2",
+      "uploader": 40,
+      "piece":12,
+      "corpus":50505,
+      "composer":6,
+      "date_of_composition":"1962-12-11",
+      "number_of_voices":3,
+      "attachments":[54001],
+      "comment": "",
+      "number_of_downloads":0
+    }
+  },
+    {
+    "model": "elvis.movement",
+    "pk": 180019,
+    "fields": {
+      "old_id": 18,
+      "title": "Movement3",
+      "uploader": 40,
+      "piece":12,
+      "corpus":50505,
+      "composer":6,
+      "date_of_composition":"1962-12-11",
+      "number_of_voices":3,
+      "attachments":[54002],
+      "comment": "",
+      "number_of_downloads":0
+    }
+  },
+    {
+    "model": "elvis.movement",
+    "pk": 180020,
+    "fields": {
+      "old_id": 18,
+      "title": "Movement4",
+      "uploader": 40,
+      "piece":12,
+      "corpus":50505,
+      "composer":6,
+      "date_of_composition":"1962-12-11",
+      "number_of_voices":3,
+      "attachments":[54003],
+      "comment": "",
+      "number_of_downloads":0
+    }
+  },
+    {
+    "model": "elvis.movement",
+    "pk": 180021,
+    "fields": {
+      "old_id": 18,
+      "title": "Movement1",
+      "uploader": 40,
+      "piece":120012,
+      "corpus":50505,
+      "composer":6,
+      "date_of_composition":"1962-12-11",
+      "number_of_voices":3,
+      "attachments":[55],
+      "comment": "",
+      "number_of_downloads":0
+    }
+  },
+    {
+    "model": "elvis.movement",
+    "pk": 180022,
+    "fields": {
+      "old_id": 18,
+      "title": "Movement2",
+      "uploader": 40,
+      "piece":120012,
+      "corpus":50505,
+      "composer":6,
+      "date_of_composition":"1962-12-11",
+      "number_of_voices":3,
+      "attachments":[55001],
+      "comment": "",
+      "number_of_downloads":0
+    }
+  },
+    {
+    "model": "elvis.movement",
+    "pk": 180023,
+    "fields": {
+      "old_id": 18,
+      "title": "Movement3",
+      "uploader": 40,
+      "piece":120012,
+      "corpus":50505,
+      "composer":6,
+      "date_of_composition":"1962-12-11",
+      "number_of_voices":3,
+      "attachments":[55002],
+      "comment": "",
+      "number_of_downloads":0
+    }
+  },
+    {
+    "model": "elvis.movement",
+    "pk": 180024,
+    "fields": {
+      "old_id": 18,
+      "title": "Movement4",
+      "uploader": 40,
+      "piece":120012,
+      "corpus":50505,
+      "composer":6,
+      "date_of_composition":"1962-12-11",
+      "number_of_voices":3,
+      "attachments":[55003],
+      "comment": "",
+      "number_of_downloads":0
+    }
+  },
+    {
+    "model": "elvis.movement",
+    "pk": 180025,
+    "fields": {
+      "old_id": 18,
+      "title": "Movement5",
+      "uploader": 40,
+      "piece":120012,
+      "corpus":50505,
+      "composer":6,
+      "date_of_composition":"1962-12-11",
+      "number_of_voices":3,
+      "attachments":[55004],
+      "comment": "",
+      "number_of_downloads":0
+    }
+  },
+  {
+    "model": "elvis.movement",
+    "pk": 20,
+    "fields": {
+      "old_id": 20,
+      "title": "Movement1",
+      "uploader": 41,
+      "piece":13,
+      "corpus":30303,
+      "composer":60606,
+      "date_of_composition":"1990-03-01",
+      "number_of_voices":4,
+      "attachments":[56],
+      "comment": "",
+      "number_of_downloads":0
+    }
+  },
+   {
+    "model": "elvis.movement",
+    "pk": 200020,
+    "fields": {
+      "old_id": 20,
+      "title": "Movement2",
+      "uploader": 41,
+      "piece":13,
+      "corpus":30303,
+      "composer":60606,
+      "date_of_composition":"1990-03-01",
+      "number_of_voices":4,
+      "attachments":[56001],
+      "comment": "",
+      "number_of_downloads":0
+    }
+  },
+   {
+    "model": "elvis.movement",
+    "pk": 200021,
+    "fields": {
+      "old_id": 20,
+      "title": "Movement3",
+      "uploader": 41,
+      "piece":13,
+      "corpus":30303,
+      "composer":60606,
+      "date_of_composition":"1990-03-01",
+      "number_of_voices":4,
+      "attachments":[56002],
+      "comment": "",
+      "number_of_downloads":0
+    }
+  },
+   {
+    "model": "elvis.movement",
+    "pk": 200022,
+    "fields": {
+      "old_id": 20,
+      "title": "Movement4",
+      "uploader": 41,
+      "piece":13,
+      "corpus":30303,
+      "composer":60606,
+      "date_of_composition":"1990-03-01",
+      "number_of_voices":4,
+      "attachments":[56003],
+      "comment": "",
+      "number_of_downloads":0
+    }
+  },
+   {
+    "model": "elvis.movement",
+    "pk": 200023,
+    "fields": {
+      "old_id": 20,
+      "title": "Movement1",
+      "uploader": 41,
+      "piece":13156,
+      "corpus":30303,
+      "composer":60606,
+      "date_of_composition":"1990-03-01",
+      "number_of_voices":4,
+      "attachments":[57],
+      "comment": "",
+      "number_of_downloads":0
+    }
+  },
+    {
+    "model": "elvis.movement",
+    "pk": 200024,
+    "fields": {
+      "old_id": 20,
+      "title": "Movement2",
+      "uploader": 41,
+      "piece":13156,
+      "corpus":30303,
+      "composer":60606,
+      "date_of_composition":"1990-03-01",
+      "number_of_voices":4,
+      "attachments":[57001],
+      "comment": "",
+      "number_of_downloads":0
+    }
+  },
+    {
+    "model": "elvis.movement",
+    "pk": 200025,
+    "fields": {
+      "old_id": 20,
+      "title": "Movement3",
+      "uploader": 41,
+      "piece":13156,
+      "corpus":30303,
+      "composer":60606,
+      "date_of_composition":"1990-03-01",
+      "number_of_voices":4,
+      "attachments":[57002],
+      "comment": "",
+      "number_of_downloads":0
+    }
+  },
+    {
+    "model": "elvis.movement",
+    "pk": 200026,
+    "fields": {
+      "old_id": 20,
+      "title": "Movement4",
+      "uploader": 41,
+      "piece":13156,
+      "corpus":30303,
+      "composer":60606,
+      "date_of_composition":"1990-03-01",
+      "number_of_voices":4,
+      "attachments":[57003],
+      "comment": "",
+      "number_of_downloads":0
+    }
+  },
+    {
+    "model": "elvis.movement",
+    "pk": 200027,
+    "fields": {
+      "old_id": 20,
+      "title": "Movement1",
+      "uploader": 41,
+      "piece":13458,
+      "corpus":30303,
+      "composer":60606,
+      "date_of_composition":"1990-03-01",
+      "number_of_voices":4,
+      "attachments":[58],
+      "comment": "",
+      "number_of_downloads":0
+    }
+  },
+      {
+    "model": "elvis.movement",
+    "pk": 200028,
+    "fields": {
+      "old_id": 20,
+      "title": "Movement2",
+      "uploader": 41,
+      "piece":13458,
+      "corpus":30303,
+      "composer":60606,
+      "date_of_composition":"1990-03-01",
+      "number_of_voices":4,
+      "attachments":[58001],
+      "comment": "",
+      "number_of_downloads":0
+    }
+  },
+      {
+    "model": "elvis.movement",
+    "pk": 200029,
+    "fields": {
+      "old_id": 20,
+      "title": "Movement3",
+      "uploader": 41,
+      "piece":13458,
+      "corpus":30303,
+      "composer":60606,
+      "date_of_composition":"1990-03-01",
+      "number_of_voices":4,
+      "attachments":[58002],
+      "comment": "",
+      "number_of_downloads":0
+    }
+  },
+      {
+    "model": "elvis.movement",
+    "pk": 200030,
+    "fields": {
+      "old_id": 20,
+      "title": "Movement4",
+      "uploader": 41,
+      "piece":13458,
+      "corpus":30303,
+      "composer":60606,
+      "date_of_composition":"1990-03-01",
+      "number_of_voices":4,
+      "attachments":[58003],
+      "comment": "",
+      "number_of_downloads":0
+    }
+  },
+  {
+    "model": "elvis.movement",
+    "pk": 200031,
+    "fields": {
+      "old_id": 20,
+      "title": "Movement1",
+      "uploader": 41,
+      "piece":13080,
+      "corpus":30303,
+      "composer":60606,
+      "date_of_composition":"1990-03-01",
+      "number_of_voices":4,
+      "attachments":[59],
+      "comment": "",
+      "number_of_downloads":0
+    }
+  },
+  {
+    "model": "elvis.movement",
+    "pk": 200032,
+    "fields": {
+      "old_id": 20,
+      "title": "Movement2",
+      "uploader": 41,
+      "piece":13080,
+      "corpus":30303,
+      "composer":60606,
+      "date_of_composition":"1990-03-01",
+      "number_of_voices":4,
+      "attachments":[59001],
+      "comment": "",
+      "number_of_downloads":0
+    }
+  },
+  {
+    "model": "elvis.movement",
+    "pk": 200033,
+    "fields": {
+      "old_id": 20,
+      "title": "Movement3",
+      "uploader": 41,
+      "piece":13080,
+      "corpus":30303,
+      "composer":60606,
+      "date_of_composition":"1990-03-01",
+      "number_of_voices":4,
+      "attachments":[59002],
+      "comment": "",
+      "number_of_downloads":0
+    }
+  },
+  {
+    "model": "elvis.movement",
+    "pk": 200034,
+    "fields": {
+      "old_id": 20,
+      "title": "Movement4",
+      "uploader": 41,
+      "piece":13080,
+      "corpus":30303,
+      "composer":60606,
+      "date_of_composition":"1990-03-01",
+      "number_of_voices":4,
+      "attachments":[59003],
+      "comment": "",
+      "number_of_downloads":0
+    }
+  },
+{
+    "model": "elvis.movement",
+    "pk": 21,
+    "fields": {
+      "old_id": 21,
+      "title": "Movement1",
+      "uploader": 41,
+      "piece":14,
+      "corpus":1,
+      "composer":5,
+      "date_of_composition":"1981-04-01",
+      "number_of_voices":4,
+      "attachments":[60],
+      "comment": "",
+      "number_of_downloads":0
+    }
+  },
+  {
+    "model": "elvis.movement",
+    "pk": 210021,
+    "fields": {
+      "old_id": 21,
+      "title": "Movement2",
+      "uploader": 41,
+      "piece":14,
+      "corpus":1,
+      "composer":5,
+      "date_of_composition":"1981-04-01",
+      "number_of_voices":4,
+      "attachments":[60001],
+      "comment": "",
+      "number_of_downloads":0
+    }
+  },
+  {
+    "model": "elvis.movement",
+    "pk": 210022,
+    "fields": {
+      "old_id": 21,
+      "title": "Movement3",
+      "uploader": 41,
+      "piece":14,
+      "corpus":1,
+      "composer":5,
+      "date_of_composition":"1981-04-01",
+      "number_of_voices":4,
+      "attachments":[60002],
+      "comment": "",
+      "number_of_downloads":0
+    }
+  },
+  {
+    "model": "elvis.movement",
+    "pk": 210023,
+    "fields": {
+      "old_id": 21,
+      "title": "Movement4",
+      "uploader": 41,
+      "piece":14,
+      "corpus":1,
+      "composer":5,
+      "date_of_composition":"1981-04-01",
+      "number_of_voices":4,
+      "attachments":[60003],
+      "comment": "",
+      "number_of_downloads":0
+    }
+  },
+{ 
+  "model":"elvis.attachment",
+  "pk":50,
+  "fields": {
+    "old_id":50,
+    "attachment":"bmvw1.6.xml",
+    "uploader":40,
+    "description":""
+  }
+},
+{ 
+  "model":"elvis.attachment",
+  "pk":50050,
+  "fields": {
+    "old_id":50,
+    "attachment":"bmvw10.7.xml",
+    "uploader":40,
+    "description":""
+  }
+},
+{ 
+  "model":"elvis.attachment",
+  "pk":50051,
+  "fields": {
+    "old_id":50,
+    "attachment":"bmvw101.7.xml",
+    "uploader":40,
+    "description":""
+  }
+},
+{ 
+  "model":"elvis.attachment",
+  "pk":50052,
+  "fields": {
+    "old_id":50,
+    "attachment":"bmvw102.7.xml",
+    "uploader":40,
+    "description":""
+  }
+},
+{ 
+  "model":"elvis.attachment",
+  "pk":50053,
+  "fields": {
+    "old_id":50,
+    "attachment":"bmvw103.6.xml",
+    "uploader":40,
+    "description":""
+  }
+},
+{ 
+  "model":"elvis.attachment",
+  "pk":50054,
+  "fields": {
+    "old_id":50,
+    "attachment":"bmvw104.6.xml",
+    "uploader":40,
+    "description":""
+  }
+},
+{ 
+  "model":"elvis.attachment",
+  "pk":50055,
+  "fields": {
+    "old_id":50,
+    "attachment":"bmvw108.6.xml",
+    "uploader":40,
+    "description":""
+  }
+},
+{ 
+  "model":"elvis.attachment",
+  "pk":50056,
+  "fields": {
+    "old_id":50,
+    "attachment":"bmvw11.6.xml",
+    "uploader":40,
+    "description":""
+  }
+},
+{ 
+  "model":"elvis.attachment",
+  "pk":51,
+  "fields": {
+    "old_id":51,
+    "attachment":"movement1.xml",
+    "uploader":40,
+    "description":""
+  }
+},
+{"pk": 51, "model": "elvis.attachment", "fields": {"description": "First movement", "attachment": "movement1.xml", "old_id": 50}},
+{"pk": 51001, "model": "elvis.attachment", "fields": {"description": "Second movement", "attachment": "movement2.xml", "old_id": 50}},
+{"pk": 51002, "model": "elvis.attachment", "fields": {"description": "Third movement", "attachment": "movement3.xml", "old_id": 50}},
+{"pk": 51003, "model": "elvis.attachment", "fields": {"description": "Fourth movement", "attachment": "movement4.xml", "old_id": 50}},
+{"pk": 52, "model": "elvis.attachment", "fields": {"description": "First movement", "attachment": "movement1.xml", "old_id": 50}},
+{"pk": 52001, "model": "elvis.attachment", "fields": {"description": "Second movement", "attachment": "movement2.xml", "old_id": 50}},
+{"pk": 52002, "model": "elvis.attachment", "fields": {"description": "Third movement", "attachment": "movement3.xml", "old_id": 50}},
+{"pk": 52003, "model": "elvis.attachment", "fields": {"description": "Fourth movement", "attachment": "movement4.xml", "old_id": 50}},
+{"pk": 53, "model": "elvis.attachment", "fields": {"description": "First movement", "attachment": "movement1.xml", "old_id": 50}},
+{"pk": 53001, "model": "elvis.attachment", "fields": {"description": "Second movement", "attachment": "movement2.xml", "old_id": 50}},
+{"pk": 53002, "model": "elvis.attachment", "fields": {"description": "Third movement", "attachment": "movement3.xml", "old_id": 50}},
+{"pk": 53003, "model": "elvis.attachment", "fields": {"description": "Fourth movement", "attachment": "movement4.xml", "old_id": 50}},
+{"pk": 54, "model": "elvis.attachment", "fields": {"description": "First movement", "attachment": "movement1.xml", "old_id": 50}},
+{"pk": 54001, "model": "elvis.attachment", "fields": {"description": "Second movement", "attachment": "movement2.xml", "old_id": 50}},
+{"pk": 54002, "model": "elvis.attachment", "fields": {"description": "Third movement", "attachment": "movement3.xml", "old_id": 50}},
+{"pk": 54003, "model": "elvis.attachment", "fields": {"description": "Fourth movement", "attachment": "movement4.xml", "old_id": 50}},
+{"pk": 55, "model": "elvis.attachment", "fields": {"description": "First movement", "attachment": "movement1.xml", "old_id": 50}},
+{"pk": 55001, "model": "elvis.attachment", "fields": {"description": "Second movement", "attachment": "movement2.xml", "old_id": 50}},
+{"pk": 55002, "model": "elvis.attachment", "fields": {"description": "Third movement", "attachment": "movement3.xml", "old_id": 50}},
+{"pk": 55003, "model": "elvis.attachment", "fields": {"description": "Fourth movement", "attachment": "movement4.xml", "old_id": 50}},
+{"pk": 55004, "model": "elvis.attachment", "fields": {"description": "Fifth movement", "attachment": "movement5.xml", "old_id": 50}},
+{"pk": 56, "model": "elvis.attachment", "fields": {"description": "First movement", "attachment": "movement1.xml", "old_id": 50}},
+{"pk": 56001, "model": "elvis.attachment", "fields": {"description": "Second movement", "attachment": "movement2.xml", "old_id": 50}},
+{"pk": 56002, "model": "elvis.attachment", "fields": {"description": "Third movement", "attachment": "movement3.xml", "old_id": 50}},
+{"pk": 56003, "model": "elvis.attachment", "fields": {"description": "Fourth movement", "attachment": "movement4.xml", "old_id": 50}},
+{"pk": 57, "model": "elvis.attachment", "fields": {"description": "First movement", "attachment": "movement1.xml", "old_id": 50}},
+{"pk": 57001, "model": "elvis.attachment", "fields": {"description": "Second movement", "attachment": "movement2.xml", "old_id": 50}},
+{"pk": 57002, "model": "elvis.attachment", "fields": {"description": "Third movement", "attachment": "movement3.xml", "old_id": 50}},
+{"pk": 57003, "model": "elvis.attachment", "fields": {"description": "Fourth movement", "attachment": "movement4.xml", "old_id": 50}},
+{"pk": 58, "model": "elvis.attachment", "fields": {"description": "First movement", "attachment": "movement1.xml", "old_id": 50}},
+{"pk": 58001, "model": "elvis.attachment", "fields": {"description": "Second movement", "attachment": "movement2.xml", "old_id": 50}},
+{"pk": 58002, "model": "elvis.attachment", "fields": {"description": "Third movement", "attachment": "movement3.xml", "old_id": 50}},
+{"pk": 58003, "model": "elvis.attachment", "fields": {"description": "Fourth movement", "attachment": "movement4.xml", "old_id": 50}},
+{"pk": 58004, "model": "elvis.attachment", "fields": {"description": "Fifth movement", "attachment": "movement5.xml", "old_id": 50}},
+{"pk": 59, "model": "elvis.attachment", "fields": {"description": "First movement", "attachment": "movement1.xml", "old_id": 50}},
+{"pk": 59001, "model": "elvis.attachment", "fields": {"description": "Second movement", "attachment": "movement2.xml", "old_id": 50}},
+{"pk": 59002, "model": "elvis.attachment", "fields": {"description": "Third movement", "attachment": "movement3.xml", "old_id": 50}},
+{"pk": 59003, "model": "elvis.attachment", "fields": {"description": "Fourth movement", "attachment": "movement4.xml", "old_id": 50}},
+{"pk": 60, "model": "elvis.attachment", "fields": {"description": "First movement", "attachment": "movement1.xml", "old_id": 50}},
+{"pk": 60001, "model": "elvis.attachment", "fields": {"description": "Second movement", "attachment": "movement2.xml", "old_id": 50}},
+{"pk": 60002, "model": "elvis.attachment", "fields": {"description": "Third movement", "attachment": "movement3.xml", "old_id": 50}},
+{"pk": 60003, "model": "elvis.attachment", "fields": {"description": "Fourth movement", "attachment": "movement4.xml", "old_id": 50}},
+{"pk": 60004, "model": "elvis.attachment", "fields": {"description": "Fifth movement", "attachment": "movement5.xml", "old_id": 50}}
+
+]

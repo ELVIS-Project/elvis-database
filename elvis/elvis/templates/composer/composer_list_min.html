@@ -1,0 +1,267 @@
+{% extends "base.html" %}
+{% load rest_framework %}
+{% load filter_methods %}
+
+{% block wrap %}
+
+<style type="text/css">
+
+#main-result-frame {
+	-moz-box-shadow: 0 0 5px #888;
+	-webkit-box-shadow: 0 0 5px#888;
+	box-shadow: 0 0 5px #888;
+	margin-left:50px;
+	margin-right:50px;
+	margin-top:20px;
+}
+
+.composer-picture {
+	width:240px;
+	height:140px;
+	overflow:hidden;
+}
+
+.result-row {
+	margin-top:20px;
+}
+
+.comp-name {
+	font-size:1.2em;
+	text-decoration:underline;
+}
+
+.comp-info {
+	font-size:.95em;
+	font-weight:bold;
+	color:#606060;
+}
+
+.comp-descrip {
+	font-size:1.05em;
+}
+
+.comp-download {
+	font-size:.95em;
+	font-weight:bold;
+	color:#6B8E23;
+}
+
+#creator-name {
+	color:#808080;
+	text-decoration:underline;
+}
+
+#check {
+	margin-right:3px;
+	margin-bottom:5px;
+}
+
+.icon-download, .icon-download-alt {
+	margin-left:4px;
+	margin-right:10px;
+}
+
+#submit-row {
+	margin-top:50px;
+	text-align:center;
+}
+
+.add {
+	margin-top:10px;
+	font-size:1em;
+	text-decoration:underline;
+}
+
+.icon-plus-sign {
+	margin-right:10px;
+}
+
+.icon-chevron-down {
+	margin-left:5px;
+	float:right;
+}
+
+.icon-th-list {
+	float:right;
+	margin-right:60px;
+}
+
+.click-nav {
+	margin:10px auto;
+	width:180px;
+}
+.click-nav ul { position:relative; font-weight:900; }
+.click-nav ul li { position:relative; list-style:none; cursor:pointer; }
+.click-nav ul li ul { position:absolute; left:0; right:0;}
+.click-nav ul .clicker {
+	position:relative;
+	background:#FFFFFF;
+	-moz-box-shadow: 0 0 5px #888;
+	-webkit-box-shadow: 0 0 5px#888;
+	box-shadow: 0 0 5px #888;
+}
+.click-nav ul .clicker:hover,.click-nav ul .active {background:#E8E8E8;}
+.click-nav img {position:absolute;top:9px;left:12px;}
+.click-nav ul li a {transition:background-color 0.2s ease-in-out;-webkit-transition:background-color 0.2s ease-in-out;
+-moz-transition:background-color 0.2s ease-in-out;display:block;padding:4px 5px 4px 10px;background:#FFF;color:#333;text-decoration:none;}
+.click-nav ul li a:hover {background:#E8E8E8;}
+
+/* Fallbacks */
+.click-nav .no-js ul {display:none;}
+.click-nav .no-js:hover ul {display:block;}
+
+</style>
+
+<script src="//ajax.googleapis.com/ajax/libs/jquery/1.8.1/jquery.min.js"></script>
+<script type="text/javascript">
+$(function () {
+    $('.click-nav > ul').toggleClass('no-js js');
+    $('.click-nav .js ul').hide();
+    $('.click-nav .js').click(function(e) {
+        $('.click-nav .js ul').slideToggle(200);
+        $('.clicker').toggleClass('active');
+        e.stopPropagation();
+    });
+    $(document).click(function() {
+        if ($('.click-nav .js ul').is(':visible')) {
+            $('.click-nav .js ul', this).slideUp();
+            $('.clicker').removeClass('active');
+        }
+    });
+});
+</script>
+
+<script type="text/javascript">
+// function to change form value to return entities sorted by filter value
+function handler(sort_name){
+	document.getElementById("sorting").value = sort_name;
+	document.getElementById("sort-form").submit();
+}
+</script>
+
+<script type="text/javascript">
+// function to open a popup window with form 
+function newPopup(url) {
+	popupWindow = window.open(
+		url,'popUpWindow','height=450,width=500,left=10,top=10,resizable=yes,scrollbars=yes,toolbar=yes,menubar=no,location=no,directories=no,status=yes')
+}
+</script>
+
+<script type="text/javascript">
+function saveAll(source) {
+  checkboxes = document.getElementsByName('save-items');
+  for(var i=0, n=checkboxes.length;i<n;i++) {
+    checkboxes[i].checked = source.checked;
+  }
+}
+</script>
+<script type="text/javascript">
+function downloadAll(source) {
+  checkboxes = document.getElementsByName('download-items');
+  for(var i=0, n=checkboxes.length;i<n;i++) {
+    checkboxes[i].checked = source.checked;
+  }
+}
+</script>
+
+<a href="/composers/"><i class="icon-th-list"></i></a><br>
+
+<div class="container-fluid" id="main-result-frame">
+	<div class="row-fluid" id="header-row">
+		<div class="span5">
+		{% if content %}
+			{% if content.paginator.count = 1 %}
+				<h4> 1 composer found </h4>
+			{% else %}
+			<h4> {{ content.paginator.count }} composers found </h4>
+			{% endif %}
+
+			<div class="row-fluid">
+				<div class="span3">
+			<input type="checkbox" id="check" onClick="saveAll(this)"/> <b style="font-size:.85em;color:#CD5C5C;">save all</b> </div>
+			<div class="span4">
+			<input type="checkbox" id="check" onClick="downloadAll(this)"/> <b style="font-size:.85em;color:#CD5C5C;">download all</b><br/></div>
+			</div>
+
+		</div>
+		<div class="span3">
+			{% with c='/addcomposer/' %}
+			<div class="add">
+				<i class="icon-plus-sign"></i><a href="JavaScript:newPopup('http://127.0.0.1:8000/addcomposer/');">new composer</a>
+			</div>
+			{% endwith %}
+		</div>
+		<div class="span4">
+
+			<div class="click-nav">
+			    <ul class="no-js">
+			    	<li>
+			            <a href="#" class="clicker">Filters<i class="icon-chevron-down"></i></a>
+			            <ul>
+			            	{% with c="/composers/" %}
+			            	<form method="POST" action="{{c}}" id="sort-form"> {% csrf_token %}
+			            	{% endwith %}
+			            	<input type="hidden" name="sorting" id="sorting" value="0">
+			                <li><a href="#" name="name" onclick="handler(this.name)">Alphabetical</a></li>
+			                <li><a href="#" name="-birth_date" onclick="handler(this.name)">Date desc</a></li>
+			                <li><a href="#" name="birth_date" onclick="handler(this.name)">Date asc</a></li>
+			                <li><a href="#" name="-number_of_queries" onclick="handler(this.name)">Popular</a></li>
+			                <li><a href="#" name="-created" onclick="handler(this.name)">Recently added</a></li>
+			                <li><a href="#" name="most" onclick="handler(this.name)">Most content</a></li>
+			                </input>
+			                </form>
+			            </ul>
+			        </li>
+			    </ul>
+			</div>
+
+		</div>
+
+
+	</div>
+
+	<form method="post" name="download-composers" action="">{% csrf_token %}
+
+	{% for composer in content %}
+	<div class="row-fluid">
+		<div class="result-row"> 
+			<div class="span3">
+    			<div class="comp-name"><a href="/composers/{{composer.id}}">{{ composer.name }}</a></div>
+    		</div>
+    		<div class="span4">
+				<div class="comp-download"><input type="checkbox" value="{{composer.id}}" id="check" name="download-items"/> <i class="icon-download-alt"></i><input type="checkbox" value="{{composer.id}}" id="check" name="save-items"/><i class="icon-download"></i></div>
+    		</div>
+    	</div>
+    </div>
+	{% endfor %}
+
+<div class="row-fluid" id="submit-row">
+<button type="submit" value="Download" class="btn btn-primary">Download and save</button>{% csrf_token %}
+</form>
+</div> 
+
+<div class="pagination">  
+  <ul> 
+  	{% if content.has_previous %}
+    <li><a href="?page={{ content.previous_page_number }}">Previous</a></li>  
+    {% endif %}
+
+    {% for page_num in content.paginator.page_range|truncate:10 %}
+    <li class="active"> <a href="?page={{page_num}}">{{page_num}}</a>  </li>  
+    {% endfor %}
+
+    {% if content.has_next %}
+    <li><a href="?page={{ content.next_page_number }}">Next</a></li>
+    {% endif %}
+  </ul>  
+</div>  
+
+
+{% else %}
+	<h4> Sorry, no composers were found. </h4>
+{% endif %}
+
+</div>
+
+
+{% endblock %}

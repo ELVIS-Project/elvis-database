@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+
+<html>
+
+<head>
+<meta charset="utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+<title></title>
+<meta name="description" content="base class for html form pages">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<link rel="stylesheet" href="{{ STATIC_URL }}css/bootstrap.min.css" rel="stylesheet" media="screen">
+<script src="{{ STATIC_URL }}js/modernizr-2.6.2.min.js"></script>
+<script src="{{ STATIC_URL }}js/bootstrap.min.js"></script>
+
+<style type="text/css">
+
+body {
+	background-color:#FFF8DC;
+	font-family:sans-serif;
+}
+
+</style>
+
+<body>
+
+{% block wrap %}
+{% endblock %}
+
+</body>
+
+</html>

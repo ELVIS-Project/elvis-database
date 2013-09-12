@@ -1,0 +1,39 @@
+{% extends "base.html" %}
+{% load rest_framework %}
+
+{% block wrap %}
+
+<style type="text/css">
+p {
+	font-style:italic;
+}
+
+i {
+	margin-right:15px;
+}
+</style>
+
+{% if content %}
+	{% if content|length = 1 %}
+		<h4> 1 discussion found: </h4>
+	{% else %}
+	<h4> {{ content|length }} composers found: </h4>
+	{% endif %}
+	<form method="post" name="download-composers" action="download.html">
+	<ul>
+		{% for composer in content %}
+   		<li> <input type="checkbox" value="{{composer.old_id}}" name="items"/><a href="{{ composer.url }}">{{ composer.name }}</a></li>
+		{% endfor %}
+	</ul>
+	<button type="submit" value="Save" class="btn btn-primary"><i class="icon-download"></i>Save to downloads</button>
+
+	<!-- this has to do something different from other form -- download files immediately --> 
+	<button type="submit" value="Download" class="btn btn-primary"><i class="icon-download-alt"></i>Download now</button>
+
+	<p>Note that selecting a composer will download all the pieces/movements associated with that composer. </p>
+	</form>
+{% else %}
+	No composers found.
+{% endif %}
+
+{% endblock %}

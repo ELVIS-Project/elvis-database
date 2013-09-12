@@ -1,0 +1,118 @@
+<style type="text/css">
+
+body {
+	background-color:#FFF8DC;
+	font-family:sans-serif;
+}
+ 
+#header {
+	background-color:#ADD8E6;
+}
+#header-error {
+	background-color:#CD5C5C;
+}
+.error {
+	color:#FFFFFF;
+	font-weight:bold;
+	text-align:center;
+	font-size:.8em;
+	padding-top:10px;
+	padding-bottom:10px;
+}
+.instruction {
+	text-align:center;
+	font-weight:bold;
+	font-size:.8em;
+	padding-top:10px;
+	padding-bottom:10px;
+}
+
+#id_name, #id_birth_date, #id_death_date {
+	border:0;
+	background:none;
+	outline:0;
+}
+#id_name {
+	font-size:1.5em;
+}
+#id_birth_date, #id_death_date {
+	font-size:.9em;
+}
+
+#date-examples {
+	font-size:.6em;
+}
+
+#composer-name, #composer-dates, #composer-picture {
+	margin-left:20px;
+	margin-right:20px;
+}
+#composer-name, #composer-name-error {
+	border-bottom:solid;
+	border-width:1px;
+}
+#composer-name-error, #bd-error {
+	font-color:#CD5C5C;
+}
+#bd, #bd-error {
+	border-bottom:dotted;
+	border-width:1px;
+}
+.submit {
+	text-align:center;
+}
+
+.default-pic {
+	height:50px;
+	width:70px;
+	overflow:hidden;
+}
+
+</style>
+
+<body>
+<div class="container-fluid">
+
+{% if form.errors %}
+	<div class="row-fluid" id="header-error">
+		<h4 class="error">Please correct the error{{ form.errors|pluralize }} below.</h4>
+	</div>
+{% else %}
+	<div class="row-fluid" id="header">
+		<h4 class="instruction">ADD A COMPOSER</h4>
+	</div>
+{% endif %}
+
+<form action="" method="post">
+    <div class="row-fluid" id="composer-name">{{ form.name }}</div>
+    <br>
+    <div class="row-fluid" id="composer-dates">
+    	<table>
+    		<tr> <td id="bd">{{ form.birth_date}}</td>  <td id="bd">{{ form.death_date }}</td> </tr>
+    		<tr><td id="date-examples">ex: 09-12-13</td></tr>
+    	</table>
+    </div>
+    <br><br>
+    <div class="row-fluid" id="composer-picture">
+    	<img class="default-pic" src="{{MEDIA_URL}}generics/composers/{{picture}}"/>
+    	{{form.picture}}
+    </div>
+
+    <br><br>
+
+{% if form.errors %} {{ form.errors }}
+<div class="submit">
+    {% csrf_token %}
+    <button type="submit" value="Download" class="btn btn-primary">Add composer</button>
+	</div>
+{% else %}
+    <div class="submit">
+    {% csrf_token %}
+    <button type="submit" value="Download" class="btn btn-primary">Add composer</button>
+	</div>
+{% endif %}
+</form>
+
+</div>
+
+</body>

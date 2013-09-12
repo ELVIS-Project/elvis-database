@@ -1,0 +1,112 @@
+{% extends "base.html" %}
+{% load rest_framework %}
+
+{% block wrap %}
+
+<style type="text/css">
+
+#proj-card {
+	background-color:#FFFFFF;
+	-moz-box-shadow: 0 0 5px #888;
+	-webkit-box-shadow: 0 0 5px#888;
+	box-shadow: 0 0 5px #888;
+	margin-top:10px;
+	margin-bottom:10px;
+}
+
+.name {
+	margin-left:10px;
+	margin-right:10px;
+	color:#000000;
+}
+
+.descrip {
+	margin-left:10px;
+	margin-right:10px;
+	font-weight:bold;
+	color:#909090;
+}
+
+#row-cards {
+	margin-left:50px;
+}
+
+.prof-pic {
+	width:30px;
+	height:30px;
+	overflow:hidden;
+	border-radius:15px;
+}
+
+#pics {
+	margin-bottom:10px;
+	margin-top:10px;
+	display:block;
+	margin-left:auto;
+	margin-right:auto;
+}
+
+#proj {
+	font-size:.7em;
+	text-align:left;
+	text-decoration:underline;
+}
+
+i {
+	display:block;
+	margin-left:auto;
+	margin-right:auto;
+}
+
+.project-url {
+	color:#000000;
+}
+
+</style>
+
+<div class="container-fluid">
+<div class="row-fluid">
+	<div class="span10">
+<!--
+	{% if projects %}
+		{% if length = 1 %}
+			<h4> There is 1 project. </h4>
+		{% else %}
+		<h4> There are {{ length }} projects. </h4>
+		{% endif %} -->
+	</div>
+	<div class="span1">
+		 <a class="project-url" href="#"><i class="icon-plus-sign"></i>
+		 <p id="proj">add project</p></a>
+	</div>
+	<div class="span1">
+		<a class="project-url" href="#"><i class="icon-remove"></i>
+		<p id="proj">delete project</p></a>
+	</div>
+</div>
+<div/>
+
+{% for list in projects %}
+<div class="row-fluid" id="row-cards">
+	{% for project in list %}
+		<div class="span3" id="proj-card">
+			<h4 class="name"><a class="project-url" href="{{ project.id }}"> {{ project.name }} </a></h4>
+			<p class="descrip"> {{ project.description|truncatechars:90 }} </p>
+			<div class="container-fluid" id="pics">
+				{% for user in project.users.all %}
+					<img class="prof-pic" src="{{MEDIA_URL}}photos/{{user.picture}}" alt="Profile Picture"/> 
+				{% endfor %}
+			</div>
+		</div>
+	{% endfor %}
+</div>
+{% endfor %}
+
+
+</div>
+	
+{% else %}
+	There are no projects.
+{% endif %}
+
+{% endblock %}

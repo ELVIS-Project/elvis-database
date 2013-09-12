@@ -1,0 +1,173 @@
+{% extends "base.html" %}
+
+{% block wrap %}
+
+<p>Search Page</p>
+
+<style type="text/css">
+
+.date-input {
+	font-size:9px;
+	font-family:Verdana, Arial, Helvetica, sans-serif;
+	padding:0;
+	margin:0;
+	height:10px;
+	width:40px;
+}
+
+input {
+	font-size:9px;
+	font-family:Verdana, Arial, Helvetica, sans-serif;
+	font-weight:bold;
+	padding:0;
+	margin:0;
+	height:10px;
+	width:250px;
+}
+
+#container {
+	background-color:#4682B4;
+	padding:1px;
+}
+
+.search-header {
+	background-color:#B0C4DE;
+	font-style:strong;
+	font-family:Verdana, Arial, Helvetica, sans-serif;
+	font-weight:bold;
+	padding:1px;
+	margin-top:10px;
+	margin-left:5px;
+}
+
+.filter-row {
+	-webkit-box-sizing:border-box;
+	-moz-box-sizing:border-box;
+	box-sizing:border-box;
+	display:table-row;
+	float:none;
+	width:100%;
+	display:inline;
+	float:left;
+	margin:8px;
+
+}
+
+table {
+	margin:5px;
+	table-layout:fixed;
+	width:100%;
+	border:1px;
+}
+
+.group {
+	font-family:Verdana, Arial, Helvetica, sans-serif;
+	font-weight:bold;
+	border-style:solid solid solid solid;
+	border-width:thin;
+	padding:10px;
+}
+
+.group:hover {
+	background-color:#B0C4DE;
+}
+
+.category-box {
+	display:none;
+}
+
+#row1, #row3 {
+	background-color:#B0C4DE;
+}
+#row2 {
+	margin-top:18px;
+	margin-left:5px;
+}
+#row3, #row4 {
+	margin-top:10px;
+}
+#header1, #header4 {
+	margin-left:5px;
+}
+
+</style> 
+
+
+<div class="container-fluid" id="container">
+	<div class="row-fluid" id="row1">
+		<div class="span3">
+			<div class="search-header" id="header1">search by keyword </div>
+		</div>
+		<div class="span3">
+			<div class="search-header"><p>exclude by keyword </p></div>
+		</div>
+		<div class="span3">
+			<div class="search-header"><p>filter by year</p></div>
+		</div>
+	</div>
+	{% with search="/search_results/" %}
+	<form action="{{search}}" method="get">
+	{% endwith %}
+	<div class="row-fluid" id="row2">
+		<div class="span3">
+			<input class="input" type="text" value="" name="search" id="search-all" size="400" placeholder=""/>
+		</div>
+		<div class="span3">
+			<input class="input" type="text" value="" name="exclude" id="search-pieces" size="400" placeholder="comma separated" />
+		</div>
+		<div class="span3">
+			<input class="date-input" type="text" value="" name="start-year" id="start-year" size="10" placeholder="start"/>
+			<input class="date-input" type="text" value="" name="end-year" id="end-year" size="10" placeholder="end" />
+		</div>
+	</div>
+	<div class="row-fluid" id="row3">
+		<div class="span6">
+			<div class="search-header" id="header4"><p>filter by category </p></div>
+		</div>
+		<div class="span6">
+			<div class="search-header"><p>number of voices</p></div>
+		</div>
+	</div>
+	<div class="row-fluid" id="row4">
+		<div class="span6">
+			<table border="1">
+				<tr>
+					<td class="group"><label>
+						<input type="checkbox" class="category-box" value="Piece" name="piece" id="piece-id"/>Piece</label> 
+					</td>
+					<td class="group"><label>
+						<input type="checkbox" class="category-box" value="Movement" name="movement" id="movement-id"/>Movement</label>
+					</td>
+					<td class="group"><label>
+						<input type="checkbox" class="category-box" value="Composer" name="composer" id="composer-id"/>Composer</label>
+					</td>
+				</tr>
+				<tr>
+					<td class="group">
+						<label>
+						<input type="checkbox" class="category-box" value="User" name="user" id="user-id"/>User</label>
+					</td>
+					<td class="group">
+						<label>
+						<input type="checkbox" class="category-box" value="Discussion" name="discussion" id="discussion-id"/>Discussion</label>
+					</td>
+					<td class="group">
+						<label>
+						<input type="checkbox" class="category-box" value="Log" name="log" id="log-id"/>Log</label>
+					</td>
+				</tr>
+			</table>
+		</div>
+		<div class="span6">
+			<input class="date-input" type="text" value="" name="num-voices" id="num-voices" size="10"/>
+		</div>
+	</div>
+	<div class="row-fluid">
+		<input type="submit" value="submit" display="hidden"></form>
+	</div>
+</div>
+
+ {% block content %}
+ {% endblock %}
+
+{% endblock %}

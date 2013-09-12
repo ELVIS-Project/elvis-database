@@ -1,0 +1,29 @@
+{
+  "nodes":[
+    {"name":"Corpus1","group":1},
+    {"name":"Corpus2","group":1},
+    {"name":"Composer1","group":2},
+    {"name":"Composer2","group":2},
+    {"name":"Composer3","group":2},
+    {"name":"Piece1","group":3},
+    {"name":"Piece2","group":3},
+    {"name":"Piece3","group":3},
+    {"name":"Movement1","group":4},
+    {"name":"Movement2","group":4},
+    {"name":"Movement3","group":4},
+    {"name":"Movement4","group":4}
+  ],
+  "links":[
+    {"source":1,"target":0,"value":1},
+    {"source":2,"target":0,"value":1},
+    {"source":3,"target":0,"value":1},
+    {"source":3,"target":2,"value":1},
+    {"source":4,"target":0,"value":1},
+    {"source":5,"target":0,"value":1},
+    {"source":6,"target":0,"value":1},
+    {"source":7,"target":0,"value":1},
+    {"source":8,"target":0,"value":1},
+    {"source":9,"target":0,"value":1}
+  ]
+}
+

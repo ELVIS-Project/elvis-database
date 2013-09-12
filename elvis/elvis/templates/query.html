@@ -1,0 +1,23 @@
+{% extends "base.html" %}
+
+{% block wrap %}
+
+<style>
+#main {
+	margin-left:50px;
+	margin-right:50px;
+	margin-top:20px;
+}
+</style>
+
+<div class="container-fluid" id="main">
+	<div class="row-fluid">
+		<h4> Query history </h4>
+	</div>
+	{% for query in content %}
+		<div class="row-fluid"> <h5>{{ query }}</h5> </div>
+	{% endfor %}
+
+</div>
+
+{% endblock %}

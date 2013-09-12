@@ -1,0 +1,12 @@
+{% extends "base.html" %}
+
+{% block wrap %}
+
+<p> List of Tags </p>
+<ul>
+{% for tag in content %}
+    <li><a href="{{ tag.url }}">{{ tag.name }}</a></li>
+{% endfor %}
+</ul>
+
+{% endblock %}

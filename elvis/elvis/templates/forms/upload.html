@@ -1,0 +1,112 @@
+{% extends "base.html" %}
+
+{% block wrap %}
+
+<style type="text/css">
+
+#main-result-frame {
+    -moz-box-shadow: 0 0 5px #888;
+    -webkit-box-shadow: 0 0 5px#888;
+    box-shadow: 0 0 5px #888;
+    margin-left:40px;
+    margin-right:40px;
+    margin-top:20px;
+}
+
+#separator-activity {
+    border-top:solid;
+    border-width:2px;
+    border-color:#909090;
+    margin-left:40px;
+    margin-right:40px;
+    -moz-box-shadow: 0 0 5px #888;
+    -webkit-box-shadow: 0 0 5px#888;
+    box-shadow: 0 0 5px #888;
+}
+
+.descrip {
+    border-bottom:solid;
+    border-width:1px;
+}
+
+#id_description {
+    border:0;
+    background:none;
+    outline:0;   
+    font-size:1.5em; 
+}
+
+.dostuff {
+    border: .3em solid #FFFFFF;
+    height: 4em;
+    width: 8em;
+    margin-left:50px;
+    margin-top:20px;
+    margin-bottom:20px;
+    text-align: center;
+    background:#E0FFFF;
+    -moz-box-shadow: 0 0 5px #888;
+    -webkit-box-shadow: 0 0 5px#888;
+    box-shadow: 0 0 5px #888;
+}
+.inner-stuff {
+    margin-top:5px;
+}
+.submit-button {
+    text-align:center;
+}
+
+</style>
+
+<div class="container-fluid" id="main-result-frame">
+
+<div class="span3">
+   <div class="dostuff">
+    <a href="/upload/corpus/">
+        <div class="inner-stuff">
+          <i class="icon-plus-sign"></i><br>
+           <b>Add corpus  </b>
+        </div>
+    </a>
+    </div>
+</div>
+
+<div class="span3">
+<div class="dostuff">
+    <a href="/upload/piece/">
+    <div class="inner-stuff">
+      <i class="icon-plus-sign"></i><br>
+       <b>Add piece  </b>
+    </div>
+    </a>
+</div>
+</div>
+
+<div class="span3">
+    <div class="dostuff">
+        <a href="/upload/movement/">
+        <div class="inner-stuff">
+           <i class="icon-plus-sign"></i><br>
+           <b>Add movement</b>
+        </div>
+        </a>
+    </div>
+</div>
+
+<div class="span3">
+   <div class="dostuff">
+        <a href="/upload/project/">
+        <div class="inner-stuff">
+          <i class="icon-plus-sign"></i><br>
+           <b>Add project  </b>
+        </div>
+    </a>
+    </div>
+</div>
+
+</div>
+
+    {% block content %}
+    {% endblock %}
+
+{% endblock %}

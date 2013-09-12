@@ -1,0 +1,64 @@
+{% extends "base.html" %}
+{% load rest_framework %}
+
+{% block wrap %}
+
+<style type="text/css">
+
+#main-frame-sub {
+	-moz-box-shadow: 0 0 5px #888;
+	-webkit-box-shadow: 0 0 5px#888;
+	box-shadow: 0 0 5px #888;
+	margin-left:50px;
+	margin-right:50px;
+	margin-top:20px;
+	background-color:#F8F8FF;
+}
+
+.prof-pic {
+	width:90px;
+	height:90px;
+	overflow:hidden;
+	border-radius:45px;
+	display:block;
+	margin-left:auto;
+	margin-right:auto;
+}
+
+#main-frame {
+	background-color:#FFF8DC;
+	box-shadow: 0px 0px 0px #888;
+}
+
+.name {
+	text-align:center;
+	color:#404040;
+}
+
+</style>
+
+<div class="container-fluid" id="main-frame-sub">
+<div class="row-fluid">
+	<div class="span9">
+	<h3>{{ content }}</h3>
+	</div>
+	<div class="span2">{{ content.users.all|length }} participants</div>
+<div/>
+
+<table class="table table-striped">
+	<tbody>  
+		{% for userprofile in content.users.all %}
+		<tr>  
+        	<td class="pull-left">
+        		<a href="#"><img class="prof-pic" src="{{MEDIA_URL}}photos/{{userprofile.picture}}" alt="Profile Picture"/>
+        		<div class="name"><h5> {{ userprofile.user.first_name }} {{userprofile.user.last_name}} </h5></div></a>
+        	</td>  
+        	<td class="pull-left"> latest activity </td>  
+        	<td class="pull-left"> number of contributions etc </td> 
+      	</tr>  
+      	{% endfor %}
+</table>
+
+</div>
+	
+{% endblock %}

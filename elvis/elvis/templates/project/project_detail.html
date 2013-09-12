@@ -1,0 +1,243 @@
+{% extends "base.html" %}
+{% load rest_framework %}
+{% load filter_methods %}
+
+{% block wrap %}
+
+<script language="javascript"> 
+function toggle_comments(counter) {
+	ele_name = "toggleComments" + String(counter)
+	text_name = "displayComments" + String(counter)
+    var ele = document.getElementById(ele_name);
+    var text = document.getElementById(text_name);
+    if(ele.style.display == "block") {
+        ele.style.display = "none";
+    }
+    else {
+        ele.style.display = "block";
+    }
+} 
+</script>
+
+<style type="text/css"> 
+
+/* shadow code found at http://www.css3.info/preview/box-shadow/ */
+
+#main-frame-sub {
+	-moz-box-shadow: 0 0 5px #888;
+	-webkit-box-shadow: 0 0 5px#888;
+	box-shadow: 0 0 5px #888;
+	margin-left:50px;
+	margin-right:50px;
+	margin-top:20px;
+	background-color:#F8F8FF;
+}
+
+#info {
+	margin-top:25px;
+	margin-left:20px;
+	margin-bottom:30px;
+	line-height:120%;
+}
+
+#add {
+	margin-top:15px;
+}
+
+.descrip {
+	font-size:1.5em;
+	color:#585858;
+}
+
+#stats {
+	border-top:solid;
+	border-bottom:solid;
+	border-width:1px;
+	border-color:#909090;
+	background-color:#FFFFFF;
+}
+
+.title {
+	color: #CD5C5C;
+	font-size:1.3em;
+	margin-top:24px;
+}
+
+.icon-plus-sign {
+	zoom:1.5;
+	margin-bottom:5px;
+}
+
+#add-user {
+	margin-right:auto;
+	margin-left:auto;
+	display:block;
+	text-decoration:underline;
+	text-align:center;
+}
+
+.prof-pic {
+	width:40px;
+	height:40px;
+	overflow:hidden;
+	border-radius:20px;
+}
+
+#user-matrix {
+	margin-top:20px;
+}
+
+#participant, #discussion, #attachment, #todos {
+	margin-top:6px;
+	text-align:center;
+	text-decoration:underline;
+	font-weight:bold;
+	font-size:1em;
+}
+
+.stat-link {
+	color:#000000;
+}
+
+.title {
+	color:#CD5C5C;
+	font-size:1.3em;
+	margin-top:24px;
+}
+
+.icon-arrow-right {
+	margin-left:5px;
+	margin-top:-1px;
+}
+
+#separate-discussion {
+	border-top:solid;
+	border-width:1px;
+	margin-top:5px;
+	margin-bottom:5px;
+}
+
+#num-comments {
+	font-size:.9em;
+}
+
+#discussion-name {
+	font-weight:bold;
+	text-decoration:underline;
+	font-size:1.1em;
+	color:#000000;
+}
+
+#comment {
+	background-color:#FFFFFF;
+}
+
+#create-time {
+	font-size:.82em;
+	color:#606060;
+}
+
+#todo {
+	font-size:1.2em;
+}
+
+#todo-check {
+	margin-right:3px;
+	margin-bottom:5px;
+}
+
+</style>
+
+<div class="container-fluid" id="main-frame-sub">
+	<div class="row-fluid" id="header">
+		<div class="span4" id="info">
+			<h3 class="name"> {{ content.name }} </h3>
+			<p class="descrip"> {{ content.description }} <p>
+		</div>
+		<div class="span7" id="add">
+			<p class="pull-right" id="add-user"> <i class="icon-plus-sign"></i>Add Someone</p>
+		</div>		
+	</div>
+	<div class="row-fluid" id="stats">
+		<div class="span2" id="participant">
+			<p> <a class="stat-link" href="participants">{{ content.users.all | length }} Participants </a></p>
+		</div>
+		<div class="span2" id="todos">
+			<p> <a class="stat-link" href="#todos">{{ todos | length }} Todos </a></p>
+		</div>
+		<div class="span2" id="discussion">
+			<p><a class="stat-link" href="discussions">{{ discussions | length }} Discussions </a></p>
+		</div>
+		<div class="span2" id="attachment">
+			<p> <a class="stat-link" href="#">{{ content.attachments.all | length }} Attachments </a></p>
+		</div>
+	</div>
+	<div class="row-fluid"> 
+		<p class="title"> Latest activity </p>
+	</div>
+	<div class="row-fluid">
+		<p class="title"> Discussions</i></p>
+	</div>
+	{% for discussion in discussions.all %}
+	<div class="row-fluid" id="separate-discussion"> 
+
+		{% with name="displayComments" %}
+		<a id="{{name|assign_id:forloop.counter}}" href="javascript:toggle_comments({{forloop.counter}});"><div class="span10" id="discussion-name">{{ discussion.name }}</div></a>
+		{% endwith %}
+
+		{% with comment_set=comments|get_value:discussion.id %}
+		{% with proj="/projects/" %} {% with disc="/discussions/" %}
+		<div class="span2" id="num-comments">
+			{% if comment_set|length = 1 %}
+				<a href="{{proj}}{{content.id}}{{disc}}{{discussion.id}}" class="pull-right">{{ comment_set|length }} comment <!--<i class="icon-arrow-right"></i>--></a></div>
+			{% else %}
+				<a href="{{proj}}{{content.id}}{{disc}}{{discussion.id}}" class="pull-right">{{ comment_set|length }} comments <!--<i class="icon-arrow-right"></i>--></a></div>
+			{% endif %} 
+
+		{% with name="toggleComments" %}
+		<div class="container" id="{{name|assign_id:forloop.counter}}" style="display: none">
+		{% endwith %}
+			
+			<table class="table table-striped">
+				<tbody>  
+					{% for comm in comment_set %}
+					<tr>  
+		            	<td><img class="prof-pic" src="{{MEDIA_URL}}photos/{{comm.user.picture}}" alt="Profile Picture"/> </td>  
+		            	<td><div style="width:600px;">{{ comm.text }}</div> </td>  
+		            	<td><b id="create-time">{{ comm.created|format_time }}</b></td> 
+		          	</tr> 
+		          	{% endfor %}
+		          	<tr>  
+		            	<td><img class="prof-pic" src="{{MEDIA_URL}}photos/{{discussion.first_user.picture}}" alt="Profile Picture"/> </td>  
+		            	<td><div style="width:600px;">{{ discussion.first_comment }} </div></td>  
+		            	<td><b id="create-time">{{ discussion.created|format_time }}</b></td> 
+		          	</tr>  
+		        </tbody>
+		    </table>
+		    <a href="{{proj}}{{content.id}}{{disc}}{{discussion.id}}" class="pull-right">See all </a>
+		    {% endwith %} {% endwith %}
+		</div>
+		{% endwith %}
+	</div>
+	{% endfor %}
+
+	<div class="row-fluid">
+		<a name="todos"><p class="title"> Todos </i></p></a>
+		<ul>
+		{% for todo in todos %}
+			<li id="todo"><input type="checkbox" id="todo-check"/>{{ todo.description }}</li>
+		{% endfor %}
+		</ul>
+	</div>
+
+	<div class="row-fluid">
+		<p class="title"> Attachments </i></p>
+	</div>
+
+</div>
+<div class="container-fluid" id="separator-activity">
+	
+</div>
+
+
+{% endblock %}

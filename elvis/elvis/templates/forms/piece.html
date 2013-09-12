@@ -1,0 +1,277 @@
+{% extends "forms/upload.html" %}
+
+{% block content %}
+
+<style type="text/css">
+
+#separator-activity {
+    border-top:solid;
+    border-width:2px;
+    border-color:#909090;
+    margin-left:40px;
+    margin-right:40px;
+    background-color:#FFFFFF;
+    -moz-box-shadow: 0 0 5px #888;
+    -webkit-box-shadow: 0 0 5px#888;
+    box-shadow: 0 0 5px #888;
+}
+
+.error {
+	font-color:#FF6347;
+}
+
+#piece-title {
+	border-bottom:solid;
+	border-width:2px;
+}
+#piece-composer, #piece-corpus {
+	border-bottom:solid;
+	border-width:1px;
+}
+#piece-date {
+	border-bottom:dotted;
+	border-width:1px;
+}
+#piece-date-example {
+	font-size:.8em;
+	color:#6B8E23;
+	font-weight:bold;
+}
+
+#id_title {
+	font-size:1.6em;
+	font-weight:bold;
+	width:420px;
+}
+
+#id_composer, #id_corpus {
+	font-size:1.3em;
+	width:280px;
+}
+
+#id_title, #id_composer, #id_corpus, #id_date_of_composition, #id_comment, #id_description {
+	border:0;
+	background:none;
+	outline:0;
+}
+
+#id_number_of_voices {
+	width:30px;
+	height:30px;
+}
+
+#id_tags {
+	width:400px;
+	height:60px;
+	background:none;
+}
+#id_comment {
+	width:426px;
+	height:120px;
+}
+#id_description {
+	width:320px;
+	height:90px;
+}
+#piece-comment {
+	border:dotted;
+}
+#piece-descrip {
+	border:dotted;
+	border-width:1px;
+	margin-bottom:15px;
+} 
+
+.num-voices, .tags, #comment, #attachments {
+	color:#606060;
+	font-weight:bold;
+}
+
+#attachments-header {
+	color:#606060;
+	font-weight:bold;
+	font-size:1.3em;
+	margin-top:15px;
+}
+
+.row-fluid {
+	margin-left:20px;
+}
+
+#voice-info-hide, #tag-info, #file-info {
+	font-size:.8em;
+}
+
+#save {
+	text-align:center;
+}
+
+#attachment-container {
+	background-color:#F0F0F0 ;
+	border:solid;
+	border-width:1px;
+	border-radius:5px;
+	margin-right:20px;
+	margin-left:20px;
+}
+
+#display {
+	margin-left:80px;
+	margin-bottom:20px;
+}
+
+#mov-num-voices {
+	width:20px;
+	height:20px;
+}
+
+</style>
+
+<script language="javascript"> 
+function toggle() {
+    var ele = document.getElementById("voice-info");
+    var text = document.getElementById("voice-info-hide");
+    if(ele.style.display == "block") {
+        ele.style.display = "none";
+    }
+    else {
+        text.style.display = "block";
+    }
+} 
+
+</script>
+<script language="javascript"> 
+function toggleFileEdit2() {
+    var ele = document.getElementById("edit-file");
+    var text = document.getElementById("subdisplay");
+    if(ele.style.display == "block") {
+        ele.style.display = "none";
+    }
+    else {
+        text.style.display = "block";
+    }
+} 
+</script>
+<script language="javascript"> 
+function toggleFileEdit(counter) {
+	ele_name = "edit-file" + counter
+	text_name = "subdisplay" + counter
+    var ele = document.getElementById(ele_name);
+    var text = document.getElementById(text_name);
+    if(ele.style.display == "block") {
+        ele.style.display = "none";
+    }
+    else {
+        text.style.display = "block";
+    }
+} 
+</script>
+ <script type="text/javascript">
+ //options to add tags, change number of voices/date 
+	function displayFileList() {
+		var myFileList = document.getElementById("upload");
+    	for (var i = 0; i < myFileList.files.length; i++) {
+    		var istr = i.toString()
+    		var tags = 'mov-tags'+istr
+    		var voice = 'mov-num-voices'+istr
+    		var date = 'mov-date'+istr
+    		var descrip = 'mov-descrip'+istr
+    		var comment = 'mov-comment'+istr
+    		var title = 'mov-title'+istr
+    		var str1 = "<i style='margin-right:5px;' class='icon-file'></i>";
+    		var movementform = "Title: <input type='text' name='"+title+"' id='"+title+"'/> <br> Add more tags: <input type='text' name='"+tags+"' id='"+tags+"'/> <br> Number of voices:<input type='text' name='"+voice+"' id='"+voice+"'/> <br> Date: <input type='text' name='"+date+"' id='"+date+"'/><br> Description: <input type='text' name='"+descrip+"' id='"+descrip+"'/><br> Comment:<input type='text' name='"+comment+"' id='"+comment+"'/>"
+    		var str2 = "<a id='edit-file"+istr+"' href='javascript:toggleFileEdit("+istr+")'><b style='font-size:.85em; margin-left:40px;'>edit</b> <i class='icon-chevron-down' style='margin-left:2px;'></i></a><div id='subdisplay"+istr+"' style='display:none;'>"+movementform+"</div><br>"
+        	document.getElementById("display").innerHTML += str1 + myFileList.files[i].name + str2;
+    	}
+	}
+</script>
+
+<div class="container-fluid" id="separator-activity">
+
+{% if form.errors %}
+	<h4 class="error">Please correct the error{{ form.errors|pluralize }} below.</h4><br>
+	{{ form.errors }}
+{% else %}
+	<h4 class="instruction">Add a piece</h4><br>
+{% endif %}
+
+<form action="" method="post" enctype="multipart/form-data"> 
+    <div class="row-fluid">
+    	<div class="span6" id="piece-title"> {{ form.title }} </div>
+    </div>
+    <br>
+    <div class="row-fluid">
+    	<div class="span4" id="piece-composer">{{ form.composer }}</div>
+    </div>
+    <br>
+    <div class="row-fluid" >
+    	<div class="span4" id="piece-corpus">{{ form.corpus }}</div>
+    </div>
+    <br>
+    <div class="row-fluid">
+    	<div class="span3" id="piece-date">{{ form.date_of_composition }}</div>
+    </div>
+    <div class="row-fluid">
+    	<div class="span3" id="piece-date-example">ex: 09-29-93</div>
+    </div>
+    <br>
+    <div class="row-fluid">
+    	<div class="span6" id="piece-voices">
+    		<div class="num-voices">Number of voices</div>
+    		<div>{{ form.number_of_voices }} <a id="voice-info" href="javascript:toggle();">What is this? </b><i class="icon-chevron-down"></i></a></div>
+    		<div id="voice-info-hide" style="display: none">
+    			<i>This is the number of distinct polyphonic lines, where applicable (use "0" for solo pieces without distinct voices and for one voice + obbligato accompaniment). Divisi count only if they persist for an entire section, and doubled basslines count as one voice. For complete guidelines please refer to the Data Entry Guidelines.</i>
+    		</div>
+    	</div>
+    </div><br>
+    <div class="row-fluid"> <div class="tags">Tags </div></div>
+    <div class="row-fluid">
+    	<div class="span6" id="piece-tags">{{ form.tags }}</div>
+    </div>
+    <div class="row-fluid">
+    	<div class="span6" id="tag-info">
+    	<b>The tags field should always include:</b>
+		<i>vocal and/or instrumental genre instrumentation / voices edition (if known) source (if known) language (if texted) sacred/secular (if texted) if applicable, "missing voice(s)" (specify which in comments below)</i>
+		</div>
+    </div>
+    <br>
+    <div class="row-fluid">
+    	<div class="span4" id="comment">Comments</div>
+    </div>
+    <div class="row-fluid">
+    	<div class="span6" id="piece-comment">{{ form.comment }}</div>
+    </div>
+    <br>
+    <div class="container-fluid" id="attachment-container">
+    <div class="row-fluid" id="attachments-header"> Attachments </div>
+    <div class="row-fluid">
+    	<div class="span11" id="file-info">
+    	At least one file should be in a music notation format readable by Music21: xml, krn, mei, mxl, midi, mid, abc, nwctxt, mscx. N.B.: mid and midi files are only valid if voices are saved to separate channels. Please also upload a .pdf (it helps us compare in the case of duplicates). Please also upload a notation software file if you have it: md, sib, mus, ly, ily, nwc. Other formats are optional. 
+    	Files must be less than <b>200 MB.</b>
+		Allowed file types: <b>xml mxl krn mei midi mid abc sib mus nwc nwctxt sml ly ily etf pdf nweps mscx mscz ps jpg tiff tif jpeg txt md.</b></div>
+    </div><br>
+    <div class="row-fluid" id="attachments"> 
+    	<div class="span6">Attach piece file </div>
+    	<div class="span6" id="attach-mov">Attach movement file(s) </div>
+    </div>
+    <div class="row-fluid">
+    	<div class="span6" id="piece-attachment">{{ form.attachment }}</div>
+    	<div class="span6"> 
+    		<input name="upload[]" id="upload" type="file" multiple="multiple" onchange="displayFileList();"/>{% csrf_token %}
+    	</div>
+    </div>
+    <div class="row-fluid">
+    	<div class="span5" id="piece-descrip">{{ form.description }}</div>
+    	<div class="span6"> <br><div id="display"></div>  </div>
+    </div>
+    </div>
+    <br><br>
+
+    <div class="row-fluid" id="save">
+    <button type="submit" value="submit" class="btn btn-success">Save piece </button>{% csrf_token %}
+	</div>
+
+</form>
+</div>
+
+{% endblock %}

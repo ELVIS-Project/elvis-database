@@ -1,0 +1,13 @@
+{% extends "base.html" %}
+
+{% block wrap %}
+{{ content.name }}
+
+<h3>Pieces tagged with this tag</h3>
+<ul>
+{% for piece in content.pieces %}
+    <li><a href="{{ piece.url }}">{{ piece.title }}</a></li>
+{% endfor %}
+</ul>
+
+{% endblock %}

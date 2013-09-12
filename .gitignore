@@ -1,0 +1,7 @@
+*.log
+*.pot
+*.pyc
+local_settings.py
+solr/target/*
+.DS_Store
+elvis_env/*

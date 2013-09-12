@@ -1,0 +1,190 @@
+{% extends "forms/upload.html" %}
+
+{% block content %}
+
+<style type="text/css">
+
+#separator-activity {
+    border-top:solid;
+    border-width:2px;
+    border-color:#909090;
+    margin-left:40px;
+    margin-right:40px;
+    background-color:#FFFFFF;
+    -moz-box-shadow: 0 0 5px #888;
+    -webkit-box-shadow: 0 0 5px#888;
+    box-shadow: 0 0 5px #888;
+}
+
+#piece-title {
+	border-bottom:solid;
+	border-width:2px;
+}
+#piece-composer, #piece-corpus {
+	border-bottom:solid;
+	border-width:1px;
+}
+#piece-date {
+	border-bottom:dotted;
+	border-width:1px;
+}
+#piece-date-example {
+	font-size:.8em;
+	color:#6B8E23;
+	font-weight:bold;
+}
+
+#id_title {
+	font-size:1.6em;
+	font-weight:bold;
+	width:420px;
+}
+
+#id_composer, #id_corpus, #id_piece {
+	font-size:1.3em;
+	width:280px;
+}
+
+#id_title, #id_piece, #id_composer, #id_corpus, #id_date_of_composition, #id_comment, #id_description {
+	border:0;
+	background:none;
+	outline:0;
+}
+
+#id_number_of_voices {
+	width:30px;
+	height:30px;
+}
+
+#id_tags {
+	width:400px;
+	height:60px;
+	background:none;
+}
+#id_comment, #id_description {
+	width:426px;
+	height:120px;
+}
+#piece-comment {
+	border:dotted;
+}
+#piece-descrip {
+	border:dotted;
+	border-width:1px;
+} 
+
+.num-voices, .tags, #comment, #attachments {
+	color:#606060;
+	font-weight:bold;
+}
+
+.row-fluid {
+	margin-left:20px;
+}
+
+#voice-info-hide, #tag-info, #file-info {
+	font-size:.8em;
+}
+
+#save {
+	text-align:center;
+}
+</style>
+
+<script language="javascript"> 
+function toggle() {
+    var ele = document.getElementById("voice-info");
+    var text = document.getElementById("voice-info-hide");
+    if(ele.style.display == "block") {
+        ele.style.display = "none";
+    }
+    else {
+        text.style.display = "block";
+    }
+} 
+</script>
+
+
+<div class="container-fluid" id="separator-activity">
+
+{% if form.errors %}
+	<h4 class="error">Please correct the error{{ form.errors|pluralize }} below.</h4><br>
+{% else %}
+	<h4 class="instruction">Add a movement</h4><br>
+{% endif %}
+
+<form action="" method="post">
+    <div class="row-fluid">
+    	<div class="span6" id="piece-title"> {{ form.title }} </div>
+    </div>
+    <br>
+    <div class="row-fluid">
+    	<div class="span4" id="piece-composer">{{ form.composer }}</div>
+    </div>
+    <br>
+    <div class="row-fluid" >
+    	<div class="span4" id="piece-corpus">{{ form.corpus }}</div>
+    </div>
+    <br>
+    <div class="row-fluid" >
+    	<div class="span4" id="piece-corpus">{{ form.piece }}</div>
+    </div>
+    <br>
+    <div class="row-fluid">
+    	<div class="span3" id="piece-date">{{ form.date_of_composition }}</div>
+    </div>
+    <div class="row-fluid">
+    	<div class="span3" id="piece-date-example">ex: 09-29-93</div>
+    </div>
+    <br>
+    <div class="row-fluid">
+    	<div class="span6" id="piece-voices">
+    		<div class="num-voices">Number of voices</div>
+    		<div>{{ form.number_of_voices }} <a id="voice-info" href="javascript:toggle();">What is this? </b><i class="icon-chevron-down"></i></a></div>
+    		<div id="voice-info-hide" style="display: none">
+    			<i>This is the number of distinct polyphonic lines, where applicable (use "0" for solo pieces without distinct voices and for one voice + obbligato accompaniment). Divisi count only if they persist for an entire section, and doubled basslines count as one voice. For complete guidelines please refer to the Data Entry Guidelines.</i>
+    		</div>
+    	</div>
+    </div><br>
+    <div class="row-fluid"> <div class="tags">Tags </div></div>
+    <div class="row-fluid">
+    	<div class="span6" id="piece-tags">{{ form.tags }}</div>
+    </div>
+    <div class="row-fluid">
+    	<div class="span6" id="tag-info">
+    	<b>The tags field should always include:</b>
+		<i>vocal and/or instrumental genre instrumentation / voices edition (if known) source (if known) language (if texted) sacred/secular (if texted) if applicable, "missing voice(s)" (specify which in comments below)</i>
+		</div>
+    </div>
+    <br>
+    <div class="row-fluid">
+    	<div class="span4" id="comment">Comments</div>
+    </div>
+    <div class="row-fluid">
+    	<div class="span6" id="piece-comment">{{ form.comment }}</div>
+    </div>
+    <br>
+    <div class="row-fluid" id="attachments"> Attachments </div>
+    <div class="row-fluid">
+    	<div class="span4" id="piece-attachment">{{ form.attachment }}</div>
+    </div>
+    <div class="row-fluid">
+    	<div class="span6" id="file-info">
+    	Files must be less than <b>200 MB.</b>
+		Allowed file types: <b>xml mxl krn mei midi mid abc sib mus nwc nwctxt sml ly ily etf pdf nweps mscx mscz ps jpg tiff tif jpeg txt md.</b>
+		</div>
+    </div><br>
+    <div class="row-fluid">
+    	<div class="span6" id="piece-descrip">{{ form.description }}</div>
+    </div>
+    
+    <br><br>
+
+    <div class="row-fluid" id="save">
+    <button type="submit" value="submit" class="btn btn-success">Save movement </button>
+	</div>
+
+</form>
+</div>
+
+{% endblock %}

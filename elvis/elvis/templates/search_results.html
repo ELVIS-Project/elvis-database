@@ -1,0 +1,43 @@
+{% extends "search.html" %}
+
+{% block content %}
+
+<!--
+	TODO: divide results into categories 
+	ex: searching for monk should yield:
+	composers:
+		thelonious monk
+	pieces:
+		pieces by thelonious monk
+	corpora:
+		corpora thelonious monk is found in
+	...etc 
+	and then:
+	related:
+		...etc => this would be FKs of object 
+-->
+
+<div class="container-fluid" id="search-result-stats">
+	<div class="row-fluid">
+		<div class="span4">
+			<p>You searched for:  {% for param in query %} <strong>{{ param }}</strong></p> {% endfor %}
+		</div>
+		<div class="span4">
+			{% if num_results > 0 %} <p> {{ num_results }} results found </p>
+			{% else %} <p>No results found.</p>
+			{% endif %}
+		</div>
+	</div>
+
+	<div class="container-fluid" id="search-results">
+    {% for result in results %}
+    	<div class="row-fluid">
+    		<h5><a href="#">{{ result }}</a></h5> 
+    		type | created | add to downloads | download now 
+    	</div>
+    {% endfor %}
+	</div>
+
+</div>
+
+{% endblock %}

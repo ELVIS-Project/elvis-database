@@ -1,0 +1,50 @@
+<style type="text/css">
+
+body {
+	background-color:#FFF8DC;
+	font-family:sans-serif;
+}
+
+#header {
+	background-color:#ADD8E6;
+	text-align:center;
+}
+#header-error {
+	background-color:#CD5C5C;
+	text-align:center;
+}
+.submit {
+	text-align:center;
+}
+
+</style>
+
+<body>
+<div class="container-fluid">
+
+{% if error %}
+	<div class="row-fluid" id="header-error">
+		<h4 class="error">Unable to delete {{ name }} </h4>
+	</div>
+{% else %}
+	<div class="row-fluid" id="header">
+		<h4 class="instruction">DELETE {{ entity|upper }}</h4>
+	</div>
+{% endif %}
+
+<form action="" method="post">
+    <p> Are you sure you want to delete {{ name }}? 
+    	Note that all files associated with {{ name }} will also be deleted. </p>
+
+    <br><br>
+
+    <div class="submit">
+    <button type="button" onclick="window.open('', '_self', ''); window.close();">Nevermind</button>
+    {% csrf_token %}
+    <button type="submit" value="delete" class="btn btn-primary">Delete</button>
+	</div>
+</form>
+
+</div>
+
+</body>

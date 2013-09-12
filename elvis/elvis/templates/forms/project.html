@@ -1,0 +1,162 @@
+{% extends "forms/upload.html" %}
+
+{% block content %}
+
+<script type="text/javascript">
+<!-- Begin
+/* This script and many more are available free online at
+The JavaScript Source!! http://javascript.internet.com
+Created by: Husay :: http://www.communitxt.net */
+
+var arrInput = new Array(0);
+var arrInputValue = new Array(0);
+fields = 1;
+maxInput = 4;
+function addInput() {
+ //arrInput.push(createInput(arrInput.length));
+ if(fields <= maxInput){
+     fields +=1;
+     arrInput.push(arrInput.length);
+     //arrInputValue.push(arrInputValue.length);
+     arrInputValue.push("");
+     display();
+ }
+}
+
+function display() {
+ document.getElementById('parah').innerHTML="";
+ for (intI=0;intI<arrInput.length;intI++) {
+   document.getElementById('parah').innerHTML+=createInput(arrInput[intI], arrInputValue[intI]);
+ }
+}
+
+function saveValue(intId,strValue) {
+ arrInputValue[intId]=strValue;
+}
+
+function createInput(id,value) {
+	return "<div class='row-fluid'> <div class='span6' id='email-field'><i class='icon-user'></i> <input type='email' name='add-user' id='add-user'></input></div></div>"
+	//return "<input type='email' id='test "+ id +"' onChange='javascript:saveValue("+ id +",this.value)' value='"+ value +"'><br>";
+}
+
+function deleteInput() {
+ if (arrInput.length > 0) {
+    fields -=1;
+    arrInput.pop();
+    arrInputValue.pop();
+ }
+ display();
+}
+// End -->
+</script>
+
+<style type="text/css">
+#separator-activity {
+    border-top:solid;
+    border-width:2px;
+    border-color:#909090;
+    margin-left:40px;
+    margin-right:40px;
+    background-color:#FFFFFF;
+    -moz-box-shadow: 0 0 5px #888;
+    -webkit-box-shadow: 0 0 5px#888;
+    box-shadow: 0 0 5px #888;
+}
+#id_name, #id_description, #add-user {
+	border:0;
+	background:none;
+	outline:0;
+}
+#id_name {
+	font-size:1.5em;
+	font-weight:bold;
+	width:420px;
+}
+#id_description {
+	font-size:1.2em;
+	width:430px;
+}
+
+#project-name {
+	border-bottom:solid;
+	border-width:1px;
+}
+#project-description {
+	border:dotted;
+	border-width:2px;
+}
+
+#more {
+	float:right;
+}
+.icon-user {
+	margin-right:5px;
+}
+#email-field {
+	border-bottom:dotted;
+	border-width:1px;
+}
+#add-user {
+	width:400px;
+}
+
+#invite-people {
+	color:#606060;
+	font-weight:bold;
+}
+
+#submit {
+	text-align:center;
+}
+</style>
+
+<div class="container-fluid" id="separator-activity">
+{% if form.errors %}
+	<div class="row-fluid" id="header-error">
+		<h4 class="error">Please correct the error{{ form.errors|pluralize }} below.</h4>
+	</div>
+{% endif %}
+
+<form action="" method="post">
+	<div class="row-fluid"><h4>Add a project</h4></div><br>
+    <div class="row-fluid">
+    	<div class="span6" id="project-name"> {{ form.name }} </div>
+    </div>
+    <br>
+    <div class="row-fluid">
+    	<div class="span6" id="project-description">{{ form.description }}</div>
+    </div>
+    <br>
+    <div class="row-fluid" id="invite-people"> Invite people </div> <br>
+
+    <div class="row-fluid">
+    	<div class="span6" id="email-field">
+    		<i class="icon-user"></i> <input type="email" name="add-user" id="add-user"></input>
+    	</div>
+    </div>
+    <div class="row-fluid">
+    	<div class="span6" id="email-field">
+    		<i class="icon-user"></i> <input type="email" name="add-user" id="add-user"></input>
+    	</div>
+    </div>
+    <div class="row-fluid">
+    	<div class="span6" id="email-field">
+    		<i class="icon-user"></i> <input type="email" name="add-user" id="add-user"></input>
+    	</div>
+    </div>
+    <p id="parah"></p><br>
+    <div class="row-fluid">
+    	<div class="span5"></div>
+    	<div class="span1"><a href="javascript:addInput()"><i class="icon-plus-sign" id="more"></i></a></div>
+    </div>
+
+<br><br>
+<div class="row-fluid" id="submit">
+    {% csrf_token %}
+    <button type="submit" value="Download" class="btn btn-success">Add corpus</button>
+</div>
+</form>
+
+</div>
+
+{% endblock %}

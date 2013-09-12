@@ -1,0 +1,1071 @@
+[
+{
+  "model":"elvis.project",
+  "pk":998,
+  "fields": {
+    "name":"New Elvis Website",
+    "description": "The goal is to create a more user-friendly website for elvis users equipped with better search/upload/download capabilities and a more aesthetic interface.",
+    "users":[400,480,5005]
+  }
+},
+{
+  "model": "elvis.project",
+  "pk":999,
+  "fields": {
+    "name": "Quantifying Repetition",
+    "description": "How do we quantify repetition? What IS repetition? Investigating the epistemology of repetition.",
+    "users":[5006,5007,440,470]
+  }
+},
+{
+  "model": "elvis.project",
+  "pk":997,
+  "fields": {
+    "name": "Case Study: Fats Waller",
+    "description": "Getting to the root of why Fats Waller has a pathological aversion to large feet.",
+    "users":[430,450,5006,470,400, 5008]
+  }
+},
+{
+  "model": "elvis.project",
+  "pk":996,
+  "fields": {
+    "name": "The ElectroSwing Project",
+    "description": "An initiative to listen to electroswing music without moving any body part. This has proven challenging across age, sex, gender, and other demographic attributes.",
+    "users":[400, 410, 420, 430, 440, 460, 470, 5002, 5004]
+  }
+},
+{
+  "model": "elvis.project",
+  "pk":995,
+  "fields": {
+    "name": "Group Coordination",
+    "description": "Used for discussion of meetings, ideas, brainstorming, ad hoc discussions.",
+    "users":[400, 410, 420, 430, 440, 450, 460, 470, 480, 490, 5001, 5002, 5003, 5004, 5005, 5006, 5007]
+  }
+},
+{
+  "model":"elvis.todo",
+  "pk":9980,
+  "fields": {
+    "description": "Implement tag hierarchy search",
+    "project": 998
+  }
+},
+{
+  "model":"elvis.todo",
+  "pk":9981,
+  "fields": {
+    "description": "Implement basic upload functionality",
+    "project": 998,
+    "assigned_to": 40
+  }
+},
+{
+  "model":"elvis.todo",
+  "pk":9982,
+  "fields": {
+    "description": "Implement basic download functionality",
+    "project": 998,
+    "assigned_to": 40
+  }
+},
+{
+  "model":"elvis.todo",
+  "pk":9983,
+  "fields": {
+    "description": "Ensure that users can save pieces as they browse for future download",
+    "project": 998,
+    "assigned_to": 500
+  }
+},
+{
+  "model":"elvis.todo",
+  "pk":9991,
+  "fields": {
+    "description": "Design repetition-finding algorithm that is compatible with encoded music",
+    "project": 999,
+    "assigned_to": 507
+  }
+},
+{
+  "model":"elvis.todo",
+  "pk":9992,
+  "fields": {
+    "description": "Test repetition-finding algorithm against manually-curated repetitions",
+    "project": 999,
+    "assigned_to": 44
+  }
+},
+{
+  "model":"elvis.todo",
+  "pk":9971,
+  "fields": {
+    "description": "Listen to Fats Waller's song: 'Yo Feets Too Big'",
+    "project": 997,
+    "assigned_to": 43
+  }
+},
+{
+  "model":"elvis.todo",
+  "pk":9972,
+  "fields": {
+    "description": "Research Waller's experience with women, focusing on those with metatarsal incongruities",
+    "project": 997,
+    "assigned_to": 43
+  }
+},
+{
+  "model":"elvis.todo",
+  "pk":9973,
+  "fields": {
+    "description": "Submit preliminary thesis to FWAC (Fats Waller Academic Convention)",
+    "project": 997,
+    "assigned_to": 47
+  }
+},
+{
+  "model":"elvis.todo",
+  "pk":9974,
+  "fields": {
+    "description": "Locate Fats Waller's extant relatives",
+    "project": 997,
+    "assigned_to": 506
+  }
+},
+{
+  "model":"elvis.todo",
+  "pk":9975,
+  "fields": {
+    "description": "Sumit relatives to tests involving women with grossly disfigured feet",
+    "project": 997,
+    "assigned_to": 45
+  }
+},
+{
+  "model":"elvis.todo",
+  "pk":9961,
+  "fields": {
+    "description": "Curate corpus of electroswing music",
+    "project": 996,
+    "assigned_to": 504
+  }
+},
+{
+  "model":"elvis.todo",
+  "pk":9962,
+  "fields": {
+    "description": "Design study where participants listen to curated electroswing",
+    "project": 996
+  }
+},
+{
+  "model":"elvis.discussion",
+  "pk":770,
+  "fields": {
+    "name": "How serious is Fats Waller in his song?",
+    "project": 997,
+    "first_comment": "In his song 'Feets Too Big', Fats Waller seems very alarmed and provoked by the girthy mass of an unknown woman's feet. It would be interesting to see others' opinions on whether or not he is serious about this phobia.",
+    "first_user": 5006
+  }
+},
+{
+  "model":"elvis.discussion",
+  "pk":771,
+  "fields": {
+    "name": "Is Fats male or female?",
+    "project": 997,
+    "first_comment": "I think I know the answer to this question...but I might be wrong, what do you guys think?",
+    "first_user": 5007
+  }
+},
+{
+  "model":"elvis.comment",
+  "pk":7701,
+  "fields": {
+    "text": "I think he's really serious. When he says 'yo feets too big', it's easy to hear comical overtones but there's a deep longing for small feet.",
+    "user": 5000,
+    "discussion":770
+  }
+},
+{
+  "model":"elvis.comment",
+  "pk":7702,
+  "fields": {
+    "text": "The line where he states that there are 4 people at the table suggests how aware he is of the feets' presence. Theyre not just an appendage of the woman, they are truly their own entities. In Fats' mind, the role of these characters should be a subtle one, and when the feet are too big, he's overwhelmed and resorts to drinking, as is clear in the enunciation of his singing.",
+    "user": 5000,
+    "discussion":770
+  }
+},
+{
+  "model":"elvis.comment",
+  "pk":7711,
+  "fields": {
+    "text": "I think it's likely that FAts is male, although its unclear by his first name, and last name for that matter. Often it is said he found his company with women, and they were naked.",
+    "user": 5000,
+    "discussion":771
+  }
+},
+{
+	"model":"auth.user",
+	"pk":40,
+	"fields": {
+		"username": "morgciot",
+    "first_name": "Morgane",
+    "last_name": "Ciot",
+    "email":"morgane.ciot@mail.mcgill.ca"
+	}
+},
+{
+	"model":"auth.user",
+	"pk":41,
+	"fields": {
+		"username": "crispaletta",
+    "first_name": "Cristina",
+    "last_name": "Paletta",
+    "email":"cristina.paletta@mail.mcgill.ca"
+	}
+},
+{
+  "model":"auth.user",
+  "pk":42,
+  "fields": {
+    "username": "hannahwillz",
+    "first_name": "Hannah",
+    "last_name": "Williams",
+    "email":"hannah.williams@mail.mcgill.ca"
+  }
+},
+{
+  "model":"auth.user",
+  "pk":43,
+  "fields": {
+    "username": "loradail",
+    "first_name": "Laura",
+    "last_name": "Dale",
+    "email":"laura.dale@mail.mcgill.ca"
+  }
+},
+{
+  "model":"auth.user",
+  "pk":44,
+  "fields": {
+    "username": "juliearrowsmith",
+    "first_name": "Julie",
+    "last_name": "Arrowsmith",
+    "email":"julie.arrowsmith@mail.mcgill.ca"
+  }
+},
+{
+  "model":"auth.user",
+  "pk":45,
+  "fields": {
+    "username": "charistheferris",
+    "first_name": "Charis",
+    "last_name": "Whitbourne",
+    "email":"charis.whitbourne@mail.mcgill.ca"
+  }
+},
+{
+  "model":"auth.user",
+  "pk":46,
+  "fields": {
+    "username": "alyssablovas",
+    "first_name": "Alyssa",
+    "last_name": "Lovas",
+    "email":"alyssa.lovas@mail.mcgill.ca"
+  }
+},
+{
+  "model":"auth.user",
+  "pk":47,
+  "fields": {
+    "username": "annabanana",
+    "first_name": "Anna",
+    "last_name": "Zeira",
+    "email":"anna.zeira@mail.mcgill.ca"
+  }
+},
+{
+  "model":"auth.user",
+  "pk":48,
+  "fields": {
+    "username": "fatmarge",
+    "first_name": "Marge",
+    "last_name": "The Cat",
+    "email":"marge.fat@mail.mcgill.ca"
+  }
+},
+{
+  "model":"auth.user",
+  "pk":49,
+  "fields": {
+    "username": "nicob",
+    "first_name": "Nicole",
+    "last_name": "Bernardi",
+    "email":"nicole.bernardi@mail.mcgill.ca"
+  }
+},
+{
+  "model":"auth.user",
+  "pk":500,
+  "fields": {
+    "username": "kelsmasta",
+    "first_name": "Kelsey",
+    "last_name": "Smith",
+    "email":"kelsey.smith@mail.mcgill.ca"
+  }
+},
+{
+  "model":"auth.user",
+  "pk":501,
+  "fields": {
+    "username": "alexbohner",
+    "first_name": "Alex",
+    "last_name": "Bohn",
+    "email":"alex.bohn@mail.mcgill.ca"
+  }
+},
+{
+  "model":"auth.user",
+  "pk":502,
+  "fields": {
+    "username": "hughbertsnuggleton",
+    "first_name": "Hugh",
+    "last_name": "Boyd",
+    "email":"hugh.boyd@mail.mcgill.ca"
+  }
+},
+{
+  "model":"auth.user",
+  "pk":503,
+  "fields": {
+    "username": "dwhit",
+    "first_name": "David",
+    "last_name": "Whitney",
+    "email":"david.whitney@mail.mcgill.ca"
+  }
+},
+{
+  "model":"auth.user",
+  "pk":504,
+  "fields": {
+    "username": "gatesmcquates",
+    "first_name": "Gaetan",
+    "last_name": "Ciot",
+    "email":"gaetan.ciot@mail.mcgill.ca"
+  }
+},
+{
+  "model":"auth.user",
+  "pk":505,
+  "fields": {
+    "username": "pawpawmankowkow",
+    "first_name": "Pawel",
+    "last_name": "Mankowski",
+    "email":"pawel.mankowski@mail.mcgill.ca"
+  }
+},
+{
+  "model":"auth.user",
+  "pk":506,
+  "fields": {
+    "username": "trevmasta",
+    "first_name": "Trevor",
+    "last_name": "Neirendorf",
+    "email":"trevor.neirendorf@mail.mcgill.ca"
+  }
+},
+{
+  "model":"auth.user",
+  "pk":507,
+  "fields": {
+    "username": "kbreezy",
+    "first_name": "Kris",
+    "last_name": "Brown",
+    "email":"kris.brown@mail.mcgill.ca"
+  }
+},
+{
+  "model":"auth.user",
+  "pk":508,
+  "fields": {
+    "username": "hungarianoak",
+    "first_name": "Warren",
+    "last_name": "Robinson",
+    "email":"warren.robinson@mail.mcgill.ca"
+  }
+},
+{
+  "model":"elvis.userprofile",
+  "pk":400,
+  "fields": {
+    "user": 40,
+    "picture": "morgypic.png"
+  }
+},
+{
+  "model":"elvis.userprofile",
+  "pk":410,
+  "fields": {
+    "user": 41,
+    "picture": "cristpic.png"
+  }
+},
+{
+  "model":"elvis.userprofile",
+  "pk":420,
+  "fields": {
+    "user": 42,
+    "picture": "hanpic.png"
+  }
+},
+{
+  "model":"elvis.userprofile",
+  "pk":430,
+  "fields": {
+    "user": 43,
+    "picture": "laurpic.png"
+  }
+},
+{
+  "model":"elvis.userprofile",
+  "pk":440,
+  "fields": {
+    "user": 44,
+    "picture": "julpic.png"
+  }
+},
+{
+  "model":"elvis.userprofile",
+  "pk":450,
+  "fields": {
+    "user": 45,
+    "picture": "charpic.png"
+  }
+},
+{
+  "model":"elvis.userprofile",
+  "pk":460,
+  "fields": {
+    "user": 46,
+    "picture": "alyspic.png"
+  }
+},
+{
+  "model":"elvis.userprofile",
+  "pk":470,
+  "fields": {
+    "user": 47,
+    "picture": "anpic.png"
+  }
+},
+{
+  "model":"elvis.userprofile",
+  "pk":480,
+  "fields": {
+    "user": 48,
+    "picture": "marpic.png"
+  }
+},
+{
+  "model":"elvis.userprofile",
+  "pk":490,
+  "fields": {
+    "user": 49,
+    "picture": "nicpic.png"
+  }
+},
+{
+  "model":"elvis.userprofile",
+  "pk":5000,
+  "fields": {
+    "user": 500,
+    "picture": "kelspic.png"
+  }
+},
+{
+  "model":"elvis.userprofile",
+  "pk":5001,
+  "fields": {
+    "user": 501,
+    "picture": "alexpic.png"
+  }
+},
+{
+  "model":"elvis.userprofile",
+  "pk":5002,
+  "fields": {
+    "user": 502,
+    "picture": "hughpic.png"
+  }
+},
+{
+  "model":"elvis.userprofile",
+  "pk":5003,
+  "fields": {
+    "user": 503,
+    "picture": "davpic.png"
+  }
+},
+{
+  "model":"elvis.userprofile",
+  "pk":5004,
+  "fields": {
+    "user": 504,
+    "picture": "gatepic.png"
+  }
+},
+{
+  "model":"elvis.userprofile",
+  "pk":5005,
+  "fields": {
+    "user": 505,
+    "picture": "pawpic.png"
+  }
+},
+{
+  "model":"elvis.userprofile",
+  "pk":5006,
+  "fields": {
+    "user": 506,
+    "picture": "trevpic.png"
+  }
+},
+{
+  "model":"elvis.userprofile",
+  "pk":5007,
+  "fields": {
+    "user": 507,
+    "picture": "krispic.png"
+  }
+},
+{
+  "model":"elvis.userprofile",
+  "pk":5008,
+  "fields": {
+    "user": 508,
+    "picture": "warrenpic.png"
+  }
+},
+ {
+    "model": "elvis.corpus",
+    "pk": 1,
+    "fields": {
+      "old_id": 1,
+      "creator": 410,
+      "title": "JazzCorpus",
+      "comment": "First corpus created because I love jazzy things.",
+      "picture": "jazz.png"
+    }
+  },
+  {
+    "model": "elvis.corpus",
+    "pk": 2,
+    "fields": {
+      "old_id": 1,
+      "creator": 400,
+      "title": "SwingCorpus",
+      "comment": "People love to swing dance.",
+      "picture": "swing.png"
+    }
+  },
+   {
+    "model": "elvis.composer",
+    "pk": 3,
+    "fields": {
+      "old_id": 3,
+      "name": "Art Tatum",
+      "birth_date": "1930-08-21",
+      "death_date": "1990-10-10",
+      "picture":"art_tatum.png"
+    }
+  },
+  {
+    "model": "elvis.composer",
+    "pk": 4,
+    "fields": {
+      "old_id": 4,
+      "name": "Felonious Sphere Monk",
+      "birth_date": "1917-10-10",
+      "death_date": "1982-02-17",
+      "picture": "thelonious.png"
+    }
+  },
+  {
+    "model": "elvis.composer",
+    "pk": 5,
+    "fields": {
+      "old_id": 5,
+      "name": "Miles Davis",
+      "birth_date": "1926-05-26",
+      "death_date": "1991-09-28",
+      "picture": "miles.png"
+    }
+  },
+  {
+    "model": "elvis.composer",
+    "pk": 6,
+    "fields": {
+      "old_id": 6,
+      "name": "Caravan Palace",
+      "birth_date": "1926-05-26",
+      "death_date": "2013-08-18",
+      "picture": "caravan.png"
+    }
+  },
+  {
+    "model": "elvis.composer",
+    "pk": 7,
+    "fields": {
+      "old_id": 7,
+      "name": "Parov Stelar",
+      "birth_date": "1990-10-14",
+      "death_date": "2013-10-10",
+      "picture": "parov.png"
+    }
+  },
+  {
+    "model": "elvis.composer",
+    "pk": 8,
+    "fields": {
+      "old_id": 8,
+      "name": "Frank Sinatra",
+      "birth_date": "1915-12-12",
+      "death_date": "1998-05-14",
+      "picture": "frank_sinatra.png"
+    }
+  },
+  {
+    "model": "elvis.piece",
+    "pk": 9,
+    "fields": {
+      "old_id": 9,
+      "title": "Monks Dream",
+      "uploader": 40,
+      "corpus":1,
+      "composer":4,
+      "date_of_composition":"1962-11-12",
+      "number_of_voices":3,
+      "attachments":[50],
+      "comment": "",
+      "number_of_downloads":0
+    }
+  },
+  {
+    "model": "elvis.piece",
+    "pk": 10,
+    "fields": {
+      "old_id": 10,
+      "title": "Body and Soul",
+      "uploader": 40,
+      "corpus":1,
+      "composer":4,
+      "date_of_composition":"1963-05-10",
+      "number_of_voices":4,
+      "attachments":[51],
+      "comment": "",
+      "number_of_downloads":0
+    }
+  },
+  {
+    "model": "elvis.piece",
+    "pk": 11,
+    "fields": {
+      "old_id": 11,
+      "title": "Five Spot Blues",
+      "uploader": 40,
+      "corpus":1,
+      "composer":4,
+      "date_of_composition":"1940-05-08",
+      "number_of_voices":3,
+      "attachments":[52],
+      "comment": "",
+      "number_of_downloads":0
+    }
+  },
+  {
+    "model": "elvis.piece",
+    "pk": 12,
+    "fields": {
+      "old_id": 12,
+      "title": "Freddie Freeloader",
+      "uploader": 41,
+      "corpus":1,
+      "composer":5,
+      "date_of_composition":"1990-03-01",
+      "number_of_voices":6,
+      "attachments":[53],
+      "comment": "",
+      "number_of_downloads":0
+    }
+  },
+    {
+    "model": "elvis.piece",
+    "pk": 13,
+    "fields": {
+      "old_id": 13,
+      "title": "So What",
+      "uploader": 41,
+      "corpus":1,
+      "composer":5,
+      "date_of_composition":"1981-04-01",
+      "number_of_voices":6,
+      "attachments":[54],
+      "comment": "",
+      "number_of_downloads":0
+    }
+  },
+  {
+    "model": "elvis.piece",
+    "pk": 14,
+    "fields": {
+      "old_id": 14,
+      "title": "Autumn Leaves",
+      "uploader": 41,
+      "corpus":1,
+      "composer":3,
+      "date_of_composition":"1950-04-01",
+      "number_of_voices":7,
+      "attachments":[55],
+      "comment": "",
+      "number_of_downloads":0
+    }
+  },
+    {
+    "model": "elvis.piece",
+    "pk": 15,
+    "fields": {
+      "old_id": 15,
+      "title": "Blue in Green",
+      "uploader": 41,
+      "corpus":1,
+      "composer":3,
+      "date_of_composition":"1950-08-11",
+      "number_of_voices":6,
+      "attachments":[56],
+      "comment": "",
+      "number_of_downloads":0
+    }
+  },
+    {
+    "model": "elvis.piece",
+    "pk": 16,
+    "fields": {
+      "old_id": 16,
+      "title": "Witchcraft",
+      "uploader": 41,
+      "corpus":1,
+      "composer":3,
+      "date_of_composition":"1950-03-21",
+      "number_of_voices":4,
+      "attachments":[57],
+      "comment": "",
+      "number_of_downloads":0
+    }
+  },
+   {
+    "model": "elvis.movement",
+    "pk": 17,
+    "fields": {
+      "old_id": 17,
+      "title": "MDMov",
+      "uploader": 40,
+      "piece":9,
+      "corpus":1,
+      "composer":4,
+      "date_of_composition":"1962-12-11",
+      "number_of_voices":3,
+      "attachments":[58],
+      "comment": "",
+      "number_of_downloads":0
+    }
+  },
+  {
+    "model": "elvis.movement",
+    "pk": 18,
+    "fields": {
+      "old_id": 18,
+      "title": "BSMov",
+      "uploader": 40,
+      "piece":10,
+      "corpus":1,
+      "composer":4,
+      "date_of_composition":"1963-05-10",
+      "number_of_voices":4,
+      "attachments":[59],
+      "comment": "",
+      "number_of_downloads":0
+    }
+  },
+  {
+    "model": "elvis.movement",
+    "pk": 19,
+    "fields": {
+      "old_id": 19,
+      "title": "FSBMov",
+      "uploader": 40,
+      "piece":11,
+      "corpus":1,
+      "composer":4,
+      "date_of_composition":"1940-05-08",
+      "number_of_voices":3,
+      "attachments":[60],
+      "comment": "",
+      "number_of_downloads":0
+    }
+  },
+  {
+    "model": "elvis.movement",
+    "pk": 20,
+    "fields": {
+      "old_id": 20,
+      "title": "FFMov",
+      "uploader": 41,
+      "piece":12,
+      "corpus":1,
+      "composer":5,
+      "date_of_composition":"1990-03-01",
+      "number_of_voices":6,
+      "attachments":[61],
+      "comment": "",
+      "number_of_downloads":0
+    }
+  },
+    {
+    "model": "elvis.movement",
+    "pk": 21,
+    "fields": {
+      "old_id": 21,
+      "title": "SWMov",
+      "uploader": 41,
+      "piece":13,
+      "corpus":1,
+      "composer":5,
+      "date_of_composition":"1981-04-01",
+      "number_of_voices":6,
+      "attachments":[62],
+      "comment": "",
+      "number_of_downloads":0
+    }
+  },
+  {
+    "model": "elvis.movement",
+    "pk": 22,
+    "fields": {
+      "old_id": 22,
+      "title": "ALMov",
+      "uploader": 41,
+      "piece":14,
+      "corpus":1,
+      "composer":3,
+      "date_of_composition":"1950-04-01",
+      "number_of_voices":7,
+      "attachments":[63],
+      "comment": "",
+      "number_of_downloads":0
+    }
+  },
+  {
+    "model": "elvis.movement",
+    "pk": 23,
+    "fields": {
+      "old_id": 23,
+      "title": "BGMov",
+      "uploader": 41,
+      "piece":15,
+      "corpus":1,
+      "composer":3,
+      "date_of_composition":"1950-08-11",
+      "number_of_voices":6,
+      "attachments":[64],
+      "comment": "",
+      "number_of_downloads":0
+    }
+  },
+  {
+    "model": "elvis.movement",
+    "pk": 24,
+    "fields": {
+      "old_id": 24,
+      "title": "WMov",
+      "uploader": 41,
+      "piece":16,
+      "corpus":1,
+      "composer":3,
+      "date_of_composition":"1950-03-21",
+      "number_of_voices":4,
+      "attachments":[65],
+      "comment": "",
+      "number_of_downloads":0
+    }
+  },
+  { 
+	"model":"elvis.attachment",
+	"pk":50,
+	"fields": {
+		"old_id":50,
+		"attachment":"monksdream.txt",
+		"uploader":40,
+		"description":"Monks Dream piece"
+	}
+},
+{ 
+	"model":"elvis.attachment",
+	"pk":51,
+	"fields": {
+		"old_id":51,
+		"attachment":"bodyandsoul.txt",
+		"uploader":40,
+		"description":"Body and Soul piece"
+	}
+},
+{ 
+	"model":"elvis.attachment",
+	"pk":52,
+	"fields": {
+		"old_id":52,
+		"attachment":"fivespotblues.txt",
+		"uploader":40,
+		"description":"Five Spot Blues piece"
+	}
+},
+{ 
+	"model":"elvis.attachment",
+	"pk":53,
+	"fields": {
+		"old_id":53,
+		"attachment":"freddiefreeloader.txt",
+		"uploader":40,
+		"description":"Freddie Freeloader piece"
+	}
+},
+{ 
+	"model":"elvis.attachment",
+	"pk":54,
+	"fields": {
+		"old_id":54,
+		"attachment":"sowhat.txt",
+		"uploader":40,
+		"description":"So What piece"
+	}
+},
+{ 
+	"model":"elvis.attachment",
+	"pk":55,
+	"fields": {
+		"old_id":55,
+		"attachment":"autumnleaves.txt",
+		"uploader":40,
+		"description":"Autumn Leaves piece"
+	}
+},
+{ 
+	"model":"elvis.attachment",
+	"pk":56,
+	"fields": {
+		"old_id":56,
+		"attachment":"blueingreen.txt",
+		"uploader":40,
+		"description":"Blue in Green piece"
+	}
+},
+{ 
+	"model":"elvis.attachment",
+	"pk":57,
+	"fields": {
+		"old_id":57,
+		"attachment":"witchcraft.txt",
+		"uploader":40,
+		"description":"Witchcraft piece"
+	}
+},
+{ 
+	"model":"elvis.attachment",
+	"pk":58,
+	"fields": {
+		"old_id":58,
+		"attachment":"monksdream.txt",
+		"uploader":40,
+		"description":"Monk's Dream Movement"
+	}
+},
+{ 
+	"model":"elvis.attachment",
+	"pk":59,
+	"fields": {
+		"old_id":59,
+		"attachment":"bodyandsoul.txt",
+		"uploader":40,
+		"description":"Body and Soul movement"
+	}
+},
+{ 
+	"model":"elvis.attachment",
+	"pk":60,
+	"fields": {
+		"old_id":60,
+		"attachment":"fivespotblues.txt",
+		"uploader":40,
+		"description":"Five spot blues movement"
+	}
+},
+{ 
+	"model":"elvis.attachment",
+	"pk":61,
+	"fields": {
+		"old_id":60,
+		"attachment":"freddiefreeloader.txt",
+		"uploader":40,
+		"description":"Freddie freeloader movement"
+	}
+},
+{ 
+	"model":"elvis.attachment",
+	"pk":62,
+	"fields": {
+		"old_id":60,
+		"attachment":"sowhat.txt",
+		"uploader":40,
+		"description":"So what movement"
+	}
+},
+{ 
+	"model":"elvis.attachment",
+	"pk":63,
+	"fields": {
+		"old_id":60,
+		"attachment":"autumnleaves.txt",
+		"uploader":40,
+		"description":"Autumn Leaves movement"
+	}
+},
+{ 
+	"model":"elvis.attachment",
+	"pk":64,
+	"fields": {
+		"old_id":60,
+		"attachment":"blueingreen.txt",
+		"uploader":40,
+		"description":"Blue in green movement"
+	}
+},
+{ 
+	"model":"elvis.attachment",
+	"pk":65,
+	"fields": {
+		"old_id":60,
+		"attachment":"witchcraft.txt",
+		"uploader":40,
+		"description":"Witchcraft movement"
+	}
+},
+{ 
+	"model":"elvis.download",
+	"pk":70,
+	"fields": {
+		"user":40,
+		"attachment":60
+	}
+}
+]
