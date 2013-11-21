@@ -10,7 +10,7 @@ class Movement(models.Model):
     uploader = models.ForeignKey(User, blank=True, null=True)
     piece = models.ForeignKey("elvis.Piece", blank=True, null=True)
     corpus = models.ForeignKey("elvis.Corpus", blank=True, null=True)
-    composer = models.ForeignKey("elvis.Composer", blank=True, null=True)
+    composer = models.ForeignKey("elvis.Composer", blank=True, null=True, related_name="movements")
     date_of_composition = models.DateField(blank=True, null=True)
     number_of_voices = models.IntegerField(blank=True, null=True)
     tags = models.ManyToManyField("elvis.Tag", blank=True, null=True)

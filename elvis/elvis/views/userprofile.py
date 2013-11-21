@@ -10,10 +10,6 @@ from elvis.renderers.custom_html_renderer import CustomHTMLRenderer
 class UserProfileListHTMLRenderer(CustomHTMLRenderer):
     template_name = "userprofile/userprofile_list.html"
 
-    def get_usernames(request):
-        user_objects = UserProfile.objects.all()
-        return render(request, self.template_name, {'userobjects': user_objects})
-
 
 class UserProfileDetailHTMLRenderer(CustomHTMLRenderer):
     template_name = "userprofile/userprofile_detail.html"

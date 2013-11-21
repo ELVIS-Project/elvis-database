@@ -20,6 +20,9 @@ class PieceList(generics.ListCreateAPIView):
     permission_classes = (permissions.IsAuthenticatedOrReadOnly,)
     serializer_class = PieceSerializer
     renderer_classes = (JSONRenderer, JSONPRenderer, PieceListHTMLRenderer)
+    paginate_by = 10
+    paginate_by_param = 'page_size'
+    max_paginate_by = 100
 
 
 class PieceDetail(generics.RetrieveUpdateDestroyAPIView):

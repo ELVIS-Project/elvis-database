@@ -19,6 +19,9 @@ class ComposerList(generics.ListCreateAPIView):
     permission_classes = (permissions.IsAuthenticatedOrReadOnly,)
     serializer_class = ComposerSerializer
     renderer_classes = (JSONRenderer, JSONPRenderer, ComposerListHTMLRenderer)
+    paginate_by = 20
+    paginate_by_param = 'page_size'
+    max_paginate_by = 20
 
 
 class ComposerDetail(generics.RetrieveUpdateDestroyAPIView):

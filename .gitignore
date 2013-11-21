@@ -2,3 +2,6 @@
 *.sqlite3
 solr/target/*
 elvis_env/*
+.DS_Store
+dumps
+elvis/attachments

@@ -4,87 +4,6 @@
 
 {% block wrap %}
 
-<style type="text/css">
-
-#main-result-frame {
-	-moz-box-shadow: 0 0 5px #888;
-	-webkit-box-shadow: 0 0 5px#888;
-	box-shadow: 0 0 5px #888;
-	margin-left:50px;
-	margin-right:50px;
-	margin-top:20px;
-}
-
-.corpus-picture {
-	width:280px;
-	height:200px;
-	overflow:hidden;
-}
-
-.header {
-	margin-top:20px;
-}
-
-.corpus-name {
-	font-size:2em;
-	font-weight:bold;
-}
-.corpus-dates {
-	font-size:1em;
-	font-weight:bold;
-	color:#A0A0A0;
-	margin-top:5px;
-}
-
-.last-update {
-	font-size:.85em;
-}
-
-#creator-name {
-	color:#808080;
-	text-decoration:underline;
-}
-
-#check {
-	margin-right:3px;
-	margin-bottom:5px;
-}
-
-.icon-download, .icon-download-alt {
-	margin-left:4px;
-	margin-right:10px;
-}
-
-#submit-row {
-	margin-top:50px;
-	text-align:center;
-}
-
-.edit {
-	margin-top:4px;
-}
-
-.edit,.delete {
-	font-size:.9em;
-	text-decoration:underline;
-}
-.icon-pencil,.icon-remove {
-	margin-right:3px;
-}
-
-.dostuff {
-    border: .3em solid #FFFFFF;
-    height: 4em;
-    width: 5em;
-    text-align: center;
-    background:#FFFFFF;
-    -moz-box-shadow: 0 0 5px #888;
-	-webkit-box-shadow: 0 0 5px#888;
-	box-shadow: 0 0 5px #888;
-}
-
-</style>
-
 <script type="text/javascript">
 function saveAll(source) {
   checkboxes = document.getElementsByName('piece-save');
@@ -92,8 +11,6 @@ function saveAll(source) {
     checkboxes[i].checked = source.checked;
   }
 }
-</script>
-<script type="text/javascript">
 function downloadAll(source) {
   checkboxes = document.getElementsByName('piece-download');
   for(var i=0, n=checkboxes.length;i<n;i++) {

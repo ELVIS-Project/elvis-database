@@ -1,5 +1,6 @@
 from django.contrib import admin
 
+from elvis.models.project import Project
 from elvis.models.piece import Piece
 from elvis.models.corpus import Corpus
 from elvis.models.composer import Composer
@@ -7,7 +8,13 @@ from elvis.models.tag import Tag
 from elvis.models.tag_hierarchy import TagHierarchy
 from elvis.models.attachment import Attachment
 from elvis.models.movement import Movement
+from elvis.models.userprofile import UserProfile
 
+class UserProfileAdmin(admin.ModelAdmin):
+    pass
+
+class ProjectAdmin(admin.ModelAdmin):
+    pass
 
 class PieceAdmin(admin.ModelAdmin):
     list_display = ("title", "composer", "date_of_composition", "number_of_voices", "uploader", "old_id", "corpus")
@@ -40,6 +47,9 @@ class TagHierarchyAdmin(admin.ModelAdmin):
 class AttachmentAdmin(admin.ModelAdmin):
     pass
 
+
+admin.site.register(UserProfile, UserProfileAdmin)
+admin.site.register(Project, ProjectAdmin)
 admin.site.register(TagHierarchy, TagHierarchyAdmin)
 admin.site.register(Piece, PieceAdmin)
 admin.site.register(Tag, TagAdmin)

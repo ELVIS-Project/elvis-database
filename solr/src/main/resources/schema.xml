@@ -45,7 +45,7 @@
     that avoids logging every request
 -->
 
-<schema name="duchemin-solr" version="1.5">
+<schema name="elvis-solr" version="1.5">
   <!-- attribute "name" is the name of this schema and is only used for display purposes.
        Applications should change this to reflect the nature of the search collection.
        version="x.y" is Solr's version number for the schema syntax and semantics.  It should
@@ -896,6 +896,7 @@
     <field name="type" type="string" indexed="true" stored="true" />
     <!-- Alright, alright! I'll make a field called text!! -->
     <field name="text" type="text_general" indexed="true" stored="false" multiValued="true"/>
+    <field name="item_id" type="string" indexed="true" stored="true" />
 
     <field name="composer_name" type="string" indexed="true" stored="true" />
     <field name="composer_birth" type="date" indexed="true" stored="true" />

@@ -5,7 +5,7 @@ from elvis.serializers.composer import ComposerSerializer
 
 class MovementSerializer(serializers.HyperlinkedModelSerializer):
 
-	composer = ComposerSerializer()
+    # composer = ComposerSerializer()
 
-	class Meta:
-		model = Movement
+    class Meta:
+        model = Movement
