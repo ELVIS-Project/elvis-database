@@ -3,10 +3,14 @@ from django.contrib.auth.models import User
 
 
 class Piece(models.Model):
+    class Meta:
+        app_label = "elvis"
+        ordering = ["title"]
+
     old_id = models.IntegerField(db_index=True, blank=True, null=True)
     title = models.CharField(max_length=255)
     uploader = models.ForeignKey(User, blank=True, null=True)
-    corpus = models.ForeignKey("elvis.Corpus", blank=True, null=True)
+    corpus = models.ForeignKey("elvis.Corpus", blank=True, null=True, related_name="pieces")
     composer = models.ForeignKey("elvis.Composer", db_index=True, blank=True, null=True, related_name="pieces")
     date_of_composition = models.DateField(blank=True, null=True)
     number_of_voices = models.IntegerField(blank=True, null=True)
@@ -22,6 +26,3 @@ class Piece(models.Model):
 
     def __unicode__(self):
         return u"{0}".format(self.title)
-
-    class Meta:
-        app_label = "elvis"

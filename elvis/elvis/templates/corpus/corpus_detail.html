@@ -3,92 +3,109 @@
 {% load filter_methods %}
 
 {% block wrap %}
+<div class="row">
+    <h2>{{ content.title }} <small>{{ content.pieces | length }} Pieces, {{ content.movements | length }} Movements</small></h2>
+    <p>Created by {{ content.creator.full_name }} on {{ content.created }} Last updated {{ content.updated }}</p>
+    <p>{{ content.comment }}</p>
+</div>
+<div class="row">
+    <h3>Pieces</h3>
+    <table class="table table-condensed">
+        <thead>
+            <tr>
+                <th>Title</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for piece in content.pieces %}
+                <tr>
+                    <td><a href="{{ piece.url }}">{{ piece.title }}</a></td>
+                </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
 
-<script type="text/javascript">
-function saveAll(source) {
-  checkboxes = document.getElementsByName('piece-save');
-  for(var i=0, n=checkboxes.length;i<n;i++) {
-    checkboxes[i].checked = source.checked;
-  }
-}
-function downloadAll(source) {
-  checkboxes = document.getElementsByName('piece-download');
-  for(var i=0, n=checkboxes.length;i<n;i++) {
-    checkboxes[i].checked = source.checked;
-  }
-}
-</script>
+<div class="row">
+    <h3>Movements</h3>
+    <table class="table table-condensed">
+        <thead>
+            <tr>
+                <th>Title</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for movement in content.movements %}
+                <tr>
+                    <td><a href="{{ movement.url }}">{{ movement.title }}</a></td>
+                </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+<!--         <div class="span6">
+            <div class="corpus-name">{{content.title}}</div>
+            {% with u="/userprofiles/" %}
+            <div class="corpus-dates">created {{content.created}} by <a href="{{u}}{{content.creator.id}}">{{content.creator}}</a></div>
+            {% endwith %}
+            <div>{{content.comment}}</div>
+            <br>
+            <div class="last-update">last updated {{content.updated}} </div>
 
-<div class="container-fluid" id="main-result-frame">
+            <br>
+            <div class="row-fluid">
+                <div class="span3">
+            <input type="checkbox" id="check" onClick="saveAll(this)"/> <b style="font-size:.85em;color:#CD5C5C;">save all</b> </div>
+            <div class="span4">
+            <input type="checkbox" id="check" onClick="downloadAll(this)"/> <b style="font-size:.85em;color:#CD5C5C;">download all</b><br/></div>
+            </div>
 
-<div class="row-fluid">
-	<div class="header">
-		<div class="span4">
-			<img class="corpus-picture" src="{{MEDIA_URL}}photos/corpora/{{content.picture}}" alt="pic"/>
-		</div>
-		<div class="span6">
-			<div class="corpus-name">{{content.title}}</div>
-			{% with u="/userprofiles/" %}
-			<div class="corpus-dates">created {{content.created}} by <a href="{{u}}{{content.creator.id}}">{{content.creator}}</a></div>
-			{% endwith %}
-			<div>{{content.comment}}</div>
-			<br>
-			<div class="last-update">last updated {{content.updated}} </div>
-
-			<br>
-			<div class="row-fluid">
-				<div class="span3">
-			<input type="checkbox" id="check" onClick="saveAll(this)"/> <b style="font-size:.85em;color:#CD5C5C;">save all</b> </div>
-			<div class="span4">
-			<input type="checkbox" id="check" onClick="downloadAll(this)"/> <b style="font-size:.85em;color:#CD5C5C;">download all</b><br/></div>
-			</div>
-
-		</div>
-		<div class="span2">
-			<div class="dostuff">
-				<div class="edit"><i class="icon-pencil"></i>edit</div>
-				<div class="delete"><i class="icon-remove"></i>delete</div>
-			</div>
-		</div>
-	</div>
+        </div>
+        <div class="span2">
+            <div class="dostuff">
+                <div class="edit"><i class="icon-pencil"></i>edit</div>
+                <div class="delete"><i class="icon-remove"></i>delete</div>
+            </div>
+        </div>
+    </div>
 </div>
 <br></br>
 <form method="post" name="download-save-corpora" action="">{% csrf_token %}
 <div class="row-fluid" id="lists">
-	<div class="span6">
-		<h4>Pieces from {{content.title}} ({{pieces|length}})</h4>
-		<table cellpadding="3">
-			<tbody>
-			{% for piece in pieces %}
-				<tr>
-					{% with p="/pieces/" %}
-					<td><a href="{{p}}{{piece.id}}">{{piece}}</a></td>
-					{% endwith %}
-		 			<td class="pull-right"> <input type="checkbox" value="{{piece.id}}" id="check" name="piece-download"/><i class="icon-download-alt"></i><input type="checkbox" value="{{piece.id}}" id="check" name="piece-save"/><i class="icon-download"></i>
-		 			</td>
-				</tr>
-			{% endfor %}
-			</tbody>
-		</table>
-	</div>
-	<div class="span6">
-		<h4>Movements from {{content.title}} ({{movements|length}})</h4>
-		<table cellpadding="3">
-			<tbody>
-			{% for piece in pieces %}
-			{% for movement in movements|get_value:piece.id %}
-				<tr>
-					{% with m="/movements/" %}
-					<td><a href="{{m}}{{movement.id}}">{{piece.title}}: {{movement}}</a></td>
-					{% endwith %}
-		 			<td class="pull-right"> <input type="checkbox" name="movement-download" value="{{movement.id}}" id="check"/><i class="icon-download-alt"></i><input type="checkbox" name="movement-save" value="{{movement.id}}" id="check"/><i class="icon-download"></i>
-		 			</td>
-				</tr>
-			{% endfor %}
-			{% endfor %}
-			</tbody>
-		</table>
-	</div>
+    <div class="span6">
+        <h4>Pieces from {{content.title}} ({{pieces|length}})</h4>
+        <table cellpadding="3">
+            <tbody>
+            {% for piece in pieces %}
+                <tr>
+                    {% with p="/pieces/" %}
+                    <td><a href="{{p}}{{piece.id}}">{{piece}}</a></td>
+                    {% endwith %}
+                    <td class="pull-right"> <input type="checkbox" value="{{piece.id}}" id="check" name="piece-download"/><i class="icon-download-alt"></i><input type="checkbox" value="{{piece.id}}" id="check" name="piece-save"/><i class="icon-download"></i>
+                    </td>
+                </tr>
+            {% endfor %}
+            </tbody>
+        </table>
+    </div>
+    <div class="span6">
+        <h4>Movements from {{content.title}} ({{movements|length}})</h4>
+        <table cellpadding="3">
+            <tbody>
+            {% for piece in pieces %}
+            {% for movement in movements|get_value:piece.id %}
+                <tr>
+                    {% with m="/movements/" %}
+                    <td><a href="{{m}}{{movement.id}}">{{piece.title}}: {{movement}}</a></td>
+                    {% endwith %}
+                    <td class="pull-right"> <input type="checkbox" name="movement-download" value="{{movement.id}}" id="check"/><i class="icon-download-alt"></i><input type="checkbox" name="movement-save" value="{{movement.id}}" id="check"/><i class="icon-download"></i>
+                    </td>
+                </tr>
+            {% endfor %}
+            {% endfor %}
+            </tbody>
+        </table>
+    </div>
 </div>
 
 <div class="row-fluid" id="submit-row">
@@ -96,6 +113,6 @@ function downloadAll(source) {
 </form>
 </div> 
 
-</div>
+</div> -->
 
 {% endblock %}

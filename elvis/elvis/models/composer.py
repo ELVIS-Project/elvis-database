@@ -6,6 +6,9 @@ from django.contrib.auth.models import User
 from django.db.models.signals import post_save, post_delete
 
 class Composer(models.Model):
+    class Meta:
+        app_label = "elvis"
+        ordering = ["name"]
 
     def picture_path(self, filename):
         return os.path.join("photos", "composers", filename)
@@ -23,8 +26,6 @@ class Composer(models.Model):
     def __unicode__(self):
         return u"{0}".format(self.name)
 
-    class Meta:
-        app_label = "elvis"
 
 @receiver(post_save, sender=Composer)
 def solr_index(sender, instance, created, **kwargs):

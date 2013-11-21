@@ -8,10 +8,11 @@
     <div class="list-group">
     {% for corpus in content.results %}
         <a class="list-group-item" href="{{ corpus.url }}">
+            <span class="badge">{{ corpus.pieces | length }} Pieces, {{ corpus.movements | length }} Movements</span>
             <h4 class="list-group-item-header">{{ corpus.title }}</h4>
             <p class="list-group-item-text">
                 <small>Created by {{ corpus.creator.full_name }} on {{ corpus.created }}</small><br />
-                {{ corpus.comment | truncatechars:100 }}
+                {{ corpus.comment | default_if_none:"No Comment" | truncatechars:100 }}
             </p>
         </a>
     {% endfor %}

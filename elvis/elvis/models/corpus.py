@@ -3,6 +3,10 @@ from django.contrib.auth.models import User
 
 
 class Corpus(models.Model):
+    class Meta:
+        ordering = ["title"]
+        verbose_name_plural = "corpora"
+        app_label = "elvis"
 
     def picture_path(self):
         return '/'.join('photos/corpora', self.title.__unicode__)
@@ -15,14 +19,7 @@ class Corpus(models.Model):
 
     created = models.DateTimeField(auto_now_add=True)
     updated = models.DateTimeField(auto_now=True)
-    # created = models.DateTimeField(default=datetime.now, blank=True)
-    # updated = models.DateTimeField(default=datetime.now, blank=True)
-
     picture = models.ImageField(upload_to=picture_path, null=True)
 
     def __unicode__(self):
         return u"{0}".format(self.title)
-
-    class Meta:
-        verbose_name_plural = "corpora"
-        app_label = "elvis"
