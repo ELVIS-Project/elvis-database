@@ -1,3 +1,5 @@
+from django.shortcuts import get_object_or_404
+
 from rest_framework import generics
 from rest_framework import permissions
 from rest_framework.renderers import JSONRenderer, JSONPRenderer
@@ -12,7 +14,7 @@ class DownloadListHTMLRenderer(CustomHTMLRenderer):
 
 
 class DownloadDetailHTMLRenderer(CustomHTMLRenderer):
-    template_name = "download/download_detail.html"
+    template_name = "download/download.html"
 
 
 class DownloadList(generics.ListCreateAPIView):
@@ -21,9 +23,18 @@ class DownloadList(generics.ListCreateAPIView):
     serializer_class = DownloadSerializer
     renderer_classes = (JSONRenderer, JSONPRenderer, DownloadListHTMLRenderer)
 
+    def get_queryset(self):
+        user = self.request.user
+        return Download.objects.filter(user=user)
 
-class DownloadDetail(generics.RetrieveUpdateDestroyAPIView):
+
+class DownloadDetail(generics.RetrieveAPIView):
     model = Download
     permission_classes = (permissions.IsAuthenticatedOrReadOnly,)
     serializer_class = DownloadSerializer
     renderer_classes = (JSONRenderer, JSONPRenderer, DownloadDetailHTMLRenderer)
+
+    def get_object(self):
+        user = self.request.user
+        obj = Download.objects.filter(user=user).latest("created")
+        return obj

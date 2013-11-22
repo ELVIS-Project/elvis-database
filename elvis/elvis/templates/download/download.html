@@ -1,0 +1,52 @@
+{% extends "base.html" %}
+
+{% block wrap %}
+<div class="row">
+    <div class="col-md-10">
+        <h2>Your Downloads</h2>
+        <table class="table table-condensed">
+            <thead>
+                <tr>
+                    <th>Files to download</th>
+                    <th>Composer</th>
+                    <th>Piece or Movement</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for attachment in content.attachments %}
+                    <tr>
+                        <td><a href="{{ attachment.url }}"> {{ attachment.description | default:"File" }}</a></td>
+                        {% for piece in attachment.pieces %}
+                            <td><a href="{{ piece.composer.url }}">{{ piece.composer.name }}</a></td>
+                            <td><a href="{{ piece.url }}">{{ piece.title }}</a> <span class="label label-primary">Piece</span></td>
+                        {% endfor %}
+                        {% for mvmt in attachment.movements %}
+                            <td><a href="{{ mvmt.composer.url }}">{{ mvmt.composer.name }}</a></td>
+                            <td><a href="{{ mvmt.url }}">{{ mvmt.title }}</a> <span class="label label-primary">Movement</span></td>
+                        {% endfor %}
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+        <button type="button" class="btn btn-primary">Download all</button>
+        <button type="button" class="btn btn-danger">Clear all</button>
+    </div>
+    <div class="col-md-2">
+        <h4>Download History</h4>
+        <table class="table table-condensed">
+            <thead>
+                <tr>
+                    <th></th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for download in user.downloads.items %}
+                    <tr>
+                        <td>{{ download.created }}</td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+{% endblock %}

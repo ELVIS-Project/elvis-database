@@ -7,6 +7,7 @@ class Download(models.Model):
 
     user = models.ForeignKey(User, blank=True, null=True, related_name="downloads")
     attachments = models.ManyToManyField("elvis.Attachment", blank=True, null=True, related_name="downloads")
+    created = models.DateTimeField(auto_now_add=True)
 
     def __unicode__(self):
         return u"{0}".format(self.attachments)

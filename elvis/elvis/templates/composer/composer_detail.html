@@ -20,17 +20,15 @@
             </tr>
         </thead>
         <tbody>
-            {% if content.pieces %}
-                {% for piece in content.pieces %}
-                    <tr>
-                        <td><a href="{{ piece.url }}">{{ piece.title }}</a></td>
-                    </tr>
-                {% endfor %}
-            {% else %}
-                    <tr>
-                        <td><em>No pieces</em></td>
-                    </tr>
-            {% endif %}
+            {% for piece in content.pieces %}
+                <tr>
+                    <td><a href="{{ piece.url }}">{{ piece.title }}</a></td>
+                </tr>
+            {% empty %}
+                <tr>
+                    <td><em>No pieces</em></td>
+                </tr>
+            {% endfor %}
         </tbody>
     </table>
 </div>
@@ -43,92 +41,16 @@
             </tr>
         </thead>
         <tbody>
-            {% if content.movements %}
-                {% for movement in content.movements %}
-                <tr>
-                    <td><a href="{{ movement.url }}">{{ movement.title }}</a></td>
-                </tr>
-                {% endfor %}
-            {% else %}
+            {% for movement in content.movements %}
+            <tr>
+                <td><a href="{{ movement.url }}">{{ movement.title }}</a></td>
+            </tr>
+            {% empty %}
                 <tr>
                     <td><em>No Movements</em></td>
                 </tr>
-            {% endif %}
+            {% endfor %}
         </tbody>
     </table>
 </div>
-
-{# comment #}
-<!-- <div class="row-fluid">
-    <div class="header">
-        <div class="span3">
-            <img class="composer-picture" src="{{MEDIA_URL}}photos/composers/{{content.picture}}" alt="pic"/>
-        </div>
-        <div class="span7">
-            <div class="composer-name">{{content.name}}</div>
-            <div class="composer-dates">{{content.birth_date}} - {{content.death_date}}</div>
-            <br>
-            <div class="row-fluid">
-                <div class="span3">
-            <input type="checkbox" id="check" onClick="saveAll(this)"/> <b style="font-size:.85em;color:#CD5C5C;">save all</b> </div>
-            <div class="span4">
-            <input type="checkbox" id="check" onClick="downloadAll(this)"/> <b style="font-size:.85em;color:#CD5C5C;">download all</b><br/></div>
-            </div>
-        </div>
-        <div class="span2">
-            <div class="dostuff">
-                <div class="edit"><i class="icon-pencil"></i><a href="">edit</a></div>
-                <div class="delete"><i class="icon-remove"></i><a href="JavaScript:newPopup('{{url}}delete/');">delete</a></div>
-                
-            </div>
-        </div>
-    </div>
-</div>
-<br></br>-->
-<!-- <form method="post" name="download-composers" action=""> {% csrf_token %}
-<div class="row-fluid" id="lists">
-    <div class="span6">
-        <h4>{{content.name}}'s pieces ({{pieces|length}})</h4>
-        <table cellpadding="3">
-            <tbody>
-            {% for piece in pieces %}
-                <tr>
-                    {% with p="/pieces/" %}
-                    <td><a href="{{p}}{{piece.id}}">{{piece}}</a></td>
-                    {% endwith %}
-                    <td class="pull-right"> <input type="checkbox" value="{{piece.id}}" id="check" name="download-pieces"/><i class="icon-download-alt"></i><input type="checkbox" value="{{piece.id}}" id="check" name="save-pieces"/><i class="icon-download"></i>
-                    </td>
-                </tr>
-            {% endfor %}
-            </tbody>
-        </table>
-    </div>
-    <div class="span6">
-        <h4>{{content.name}}'s movements ({{movements}})</h4>
-        <table cellpadding="3">
-            <tbody>
-            {% for piece in pieces %}
-            {% for movement in movements %}
-                <tr>
-                    {% with m="/movements/" %}
-                    <td><a href="{{m}}{{movement.id}}">{{piece.title}}: {{movement}}</a></td>
-                    {% endwith %}
-                    <td class="pull-right"> <input type="checkbox" value="{{movement.id}}" id="check" name="download-movements"/><i class="icon-download-alt"></i><input type="checkbox" value="{{movement.id}}" id="check" name="save-movements"/><i class="icon-download"></i>
-                    </td>
-                </tr>
-            {% endfor %}
-            {% endfor %}
-            </tbody>
-        </table>
-    </div>
-</div>
-
-<div class="row-fluid" id="submit-row">
-<button type="submit" value="Download" class="btn btn-primary">Download and save</button> {% csrf_token %}
-</form>
-</div> 
-
-</div>-->{# endcomment #}
-
-
 {% endblock %}

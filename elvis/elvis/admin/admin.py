@@ -9,6 +9,10 @@ from elvis.models.tag_hierarchy import TagHierarchy
 from elvis.models.attachment import Attachment
 from elvis.models.movement import Movement
 from elvis.models.userprofile import UserProfile
+from elvis.models.download import Download
+
+class DownloadAdmin(admin.ModelAdmin):
+    filter_horizontal = ('attachments',)
 
 class UserProfileAdmin(admin.ModelAdmin):
     pass
@@ -48,6 +52,7 @@ class AttachmentAdmin(admin.ModelAdmin):
     pass
 
 
+admin.site.register(Download, DownloadAdmin)
 admin.site.register(UserProfile, UserProfileAdmin)
 admin.site.register(Project, ProjectAdmin)
 admin.site.register(TagHierarchy, TagHierarchyAdmin)
