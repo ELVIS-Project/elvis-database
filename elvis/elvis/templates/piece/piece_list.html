@@ -1,18 +1,17 @@
 {% extends "base.html" %}
-{% load rest_framework %}
-{% load filter_methods %}
 
 {% block wrap %}
-<h2>Pieces</h2>
+<h2>Pieces <small>({{ content.count }})</small></h2>
 
 {% include "paginate.html" with content=content %}
 
 <div class="list-group">
 {% for piece in content.results %}
     <a href="{{ piece.url }}" class="list-group-item">
-        <h4 class="list-group-item-heading">{{ piece.title }} ({{ piece.composer.name }})</h4>
+        <span class="badge">{{ piece.movements | length }} Movements, {{ piece.attachments | length }} Attachments</span>
+        <h4 class="list-group-item-heading">{{ piece.title }} <small>({{ piece.composer.name }})</small></h4>
         <p class="list-group-item-text">
-            <small>Uploaded by {{ piece.uploader.full_name }} on {{ piece.created }}</small><br />
+            <small>Uploaded by {{ piece.uploader.username }} on {{ piece.created }}</small><br />
             {{ piece.comment | truncatechars:100 }}
         </p>
     </a>

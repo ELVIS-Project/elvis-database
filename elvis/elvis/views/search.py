@@ -23,7 +23,7 @@ class SearchView(APIView):
         querydict = request.GET
 
         s = SolrSearch(request)
-        facets = s.facets()
+        facets = s.facets([])
 
         # if we don't have a query parameter, send empty search results
         # back to the template, but still send along the facets.

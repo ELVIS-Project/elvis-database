@@ -24,6 +24,8 @@ class Attachment(models.Model):
         attempting to attach a file. If not, self.pk will not be set and all
         kinds of weirdness will take place.
     """
+    class Meta:
+        app_label = "elvis"
 
     @property
     def attachment_path(self):
@@ -43,8 +45,6 @@ class Attachment(models.Model):
 
     created = models.DateTimeField(auto_now_add=True)
     updated = models.DateTimeField(auto_now=True)
-    # created = models.DateTimeField(default=datetime.now, blank=True)
-    # updated = models.DateTimeField(default=datetime.now, blank=True)
 
     def save(self, *args, **kwargs):
         super(Attachment, self).save(*args, **kwargs)
@@ -58,6 +58,3 @@ class Attachment(models.Model):
 
     def __unicode__(self):
         return u"{0}".format(self.attachment)
-
-    class Meta:
-        app_label = "elvis"

@@ -7,6 +7,7 @@ from rest_framework.urlpatterns import format_suffix_patterns
 
 from django.contrib.staticfiles.urls import staticfiles_urlpatterns
 from elvis.views.main import home
+from elvis.views.auth import LoginFormView, logout_view
 from elvis.views.search import SearchView
 from elvis.views.project import ProjectList, ProjectDetail
 from elvis.views.download import DownloadList, DownloadDetail
@@ -31,9 +32,12 @@ urlpatterns = []
 urlpatterns += format_suffix_patterns(
     patterns('',
         url(r'^$', home, name='home'),
+        url(r'^search/', SearchView.as_view(), name="search-view"),
 
         url(r'^users/$', UserList.as_view(), name="user-list"),
         url(r'^user/(?P<pk>[0-9]+)/$', UserDetail.as_view(), name="user-detail"),
+        url(r'^login/?', LoginFormView.as_view(), name="login-form"),
+        url(r'^logout/?', logout_view),
 
         url(r'^userprofiles/$', UserProfileList.as_view(), name="userprofile-list"),
         url(r'^userprofiles/(?P<pk>[0-9]+)/$', UserProfileDetail.as_view(), name="userprofile-detail"),
@@ -43,9 +47,6 @@ urlpatterns += format_suffix_patterns(
         url(r'^pieces/$', PieceList.as_view(), name="piece-list"),
         url(r'^piece/(?P<pk>[0-9]+)/$', PieceDetail.as_view(), name="piece-detail"),
 
-        # url(r'^pieces/(?P<pk>[0-9]+)/download/$', download_piece, name="download-piece"),
-        # url(r'^pieces/(?P<pk>[0-9]+)/save/$', save_piece, name="save-piece"),
-
         url(r'^corpora/$', CorpusList.as_view(), name="corpus-list"),
         url(r'^corpus/(?P<pk>[0-9]+)/$', CorpusDetail.as_view(), name="corpus-detail"),
         url(r'^composers/$', ComposerList.as_view(), name="composer-list"),
@@ -53,8 +54,6 @@ urlpatterns += format_suffix_patterns(
 
         url(r'^movements/$', MovementList.as_view(), name="movement-list"),
         url(r'^movement/(?P<pk>[0-9]+)/$', MovementDetail.as_view(), name="movement-detail"),
-        # url(r'^movements/(?P<pk>[0-9]+)/download/$', download_movement, name="download-movement"),
-        # url(r'^movements/(?P<pk>[0-9]+)/save/$', save_movement, name="save-movement"),
 
         url(r'^attachments/$', AttachmentList.as_view(), name="attachment-list"),
         url(r'^attachment/(?P<pk>[0-9]+)/$', AttachmentDetail.as_view(), name="attachment-detail"),

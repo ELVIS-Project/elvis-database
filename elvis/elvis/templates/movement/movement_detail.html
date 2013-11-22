@@ -1,133 +1,41 @@
 {% extends "base.html" %}
-{% load rest_framework %}
-{% load filter_methods %}
 
 {% block wrap %}
 
-<style type="text/css"> 
-
-#main-result-frame {
-	-moz-box-shadow: 0 0 5px #888;
-	-webkit-box-shadow: 0 0 5px#888;
-	box-shadow: 0 0 5px #888;
-	margin-left:50px;
-	margin-right:50px;
-	margin-top:20px;
-}
-
-.upload-data {
-	color:#808080;
-	font-weight:bold;
-	margin-top:10px;
-}
-
-.title {
-	font-size:2.5em;
-}
-
-.pic {
-	height:80px;
-	width:140px;
-	overflow:hidden;
-}
-
-#header {
-	margin-top:20px;
-}
-#check {
-	margin-right:3px;
-	margin-bottom:5px;
-}
-
-#submit-row {
-	margin-top:50px;
-	text-align:center;
-}
-
-.edit {
-	margin-top:4px;
-}
-
-.edit,.delete {
-	font-size:.9em;
-	text-decoration:underline;
-}
-.icon-pencil,.icon-remove {
-	margin-right:3px;
-}
-
-.dostuff {
-    border: .3em solid #FFFFFF;
-    height: 4em;
-    width: 5em;
-    text-align: center;
-    background:#FFFFFF;
-    -moz-box-shadow: 0 0 5px #888;
-	-webkit-box-shadow: 0 0 5px#888;
-	box-shadow: 0 0 5px #888;
-}
-
-table {
-	margin: 0 auto;
-}
-
-span {
-	margin-left:2px;
-	margin-right:2px;
-}
-
-</style>
-
-<div class="container-fluid" id="main-result-frame">
-
-<div class="row-fluid" id="header">
-	<div class="span2">
-		<img class="pic" src="{{MEDIA_URL}}photos/composers/{{content.composer.picture}}" alt="pic"/> 
-	</div>
-	<div class="span8">
-		<div class="title">{{content.title}}</div>
-		{% with u="/userprofiles/" %}
-		<div class="upload-data">uploaded by <a href="{{u}}{{content.uploader.id}}">{{content.uploader}}</a> on {{content.created}}</div>
-		{% endwith %}
-	</div>
-	<div class="span2">
-		<div class="dostuff">
-			<div class="edit"><i class="icon-pencil"></i>edit</div> 
-			<div class="delete"><i class="icon-remove"></i>delete</div>
-		</div>
-	</div>
-</div>
-<br>
-<div class="row-fluid">
-	<div class="span6">
-	{% with cm="/composers/" %} {% with cp="/corpora/" %} {% with p="/pieces/" %}
-	<b>Composer:</b> <a href="{{cm}}{{content.composer.id}}">{{content.composer}}</a><br>
-	<b>Date of composition:</b> {{content.date_of_composition}} <br>
-	<b>Corpus:</b> <a href="{{cp}}{{content.corpus.id}}">{{content.corpus}}</a><br>
-	<b>Number of voices:</b> {{content.number_of_voices}} <br>
-	<b>Piece:</b> <a href="{{p}}{{content.piece.id}}">{{content.piece}}</a> <br>
-	{% endwith %}{% endwith %}{% endwith %}
-	</div>
-	<div class="span6">
-	<b>Number of downloads:</b>{{content.number_of_downloads}}<br>
-	<b>Number of queries:</b><br>
-	<b>File:</b>{% for file in content.attachments.all %} {{file}}<i class="icon-file"></i> {% endfor %}<br>
-	</div>
-</div>
-<br>
-<div class="row-fluid">
-	<span class="label">tag1</span> <span class="label label-success">tag2</span><span class="label label-warning">tag3</span><span class="label label-important">tag4</span><span class="label label-info">tag5</span><span class="label label-inverse">tag6</span>
+<div class="row">
+    <h2>{{ content.title }}</h2>
+    <p><span class="label label-primary">Movement</span> Created by {{ content.creator.full_name }} on {{ content.created }} Last updated {{ content.updated }}</p>
+    <p>{{ content.comment }}</p>
 </div>
 
-<div class="row-fluid" id="submit-row">
-<table>
-	<tr> <td> <form method="post" name="download-movement" action="download/">{% csrf_token %}
-<button type="submit" value="Download" class="btn btn-primary"><i class="icon-download-alt"></i> Download </button></form> </td>
-	<td> <form method="post" name="save-movement" action="save/">{% csrf_token %} <button type="submit" value="Save" class="btn btn-primary"><i class="icon-download"></i> Save </button></form>
-	</tr>
-</table>
-</div> 
-
+<div class="row">
+    <dl class="dl-horizontal">
+        <dt>Composer</dt>
+        <dd><a href="{{ content.composer.url }}">{{ content.composer.name }}</a></dd>
+        <dt>Date of Composition</dt>
+        <dd>{{ content.date_of_composition }}</dd>
+        <dt>Corpus</dt>
+        <dd><a href="{{content.corpus.url}}">{{ content.corpus.title }}</a></dd>
+        <dt>Number of voices:</dt>
+        <dd>{{content.number_of_voices}}</dd>
+        {% if content.piece %}
+        <dt>Piece</dt>
+        <dd><a href="{{content.piece.url}}">{{content.piece.name}}</a></dd>
+        {% endif %}
+        <dt>Tags</dt>
+        <dd>
+            {% for tag in content.tags %}
+                <a href="{{ tag.url }}">{{ tag.name }} </a>
+            {% endfor %}
+        </dd>
+        <dt>Attachments</dt>
+        <dd>
+            <ul>
+                {% for attachment in content.attachments %}
+                    <li><a href="{{ attachment.attachment }}">{{ attachment.description | default:"Download File" }}</a></li>
+                {% endfor %}
+            </ul>
+        </dd>
+    </dl>
 </div>
-
 {% endblock %}

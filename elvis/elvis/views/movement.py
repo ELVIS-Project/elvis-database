@@ -20,6 +20,10 @@ class MovementList(generics.ListCreateAPIView):
     permission_classes = (permissions.IsAuthenticatedOrReadOnly,)
     serializer_class = MovementSerializer
     renderer_classes = (JSONRenderer, JSONPRenderer, MovementListHTMLRenderer)
+    paginate_by = 20
+    paginate_by_param = 'page_size'
+    max_paginate_by = 20
+
 
 
 class MovementDetail(generics.RetrieveUpdateDestroyAPIView):

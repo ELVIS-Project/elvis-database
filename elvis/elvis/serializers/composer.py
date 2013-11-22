@@ -6,11 +6,13 @@ from elvis.models.movement import Movement
 class ComposerPieceSerializer(serializers.HyperlinkedModelSerializer):
     class Meta:
         model = Piece
+        fields = ('url', 'title')
 
 
 class ComposerMovementSerializer(serializers.HyperlinkedModelSerializer):
     class Meta:
         model = Movement
+        fields = ('url', 'title')
 
 
 class ComposerSerializer(serializers.HyperlinkedModelSerializer):

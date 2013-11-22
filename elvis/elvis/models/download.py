@@ -1,16 +1,12 @@
 from django.db import models
 from django.contrib.auth.models import User
 
-from datetime import datetime
-
 class Download(models.Model):
-	user = models.ForeignKey(User, blank=True, null=True)
-	attachment = models.ForeignKey("elvis.Attachment", blank=True, null=True)
+    class Meta:
+        app_label = "elvis"
 
-	saved = models.DateTimeField(default=datetime.now, blank=True)
+    user = models.ForeignKey(User, blank=True, null=True, related_name="downloads")
+    attachments = models.ManyToManyField("elvis.Attachment", blank=True, null=True, related_name="downloads")
 
-	def __unicode__(self):
-		return self.attachment.__unicode__
-
-	class Meta:
-		app_label = "elvis"
+    def __unicode__(self):
+        return u"{0}".format(self.attachments)

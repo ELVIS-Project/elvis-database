@@ -1,7 +1,7 @@
 {% extends "base.html" %}
 
 {% block wrap %}
-    <h2>Composers</h2>
+    <h2>Composers <small>({{ content.count }})</small></h2>
 
     {% include "paginate.html" with content=content %}
 

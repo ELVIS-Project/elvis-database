@@ -38,6 +38,7 @@ INSTALLED_APPS = (
     'django.contrib.staticfiles',
     'elvis',
     'rest_framework',
+    'rest_framework.authtoken',
     'django_extensions',
     'south'
 )

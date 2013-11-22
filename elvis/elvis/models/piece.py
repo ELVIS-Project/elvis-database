@@ -9,7 +9,7 @@ class Piece(models.Model):
 
     old_id = models.IntegerField(db_index=True, blank=True, null=True)
     title = models.CharField(max_length=255)
-    uploader = models.ForeignKey(User, blank=True, null=True)
+    uploader = models.ForeignKey(User, blank=True, null=True, related_name="pieces")
     corpus = models.ForeignKey("elvis.Corpus", blank=True, null=True, related_name="pieces")
     composer = models.ForeignKey("elvis.Composer", db_index=True, blank=True, null=True, related_name="pieces")
     date_of_composition = models.DateField(blank=True, null=True)
@@ -18,8 +18,8 @@ class Piece(models.Model):
     attachments = models.ManyToManyField("elvis.Attachment", blank=True, null=True)
     comment = models.TextField(blank=True, null=True)
 
-    number_of_queries = models.IntegerField(blank=True, null=True)
-    number_of_downloads = models.IntegerField(blank=True, null=True)
+    # number_of_queries = models.IntegerField(blank=True, null=True)
+    # number_of_downloads = models.IntegerField(blank=True, null=True)
 
     created = models.DateTimeField(auto_now_add=True)
     updated = models.DateTimeField(auto_now=True)
