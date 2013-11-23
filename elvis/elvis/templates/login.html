@@ -6,29 +6,25 @@
 <p>Your username and password didn't match. Please try again.</p>
 {% endif %}
 
-<form class="form-horizontal" method="post" action="/login">
+<form role="form" method="post" action="/login">
 {% csrf_token %}
-<div class="control-group">
-    <label class="control-label" for="id_username">
-        {{ form.username.label_tag }}
-    </label>
-    <div class="controls">
-        {{ form.username }}
+    <div class="form-group">
+        <label class="control-label" for="id_username">
+            {{ form.username.label_tag }}
+        </label>
+        <div class="controls">
+            {{ form.username }}
+        </div>
     </div>
-</div>
-<div class="control-group">
-    <label class="control-label" for="id_password">
-        {{ form.password.label_tag }}
-    </label>
-    <div class="controls">
-        {{ form.password }}
+    <div class="form-group">
+        <label for="id_password">
+            {{ form.password.label_tag }}
+        </label>
+        <div class="controls">
+            {{ form.password }}
+        </div>
     </div>
-</div>
-<div class="control-group">
-    <div class="controls">
-        <button type="submit" class="btn">Login</button>
-        <input type="hidden" name="next" value="{{ next }}" />
-    </div>
-</div>
+    <button type="submit" class="btn btn-default">Login</button>
+    <input type="hidden" name="next" value="{{ next }}" />
 </form>
 {% endblock %}
