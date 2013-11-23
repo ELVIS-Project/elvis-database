@@ -34,9 +34,10 @@ class UserPieceSerializer(serializers.HyperlinkedModelSerializer):
         fields = ('url', 'username', 'first_name', "last_name")
 
 class MovementPieceSerializer(serializers.HyperlinkedModelSerializer):
+    item_id = serializers.Field('pk')
     class Meta:
         model = Movement
-        fields = ('url', 'title')
+        fields = ('url', 'title', 'item_id')
 
 class PieceSerializer(serializers.HyperlinkedModelSerializer):
     composer = ComposerPieceSerializer()
@@ -45,6 +46,7 @@ class PieceSerializer(serializers.HyperlinkedModelSerializer):
     corpus = CorpusPieceSerializer()
     uploader = UserPieceSerializer()
     movements = MovementPieceSerializer()
+    item_id = serializers.Field("pk")
 
     class Meta:
         model = Piece

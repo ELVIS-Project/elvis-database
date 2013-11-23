@@ -15,16 +15,17 @@ class ComposerCorpusSerializer(serializers.HyperlinkedModelSerializer):
 
 class PieceCorpusSerializer(serializers.HyperlinkedModelSerializer):
     composer = ComposerCorpusSerializer()
+    number_of_movements = serializers.Field(source="number_of_movements")
     class Meta:
         model = Piece
-        fields = ("url", "title", "composer")
+        fields = ("url", "title", "composer", "number_of_movements")
 
 
 class MovementCorpusSerializer(serializers.HyperlinkedModelSerializer):
     composer = ComposerCorpusSerializer()
     class Meta:
         model = Movement
-        fields = ("url", "title", "composer")
+        fields = ("url", "title", "composer", "piece")
 
 
 class UserCorpusSerializer(serializers.HyperlinkedModelSerializer):

@@ -3,16 +3,20 @@ from elvis.models.composer import Composer
 from elvis.models.piece import Piece
 from elvis.models.movement import Movement
 
-class ComposerPieceSerializer(serializers.HyperlinkedModelSerializer):
-    class Meta:
-        model = Piece
-        fields = ('url', 'title')
-
 
 class ComposerMovementSerializer(serializers.HyperlinkedModelSerializer):
+    item_id = serializers.Field("pk")
     class Meta:
         model = Movement
-        fields = ('url', 'title')
+        fields = ('url', 'title', "item_id")
+
+
+class ComposerPieceSerializer(serializers.HyperlinkedModelSerializer):
+    movements = ComposerMovementSerializer()
+    item_id = serializers.Field("pk")
+    class Meta:
+        model = Piece
+        fields = ('url', 'title', 'movements', "item_id")
 
 
 class ComposerSerializer(serializers.HyperlinkedModelSerializer):
@@ -28,7 +32,5 @@ class ComposerSerializer(serializers.HyperlinkedModelSerializer):
                   "death_date",
                   "picture",
                   "pieces",
-                  "movements",
-                  "number_of_queries",
                   "created",
                   "updated")

@@ -39,6 +39,6 @@ class MovementSerializer(serializers.HyperlinkedModelSerializer):
     attachments = AttachmentMovementSerializer()
     corpus = CorpusMovementSerializer()
     uploader = UserMovementSerializer()
-
+    item_id = serializers.Field("pk")
     class Meta:
         model = Movement
