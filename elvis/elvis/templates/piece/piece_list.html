@@ -5,16 +5,45 @@
 
 {% include "paginate.html" with content=content %}
 
-<div class="list-group">
+<ul class="media-list">
 {% for piece in content.results %}
-    <a href="{{ piece.url }}" class="list-group-item">
-        <span class="badge">{{ piece.movements | length }} Movements, {{ piece.attachments | length }} Attachments</span>
-        <h4 class="list-group-item-heading">{{ piece.title }} <small>({{ piece.composer.name }})</small></h4>
-        <p class="list-group-item-text">
-            <small>Uploaded by {{ piece.uploader.username }} on {{ piece.created }}</small><br />
-            {{ piece.comment | truncatechars:100 }}
-        </p>
-    </a>
+    <li class="media">
+        <div class="media-body">
+            <h4 class="media-heading"><a href="{{ piece.url }}">{{ piece.title }}</a> <small>({{ piece.composer.name }})</small></h4>
+            <span class="badge">{{ piece.attachments | length }} Attachments</span>
+            {% include "includes/download-badge-inc.html" with download_type="piece" download_item_id=piece.item_id %}
+            <p>
+                <small>Uploaded by {{ piece.uploader.username }} on {{ piece.created | date:"d F Y"}}.</small>
+            </p>
+            <p>
+                {{ piece.comment }}
+            </p>
+            {% if piece.movements %}
+            <div class="btn-group">
+                <button class="btn btn-primary btn-xs dropdown-toggle" data-toggle="collapse" data-target="#movements-piece-{{ forloop.counter }}">Movements ({{ piece.movements | length }}) <span class="caret"></span></button>
+            </div>
+            <div id="movements-piece-{{ forloop.counter }}" class="collapse collapsed">
+                <table class="table table-condensed table-hover">
+                    <thead>
+                        <tr>
+                            <th></th>
+                            <th>Movement Name</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for movement in piece.movements %}
+                            <tr>
+                                <td class="small-column">{% include "includes/download-badge-inc.html" with download_type="movement" download_item_id=movement.item_id %}</td>
+                                <td><a href="{{ movement.url }}">{{ movement.title }}</a></td>
+                            </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+                <hr />
+            </div>
+            {% endif %}
+        </div>
+    </li>
 {% endfor %}
 </div>
 
