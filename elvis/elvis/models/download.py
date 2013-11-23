@@ -10,4 +10,4 @@ class Download(models.Model):
     created = models.DateTimeField(auto_now_add=True)
 
     def __unicode__(self):
-        return u"{0}".format(self.attachments)
+        return u"{0}".format(self.attachments.all())

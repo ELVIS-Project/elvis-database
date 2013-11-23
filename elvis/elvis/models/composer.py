@@ -18,7 +18,7 @@ class Composer(models.Model):
     birth_date = models.DateField(blank=True, null=True)
     death_date = models.DateField(blank=True, null=True)
     picture = models.ImageField(upload_to=picture_path, null=True)
-    number_of_queries = models.IntegerField(blank=True, null=True)
+    # number_of_queries = models.IntegerField(blank=True, null=True)
 
     created = models.DateTimeField(auto_now_add=True)
     updated = models.DateTimeField(auto_now=True)

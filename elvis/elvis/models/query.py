@@ -2,7 +2,7 @@ from django.db import models
 from datetime import datetime
 
 '''
-	TODO: query should be re-query-able, so should store more than just a string 
+    TODO: query should be re-query-able, so should store more than just a string 
 '''
 class Query(models.Model):
     query = models.CharField(max_length=255)

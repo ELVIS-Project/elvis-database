@@ -26,3 +26,6 @@ class Piece(models.Model):
 
     def __unicode__(self):
         return u"{0}".format(self.title)
+
+    def number_of_movements(self):
+        return len(self.movements.all())
