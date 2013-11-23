@@ -4,32 +4,76 @@
 <div class="row">
     <div class="col-md-10">
         <h2>Your Downloads</h2>
-        <table class="table table-condensed">
-            <thead>
-                <tr>
-                    <th>Files to download</th>
-                    <th>Composer</th>
-                    <th>Piece or Movement</th>
-                </tr>
-            </thead>
-            <tbody>
-                {% for attachment in content.attachments %}
+        <div class="row">
+            <table class="table table-condensed">
+                <thead>
                     <tr>
-                        <td><a href="{{ attachment.url }}"> {{ attachment.description | default:"File" }}</a></td>
-                        {% for piece in attachment.pieces %}
-                            <td><a href="{{ piece.composer.url }}">{{ piece.composer.name }}</a></td>
-                            <td><a href="{{ piece.url }}">{{ piece.title }}</a> <span class="label label-primary">Piece</span></td>
-                        {% endfor %}
-                        {% for mvmt in attachment.movements %}
-                            <td><a href="{{ mvmt.composer.url }}">{{ mvmt.composer.name }}</a></td>
-                            <td><a href="{{ mvmt.url }}">{{ mvmt.title }}</a> <span class="label label-primary">Movement</span></td>
-                        {% endfor %}
+                        <th>Download</th>
+                        <th>Title</th>
+                        <th>Composer</th>
+                        <th>Type</th>
+                        <th>Delete</th>
                     </tr>
-                {% endfor %}
-            </tbody>
-        </table>
-        <button type="button" class="btn btn-primary">Download all</button>
-        <button type="button" class="btn btn-danger">Clear all</button>
+                </thead>
+                <tbody>
+                    {% for attachment in content.attachments %}
+                        <tr>
+                            <td>
+                                <input type="checkbox" checked="true">
+                            </td>
+                            {% for piece in attachment.pieces %}
+                                <td><a href="{{ piece.url }}">{{ piece.title }}</a></td>
+                                <td><a href="{{ piece.composer.url }}">{{ piece.composer.name }}</a></td>
+                                <td><span class="label label-success">Piece</span></td>
+                                <td class="danger">
+                                    {% include "includes/delete-badge-inc.html" %}
+                                </td>
+                            {% endfor %}
+                            {% for mvmt in attachment.movements %}
+                                <td><a href="{{ mvmt.url }}">{{ mvmt.title }}</a></td>
+                                <td><a href="{{ mvmt.composer.url }}">{{ mvmt.composer.name }}</a></td>
+                                <td><span class="label label-info">Movement</span></td>
+                                <td class="danger">
+                                    {% include "includes/delete-badge-inc.html" %}
+                                </td>
+                            {% endfor %}
+                        </tr>
+                    {% empty %}
+                        <tr>
+                            <td colspan="4">
+                                <em>No downloads.</em>
+                            </td>
+                        </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+        <div class="row">
+            <h4>Select file types to download</h4>
+            <label class="checkbox-inline">
+                <input type="checkbox" id="mei-select" value="mei"> MEI
+            </label>
+            <label class="checkbox-inline">
+                <input type="checkbox" id="musicxml-select" value="musicxml" checked="true"> MusicXML
+            </label>
+            <label class="checkbox-inline">
+                <input type="checkbox" id="midi-select" value="midi" checked="true"> MIDI
+            </label>
+            <label class="checkbox-inline">
+                <input type="checkbox" id="pdf-select" value="pdf"> PDF
+            </label>
+            <label class="checkbox-inline">
+                <input type="checkbox" id="kern-select" value="kern"> **kern
+            </label>
+            <label class="checkbox-inline">
+                <input type="checkbox" id="kern-select" value="kern"> All others
+            </label>
+            <span class="help-block">Select which file types you wish to download. If a piece or movement does not have one of your selected file types, it will not be downloaded. Choose "all others" to download any formats that do not appear in this list.</span>
+        </div>
+        <div class="row">
+            <button id="download-all" type="button" class="btn btn-primary"><span class="glyphicon glyphicon-download"></span> Download</button>
+            <button type="button" class="btn btn-danger">Clear all</button>
+        </div>
     </div>
     <div class="col-md-2">
         <h4>Download History</h4>
@@ -49,4 +93,5 @@
         </table>
     </div>
 </div>
+
 {% endblock %}
