@@ -6,9 +6,6 @@ from rest_framework.renderers import JSONRenderer, JSONPRenderer
 from elvis.serializers.search import SearchSerializer
 from elvis.renderers.custom_html_renderer import CustomHTMLRenderer
 from elvis.helpers.solrsearch import SolrSearch
-from elvis.helpers.paginate import SolrPaginator, SolrGroupedPaginator
-from elvis.helpers.json_response import JsonResponse
-
 
 
 class SearchViewHTMLRenderer(CustomHTMLRenderer):

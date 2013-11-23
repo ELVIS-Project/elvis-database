@@ -1,5 +1,3 @@
-from django.shortcuts import get_object_or_404
-
 from rest_framework import generics
 from rest_framework import permissions
 from rest_framework.renderers import JSONRenderer, JSONPRenderer
@@ -28,7 +26,7 @@ class DownloadList(generics.ListCreateAPIView):
         return Download.objects.filter(user=user)
 
 
-class DownloadDetail(generics.RetrieveAPIView):
+class DownloadDetail(generics.RetrieveUpdateAPIView):
     model = Download
     permission_classes = (permissions.IsAuthenticatedOrReadOnly,)
     serializer_class = DownloadSerializer
@@ -38,3 +36,8 @@ class DownloadDetail(generics.RetrieveAPIView):
         user = self.request.user
         obj = Download.objects.filter(user=user).latest("created")
         return obj
+
+    def patch(self, request, *args, **kwargs):
+        print("I AM BEING PATCHED");
+        return self.partial_update(request, *args, **kwargs)
+

@@ -20,6 +20,9 @@ class UserList(generics.ListCreateAPIView):
     permission_classes = (permissions.IsAuthenticatedOrReadOnly,)
     serializer_class = UserSerializer
     renderer_classes = (JSONRenderer, JSONPRenderer, UserListHTMLRenderer)
+    paginate_by = 10
+    paginate_by_param = 'page_size'
+    max_paginate_by = 100
 
 
 class UserDetail(generics.RetrieveUpdateDestroyAPIView):
