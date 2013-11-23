@@ -13,11 +13,20 @@
 
 
         <!-- Place favicon.ico and apple-touch-icon.png in the root directory -->
-        <link rel="stylesheet" href="{{ STATIC_URL }}css/bootstrap.min.css" rel="stylesheet" media="screen">
+        <link rel="stylesheet" href="{{ STATIC_URL }}css/themes/yeti/bootstrap.min.css" rel="stylesheet" media="screen">
+        <link rel="stylesheet" href="{{ STATIC_URL }}css/style.css" rel="stylesheet" media="screen" />
         <script src="{{ STATIC_URL }}js/jquery-1.9.1.min.js"></script>
         <script src="{{ STATIC_URL }}js/modernizr-2.6.2.min.js"></script>
         <script src="{{ STATIC_URL }}js/bootstrap.min.js"></script>
         <script src="{{ STATIC_URL }}js/holder.js"></script>
+        <script src="{{ STATIC_URL }}js/elvis-download-manager.js"></script>
+
+        <script type="text/javascript">
+            $(document).ready(function ($) {
+                // initialize the download manager script
+                initializeDownloadBadges();
+            });
+        </script>
     </head>
     
     <body>
@@ -25,24 +34,31 @@
             <div class="navbar-header">
                 <a class="navbar-brand" href="/">ELVIS</a>
             </div>
-                    
+
             <div class="navbar-collapse collapse">
                 <ul class="nav navbar-nav">
                     <li><a href="/about">About</a></li>
                     <li><a href="/projects">Projects</a></li>
                     <li><a href="/queries">Queries</a></li>
-                    <li id="separator"><a href="/userprofiles">Everyone</a></li>
-                    <li><a href="#">Me</a></li>
                 </ul>
                 <ul class="nav navbar-nav navbar-right">
                 {% if user.is_authenticated %}
+                    <li>
+                        {% with download_num=user.downloads.all.first.attachments.all %}
+                        <a href="/downloads">
+                            <span class="glyphicon glyphicon-circle-arrow-down"></span> Downloads
+                        ({{ download_num | length }})
+                        </a>
+                        {% endwith %}
+                    </li>
                     <li class="dropdown">
                         <a href="#" class="dropdown-toggle" data-toggle="dropdown">Welcome {{ user.username }} <b class="caret"></b></a>
                         <ul class="dropdown-menu">
-                            <li><a href="/downloads">Downloads</a></li>
                             <li class="divider"></li>
                             <li><a href="/user/{{ user.id }}">Account Settings</a></li>
                             <li><a href="/logout/">Logout</a></li>
+                            <li id="separator"></li>
+                            <li><a href="/user-profiles">View other users</a></li>
                         </ul>
                     </li>
                 {% else %}
@@ -64,7 +80,7 @@
                         <li><a href="/corpora">Corpora</a></li>
                         <li><a href="/composers">Composers</a></li>
                         <li><a href="/pieces">Pieces</a></li>
-                        <li><a href="/movements">Movements</a></li>
+                        <!-- <li><a href="/movements">Movements</a></li> -->
                     </ul>
                 </div>
 
