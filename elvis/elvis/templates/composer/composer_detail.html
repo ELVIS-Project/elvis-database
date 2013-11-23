@@ -3,54 +3,54 @@
 {% block wrap %}
 <div class="row">
     <div class="col-md-2">
-        <img data-src="holder.js/100x100/text:No Picture" />
-        <!-- <img src="{{ content.picture }}" /> -->
+        {% if content.picture %}
+            <img src="{{ content.picture }}" />
+        {% else %}
+            <img data-src="holder.js/100x100/text:No Picture" />
+        {% endif %}
     </div>
     <div class="col-md-10">
-        <h2>{{ content.name }} <small>({{ content.birth_date }}&ndash;{{ content.death_date}})</small></h2>
+        <h2>{{ content.name }} <small>({{ content.birth_date | date:"Y" }}&ndash;{{ content.death_date | date:"Y" }})</small></h2>
     </div>
 </div>
 
+
 <div class="row">
-    <h3>Pieces</h3>
-    <table class="table">
-        <thead>
-            <tr>
-                <th>Title</th>
-            </tr>
-        </thead>
-        <tbody>
-            {% for piece in content.pieces %}
+    <div class="col-md-12">
+        <h3>Pieces</h3>
+        <table class="table table-hover">
+            <thead>
                 <tr>
-                    <td><a href="{{ piece.url }}">{{ piece.title }}</a></td>
+                    <th></th>
+                    <th>Title</th>
                 </tr>
-            {% empty %}
-                <tr>
-                    <td><em>No pieces</em></td>
-                </tr>
-            {% endfor %}
-        </tbody>
-    </table>
-</div>
-<div class="row">
-    <h3>Movements</h3>
-    <table class="table">
-        <thead>
-            <tr>
-                <th>Title</th>
-            </tr>
-        </thead>
-        <tbody>
-            {% for movement in content.movements %}
-            <tr>
-                <td><a href="{{ movement.url }}">{{ movement.title }}</a></td>
-            </tr>
-            {% empty %}
-                <tr>
-                    <td><em>No Movements</em></td>
-                </tr>
-            {% endfor %}
-        </tbody>
-    </table>
+            </thead>
+            <tbody>
+                {% for piece in content.pieces %}
+                    <tr>
+                        <td class="small-column">
+                            {% include "includes/download-badge-inc.html" with download_type="piece" download_item_id=piece.item_id %}
+                        </td>
+                        <td>
+                            <a href="{{ piece.url }}">{{ piece.title }}</a>
+                            {% if piece.movements %}
+                            <h5>Movements</h5>
+                                <ul>
+                                {% for movement in piece.movements %}
+                                    <li>{% include "includes/download-badge-inc.html" with title="" download_type="movement" download_item_id=movement.item_id %}<a href="{{ movement.url }}"> {{ movement.title }}</a>
+                                    </li>
+                                {% endfor %}
+                                </ul>
+                            {% endif %}
+                        </td>
+                    </tr>
+                {% empty %}
+                    <tr>
+                        <td><em>No pieces</em></td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
 </div>
 {% endblock %}

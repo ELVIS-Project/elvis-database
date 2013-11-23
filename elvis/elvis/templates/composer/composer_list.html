@@ -5,18 +5,25 @@
 
     {% include "paginate.html" with content=content %}
 
-    <div class="list-group">
+    <ul class="media-list">
     {% for composer in content.results %}
-        <a class="list-group-item" href="{{ composer.url }}">
-            <h4 class="list-group-item-heading">{{ composer.name }} <small>({{ composer.birth_date|default_if_none:"n.d." }}&ndash;{{ composer.death_date|default_if_none:"n.d." }})</small></h4>
-            <p class="list-group-item-text">
+        <li class="media">
+            <a class="pull-left" href="#">
                 {% if composer.picture %}
-                    <img src="{{ composer.picture }}" />
+                <img src="{{ composer.picture }}" class="media-object" />
+                {% else %}
+                <img data-src="holder.js/100x100/text:No Picture" class="media-object" />
                 {% endif %}
-            </p>
-        </a>
+            </a>
+            <div class="media-body">
+                <h4 class="media-heading"><a href="{{ composer.url }}">{{ composer.name }}</a> <small>({{ composer.birth_date | date:"Y" }}&ndash;{{ composer.death_date | date:"Y" }})</small></h4>
+                <span class="badge">{{ composer.pieces | length }} Pieces</span>
+                <p>
+                </p>
+            </div>
+        </li>
     {% endfor %}
-    </div>
+    </ul>
 
     {% include "paginate.html" with content=content %}
 
