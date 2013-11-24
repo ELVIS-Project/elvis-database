@@ -6,7 +6,8 @@ class TagHierarchy(models.Model):
     parent = models.ForeignKey("elvis.Tag", related_name="has_hierarchy", blank=True, null=True)
 
     def __unicode__(self):
-        return u"{0}:{1}".format(self.tag.name, self.parent.name)
+    	parent = self.parent.name if self.parent else ""
+        return u"{0}:{1}".format(self.tag.name, parent)
 
     class Meta:
         app_label = "elvis"

@@ -1,26 +1,16 @@
-import sys, operator
+
 import elvis.models
 
-from django.shortcuts import render
-from django.http import HttpResponse
-from django.http import HttpResponseRedirect
-from django.db.models import Q
-from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
-
+from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.models import User
-from elvis.models.attachment import Attachment
-from elvis.models.composer import Composer
+from django.shortcuts import render
+from django.db.models import Q
+from django.http import HttpResponseRedirect
+
 from elvis.models.download import Download
-from elvis.models.comment import Comment
 from elvis.models.userprofile import UserProfile
-from elvis.models.project import Project
-from elvis.models.todo import Todo
-from elvis.models.discussion import Discussion
-from elvis.models.comment import Comment
-from elvis.models.query import Query
-from elvis.views.corpus import Corpus
-from elvis.views.piece import Piece
-from elvis.views.movement import Movement
+
+from elvis.utils.helpers import sendemails, createTempUser
 
 '''
 def get_models(models):
@@ -38,15 +28,50 @@ MODELS = get_models(dir(elvis.models))
 MODEL_INFO = model_dict(MODELS)
 '''
 
-# USER = User.objects.get(pk=40)
-USER = None
-
-# Default number of results per page. Used for pagination 
-RESULT_PER_PAGE = 25
+USER = UserProfile.objects.get(id=90)
+URL = "http://localhost:8000/"
 
 # Render the home page 
 def home(request):
     return render(request, "home.html", {})
+
+# Render the login page 
+def user_login(request):
+    context = {}
+    if request.method == 'POST':
+        username = request.POST['username']
+        password = request.POST['password']
+        user = authenticate(username=username, password=password)
+        if user and user.is_active:
+            login(request, user)
+            return HttpResponseRedirect('/home/')
+        else:
+            context = {"error_message": "Wrong username or password."}
+    return render(request, 'registration/login.html', context)
+
+# TODO: If want to save anything from current session, do that after logout
+def user_logout(request):
+    logout(request)
+
+# TODO: Message body 
+def request_permission(request):
+    context = {}
+    if request.method == 'POST':
+        first_name = request.POST['first-name']
+        last_name = request.POST['last-name']
+        email = request.POST['email']
+        # First create a temporary (inactive) user object for this user
+        # This will be activated once the admin sets permissions and once the user receives a confirmation email 
+        user, userprofile = createTempUser(first_name, last_name, email)
+        # Then send email to admin 
+        subject = first_name + " " + last_name + " would like to join ELVIS."
+        message = "Go to " + URL + "registration" + " to allow or disallow the user to join and set permissions."
+        val = sendemails(email, [USER.user.email], subject, message)
+        if val:
+            context = {'success': 'Your email has been sent.'}
+        else:
+            context = {'failure': 'Something went wrong.'}
+    return render(request, 'registration/permission.html', context)
 
 # Render the upload page 
 def upload(request):
@@ -60,12 +85,6 @@ def relevant_field(field):
     field = str(field)
     return 'CharField' in field or 'TextField' in field
 
-# Partition data into rows. Used for template organization
-def partition(data, row):
-    partitioned_data = []
-    for x in range(0, len(data), row):
-        partitioned_data.append(data[x:x+row])
-    return partitioned_data
 
 # TODO: Can reduce complexity by hardcoding FK-relations? 
 # TODO: This is bad since PKs can be the same within different tables, so REDO THIS 
@@ -91,30 +110,6 @@ def get_related(querysets, filters):
                     qset = reduce(operator.or_, (Q(**{field: query}) for field, query in query_vals))
                     results.append(model.objects.filter(qset))
     return results
-
-'''
-# TODO: Can reduce complexity by hardcoding DateField relations? 
-# TODO: Can get class names from meta class. what about predefined classes like User? 
-def filter_dates(querysets, start, end, alldb=False):
-    # This means should only look at dates related to objects found
-    if not alldb:
-        # Iterate through each query set and get all related pk's w/ dates
-        for queryset in querysets:
-            for result in queryset:
-
-
-    # Otherwise just return all objects in this range
-    else:
-'''
-
-'''
-def filter_voices(results, voices, alldb=False):
-    # This means should only look at voices related to objects found
-    if results:
-        
-    # Otherwise just return all objects with this number of voices
-    else:
-'''
 
 
 '''
@@ -228,307 +223,6 @@ def queries(request):
     return render(request, 'query.html', {"content": queries})
 
 
-'''
-USER PROFILES
-'''
-
-# Render list of user profiles
-def user_profiles(request):
-    userprofiles = UserProfile.objects.all()
-    userprofiles_list = partition(userprofiles, 4)
-    return render(request, 'userprofile/userprofile_list.html', {'content': userprofiles_list, 'length':len(userprofiles)})
-
-def user_view(request, pk):
-    user = UserProfile.objects.filter(pk=pk)[0]
-    return render(request, 'userprofile/userprofile_detail.html', {'content':user})
-
-'''
-PROJECTS
-'''
-
-def projects_list(request):
-    projects = Project.objects.all()
-    projects_list = partition(projects, 3)
-    return render(request, 'project/project_list.html', {'projects': projects_list, 'length':len(projects)})
-
-def project_view(request, pk):
-    project = Project.objects.filter(pk=pk)[0]
-    todos = Todo.objects.filter(project_id=pk)
-    discussions = Discussion.objects.filter(project_id=pk)
-    comments = {}
-    for discussion in discussions:
-        comments[discussion.id] = Comment.objects.filter(discussion_id=discussion.id).order_by('-created')
-    context = {'content':project, 
-                'todos': todos, 
-                'discussions':discussions, 
-                'comments':comments}
-    return render(request, 'project/project_detail.html', context)
-
-def project_participants(request, pk):
-    project = Project.objects.filter(pk=pk)[0]
-    return render(request, 'project/project_participants.html', {"content": project})
-
-def project_discussions(request, pk):
-    project = Project.objects.filter(pk=pk)[0]
-    discussions = Discussion.objects.filter(project_id=pk)
-    num_comments = {}
-    for discussion in discussions:
-        num_comments[discussion.id] = Comment.objects.filter(discussion_id=discussion.id).count()
-    context = {"project": project, 
-                "discussions": discussions,
-                "comments": num_comments}
-    return render(request, 'project/project_discussions.html', context)
-
-def discussion_view(request, pk, did):
-    if request.method == "POST":
-        comment = request.POST.get('comment')
-        obj = Comment(name='', text=comment, user_id=400, discussion_id=did)
-        obj.save()
-    project = Project.objects.get(pk=pk)
-    discussion = Discussion.objects.get(pk=did)
-    comments = Comment.objects.filter(discussion_id=did)
-    context = {"project": project, "discussion": discussion, "comments": comments}
-    return render(request, 'discussion/discussion_detail.html', context)
-
-'''
-MODEL LISTS
-'''
-
-# Utility method to sort objects by filters
-def sort_objects(object_name, val):
-    if val is None or val == u"0" or val == u"most":
-        return object_name.objects.all()
-    else:
-        return object_name.objects.all().order_by(val)
-
-# Utility method to paginate a query set 
-def paginate(objects, GET, num=RESULT_PER_PAGE):
-    paginator = Paginator(objects, num)
-    page = GET.get("page")
-    try:
-        object_list = paginator.page(page)
-    except PageNotAnInteger:
-        object_list = paginator.page(1)
-    except EmptyPage:
-        object_list = paginator.page(paginator.num_pages)
-    return object_list
-
-def corpora_list(request):
-    val = None
-    if request.method == "POST":
-        val = request.POST.get('sorting')
-        save_corpus(request.POST.getlist('save-items'))
-
-    corpora = paginate(sort_objects(Corpus, val), request.GET)
-
-    if val == u'most':
-        corp = map(lambda corpus:(Piece.objects.filter(corpus_id=corpus.id).count(), corpus), corpora)
-        corp.sort()
-        corpora = paginate([c[1] for c in corp], request.GET)
-
-    return render(request, 'corpus/corpus_list.html', {"content":corpora})
-
-def corpora_list_min(request):
-    val = None
-    if request.method == "POST":
-        val = request.POST.get('sorting')
-        save_corpus(request.POST.getlist('save-items'))
-
-    corpora = paginate(sort_objects(Corpus, val), request.GET)
-
-    if val == u'most':
-        corp = map(lambda corpus:(Piece.objects.filter(corpus_id=corpus.id).count(), corpus), corpora)
-        corp.sort()
-        corpora = paginate([c[1] for c in corp], request.GET)
-
-    return render(request, 'corpus/corpus_list_min.html', {"content":corpora})
-
-# TODO: when sort value = most
-def composer_list(request):
-    val = None
-    if request.method == "POST":
-        val = request.POST.get('sorting')
-        save_composer(request.POST.getlist('save-items'))
-    if val == u'most':
-        comp = []
-
-    composers = paginate(sort_objects(Composer, val), request.GET)
-    pieces = {}
-
-    for composer in composers:
-        p = map(lambda x:x.title, list(Piece.objects.filter(composer_id=composer.id)))[:15]
-        if val == u'most':
-            comp.append( (len(p), composer) )
-        if p:
-            pieces[composer.id] = ', '.join(p)+'...'
-        else:
-            pieces[composer.id] = ''
-
-    if val == u'most':
-        comp.sort(reverse=True)
-        composers = paginate([c[1] for c in comp], request.GET)
-
-    context = {"content": composers, "pieces":pieces }
-
-    return render(request, 'composer/composer_list.html', context)
-
-# TODO: when sort value = most
-def composer_list_min(request):
-    val = None
-    if request.method == "POST":
-        val = request.POST.get('sorting')
-        save_composer(request.POST.getlist('save-items'))
-    if val == u'most':
-        comp = []
-
-    composers = paginate(sort_objects(Composer, val), request.GET)
-
-    if val == u'most':
-        comp.sort(reverse=True)
-        composers = paginate([c[1] for c in comp], request.GET)
-
-    context = {"content": composers }
-
-    return render(request, 'composer/composer_list_min.html', context)
-
-def piece_list(request):
-    val = None
-    if request.method == "POST":
-        val = request.POST.get('sorting')
-        save_pieces(request.POST.getlist('save-pieces'))
-
-    pieces = paginate(sort_objects(Piece, val), request.GET, num=40)
-
-    return render(request, 'piece/piece_list.html', {"content": pieces})
-
-def movement_list(request):
-    val = None
-    if request.method == "POST":
-        val = request.POST.get('sorting')
-        save_movements(request.POST.getlist('save-movements'))
-
-    movements = paginate(sort_objects(Movement, val), request.GET, num=40)
-
-    return render(request, 'movement/movement_list.html', {"content":movements})
-
-# Download has attachment associated with either piece or movement
-def download_list(request):
-    if request.method == 'POST':
-        dl_ids = request.POST.getlist('download-item')
-        for dl_id in dl_ids:
-            Download.objects.get(pk=int(str(dl_id))).delete()
-
-    downloads = paginate(Download.objects.all(), request.GET, num=40)
-
-    return render(request, 'download/download_list.html', {"content": downloads})
-
-'''
-SAVE Utility functions
-'''
-
-# TODO: This should probably take a piece object not str/int
-# Causes superfluous querying of db from save_corpus/composer/etc
-def save_piece(piece):
-    p = Piece.objects.get(pk=int(piece))
-    # Save all of a piece's movements
-    movs = Movement.objects.filter(piece_id=int(piece))
-    if movs:
-        for m in movs.all():
-            for attachment in m.attachments.all():
-                dl = Download(user=USER, attachment=attachment)
-                dl.save()
-    # If piece has attachment, save this
-    else:
-        attachments = p.attachments.all()
-        if attachments:
-            for attachment in attachments:
-                dl = Download(user=USER, attachment=attachment)
-                dl.save()
-
-def save_movement(movement):
-    m = Movement.objects.get(pk=int(movement))
-    for attachment in m.attachments.all():
-        dl = Download(user=USER, attachment=attachment)
-        dl.save()
-
-def save_pieces(pieces):
-    if pieces:
-        for piece in pieces:
-            save_piece(piece)
-
-def save_movements(movements):
-    if movements:
-        for movement in movements:
-            save_movement(movement)
-
-def save_corpus(corpora):
-    if corpora:
-        for corpus in corpora:
-            pieces = Piece.objects.filter(corpus_id=int(corpus))
-            for piece in pieces:
-                save_piece(piece.id)
-
-def save_composer(composers):
-    if composers:
-        for composer in composers:
-            pieces = Piece.objects.filter(composer_id=int(composer))
-            for piece in pieces:
-                save_piece(piece.id)
-
-'''
-MODEL DETAILS
-'''
-
-def corpus_view(request, pk):
-    if request.method == 'POST':
-        save_pieces(request.POST.getlist('piece-save'))
-        save_movements(request.POST.getlist('movement-save'))
-        dl_piece = request.POST.getlist('piece-download')
-        dl_movement = request.POST.getlist('movement-download')
-
-        return HttpResponseRedirect('/downloads/')
-
-    corpus = Corpus.objects.get(pk=pk)
-    pieces = Piece.objects.filter(corpus_id=pk)
-    movements = {}
-    for piece in pieces:
-        movements[piece.id] = Movement.objects.filter(piece_id=piece.id)
-    context = {'content':corpus,
-                'pieces':pieces,
-                'movements':movements,
-                'url': request.build_absolute_uri()}
-    return render(request, 'corpus/corpus_detail.html', context)
-
-def composer_view(request, pk):
-    if request.method == 'POST':
-        save_pieces(request.POST.getlist('save-pieces'))
-        save_movements(request.POST.getlist('save-movements'))
-        dl_piece = request.POST.getlist('download-pieces')
-        dl_movement = request.POST.getlist('download-movements')
-
-        return HttpResponseRedirect('/downloads/')
-
-    composer = Composer.objects.get(pk=pk)
-    pieces = Piece.objects.filter(composer_id=pk)
-    movements = {}
-    for piece in pieces:
-        movements[piece.id] = Movement.objects.filter(piece_id=piece.id)
-    context = {'content':composer,
-                'pieces':pieces,
-                'movements':movements,
-                'url': request.build_absolute_uri()}
-    return render(request, 'composer/composer_detail.html', context)
-
-def piece_view(request, pk):
-    piece = Piece.objects.get(pk=pk)
-    movements = Movement.objects.filter(piece_id=pk)
-    url = request.build_absolute_uri()
-    return render(request, 'piece/piece_detail.html', {'content':piece, 'movements':movements, 'url':url})
-
-def movement_view(request, pk):
-    movement = Movement.objects.get(pk=pk)
-    url = request.build_absolute_uri()
-    return render(request, 'movement/movement_detail.html', {'content':movement, 'url':url})
 
 '''
 DOWNLOADS

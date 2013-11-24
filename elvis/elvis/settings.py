@@ -23,6 +23,8 @@ DATABASES = {
     }
 }
 
+SOLR_SERVER = "http://localhost:8983/solr"
+
 # Path to fixture. Used for testing 
 # FIXTURE_DIRS = (
 #    'fixtures/initial_data.json',
@@ -158,21 +160,14 @@ INSTALLED_APPS = (
     # 'django.contrib.admindocs',
 )
 
-'''
-HAYSTACK_CONNECTIONS = {
-    'default': {
-        'ENGINE': 'haystack.backends.solr_backend.SolrEngine',
-        'URL': 'http://127.0.0.1:8983/solr'
-        # ...or for multicore...
-        # 'URL': 'http://127.0.0.1:8983/solr/mysite',
-    },
-}
+# Sending emails
+EMAIL_HOST = 'smtp.gmail.com'
+EMAIL_HOST_USER = 'elvismusicsite@gmail.com'
+EMAIL_HOST_PASSWORD = 'elvismusic'
+EMAIL_PORT = 587
+EMAIL_USE_TLS = True
 
-
-HAYSTACK_SEARCH_ENGINE = 'solr'
-HAYSTACK_SITECONF = 'elvis.search_sites'
-HAYSTACK_SOLR_URL = 'http://127.0.0.1:8983/solr'
-'''
+LOGIN_URL = "/login/"
 
 # A sample logging configuration. The only tangible logging
 # performed by this configuration is to send an email to

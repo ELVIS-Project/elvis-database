@@ -1,0 +1,92 @@
+<style type="text/css">
+
+body {
+	background-color:#FFF8DC;
+	font-family:sans-serif;
+}
+ 
+#header {
+	background-color:#ADD8E6;
+}
+#header-error {
+	background-color:#CD5C5C;
+}
+.error {
+	color:#FFFFFF;
+	font-weight:bold;
+	text-align:center;
+	font-size:.8em;
+	padding-top:10px;
+	padding-bottom:10px;
+}
+.instruction {
+	text-align:center;
+	font-weight:bold;
+	font-size:.8em;
+	padding-top:10px;
+	padding-bottom:10px;
+}
+
+#id_name, #id_birth_date, #id_death_date {
+	border:0;
+	background:none;
+	outline:0;
+}
+#id_name {
+	font-size:1.5em;
+}
+#id_birth_date, #id_death_date {
+	font-size:.9em;
+}
+
+#date-examples {
+	font-size:.6em;
+}
+
+#composer-name, #composer-dates, #composer-picture {
+	margin-left:20px;
+	margin-right:20px;
+}
+#composer-name, #composer-name-error {
+	border-bottom:solid;
+	border-width:1px;
+}
+#composer-name-error, #bd-error {
+	font-color:#CD5C5C;
+}
+#bd, #bd-error {
+	border-bottom:dotted;
+	border-width:1px;
+}
+.submit {
+	text-align:center;
+}
+
+.default-pic {
+	height:50px;
+	width:70px;
+	overflow:hidden;
+}
+
+</style>
+
+<body>
+<div class="container-fluid">
+
+<div class="row-fluid" id="header">
+	<h4 class="instruction">INVITE USERS TO A PROJECT</h4>
+</div>
+
+<form action="" method="post">
+    <div class="row-fluid" id="composer-name">{{ form.name }}</div>
+    <br><br>
+
+<div class="submit">
+    {% csrf_token %}
+    <button type="submit" value="Download" class="btn btn-primary">Invite</button>
+	</div>
+</div>
+
+</form>
+
+</body>

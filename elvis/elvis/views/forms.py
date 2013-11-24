@@ -5,15 +5,13 @@ from random import choice
 from django.shortcuts import render
 from django.http import HttpResponse
 from django.http import HttpResponseRedirect
-from django.core.mail import send_mail
 from django.core.servers.basehttp import FileWrapper
-from django.core.files import File
+from django.contrib.auth.decorators import login_required
 
 import elvis.models 
 
 from elvis.forms.entity import ComposerForm, CorpusForm, PieceForm, MovementForm, AttachmentForm
-from elvis.forms.user import UserForm, InviteUserForm
-from elvis.forms.project import ProjectForm, DiscussionForm, CommentForm, TodoForm
+from elvis.forms.project import ProjectForm
 
 from django.contrib.auth.models import User
 from elvis.models.composer import Composer
@@ -23,6 +21,7 @@ from elvis.models.piece import Piece
 from elvis.models.download import Download
 from elvis.models.movement import Movement
 from elvis.models.tag import Tag
+from elvis.models.project import Project
 
 '''
 Views that create and add an entity to the database 
@@ -82,10 +81,13 @@ def tag_handler(tags):
 			for tag_object in tag_objects:
 				found = False
 				for tag in tag_list:
-					if tag == str(tag_object.name).strip():
-						new_tags.append(tag_object)
-						found = True
-						break
+					try:
+						if tag == str(tag_object.name).strip():
+							new_tags.append(tag_object)
+							found = True
+							break
+					except UnicodeEncodeError:	# There's probably an accent 
+						continue
 				if not found:
 					tag_instance = Tag(name=tag)
 					tag_instance.save()
@@ -110,8 +112,11 @@ def object_handler(model, string):
 def composer_handler(composer):
 	if composer:
 		for c in Composer.objects.all():
-			if str(c.name) == str(composer):
-				return c
+			try:
+				if str(c.name) == str(composer):
+					return c
+			except UnicodeEncodeError:
+				continue
 		composer_instance = Composer(name=composer)
 		composer_instance.save()
 		return composer_instance
@@ -319,25 +324,34 @@ def user_handler(users):
 def create_project(request):
 	if request.method == 'POST':
 		form = ProjectForm(request.POST)
-		clean_form = form.cleaned_data
+		if form.is_valid():
+			clean_form = form.cleaned_data
 
-		# Get users invited to this project
-		users = user_handler(clean_form.get('users'))
+			# Get users invited to this project
+			users = user_handler(clean_form.get('users'))
 
-		# Create project - name, descrip, users
-		project = Project(name=clean_form['title'],
-							description=clean_form.get('description') )
-		# Save for now, add users later 
-		project.save()
+			# Create project - name, descrip, users
+			project = Project(name=clean_form['name'],
+								description=clean_form.get('description') )
+			# Save for now, add users later 
+			project.save()
+			return HttpResponseRedirect('/projects/')
 	else:
 		form = ProjectForm(initial={'name':'Name this project',
 									'description':'Describe this project' })
 	return render(request, 'forms/project.html', {'form':form})
 
 
+def inviteUsersToProject(request): 
+	return render(request, 'project/snippets/invite_users.html', {})
+
+def deleteProject(request):
+	return render(request, 'project/snippets/delete_project.html', {})
+
 '''
 Views that upload files to file system
 '''
+#@login_required
 def upload_file(request):
 	if request.method == 'POST':
 		form = AttachmentForm(request.POST, request.FILES)

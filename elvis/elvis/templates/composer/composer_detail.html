@@ -13,6 +13,7 @@
 	margin-left:50px;
 	margin-right:50px;
 	margin-top:20px;
+	background-color: #FFFFFF;
 }
 
 .composer-picture {
@@ -112,7 +113,7 @@ function downloadAll(source) {
 <div class="row-fluid">
 	<div class="header">
 		<div class="span3">
-			<img class="composer-picture" src="{{MEDIA_URL}}photos/composers/{{content.picture}}" alt="pic"/>
+			<img class="composer-picture" src="{{MEDIA_URL}}{{content.picture}}" alt="pic"/>
 		</div>
 		<div class="span7">
 			<div class="composer-name">{{content.name}}</div>
@@ -120,9 +121,9 @@ function downloadAll(source) {
 			<br>
 			<div class="row-fluid">
 				<div class="span3">
-			<input type="checkbox" id="check" onClick="saveAll(this)"/> <b style="font-size:.85em;color:#CD5C5C;">save all</b> </div>
+			<input type="checkbox" id="check" onClick="saveAll(this)"/> <b style="font-size:1.2em;color:#CD5C5C;">save all</b> </div>
 			<div class="span4">
-			<input type="checkbox" id="check" onClick="downloadAll(this)"/> <b style="font-size:.85em;color:#CD5C5C;">download all</b><br/></div>
+			<input type="checkbox" id="check" onClick="downloadAll(this)"/> <b style="font-size:1.2em;color:#CD5C5C;">download all</b><br/></div>
 			</div>
 		</div>
 		<div class="span2">

@@ -1,0 +1,41 @@
+{
+  "name": "INSTRUMENTS",
+  "children": [
+  {
+    "name": "polyphonic instrument",
+    "children": [
+      {"name": "orchestra"},
+      {"name": "strings"},
+      {"name": "keyboard",
+      "children": [
+        {"name":"piano"},
+        {"name": "organ"},
+        {"name":"harpsichord"} ] }
+    ]
+  },
+  {
+    "name":"monophonic instruments",
+    "children": [
+      {"name": "trombone"},
+      {"name": "cornetto"},
+      {"name": "violin"},
+      {"name": "viola"},
+      {"name": "bassoon",
+      "children": [{"name":"double bassoon"}]},
+      {"name": "clarinet"},
+      {"name": "horn"},
+      {"name": "arpeggione"},
+      {"name": "baryton"},
+      {"name": "cello"},
+      {"name": "flute"},
+      {"name": "oboe"},
+      {"name": "trumpet"},
+      {"name": "timpani"},
+      {"name": "double bass"},
+      {"name": "english horn"},
+      {"name": "recorder"},
+      {"name": "musette"}
+    ]
+  }
+  ]
+}

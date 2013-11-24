@@ -1,0 +1,36 @@
+<!-- Project card displays this if there are no other users in the project --> 
+
+{% load filter_methods %}
+
+<div class="container-fluid">
+	<div class="row-fluid">
+		<div class="span9">
+			<h4 class="name"><a class="project-url" href="{{ project.id }}"> {{ project.name }} </a></h4> 
+		</div>
+		<div class="span3">
+			<a href="#" onclick="javascript:expand('40%', '20%', '350px', '100px', 'delete', {{project.id}})"><i class="icon-trash" style="float:right; margin-top:10px"></i></a>
+		</div>
+	</div>
+	<div class="row-fluid">
+		<p class="descrip"> {{ project.description|truncatechars:50 }} </p>
+	</div>
+</div>
+
+<div class="container-fluid" id="inner-proj-card">
+	<div class="pic-grid">
+		<a href="#" id="invite-users" onclick="javascript:expand('25%', '10%', '600px', '450px', 'invite')"><i class="icon-plus-sign"></i><b>Invite users to this project!</b></a>
+		{% for up in userDeco1 %}
+			<a href="#" onclick="javascript:expand('25%', '10%', '600px', '450px', 'invite')"><img class="prof-pic" src="{{MEDIA_URL}}{{up.picture}}"/></a>
+    	{% endfor %}
+		{% for up in userDeco2 %}
+			<a href="#" onclick="javascript:expand('25%', '10%', '600px', '450px', 'invite')"><img class="prof-pic" src="{{MEDIA_URL}}{{up.picture}}"/></a>
+    	{% endfor %}
+	</div>
+
+	<br>
+	<div class="row-fluid">
+		<div class="span8" id="num-users"><i class="icon-user"></i> {{project.users.all|length}}
+		</div>
+		<div class="span4" id="last-updated">{{project.updated|format_time}}</div>
+	</div>
+</div>

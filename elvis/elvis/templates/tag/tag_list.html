@@ -1,12 +1,300 @@
 {% extends "base.html" %}
+{% load filter_methods %}
 
 {% block wrap %}
 
-<p> List of Tags </p>
-<ul>
-{% for tag in content %}
-    <li><a href="{{ tag.url }}">{{ tag.name }}</a></li>
-{% endfor %}
-</ul>
+<style type="text/css">
+
+#main-result-frame {
+	-moz-box-shadow: 0 0 5px #888;
+	-webkit-box-shadow: 0 0 5px#888;
+	box-shadow: 0 0 5px #888;
+	margin-left:50px;
+	margin-right:50px;
+	margin-top:20px;
+	background-color:#FFFFFF;
+}
+
+#tag-row {
+	border-style:solid;
+}
+
+.tag-name {
+	margin:5px;
+}
+
+#tag-cell {
+	background-color: #FFE4B5;
+}
+
+#merge-name, #split-name {
+	border:0;
+	background:none;
+	outline:none;
+	font-size:1.4em;
+	font-weight:bold;
+	width:250px;
+}
+#add-merge-tag, #add-split-tag {
+	border:0;
+	background:none;
+	outline:none;
+	font-size:1.2em;
+	width:84%;
+}
+#merge-div {
+	border-bottom:solid;
+	border-width:2px;
+}
+#add-tag {
+	border-bottom:solid;
+	border-width:1px;
+}
+
+</style>
+
+<script type="text/javascript">
+<!-- Begin
+/* This script and many more are available free online at
+The JavaScript Source!! http://javascript.internet.com
+Created by: Husay :: http://www.communitxt.net */
+
+var arrInput1 = new Array(0);
+var arrInput2 = new Array(0);
+var arrInputValue1 = new Array(0);
+var arrInputValue2 = new Array(0);
+
+fields1 = 1;
+fields2 = 1;
+maxInput = 10;
+
+function addInput(idname) {
+ if(idname == "more-merge-tags") {
+	 //arrInput.push(createInput(arrInput.length));
+	 if(fields1 <= maxInput) {
+	     fields1 +=1;
+	     arrInput1.push(arrInput1.length);
+	     //arrInputValue.push(arrInputValue.length);
+	     arrInputValue1.push("");
+	 }
+  }
+  else {
+  	if(fields2 <= maxInput) {
+  		fields2 += 1;
+  		arrInput2.push(arrInput2.length);
+  		arrInputValue2.push("");
+  	}
+  }
+  display(idname);
+}
+
+function display(idname) {
+ document.getElementById(idname).innerHTML="";
+ if(idname == "more-merge-tags") {
+ 	for (intI=0;intI<arrInput1.length;intI++) {
+   		document.getElementById(idname).innerHTML+=createInput(arrInput1[intI], arrInputValue1[intI],idname);
+ 	}
+ }
+ else {
+ 	for (intI=0;intI<arrInput2.length;intI++) {
+   		document.getElementById(idname).innerHTML+=createInput(arrInput2[intI], arrInputValue2[intI],idname);
+ 	}
+ }
+}
+
+function createInput(id,value,idname) {
+	if(idname=="more-merge-tags") {
+		return "<div class='row-fluid'> <div class='span10' id='add-tag'><i class='icon-tags'></i> <input type='text' name='add-merge-tag' id='add-merge-tag'></input></div></div>"
+	}
+	else {
+		return "<div class='row-fluid'> <div class='span10' id='add-tag'><i class='icon-tags'></i> <input type='text' name='add-split-tag' id='add-split-tag'></input></div></div>"
+	}
+}
+
+// End -->
+</script>
+
+<script type="text/javascript">
+
+// Keeps track of which ones have been clicked on 
+var clicked_name = new Array(0);
+var clicked_opt = new Array(0);
+// Keeps track of colors that have been set
+var colors = new Array(0);
+
+function test() {
+	//window.alert("HELLO!??!");
+	var datastring = ""
+	// Create string from arrays to submit to server
+	for(i=0; i<colors.length; i++) {
+		var id_num = clicked_name[i].match(/\d+$/)[0]
+		substring = "("+id_num+","+colors[i]+");"
+		datastring += substring; 
+	}
+	document.getElementById("arraydata").value = datastring;
+}
+
+function highlight(id, color) {
+	var id_num = id.match(/\d+$/)[0]
+	var cell_name = "tag-cell-name"+id_num;
+	var cell_opt = "tag-cell-opt"+id_num;
+
+	var curr_background = document.getElementById(cell_name).style.background;
+
+	// Check if background color has already been set. If so, unset and return
+	if( curr_background == "rgb(144, 238, 144)" || curr_background == "rgb(250, 128, 114)" ) {
+		document.getElementById(cell_name).style.background = "none";
+		document.getElementById(cell_opt).style.background = "none";
+		// Now need to delete it from array 
+		var index = clicked_name.indexOf(cell_name)-1;
+		clicked_name.splice(index, 1);
+		clicked_opt.splice(index, 1);
+		colors.splice(index, 1);
+	}
+
+	else {
+		clicked_name.push(cell_name);
+		clicked_opt.push(cell_opt);
+		colors.push(color);
+
+		for (intI=0; intI<colors.length; intI++) {
+	   		document.getElementById(clicked_name[intI]).style.background = colors[intI];
+	   		document.getElementById(clicked_opt[intI]).style.background = colors[intI];
+	 	}
+	}
+
+}
+
+ 
+</script>
+
+
+<form action="" method="post">{% csrf_token %}
+
+<div class="container-fluid" id="main-result-frame">
+
+	<div class="row-fluid">	<h3> Tag Taxonomy </h3> </div>
+
+	<div class="row-fluid">
+	
+	<div class="span7">
+
+	<!-- Already approved: no color. Pending approval: orange. 
+		Just marked approved: green. Just marked rejected: red. 
+	-->
+
+	{% with name="approve_reject" %}
+	<table class="table table-striped">
+	{% for tag in content %}
+		{% with ID=name|assign_id:forloop.counter %}
+		 {% if tag.approved %}
+		 	<tr>
+		 		<td>
+		 			<a href="/tags/{{tag.id}}"><h4>{{ tag.name }}</h4></a> 
+		 		</td>
+		 		<td></td>
+		 	</tr>
+		{% else %}
+			<tr>
+				<td id="tag-cell-name{{tag.id}}">
+					<div onmouseover="document.getElementById('{{ID}}').style.display = 'block';" onmouseout="document.getElementById('{{ID}}').style.display = 'none';">
+						<a href="/tags/{{tag.id}}"><h4><b style="color:#FA8072;">*</b>{{ tag.name }}</h4></a>
+					</div>
+				</td>
+				<td id="tag-cell-opt{{tag.id}}">
+					<div class="approve-reject" id="{{name|assign_id:forloop.counter}}" style="display:none;" onmouseover="document.getElementById('{{ID}}').style.display = 'block';" onmouseout="document.getElementById('{{ID}}').style.display = 'none';">
+
+						<button type="button" class="btn btn-success" name="accept{{tag.id}}" onclick="highlight(this.name, '#90EE90')"><i class="icon-ok"></i></button>
+						<button type="button" class="btn btn-danger" name="reject{{tag.id}}" onclick="highlight(this.name, '#FA8072')"><i class="icon-remove"></i></button>
+
+					</div>
+				</td>
+			</tr>
+		{% endif %}
+		{% endwith %}
+	{% endfor %} 
+	</table>
+	{% endwith %}
+
+	</div>
+
+	<div class="span5">
+		<div class="container-fluid">
+			<div class="row-fluid">
+				<div class="merge"> <h3>Merge tags</h3>  </div>
+			</div>
+			<div class="row-fluid">
+				<div class="span10" id="merge-div">
+					<input type="text" value="New tag name" name="merge-name" id="merge-name"/>
+				</div>
+			</div>
+			<br>
+			<div class="row-fluid">
+				<div class="span10" id="add-tag">
+					<div> <i class="icon-tags"></i><input type="text" name="add-merge-tag" id="add-merge-tag" value="existing tag"/></div>
+				</div>
+			</div>
+			<div class="row-fluid">
+				<div class="span10" id="add-tag">
+					<div> <i class="icon-tags"></i><input type="text" name="add-merge-tag" id="add-merge-tag" value="existing tag"/></div>
+				</div>
+			</div>
+
+			<p id="more-merge-tags"></p><br>
+		    <div class="row-fluid">
+		    	<div class="span9"></div>
+		    	<div class="span3"><a href="javascript:addInput('more-merge-tags')"><i class="icon-plus-sign" id="more"></i></a></div>
+		    </div>
+
+			<br><br>
+
+
+			<div class="row-fluid">
+				<div class="split"> <h3>Split tag</h3> </div>
+			</div>
+			<div class="row-fluid">
+				<div class="span10" id="merge-div">
+					<input type="text" value="Existing tag name" name="split-name" id="split-name"/>
+				</div>
+			</div>
+			<br>
+			<div class="row-fluid">
+				<div class="span10" id="add-tag">
+					<div> <i class="icon-tags"></i><input type="text" name="add-split-tag" id="add-split-tag" value="new tag"/></div>
+				</div>
+			</div>
+			<div class="row-fluid">
+				<div class="span10" id="add-tag">
+					<div> <i class="icon-tags"></i><input type="text" name="add-split-tag" id="add-split-tag" value="new tag"/></div>
+				</div>
+			</div>
+
+			<p id="more-split-tags"></p><br>
+		    <div class="row-fluid">
+		    	<div class="span9"></div>
+		    	<div class="span3"><a href="javascript:addInput('more-split-tags')"><i class="icon-plus-sign" id="more"></i></a></div>
+		    </div>
+
+		    <br><br>
+
+		    <div class="row-fluid">
+		    	<div class="span2">
+		    	</div>
+		    	<div class="span5">
+			    	<label for="arraydata"><button type="button" class="btn btn-success">Save changes</button></label>
+			    	<input type="checkbox" id="arraydata" name="arraydata" value="" onchange="test()" style="display:none;"/>
+				</div>
+				<div class="span5">
+					<button id="submit" type="submit" value="Submit" class="btn btn-warning">Done</button>{% csrf_token %}
+				</div>
+			</div>
+
+		</div>
+	</div>
+
+</form> 
+	</div>
+
+</div>
 
 {% endblock %}

@@ -1,0 +1,25 @@
+<!-- Project card displays this if are other users in the project --> 
+
+{% load filter_methods %}
+
+<h4 class="name"><a class="project-url" href="{{ project.id }}"> {{ project.name }} </a></h4>
+<p class="descrip"> {{ project.description|truncatechars:180 }} </p>
+
+<div class="container-fluid" id="inner-proj-card">
+	<div class="pic-grid">
+		<a href="#"><i class="icon-plus-sign"></i><b>Invite users to this project!</b></a>
+		{% for up in project.users %}
+			<a href="#"><img class="prof-pic" src="{{MEDIA_URL}}{{up.picture}}"/></a>
+    	{% endfor %}
+		{% for up in userDeco2 %}
+			<a href="#"><img class="prof-pic" src="{{MEDIA_URL}}{{up.picture}}"/></a>
+    	{% endfor %}
+	</div>
+
+	<br>
+	<div class="row-fluid">
+		<div class="span9" id="num-users"><i class="icon-user"></i> {{project.users.all|length}}
+		</div>
+		<div class="span3" id="last-updated">{{project.updated|format_time}}</div>
+	</div>
+</div>

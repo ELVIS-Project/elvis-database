@@ -9,6 +9,7 @@ class UserProfile(models.Model):
 
 	user = models.ForeignKey(User, unique=True)
 	picture = models.ImageField(upload_to=picture_path, null=True)
+	is_temp = models.BooleanField()
 
 	def __unicode__(self):
 		return u"{0}".format(self.user.username)

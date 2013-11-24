@@ -11,7 +11,7 @@ Created by: Husay :: http://www.communitxt.net */
 var arrInput = new Array(0);
 var arrInputValue = new Array(0);
 fields = 1;
-maxInput = 4;
+maxInput = 10;
 function addInput() {
  //arrInput.push(createInput(arrInput.length));
  if(fields <= maxInput){
@@ -35,8 +35,7 @@ function saveValue(intId,strValue) {
 }
 
 function createInput(id,value) {
-	return "<div class='row-fluid'> <div class='span6' id='email-field'><i class='icon-user'></i> <input type='email' name='add-user' id='add-user'></input></div></div>"
-	//return "<input type='email' id='test "+ id +"' onChange='javascript:saveValue("+ id +",this.value)' value='"+ value +"'><br>";
+	return "<div class='row-fluid'> <div class='span6' id='email-field'><i class='icon-user'></i> <input type='email' name='add-user' id='add-user'></input></div></div>";
 }
 
 function deleteInput() {
@@ -97,7 +96,7 @@ function deleteInput() {
 	border-width:1px;
 }
 #add-user {
-	width:400px;
+	width:90%;
 }
 
 #invite-people {
@@ -153,7 +152,7 @@ function deleteInput() {
 <br><br>
 <div class="row-fluid" id="submit">
     {% csrf_token %}
-    <button type="submit" value="Download" class="btn btn-success">Add corpus</button>
+    <button type="submit" value="Download" class="btn btn-success">Add project</button>
 </div>
 </form>
 

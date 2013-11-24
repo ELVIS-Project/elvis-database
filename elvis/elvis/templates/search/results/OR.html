@@ -1,0 +1,153 @@
+<style>
+.result-item {
+	margin-bottom:10px;
+}
+.result-name {
+	font-size:1.2em;
+}
+.result-info a {
+	color:#333;
+}
+.icon-download, .icon-download-alt {
+	margin-left:5px;
+	margin-right:10px;
+}
+.download input {
+	margin-right:3px;
+	margin-bottom:5px;
+}
+.download {
+	color:green;
+	font-weight:bold;
+}
+</style>
+
+
+<div class="container-fluid">
+
+	<div class="row-fluid">
+		<h3> Search Results </h3>
+		<!-- Composer-based results (highlight composer) --> 
+		{% for set in composer_results.movements %}
+			{% for movement in set %}
+    			<div class="result-item">
+	    			<div class="result-name"><a href="/movements/{{movement.id}}">{{ movement.title }}</a></div>
+	    			<div class="result-info">
+	    				{{movement.date_of_composition.year}} - <a href="/composers/{{movement.composer.id}}"><b>{{movement.composer}}</b></a> - <a href="/corpora/{{movement.corpus.id}}">{{movement.corpus}}</a> - <a href="/userprofiles/{{movement.uploader.id}}">{{movement.uploader}}</a> 
+	    			</div>
+					<div class="download">
+						<input type="checkbox" value="{{movement.id}}" name="download-pieces"/>download now <i class="icon-download-alt"></i><input type="checkbox" value="{{movement.id}}" name="save-movements"/>download later<i class="icon-download"></i>
+					</div>
+				</div>
+			{% endfor %}
+		{% endfor %}
+		{% for set in composer_results.pieces %}
+			{% for piece in set %}
+				<div class="result-item">
+					{{piece}} 
+				</div>
+			{% endfor %}
+		{% endfor %}
+		<!-- Corpus-based results (highlight corpus name)
+		{% for set in corpus_results.movements %}
+			{% for movement in set %}
+				<div class="result-item">
+	    			<div class="result-name"><a href="/movements/{{movement.id}}">{{ movement.title }}</a></div>
+	    			<div class="result-info">
+	    				{{movement.date_of_composition.year}} - <a href="/composers/{{movement.composer.id}}">{{movement.composer}}</a> - <a href="/corpora/{{movement.corpus.id}}"><b>{{movement.corpus}}</b></a> - <a href="/userprofiles/{{movement.uploader.id}}">{{movement.uploader}}</a> 
+	    			</div>
+					<div class="download">
+						<input type="checkbox" value="{{movement.id}}" name="download-pieces"/>download now <i class="icon-download-alt"></i><input type="checkbox" value="{{movement.id}}" name="save-movements"/>download later<i class="icon-download"></i>
+					</div>
+				</div>
+			{% endfor %}
+		{% endfor %}
+		{% for set in corpus_results.pieces %}
+			{% for piece in set %}
+				{{piece}} <br>
+			{% endfor %}
+		{% endfor %}  -->
+		<!-- Tag-based results (highlight tags) 
+		{% for set in tag_results.movements %}
+			{% for movement in set %}
+				<div class="result-item">
+	    			<div class="result-name"><a href="/movements/{{movement.id}}">{{ movement.title }}</a></div>
+	    			<div class="result-info">
+	    				{{movement.date_of_composition.year}} - <a href="/composers/{{movement.composer.id}}">{{movement.composer}}</a> - <a href="/corpora/{{movement.corpus.id}}">{{movement.corpus}}</a> - <a href="/userprofiles/{{movement.uploader.id}}">{{movement.uploader}}</a> 
+	    			</div>
+					<div class="download">
+						<input type="checkbox" value="{{movement.id}}" name="download-pieces"/>download now <i class="icon-download-alt"></i><input type="checkbox" value="{{movement.id}}" name="save-movements"/>download later<i class="icon-download"></i>
+					</div>
+				</div>
+			{% endfor %}
+		{% endfor %}
+		{% for set in tag_results.pieces %}
+			{% for piece in set %}
+				{{piece}} <br>
+			{% endfor %}
+		{% endfor %} -->
+		<!-- Uploader-based results (highlight uploader name) 
+		{% for set in uploader_results.movements %}
+			{% for movement in set %}
+				<div class="result-item">
+	    			<div class="result-name"><a href="/movements/{{movement.id}}">{{ movement.title }}</a></div>
+	    			<div class="result-info">
+	    				{{movement.date_of_composition.year}} - <a href="/composers/{{movement.composer.id}}">{{movement.composer}}</a> - <a href="/corpora/{{movement.corpus.id}}">{{movement.corpus}}</a> - <a href="/userprofiles/{{movement.uploader.id}}"><b>{{movement.uploader}}</b></a> 
+	    			</div>
+					<div class="download">
+						<input type="checkbox" value="{{movement.id}}" name="download-pieces"/>download now <i class="icon-download-alt"></i><input type="checkbox" value="{{movement.id}}" name="save-movements"/>download later<i class="icon-download"></i>
+					</div>
+				</div>
+			{% endfor %}
+		{% endfor %}
+		{% for set in uploader_results.pieces %}
+			{% for piece in set %}
+				{{piece}} <br>
+			{% endfor %}
+		{% endfor %} -->
+		<!-- Voice-based results (highlight voices) 
+		{% for set in voice_results.movements %}
+			{% for movement in set %}
+				<div class="result-item">
+	    			<div class="result-name"><a href="/movements/{{movement.id}}">{{ movement.title }}</a></div>
+	    			<div class="result-info">
+	    				{{movement.date_of_composition.year}} - <a href="/composers/{{movement.composer.id}}"><b>{{movement.composer}}</b></a> - <a href="/corpora/{{movement.corpus.id}}">{{movement.corpus}}</a> - <b>{{movement.number_of_voices}}</b>
+	    			</div>
+					<div class="download">
+						<input type="checkbox" value="{{movement.id}}" name="download-pieces"/>download now <i class="icon-download-alt"></i><input type="checkbox" value="{{movement.id}}" name="save-movements"/>download later<i class="icon-download"></i>
+					</div>
+				</div>
+			{% endfor %}
+		{% endfor %} 
+		{% for set in voice_results.pieces %}
+			{% for piece in set %}
+				{{ piece }} <br>
+			{% endfor %}
+		{% endfor %} -->
+		<!-- Date-based results (highlight dates)  
+		{% for set in date_results.pieces %}
+			{% for piece in set %}
+				{{ piece }} <br>
+			{% endfor %}
+		{% endfor %}
+		{% for set in date_results.movements %}
+			{% for movement in set %}
+				<div class="result-item">
+	    			<div class="result-name"><a href="/movements/{{movement.id}}">{{ movement.title }}</a></div>
+	    			<div class="result-info">
+	    				<b>{{movement.date_of_composition.year}}</b> - <a href="/composers/{{movement.composer.id}}"><b>{{movement.composer}}</b></a> - <a href="/corpora/{{movement.corpus.id}}">{{movement.corpus}}</a> - <a href="/userprofiles/{{movement.uploader.id}}">{{movement.uploader}}</a> 
+	    			</div>
+					<div class="download">
+						<input type="checkbox" value="{{movement.id}}" name="download-pieces"/>download now <i class="icon-download-alt"></i><input type="checkbox" value="{{movement.id}}" name="save-movements"/>download later<i class="icon-download"></i>
+					</div>
+				</div>
+			{% endfor %}
+		{% endfor %}
+		{% for composer in date_results.composers %}
+			{{ composer }}
+		{% endfor %}-->
+	</div>
+	<br>
+	<br>
+
+</div>

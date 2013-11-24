@@ -5,6 +5,7 @@ class Tag(models.Model):
     old_id = models.IntegerField(db_index=True, blank=True, null=True)
     name = models.CharField(max_length=255)
     description = models.TextField(blank=True, null=True)
+    approved = models.BooleanField()
 
     number_of_queries = models.IntegerField(blank=True, null=True)
 

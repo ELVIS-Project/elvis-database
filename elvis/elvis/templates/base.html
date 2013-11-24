@@ -18,6 +18,8 @@
         <script src="{{ STATIC_URL }}js/modernizr-2.6.2.min.js"></script>
         <script src="{{ STATIC_URL }}js/bootstrap.min.js"></script>
 
+        <script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.5.1/jquery.js"></script>
+
         <style type="text/css">
         body {
          padding-top: 60px;
@@ -59,74 +61,61 @@
     </head>
     
     <body>
-      <div class="navbar navbar-fixed-top"> 
-             <div class="navbar-inner"> 
-                <div class="container-fluid" id="bar">
-              <!--      <button type="button" class="btn btn-navbar" data-toggle="collapse" data-target=".nav-collapse">
-                        <span class="icon-bar"></span>
-                        <span class="icon-bar"></span>
-                        <span class="icon-bar"></span>
-                    </button> -->
-                    {% with home="/" %}
-                    <a class="brand" href="{{home}}">ELVIS</a>
-                    {% endwith %}
-                    <div class="nav-collapse collapse">
-                        <ul class="nav">
-                            {% with about="/about/" %}{% with projects="/projects/" %}{% with everyone="/userprofiles/" %}
-                            {% with queries="/queries/" %}
-                            <li><a href="{{about}}">About</a></li>
-                            <li><a href="{{projects}}">Projects</a></li>
-                            <li><a href="{{queries}}">Queries</a></li>
-                            <li id="separator"><a href="{{everyone}}">Everyone</a></li>
-                            <li><a href="#">Me</a></li>
-                            {% endwith %}{% endwith %}{% endwith %}{% endwith %}
-                        </ul>
-                        <p class="navbar-text pull-right">
-                            {% with downloads="/downloads/" %}
-                            <a href="{{downloads}}"><i class="icon-download"></i></a>
-                            {% endwith %}
-                            <a href="#">Login</a>
-                        </p>
-                    </div>
+
+    <div class="navbar navbar-fixed-top"> 
+        <div class="navbar-inner"> 
+            <div class="container-fluid" id="bar">
+                <a class="brand" href="/">ELVIS</a>
+                <div class="nav-collapse collapse">
+                    <ul class="nav">
+                        <li><a href="/about/">About</a></li>
+                        <li><a href="/projects/">Projects</a></li>
+                        <li><a href="/queries/">Queries</a></li>
+                        <li id="separator"><a href="/userprofiles/">Everyone</a></li>
+                        <li><a href="#">Me</a></li>
+                    </ul>
+                    <p class="navbar-text pull-right">
+                        <a href="/downloads/"><i class="icon-download"></i></a>
+                        <a href="/login/" style="margin-right:5px;">Login</a>
+                        <a href="/permission/" style="margin-left:5px;">Register</a>
+                    </p>
                 </div>
             </div>
         </div>
-       <!-- <div class="navbar">
-            <img src="../static/img/musicpaper.png" >
-        </div> -->
+    </div>
+
         <div class="container-fluid">
             <div class="row-fluid">
                 <div class="span2">
                     <table class="table table-hover">
                         <tr>
                             <td class="dropdown">
-                                {% with search="/search/" %}{% with upload="/upload/" %}
-                                <a class="model-link" href="{{search}}" class="dropdown-toggle" data-toggle="dropdown">Search</a>
+                                <a class="model-link" href="/search/" class="dropdown-toggle" data-toggle="dropdown">Search</a>
                             </td>
                         </tr>
                         <tr>
-                            <td><a class="model-link" href="{{upload}}">Add content</a></td>
+                            <td><a class="model-link" href="/upload/">Add content</a></td>
                         </tr>
-                        {% endwith %}{% endwith %}
                     </table>
                     <table class="table table-hover">
-                        {% with corpora="/corpora/" %}{% with composers="/composers/" %}{% with pieces="/pieces/" %}{% with movements="/movements/" %}
                         <tr>
                             <thead>View all:</thead>
                         </tr>
                         <tr>
-                            <td><a class="model-link" href="{{corpora}}">Corpora</a></td>
+                            <td><a class="model-link" href="/corpora/">Corpora</a></td>
                         </tr>
                         <tr>
-                            <td><a class="model-link" href="{{composers}}">Composers</a></td>
+                            <td><a class="model-link" href="/composers/">Composers</a></td>
                         </tr>
                         <tr>
-                            <td><a class="model-link" href="{{pieces}}">Pieces</a></td>
+                            <td><a class="model-link" href="/pieces/">Pieces</a></td>
                         </tr>
                         <tr>
-                            <td><a class="model-link" href="{{movements}}">Movements</a></td>
+                            <td><a class="model-link" href="/movements/">Movements</a></td>
                         </tr>
-                        {% endwith %}{% endwith %}{% endwith %}{% endwith %}
+                        <tr>
+                            <td><a class="model-link" href="/tags/">Tags</a></td>
+                        </tr>
                     </table>
 
                 </div>

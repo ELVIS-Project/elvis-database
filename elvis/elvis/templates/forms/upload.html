@@ -11,6 +11,7 @@
     margin-left:40px;
     margin-right:40px;
     margin-top:20px;
+    background-color: #FFFFFF;
 }
 
 #separator-activity {
@@ -50,58 +51,60 @@
     box-shadow: 0 0 5px #888;
 }
 .inner-stuff {
-    margin-top:5px;
+    padding-top:10px;
+    padding-bottom:10px;
 }
 .submit-button {
     text-align:center;
+}
+
+#main-result-frame .span3 {
+    text-align:center;
+    margin-left:0px;
+    width:25% !important;
+
 }
 
 </style>
 
 <div class="container-fluid" id="main-result-frame">
 
-<div class="span3">
-   <div class="dostuff">
+<div class="span3" id="add-corpus-col">
+   <!--<div class="dostuff">-->
     <a href="/upload/corpus/">
         <div class="inner-stuff">
-          <i class="icon-plus-sign"></i><br>
+          <img src="{{STATIC_URL}}img/plus-blue.png"/><br>
            <b>Add corpus  </b>
         </div>
     </a>
-    </div>
+   <!-- </div> -->
 </div>
 
-<div class="span3">
-<div class="dostuff">
+<div class="span3" id="add-piece-col">
     <a href="/upload/piece/">
     <div class="inner-stuff">
-      <i class="icon-plus-sign"></i><br>
-       <b>Add piece  </b>
+      <img src="{{STATIC_URL}}img/plus-yellow.png"/><br>
+       <b>Add piece </b>
     </div>
     </a>
 </div>
-</div>
 
-<div class="span3">
-    <div class="dostuff">
-        <a href="/upload/movement/">
-        <div class="inner-stuff">
-           <i class="icon-plus-sign"></i><br>
-           <b>Add movement</b>
-        </div>
-        </a>
+<div class="span3" id="add-movement-col">
+    <a href="/upload/movement/">
+    <div class="inner-stuff">
+       <img src="{{STATIC_URL}}img/plus-red.png"/><br>
+        <b>Add movement</b>
     </div>
-</div>
-
-<div class="span3">
-   <div class="dostuff">
-        <a href="/upload/project/">
-        <div class="inner-stuff">
-          <i class="icon-plus-sign"></i><br>
-           <b>Add project  </b>
-        </div>
     </a>
+</div>
+
+<div class="span3" id="add-project-col">
+    <a href="/upload/project/" id="add-project-col">
+    <div class="inner-stuff">
+      <img src="{{STATIC_URL}}img/plus-green.png"/><br>
+       <b>Add project  </b>
     </div>
+    </a>
 </div>
 
 </div>
