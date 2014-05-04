@@ -9,9 +9,11 @@ function addToDownloads(obj)
     console.log("Adding to downloads");
     var type = $(obj).data('type');
     var item_id = $(obj).data('itemId');
+    var csrftoken = $.cookie('csrftoken');
+    console.log(csrftoken);
     $.ajax("/downloads",
     {
-        type: "PUT",
+        type: "PATCH",
         data: {
             "type": type,
             "item_id": item_id

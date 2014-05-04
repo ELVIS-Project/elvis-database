@@ -1,3 +1,4 @@
+from django.views.decorators.csrf import ensure_csrf_cookie
 from rest_framework import generics
 from rest_framework import permissions
 from rest_framework.renderers import JSONRenderer, JSONPRenderer
@@ -30,3 +31,5 @@ class PieceDetail(generics.RetrieveUpdateDestroyAPIView):
     permission_classes = (permissions.IsAuthenticatedOrReadOnly,)
     serializer_class = PieceSerializer
     renderer_classes = (JSONRenderer, JSONPRenderer, PieceDetailHTMLRenderer)
+
+
