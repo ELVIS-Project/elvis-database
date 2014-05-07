@@ -20,6 +20,9 @@ class TagList(generics.ListCreateAPIView):
     permission_classes = (permissions.IsAuthenticatedOrReadOnly,)
     serializer_class = TagSerializer
     renderer_classes = (JSONRenderer, JSONPRenderer, TagListHTMLRenderer)
+    paginate_by = 10
+    paginate_by_param = 'page_size'
+    max_paginate_by = 100
 
 
 class TagDetail(generics.RetrieveUpdateDestroyAPIView):

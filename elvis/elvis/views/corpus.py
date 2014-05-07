@@ -20,6 +20,10 @@ class CorpusList(generics.ListCreateAPIView):
     permission_classes = (permissions.IsAuthenticatedOrReadOnly,)
     serializer_class = CorpusSerializer
     renderer_classes = (JSONRenderer, JSONPRenderer, CorpusListHTMLRenderer)
+    paginate_by = 10
+    paginate_by_param = 'page_size'
+    max_paginate_by = 100
+
 
 
 class CorpusDetail(generics.RetrieveUpdateDestroyAPIView):

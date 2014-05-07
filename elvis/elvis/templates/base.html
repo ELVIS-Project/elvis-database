@@ -13,117 +13,82 @@
 
 
         <!-- Place favicon.ico and apple-touch-icon.png in the root directory -->
-        <link rel="stylesheet" href="{{ STATIC_URL }}css/bootstrap.min.css" rel="stylesheet" media="screen">
-
+        <link rel="stylesheet" href="{{ STATIC_URL }}css/themes/yeti/bootstrap.min.css" rel="stylesheet" media="screen">
+        <link rel="stylesheet" href="{{ STATIC_URL }}css/style.css" rel="stylesheet" media="screen" />
+        <script src="{{ STATIC_URL }}js/jquery-1.9.1.min.js"></script>
         <script src="{{ STATIC_URL }}js/modernizr-2.6.2.min.js"></script>
         <script src="{{ STATIC_URL }}js/bootstrap.min.js"></script>
+        <script src="{{ STATIC_URL }}js/holder.js"></script>
+        <script src="{{ STATIC_URL }}js/plugins.js"></script>
+        <script src="{{ STATIC_URL }}js/elvis-download-manager.js"></script>
 
-        <script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.5.1/jquery.js"></script>
-
-        <style type="text/css">
-        body {
-         padding-top: 60px;
-         padding-bottom: 40px;
-         background-color:#FFF8DC;
-        }
-        .sidebar-nav {
-         padding: 9px 0;
-        }
-
-        li {
-            list-style-type:none;
-        }
-
-        @media (max-width: 980px) {
-         /* Enable use of floated navbar text */
-            .navbar-text.pull-right {
-              float: none;
-              padding-left: 5px;
-              padding-right: 5px;
-            }
-         }
-
-         #separator {
-            border-left:solid;
-            border-width:1px;
-         }
-
-         .icon-download {
-            margin-right:20px;
-         }
-
-         .model-link {
-            font-weight:bold;
-         }
-
-        </style>
-
+        <script type="text/javascript">
+            $(document).ready(function ($) {
+                // initialize the download manager script
+                initializeDownloadBadges();
+            });
+        </script>
     </head>
     
     <body>
-
-    <div class="navbar navbar-fixed-top"> 
-        <div class="navbar-inner"> 
-            <div class="container-fluid" id="bar">
-                <a class="brand" href="/">ELVIS</a>
-                <div class="nav-collapse collapse">
-                    <ul class="nav">
-                        <li><a href="/about/">About</a></li>
-                        <li><a href="/projects/">Projects</a></li>
-                        <li><a href="/queries/">Queries</a></li>
-                        <li id="separator"><a href="/userprofiles/">Everyone</a></li>
-                        <li><a href="#">Me</a></li>
-                    </ul>
-                    <p class="navbar-text pull-right">
-                        <a href="/downloads/"><i class="icon-download"></i></a>
-                        <a href="/login/" style="margin-right:5px;">Login</a>
-                        <a href="/permission/" style="margin-left:5px;">Register</a>
-                    </p>
-                </div>
+        <nav class="navbar navbar-default" role="navigation"> 
+            <div class="navbar-header">
+                <a class="navbar-brand" href="/">ELVIS</a>
             </div>
-        </div>
-    </div>
 
-        <div class="container-fluid">
-            <div class="row-fluid">
-                <div class="span2">
-                    <table class="table table-hover">
-                        <tr>
-                            <td class="dropdown">
-                                <a class="model-link" href="/search/" class="dropdown-toggle" data-toggle="dropdown">Search</a>
-                            </td>
-                        </tr>
-                        <tr>
-                            <td><a class="model-link" href="/upload/">Add content</a></td>
-                        </tr>
-                    </table>
-                    <table class="table table-hover">
-                        <tr>
-                            <thead>View all:</thead>
-                        </tr>
-                        <tr>
-                            <td><a class="model-link" href="/corpora/">Corpora</a></td>
-                        </tr>
-                        <tr>
-                            <td><a class="model-link" href="/composers/">Composers</a></td>
-                        </tr>
-                        <tr>
-                            <td><a class="model-link" href="/pieces/">Pieces</a></td>
-                        </tr>
-                        <tr>
-                            <td><a class="model-link" href="/movements/">Movements</a></td>
-                        </tr>
-                        <tr>
-                            <td><a class="model-link" href="/tags/">Tags</a></td>
-                        </tr>
-                    </table>
+            <div class="navbar-collapse collapse">
+                <ul class="nav navbar-nav">
+                    <li><a href="/about">About</a></li>
+                    <li><a href="/projects">Projects</a></li>
+                    <li><a href="/queries">Queries</a></li>
+                </ul>
+                <ul class="nav navbar-nav navbar-right">
+                {% if user.is_authenticated %}
+                    <li>
+                        {% with download_num=user.downloads.all.first.attachments.all %}
+                        <a href="/downloads">
+                            <span class="glyphicon glyphicon-circle-arrow-down"></span> Downloads
+                        ({{ download_num | length }})
+                        </a>
+                        {% endwith %}
+                    </li>
+                    <li class="dropdown">
+                        <a href="#" class="dropdown-toggle" data-toggle="dropdown">Welcome {{ user.username }} <b class="caret"></b></a>
+                        <ul class="dropdown-menu">
+                            <li class="divider"></li>
+                            <li><a href="/user/{{ user.id }}">Account Settings</a></li>
+                            <li><a href="/logout/">Logout</a></li>
+                            <li id="separator"></li>
+                            <li><a href="/user-profiles">View other users</a></li>
+                        </ul>
+                    </li>
+                {% else %}
+                    <li><a href="/login/">Login</a></li>
+                {% endif %}
+                </ul>
+            </div>
+        </nav>
 
+        <div class="container">
+            <div class="row">
+                <div class="col-md-2">
+                    <ul class="nav nav-pills nav-stacked">
+                        <li><a href="/search">Search</a></li>
+                    </ul>
+                    <hr />
+                    <h4>Browse</h4>
+                    <ul class="nav nav-pills nav-stacked">
+                        <li><a href="/corpora">Corpora</a></li>
+                        <li><a href="/composers">Composers</a></li>
+                        <li><a href="/pieces">Pieces</a></li>
+                        <!-- <li><a href="/movements">Movements</a></li> -->
+                    </ul>
                 </div>
-                <div class="span10" id="main-frame">
 
+                <div class="col-md-10">
                     {% block wrap %}
-                    {% endblock %}
 
+                    {% endblock %}
                 </div>
             </div>
         </div>

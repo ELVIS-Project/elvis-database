@@ -7,7 +7,7 @@ class Tag(models.Model):
     description = models.TextField(blank=True, null=True)
     approved = models.BooleanField()
 
-    number_of_queries = models.IntegerField(blank=True, null=True)
+    # number_of_queries = models.IntegerField(blank=True, null=True)
 
     def __unicode__(self):
         return u"{0}".format(self.name)

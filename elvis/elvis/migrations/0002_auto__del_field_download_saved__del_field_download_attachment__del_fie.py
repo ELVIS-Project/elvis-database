@@ -8,116 +8,79 @@ from django.db import models
 class Migration(SchemaMigration):
 
     def forwards(self, orm):
-        # Adding field 'Todo.updated'
-        db.add_column(u'elvis_todo', 'updated',
-                      self.gf('django.db.models.fields.DateTimeField')(auto_now=True, default=datetime.datetime(2013, 9, 5, 0, 0), blank=True),
-                      keep_default=False)
+        # Deleting field 'Download.saved'
+        db.delete_column(u'elvis_download', 'saved')
+
+        # Deleting field 'Download.attachment'
+        db.delete_column(u'elvis_download', 'attachment_id')
+
+        # Adding M2M table for field attachments on 'Download'
+        db.create_table(u'elvis_download_attachments', (
+            ('id', models.AutoField(verbose_name='ID', primary_key=True, auto_created=True)),
+            ('download', models.ForeignKey(orm['elvis.download'], null=False)),
+            ('attachment', models.ForeignKey(orm['elvis.attachment'], null=False))
+        ))
+        db.create_unique(u'elvis_download_attachments', ['download_id', 'attachment_id'])
+
+        # Deleting field 'Movement.number_of_downloads'
+        db.delete_column(u'elvis_movement', 'number_of_downloads')
+
+        # Deleting field 'Movement.number_of_queries'
+        db.delete_column(u'elvis_movement', 'number_of_queries')
 
 
-        # Changing field 'Todo.created'
-        db.alter_column(u'elvis_todo', 'created', self.gf('django.db.models.fields.DateTimeField')(auto_now_add=True))
-        # Adding field 'Project.updated'
-        db.add_column(u'elvis_project', 'updated',
-                      self.gf('django.db.models.fields.DateTimeField')(auto_now=True, default=datetime.datetime(2013, 9, 5, 0, 0), blank=True),
-                      keep_default=False)
+        # Changing field 'Movement.updated'
+        db.alter_column(u'elvis_movement', 'updated', self.gf('django.db.models.fields.DateTimeField')(auto_now=True))
 
+        # Changing field 'Movement.created'
+        db.alter_column(u'elvis_movement', 'created', self.gf('django.db.models.fields.DateTimeField')(auto_now_add=True))
+        # Deleting field 'Piece.number_of_downloads'
+        db.delete_column(u'elvis_piece', 'number_of_downloads')
 
-        # Changing field 'Project.created'
-        db.alter_column(u'elvis_project', 'created', self.gf('django.db.models.fields.DateTimeField')(auto_now_add=True))
+        # Deleting field 'Piece.number_of_queries'
+        db.delete_column(u'elvis_piece', 'number_of_queries')
 
-        # Changing field 'Piece.updated'
-        db.alter_column(u'elvis_piece', 'updated', self.gf('django.db.models.fields.DateTimeField')(auto_now=True))
-
-        # Changing field 'Piece.created'
-        db.alter_column(u'elvis_piece', 'created', self.gf('django.db.models.fields.DateTimeField')(auto_now_add=True))
-
-        # Changing field 'Comment.user'
-        db.alter_column(u'elvis_comment', 'user_id', self.gf('django.db.models.fields.related.ForeignKey')(to=orm['auth.User']))
-
-        # Changing field 'Attachment.updated'
-        db.alter_column(u'elvis_attachment', 'updated', self.gf('django.db.models.fields.DateTimeField')(auto_now=True))
-
-        # Changing field 'Attachment.created'
-        db.alter_column(u'elvis_attachment', 'created', self.gf('django.db.models.fields.DateTimeField')(auto_now_add=True))
-        # Adding field 'Discussion.updated'
-        db.add_column(u'elvis_discussion', 'updated',
-                      self.gf('django.db.models.fields.DateTimeField')(auto_now=True, default=datetime.datetime(2013, 9, 5, 0, 0), blank=True),
-                      keep_default=False)
-
-
-        # Changing field 'Discussion.created'
-        db.alter_column(u'elvis_discussion', 'created', self.gf('django.db.models.fields.DateTimeField')(auto_now_add=True))
-
-        # Changing field 'Discussion.first_user'
-        db.alter_column(u'elvis_discussion', 'first_user_id', self.gf('django.db.models.fields.related.ForeignKey')(to=orm['auth.User']))
-
-        # Changing field 'Corpus.updated'
-        db.alter_column(u'elvis_corpus', 'updated', self.gf('django.db.models.fields.DateTimeField')(auto_now=True))
-
-        # Changing field 'Corpus.creator'
-        db.alter_column(u'elvis_corpus', 'creator_id', self.gf('django.db.models.fields.related.ForeignKey')(to=orm['auth.User']))
-
-        # Changing field 'Corpus.created'
-        db.alter_column(u'elvis_corpus', 'created', self.gf('django.db.models.fields.DateTimeField')(auto_now_add=True))
-
-        # Changing field 'Composer.updated'
-        db.alter_column(u'elvis_composer', 'updated', self.gf('django.db.models.fields.DateTimeField')(auto_now=True))
-
-        # Changing field 'Composer.created'
-        db.alter_column(u'elvis_composer', 'created', self.gf('django.db.models.fields.DateTimeField')(auto_now_add=True))
 
     def backwards(self, orm):
-        # Deleting field 'Todo.updated'
-        db.delete_column(u'elvis_todo', 'updated')
+        # Adding field 'Download.saved'
+        db.add_column(u'elvis_download', 'saved',
+                      self.gf('django.db.models.fields.DateTimeField')(default=datetime.datetime.now, blank=True),
+                      keep_default=False)
+
+        # Adding field 'Download.attachment'
+        db.add_column(u'elvis_download', 'attachment',
+                      self.gf('django.db.models.fields.related.ForeignKey')(to=orm['elvis.Attachment'], null=True, blank=True),
+                      keep_default=False)
+
+        # Removing M2M table for field attachments on 'Download'
+        db.delete_table('elvis_download_attachments')
+
+        # Adding field 'Movement.number_of_downloads'
+        db.add_column(u'elvis_movement', 'number_of_downloads',
+                      self.gf('django.db.models.fields.IntegerField')(null=True, blank=True),
+                      keep_default=False)
+
+        # Adding field 'Movement.number_of_queries'
+        db.add_column(u'elvis_movement', 'number_of_queries',
+                      self.gf('django.db.models.fields.IntegerField')(null=True, blank=True),
+                      keep_default=False)
 
 
-        # Changing field 'Todo.created'
-        db.alter_column(u'elvis_todo', 'created', self.gf('django.db.models.fields.DateTimeField')())
-        # Deleting field 'Project.updated'
-        db.delete_column(u'elvis_project', 'updated')
+        # Changing field 'Movement.updated'
+        db.alter_column(u'elvis_movement', 'updated', self.gf('django.db.models.fields.DateTimeField')())
 
+        # Changing field 'Movement.created'
+        db.alter_column(u'elvis_movement', 'created', self.gf('django.db.models.fields.DateTimeField')())
+        # Adding field 'Piece.number_of_downloads'
+        db.add_column(u'elvis_piece', 'number_of_downloads',
+                      self.gf('django.db.models.fields.IntegerField')(null=True, blank=True),
+                      keep_default=False)
 
-        # Changing field 'Project.created'
-        db.alter_column(u'elvis_project', 'created', self.gf('django.db.models.fields.DateTimeField')())
+        # Adding field 'Piece.number_of_queries'
+        db.add_column(u'elvis_piece', 'number_of_queries',
+                      self.gf('django.db.models.fields.IntegerField')(null=True, blank=True),
+                      keep_default=False)
 
-        # Changing field 'Piece.updated'
-        db.alter_column(u'elvis_piece', 'updated', self.gf('django.db.models.fields.DateTimeField')())
-
-        # Changing field 'Piece.created'
-        db.alter_column(u'elvis_piece', 'created', self.gf('django.db.models.fields.DateTimeField')())
-
-        # Changing field 'Comment.user'
-        db.alter_column(u'elvis_comment', 'user_id', self.gf('django.db.models.fields.related.ForeignKey')(to=orm['elvis.UserProfile']))
-
-        # Changing field 'Attachment.updated'
-        db.alter_column(u'elvis_attachment', 'updated', self.gf('django.db.models.fields.DateTimeField')())
-
-        # Changing field 'Attachment.created'
-        db.alter_column(u'elvis_attachment', 'created', self.gf('django.db.models.fields.DateTimeField')())
-        # Deleting field 'Discussion.updated'
-        db.delete_column(u'elvis_discussion', 'updated')
-
-
-        # Changing field 'Discussion.created'
-        db.alter_column(u'elvis_discussion', 'created', self.gf('django.db.models.fields.DateTimeField')())
-
-        # Changing field 'Discussion.first_user'
-        db.alter_column(u'elvis_discussion', 'first_user_id', self.gf('django.db.models.fields.related.ForeignKey')(to=orm['elvis.UserProfile']))
-
-        # Changing field 'Corpus.updated'
-        db.alter_column(u'elvis_corpus', 'updated', self.gf('django.db.models.fields.DateTimeField')())
-
-        # Changing field 'Corpus.creator'
-        db.alter_column(u'elvis_corpus', 'creator_id', self.gf('django.db.models.fields.related.ForeignKey')(to=orm['elvis.UserProfile']))
-
-        # Changing field 'Corpus.created'
-        db.alter_column(u'elvis_corpus', 'created', self.gf('django.db.models.fields.DateTimeField')())
-
-        # Changing field 'Composer.updated'
-        db.alter_column(u'elvis_composer', 'updated', self.gf('django.db.models.fields.DateTimeField')())
-
-        # Changing field 'Composer.created'
-        db.alter_column(u'elvis_composer', 'created', self.gf('django.db.models.fields.DateTimeField')())
 
     models = {
         u'auth.group': {
@@ -138,7 +101,7 @@ class Migration(SchemaMigration):
             'date_joined': ('django.db.models.fields.DateTimeField', [], {'default': 'datetime.datetime.now'}),
             'email': ('django.db.models.fields.EmailField', [], {'max_length': '75', 'blank': 'True'}),
             'first_name': ('django.db.models.fields.CharField', [], {'max_length': '30', 'blank': 'True'}),
-            'groups': ('django.db.models.fields.related.ManyToManyField', [], {'to': u"orm['auth.Group']", 'symmetrical': 'False', 'blank': 'True'}),
+            'groups': ('django.db.models.fields.related.ManyToManyField', [], {'symmetrical': 'False', 'related_name': "u'user_set'", 'blank': 'True', 'to': u"orm['auth.Group']"}),
             u'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'}),
             'is_active': ('django.db.models.fields.BooleanField', [], {'default': 'True'}),
             'is_staff': ('django.db.models.fields.BooleanField', [], {'default': 'False'}),
@@ -146,7 +109,7 @@ class Migration(SchemaMigration):
             'last_login': ('django.db.models.fields.DateTimeField', [], {'default': 'datetime.datetime.now'}),
             'last_name': ('django.db.models.fields.CharField', [], {'max_length': '30', 'blank': 'True'}),
             'password': ('django.db.models.fields.CharField', [], {'max_length': '128'}),
-            'user_permissions': ('django.db.models.fields.related.ManyToManyField', [], {'to': u"orm['auth.Permission']", 'symmetrical': 'False', 'blank': 'True'}),
+            'user_permissions': ('django.db.models.fields.related.ManyToManyField', [], {'symmetrical': 'False', 'related_name': "u'user_set'", 'blank': 'True', 'to': u"orm['auth.Permission']"}),
             'username': ('django.db.models.fields.CharField', [], {'unique': 'True', 'max_length': '30'})
         },
         u'contenttypes.contenttype': {
@@ -176,7 +139,7 @@ class Migration(SchemaMigration):
             'user': ('django.db.models.fields.related.ForeignKey', [], {'to': u"orm['auth.User']"})
         },
         'elvis.composer': {
-            'Meta': {'object_name': 'Composer'},
+            'Meta': {'ordering': "['name']", 'object_name': 'Composer'},
             'birth_date': ('django.db.models.fields.DateField', [], {'null': 'True', 'blank': 'True'}),
             'created': ('django.db.models.fields.DateTimeField', [], {'auto_now_add': 'True', 'blank': 'True'}),
             'death_date': ('django.db.models.fields.DateField', [], {'null': 'True', 'blank': 'True'}),
@@ -188,7 +151,7 @@ class Migration(SchemaMigration):
             'updated': ('django.db.models.fields.DateTimeField', [], {'auto_now': 'True', 'blank': 'True'})
         },
         'elvis.corpus': {
-            'Meta': {'object_name': 'Corpus'},
+            'Meta': {'ordering': "['title']", 'object_name': 'Corpus'},
             'comment': ('django.db.models.fields.TextField', [], {'null': 'True', 'blank': 'True'}),
             'created': ('django.db.models.fields.DateTimeField', [], {'auto_now_add': 'True', 'blank': 'True'}),
             'creator': ('django.db.models.fields.related.ForeignKey', [], {'to': u"orm['auth.User']"}),
@@ -211,41 +174,36 @@ class Migration(SchemaMigration):
         },
         'elvis.download': {
             'Meta': {'object_name': 'Download'},
-            'attachment': ('django.db.models.fields.related.ForeignKey', [], {'to': "orm['elvis.Attachment']", 'null': 'True', 'blank': 'True'}),
+            'attachments': ('django.db.models.fields.related.ManyToManyField', [], {'blank': 'True', 'related_name': "'downloads'", 'null': 'True', 'symmetrical': 'False', 'to': "orm['elvis.Attachment']"}),
             u'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'}),
-            'saved': ('django.db.models.fields.DateTimeField', [], {'default': 'datetime.datetime.now', 'blank': 'True'}),
-            'user': ('django.db.models.fields.related.ForeignKey', [], {'to': u"orm['auth.User']"})
+            'user': ('django.db.models.fields.related.ForeignKey', [], {'blank': 'True', 'related_name': "'downloads'", 'null': 'True', 'to': u"orm['auth.User']"})
         },
         'elvis.movement': {
-            'Meta': {'object_name': 'Movement'},
+            'Meta': {'ordering': "['title']", 'object_name': 'Movement'},
             'attachments': ('django.db.models.fields.related.ManyToManyField', [], {'symmetrical': 'False', 'to': "orm['elvis.Attachment']", 'null': 'True', 'blank': 'True'}),
             'comment': ('django.db.models.fields.TextField', [], {'null': 'True', 'blank': 'True'}),
-            'composer': ('django.db.models.fields.related.ForeignKey', [], {'to': "orm['elvis.Composer']", 'null': 'True', 'blank': 'True'}),
-            'corpus': ('django.db.models.fields.related.ForeignKey', [], {'to': "orm['elvis.Corpus']", 'null': 'True', 'blank': 'True'}),
-            'created': ('django.db.models.fields.DateTimeField', [], {'default': 'datetime.datetime.now', 'blank': 'True'}),
+            'composer': ('django.db.models.fields.related.ForeignKey', [], {'blank': 'True', 'related_name': "'movements'", 'null': 'True', 'to': "orm['elvis.Composer']"}),
+            'corpus': ('django.db.models.fields.related.ForeignKey', [], {'blank': 'True', 'related_name': "'movements'", 'null': 'True', 'to': "orm['elvis.Corpus']"}),
+            'created': ('django.db.models.fields.DateTimeField', [], {'auto_now_add': 'True', 'blank': 'True'}),
             'date_of_composition': ('django.db.models.fields.DateField', [], {'null': 'True', 'blank': 'True'}),
             u'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'}),
-            'number_of_downloads': ('django.db.models.fields.IntegerField', [], {'null': 'True', 'blank': 'True'}),
-            'number_of_queries': ('django.db.models.fields.IntegerField', [], {'null': 'True', 'blank': 'True'}),
             'number_of_voices': ('django.db.models.fields.IntegerField', [], {'null': 'True', 'blank': 'True'}),
             'old_id': ('django.db.models.fields.IntegerField', [], {'db_index': 'True', 'null': 'True', 'blank': 'True'}),
             'piece': ('django.db.models.fields.related.ForeignKey', [], {'to': "orm['elvis.Piece']", 'null': 'True', 'blank': 'True'}),
             'tags': ('django.db.models.fields.related.ManyToManyField', [], {'symmetrical': 'False', 'to': "orm['elvis.Tag']", 'null': 'True', 'blank': 'True'}),
             'title': ('django.db.models.fields.CharField', [], {'max_length': '255'}),
-            'updated': ('django.db.models.fields.DateTimeField', [], {'default': 'datetime.datetime.now', 'blank': 'True'}),
+            'updated': ('django.db.models.fields.DateTimeField', [], {'auto_now': 'True', 'blank': 'True'}),
             'uploader': ('django.db.models.fields.related.ForeignKey', [], {'to': u"orm['auth.User']", 'null': 'True', 'blank': 'True'})
         },
         'elvis.piece': {
-            'Meta': {'object_name': 'Piece'},
+            'Meta': {'ordering': "['title']", 'object_name': 'Piece'},
             'attachments': ('django.db.models.fields.related.ManyToManyField', [], {'symmetrical': 'False', 'to': "orm['elvis.Attachment']", 'null': 'True', 'blank': 'True'}),
             'comment': ('django.db.models.fields.TextField', [], {'null': 'True', 'blank': 'True'}),
-            'composer': ('django.db.models.fields.related.ForeignKey', [], {'to': "orm['elvis.Composer']", 'null': 'True', 'blank': 'True'}),
-            'corpus': ('django.db.models.fields.related.ForeignKey', [], {'to': "orm['elvis.Corpus']", 'null': 'True', 'blank': 'True'}),
+            'composer': ('django.db.models.fields.related.ForeignKey', [], {'blank': 'True', 'related_name': "'pieces'", 'null': 'True', 'to': "orm['elvis.Composer']"}),
+            'corpus': ('django.db.models.fields.related.ForeignKey', [], {'blank': 'True', 'related_name': "'pieces'", 'null': 'True', 'to': "orm['elvis.Corpus']"}),
             'created': ('django.db.models.fields.DateTimeField', [], {'auto_now_add': 'True', 'blank': 'True'}),
             'date_of_composition': ('django.db.models.fields.DateField', [], {'null': 'True', 'blank': 'True'}),
             u'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'}),
-            'number_of_downloads': ('django.db.models.fields.IntegerField', [], {'null': 'True', 'blank': 'True'}),
-            'number_of_queries': ('django.db.models.fields.IntegerField', [], {'null': 'True', 'blank': 'True'}),
             'number_of_voices': ('django.db.models.fields.IntegerField', [], {'null': 'True', 'blank': 'True'}),
             'old_id': ('django.db.models.fields.IntegerField', [], {'db_index': 'True', 'null': 'True', 'blank': 'True'}),
             'tags': ('django.db.models.fields.related.ManyToManyField', [], {'blank': 'True', 'related_name': "'pieces'", 'null': 'True', 'symmetrical': 'False', 'to': "orm['elvis.Tag']"}),

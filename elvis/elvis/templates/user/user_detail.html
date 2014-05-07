@@ -2,6 +2,8 @@
 
 {% block wrap %}
 
-<h2> user detail page </h2>
+<h2>Account settings for {{ content.username }}</h2>
+<p>Joined {{ user.date_joined | date:"d F Y" }}</p>
+<p>Last Login {{ user.last_login | date:"d F Y" }}</p>
 
 {% endblock %}

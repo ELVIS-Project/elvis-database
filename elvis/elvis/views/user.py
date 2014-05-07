@@ -1,6 +1,7 @@
-'''
-USERS
-'''
+from django.contrib.auth.models import User
+from rest_framework import generics
+from rest_framework import permissions
+from rest_framework.renderers import JSONRenderer, JSONPRenderer
 
 from django.shortcuts import render
 from elvis.models.userprofile import UserProfile
@@ -26,5 +27,22 @@ def registration(request):
 	print temp_users
 	return render(request, 'registration/registration.html', {'users': temp_users})
 
-def setPermissions(request):
-	return render(request, 'registration/user_permissions.html')
+class UserDetailHTMLRenderer(CustomHTMLRenderer):
+    template_name = "user/user_detail.html"
+
+
+class UserList(generics.ListCreateAPIView):
+    model = User
+    permission_classes = (permissions.IsAuthenticatedOrReadOnly,)
+    serializer_class = UserSerializer
+    renderer_classes = (JSONRenderer, JSONPRenderer, UserListHTMLRenderer)
+    paginate_by = 10
+    paginate_by_param = 'page_size'
+    max_paginate_by = 100
+
+
+class UserDetail(generics.RetrieveUpdateDestroyAPIView):
+    model = User
+    permission_classes = (permissions.IsAuthenticatedOrReadOnly,)
+    serializer_class = UserSerializer
+    renderer_classes = (JSONRenderer, JSONPRenderer, UserDetailHTMLRenderer)

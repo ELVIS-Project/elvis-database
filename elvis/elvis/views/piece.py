@@ -1,3 +1,4 @@
+from django.views.decorators.csrf import ensure_csrf_cookie
 from rest_framework import generics
 from rest_framework import permissions
 from rest_framework.renderers import JSONRenderer, JSONPRenderer
@@ -20,6 +21,9 @@ class PieceList(generics.ListCreateAPIView):
     permission_classes = (permissions.IsAuthenticatedOrReadOnly,)
     serializer_class = PieceSerializer
     renderer_classes = (JSONRenderer, JSONPRenderer, PieceListHTMLRenderer)
+    paginate_by = 10
+    paginate_by_param = 'page_size'
+    max_paginate_by = 100
 
 
 class PieceDetail(generics.RetrieveUpdateDestroyAPIView):
@@ -27,3 +31,5 @@ class PieceDetail(generics.RetrieveUpdateDestroyAPIView):
     permission_classes = (permissions.IsAuthenticatedOrReadOnly,)
     serializer_class = PieceSerializer
     renderer_classes = (JSONRenderer, JSONPRenderer, PieceDetailHTMLRenderer)
+
+

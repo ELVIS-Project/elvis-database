@@ -1,7 +1,6 @@
 from django import template
 from django.utils import timezone
-from datetime import datetime, date
-import random
+from datetime import datetime
 
 register = template.Library()
 
@@ -59,16 +58,11 @@ def assign_id(name, counter): return str(name)+str(counter)
 def get_value(dictionary, key): return dictionary.get(key)
 
 @register.filter
-def randomLabel(tag): 
-	labels = ["label", "label label-success", "label label-warning", "label label-important", "label label-info", "label label-inverse"]
-	return random.choice(labels)
-
-@register.filter
-def get_length(dictionary): 
-	length = 0
-	for key,val in dictionary.iteritems():
-		length += len(val)
-	return length
+def get_length(dictionary):
+    length = 0
+    for key,val in dictionary.iteritems():
+        length += len(val)
+    return length
 
 @register.filter
 def get_field(model, fieldname):
@@ -88,32 +82,20 @@ def rangefn(number): return range(1,number) + [number]
 
 @register.filter
 def pager(l, page_num): 
-	start = 0 if (page_num-5) < 0 else (page_num-5)
-	return l[start:page_num+5]
+    start = 0 if (page_num-5) < 0 else (page_num-5)
+    return l[start:page_num+5]
 
-'''
-These are used for date displays. format_timestamp is for date created/uploaded/modified
-format_composition is for piece/movement date of composition or composer year 
-format_time is for comments in discussions 
-'''
-
-@register.filter
-def format_timestamp(timestamp): return timestamp.strftime("%Y-%m-%d")
-
-@register.filter
-def format_composition(timestamp): return timestamp.year
-
-@register.filter
-def format_time(timestamp):
-	today = datetime.now()
-	today = timezone.make_aware(today, timezone.get_default_timezone())
-	if today == timestamp:
-		return "just now"
-	elif today.day == timestamp.day and today.month == timestamp.month and today.year == timestamp.year:
-		return timestamp.time()
-	elif today.year == timestamp.year and today.month == timestamp.month:
-		return timestamp.strftime("%d %b")
-	elif today.year == timestamp.year:
-		return timestamp.strftime("%d %b")
-	else:
-		return timestamp.strftime("%d %b %Y")
+# @register.filter
+# def format_time(timestamp):
+#     today = datetime.now()
+#     today = timezone.make_aware(today, timezone.get_default_timezone())
+#     if today == timestamp:
+#         return "just now"
+#     elif today.day == timestamp.day and today.month == timestamp.month and today.year == timestamp.year:
+#         return timestamp.time()
+#     elif today.year == timestamp.year and today.month == timestamp.month:
+#         return timestamp.strftime("%d %b")
+#     elif today.year == timestamp.year:
+#         return timestamp.strftime("%d %b")
+#     else:
+#         return timestamp.strftime("%d %b %Y")

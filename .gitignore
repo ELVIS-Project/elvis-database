@@ -1,7 +1,7 @@
-*.log
-*.pot
 *.pyc
-local_settings.py
+*.sqlite3
 solr/target/*
-.DS_Store
 elvis_env/*
+.DS_Store
+dumps
+elvis/attachments
