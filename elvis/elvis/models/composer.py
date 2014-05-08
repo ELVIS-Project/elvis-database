@@ -5,13 +5,14 @@ from django.dispatch import receiver
 from django.contrib.auth.models import User
 from django.db.models.signals import post_save, post_delete
 
+def picture_path(instance, filename):
+    return os.path.join("photos", "composers", filename)
+
+
 class Composer(models.Model):
     class Meta:
         app_label = "elvis"
         ordering = ["name"]
-
-    def picture_path(self, filename):
-        return os.path.join("photos", "composers", filename)
 
     old_id = models.IntegerField(db_index=True, blank=True, null=True)
     name = models.CharField(max_length=255)

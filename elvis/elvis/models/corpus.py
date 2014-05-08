@@ -8,9 +8,6 @@ class Corpus(models.Model):
         verbose_name_plural = "corpora"
         app_label = "elvis"
 
-    def picture_path(self):
-        return '/'.join('photos/corpora', self.title.__unicode__)
-
     old_id = models.IntegerField(db_index=True, blank=True, null=True)
     creator = models.ForeignKey(User)
     title = models.CharField(max_length=255, blank=True, null=True)
@@ -19,7 +16,6 @@ class Corpus(models.Model):
 
     created = models.DateTimeField(auto_now_add=True)
     updated = models.DateTimeField(auto_now=True)
-    picture = models.ImageField(upload_to=picture_path, null=True)
 
     def __unicode__(self):
         return u"{0}".format(self.title)

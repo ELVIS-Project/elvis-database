@@ -7,6 +7,10 @@ from django.conf import settings
 
 from datetime import datetime
 
+
+def upload_path(instance, filename):
+    return os.path.join(instance.attachment_path, filename)
+
 class Attachment(models.Model):
     """
         IMPORTANT: This model will store its attachments in a
@@ -34,9 +38,6 @@ class Attachment(models.Model):
                             "{0:0>2}".format(str(self.pk)[0:2]),
                             "{0:0>2}".format(str(self.pk)[-2:]),
                             "{0:0>15}".format(self.pk))
-
-    def upload_path(self, filename):
-        return os.path.join(self.attachment_path, filename)
 
     old_id = models.IntegerField(null=True, blank=True, db_index=True)
     attachment = models.FileField(upload_to=upload_path, null=True, max_length=512)
