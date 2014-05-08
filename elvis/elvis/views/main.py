@@ -6,44 +6,6 @@ from django.shortcuts import render
 def home(request):
     return render(request, "home.html", {})
 
-# Render the login page 
-def user_login(request):
-    context = {}
-    if request.method == 'POST':
-        username = request.POST['username']
-        password = request.POST['password']
-        user = authenticate(username=username, password=password)
-        if user and user.is_active:
-            login(request, user)
-            return HttpResponseRedirect('/home/')
-        else:
-            context = {"error_message": "Wrong username or password."}
-    return render(request, 'registration/login.html', context)
-
-# TODO: If want to save anything from current session, do that after logout
-def user_logout(request):
-    logout(request)
-
-# TODO: Message body 
-def request_permission(request):
-    context = {}
-    if request.method == 'POST':
-        first_name = request.POST['first-name']
-        last_name = request.POST['last-name']
-        email = request.POST['email']
-        # First create a temporary (inactive) user object for this user
-        # This will be activated once the admin sets permissions and once the user receives a confirmation email 
-        user, userprofile = createTempUser(first_name, last_name, email)
-        # Then send email to admin 
-        subject = first_name + " " + last_name + " would like to join ELVIS."
-        message = "Go to " + URL + "registration" + " to allow or disallow the user to join and set permissions."
-        val = sendemails(email, [USER.user.email], subject, message)
-        if val:
-            context = {'success': 'Your email has been sent.'}
-        else:
-            context = {'failure': 'Something went wrong.'}
-    return render(request, 'registration/permission.html', context)
-
 # Render the upload page 
 # def upload(request):
 #     return render(request, "upload.html", {})
@@ -87,6 +49,30 @@ def request_permission(request):
 #                     qset = reduce(operator.or_, (Q(**{field: query}) for field, query in query_vals))
 #                     results.append(model.objects.filter(qset))
 #     return results
+
+'''
+# TODO: Can reduce complexity by hardcoding DateField relations? 
+# TODO: Can get class names from meta class. what about predefined classes like User? 
+def filter_dates(querysets, start, end, alldb=False):
+    # This means should only look at dates related to objects found
+    if not alldb:
+        # Iterate through each query set and get all related pk's w/ dates
+        for queryset in querysets:
+            for result in queryset:
+
+
+    # Otherwise just return all objects in this range
+    else:
+'''
+
+'''
+def filter_voices(results, voices, alldb=False):
+    # This means should only look at voices related to objects found
+    if results:
+        
+    # Otherwise just return all objects with this number of voices
+    else:
+'''
 
 
 '''
@@ -200,6 +186,9 @@ SEARCH
 #     return render(request, 'query.html', {"content": queries})
 
 
+'''
+USER PROFILES
+'''
 
 # Render list of user profiles
 # def user_profiles(request):
@@ -510,7 +499,7 @@ PROJECTS
 #         items = request.getlist("items")
 #         # Need to save these items to the database
 #         for item in items:
-#         	obj = Download(item)
-#         	obj.save()
+#           obj = Download(item)
+#           obj.save()
 #     # Now render downloads page 
 #     return render(request, "download.html", {})
