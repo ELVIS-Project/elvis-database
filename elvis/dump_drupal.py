@@ -4,7 +4,10 @@ import MySQLdb
 from django.core.files import File
 from MySQLdb.cursors import DictCursor
 
+import django
 os.environ.setdefault("DJANGO_SETTINGS_MODULE", "elvis.settings")
+django.setup()
+
 from elvis.models.tag import Tag
 from elvis.models.tag_hierarchy import TagHierarchy
 from elvis.models.composer import Composer
@@ -53,11 +56,11 @@ ATTACHMENT_QUERY = """"""
 
 class DumpDrupal(object):
     def __init__(self):
-        self.get_tags()
-        self.get_composers()
-        self.get_users()
-        self.get_corpus()
-        self.get_pieces_movements("piece")
+        # self.get_tags()
+        # self.get_composers()
+        # self.get_users()
+        # self.get_corpus()
+        # self.get_pieces_movements("piece")
         self.get_pieces_movements("movement")
 
     def __connect(self):
@@ -135,6 +138,7 @@ class DumpDrupal(object):
         for composer in composers:
             c = Composer(**composer)
             c.save()
+
         self.__disconnect()
 
     def get_tags(self):
@@ -147,6 +151,7 @@ class DumpDrupal(object):
 
         print "Adding tags"
         for tag in tags:
+            print tag
             t = Tag(**tag)
             t.save()
 
@@ -240,7 +245,7 @@ class DumpDrupal(object):
 
         for item in objects:
             self.__connect()
-            self.curs.execute(ITEM_TAG_QUERY, item.old_id)
+            self.curs.execute(ITEM_TAG_QUERY, [item.old_id])
             tags = self.curs.fetchall()
             for tag in tags:
                 tag_obj = Tag.objects.filter(old_id=tag.get('tid'))
@@ -267,7 +272,7 @@ class DumpDrupal(object):
 
         self.__connect()
         for item in objects:
-            self.curs.execute(ITEM_ATTACHMENT_QUERY, item.old_id)
+            self.curs.execute(ITEM_ATTACHMENT_QUERY, [item.old_id])
             attachments = self.curs.fetchall()
             for attachment in attachments:
                 for user in users:
@@ -307,7 +312,7 @@ class DumpDrupal(object):
                FROM menu_links ml1
                LEFT JOIN menu_links ml2 ON ml2.plid = ml1.mlid
                WHERE ml2.link_path = \"node/%s\""""
-        self.curs.execute(q, old_id)
+        self.curs.execute(q, [old_id])
         pp = self.curs.fetchone()
         # import pdb
         # pdb.set_trace()
