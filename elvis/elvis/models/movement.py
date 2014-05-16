@@ -3,6 +3,10 @@ from django.contrib.auth.models import User
 
 from datetime import datetime
 
+#django signal handlers
+from django.dispatch import receiver
+from django.db.models.signals import post_save, post_delete
+
 
 class Movement(models.Model):
     class Meta:
@@ -20,7 +24,7 @@ class Movement(models.Model):
     tags = models.ManyToManyField("elvis.Tag", blank=True, null=True)
     attachments = models.ManyToManyField("elvis.Attachment", blank=True, null=True, related_name="movements")
     comment = models.TextField(blank=True, null=True)
-
+    
     # number_of_queries = models.IntegerField(blank=True, null=True)
     # number_of_downloads = models.IntegerField(blank=True, null=True)
 
@@ -29,3 +33,40 @@ class Movement(models.Model):
 
     def __unicode__(self):
         return u"{0}".format(self.title)
+
+@receiver(post_save, sender=Movement)
+def solr_index(sender, instance, created, **kwargs):
+    import uuid
+    from django.conf import settings
+    import solr
+
+    solrconn = solr.SolrConnection(settings.SOLR_SERVER)
+    record = solrconn.query("type:elvis_movement item_id:{0}".format(instance.id))
+    if record:
+        solrconn.delete(record.results[0]['id'])
+
+    movement = instance
+    #print(movement.title)
+    d = {
+            'type': 'elvis_movement',
+            'id': str(uuid.uuid4()),
+            'item_id': int(movement.id),
+            'movement_title': unicode(movement.title),
+            'movement_date_of_composition': movement.date_of_composition,
+            'movement_number_of_voices': movement.number_of_voices,
+            'created': movement.created,
+            'updated': movement.updated,
+    }
+    solrconn.add(**d)
+    solrconn.commit()
+
+
+@receiver(post_delete, sender=Movement)
+def solr_delete(sender, instance, **kwargs):
+    from django.conf import settings
+    import solr
+    solrconn = solr.SolrConnection(settings.SOLR_SERVER)
+    record = solrconn.query("type:elvis_corpus item_id:{0}".format(instance.id))
+    if record:
+        # the record already exists, so we'll remove it.
+        solrconn.delete(record.results[0]['id'])

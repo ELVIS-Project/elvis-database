@@ -11,6 +11,23 @@ from elvis.models.movement import Movement
 from elvis.models.userprofile import UserProfile
 from elvis.models.download import Download
 
+# method for admin reindex all entries to solr
+def reindex_in_solr(modeladmin, request, queryset):
+    for item in queryset:
+        item.save()
+
+reindex_in_solr.short_description = "Reindex selected in Solr"
+
+
+# see above, delete all entries in solr
+def delete_in_solr(modeladmin, request, queryset):
+    for item in queryset:
+        item.delete()
+
+delete_in_solr.short_description = "Delete selected in Solr"
+
+# summary of available actions: actions = [reindex_in_solr, delete_in_solr]
+
 class DownloadAdmin(admin.ModelAdmin):
     filter_horizontal = ('attachments',)
 
@@ -24,20 +41,22 @@ class PieceAdmin(admin.ModelAdmin):
     list_display = ("title", "composer", "date_of_composition", "number_of_voices", "uploader", "old_id", "corpus")
     filter_horizontal = ("tags",)
     readonly_fields = ("attachments",)
+    actions = [reindex_in_solr, delete_in_solr]
 
 
 class MovementAdmin(admin.ModelAdmin):
     list_display = ("title", "composer", "date_of_composition", "number_of_voices", "uploader", "old_id", "piece", "corpus")
     filter_horizontal = ("tags",)
     readonly_fields = ("attachments",)
-
+    actions = [reindex_in_solr, delete_in_solr]
 
 class CorpusAdmin(admin.ModelAdmin):
     pass
-
+    actions = [reindex_in_solr, delete_in_solr]
 
 class ComposerAdmin(admin.ModelAdmin):
     list_display = ("name", "birth_date", "death_date")
+    actions = [reindex_in_solr, delete_in_solr]
 
 
 class TagAdmin(admin.ModelAdmin):
