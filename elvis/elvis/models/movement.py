@@ -49,12 +49,12 @@ def solr_index(sender, instance, created, **kwargs):
     #print(movement.title)
 
     if movement.piece is None:
-        parent_piece_name = 'none'
+        parent_piece_name = None
     else:
         parent_piece_name = movement.piece.title
 
     if movement.corpus is None:
-        parent_corpus_name = 'none'
+        parent_corpus_name = None
     else:
         parent_corpus_name = movement.corpus.title
 

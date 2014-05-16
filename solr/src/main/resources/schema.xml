@@ -924,15 +924,12 @@
     
 
     <!-- LM Misc User-related fields --> 
-    <!-- TODO may want to change comment to text_general later, and add copy_field 
-     Also, why is there an individual comment field while there is a comment model?-->
+    <!-- TODO may want to change comment to text_general later, and add copy_field -->
     <field name="comment" type="string" indexed="true" stored="true" />
-
     <!-- TODO same as general comments; may want to change project_description to text_general later, and add copy_field -->  
     <field name="project_description" type="string" indexed="true" stored="true" />
 
     <!-- LM Comment specific fields... why is there a comment model? --> 
-    <field name="comment_name" type="string" indexed="true" stored="true" />
     <!-- TODO same as general comments; change to text_general -->
     <field name="comment_text" type="string" indexed="true" stored="true" />
 
@@ -941,6 +938,7 @@
     <!-- LM copyFields to text used for searching -->
     <copyField source="name" dest="text" />
     <copyField source="birth_date" dest="text" />
+    <copyField source="date_of_composition" dest="text" />
     <copyField source="title" dest="text" />
 
     <!-- piece fields -->

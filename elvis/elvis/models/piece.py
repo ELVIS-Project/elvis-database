@@ -49,7 +49,7 @@ def solr_index(sender, instance, created, **kwargs):
     piece = instance
 
     if piece.corpus is None:
-        parent_corpus_name = 'none'
+        parent_corpus_name = None
     else:
         parent_corpus_name = piece.corpus.title
 
