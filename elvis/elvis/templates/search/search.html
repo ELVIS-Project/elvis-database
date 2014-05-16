@@ -2,9 +2,15 @@
 
 {% block wrap %}
 
+
     <form id="search-form" action="/search" method="get">
         <input type="text" name="q" class="search-input" />
         <button type="submit" class="btn">Search</button>
     </form>
+
+    {% if content.results %}
+            <h3>Results</h3>
+            {% include "search/search_results.html" %}
+    {% endif %}
 
 {% endblock %}

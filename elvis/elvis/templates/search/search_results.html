@@ -1,0 +1,38 @@
+{% if content.results.numFound > 0 %}
+    <div class="list-group">
+    {% for result in content.results.results %}
+        {% if result.type == "elvis_composer" %}
+            <a href="/composer/{{ result.item_id }}" class="list-group-item">
+                <span class="label label-primary pull-right">Composer</span>
+                <h4>{{ result.name }}</h4>
+                <p class="list-group-item-text">{{ result.birth_date | date:"Y" }}&ndash;{{ result.death_date | date:"Y" }}</p>
+            </a>
+        {% elif result.type == "elvis_corpus" %}
+            <a href="/corpus/{{ result.item_id }}" class="list-group-item">
+                <span class="label label-primary pull-right">Corpus</span>
+                <h4>{{ result.title }}</h4>
+                <p class="list-group-item-text"> Created by {{result.creator_name}} on {{result.created}} </p>
+                <p class="list-group-item-text"> {{result.comment}} </p>
+            </a>
+        {% elif result.type == "elvis_movement" %}
+            <a href="/movement/{{ result.item_id }}" class="list-group-item">
+                <span class="label label-primary pull-right">Movement</span>
+                <h4>{{ result.title }}</h4>
+                <!-- TODO reorganise data presentation --> 
+                <p class="list-group-item-text"> {{result.composer_name}} Date: {{ result.date_of_composition | date:"Y" }} Piece: {{result.parent_piece_name}} </p>
+                <p class="list-group-item-text"> {{result.comment}} </p>
+            </a>
+        {% elif result.type == "elvis_piece" %}
+            <a href="/movement/{{ result.item_id }}" class="list-group-item">
+                <span class="label label-primary pull-right">Piece</span>
+                <h4>{{ result.title }}</h4>
+                <!-- TODO reorganise data presentation --> 
+                <p class="list-group-item-text"> {{result.composer_name}} Date: { result.date_of_composition | date:"Y" }} </p>
+                <p class="list-group-item-text"> {{result.comment}} </p>
+            </a>
+        {% endif %}
+    {% endfor %}
+    </div>
+{% else %}
+    <h5>No Results found.</h5>
+{% endif %}

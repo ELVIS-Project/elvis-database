@@ -47,15 +47,31 @@ def solr_index(sender, instance, created, **kwargs):
 
     movement = instance
     #print(movement.title)
+
+    if movement.piece is None:
+        parent_piece_name = 'none'
+    else:
+        parent_piece_name = movement.piece.title
+
+    if movement.corpus is None:
+        parent_corpus_name = 'none'
+    else:
+        parent_corpus_name = movement.corpus.title
+
     d = {
             'type': 'elvis_movement',
             'id': str(uuid.uuid4()),
             'item_id': int(movement.id),
-            'movement_title': unicode(movement.title),
-            'movement_date_of_composition': movement.date_of_composition,
-            'movement_number_of_voices': movement.number_of_voices,
+            'title': unicode(movement.title),
+            'date_of_composition': movement.date_of_composition,
+            'number_of_voices': movement.number_of_voices,
+            'comment': movement.comment,
             'created': movement.created,
             'updated': movement.updated,
+            'parent_piece_name': parent_piece_name,  
+            'parent_corpus_name': parent_corpus_name,
+            'composer_name': movement.composer.name,
+            'uploader_name': movement.uploader.username,
     }
     solrconn.add(**d)
     solrconn.commit()
@@ -66,7 +82,7 @@ def solr_delete(sender, instance, **kwargs):
     from django.conf import settings
     import solr
     solrconn = solr.SolrConnection(settings.SOLR_SERVER)
-    record = solrconn.query("type:elvis_corpus item_id:{0}".format(instance.id))
+    record = solrconn.query("type:elvis_movement item_id:{0}".format(instance.id))
     if record:
         # the record already exists, so we'll remove it.
         solrconn.delete(record.results[0]['id'])

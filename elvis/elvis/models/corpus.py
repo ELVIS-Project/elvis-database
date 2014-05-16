@@ -43,10 +43,11 @@ def solr_index(sender, instance, created, **kwargs):
             'type': 'elvis_corpus',
             'id': str(uuid.uuid4()),
             'item_id': int(corpus.id),
-            'corpus_title': unicode(corpus.title),
+            'title': unicode(corpus.title),
             'created': corpus.created,
             'updated': corpus.updated,
             'comment': corpus.comment,
+            'creator_name': corpus.creator.username,
     }
     solrconn.add(**d)
     solrconn.commit()
