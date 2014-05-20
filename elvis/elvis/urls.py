@@ -5,7 +5,10 @@ import os
 
 from rest_framework.urlpatterns import format_suffix_patterns
 from django.contrib.staticfiles.urls import staticfiles_urlpatterns
-from elvis.views.main import home
+
+# temporary views for static pages
+from elvis.views.main import home, about, queries
+
 from elvis.views.auth import LoginFormView, logout_view
 from elvis.views.search import SearchView
 from elvis.views.project import ProjectList, ProjectDetail
@@ -18,7 +21,7 @@ from elvis.views.movement import MovementList, MovementDetail
 from elvis.views.composer import ComposerList, ComposerDetail
 from elvis.views.tag import TagList, TagDetail
 from elvis.views.attachment import AttachmentList, AttachmentDetail
-
+from elvis.views.forms import create_composer, create_corpus
 
 # Uncomment the next two lines to enable the admin:
 from django.contrib import admin
@@ -62,15 +65,17 @@ urlpatterns += format_suffix_patterns(
         url(r'^tag/(?P<pk>[0-9]+)/$', TagDetail.as_view(), name="tag-detail"),
 
 
+        url(r'^about/', about, name='about'),
+
         # url(r'^upload/corpus/$', create_corpus_large, name="create-corpus-large"),
         # url(r'^upload/piece/$', create_piece, name="create-piece"),
         # url(r'^upload/movement/$', create_movement, name="create-movement"),
         # url(r'^upload/project/$', create_project, name="create-project"),
         # url(r'^search_results/$', search_view, name="search_results"),
         # url(r'^upload/$', upload_file, name="upload"),
-        # url(r'^queries/$', queries, name="queries"),
-        # url(r'^addcomposer/$', create_composer, name="create-composer"),
-        # url(r'^addcorpus/$', create_corpus, name="create-corpus"),
+        url(r'^queries/$', queries, name="queries"),
+        url(r'^addcomposer/$', create_composer, name="create-composer"),
+        url(r'^addcorpus/$', create_corpus, name="create-corpus"),
         # url(r'^(?P<entity>[a-z_]+)/(?P<pk>[0-9]+)/delete/', delete_model, name="delete-model"),
 
         # url(r'^downloads/$', download_list, name="download-list"),

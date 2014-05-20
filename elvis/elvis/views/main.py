@@ -6,6 +6,21 @@ from django.shortcuts import render
 def home(request):
     return render(request, "home.html", {})
 
+# LM Render the about page
+def about(request):
+    return render(request, "about.html", {})
+
+# LM Render the query page
+def queries(request):
+    return render(request, "query.html", {})    
+
+'''
+LM: Unsure of what the below code is used for, above are temporary views
+
+'''
+
+
+
 # Render the upload page 
 # def upload(request):
 #     return render(request, "upload.html", {})

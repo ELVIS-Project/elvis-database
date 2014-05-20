@@ -28,7 +28,7 @@ Views that create and add an entity to the database
 '''
 
 def create_composer(request):
-	picture = choice(os.listdir(os.path.abspath('elvis/media/generics/composers')))
+	picture = choice(os.listdir(os.path.abspath('elvis/elvis/media/generics/composers')))
 	if request.method == 'POST':
 		form = ComposerForm(request.POST)
 		if form.is_valid():
@@ -47,7 +47,7 @@ def create_composer(request):
 
 
 def corpus_handler(request):
-	picture = choice(os.listdir(os.path.abspath('elvis/media/generics/corpora')))
+	picture = choice(os.listdir(os.path.abspath('elvis/elvis/media/generics/corpora')))
 	if request.method == 'POST':
 		form = CorpusForm(request.POST)
 		if form.is_valid():
@@ -452,7 +452,7 @@ def download_movement(request, pk):
 
 def download_file(attachment):
 	#path_to_file = os.path.realpath('media/attachments/'+str(attachment.attachment.name))
-	path_to_file = 'elvis/media/attachments/'+str(attachment.attachment.name)
+	path_to_file = 'elvis/elvis/media/attachments/'+str(attachment.attachment.name)
 	myfile = FileWrapper(open(path_to_file, 'r'))
 	response = HttpResponse(myfile, content_type=mimetypes.guess_type(path_to_file)[0])
 	#content_disp = 'attachment; filename='+str(attachment.attachment.name)
