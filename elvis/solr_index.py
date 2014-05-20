@@ -1,16 +1,19 @@
-import os, sys
+import os, sys, django
 import solr
 import uuid
+from elvis.settings import SOLR_SERVER
 
 #from django.conf import settings
 
 '''
-Used to populate the Solr database
+Used to populate the Solr database; LM: more fields added; according to models
 '''
 
 
 if __name__ == "__main__":
     os.environ.setdefault("DJANGO_SETTINGS_MODULE", "elvis.settings")
+
+    django.setup()
 
     from elvis.models.corpus import Corpus
     from elvis.models.composer import Composer
@@ -21,7 +24,6 @@ if __name__ == "__main__":
     from elvis.models.comment import Comment
     from elvis.models.discussion import Discussion
 
-    SOLR_SERVER = "http://localhost:8983/solr"
     print "Using: {0}".format(SOLR_SERVER)
     solrconn = solr.SolrConnection(SOLR_SERVER)
     solrconn.delete_query("*:*")
@@ -39,8 +41,12 @@ if __name__ == "__main__":
         doc = {
             'type': 'elvis_corpus',
             'id': str(uuid.uuid4()),
-            'corpus_id': int(corpus.id),
-            'corpus_name': corpus.title,
+            'item_id': int(corpus.id),
+            'title': unicode(corpus.title),
+            'created': corpus.created,
+            'updated': corpus.updated,
+            'comment': corpus.comment,
+            'creator_name': corpus.creator.username,
         }
         all_corpora.append(doc)
     solrconn.add_many(all_corpora)
@@ -57,10 +63,12 @@ if __name__ == "__main__":
         doc = {
             'type': 'elvis_composer',
             'id': str(uuid.uuid4()),
-            'composer_id': int(composer.id),
-            'composer_name': composer.name,
-            'composer_birth': composer.birth_date,
-            'composer_death': composer.death_date
+            'item_id': int(composer.id), 
+            'name': composer.name,
+            'birth_date': composer.birth_date,
+            'death_date': composer.death_date,
+            'created': composer.created,
+            'updated': composer.updated,
         }
         all_composers.append(doc)
     solrconn.add_many(all_composers)
@@ -80,18 +88,26 @@ if __name__ == "__main__":
         user = piece.uploader.first_name + " " + piece.uploader.last_name
         username = piece.uploader.username
         corpus = piece.corpus.title if piece.corpus else ""
-                
+        
+
+        if piece.corpus is None:
+            parent_corpus_name = None
+        else:
+            parent_corpus_name = piece.corpus.title        
+
         doc = {
             'type': 'elvis_piece',
             'id': str(uuid.uuid4()),
-            'piece_id': int(piece.id),
-            'piece_title': piece.title,
+            'item_id': int(piece.id),
+            'title': unicode(piece.title),
+            'date_of_composition': piece.date_of_composition,
+            'number_of_voices': piece.number_of_voices,
+            'comment': piece.comment,
+            'created': piece.created,
+            'updated': piece.updated,
+            'parent_corpus_name': parent_corpus_name,
             'composer_name': piece.composer.name,
-            'corpus_name': corpus,
-            'user': user,
-            'username': username,
-            'num_voices': piece.number_of_voices,
-            'date_of_composition': piece.date_of_composition
+            'uploader_name': piece.uploader.username,
         }
 
         all_pieces.append(doc)
@@ -112,19 +128,32 @@ if __name__ == "__main__":
         user = movement.uploader.first_name + " " + movement.uploader.last_name
         username = movement.uploader.username
         corpus = movement.corpus.title if movement.corpus else ""
-                
+        
+        if movement.piece is None:
+            parent_piece_name = None
+        else:
+            parent_piece_name = movement.piece.title
+
+        if movement.corpus is None:
+            parent_corpus_name = None
+        else:
+            parent_corpus_name = movement.corpus.title
+
+
         doc = {
             'type': 'elvis_movement',
             'id': str(uuid.uuid4()),
-            'movement_id': int(movement.id),
-            'movement_title': movement.title,
-            'piece_title': movement.piece,
-            'composer_name': movement.composer.name,
-            'corpus_name': corpus,
-            'num_voices': movement.number_of_voices,
+            'item_id': int(movement.id),
+            'title': unicode(movement.title),
             'date_of_composition': movement.date_of_composition,
-            'user':user,
-            'username':username
+            'number_of_voices': movement.number_of_voices,
+            'comment': movement.comment,
+            'created': movement.created,
+            'updated': movement.updated,
+            'parent_piece_name': parent_piece_name,  
+            'parent_corpus_name': parent_corpus_name,
+            'composer_name': movement.composer.name,
+            'uploader_name': movement.uploader.username,
         }
 
         all_movements.append(doc)
@@ -145,9 +174,10 @@ if __name__ == "__main__":
         doc = {
             'type': 'elvis_tag',
             'id': str(uuid.uuid4()),
-            'tag_id': int(tag.id),
-            'tag_title': tag.name,
-            'tag_description': tag.description
+            'item_id': int(tag.id),
+            'name': tag.name,
+            'description': tag.description,
+            'approved': tag.approved,
         }
 
         all_tags.append(doc)
@@ -168,9 +198,11 @@ if __name__ == "__main__":
         doc = {
             'type': 'elvis_project',
             'id': str(uuid.uuid4()),
-            'project_id': int(project.id),
-            'project_name': project.name,
-            'project_description': project.description
+            'item_id': int(project.id),
+            'name': project.name,
+            'description': project.description,
+            'created': project.created,
+            'updated': project.updated,
         }
 
         all_projects.append(doc)
@@ -190,10 +222,12 @@ if __name__ == "__main__":
          doc = {
             'type': 'elvis_discussion',
             'id': str(uuid.uuid4()),
-            'discussion_id': int(discussion.id),
-            'discussion_name': discussion.name,
-            'discussion_comment': discussion.comment,
-            'user': discussion.user.name
+            'item_id': int(discussion.id),
+            'name': discussion.name,
+            'comment_text': discussion.text,
+            'created': discussion.created,
+            'updated': discussion.updated,
+            'parent_project_name': discussion.project.name,
          }
 
          all_discussions.append(doc)
@@ -217,9 +251,11 @@ if __name__ == "__main__":
         doc = {
             'type': 'elvis_comment',
             'id': str(uuid.uuid4()),
-            'comment_id': int(comment.id),
+            'item_id': int(comment.id),
+            'name': comment.name,
             'comment_text': comment.text,
-            'user': comment.user.name
+            'created': comment.created,
+            'updated': comment.updated,
          }
 
         all_comments.append(doc)
