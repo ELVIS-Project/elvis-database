@@ -1,5 +1,9 @@
 from django.db import models
 
+#django signal handlers
+from django.dispatch import receiver
+from django.db.models.signals import post_save, post_delete
+
 class Project(models.Model):
     name = models.CharField(max_length=255)
     description = models.TextField(blank=True, null=True)
@@ -13,3 +17,41 @@ class Project(models.Model):
 
     class Meta:
         app_label = "elvis"
+
+
+# TODO LM manytomany field: users
+
+@receiver(post_save, sender=Project)
+def solr_index(sender, instance, created, **kwargs):
+    import uuid
+    from django.conf import settings
+    import solr
+
+    solrconn = solr.SolrConnection(settings.SOLR_SERVER)
+    record = solrconn.query("type:elvis_project item_id:{0}".format(instance.id))
+    if record:
+        solrconn.delete(record.results[0]['id'])
+    
+    project = instance
+    d = {
+            'type': 'elvis_project',
+            'id': str(uuid.uuid4()),
+            'item_id': int(project.id),
+            'name': project.name,
+            'description': project.description,
+            'created': project.created,
+            'updated': project.updated,
+    }
+    solrconn.add(**d)
+    solrconn.commit()
+
+
+@receiver(post_delete, sender=Project)
+def solr_delete(sender, instance, **kwargs):
+    from django.conf import settings
+    import solr
+    solrconn = solr.SolrConnection(settings.SOLR_SERVER)
+    record = solrconn.query("type:project item_id:{0}".format(instance.id))
+    if record:
+        # the record already exists, so we'll remove it.
+        solrconn.delete(record.results[0]['id'])

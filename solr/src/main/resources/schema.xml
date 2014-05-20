@@ -917,6 +917,7 @@
     <field name="uploader_name" type="string" indexed="true" stored="true" />
     <field name="parent_piece_name" type="string" indexed="true" stored="true" /> 
     <field name="parent_corpus_name" type="string" indexed="true" stored="true" />
+    <field name="parent_project_name" type="string" indexed="true" stored="true" />
 
 
     <!-- LM Musical Attribute fields -->
@@ -926,13 +927,12 @@
     <!-- LM Misc User-related fields --> 
     <!-- TODO may want to change comment to text_general later, and add copy_field -->
     <field name="comment" type="string" indexed="true" stored="true" />
-    <!-- TODO same as general comments; may want to change project_description to text_general later, and add copy_field -->  
-    <field name="project_description" type="string" indexed="true" stored="true" />
-
+    <!-- TODO same as general comments; may want to change description to text_general later, and add copy_field -->  
+    <field name="description" type="string" indexed="true" stored="true" />
     <!-- LM Comment specific fields... why is there a comment model? --> 
     <!-- TODO same as general comments; change to text_general -->
     <field name="comment_text" type="string" indexed="true" stored="true" />
-
+    <field name="approved" type="boolean" indexed="true" stored="true" />
 
 
     <!-- LM copyFields to text used for searching -->

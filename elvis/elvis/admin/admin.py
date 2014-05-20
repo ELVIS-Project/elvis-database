@@ -33,9 +33,11 @@ class DownloadAdmin(admin.ModelAdmin):
 
 class UserProfileAdmin(admin.ModelAdmin):
     pass
+    actions = [reindex_in_solr, delete_in_solr]
 
 class ProjectAdmin(admin.ModelAdmin):
     pass
+    actions = [reindex_in_solr, delete_in_solr]
 
 class PieceAdmin(admin.ModelAdmin):
     list_display = ("title", "composer", "date_of_composition", "number_of_voices", "uploader", "old_id", "corpus")
@@ -61,14 +63,17 @@ class ComposerAdmin(admin.ModelAdmin):
 
 class TagAdmin(admin.ModelAdmin):
     list_display = ("name", "description", "old_id")
+    actions = [reindex_in_solr, delete_in_solr]
 
 
 class TagHierarchyAdmin(admin.ModelAdmin):
     list_display = ("tag", "parent")
+    actions = [reindex_in_solr, delete_in_solr]
 
 
 class AttachmentAdmin(admin.ModelAdmin):
     pass
+    #actions = [reindex_in_solr, delete_in_solr]
 
 
 admin.site.register(Download, DownloadAdmin)

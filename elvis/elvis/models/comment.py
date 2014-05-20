@@ -44,6 +44,7 @@ def solr_index(sender, instance, created, **kwargs):
             'name': comment.name,
             'comment_text': comment.text,
             'created': comment.created,
+            'updated': comment.updated,
     }
     solrconn.add(**d)
     solrconn.commit()

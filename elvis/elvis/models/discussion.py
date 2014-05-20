@@ -1,6 +1,9 @@
 from django.db import models
 from django.contrib.auth.models import User
 
+#django signal handlers
+from django.dispatch import receiver
+from django.db.models.signals import post_save, post_delete
 
 class Discussion(models.Model):
     name = models.CharField(max_length=255)
@@ -17,9 +20,6 @@ class Discussion(models.Model):
     class Meta:
         app_label = "elvis"
 
-
-
-# LM Preliminary Discussion request handlers
 
 @receiver(post_save, sender=Discussion)
 def solr_index(sender, instance, created, **kwargs):
@@ -40,6 +40,8 @@ def solr_index(sender, instance, created, **kwargs):
             'name': discussion.name,
             'comment_text': discussion.text,
             'created': discussion.created,
+            'updated': discussion.updated,
+            'parent_project_name': discussion.project.name,
     }
     solrconn.add(**d)
     solrconn.commit()

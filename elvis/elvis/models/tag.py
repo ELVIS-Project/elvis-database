@@ -1,5 +1,8 @@
 from django.db import models
 
+#django signal handlers
+from django.dispatch import receiver
+from django.db.models.signals import post_save, post_delete
 
 class Tag(models.Model):
     old_id = models.IntegerField(db_index=True, blank=True, null=True)
@@ -14,3 +17,38 @@ class Tag(models.Model):
 
     class Meta:
         app_label = "elvis"
+
+
+@receiver(post_save, sender=Tag)
+def solr_index(sender, instance, created, **kwargs):
+    import uuid
+    from django.conf import settings
+    import solr
+
+    solrconn = solr.SolrConnection(settings.SOLR_SERVER)
+    record = solrconn.query("type:elvis_tag item_id:{0}".format(instance.id))
+    if record:
+        solrconn.delete(record.results[0]['id'])
+    
+    tag = instance
+    d = {
+            'type': 'elvis_tag',
+            'id': str(uuid.uuid4()),
+            'item_id': int(tag.id),
+            'name': tag.name,
+            'description': tag.description,
+            'approved': tag.approved,
+    }
+    solrconn.add(**d)
+    solrconn.commit()
+
+
+@receiver(post_delete, sender=Tag)
+def solr_delete(sender, instance, **kwargs):
+    from django.conf import settings
+    import solr
+    solrconn = solr.SolrConnection(settings.SOLR_SERVER)
+    record = solrconn.query("type:tag item_id:{0}".format(instance.id))
+    if record:
+        # the record already exists, so we'll remove it.
+        solrconn.delete(record.results[0]['id'])

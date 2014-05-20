@@ -35,6 +35,8 @@ class Piece(models.Model):
     def number_of_movements(self):
         return len(self.movements.all())
 
+        
+
 @receiver(post_save, sender=Piece)
 def solr_index(sender, instance, created, **kwargs):
     import uuid
