@@ -6,7 +6,7 @@ from elvis.settings import SOLR_SERVER
 #from django.conf import settings
 
 '''
-Used to populate the Solr database; LM: more fields added; according to models
+Used to populate the Solr database; LM: more fields added, according to models
 '''
 
 

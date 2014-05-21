@@ -38,16 +38,40 @@ def solr_index(sender, instance, created, **kwargs):
         solrconn.delete(record.results[0]['id'])
 
     corpus = instance
+
+    #LM: Same ugly bit of code as in movement model, but edited for piece model. Again, this is for drupal dump 
+    try:
+        corpus_title = unicode(corpus.title)
+    except UnicodeDecodeError:
+        corpus_title = corpus.title.decode('utf-8')
+
+    if corpus.creator is None:
+        creator_name = None
+    else:
+        try:
+            creator_name = unicode(corpus.creator.username)
+        except UnicodeDecodeError:
+            creator_name = corpus.creator.username.decode('utf-8')
+
+    if corpus.comment is None:
+        corpus_comment = None
+    else:
+        try:
+            corpus_comment = unicode(corpus.comment)
+        except UnicodeDecodeError:
+            corpus_comment = corpus.comment.decode('utf-8')
+            
+    
     #print(corpus.title)
     d = {
             'type': 'elvis_corpus',
             'id': str(uuid.uuid4()),
             'item_id': int(corpus.id),
-            'title': unicode(corpus.title),
+            'title': corpus_title,
             'created': corpus.created,
             'updated': corpus.updated,
-            'comment': corpus.comment,
-            'creator_name': corpus.creator.username,
+            'comment': corpus_comment,
+            'creator_name': creator_name,
     }
     solrconn.add(**d)
     solrconn.commit()

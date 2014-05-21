@@ -31,12 +31,30 @@ def solr_index(sender, instance, created, **kwargs):
         solrconn.delete(record.results[0]['id'])
     
     tag = instance
+    
+    if tag.name is None:
+        tag_name = None
+    else:
+        try:
+            tag_name = unicode(tag.name)
+        except UnicodeDecodeError:
+            tag_name = tag.name.decode('utf-8')
+
+    if tag.description is None:
+        tag_description = None
+    else:
+        try:
+            tag_description = unicode(tag.description)
+        except UnicodeDecodeError:
+            tag_description = tag.description.decode('utf-8')
+
+    
     d = {
             'type': 'elvis_tag',
             'id': str(uuid.uuid4()),
             'item_id': int(tag.id),
-            'name': tag.name,
-            'description': tag.description,
+            'name': tag_name,
+            'description': tag_description,
             'approved': tag.approved,
     }
     solrconn.add(**d)

@@ -46,32 +46,73 @@ def solr_index(sender, instance, created, **kwargs):
         solrconn.delete(record.results[0]['id'])
 
     movement = instance
-    #print(movement.title)
+
+    # LM: Ugly bit of code to migrate the discrepancies in drupal database encoding. Used only for drupal dump
+    try:
+        movement_title = unicode(movement.title)
+    except UnicodeDecodeError:
+        movement_title = movement.title.decode('utf-8')
 
     if movement.piece is None:
         parent_piece_name = None
     else:
-        parent_piece_name = movement.piece.title
+        try:
+            parent_piece_name = unicode(movement.piece.title)
+        except UnicodeDecodeError:
+            parent_piece_name = movement.piece.title.decode('utf-8')
 
     if movement.corpus is None:
         parent_corpus_name = None
     else:
-        parent_corpus_name = movement.corpus.title
+        try:
+            parent_corpus_name = unicode(movement.corpus.title)
+        except UnicodeDecodeError:
+            parent_corpus_name = movement.corpus.title.decode('utf-8')
+    
+    if movement.composer is None:
+        composer_name = None
+    else:
+        try:
+            composer_name = unicode(movement.composer.name)
+        except UnicodeDecodeError:
+            composer_name = movement.composer.name.decode('utf-8')
+
+    if movement.comment is None:
+        movement_comment = None
+    else:
+        try:
+            movement_comment = unicode(movement.comment)
+        except UnicodeDecodeError:
+            movement_comment = movement.comment.decode('utf-8')
+
+    if movement.uploader is None:
+        uploader_name = None
+    else:
+        try:
+            uploader_name = unicode(movement.uploader.username)
+        except UnicodeDecodeError:
+            uploader_name = movement.uploader.name.decode('utf-8')
+
+    #print(movement.title)
+    #print(parent_piece_name)
+    #print(parent_corpus_name)
+    #print(composer_name)
+    #print(movement_comment)
 
     d = {
             'type': 'elvis_movement',
             'id': str(uuid.uuid4()),
             'item_id': int(movement.id),
-            'title': unicode(movement.title),
+            'title': movement_title,
             'date_of_composition': movement.date_of_composition,
             'number_of_voices': movement.number_of_voices,
-            'comment': movement.comment,
+            'comment': movement_comment,
             'created': movement.created,
             'updated': movement.updated,
             'parent_piece_name': parent_piece_name,  
             'parent_corpus_name': parent_corpus_name,
-            'composer_name': movement.composer.name,
-            'uploader_name': movement.uploader.username,
+            'composer_name': composer_name,
+            'uploader_name': uploader_name,
     }
     solrconn.add(**d)
     solrconn.commit()

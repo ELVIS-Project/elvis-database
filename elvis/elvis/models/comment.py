@@ -36,13 +36,36 @@ def solr_index(sender, instance, created, **kwargs):
     if record:
         solrconn.delete(record.results[0]['id'])
 
+    try:
+        comment_name = unicode(comment.name)
+    except UnicodeDecodeError:
+        comment_name = comment.name.decode('utf-8')
+
+    if comment.user is None:
+        creator_name = None
+    else:
+        try:
+            creator_name = unicode(comment.user.username)
+        except UnicodeDecodeError:
+            creator_name = comment.user.username.decode('utf-8')
+
+    # Comment body stored as a string in case of unusual characters; same for comments elsewhere
+    if comment.text is None:
+        comment_text = None
+    else:
+        try:
+            comment_text=unicode(comment.text)
+        except UnicodeDecodeError:
+            comment_text=comment.text.decode('utf-8')
+
     comment = instance
     d = {
             'type': 'elvis_comment',
             'id': str(uuid.uuid4()),
             'item_id': int(comment.id),
-            'name': comment.name,
-            'comment_text': comment.text,
+            'name': comment_name,
+            'creator_name': creator_name,
+            'comment_text': comment_text,
             'created': comment.created,
             'updated': comment.updated,
     }

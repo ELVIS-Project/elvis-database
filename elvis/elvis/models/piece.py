@@ -50,25 +50,59 @@ def solr_index(sender, instance, created, **kwargs):
 
     piece = instance
 
+    #LM: Same ugly bit of code as in movement model, but edited for piece model. Again, this is for drupal dump 
+
+    try:
+        piece_title = unicode(piece.title)
+    except UnicodeDecodeError:
+        piece_title = piece.title.decode('utf-8')
+
     if piece.corpus is None:
         parent_corpus_name = None
     else:
-        parent_corpus_name = piece.corpus.title
+        try:
+            parent_corpus_name = unicode(piece.corpus.title)
+        except UnicodeDecodeError:
+            parent_corpus_name = piece.corpus.title.decode('utf-8')
+
+    if piece.comment is None:
+        piece_comment = None
+    else:
+        try:
+            piece_comment = unicode(piece.comment)
+        except UnicodeDecodeError:
+            piece_comment = piece.comment.decode('utf-8')
+
+    if piece.composer is None:
+        composer_name = None
+    else:
+        try:
+            composer_name = unicode(piece.composer.name)
+        except UnicodeDecodeError:
+            composer_name = piece.composer.name.decode('utf-8')
+
+    if piece.uploader is None:
+        uploader_name = None
+    else:
+        try:
+            uploader_name = unicode(piece.uploader.username)
+        except UnicodeDecodeError:
+            uploader_name = piece.uploader.name.decode('utf-8')
 
     #print(piece.title)
     d = {
             'type': 'elvis_piece',
             'id': str(uuid.uuid4()),
             'item_id': int(piece.id),
-            'title': unicode(piece.title),
+            'title': piece_title,
             'date_of_composition': piece.date_of_composition,
             'number_of_voices': piece.number_of_voices,
-            'comment': piece.comment,
+            'comment': piece_comment,
             'created': piece.created,
             'updated': piece.updated,
             'parent_corpus_name': parent_corpus_name,
-            'composer_name': piece.composer.name,
-            'uploader_name': piece.uploader.username,
+            'composer_name': composer_name,
+            'uploader_name': uploader_name,
     }
     solrconn.add(**d)
     solrconn.commit()

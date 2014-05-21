@@ -11,6 +11,10 @@ from elvis.models.movement import Movement
 from elvis.models.userprofile import UserProfile
 from elvis.models.download import Download
 
+
+# LM: Wouldn't want to accidentally click on delete selected from django and have to re-drupal_dump everything... again...
+admin.site.disable_action('delete_selected')
+
 # method for admin reindex all entries to solr
 def reindex_in_solr(modeladmin, request, queryset):
     for item in queryset:

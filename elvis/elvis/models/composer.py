@@ -44,12 +44,19 @@ def solr_index(sender, instance, created, **kwargs):
 
     # take instance, build dictionary around instance && use shorthand ** to add to solr
     composer = instance
+
+    try:
+        composer_name = unicode(composer.name)
+    except UnicodeDecodeError:
+        composer_name = composer.name.decode('utf-8')
+
+
     #print(composer.name)
     d = {
             'type': 'elvis_composer',
             'id': str(uuid.uuid4()),
             'item_id': int(composer.id), # called composer_id in elvis/solr_index.py 
-            'name': composer.name,
+            'name': composer_name,
             'birth_date': composer.birth_date,
             'death_date': composer.death_date,
             'created': composer.created,

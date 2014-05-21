@@ -1,11 +1,13 @@
 import os
-import datetime
+import datetime, pytz
 import MySQLdb
 from django.core.files import File
 from MySQLdb.cursors import DictCursor
 
 import django
+
 os.environ.setdefault("DJANGO_SETTINGS_MODULE", "elvis.settings")
+
 django.setup()
 
 from elvis.models.tag import Tag
@@ -56,12 +58,13 @@ ATTACHMENT_QUERY = """"""
 
 class DumpDrupal(object):
     def __init__(self):
+        # LM: Would want to run tags, users only if db doesnt have previous users, corpus, piece, movement, in that order
         # self.get_tags()
-        # self.get_composers()
+         self.get_composers()
         # self.get_users()
         # self.get_corpus()
         # self.get_pieces_movements("piece")
-        self.get_pieces_movements("movement")
+        # self.get_pieces_movements("movement")
 
     def __connect(self):
         self.conn = MySQLdb.connect(host="localhost", user="root", cursorclass=DictCursor, db="ddmal_elvis")
@@ -136,7 +139,15 @@ class DumpDrupal(object):
 
         print "Adding composers"
         for composer in composers:
-            c = Composer(**composer)
+            c = {
+                'old_id': composer.get('old_id', None),
+                'name': composer.get('name'),
+                'birth_date': pytz.utc.localize(composer.get('birth_date', None)),
+                'death_date': pytz.utc.localize(composer.get('death_date', None)),
+                'created': datetime.datetime.fromtimestamp(composer.get('created')),
+                'updated': datetime.datetime.fromtimestamp(composer.get('updated')),                
+            }
+            c = Composer(**c)
             c.save()
 
         self.__disconnect()
@@ -191,7 +202,12 @@ class DumpDrupal(object):
 
         print "Adding {0}".format(rettype)
         for item in objects:
-            composer_obj = Composer.objects.get(old_id=item['composer_id'])
+            # LM: composer may be none
+            try:
+                composer_obj = Composer.objects.get(old_id=item['composer_id'])
+            except Composer.DoesNotExist:
+                composer_obj = None
+
             for user in users:
                 if item.get('uploader') == user.get('uid'):
                     user_obj = User.objects.get(username=user.get('name'))
@@ -216,7 +232,7 @@ class DumpDrupal(object):
                 'composer': composer_obj,
                 'old_id': item.get('old_id', None),
                 'title': item.get('title', None),
-                'date_of_composition': item.get('date_of_composition', None),
+                'date_of_composition': pytz.utc.localize(item.get('date_of_composition', None)),  
                 'number_of_voices': item.get('number_of_voices', None),
                 'comment': item.get('comment', None),
                 'created': datetime.datetime.fromtimestamp(item.get('created')),
