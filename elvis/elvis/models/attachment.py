@@ -14,7 +14,7 @@ def upload_path(instance, filename):
 class Attachment(models.Model):
     """
         IMPORTANT: This model will store its attachments in a
-        random folder structure. This is to prevent the webapp from
+        random (LM Edit: NOT random - hashed from pk) folder structure. This is to prevent the webapp from
         putting too many files in a single directory.
 
         The format is:

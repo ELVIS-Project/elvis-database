@@ -1,4 +1,7 @@
 from django.contrib import admin
+import shutil, os
+
+from elvis import settings
 
 from elvis.models.project import Project
 from elvis.models.piece import Piece
@@ -11,6 +14,7 @@ from elvis.models.movement import Movement
 from elvis.models.userprofile import UserProfile
 from elvis.models.download import Download
 
+# summary of available actions: actions = [reindex_in_solr, delete_in_solr]
 
 # LM: Wouldn't want to accidentally click on delete selected from django and have to re-drupal_dump everything... again...
 admin.site.disable_action('delete_selected')
@@ -29,8 +33,6 @@ def delete_in_solr(modeladmin, request, queryset):
         item.delete()
 
 delete_in_solr.short_description = "Delete selected in Solr"
-
-# summary of available actions: actions = [reindex_in_solr, delete_in_solr]
 
 
 class DownloadAdmin(admin.ModelAdmin):
@@ -79,7 +81,29 @@ class TagHierarchyAdmin(admin.ModelAdmin):
 
 class AttachmentAdmin(admin.ModelAdmin):
     list_display = ('attachment', 'description', 'pk')
-    #actions = ['delete_selected',]
+    actions = ['delete_attachments_filesys',]
+
+    # LM For some reason simply using the model deleter for querysets doesn't work correctly, so this is a solution.
+
+    def delete_attachments_filesys(modeladmin, request, queryset):
+        def attachment_path(item):
+            try:
+                return os.path.join(settings.MEDIA_ROOT,
+                            "attachments",
+                            "{0:0>2}".format(str(item.pk)[0:2]),
+                            "{0:0>2}".format(str(item.pk)[-2:]),
+                            "{0:0>15}".format(item.pk))
+            except AttributeError:
+                return os.path.join("attachments",
+                            "{0:0>2}".format(str(item.pk)[0:2]),
+                            "{0:0>2}".format(str(item.pk)[-2:]),
+                            "{0:0>15}".format(item.pk))
+        for item in queryset:
+            if os.path.exists(attachment_path(item)):
+                shutil.rmtree(attachment_path(item))
+            item.delete()
+
+    delete_attachments_filesys.short_description = "Delete attachments from File System"
     #pass
     #actions = [reindex_in_solr, delete_in_solr]
 
