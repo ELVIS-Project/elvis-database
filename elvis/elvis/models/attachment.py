@@ -40,7 +40,7 @@ class Attachment(models.Model):
                             "{0:0>15}".format(self.pk))
 
     old_id = models.IntegerField(null=True, blank=True, db_index=True)
-    attachment = models.FileField(upload_to=upload_path, null=True, max_length=512)
+    attachment = models.FileField(upload_to=upload_path, null=True, blank=True, max_length=512)
     uploader = models.ForeignKey(User, blank=True, null=True, related_name="attachments")
     description = models.CharField(max_length=255, blank=True, null=True)
 

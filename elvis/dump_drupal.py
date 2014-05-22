@@ -64,7 +64,7 @@ class DumpDrupal(object):
         # self.get_users()
         # self.get_corpus()
         # self.get_pieces_movements("piece")
-        # self.get_pieces_movements("movement")
+         self.get_pieces_movements("movement")
 
     def __connect(self):
         self.conn = MySQLdb.connect(host="localhost", user="root", cursorclass=DictCursor, db="ddmal_elvis")
@@ -190,8 +190,9 @@ class DumpDrupal(object):
         self.curs.execute(ATTACHMENT_QUERY)
 
     def get_pieces_movements(self, rettype):
-        '''
+        
         users = self.__get_ddmal_users()
+        '''
         query = PIECE_MOVEMENT_QUERY.format(rettype)
         self.__connect()
         self.curs.execute(query)
@@ -304,8 +305,8 @@ class DumpDrupal(object):
                 a = Attachment()
                 a.save()  # ensure we've got a PK before we try and attach a file.
 
-                # filename = attachment.get('filename')[9:]  # lop the 'public://' off.
-                filename = "test_file.mei"  # for testing.
+                filename = attachment.get('filename')[9:]  # lop the 'public://' off.
+                #filename = "test_file.mei"  # for testing.
 
                 filepath = os.path.join(DRUPAL_FILE_PATH, filename)
                 f = open(filepath, 'rb')

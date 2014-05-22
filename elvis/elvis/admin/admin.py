@@ -32,8 +32,10 @@ delete_in_solr.short_description = "Delete selected in Solr"
 
 # summary of available actions: actions = [reindex_in_solr, delete_in_solr]
 
+
 class DownloadAdmin(admin.ModelAdmin):
-    filter_horizontal = ('attachments',)
+    list_display = ('user', 'created')
+    filter_horizontal = ( 'attachments',)
 
 class UserProfileAdmin(admin.ModelAdmin):
     pass
@@ -76,8 +78,12 @@ class TagHierarchyAdmin(admin.ModelAdmin):
 
 
 class AttachmentAdmin(admin.ModelAdmin):
-    pass
+    list_display = ('attachment', 'description', 'pk')
+    #actions = ['delete_selected',]
+    #pass
     #actions = [reindex_in_solr, delete_in_solr]
+
+    
 
 
 admin.site.register(Download, DownloadAdmin)
