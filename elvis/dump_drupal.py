@@ -60,7 +60,7 @@ class DumpDrupal(object):
     def __init__(self):
         # LM: Would want to run tags, users only if db doesnt have previous users, corpus, piece, movement, in that order
         # self.get_tags()
-         self.get_composers()
+        # self.get_composers()
         # self.get_users()
         # self.get_corpus()
         # self.get_pieces_movements("piece")
@@ -139,15 +139,18 @@ class DumpDrupal(object):
 
         print "Adding composers"
         for composer in composers:
+            '''
             c = {
                 'old_id': composer.get('old_id', None),
                 'name': composer.get('name'),
-                'birth_date': pytz.utc.localize(composer.get('birth_date', None)),
+                'birth_date': pytz.utc.localize(composer.get('birth')),
                 'death_date': pytz.utc.localize(composer.get('death_date', None)),
                 'created': datetime.datetime.fromtimestamp(composer.get('created')),
                 'updated': datetime.datetime.fromtimestamp(composer.get('updated')),                
             }
-            c = Composer(**c)
+            '''
+            print(composer.get('name'))
+            c = Composer(**composer)
             c.save()
 
         self.__disconnect()
@@ -187,6 +190,7 @@ class DumpDrupal(object):
         self.curs.execute(ATTACHMENT_QUERY)
 
     def get_pieces_movements(self, rettype):
+        '''
         users = self.__get_ddmal_users()
         query = PIECE_MOVEMENT_QUERY.format(rettype)
         self.__connect()
@@ -272,6 +276,7 @@ class DumpDrupal(object):
 
             self.__disconnect()
 
+        '''    
         ITEM_ATTACHMENT_QUERY = """SELECT ff.field_files_description AS description, fm.timestamp AS created,
                                     fm.uid AS uploader, fm.filename AS filename, fm.uri AS uri FROM field_data_field_files ff
                                     LEFT JOIN file_managed fm ON ff.field_files_fid = fm.fid
@@ -321,6 +326,7 @@ class DumpDrupal(object):
                 item.attachments.add(a)
 
         self.__disconnect()
+        
 
     def __resolve_movement_parent(self, old_id):
         q = """SELECT REPLACE(ml1.link_path, 'node/', '') AS parent_nid,

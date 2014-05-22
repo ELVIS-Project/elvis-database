@@ -23,7 +23,7 @@ from elvis.views.tag import TagList, TagDetail
 from elvis.views.attachment import AttachmentList, AttachmentDetail
 
 #views for forms
-from elvis.views.forms import create_composer, create_corpus, create_corpus_large, create_piece, create_movement, create_project
+from elvis.views.forms import create_composer, create_corpus, create_corpus_large, create_piece, create_movement, create_project, upload_file
 
 # Uncomment the next two lines to enable the admin:
 from django.contrib import admin
@@ -69,13 +69,14 @@ urlpatterns += format_suffix_patterns(
 
         url(r'^about/', about, name='about'),
 
-        # LM Added urls for create_* views
+        # LM Added urls for create_* views.... why are there add* urls as well?
         url(r'^upload/corpus/$', create_corpus_large, name="create-corpus-large"),
         url(r'^upload/piece/$', create_piece, name="create-piece"),
         url(r'^upload/movement/$', create_movement, name="create-movement"),
         url(r'^upload/project/$', create_project, name="create-project"),
+        # LM Won't need this with embedded search results in search
         # url(r'^search_results/$', search_view, name="search_results"),
-        # url(r'^upload/$', upload_file, name="upload"),
+        url(r'^upload/$', upload_file, name="upload"),
         url(r'^queries/$', queries, name="queries"),
         url(r'^addcomposer/$', create_composer, name="create-composer"),
         url(r'^addcorpus/$', create_corpus, name="create-corpus"),

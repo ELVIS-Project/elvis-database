@@ -1,6 +1,6 @@
 from django.db import models
 from django.contrib.auth.models import User
-
+#import pytz
 from datetime import datetime
 
 #django signal handlers
@@ -41,7 +41,7 @@ def solr_index(sender, instance, created, **kwargs):
     import solr
 
     solrconn = solr.SolrConnection(settings.SOLR_SERVER)
-    record = solrconn.query("type:elvis_movement item_id:{0}".format(instance.id))
+    record = solrconn.query("type:elvis_movement item_id:{0}".format(instance.id), q_op="AND")
     if record:
         solrconn.delete(record.results[0]['id'])
 
@@ -49,7 +49,7 @@ def solr_index(sender, instance, created, **kwargs):
 
     # LM: Ugly bit of code to migrate the discrepancies in drupal database encoding. Used only for drupal dump
     try:
-        movement_title = unicode(movement.title)
+        movement_title = (movement.title)
     except UnicodeDecodeError:
         movement_title = movement.title.decode('utf-8')
 
@@ -92,6 +92,11 @@ def solr_index(sender, instance, created, **kwargs):
             uploader_name = unicode(movement.uploader.username)
         except UnicodeDecodeError:
             uploader_name = movement.uploader.name.decode('utf-8')
+
+    #if movement.date_of_composition is None:
+    #    date_of_composition = None
+    #else:
+    #    date_of_composition = pytz.utc.localize(movement.date_of_composition)
 
     #print(movement.title)
     #print(parent_piece_name)

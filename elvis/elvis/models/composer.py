@@ -1,4 +1,4 @@
-import os
+import os, pytz
 from django.db import models
 from datetime import datetime
 from django.contrib.auth.models import User
@@ -20,7 +20,8 @@ class Composer(models.Model):
     name = models.CharField(max_length=255)
     birth_date = models.DateField(blank=True, null=True)
     death_date = models.DateField(blank=True, null=True)
-    picture = models.ImageField(upload_to=picture_path, null=True)
+    # LM: I suspect this is because of the new django beta, but image fields require blank=True to be optional; else it is required in admin
+    picture = models.ImageField(upload_to=picture_path, null=True, blank=True)
     # number_of_queries = models.IntegerField(blank=True, null=True)
 
     created = models.DateTimeField(auto_now_add=True)
@@ -45,11 +46,37 @@ def solr_index(sender, instance, created, **kwargs):
     # take instance, build dictionary around instance && use shorthand ** to add to solr
     composer = instance
 
+
+
+    # Everything between here...
     try:
         composer_name = unicode(composer.name)
     except UnicodeDecodeError:
         composer_name = composer.name.decode('utf-8')
 
+    if composer.birth_date is None:
+        composer_birth_date = None
+    else:
+        #try:
+        # IMPORTANT: For drupal dumping purposes, insert pytz.utc.localize(composer.birth_date) in RHS of assignment
+        # ELSE, stick with just composer.birth_date
+        composer_birth_date = (composer.birth_date)
+        #except ValueError:
+           # birth_date = composer.birth_date
+
+    if composer.death_date is None:
+        composer_death_date = None
+    else:
+        #try:
+        # IMPORTANT, see composer_birth_date assignment.
+        composer_death_date = (composer.death_date)
+
+    # ... and here are specifically for drupal dumping
+
+
+    print(composer_name)
+    print(composer_birth_date)
+    print(composer_death_date)
 
     #print(composer.name)
     d = {
@@ -57,8 +84,8 @@ def solr_index(sender, instance, created, **kwargs):
             'id': str(uuid.uuid4()),
             'item_id': int(composer.id), # called composer_id in elvis/solr_index.py 
             'name': composer_name,
-            'birth_date': composer.birth_date,
-            'death_date': composer.death_date,
+            'birth_date': composer_birth_date,
+            'death_date': composer_death_date,
             'created': composer.created,
             'updated': composer.updated,
     }

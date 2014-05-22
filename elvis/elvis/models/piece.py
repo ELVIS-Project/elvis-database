@@ -1,6 +1,6 @@
 from django.db import models
 from django.contrib.auth.models import User
-
+#import pytz
 from datetime import datetime
 
 #django signal handlers
@@ -88,6 +88,11 @@ def solr_index(sender, instance, created, **kwargs):
             uploader_name = unicode(piece.uploader.username)
         except UnicodeDecodeError:
             uploader_name = piece.uploader.name.decode('utf-8')
+
+    #if piece.date_of_composition is None:
+    #    date_of_composition = None
+    #else:
+    #    date_of_composition = pytz.utc.localize(piece.date_of_composition)
 
     #print(piece.title)
     d = {
