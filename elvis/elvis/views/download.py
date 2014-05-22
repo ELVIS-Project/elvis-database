@@ -10,6 +10,7 @@ from elvis.models.download import Download
 from elvis.models.piece import Piece
 from elvis.models.movement import Movement
 
+from django.core.exceptions import ObjectDoesNotExist
 
 class DownloadListHTMLRenderer(CustomHTMLRenderer):
     template_name = "download/download_list.html"
@@ -38,8 +39,12 @@ class DownloadDetail(generics.RetrieveUpdateAPIView):
 
     def get_object(self):
         user = self.request.user
-        obj = Download.objects.filter(user=user).latest("created")
-        return obj
+        
+        try:
+            obj = Download.objects.filter(user=user).latest("created")
+            return obj
+        except ObjectDoesNotExist:
+            return None
 
 
     def get(self, request, *args, **kwargs):
@@ -60,8 +65,9 @@ class DownloadDetail(generics.RetrieveUpdateAPIView):
 
         if not obj:
             return Response({'message': "The item with id {0} was not found".format(item_id)}, status=status.HTTP_404_NOT_FOUND)
-
+       
         dlobj = self.get_object()
+        
         for attachment in obj.attachments.all():
             dlobj.attachments.add(attachment)
 
