@@ -60,7 +60,7 @@ def solr_index(sender, instance, created, **kwargs):
         #try:
         # IMPORTANT: For drupal dumping purposes, insert pytz.utc.localize(composer.birth_date) in RHS of assignment
         # ELSE, stick with just composer.birth_date
-        composer_birth_date = (composer.birth_date)
+        composer_birth_date = pytz.utc.localize(composer.birth_date)
         #except ValueError:
            # birth_date = composer.birth_date
 
@@ -69,7 +69,7 @@ def solr_index(sender, instance, created, **kwargs):
     else:
         #try:
         # IMPORTANT, see composer_birth_date assignment.
-        composer_death_date = (composer.death_date)
+        composer_death_date = pytz.utc.localize(composer.death_date)
 
     # ... and here are specifically for drupal dumping
 

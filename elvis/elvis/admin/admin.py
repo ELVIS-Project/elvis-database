@@ -27,12 +27,12 @@ def reindex_in_solr(modeladmin, request, queryset):
 reindex_in_solr.short_description = "Reindex selected in Solr"
 
 
-# see above, delete all entries in solr
+# IMPORTANT: Misnomer - this actually deletes item from both Django AND Solr.... TODO Write method for solr deletion only
 def delete_in_solr(modeladmin, request, queryset):
     for item in queryset:
         item.delete()
 
-delete_in_solr.short_description = "Delete selected in Solr"
+delete_in_solr.short_description = "Permanently delete selected"
 
 
 class DownloadAdmin(admin.ModelAdmin):

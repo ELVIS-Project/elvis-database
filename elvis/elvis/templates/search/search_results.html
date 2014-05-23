@@ -1,8 +1,8 @@
 
-<!-- LM: _Very_ temporary search ui --> 
-{% if content.results.numFound > 0 %}
+<!-- LM: VERY PRELIMINARY search ui --> 
+{% if content %}
     <div class="list-group">
-    {% for result in content.results.results %}
+    {% for result in content.results %}
         {% if result.type == "elvis_composer" %}
             <a href="/composer/{{ result.item_id }}" class="list-group-item">
                 <span class="label label-primary pull-right">Composer</span>
@@ -43,6 +43,23 @@
         {% endif %}
     {% endfor %}
     </div>
+
+    <div class="pagination">
+        <span class="step-links">
+            {% if content.has_previous %}
+                <a href="?page={{ content.previous_page_number }}">previous</a>
+            {% endif %}
+
+            <span class="current">
+                Page {{ content.number }} of {{ content.paginator.num_pages }}.
+            </span>
+
+            {% if content.has_next %}
+                <a href="?page={{ content.next_page_number }}">next</a>
+            {% endif %}
+        </span>
+    </div>
+
 {% else %}
     <h5>No Results found.</h5>
 {% endif %}

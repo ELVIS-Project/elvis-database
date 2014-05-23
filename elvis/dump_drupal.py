@@ -64,7 +64,7 @@ class DumpDrupal(object):
         # self.get_users()
         # self.get_corpus()
         # self.get_pieces_movements("piece")
-         self.get_pieces_movements("movement")
+        # self.get_pieces_movements("movement")
 
     def __connect(self):
         self.conn = MySQLdb.connect(host="localhost", user="root", cursorclass=DictCursor, db="ddmal_elvis")
@@ -192,7 +192,7 @@ class DumpDrupal(object):
     def get_pieces_movements(self, rettype):
         
         users = self.__get_ddmal_users()
-        '''
+        
         query = PIECE_MOVEMENT_QUERY.format(rettype)
         self.__connect()
         self.curs.execute(query)
@@ -327,7 +327,7 @@ class DumpDrupal(object):
                 item.attachments.add(a)
 
         self.__disconnect()
-        
+     '''   
 
     def __resolve_movement_parent(self, old_id):
         q = """SELECT REPLACE(ml1.link_path, 'node/', '') AS parent_nid,

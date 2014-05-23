@@ -937,9 +937,10 @@
 
     <!-- LM copyFields to text used for searching -->
     <copyField source="name" dest="text" />
-    <copyField source="birth_date" dest="text" />
-    <copyField source="date_of_composition" dest="text" />
     <copyField source="title" dest="text" />
+    <!--<copyField source="birth_date" dest="text" />
+    <copyField source="date_of_composition" dest="text" /> -->
+    
 
     <!-- piece fields -->
 <!--     <field name="piece_id" type="string" indexed="true" stored="true" />

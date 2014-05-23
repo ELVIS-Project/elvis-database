@@ -1,6 +1,9 @@
 import math
 from django.core.paginator import EmptyPage, PageNotAnInteger
 
+# LM: For those who haven't figured it out, SolrPaginator implements a class that is functionally
+# identical to the Django.core paginator, but for Solr. So call, use, etc it like you would with the Django 
+# paginator -- just use SolrPaginator(results, ...) instead of Paginator(results, ...)
 
 # from http://code.google.com/p/solrpy/source/browse/solr/paginator.py
 class SolrPaginator(object):

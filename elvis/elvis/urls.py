@@ -36,6 +36,7 @@ urlpatterns = []
 urlpatterns += format_suffix_patterns(
     patterns('',
         url(r'^$', home, name='home'),
+
         url(r'^search/', SearchView.as_view(), name="search-view"),
 
         url(r'^users/$', UserList.as_view(), name="user-list"),

@@ -49,7 +49,7 @@ def solr_index(sender, instance, created, **kwargs):
 
     # LM: Ugly bit of code to migrate the discrepancies in drupal database encoding. Used only for drupal dump
     try:
-        movement_title = (movement.title)
+        movement_title = unicode(movement.title)
     except UnicodeDecodeError:
         movement_title = movement.title.decode('utf-8')
 
@@ -98,11 +98,11 @@ def solr_index(sender, instance, created, **kwargs):
     #else:
     #    date_of_composition = pytz.utc.localize(movement.date_of_composition)
 
-    #print(movement.title)
-    #print(parent_piece_name)
-    #print(parent_corpus_name)
-    #print(composer_name)
-    #print(movement_comment)
+    print(movement.title)
+    print(parent_piece_name)
+    print(parent_corpus_name)
+    print(composer_name)
+    print(movement_comment)
 
     d = {
             'type': 'elvis_movement',
