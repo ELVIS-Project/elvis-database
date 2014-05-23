@@ -42,24 +42,30 @@ class SearchView(APIView):
         # LM: Continuing from above, the search() function belongs to SolrSearch, and simply returns the response for
         # the aforementioned parsed and prepared query
         search_results = s.search()
+        print('search_results', search_results)
        
         # LM: Paginate results... TODO: handle 0 hits
 
         paginator = paginate.SolrPaginator(search_results)
-        print paginator.num_pages
+        print('available pages', paginator.num_pages)
         
         page_number = request.GET.get('page')
-        print('Requested Page Num')
-        print(page_number)
+        
+        try:
+            page_number = int(page_number)
+        except PageNotAnInteger:
+            pass
 
         #paged_results = paginator.page(page_number)
         
         try:
+            print('Requested Page Num', page_number)
             paged_results = paginator.page(page_number)
         except paginate.PageNotAnInteger:
+            print('caught pagenotint')
             paged_results = paginator.page(1)
         except paginate.EmptyPage:
-            print(paginator.num_pages)
+            print('caught empty')
             paged_results = paginator.page(paginator.num_pages)
          
 
