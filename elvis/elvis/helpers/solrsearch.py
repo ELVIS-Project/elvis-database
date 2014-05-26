@@ -29,6 +29,9 @@ class SolrSearch(object):
         self.solr_params = {}
         self._parse_request()
         self._prepare_query()
+        # LM: Debugging prints
+        #print('parsed_request', self.parsed_request, type(self.parsed_request))
+        #print('prepared_query', self.prepared_query, type(self.prepared_query))
 
 
     def search(self, **kwargs):
@@ -66,7 +69,9 @@ class SolrSearch(object):
     def _parse_request(self):
         qdict = self.request.GET
         for k, v in qdict.lists():
-            self.parsed_request[k] = v
+            # LM: modified from just self.parsed_request[k] = v to cut out page requests
+            if k != 'page':
+                self.parsed_request[k] = v
 
     def _prepare_query(self):
         if self.parsed_request:
