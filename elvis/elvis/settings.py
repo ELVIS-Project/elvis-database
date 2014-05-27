@@ -98,3 +98,14 @@ USE_TZ = True
 STATIC_URL = '/static/'
 
 SOLR_SERVER = "http://localhost:8080/elvis-solr"
+
+#LM Search Settings:
+
+SEARCH_FILTERS_DICT = {
+    'fcp':'elvis_composer',
+    'fp':'elvis_piece',
+    'fm':'elvis_movement',
+    'fcr':'elvis_corpus',
+    'ft':'elvis_tag',
+    'fu': 'elvis_user',
+}

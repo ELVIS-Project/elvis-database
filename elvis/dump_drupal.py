@@ -59,12 +59,12 @@ ATTACHMENT_QUERY = """"""
 class DumpDrupal(object):
     def __init__(self):
         # LM: Would want to run tags, users only if db doesnt have previous users, corpus, piece, movement, in that order
-        # self.get_tags()
-        # self.get_composers()
+         self.get_tags()
+         self.get_composers()
         # self.get_users()
-        # self.get_corpus()
-        # self.get_pieces_movements("piece")
-        # self.get_pieces_movements("movement")
+         self.get_corpus()
+         self.get_pieces_movements("piece")
+         self.get_pieces_movements("movement")
 
     def __connect(self):
         self.conn = MySQLdb.connect(host="localhost", user="root", cursorclass=DictCursor, db="ddmal_elvis")

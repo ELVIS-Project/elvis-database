@@ -1,7 +1,10 @@
 
 <!-- LM: VERY PRELIMINARY search ui --> 
-{% if content %}
-    <div class="list-group">
+
+<!-- TODO reorganise data presentation --> 
+<!-- TODO faceted/filtered search -->
+{% if content.results %}
+    <div class="list-group" >
     {% for result in content.results %}
         {% if result.type == "elvis_composer" %}
             <a href="/composer/{{ result.item_id }}" class="list-group-item">
@@ -20,23 +23,21 @@
             <a href="/movement/{{ result.item_id }}" class="list-group-item">
                 <span class="label label-primary pull-right">Movement</span>
                 <h4>{{ result.title }}</h4>
-                <!-- TODO reorganise data presentation --> 
+                
                 <p class="list-group-item-text"> {{result.composer_name}} Date: {{ result.date_of_composition | date:"Y" }} Piece: {{result.parent_piece_name}} </p>
                 <p class="list-group-item-text"> {{result.comment}} </p>
             </a>
         {% elif result.type == "elvis_piece" %}
-            <a href="/movement/{{ result.item_id }}" class="list-group-item">
+            <a href="/piece/{{ result.item_id }}" class="list-group-item">
                 <span class="label label-primary pull-right">Piece</span>
                 <h4>{{ result.title }}</h4>
-                <!-- TODO reorganise data presentation --> 
                 <p class="list-group-item-text"> {{result.composer_name}} Date: {{ result.date_of_composition | date:"Y" }} </p>
                 <p class="list-group-item-text"> {{result.comment}} </p>
             </a>
         {% elif result.type == "elvis_comment" %}
-            <a href="/movement/{{ result.item_id }}" class="list-group-item">
+            <a href="/comment/{{ result.item_id }}" class="list-group-item">
                 <span class="label label-primary pull-right">Comment</span>
                 <h4>{{ result.name }}</h4>
-                <!-- TODO reorganise data presentation --> 
                 <p class="list-group-item-text"> Created by {{result.creator_name}} on {{result.created}} </p>
                 <p class="list-group-item-text"> {{result.comment_text}} </p>
             </a>
@@ -44,10 +45,11 @@
     {% endfor %}
     </div>
 
-    <div class="pagination">
+    
+    <div class="pager">
         <span class="step-links">
             {% if content.results.has_previous %}
-                <a href="?q={{ content.current_query }}&page={{ content.results.previous_page_number }}">previous</a>
+                <a href="?{{ content.current_query }}&page={{ content.results.previous_page_number }}">&larr; Previous Page</a>
             {% endif %}
 
             <span class="current">
@@ -55,7 +57,7 @@
             </span>
 
             {% if content.results.has_next %}
-                <a href="?q={{ content.current_query }}&page={{ content.results.next_page_number }}">next</a>
+                <a href="?{{ content.current_query }}&page={{ content.results.next_page_number }}">Next Page &rarr;</a>
             {% endif %}
         </span>
     </div>

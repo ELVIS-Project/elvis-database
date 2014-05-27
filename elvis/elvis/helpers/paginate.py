@@ -44,7 +44,6 @@ class SolrPaginator(object):
                 raise ValueError('default_page_size must be an integer')
 
             # LM: This if statement makes no sense to me
-
             #if self.page_size < len(self.result.results):
             #    print(self.page_size, len(self.result.results))
             #    raise ValueError('Invalid default_page_size specified, lower '

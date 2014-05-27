@@ -34,24 +34,39 @@ def delete_in_solr(modeladmin, request, queryset):
 
 delete_in_solr.short_description = "Permanently delete selected"
 
+# Items for each page / show all
+listperpage = 200
+listmaxshowall = 800
+
 
 class DownloadAdmin(admin.ModelAdmin):
     list_display = ('user', 'created')
     filter_horizontal = ( 'attachments',)
+    list_per_page = listperpage
+    list_max_show_all = listmaxshowall
+
 
 class UserProfileAdmin(admin.ModelAdmin):
     pass
     actions = [reindex_in_solr, delete_in_solr]
+    list_per_page = listperpage
+    list_max_show_all = listmaxshowall
+
 
 class ProjectAdmin(admin.ModelAdmin):
     pass
     actions = [reindex_in_solr, delete_in_solr]
+    list_per_page = listperpage
+    list_max_show_all = listmaxshowall
+
 
 class PieceAdmin(admin.ModelAdmin):
     list_display = ("title", "composer", "date_of_composition", "number_of_voices", "uploader", "old_id", "corpus")
     filter_horizontal = ("tags",)
     readonly_fields = ("attachments",)
     actions = [reindex_in_solr, delete_in_solr]
+    list_per_page = listperpage
+    list_max_show_all = listmaxshowall
 
 
 class MovementAdmin(admin.ModelAdmin):
@@ -59,29 +74,41 @@ class MovementAdmin(admin.ModelAdmin):
     filter_horizontal = ("tags",)
     readonly_fields = ("attachments",)
     actions = [reindex_in_solr, delete_in_solr]
+    list_per_page = listperpage
+    list_max_show_all = listmaxshowall
 
 class CorpusAdmin(admin.ModelAdmin):
-    pass
+    #pass
     actions = [reindex_in_solr, delete_in_solr]
+    list_per_page = listperpage
+    list_max_show_all = listmaxshowall
 
 class ComposerAdmin(admin.ModelAdmin):
     list_display = ("name", "birth_date", "death_date")
     actions = [reindex_in_solr, delete_in_solr]
+    list_per_page = listperpage
+    list_max_show_all = listmaxshowall
 
 
 class TagAdmin(admin.ModelAdmin):
     list_display = ("name", "description", "old_id")
     actions = [reindex_in_solr, delete_in_solr]
+    list_per_page = listperpage
+    list_max_show_all = listmaxshowall
 
 
 class TagHierarchyAdmin(admin.ModelAdmin):
     list_display = ("tag", "parent")
     actions = [reindex_in_solr, delete_in_solr]
+    list_per_page = listperpage
+    list_max_show_all = listmaxshowall
 
 
 class AttachmentAdmin(admin.ModelAdmin):
     list_display = ('attachment', 'description', 'pk')
     actions = ['delete_attachments_filesys',]
+    list_per_page = listperpage
+    list_max_show_all = listmaxshowall
 
     # LM For some reason simply using the model deleter for querysets doesn't work correctly, so this is a solution.
 
