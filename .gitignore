@@ -4,10 +4,8 @@ solr/target/*
 elvis_env/*
 .DS_Store
 dumps
-elvis/attachments
-elvis/elvis-files
-attachments
-elvis-files
+**/attachments/*
+**/elvis-files/*
 elvis-files.tgz
 ddmal_elvis.sql
 ddmal_drupal.sql
