@@ -19,7 +19,7 @@ from elvis.models.piece import Piece
 from elvis.models.attachment import Attachment
 from elvis.models.movement import Movement
 
-DRUPAL_FILE_PATH = ""  # path to the old drupal files.
+DRUPAL_FILE_PATH = "elvis-files"  # path to the old drupal files.
 
 ELVIS_USERS = """SELECT DISTINCT u.uid, u.name, u.mail, u.created, u.access, u.login FROM users u
                 LEFT JOIN users_roles ur ON u.uid = ur.uid
@@ -59,10 +59,10 @@ ATTACHMENT_QUERY = """"""
 class DumpDrupal(object):
     def __init__(self):
         # LM: Would want to run tags, users only if db doesnt have previous users, corpus, piece, movement, in that order
-         self.get_tags()
-         self.get_composers()
+        # self.get_tags()
+        # self.get_composers()
         # self.get_users()
-         self.get_corpus()
+        # self.get_corpus()
          self.get_pieces_movements("piece")
          self.get_pieces_movements("movement")
 
@@ -192,7 +192,7 @@ class DumpDrupal(object):
     def get_pieces_movements(self, rettype):
         
         users = self.__get_ddmal_users()
-        
+        '''
         query = PIECE_MOVEMENT_QUERY.format(rettype)
         self.__connect()
         self.curs.execute(query)
@@ -276,8 +276,8 @@ class DumpDrupal(object):
                 item.save()
 
             self.__disconnect()
-
-        '''    
+            '''
+            
         ITEM_ATTACHMENT_QUERY = """SELECT ff.field_files_description AS description, fm.timestamp AS created,
                                     fm.uid AS uploader, fm.filename AS filename, fm.uri AS uri FROM field_data_field_files ff
                                     LEFT JOIN file_managed fm ON ff.field_files_fid = fm.fid
@@ -293,6 +293,7 @@ class DumpDrupal(object):
         Attachment.objects.all().delete()
 
         self.__connect()
+        failures = 0
         for item in objects:
             self.curs.execute(ITEM_ATTACHMENT_QUERY, [item.old_id])
             attachments = self.curs.fetchall()
@@ -305,17 +306,41 @@ class DumpDrupal(object):
                 a = Attachment()
                 a.save()  # ensure we've got a PK before we try and attach a file.
 
-                filename = attachment.get('filename')[9:]  # lop the 'public://' off.
+                filename = attachment.get('filename')  # lop the 'public://' off.
                 #filename = "test_file.mei"  # for testing.
 
                 filepath = os.path.join(DRUPAL_FILE_PATH, filename)
-                f = open(filepath, 'rb')
+                
+                # LM Catch IO Error
+                try:
+                    f = open(filepath, 'rb')
+                except IOError:
+                    # print('Failed to open: ' + filename)
+                    # Some files have _0 appended to name before extension.... try that
+                    try:
+                        filename_temp, extension_temp = os.path.splitext(filename)
+                        filename = filename_temp + '_0' + extension_temp
+                        filepath = os.path.join(DRUPAL_FILE_PATH, filename)
+                        f = open(filepath)
+                    # If that doesn't work then pass
+                    except IOError:
+                        print('Failure: ' + filename)
+                        failures = failures + 1
+                        continue     
 
-                # attached_file = os.path.join(a.attachment_path, filename)
+                attached_file = os.path.join(a.attachment_path, filename)
+
+                # LM Try to localise timezone
+                #try:
+                date_created = pytz.utc.localize(datetime.datetime.fromtimestamp(attachment.get('created')))
+                #except AttributeError:
+                #    date_created = datetime.datetime.fromtimestamp(attachment.get('created'))
+
+
                 s = {
                     'uploader': user_obj,
                     'description': attachment.get('description', None),
-                    'created': datetime.datetime.fromtimestamp(attachment.get('created')),
+                    'created': date_created,
                     'old_id': attachment.get('old_id', None)
                 }
                 a.__dict__.update(**s)
@@ -325,9 +350,10 @@ class DumpDrupal(object):
                 a.save()
                 f.close()
                 item.attachments.add(a)
+                
 
         self.__disconnect()
-     '''   
+        print('failed attachments', failures)
 
     def __resolve_movement_parent(self, old_id):
         q = """SELECT REPLACE(ml1.link_path, 'node/', '') AS parent_nid,

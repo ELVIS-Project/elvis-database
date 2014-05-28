@@ -28,6 +28,7 @@ class SolrPaginator(object):
 
     """
 
+    # LM default_page_size should be == rows number in requestHandler (\select in this case)
     def __init__(self, result, default_page_size=10, allow_empty_first_page=True):
         self.params = result.header['params']
         self.result = result

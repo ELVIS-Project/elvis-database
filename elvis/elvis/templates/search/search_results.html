@@ -41,6 +41,12 @@
                 <p class="list-group-item-text"> Created by {{result.creator_name}} on {{result.created}} </p>
                 <p class="list-group-item-text"> {{result.comment_text}} </p>
             </a>
+        {% elif result.type == "elvis_tag" %}
+            <a href="/tag/{{ result.item_id }}" class="list-group-item">
+                <span class="label label-primary pull-right">Tag</span>
+                <h4>{{ result.name }}</h4>
+                <p class="list-group-item-text"> {{result.description}}</p>
+            </a>
         {% endif %}
     {% endfor %}
     </div>
