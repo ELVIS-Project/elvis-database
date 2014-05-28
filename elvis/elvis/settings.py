@@ -89,8 +89,8 @@ USE_L10N = True
 
 USE_TZ = True
 
-# LM Change when server structure is decided
-# MEDIA_ROOT = ''
+# LM Has to be absolute, relative pathing does not work
+MEDIA_ROOT = "/Users/lmok/Documents/workspace/elvis-site/elvis"
 
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/1.6/howto/static-files/

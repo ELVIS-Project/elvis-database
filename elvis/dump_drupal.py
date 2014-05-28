@@ -59,10 +59,10 @@ ATTACHMENT_QUERY = """"""
 class DumpDrupal(object):
     def __init__(self):
         # LM: Would want to run tags, users only if db doesnt have previous users, corpus, piece, movement, in that order
-        # self.get_tags()
-        # self.get_composers()
+         self.get_tags()
+         self.get_composers()
         # self.get_users()
-        # self.get_corpus()
+         self.get_corpus()
          self.get_pieces_movements("piece")
          self.get_pieces_movements("movement")
 
@@ -192,7 +192,7 @@ class DumpDrupal(object):
     def get_pieces_movements(self, rettype):
         
         users = self.__get_ddmal_users()
-        '''
+        
         query = PIECE_MOVEMENT_QUERY.format(rettype)
         self.__connect()
         self.curs.execute(query)
@@ -276,7 +276,7 @@ class DumpDrupal(object):
                 item.save()
 
             self.__disconnect()
-            '''
+            
             
         ITEM_ATTACHMENT_QUERY = """SELECT ff.field_files_description AS description, fm.timestamp AS created,
                                     fm.uid AS uploader, fm.filename AS filename, fm.uri AS uri FROM field_data_field_files ff
@@ -290,7 +290,12 @@ class DumpDrupal(object):
             objects = Movement.objects.all()
 
         print "Deleting attachments"
-        Attachment.objects.all().delete()
+        #Attachment.objects.all().delete()
+        attachment_set = Attachment.objects.all()
+        for item in attachment_set:
+            item.delete()
+
+        print("Attaching for real - LM")
 
         self.__connect()
         failures = 0
@@ -306,13 +311,13 @@ class DumpDrupal(object):
                 a = Attachment()
                 a.save()  # ensure we've got a PK before we try and attach a file.
 
-                filename = attachment.get('filename')  # lop the 'public://' off.
+                # LM filename from old attachment objects
+                filename = attachment.get('filename')  
                 #filename = "test_file.mei"  # for testing.
-
-                filepath = os.path.join(DRUPAL_FILE_PATH, filename)
                 
-                # LM Catch IO Error
+                # LM Catch IO Error when trying to find file
                 try:
+                    filepath = os.path.join(DRUPAL_FILE_PATH, filename)
                     f = open(filepath, 'rb')
                 except IOError:
                     # print('Failed to open: ' + filename)
@@ -327,6 +332,7 @@ class DumpDrupal(object):
                         print('Failure: ' + filename)
                         failures = failures + 1
                         continue     
+
 
                 attached_file = os.path.join(a.attachment_path, filename)
 

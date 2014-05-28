@@ -106,7 +106,7 @@ class TagHierarchyAdmin(admin.ModelAdmin):
 
 class AttachmentAdmin(admin.ModelAdmin):
     list_display = ('attachment', 'description', 'pk')
-    actions = ['delete_attachments_filesys',]
+    actions = [delete_in_solr]
     list_per_page = listperpage
     list_max_show_all = listmaxshowall
 
@@ -128,7 +128,9 @@ class AttachmentAdmin(admin.ModelAdmin):
         for item in queryset:
             if os.path.exists(attachment_path(item)):
                 shutil.rmtree(attachment_path(item))
-            item.delete()
+                item.delete()
+            else:
+                print('Delete failure')
 
     delete_attachments_filesys.short_description = "Delete attachments from File System"
     #pass

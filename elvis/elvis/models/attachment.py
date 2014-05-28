@@ -39,6 +39,7 @@ class Attachment(models.Model):
                             "{0:0>2}".format(str(self.pk)[-2:]),
                             "{0:0>15}".format(self.pk))
 
+
     old_id = models.IntegerField(null=True, blank=True, db_index=True)
     attachment = models.FileField(upload_to=upload_path, null=True, blank=True, max_length=512)
     uploader = models.ForeignKey(User, blank=True, null=True, related_name="attachments")
@@ -46,6 +47,10 @@ class Attachment(models.Model):
 
     created = models.DateTimeField(auto_now_add=True)
     updated = models.DateTimeField(auto_now=True)
+
+    #@property
+    #def file_name(self):
+    #    return os.path.basename(self.attachment.name)
 
     def save(self, *args, **kwargs):
         super(Attachment, self).save(*args, **kwargs)
@@ -55,6 +60,8 @@ class Attachment(models.Model):
     def delete(self, *args, **kwargs):
         if os.path.exists(self.attachment_path):
             shutil.rmtree(self.attachment_path)
+        else:
+            print('path not found')
         super(Attachment, self).delete(*args, **kwargs)
 
     def __unicode__(self):
