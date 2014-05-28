@@ -62,6 +62,7 @@ class ProjectAdmin(admin.ModelAdmin):
 
 class PieceAdmin(admin.ModelAdmin):
     list_display = ("title", "composer", "date_of_composition", "number_of_voices", "uploader", "old_id", "corpus")
+    # Other things for interest: , "attached_files", "tagged_as"
     filter_horizontal = ("tags",)
     readonly_fields = ("attachments",)
     actions = [reindex_in_solr, delete_in_solr]
@@ -71,6 +72,7 @@ class PieceAdmin(admin.ModelAdmin):
 
 class MovementAdmin(admin.ModelAdmin):
     list_display = ("title", "composer", "date_of_composition", "number_of_voices", "uploader", "old_id", "piece", "corpus")
+    # Other things for interest , "attached_files", "tagged_as"
     filter_horizontal = ("tags",)
     readonly_fields = ("attachments",)
     actions = [reindex_in_solr, delete_in_solr]
@@ -105,7 +107,7 @@ class TagHierarchyAdmin(admin.ModelAdmin):
 
 
 class AttachmentAdmin(admin.ModelAdmin):
-    list_display = ('attachment', 'description', 'pk')
+    list_display = ('attachment', 'description', 'pk', 'attached_to')
     actions = [delete_in_solr]
     list_per_page = listperpage
     list_max_show_all = listmaxshowall

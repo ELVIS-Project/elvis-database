@@ -31,6 +31,16 @@ class Movement(models.Model):
     created = models.DateTimeField(auto_now_add=True)
     updated = models.DateTimeField(auto_now=True)
 
+    @property
+    def attached_files(self):
+        if not self.attachments.all():
+            return 'none'
+        return " ".join([a.description for a in self.attachments.all()])
+
+    @property
+    def tagged_as(self):
+        return " ".join([t.name for t in self.tags.all()])
+
     def __unicode__(self):
         return u"{0}".format(self.title)
 

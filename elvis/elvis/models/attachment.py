@@ -52,6 +52,12 @@ class Attachment(models.Model):
     #def file_name(self):
     #    return os.path.basename(self.attachment.name)
 
+    @property
+    def attached_to(self):
+        p_list = " ".join([p.title for p in self.pieces.all()])
+        m_list = " ".join([m.title for m in self.movements.all()])
+        return 'm: ' + m_list+ '; p: ' + p_list
+
     def save(self, *args, **kwargs):
         super(Attachment, self).save(*args, **kwargs)
         if not os.path.exists(self.attachment_path):
@@ -60,8 +66,6 @@ class Attachment(models.Model):
     def delete(self, *args, **kwargs):
         if os.path.exists(self.attachment_path):
             shutil.rmtree(self.attachment_path)
-        else:
-            print('path not found')
         super(Attachment, self).delete(*args, **kwargs)
 
     def __unicode__(self):

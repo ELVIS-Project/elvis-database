@@ -35,7 +35,16 @@ class Piece(models.Model):
     def number_of_movements(self):
         return len(self.movements.all())
 
-        
+    @property
+    def attached_files(self):
+        if not self.attachments.all():
+            return 'none'
+        return " ".join([a.description for a in self.attachments.all()])
+
+    @property
+    def tagged_as(self):
+        return " ".join([t.name for t in self.tags.all()])
+
 
 @receiver(post_save, sender=Piece)
 def solr_index(sender, instance, created, **kwargs):

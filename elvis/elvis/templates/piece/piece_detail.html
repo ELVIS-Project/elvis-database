@@ -5,7 +5,7 @@
     <h2>{{ content.title }} <small>{{ content.composer.name }}</small></h2>
     <p><span class="label label-primary">Piece</span> Created by {{ content.uploader.username }} on {{ content.created | date:"d F Y" }}. Last updated {{ content.updated | date:"d F Y" }}.</p>
     <p>{{ content.comment }}</p>
-    {% include "includes/download-badge-inc.html" with download_type="piece" download_item_id=content.item_id title="Download Piece" %}
+    {% include "includes/download-badge-inc.html" with download_type="piece" download_item_id=content.item_id title="Add to Downloads" %}
 
 </div>
 
@@ -31,7 +31,7 @@
         <dd>
             <ul>
                 {% for attachment in content.attachments %}
-                    <li><a href="{{ attachment.attachment }}">{{ attachment.description | default:"Download File" }}</a></li>
+                    <li><a href="{{ attachment.attachment }}">{{ attachment.description | default:"Add to Downloads" }}</a></li>
                 {% endfor %}
             </ul>
         </dd>

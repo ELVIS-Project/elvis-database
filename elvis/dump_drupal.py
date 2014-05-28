@@ -59,10 +59,10 @@ ATTACHMENT_QUERY = """"""
 class DumpDrupal(object):
     def __init__(self):
         # LM: Would want to run tags, users only if db doesnt have previous users, corpus, piece, movement, in that order
-         self.get_tags()
-         self.get_composers()
+        # self.get_tags()
+        # self.get_composers()
         # self.get_users()
-         self.get_corpus()
+        # self.get_corpus()
          self.get_pieces_movements("piece")
          self.get_pieces_movements("movement")
 
@@ -192,7 +192,7 @@ class DumpDrupal(object):
     def get_pieces_movements(self, rettype):
         
         users = self.__get_ddmal_users()
-        
+        '''
         query = PIECE_MOVEMENT_QUERY.format(rettype)
         self.__connect()
         self.curs.execute(query)
@@ -276,7 +276,7 @@ class DumpDrupal(object):
                 item.save()
 
             self.__disconnect()
-            
+            '''
             
         ITEM_ATTACHMENT_QUERY = """SELECT ff.field_files_description AS description, fm.timestamp AS created,
                                     fm.uid AS uploader, fm.filename AS filename, fm.uri AS uri FROM field_data_field_files ff
@@ -286,14 +286,18 @@ class DumpDrupal(object):
         print "Attaching files to {0}".format(rettype)
         if rettype == "piece":
             objects = Piece.objects.all()
+
+            # LM: Deletion of previous attachments should happen here, otherwise attaching movements will delete attachments to pieces
+            print "Deleting attachments"
+            #Attachment.objects.all().delete()
+            attachment_set = Attachment.objects.all()
+            for item in attachment_set:
+                item.delete()
+
         elif rettype == "movement":
             objects = Movement.objects.all()
 
-        print "Deleting attachments"
-        #Attachment.objects.all().delete()
-        attachment_set = Attachment.objects.all()
-        for item in attachment_set:
-            item.delete()
+        
 
         print("Attaching for real - LM")
 
@@ -355,6 +359,8 @@ class DumpDrupal(object):
                 a.attachment.save(filename, File(f))
                 a.save()
                 f.close()
+                
+                #print('Attaching ' + a.attachment.attachment_path + ' to ' + item.title)
                 item.attachments.add(a)
                 
 
