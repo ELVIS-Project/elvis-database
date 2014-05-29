@@ -3,9 +3,17 @@ from rest_framework import permissions
 from rest_framework import status
 from rest_framework.renderers import JSONRenderer, JSONPRenderer
 from rest_framework.response import Response
+from rest_framework.views import APIView
+from django.views.decorators.http import require_http_methods
+from django.views.decorators.csrf import csrf_protect
+from django.conf import settings
+
+from django.template import RequestContext
+from django.shortcuts import render_to_response
+
 
 from elvis.renderers.custom_html_renderer import CustomHTMLRenderer
-from elvis.serializers.download import DownloadSerializer
+from elvis.serializers.download import DownloadSerializer, DownloadingSerializer
 from elvis.models.download import Download
 from elvis.models.piece import Piece
 from elvis.models.movement import Movement
@@ -19,6 +27,8 @@ class DownloadListHTMLRenderer(CustomHTMLRenderer):
 class DownloadDetailHTMLRenderer(CustomHTMLRenderer):
     template_name = "download/download.html"
 
+class DownloadingHTMLRenderer(CustomHTMLRenderer):
+    template_name = "download/downloading.html"
 
 class DownloadList(generics.ListCreateAPIView):
     model = Download
@@ -74,4 +84,39 @@ class DownloadDetail(generics.RetrieveUpdateAPIView):
         return Response(d)
 
         # return self.partial_update(request, *args, **kwargs)
+
+class Downloading(APIView):
+    permission_classes = (permissions.IsAuthenticatedOrReadOnly,)
+    serializer_class = DownloadingSerializer
+    renderer_classes = (JSONRenderer, JSONPRenderer, DownloadingHTMLRenderer)
+
+
+@csrf_protect#require_http_methods(["POST"])
+def downloading_item(request):
+    c = {}
+
+    print(request)
+
+    # LM: Things wanted:
+    # 1. Parse request to extract path to all requested files
+    # 2. Create subprocess - Celery
+    # 3. Get files and copy into dummy directory
+    # 4. Zip directory
+    # 5. Track subprocess
+    # 6. Serve
+    # 7. Remove dummy directory and zipped file
+    # 
+
+    items = request.POST.getlist('item')
+    print(items)
+
+    extensions = request.POST.getlist('extension')
+    print(extensions)
+
+
+    #c.update(csrf(request))
+    # ... view code here
+    return render_to_response("download.html", RequestContext(request, {}))
+
+
 

@@ -12,7 +12,7 @@ from elvis.views.main import home, about, queries
 from elvis.views.auth import LoginFormView, logout_view
 from elvis.views.search import SearchView
 from elvis.views.project import ProjectList, ProjectDetail
-from elvis.views.download import DownloadDetail
+from elvis.views.download import DownloadDetail, Downloading, downloading_item
 from elvis.views.piece import PieceList, PieceDetail
 from elvis.views.corpus import CorpusList, CorpusDetail
 from elvis.views.user import UserList, UserDetail
@@ -43,7 +43,9 @@ urlpatterns += format_suffix_patterns(
         url(r'^user/(?P<pk>[0-9]+)/$', UserDetail.as_view(), name="user-detail"),
         url(r'^login/?', LoginFormView.as_view(), name="login-form"),
         url(r'^logout/?', logout_view),
+
         url(r'^downloads/$', DownloadDetail.as_view(), name="download-detail"),
+        url(r'^downloading/$', downloading_item, name="downloading-detail"),
 
         url(r'^user-profiles/$', UserProfileList.as_view(), name="userprofile-list"),
         url(r'^user-profile/(?P<pk>[0-9]+)/$', UserProfileDetail.as_view(), name="userprofile-detail"),

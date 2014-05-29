@@ -32,9 +32,10 @@ class UserAttachmentSerializer(serializers.HyperlinkedModelSerializer):
     pieces = AttachmentPieceSerializer()
     movements = AttachmentMovementSerializer()
     file_name = serializers.Field()
+    attachment_path = serializers.Field()
     class Meta:
         model = Attachment
-        fields = ('url', 'pieces', 'movements', 'attachment', 'file_name', 'id')
+        fields = ('url', 'pieces', 'movements', 'attachment', 'file_name', 'id', 'attachment_path')
 
 
 class DownloadSerializer(serializers.ModelSerializer):
@@ -42,3 +43,7 @@ class DownloadSerializer(serializers.ModelSerializer):
     attachments = UserAttachmentSerializer()
     class Meta:
         model = Download
+
+class DownloadingSerializer(serializers.Serializer):
+    class Meta:
+        pass
