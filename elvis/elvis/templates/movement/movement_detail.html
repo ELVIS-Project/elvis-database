@@ -33,7 +33,7 @@
         <dd>
             <ul>
                 {% for attachment in content.attachments %}
-                    <li><a href="{{ attachment.attachment }}">{{ attachment.description | default:"Download File" }}</a></li>
+                    <li><a href="{{ attachment.attachment }}">{{ attachment.file_name | default:"Download File" }}</a></li>
                 {% endfor %}
             </ul>
         </dd>

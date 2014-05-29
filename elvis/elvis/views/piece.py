@@ -31,5 +31,8 @@ class PieceDetail(generics.RetrieveUpdateDestroyAPIView):
     permission_classes = (permissions.IsAuthenticatedOrReadOnly,)
     serializer_class = PieceSerializer
     renderer_classes = (JSONRenderer, JSONPRenderer, PieceDetailHTMLRenderer)
-
+'''
+    def post(self, request, *args, **kwargs):
+        
+'''       
 

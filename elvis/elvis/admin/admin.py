@@ -107,7 +107,7 @@ class TagHierarchyAdmin(admin.ModelAdmin):
 
 
 class AttachmentAdmin(admin.ModelAdmin):
-    list_display = ('attachment', 'description', 'pk', 'attached_to')
+    list_display = ('attachment', 'description', 'pk', 'attached_to', 'file_name')
     actions = [delete_in_solr]
     list_per_page = listperpage
     list_max_show_all = listmaxshowall

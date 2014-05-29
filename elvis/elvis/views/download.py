@@ -46,7 +46,6 @@ class DownloadDetail(generics.RetrieveUpdateAPIView):
         except ObjectDoesNotExist:
             return None
 
-
     def get(self, request, *args, **kwargs):
         return self.retrieve(request, *args, **kwargs)
 

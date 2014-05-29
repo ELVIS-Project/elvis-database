@@ -28,13 +28,17 @@
             {% endfor %}
         </dd>
         <dt>Attachments</dt>
+
+        <!-- Attachments & Form -->
+        <!-- <form id="add-download-form" action="/piece/{{ content.id }}" method="post"> -->
         <dd>
             <ul>
-                {% for attachment in content.attachments %}
-                    <li><a href="{{ attachment.attachment }}">{{ attachment.description | default:"Add to Downloads" }}</a></li>
+                {% for item in content.attachments %}
+                    <li><a href="{{ item.attachment }}">{{ item.file_name | default:"Download" }}</a></li>
                 {% endfor %}
             </ul>
         </dd>
+        <!-- </form> -->
     </dl>
 </div>
 

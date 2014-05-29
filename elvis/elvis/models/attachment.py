@@ -48,9 +48,9 @@ class Attachment(models.Model):
     created = models.DateTimeField(auto_now_add=True)
     updated = models.DateTimeField(auto_now=True)
 
-    #@property
-    #def file_name(self):
-    #    return os.path.basename(self.attachment.name)
+    @property
+    def file_name(self):
+        return os.path.basename(self.attachment.name)
 
     @property
     def attached_to(self):
