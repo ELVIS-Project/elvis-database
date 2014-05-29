@@ -25,9 +25,9 @@
                         <tr>
 
                             {% for piece in attachment.pieces %}
-                            <td>
+                                <td>
                                 <input type="checkbox" name="item" value="{{ attachment.attachment_path }}/{{ attachment.file_name }}" checked="true">
-                            </td>
+                                </td>
                                 <td><a href="{{ piece.url }}">{{ piece.title }}</a></td>
                                 <td> {{ attachment.file_name }} </td>
                                 <td><a href="{{ piece.composer.url }}">{{ piece.composer.name }}</a></td>
@@ -37,9 +37,9 @@
                                 </td>
                             {% endfor %}
                             {% for mvmt in attachment.movements %}
-                            <td>
+                                <td>
                                 <input type="checkbox" name="{{ attachment.attachment_path }}/{{ attachment.file_name }}" value="" checked="true">
-                            </td>
+                                </td>
                                 <td><a href="{{ mvmt.url }}">{{ mvmt.title }}</a></td>
                                 <td> {{ attachment.file_name }} </td>
                                 <td><a href="{{ mvmt.composer.url }}">{{ mvmt.composer.name }}</a></td>
@@ -61,11 +61,12 @@
         </div>
         <div class="row">
             <h4>Select file types to download</h4>
+            <!-- if these are modified, modify downloading_item view too -->
             <label class="checkbox-inline">
                 <input type="checkbox" id="mei-select" name="extension" value="mei" checked="true"> MEI
             </label>
             <label class="checkbox-inline">
-                <input type="checkbox" id="musicxml-select" name="extension" value="musicxml" checked="true"> MusicXML
+                <input type="checkbox" id="musicxml-select" name="extension" value="xml" checked="true"> MusicXML
             </label>
             <label class="checkbox-inline">
                 <input type="checkbox" id="midi-select" name="extension" value="midi" checked="true"> MIDI
@@ -74,10 +75,10 @@
                 <input type="checkbox" id="pdf-select" name="extension" value="pdf" checked="true"> PDF
             </label>
             <label class="checkbox-inline">
-                <input type="checkbox" id="kern-select" name="extension" value="kern" checked="true"> **kern
+                <input type="checkbox" id="kern-select" name="extension" value="krn" checked="true"> **kern
             </label>
             <label class="checkbox-inline">
-                <input type="checkbox" id="else-select" name="extension" value="else" checked="true"> All others
+                <input type="checkbox" id="else-select" name="extension" value="OTHERS" checked="true"> All others
             </label>
             <span class="help-block">Select which file types you wish to download. If a piece or movement does not have one of your selected file types, it will not be downloaded. Choose "all others" to download any formats that do not appear in this list.</span>
         </div>

@@ -19,7 +19,7 @@ class TagPieceSerializer(serializers.HyperlinkedModelSerializer):
         fields = ("url", "name")
 
 class AttachmentPieceSerializer(serializers.HyperlinkedModelSerializer):
-    # LM: Must add this to serializers explicitly, otherwise will raise KeyError
+    # LM: Must add this to serializers explicitly, otherwise will raise KeyError because file_name isn't *really* a field
     file_name = serializers.Field()
 
     class Meta:

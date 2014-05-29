@@ -1,3 +1,4 @@
+# LM: TODO lots of cleaning up
 from rest_framework import generics
 from rest_framework import permissions
 from rest_framework import status
@@ -10,6 +11,8 @@ from django.conf import settings
 
 from django.template import RequestContext
 from django.shortcuts import render_to_response
+from elvis import celery
+import os
 
 
 from elvis.renderers.custom_html_renderer import CustomHTMLRenderer
@@ -85,19 +88,21 @@ class DownloadDetail(generics.RetrieveUpdateAPIView):
 
         # return self.partial_update(request, *args, **kwargs)
 
+# LM: Original preliminary view for downloading, will probably be removed
 class Downloading(APIView):
     permission_classes = (permissions.IsAuthenticatedOrReadOnly,)
     serializer_class = DownloadingSerializer
     renderer_classes = (JSONRenderer, JSONPRenderer, DownloadingHTMLRenderer)
 
 
+# LM: New view for downloading files
 @csrf_protect#require_http_methods(["POST"])
 def downloading_item(request):
     c = {}
 
-    print(request)
+    #print(request)
 
-    # LM: Things wanted:
+    # LM: Things needed:
     # 1. Parse request to extract path to all requested files
     # 2. Create subprocess - Celery
     # 3. Get files and copy into dummy directory
@@ -108,14 +113,51 @@ def downloading_item(request):
     # 
 
     items = request.POST.getlist('item')
-    print(items)
+    print('items', items)
 
-    extensions = request.POST.getlist('extension')
-    print(extensions)
+    types = request.POST.getlist('extension')
+    print('types', types)
 
+    others_check = False
+    extensions = types
+    if 'midi' in types:
+        extensions.append('mid')
+    if 'xml' in types:
+        extensions.append('mxl')
+    if 'OTHERS' in types:
+        others_check = True
+
+    print('extensions', extensions)
+
+
+    # If user checks all exts except .abc, he would expect everything else but .abc
+    # -> need a list of everything that could have been left unchecked
+    # EDIT IF download.html IS CHANGED
+    default_exts = ['mei', 'xml', 'midi', 'pdf', 'krn', 'mid', 'mxl']
+
+    print('default_exts', default_exts)
+
+    # Check for two conditions. Either:
+    # 1) requested file is in selected extensions
+    # 2) file is not in available extensions (i.e. its extension was not rejected) and OTHERS was checked
+    files = []
+    for item in items:
+        fileName, fileExt = os.path.splitext(item)
+        if (fileExt in extensions or fileExt in extensions):
+            files.append(item)
+        elif((not (fileExt in default_exts or fileExt in default_exts)) and others_check):
+            files.append(item)
+        else:
+            pass
+
+    print('files', files)
+
+    print('user', request.user.username)
+
+    
+    celery.zip_files(files, request.user.username)
 
     #c.update(csrf(request))
-    # ... view code here
     return render_to_response("download.html", RequestContext(request, {}))
 
 
