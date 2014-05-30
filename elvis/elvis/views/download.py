@@ -10,11 +10,16 @@ from django.views.decorators.http import require_http_methods
 from django.views.decorators.csrf import csrf_protect
 from django.conf import settings
 
+from celery.result import AsyncResult
+from django.http import HttpResponse, HttpResponseRedirect
+from django.core.urlresolvers import reverse
+
 from django.template import RequestContext
 from django.shortcuts import render_to_response
 from elvis import tasks
-import os
+import os, json
 
+from time import sleep
 
 from elvis.renderers.custom_html_renderer import CustomHTMLRenderer
 from elvis.serializers.download import DownloadSerializer, DownloadingSerializer
@@ -89,7 +94,7 @@ class DownloadDetail(generics.RetrieveUpdateAPIView):
 
         # return self.partial_update(request, *args, **kwargs)
 
-# LM: New view 2, was original view but updated with post-only view
+# LM: New view 2, was original view but updated with post-only view below
 class Downloading(APIView):
     permission_classes = (permissions.IsAuthenticatedOrReadOnly,)
     serializer_class = DownloadingSerializer
@@ -105,6 +110,17 @@ class Downloading(APIView):
         # 7. Remove dummy directory and zipped file
         # 
 
+    def get(self, request, *args, **kwargs):
+        """ A view to report the progress to the user """
+        if 'job' in request.GET:
+            job_id = request.GET['job']
+        else:
+            return HttpResponse('No job id given.')
+
+        job = AsyncResult(job_id)
+        data = job.result or job.state
+ 
+        return HttpResponse(json.dumps(data), content_type='application/json')
 
 
     @method_decorator(csrf_protect)
@@ -112,8 +128,6 @@ class Downloading(APIView):
         c = {}
 
         #print(request)
-
-      
 
         items = request.POST.getlist('item')
         print('items', items)
@@ -157,78 +171,18 @@ class Downloading(APIView):
 
         print('user', request.user.username)
 
-    
-        res = tasks.zip_files.delay(files, request.user.username)
-        print('res', res, type(res))
+        # Call celery tasks with our parsed files
+        zip_task = tasks.zip_files.delay(files, request.user.username)
+        #zip_status = tasks.zip_status_check.delay(zip_task.id)
+        #print('zip_task', zip_task, type(zip_task))
+        #print('ready', zip_task.ready())
+        #print('get', zip_task.get(timeout=None, propagate=True, interval=0.5, no_ack=True, follow_parents=True))
+
         #c.update(csrf(request))
-        return render_to_response("download/downloading.html", RequestContext(request, {}))
+        return HttpResponseRedirect('?job=' + zip_task.id)
+        #return render_to_response("download/downloading.html", RequestContext(request, {}))
 
 
-
-# LM: New view for downloading files
-@csrf_protect#require_http_methods(["POST"])
-def downloading_item(request):
-    c = {}
-
-    #print(request)
-
-    # LM: Things needed:
-    # 1. Parse request to extract path to all requested files
-    # 2. Create subprocess - Celery
-    # 3. Get files and copy into dummy directory
-    # 4. Zip directory
-    # 5. Track subprocess
-    # 6. Serve
-    # 7. Remove dummy directory and zipped file
-    # 
-
-    items = request.POST.getlist('item')
-    print('items', items)
-
-    types = request.POST.getlist('extension')
-    print('types', types)
-
-    others_check = False
-    extensions = types
-    if 'midi' in types:
-        extensions.append('mid')
-    if 'xml' in types:
-        extensions.append('mxl')
-    if 'OTHERS' in types:
-        others_check = True
-
-    print('extensions', extensions)
-
-
-    # If user checks all exts except .abc, he would expect everything else but .abc
-    # -> need a list of everything that could have been left unchecked
-    # EDIT IF download.html IS CHANGED
-    default_exts = ['mei', 'xml', 'midi', 'pdf', 'krn', 'mid', 'mxl']
-
-    print('default_exts', default_exts)
-
-    # Check for two conditions. Either:
-    # 1) requested file is in selected extensions
-    # 2) file is not in available extensions (i.e. its extension was not rejected) and OTHERS was checked
-    files = []
-    for item in items:
-        fileName, fileExt = os.path.splitext(item)
-        if (fileExt in extensions or fileExt in extensions):
-            files.append(item)
-        elif((not (fileExt in default_exts or fileExt in default_exts)) and others_check):
-            files.append(item)
-        else:
-            pass
-
-    print('files', files)
-
-    print('user', request.user.username)
-
-    
-    tasks.zip_files.delay(files, request.user.username)
-
-    #c.update(csrf(request))
-    return render_to_response("download/downloading.html", RequestContext(request, {}))
 
 
 

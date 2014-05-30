@@ -99,7 +99,7 @@ STATIC_URL = '/static/'
 
 SOLR_SERVER = "http://localhost:8080/elvis-solr"
 
-#LM Search Settings:
+# LM Search Settings:
 
 SEARCH_FILTERS_DICT = {
     'fcp':'elvis_composer',
@@ -109,3 +109,11 @@ SEARCH_FILTERS_DICT = {
     'ft':'elvis_tag',
     'fu': 'elvis_user',
 }
+
+# LM Celery Settings
+BROKER_URL = 'amqp://'
+CELERY_RESULT_BACKEND = 'amqp://'
+
+CELERY_TASK_SERIALIZER = 'json'
+CELERY_RESULT_SERIALIZER = 'json'
+CELERY_ACCEPT_CONTENT=['json']

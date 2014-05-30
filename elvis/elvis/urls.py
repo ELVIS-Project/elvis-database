@@ -12,7 +12,7 @@ from elvis.views.main import home, about, queries
 from elvis.views.auth import LoginFormView, logout_view
 from elvis.views.search import SearchView
 from elvis.views.project import ProjectList, ProjectDetail
-from elvis.views.download import DownloadDetail, Downloading, downloading_item
+from elvis.views.download import DownloadDetail, Downloading
 from elvis.views.piece import PieceList, PieceDetail
 from elvis.views.corpus import CorpusList, CorpusDetail
 from elvis.views.user import UserList, UserDetail
