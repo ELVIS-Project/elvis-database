@@ -45,7 +45,7 @@ urlpatterns += format_suffix_patterns(
         url(r'^logout/?', logout_view),
 
         url(r'^downloads/$', DownloadDetail.as_view(), name="download-detail"),
-        url(r'^downloading/$', downloading_item, name="downloading-detail"),
+        url(r'^downloading/$', Downloading.as_view(), name="downloading-detail"),
 
         url(r'^user-profiles/$', UserProfileList.as_view(), name="userprofile-list"),
         url(r'^user-profile/(?P<pk>[0-9]+)/$', UserProfileDetail.as_view(), name="userprofile-detail"),

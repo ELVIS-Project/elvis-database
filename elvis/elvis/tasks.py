@@ -1,29 +1,10 @@
 from __future__ import absolute_import
 
-import os
-
-from celery import Celery
+from elvis.celery import app
 
 from django.conf import settings
 
-# set the default Django settings module for the 'celery' program.
-os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'elvis.settings')
-
-app = Celery('elvis', broker='amqp://', backend='amqp://')
-
-# Using a string here means the worker will not have to
-# pickle the object when using Windows.
-app.config_from_object('django.conf:settings')
-app.autodiscover_tasks(lambda: settings.INSTALLED_APPS)
-
-if __name__ == '__main__':
-    app.start()
-
-'''
-MOVED TO tasks.py
-
-
-# LM: For elvis' purposes and the one task of serving a zipped file, just defining it here is convenient
+# LM: 
 # Check this out: http://massivescale.blogspot.ca/2011/09/celery-task-queue-with-php.html
 # TODO: Change unicode encoding to utf for terminal commands
 @app.task(name='elvis.celery.zip_files')
@@ -63,4 +44,37 @@ def zip_files(paths, username):
 	print(dummy_root_dir, dummy_path)
 
 	#return zip_path
+
+'''
+@app.task()
+def do_work():
+    """ Get some rest, asynchronously, and update the state all the time """
+    for i in range(100):
+        sleep(0.1)
+        current_task.update_state(state='PROGRESS',
+            meta={'current': i, 'total': 100})
+
+
+def poll_state(request):
+    """ A view to report the progress to the user """
+    if 'job' in request.GET:
+        job_id = request.GET['job']
+    else:
+        return HttpResponse('No job id given.')
+
+    job = AsyncResult(job_id)
+    data = job.result or job.state
+    return HttpResponse(json.dumps(data), mimetype='application/json')
+
+
+def init_work(request):
+    """ A view to start a background job and redirect to the status page """
+    job = do_work.delay()
+    return HttpResponseRedirect(reverse('poll_state') + '?job=' + job.id)
+
+
+urlpatterns = patterns('webapp.modules.asynctasks.progress_bar_demo',
+    url(r'^init_work$', init_work),
+    url(r'^poll_state$', poll_state, name="poll_state"),
+)
 '''

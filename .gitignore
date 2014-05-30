@@ -6,6 +6,7 @@ elvis_env/*
 dumps
 **/attachments/*
 **/elvis-files/*
+**/user_downloads/*
 elvis-files.tgz
 ddmal_elvis.sql
 ddmal_drupal.sql
