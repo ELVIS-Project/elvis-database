@@ -112,13 +112,13 @@ class Downloading(APIView):
 
     def get(self, request, *args, **kwargs):
         """ A view to report the progress to the user """
-        if 'job' in request.GET:
-            job_id = request.GET['job']
+        if 'task' in request.GET:
+            task_id = request.GET['task']
         else:
-            return HttpResponse('No job id given.')
+            return HttpResponse('No tasks.')
 
-        job = AsyncResult(job_id)
-        data = job.result or job.state
+        task = AsyncResult(task_id)
+        data = task.result or task.state
  
         return HttpResponse(json.dumps(data), content_type='application/json')
 
@@ -179,7 +179,7 @@ class Downloading(APIView):
         #print('get', zip_task.get(timeout=None, propagate=True, interval=0.5, no_ack=True, follow_parents=True))
 
         #c.update(csrf(request))
-        return HttpResponseRedirect('?job=' + zip_task.id)
+        return HttpResponseRedirect('?task=' + zip_task.id)
         #return render_to_response("download/downloading.html", RequestContext(request, {}))
 
 
