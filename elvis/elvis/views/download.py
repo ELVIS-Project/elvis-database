@@ -10,6 +10,9 @@ from django.views.decorators.http import require_http_methods
 from django.views.decorators.csrf import csrf_protect
 from django.conf import settings
 
+from django.core.files import File
+from django.core.servers.basehttp import FileWrapper
+
 from celery.result import AsyncResult
 from django.http import HttpResponse, HttpResponseRedirect, JsonResponse
 from django.core.urlresolvers import reverse
@@ -115,15 +118,31 @@ class Downloading(APIView):
         if 'task' in request.GET:
             task_id = request.GET['task']
         else:
+            # TODO change to appropriate response type
             return Response("None", status=status.HTTP_200_OK)
 
         task = AsyncResult(task_id)
         data = task.result or task.state
+        if task.result and hasattr(task, 'result') and "path" in task.result:
+            path = task.result["path"]
+            print('path', path)
+            file_name = os.path.basename(path)
+            print('file_name', file_name)
+        ##    zipped_file = File(open(path, "r"))
+            #response = Response(task.result, status=status.HTTP_200_OK)
+            try:
+                # Doesn't work with Response for some reason, even though it works in the console. Has to be HttpResponse 
+                response = Response(FileWrapper(open(path)), content_type='application/zip', status=status.HTTP_200_OK)
+            except Exception as e:
+                print e
+            #print response
+            response['Content-Length'] = os.path.getsize(path) 
+            response['Content-Disposition'] = 'attachment; filename=%s' % file_name
+            return response
+        
+        data = task.result or task.state
         print data
-        #data = task.state
-        #return Response(json.dumps(data), content_type='application/json', status=status.HTTP_200_OK)
         return Response(data, status=status.HTTP_200_OK)
-        #return JsonResponse(data, safe=False)
 
 
     @method_decorator(csrf_protect)

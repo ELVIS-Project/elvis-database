@@ -6,13 +6,14 @@
  </script> 
  -->
 <div class="col-md-12">
-
+    <h2>Your Downloads</h2>
+    Zip progress...
     <div class="progress progress-striped active" id="progressouter" style="height: 26px">
       <div class="progress-bar progress-bar-info" id="progress" style="width: 0%; height: 20px"></div>
     </div> 
+    <iframe id="downloadFrame" style="display:none"></iframe>
 
-
-<!-- LM: figure out the relative path to this... -->
+<!-- LM TODO: Catch exceptions to stop it from setIntervalling over the exception infinitely -->
 
   <script type="text/javascript" >
 
@@ -30,6 +31,8 @@
           return vars;
         }
 
+        //$.ajaxSetup({async:false});
+
         // To update the progress bars, modified from http://elfga.com/blog/2012/10/03/bootstrap-progress-bar-update-jqueryajax/
         var statePoll = setInterval(function(){
           /* query the completion percentage from the server */
@@ -46,17 +49,48 @@
               $("#progress").css('width',data["percent"]+'%');
               //$("#progress").css('width','30'+'%');
 
-              $("#progress").html(data["percent"]+'%');
+              $("#progress").html(data["percent"]+'% of Files Zipped');
               //$("#progress").html('30'+'%');
 
 
-              if(data["percent"] >= 100){
+              if("Content-Length" in data || !("percent" in data) || data["percent"] >= 100){
                 clearInterval(statePoll);
                 $("#progressouter").removeClass("active");
-                $("#progress").html("100%");
+                $("#progress").html("100% of Files Zipped");
+                //$.ajaxSetup({async:true});
+                //var path = data["path"];
+                //var iframe = document.getElementById("downloadFrame");
+                //iframe.src = path;
               }
             }
-          );  
+          ); 
+
+     /*     $.ajax({
+            url: "",
+            data: {task: task_id},
+            success: function(data){
+
+              $("#progress").css('width',data["percent"]+'%');
+              //$("#progress").css('width','30'+'%');
+
+              $("#progress").html(data["percent"]+'% of Files Zipped');
+              //$("#progress").html('30'+'%');
+
+
+              if(!("percent" in data) || data["percent"] >= 100){
+                clearInterval(statePoll);
+                $("#progressouter").removeClass("active");
+                $("#progress").html("100% of Files Zipped");
+                //var path = data["path"];
+                //var iframe = document.getElementById("downloadFrame");
+                //iframe.src = path;
+              }
+            },
+            async: false      
+          });  */
+
+
+
 
         }, 500);
       }); 
@@ -64,6 +98,8 @@
     </script> 
     <noscript>Sorry, your browser does not support JavaScript!</noscript> 
   
+
+
 </div>
 
 {% endblock %}

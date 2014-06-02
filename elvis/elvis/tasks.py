@@ -28,7 +28,7 @@ def zip_files(paths, username):
     # Start with status at 0 - so jQuery has something to do
     i = 0
     total = len(paths)
-    percent = int_round((i*100) / total)
+    percent = int_round((i * 100) / total)
     zip_files.update_state(state='PROGRESS', meta={'curr': i, 'total': total, 'percent': percent })
 
     # Now do imports after that (again so jQuery has something to do)
@@ -42,10 +42,10 @@ def zip_files(paths, username):
     dummy_path = os.path.join(dummy_root_dir, dummy_folder)
 
     if not os.path.exists(dummy_path):
-            os.makedirs(dummy_path)
+        os.makedirs(dummy_path)
 
     # create name of zipped file
-    zip_name = username+"-"+datetime.datetime.utcnow().date().isoformat()
+    zip_name = "{0}-{1}.zip".format(username, datetime.datetime.utcnow().date().isoformat())
 
     # Create zip archive iteratively by copying first, then adding to archive file
     # Change dir to the path
@@ -58,9 +58,9 @@ def zip_files(paths, username):
         file_name = os.path.basename(item)
         shutil.copy2(item, os.path.join(dummy_path, file_name))
         archive_file.write(file_name)
-        sleep(2)
+        sleep(1)
         i += 1
-        percent = int_round((i*100) / total)
+        percent = int_round((i * 100) / total)
         zip_files.update_state(state='PROGRESS', meta={'curr': i, 'total': total, 'percent': percent})
 
 
@@ -70,6 +70,6 @@ def zip_files(paths, username):
     zip_path = os.path.join(dummy_path, zip_name)
 
     #print(dummy_root_dir, dummy_path)
-    return {"path": zip_path, "percent" : 100}
+    return {"path": zip_path, "percent" : 110}
 
 
