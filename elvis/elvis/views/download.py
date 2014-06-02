@@ -11,7 +11,7 @@ from django.views.decorators.csrf import csrf_protect
 from django.conf import settings
 
 from celery.result import AsyncResult
-from django.http import HttpResponse, HttpResponseRedirect
+from django.http import HttpResponse, HttpResponseRedirect, JsonResponse
 from django.core.urlresolvers import reverse
 
 from django.template import RequestContext
@@ -107,7 +107,7 @@ class Downloading(APIView):
         # 4. Zip directory
         # 5. Track subprocess
         # 6. Serve
-        # 7. Remove dummy directory and zipped file
+        # 7. Remove dummy directory and zipped file - do this daily
         # 
 
     def get(self, request, *args, **kwargs):
@@ -115,25 +115,30 @@ class Downloading(APIView):
         if 'task' in request.GET:
             task_id = request.GET['task']
         else:
-            return HttpResponse('No tasks.')
+            return Response("None", status=status.HTTP_200_OK)
 
         task = AsyncResult(task_id)
         data = task.result or task.state
- 
-        return HttpResponse(json.dumps(data), content_type='application/json')
+        print data
+        #data = task.state
+        #return Response(json.dumps(data), content_type='application/json', status=status.HTTP_200_OK)
+        return Response(data, status=status.HTTP_200_OK)
+        #return JsonResponse(data, safe=False)
 
 
     @method_decorator(csrf_protect)
     def post(self, request, *args, **kwargs):
         c = {}
 
+        # LM TODO cleanup
+
         #print(request)
 
         items = request.POST.getlist('item')
-        print('items', items)
+        #print('items', items)
 
         types = request.POST.getlist('extension')
-        print('types', types)
+        #print('types', types)
 
         others_check = False
         extensions = types
@@ -144,7 +149,7 @@ class Downloading(APIView):
         if 'OTHERS' in types:
             others_check = True
 
-        print('extensions', extensions)
+        #print('extensions', extensions)
 
 
         # If user checks all exts except .abc, he would expect everything else but .abc
@@ -152,7 +157,7 @@ class Downloading(APIView):
         # EDIT IF download.html IS CHANGED
         default_exts = ['mei', 'xml', 'midi', 'pdf', 'krn', 'mid', 'mxl']
 
-        print('default_exts', default_exts)
+        #print('default_exts', default_exts)
 
         # Check for two conditions. Either:
         # 1) requested file is in selected extensions
@@ -167,9 +172,9 @@ class Downloading(APIView):
             else:
                 pass
 
-        print('files', files)
+        #print('files', files)
 
-        print('user', request.user.username)
+        #print('user', request.user.username)
 
         # Call celery tasks with our parsed files
         zip_task = tasks.zip_files.delay(files, request.user.username)

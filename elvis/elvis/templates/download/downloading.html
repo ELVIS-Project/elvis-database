@@ -1,85 +1,69 @@
-<!DOCTYPE html>
-<html>
-<head>
- <title>Download Test</title>
- <script src="{{ STATIC_URL }}js/jquery-1.10.1.min.js"></script>
- <style>
-  .progress {
-   width:50%;
-   background:yellow;
-  }
-  .bar {
-   height:15px;
-   width:0%;
-   background:tomato;
-   text-align:right;
-  }
- </style>
-</head>
-<body>
+{% extends "base.html" %}
 
-  
-  <div class="progress_container">
-   
-   <div class="current-task">
-    <h4>{% if task_id %} Task ID: {{ task_id }} {% endif %}</h4>
-   </div>
-   
-   <div class="status"></div>
-   {% if task_id %}
-   <div class="progress">
-    <div class="bar"></div>
-   </div>
-   {% endif %}
-  </div>
-  
- </div>
- {% if task_id %}
-<script type="text/javascript">
-  jQuery(document).ready(function() {
-   
-   // pole state of the current task
-   var PollState = function(task_id) {
-    jQuery.ajax({
-     url: "downloading",
-     type: "GET",
-     data: "task_id=" + task_id,
-    }).done(function(task){
-     console.log(task);
-     if (task.curr) {
-      jQuery('.bar').css({'width': task.curr + '%'});
-      jQuery('.bar').html(task.curr + '%')
-     } else {
-      jQuery('.status').html(task);
-     };
-     
-     // create the infinite loop of Ajax calls to check the state
-     // of the current task
-     PollState(task_id);
-    });
-   }
-   
-   PollState('{{ task_id }}');
-  });
- </script>
- {% endif %}
- <script type="text/javascript">
-  jQuery('#do-task').click( function() {
-   jQuery.ajax({
-    url: "do_task",
-    data: {},
-    success: function(){
-     jQuery.ajax({
-      url: "",
-      context: document.body,
-      success: function(s, x) {
-       jQuery(this).html(s);
-      }
-     });
-    }
-   })
-  });
- </script> 
+{% block wrap %}
+ <!--<script src="{{ STATIC_URL }}js/jquery-1.10.1.min.js"></script>
  
-</body>
-</html>
+ </script> 
+ -->
+<div class="col-md-12">
+
+    <div class="progress progress-striped active" id="progressouter" style="height: 26px">
+      <div class="progress-bar progress-bar-info" id="progress" style="width: 0%; height: 20px"></div>
+    </div> 
+
+
+<!-- LM: figure out the relative path to this... -->
+
+  <script type="text/javascript" >
+
+      $(document).ready(function(){
+        
+        // To get the query string from current url, http://snipplr.com/view/799/get-url-variables/
+        function getUrlVars(){
+          var vars = [], hash;
+          var hashes = window.location.href.slice(window.location.href.indexOf('?') + 1).split('&');
+          for(var i = 0; i < hashes.length; i++){
+            hash = hashes[i].split('=');
+            vars.push(hash[0]);
+            vars[hash[0]] = hash[1];
+          }
+          return vars;
+        }
+
+        // To update the progress bars, modified from http://elfga.com/blog/2012/10/03/bootstrap-progress-bar-update-jqueryajax/
+        var statePoll = setInterval(function(){
+          /* query the completion percentage from the server */
+          // Get current task_id
+          var task_id = getUrlVars()["task"];
+          // Make it the next query and do the query
+          
+          //$.get(window.location.pathname, done(function(data)
+          $.get(
+            "", 
+            {task: task_id}) 
+            .done(function(data){
+
+              $("#progress").css('width',data["percent"]+'%');
+              //$("#progress").css('width','30'+'%');
+
+              $("#progress").html(data["percent"]+'%');
+              //$("#progress").html('30'+'%');
+
+
+              if(data["percent"] >= 100){
+                clearInterval(statePoll);
+                $("#progressouter").removeClass("active");
+                $("#progress").html("100%");
+              }
+            }
+          );  
+
+        }, 500);
+      }); 
+
+    </script> 
+    <noscript>Sorry, your browser does not support JavaScript!</noscript> 
+  
+</div>
+
+{% endblock %}
