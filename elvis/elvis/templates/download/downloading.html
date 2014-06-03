@@ -7,11 +7,15 @@
  -->
 <div class="col-md-12">
     <h2>Your Downloads</h2>
-    Zip progress...
+    Zip progress:
     <div class="progress progress-striped active" id="progressouter" style="height: 26px">
       <div class="progress-bar progress-bar-info" id="progress" style="width: 0%; height: 20px"></div>
     </div> 
     <iframe id="downloadFrame" style="display:none"></iframe>
+
+
+    <a href="" id="download_now" class="button" style="display: none">Download your file...</a>
+    <!-- <a class="btn btn-inverse" type="button" id="download_now" href=""> Download your file </a> -->
 
 <!-- LM TODO: Catch exceptions to stop it from setIntervalling over the exception infinitely -->
 
@@ -31,6 +35,14 @@
           return vars;
         }
 
+        // To check for the download cookie, http://stackoverflow.com/questions/10730362/get-cookie-by-name
+
+        function getCookie(name) {
+          var value = "; " + document.cookie;
+          var parts = value.split("; " + name + "=");
+          if (parts.length == 2) return parts.pop().split(";").shift();
+        }
+
         //$.ajaxSetup({async:false});
 
         // To update the progress bars, modified from http://elfga.com/blog/2012/10/03/bootstrap-progress-bar-update-jqueryajax/
@@ -39,29 +51,33 @@
           // Get current task_id
           var task_id = getUrlVars()["task"];
           // Make it the next query and do the query
+          var download_cookie = getCookie(task_id);
           
           //$.get(window.location.pathname, done(function(data)
           $.get(
             "", 
             {task: task_id}) 
             .done(function(data){
-
-              $("#progress").css('width',data["percent"]+'%');
-              //$("#progress").css('width','30'+'%');
-
-              $("#progress").html(data["percent"]+'% of Files Zipped');
-              //$("#progress").html('30'+'%');
-
-
-              if("Content-Length" in data || !("percent" in data) || data["percent"] >= 100){
+              // Old checks: "Content-Length" in data || !("percent" in data) || data["percent"] >= 100 || 
+              if(download_cookie){
                 clearInterval(statePoll);
                 $("#progressouter").removeClass("active");
-                $("#progress").html("100% of Files Zipped");
+                $("#progress").css('width',100+'%');
+                $("#progress").html("Files Ready");
+                $("#download_now").href=document.URL;
+                $('#download_now').show();
                 //$.ajaxSetup({async:true});
                 //var path = data["path"];
                 //var iframe = document.getElementById("downloadFrame");
                 //iframe.src = path;
               }
+              // TODO: Handle bad requests
+
+              $("#progress").css('width',data["percent"]+'%');
+              //$("#progress").css('width','30'+'%');
+              if(data["percent"]) $("#progress").html(data["percent"]+'% of Files Zipped');
+              //$("#progress").html('30'+'%');
+
             }
           ); 
 

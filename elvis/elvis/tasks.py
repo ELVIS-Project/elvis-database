@@ -65,7 +65,7 @@ def zip_files(paths, username):
 
 
     archive_file.close()
-
+    zip_files.update_state(state='PROGRESS', meta={'curr': total, 'total': total, 'percent': 100})
     # Path to the archive file
     zip_path = os.path.join(dummy_path, zip_name)
 
