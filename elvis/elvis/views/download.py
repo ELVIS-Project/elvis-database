@@ -121,11 +121,11 @@ class Downloading(APIView):
             task_id = request.GET['task']
         else:
             # TODO change to appropriate response type
-            return Response({"None" : "None"}, status=status.HTTP_404_NOT_FOUND)
+            return Response({"None" : "None"}, status=status.HTTP_400_BAD_REQUEST)
         try:
             task = AsyncResult(task_id)
         except Exception:
-            return Response({"None" : "None"}, status=status.HTTP_404_NOT_FOUND)
+            return Response({"None" : "None"}, status=status.HTTP_400_BAD_REQUEST)
 
         if task.result and hasattr(task, 'result') and "path" in task.result:
             path = task.result["path"]
@@ -220,68 +220,6 @@ class Downloading(APIView):
         #return render_to_response("download/downloading.html", RequestContext(request, {}))
 
 
-
-
-        ''' LM some junk
-
-        def get(self, request, *args, **kwargs):
-        """ A view to report the progress to the user """
-        if 'task' in request.GET and not 'done' in request.GET:
-            task_id = request.GET['task']
-            task = AsyncResult(task_id)
-            data = task.result or task.state
-
-            if task.result and hasattr(task, 'result') and "path" in task.result:
-                path = task.result["path"]
-                print('path', path)
-                file_name = os.path.basename(path)
-                print('file_name', file_name)
-            ##    zipped_file = File(open(path, "r"))
-                #response = Response(task.result, status=status.HTTP_200_OK)
-        #        try:
-        #            # Doesn't work with Response for some reason, even though it works in the console. Has to be HttpResponse 
-        #            response = HttpResponse(FileWrapper(file(path, "r")), content_type='application/zip')
-        #        except Exception as e:
-        #            print e
-                #print response
-        #        response["Content-Length"] = os.path.getsize(path)
-        #        print("Content-Length", os.path.getsize(path)) 
-        #        response["Content-Disposition"] = 'attachment; filename=%s' % file_name
-        #        print("Content-Disposition", 'attachment; filename=%s' %file_name)  
-        #        return response
-                return HttpResponseRedirect('?task=' + zip_task.id + '&done=')
-            
-            data = task.result or task.state
-            print data
-            return Response(data, status=status.HTTP_200_OK)
-
-        elif 'task' in request.GET and 'done' in request.GET:
-            task_id = request.GET['task']
-            task = AsyncResult(task_id)
-            data = task.result or task.state
-            path = task.result["path"]
-            print('path', path)
-            file_name = os.path.basename(path)
-            print('file_name', file_name)
-            ##    zipped_file = File(open(path, "r"))
-                #response = Response(task.result, status=status.HTTP_200_OK)
-            try:
-                    # Doesn't work with Response for some reason, even though it works in the console. Has to be HttpResponse 
-                    response = HttpResponse(FileWrapper(file(path, "r")), content_type='application/zip')
-            except Exception as e:
-                print e
-                #print response
-            response["Content-Length"] = os.path.getsize(path)
-            print("Content-Length", os.path.getsize(path)) 
-            response["Content-Disposition"] = 'attachment; filename=%s' % file_name
-            print("Content-Disposition", 'attachment; filename=%s' %file_name)  
-            return response
-
-        else:
-            # TODO change to appropriate response type
-            return Response("None", status=status.HTTP_200_OK)
-
-            '''
 
 
 
