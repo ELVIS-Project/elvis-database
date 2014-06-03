@@ -28,7 +28,8 @@
             {% endfor %}
         </dd>
     </dl>
-    
+        
+        {% if content.attachments %}
         <h3>Available Attachments</h3>
         <table class="table table-condensed">
         <!-- Attachments & Form -->
@@ -59,7 +60,9 @@
             <span class="glyphicon glyphicon-plus"></span> 
         </button>
         </form> 
-    
+        
+        {% endif %}
+
 </div>
 
 {% if content.movements %}
