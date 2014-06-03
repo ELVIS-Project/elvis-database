@@ -129,9 +129,9 @@ class Downloading(APIView):
 
         if task.result and hasattr(task, 'result') and "path" in task.result:
             path = task.result["path"]
-            print('path', path)
+            #print('path', path)
             file_name = os.path.basename(path)
-            print('file_name', file_name)
+            #print('file_name', file_name)
         ##    zipped_file = File(open(path, "r"))
             #response = Response(task.result, status=status.HTTP_200_OK)
             try:
@@ -141,9 +141,9 @@ class Downloading(APIView):
                 print e
             
             response["Content-Length"] = os.path.getsize(path)
-            print("Content-Length", os.path.getsize(path)) 
+            #print("Content-Length", os.path.getsize(path)) 
             response["Content-Disposition"] = 'attachment; filename=%s' % file_name
-            print("Content-Disposition", 'attachment; filename=%s' %file_name)
+            #print("Content-Disposition", 'attachment; filename=%s' %file_name)
 
             # to detect the download, set a cookie for an hour
             cookie_age = datetime.datetime.strftime(datetime.datetime.utcnow() + datetime.timedelta(seconds=3600), "%a, %d-%b-%Y %H:%M:%S GMT")
@@ -152,7 +152,7 @@ class Downloading(APIView):
             return response
         
         data = task.result or task.state
-        print data
+        #print data
         return Response(data, status=status.HTTP_200_OK)
 
 
@@ -167,25 +167,25 @@ class Downloading(APIView):
         items = request.POST.getlist('item')
         #print('items', items)
 
-        types = request.POST.getlist('extension')
+        extensions = request.POST.getlist('extension')
         #print('types', types)
 
         others_check = False
-        extensions = types
-        if 'midi' in types:
-            extensions.append('mid')
-        if 'xml' in types:
-            extensions.append('mxl')
-        if 'OTHERS' in types:
+        
+        if '.midi' in extensions:
+            extensions.append('.mid')
+        if '.xml' in extensions:
+            extensions.append('.mxl')
+        if 'OTHERS' in extensions:
             others_check = True
 
-        #print('extensions', extensions)
+        print('extensions', extensions)
 
 
         # If user checks all exts except .abc, he would expect everything else but .abc
         # -> need a list of everything that could have been left unchecked
         # EDIT IF download.html IS CHANGED
-        default_exts = ['mei', 'xml', 'midi', 'pdf', 'krn', 'mid', 'mxl']
+        default_exts = ['.mei', '.xml', '.midi', '.pdf', '.krn', '.mid', '.mxl']
 
         #print('default_exts', default_exts)
 
@@ -195,14 +195,16 @@ class Downloading(APIView):
         files = []
         for item in items:
             fileName, fileExt = os.path.splitext(item)
-            if (fileExt in extensions or fileExt in extensions):
+            print(fileExt)
+            if (fileExt in extensions):
                 files.append(item)
-            elif((not (fileExt in default_exts or fileExt in default_exts)) and others_check):
+            elif((not (fileExt in default_exts)) and others_check):
                 files.append(item)
+                print 'appended'
             else:
                 pass
 
-        #print('files', files)
+        print('files', files)
 
         #print('user', request.user.username)
 
