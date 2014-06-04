@@ -10,3 +10,5 @@ dumps
 elvis-files.tgz
 ddmal_elvis.sql
 ddmal_drupal.sql
+elvis/elvis/media/
+!elvis/elvis/media/.gitignore
