@@ -73,16 +73,30 @@ MIDDLEWARE_CLASSES = (
 
 # Database Configuration
 # ======================
-DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.postgresql_psycopg2',
-        'NAME': 'elvis',
-        'USER': 'elvis-database',
-        'PASSWORD': 'asdf1234',
-        'HOST': '',  # empty means localhost through domain sockets
-        'PORT': '',  # empty means 5432
+
+if PRODUCTION:
+    DATABASES = {
+        'default': {
+            'ENGINE': 'django.db.backends.postgresql_psycopg2',
+            'NAME': 'elvis',
+            'USER': 'elvis-database',
+            'PASSWORD': 'asdf1234',
+            'HOST': '',  # empty means localhost through domain sockets
+            'PORT': '',  # empty means 5432
+        }
     }
-}
+elif LILLIO:
+    DATABASES = {
+        'default': {
+            'ENGINE': 'django.db.backends.postgresql_psycopg2',  # Add 'postgresql_psycopg2', 'mysql', 'sqlite3' or 'oracle'.
+            'NAME': 'elvis',                      # Or path to database file if using sqlite3.
+
+            'USER': '',
+            'PASSWORD': '',
+            'HOST': 'localhost',                      # Empty for localhost through domain sockets or '127.0.0.1' for localhost through TCP.
+            'PORT': '5432',                      # Set to empty string for default.
+        }
+    }
 
 # Internationalization
 # ====================
@@ -92,11 +106,13 @@ USE_I18N = True
 USE_L10N = True
 USE_TZ = True
 
+
 # Media and Static Files
 # ======================
 # CRA: we used to have composer images and user profile images; if we need
 #      them back, check commit dc8f8afe75b7137440c6488483566b8e2c366379
 MEDIA_URL = '/media/'
+
 if DEBUG and LILLIO:
     MEDIA_ROOT = "/Users/lmok/Documents/workspace/elvis-site/elvis"
 elif DEBUG:
@@ -105,7 +121,15 @@ else:
     MEDIA_ROOT = os.path.join(BASE_DIR, '..', '..', '..', 'media_root')
 # httpd will serve static files from this directory
 STATIC_ROOT = os.path.join(BASE_DIR, 'static')
-STATIC_URL = '/static/'
+STATIC_URL = '/Users/lmok/Documents/workspace/elvis-site/elvis/elvis/static/'
+
+#MEDIA_ROOT = "/Users/lmok/Documents/workspace/elvis-site/elvis"
+
+# Static files (CSS, JavaScript, Images)
+# https://docs.djangoproject.com/en/1.6/howto/static-files/
+
+#STATIC_URL = '/Users/lmok/Documents/workspace/elvis-site/elvis/elvis/static/'
+
 
 
 # Solr Settings
