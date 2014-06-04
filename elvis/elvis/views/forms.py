@@ -35,14 +35,8 @@ LM View to modify user's download object
 @csrf_protect
 def patch_downloads(request):
     #current_user = request.user
-    #user_download = Download.objects.filter(pk=current_user.downloads.pk)
     user_download = request.user.downloads.all()[0]
-    add_attachments = request.POST.getlist('add_attachments')
-
-    
-    #for a in add_attachments:
-    #	a_object = Attachment.objects.filter(attachment = a)
-    #	user_download.attachments.add(a_object)
+    add_attachments = request.POST.getlist('a_ids')
 
     #add_attachments is a list of ids
     for a in add_attachments:

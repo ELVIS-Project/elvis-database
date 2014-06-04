@@ -46,7 +46,7 @@
                 <tr>
                     <td>
                         <!-- LM: Having the strangest problems with accessing the id of attachment -->
-                    <input type="checkbox" name="add_attachments" value="{{ attachment.id }}" checked="true">
+                    <input type="checkbox" name="a_ids" value="{{ attachment.id }}" checked="true">
                     </td>
                     <td>
                     <li><a href="{{ attachment.attachment }}">{{ attachment.file_name | default:"Download" }}</a></li>
