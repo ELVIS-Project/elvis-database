@@ -102,10 +102,13 @@ if DEBUG and LILLIO:
 elif DEBUG:
     MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 else:
-    MEDIA_ROOT = os.path.join(BASE_DIR, '..', '..', '..', 'media_root')
+    MEDIA_ROOT = os.path.join(BASE_DIR, '..', '..', 'media_root')
 # httpd will serve static files from this directory
-STATIC_ROOT = os.path.join(BASE_DIR, 'static')
 STATIC_URL = '/static/'
+if DEBUG:
+    STATIC_ROOT = os.path.join(BASE_DIR, '..', '..', 'static_root')
+else:
+    STATIC_ROOT = os.path.join(BASE_DIR, 'static')
 
 
 # Solr Settings
