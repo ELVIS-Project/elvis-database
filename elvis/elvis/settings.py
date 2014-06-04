@@ -13,7 +13,7 @@ from random import SystemRandom
 
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 import os
-BASE_DIR = os.path.dirname(os.path.dirname(__file__))
+BASE_DIR = os.path.dirname(__file__)
 
 # Automatically adjust settings to be suitable or insuitable for proudction environments
 # CRA: I used this to help...
