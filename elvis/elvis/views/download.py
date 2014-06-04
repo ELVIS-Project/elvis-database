@@ -31,6 +31,7 @@ from elvis.serializers.download import DownloadSerializer, DownloadingSerializer
 from elvis.models.download import Download
 from elvis.models.piece import Piece
 from elvis.models.movement import Movement
+from elvis.models.attachment import Attachment
 
 from django.core.exceptions import ObjectDoesNotExist
 
@@ -158,66 +159,89 @@ class Downloading(APIView):
 
     @method_decorator(csrf_protect)
     def post(self, request, *args, **kwargs):
-        c = {}
+        # Download selected
+        if 'download-all' in request.POST:
 
-        # LM TODO cleanup
+            # LM TODO cleanup
 
-        #print(request)
+            # get attachment ids 
+            a_ids = request.POST.getlist('a_ids')
 
-        items = request.POST.getlist('item')
-        #print('items', items)
+            items = []
+            for a_id in a_ids:
+                a_object = Attachment.objects.filter(pk=a_id).all()[0]
+                a_path = os.path.join(a_object.attachment_path, a_object.file_name)
 
-        extensions = request.POST.getlist('extension')
-        #print('types', types)
+                items.append(a_path)
 
-        others_check = False
-        
-        if '.midi' in extensions:
-            extensions.append('.mid')
-        if '.xml' in extensions:
-            extensions.append('.mxl')
-        if 'OTHERS' in extensions:
-            others_check = True
+            # get checked extensions, add in equivalent extensions
+            extensions = request.POST.getlist('extension')
 
-        print('extensions', extensions)
+            others_check = False
+            
+            if '.midi' in extensions:
+                extensions.append('.mid')
+            if '.xml' in extensions:
+                extensions.append('.mxl')
+            if 'OTHERS' in extensions:
+                others_check = True
 
 
-        # If user checks all exts except .abc, he would expect everything else but .abc
-        # -> need a list of everything that could have been left unchecked
-        # EDIT IF download.html IS CHANGED
-        default_exts = ['.mei', '.xml', '.midi', '.pdf', '.krn', '.mid', '.mxl']
+            # If user checks all exts except .abc, he would expect everything else but .abc
+            # -> need a list of everything that could have been left unchecked
+            # EDIT IF download.html IS CHANGED
+            default_exts = ['.mei', '.xml', '.midi', '.pdf', '.krn', '.mid', '.mxl']
 
-        #print('default_exts', default_exts)
+            # Check for two conditions. Either:
+            # 1) requested file is in selected extensions
+            # 2) file is not in available extensions (i.e. its extension was not rejected) and OTHERS was checked
+            files = []
+            for item in items:
+                fileName, fileExt = os.path.splitext(item)
+                #print(fileExt)
+                if ((fileExt in extensions) or ((not (fileExt in default_exts)) and others_check)):
+                    files.append(item)
+                else:
+                    pass
 
-        # Check for two conditions. Either:
-        # 1) requested file is in selected extensions
-        # 2) file is not in available extensions (i.e. its extension was not rejected) and OTHERS was checked
-        files = []
-        for item in items:
-            fileName, fileExt = os.path.splitext(item)
-            print(fileExt)
-            if (fileExt in extensions):
-                files.append(item)
-            elif((not (fileExt in default_exts)) and others_check):
-                files.append(item)
-                print 'appended'
-            else:
-                pass
+            # Call celery tasks with our parsed files
+            zip_task = tasks.zip_files.delay(files, request.user.username)
 
-        print('files', files)
 
-        #print('user', request.user.username)
+            return HttpResponseRedirect('?task=' + zip_task.id)
 
-        # Call celery tasks with our parsed files
-        zip_task = tasks.zip_files.delay(files, request.user.username)
-        #zip_status = tasks.zip_status_check.delay(zip_task.id)
-        #print('zip_task', zip_task, type(zip_task))
-        #print('ready', zip_task.ready())
-        #print('get', zip_task.get(timeout=None, propagate=True, interval=0.5, no_ack=True, follow_parents=True))
+        # Remove selected
+        elif 'remove-all' in request.POST:
 
-        #c.update(csrf(request))
-        return HttpResponseRedirect('?task=' + zip_task.id)
-        #return render_to_response("download/downloading.html", RequestContext(request, {}))
+            # get ids
+            a_ids = request.POST.getlist('a_ids')
+            # get user
+            user_download = request.user.downloads.all()[0]
+            # get extensions
+            extensions = request.POST.getlist('extension')
+
+            # do the extensions thing above
+            others_check = False
+            
+            if '.midi' in extensions:
+                extensions.append('.mid')
+            if '.xml' in extensions:
+                extensions.append('.mxl')
+            if 'OTHERS' in extensions:
+                others_check = True
+
+            default_exts = ['.mei', '.xml', '.midi', '.pdf', '.krn', '.mid', '.mxl']
+
+            for a_id in a_ids:
+                a_object = Attachment.objects.filter(pk=a_id).all()[0]
+                fileName, fileExt = os.path.splitext(a_object.attachment_path)
+                #print(fileExt)
+                if ((fileExt in extensions) or ((not (fileExt in default_exts)) and others_check)):
+                    user_download.attachments.remove(a_object)
+
+
+
+            return HttpResponseRedirect('/downloads/')
 
 
 

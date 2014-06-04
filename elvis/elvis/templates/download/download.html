@@ -25,8 +25,9 @@
                         <tr>
 
                             {% for piece in attachment.pieces %}
-                                <td>
-                                <input type="checkbox" name="item" value="{{ attachment.attachment_path }}/{{ attachment.file_name }}" checked="true">
+                                <!-- Old item value {{ attachment.attachment_path }}/{{ attachment.file_name }} -->
+                                <td> 
+                                <input type="checkbox" name="a_ids" value="{{ attachment.id }}" checked="true">
                                 </td>
                                 <td><a href="{{ piece.url }}">{{ piece.title }}</a></td>
                                 <td> {{ attachment.file_name }} </td>
@@ -38,7 +39,7 @@
                             {% endfor %}
                             {% for mvmt in attachment.movements %}
                                 <td>
-                                <input type="checkbox" name="{{ attachment.attachment_path }}/{{ attachment.file_name }}" value="" checked="true">
+                                <input type="checkbox" name="a_ids" value="{{ attachment.id }}" checked="true">
                                 </td>
                                 <td><a href="{{ mvmt.url }}">{{ mvmt.title }}</a></td>
                                 <td> {{ attachment.file_name }} </td>
@@ -78,13 +79,13 @@
                 <input type="checkbox" id="kern-select" name="extension" value=".krn" checked="true"> **kern
             </label>
             <label class="checkbox-inline">
-                <input type="checkbox" id="else-select" name="extension" value="OTHERS" checked="true"> All others
+                <input type="checkbox" id="else-select" name="extension" value="OTHERS" checked="true"> All Others
             </label>
             <span class="help-block">Select which file types you wish to download. If a piece or movement does not have one of your selected file types, it will not be downloaded. Choose "all others" to download any formats that do not appear in this list.</span>
         </div>
         <div class="row">
-            <button id="download-all" type="submit" class="btn btn-primary"><span class="glyphicon glyphicon-download"></span> Download</button>
-            <button type="button" class="btn btn-danger">Clear all</button>
+            <button id="download-all" name="download-all" type="submit" class="btn btn-primary"><span class="glyphicon glyphicon-download"></span>Download Selected</button>
+            <button id="remove-all" name="remove-all" type="submit" class="btn btn-danger"><span class="glyphicon glyphicon-remove">Remove Selected</span></button>
         </div>
     </form>
     </div>

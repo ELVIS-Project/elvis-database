@@ -44,10 +44,10 @@ def patch_downloads(request):
     #	a_object = Attachment.objects.filter(attachment = a)
     #	user_download.attachments.add(a_object)
 
-
+    #add_attachments is a list of ids
     for a in add_attachments:
-        a_object = Attachment.objects.filter(pk=a)
-        user_download.attachments.add(a_object.all()[0])
+        a_object = Attachment.objects.filter(pk=a).all()[0]
+        user_download.attachments.add(a_object)
 
     user_download.save()
     return HttpResponseRedirect(request.POST.get('this_url'))

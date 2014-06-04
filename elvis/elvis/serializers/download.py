@@ -14,7 +14,7 @@ class UserDownloadSerializer(serializers.HyperlinkedModelSerializer):
 class AttachmentComposerSerializer(serializers.HyperlinkedModelSerializer):
     class Meta:
         model = Composer
-        fields = ('url', 'name')
+        fields = ('url', 'name', 'id')
 
 class AttachmentPieceSerializer(serializers.HyperlinkedModelSerializer):
     composer = AttachmentComposerSerializer()
