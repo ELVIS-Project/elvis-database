@@ -11,6 +11,7 @@ from django.views.decorators.http import require_http_methods
 
 from django.utils.decorators import method_decorator
 from django.views.decorators.csrf import csrf_protect
+from rest_framework import status
 
 import elvis.models 
 
@@ -50,6 +51,7 @@ def patch_downloads(request):
 
     user_download.save()
     return HttpResponseRedirect(request.POST.get('this_url'))
+    #return HttpResponse("done", status=status.HTTP_200_OK)
 
 
 '''
