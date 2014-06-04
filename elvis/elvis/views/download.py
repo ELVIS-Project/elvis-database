@@ -234,8 +234,8 @@ class Downloading(APIView):
 
             for a_id in a_ids:
                 a_object = Attachment.objects.filter(pk=a_id).all()[0]
-                fileName, fileExt = os.path.splitext(a_object.attachment_path)
-                #print(fileExt)
+                fileName, fileExt = os.path.splitext(a_object.file_name)
+                print(fileExt)
                 if ((fileExt in extensions) or ((not (fileExt in default_exts)) and others_check)):
                     user_download.attachments.remove(a_object)
 
