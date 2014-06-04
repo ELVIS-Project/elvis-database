@@ -4,6 +4,7 @@ solr/target/*
 elvis_env/*
 .DS_Store
 dumps
+**/media/*
 **/attachments/*
 **/elvis-files/*
 **/user_downloads/*

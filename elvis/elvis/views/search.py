@@ -24,11 +24,11 @@ class SearchView(APIView):
         #querydict = QueryDict("q=%s"%request.GET.get('q'))
         querydict = request.GET
         querydict2 = request.GET.getlist('filters') #original 
-        print('querydict', querydict2, type(querydict))
+        #print('querydict', querydict2, type(querydict))
         # LM: Some explanations as to what is going on here
         # Constructs a SolrSearch object using the search request; specifically, it parses and prepares the query
         # and assigns it to s
-        print('request', request)
+        #print('request', request)
         s = SolrSearch(request) 
 
         facets = s.facets([])  # LM TODO add here when facets are decided
@@ -43,12 +43,12 @@ class SearchView(APIView):
         # LM: Continuing from above, the search() function belongs to SolrSearch, and simply returns the response for
         # the aforementioned parsed and prepared query
         search_results = s.search()
-        print('search_results', search_results)
+        #print('search_results', search_results)
        
         # LM: Paginate results
 
         paginator = paginate.SolrPaginator(search_results)
-        print('available pages', paginator.num_pages)
+        #print('available pages', paginator.num_pages)
         
         page_number = request.GET.get('page')
         
@@ -64,13 +64,13 @@ class SearchView(APIView):
             #print('Requested Page Num', page_number)
             paged_results = paginator.page(page_number)
         except paginate.PageNotAnInteger:
-            print('caught pagenotint')
+            #print('caught pagenotint')
             try:
                 paged_results = paginator.page(1)
             except paginate.EmptyPage:
                 paged_results = []
         except paginate.EmptyPage:
-            print('caught empty')
+            #print('caught empty')
             try:
                 paged_results = paginator.page(paginator.num_pages)
             except paginate.EmptyPage:
@@ -91,7 +91,7 @@ class SearchView(APIView):
 
         query_minus_page = query_minus_page.urlencode(['*'])     
 
-        print(query_minus_page, type(query_minus_page))
+        #print(query_minus_page, type(query_minus_page))
 
 
         result = {'results': paged_results, 'facets': facets.facet_counts, 'current_query': query_minus_page}

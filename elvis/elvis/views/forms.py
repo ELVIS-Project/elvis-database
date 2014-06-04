@@ -7,6 +7,11 @@ from django.http import HttpResponse
 from django.http import HttpResponseRedirect
 from django.core.servers.basehttp import FileWrapper
 from django.contrib.auth.decorators import login_required
+from django.views.decorators.http import require_http_methods
+
+from django.utils.decorators import method_decorator
+from django.views.decorators.csrf import csrf_protect
+from rest_framework import status
 
 import elvis.models 
 
@@ -22,6 +27,26 @@ from elvis.models.download import Download
 from elvis.models.movement import Movement
 from elvis.models.tag import Tag
 from elvis.models.project import Project
+
+'''
+LM View to modify user's download object
+'''
+
+@csrf_protect
+def patch_downloads(request):
+    #current_user = request.user
+    user_download = request.user.downloads.all()[0]
+    add_attachments = request.POST.getlist('a_ids')
+
+    #add_attachments is a list of ids
+    for a in add_attachments:
+        a_object = Attachment.objects.filter(pk=a).all()[0]
+        user_download.attachments.add(a_object)
+
+    user_download.save()
+    return HttpResponseRedirect(request.POST.get('this_url'))
+    #return HttpResponse("done", status=status.HTTP_200_OK)
+
 
 '''
 Views that create and add an entity to the database 

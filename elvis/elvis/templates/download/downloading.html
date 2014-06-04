@@ -61,7 +61,7 @@
               // Old checks: "Content-Length" in data || !("percent" in data) || data["percent"] >= 100 || 
               if(download_cookie){
                 clearInterval(statePoll);
-                $("#progressouter").removeClass("active");
+                //$("#progressouter").removeClass("active");
                 $("#progress").css('width',100+'%');
                 $("#progress").html("Files Ready");
                 $("#download_now").href=document.URL;

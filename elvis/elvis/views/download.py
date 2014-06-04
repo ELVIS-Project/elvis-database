@@ -31,6 +31,7 @@ from elvis.serializers.download import DownloadSerializer, DownloadingSerializer
 from elvis.models.download import Download
 from elvis.models.piece import Piece
 from elvis.models.movement import Movement
+from elvis.models.attachment import Attachment
 
 from django.core.exceptions import ObjectDoesNotExist
 
@@ -121,17 +122,17 @@ class Downloading(APIView):
             task_id = request.GET['task']
         else:
             # TODO change to appropriate response type
-            return Response({"None" : "None"}, status=status.HTTP_404_NOT_FOUND)
+            return Response({"None" : "None"}, status=status.HTTP_400_BAD_REQUEST)
         try:
             task = AsyncResult(task_id)
         except Exception:
-            return Response({"None" : "None"}, status=status.HTTP_404_NOT_FOUND)
+            return Response({"None" : "None"}, status=status.HTTP_400_BAD_REQUEST)
 
         if task.result and hasattr(task, 'result') and "path" in task.result:
             path = task.result["path"]
-            print('path', path)
+            #print('path', path)
             file_name = os.path.basename(path)
-            print('file_name', file_name)
+            #print('file_name', file_name)
         ##    zipped_file = File(open(path, "r"))
             #response = Response(task.result, status=status.HTTP_200_OK)
             try:
@@ -141,9 +142,9 @@ class Downloading(APIView):
                 print e
             
             response["Content-Length"] = os.path.getsize(path)
-            print("Content-Length", os.path.getsize(path)) 
+            #print("Content-Length", os.path.getsize(path)) 
             response["Content-Disposition"] = 'attachment; filename=%s' % file_name
-            print("Content-Disposition", 'attachment; filename=%s' %file_name)
+            #print("Content-Disposition", 'attachment; filename=%s' %file_name)
 
             # to detect the download, set a cookie for an hour
             cookie_age = datetime.datetime.strftime(datetime.datetime.utcnow() + datetime.timedelta(seconds=3600), "%a, %d-%b-%Y %H:%M:%S GMT")
@@ -152,134 +153,97 @@ class Downloading(APIView):
             return response
         
         data = task.result or task.state
-        print data
+        #print data
         return Response(data, status=status.HTTP_200_OK)
 
 
     @method_decorator(csrf_protect)
     def post(self, request, *args, **kwargs):
-        c = {}
+        # Download selected
+        if 'download-all' in request.POST:
 
-        # LM TODO cleanup
+            # LM TODO cleanup
 
-        #print(request)
+            # get attachment ids 
+            a_ids = request.POST.getlist('a_ids')
 
-        items = request.POST.getlist('item')
-        #print('items', items)
+            items = []
+            for a_id in a_ids:
+                a_object = Attachment.objects.filter(pk=a_id).all()[0]
+                a_path = os.path.join(a_object.attachment_path, a_object.file_name)
 
-        types = request.POST.getlist('extension')
-        #print('types', types)
+                items.append(a_path)
 
-        others_check = False
-        extensions = types
-        if 'midi' in types:
-            extensions.append('mid')
-        if 'xml' in types:
-            extensions.append('mxl')
-        if 'OTHERS' in types:
-            others_check = True
+            # get checked extensions, add in equivalent extensions
+            extensions = request.POST.getlist('extension')
 
-        #print('extensions', extensions)
-
-
-        # If user checks all exts except .abc, he would expect everything else but .abc
-        # -> need a list of everything that could have been left unchecked
-        # EDIT IF download.html IS CHANGED
-        default_exts = ['mei', 'xml', 'midi', 'pdf', 'krn', 'mid', 'mxl']
-
-        #print('default_exts', default_exts)
-
-        # Check for two conditions. Either:
-        # 1) requested file is in selected extensions
-        # 2) file is not in available extensions (i.e. its extension was not rejected) and OTHERS was checked
-        files = []
-        for item in items:
-            fileName, fileExt = os.path.splitext(item)
-            if (fileExt in extensions or fileExt in extensions):
-                files.append(item)
-            elif((not (fileExt in default_exts or fileExt in default_exts)) and others_check):
-                files.append(item)
-            else:
-                pass
-
-        #print('files', files)
-
-        #print('user', request.user.username)
-
-        # Call celery tasks with our parsed files
-        zip_task = tasks.zip_files.delay(files, request.user.username)
-        #zip_status = tasks.zip_status_check.delay(zip_task.id)
-        #print('zip_task', zip_task, type(zip_task))
-        #print('ready', zip_task.ready())
-        #print('get', zip_task.get(timeout=None, propagate=True, interval=0.5, no_ack=True, follow_parents=True))
-
-        #c.update(csrf(request))
-        return HttpResponseRedirect('?task=' + zip_task.id)
-        #return render_to_response("download/downloading.html", RequestContext(request, {}))
-
-
-
-
-        ''' LM some junk
-
-        def get(self, request, *args, **kwargs):
-        """ A view to report the progress to the user """
-        if 'task' in request.GET and not 'done' in request.GET:
-            task_id = request.GET['task']
-            task = AsyncResult(task_id)
-            data = task.result or task.state
-
-            if task.result and hasattr(task, 'result') and "path" in task.result:
-                path = task.result["path"]
-                print('path', path)
-                file_name = os.path.basename(path)
-                print('file_name', file_name)
-            ##    zipped_file = File(open(path, "r"))
-                #response = Response(task.result, status=status.HTTP_200_OK)
-        #        try:
-        #            # Doesn't work with Response for some reason, even though it works in the console. Has to be HttpResponse 
-        #            response = HttpResponse(FileWrapper(file(path, "r")), content_type='application/zip')
-        #        except Exception as e:
-        #            print e
-                #print response
-        #        response["Content-Length"] = os.path.getsize(path)
-        #        print("Content-Length", os.path.getsize(path)) 
-        #        response["Content-Disposition"] = 'attachment; filename=%s' % file_name
-        #        print("Content-Disposition", 'attachment; filename=%s' %file_name)  
-        #        return response
-                return HttpResponseRedirect('?task=' + zip_task.id + '&done=')
+            others_check = False
             
-            data = task.result or task.state
-            print data
-            return Response(data, status=status.HTTP_200_OK)
+            if '.midi' in extensions:
+                extensions.append('.mid')
+            if '.xml' in extensions:
+                extensions.append('.mxl')
+            if 'OTHERS' in extensions:
+                others_check = True
 
-        elif 'task' in request.GET and 'done' in request.GET:
-            task_id = request.GET['task']
-            task = AsyncResult(task_id)
-            data = task.result or task.state
-            path = task.result["path"]
-            print('path', path)
-            file_name = os.path.basename(path)
-            print('file_name', file_name)
-            ##    zipped_file = File(open(path, "r"))
-                #response = Response(task.result, status=status.HTTP_200_OK)
-            try:
-                    # Doesn't work with Response for some reason, even though it works in the console. Has to be HttpResponse 
-                    response = HttpResponse(FileWrapper(file(path, "r")), content_type='application/zip')
-            except Exception as e:
-                print e
-                #print response
-            response["Content-Length"] = os.path.getsize(path)
-            print("Content-Length", os.path.getsize(path)) 
-            response["Content-Disposition"] = 'attachment; filename=%s' % file_name
-            print("Content-Disposition", 'attachment; filename=%s' %file_name)  
-            return response
 
-        else:
-            # TODO change to appropriate response type
-            return Response("None", status=status.HTTP_200_OK)
+            # If user checks all exts except .abc, he would expect everything else but .abc
+            # -> need a list of everything that could have been left unchecked
+            # EDIT IF download.html IS CHANGED
+            default_exts = ['.mei', '.xml', '.midi', '.pdf', '.krn', '.mid', '.mxl']
 
-            '''
+            # Check for two conditions. Either:
+            # 1) requested file is in selected extensions
+            # 2) file is not in available extensions (i.e. its extension was not rejected) and OTHERS was checked
+            files = []
+            for item in items:
+                fileName, fileExt = os.path.splitext(item)
+                #print(fileExt)
+                if ((fileExt in extensions) or ((not (fileExt in default_exts)) and others_check)):
+                    files.append(item)
+                else:
+                    pass
+
+            # Call celery tasks with our parsed files
+            zip_task = tasks.zip_files.delay(files, request.user.username)
+
+
+            return HttpResponseRedirect('?task=' + zip_task.id)
+
+        # Remove selected
+        elif 'remove-all' in request.POST:
+
+            # get ids
+            a_ids = request.POST.getlist('a_ids')
+            # get user
+            user_download = request.user.downloads.all()[0]
+            # get extensions
+            extensions = request.POST.getlist('extension')
+
+            # do the extensions thing above
+            others_check = False
+            
+            if '.midi' in extensions:
+                extensions.append('.mid')
+            if '.xml' in extensions:
+                extensions.append('.mxl')
+            if 'OTHERS' in extensions:
+                others_check = True
+
+            default_exts = ['.mei', '.xml', '.midi', '.pdf', '.krn', '.mid', '.mxl']
+
+            for a_id in a_ids:
+                a_object = Attachment.objects.filter(pk=a_id).all()[0]
+                fileName, fileExt = os.path.splitext(a_object.file_name)
+                print(fileExt)
+                if ((fileExt in extensions) or ((not (fileExt in default_exts)) and others_check)):
+                    user_download.attachments.remove(a_object)
+
+
+
+            return HttpResponseRedirect('/downloads/')
+
+
 
 
 

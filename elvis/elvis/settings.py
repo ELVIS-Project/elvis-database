@@ -73,16 +73,29 @@ MIDDLEWARE_CLASSES = (
 
 # Database Configuration
 # ======================
-DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.postgresql_psycopg2',
-        'NAME': 'elvis',
-        'USER': 'elvis-database',
-        'PASSWORD': 'asdf1234',
-        'HOST': '',  # empty means localhost through domain sockets
-        'PORT': '',  # empty means 5432
+if not PRODUCTION and LILLIO:
+    DATABASES = {
+        'default': {
+            'ENGINE': 'django.db.backends.postgresql_psycopg2',
+            'NAME': 'elvis',
+            'USER': '',
+            'PASSWORD': '',
+            'HOST': 'localhost',
+            'PORT': '5432',
+        }
     }
-}
+else:
+    DATABASES = {
+        'default': {
+            'ENGINE': 'django.db.backends.postgresql_psycopg2',
+            'NAME': 'elvisdatabase',
+            'USER': 'elvisdatabase',
+            'PASSWORD': 'asdf1234',
+            'HOST': '',  # empty means localhost through domain sockets
+            'PORT': '',  # empty means 5432
+        }
+    }
+
 
 # Internationalization
 # ====================
@@ -92,11 +105,13 @@ USE_I18N = True
 USE_L10N = True
 USE_TZ = True
 
+
 # Media and Static Files
 # ======================
 # CRA: we used to have composer images and user profile images; if we need
 #      them back, check commit dc8f8afe75b7137440c6488483566b8e2c366379
 MEDIA_URL = '/media/'
+
 if DEBUG and LILLIO:
     MEDIA_ROOT = "/Users/lmok/Documents/workspace/elvis-site/elvis"
 elif DEBUG:
@@ -105,7 +120,10 @@ else:
     MEDIA_ROOT = os.path.join(BASE_DIR, '..', '..', 'media_root')
 # httpd will serve static files from this directory
 STATIC_URL = '/static/'
-if DEBUG:
+if DEBUG and LILLIO:
+    STATIC_ROOT = os.path.join(BASE_DIR, 'static')
+    STATIC_URL = '/Users/lmok/Documents/workspace/elvis-site/elvis/elvis/static/'
+elif DEBUG:
     STATIC_ROOT = os.path.join(BASE_DIR, '..', '..', 'static_root')
 else:
     STATIC_ROOT = os.path.join(BASE_DIR, 'static')
