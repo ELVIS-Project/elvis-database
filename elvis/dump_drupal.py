@@ -55,17 +55,34 @@ TAG_HIERARCHY_QUERY = """SELECT * FROM taxonomy_term_hierarchy"""
 
 ATTACHMENT_QUERY = """"""
 
+# There may be even more problems dumping the database on different oses... this attempts to decode in utf-8 and then latin-1
+def my_decoder(text):
+        if not text is None:
+            try:
+                text = unicode(text)
+            except UnicodeDecodeError:
+                try:
+                    text = text.decode('utf-8')
+                except UnicodeDecodeError:
+                    try:
+                        text = text.decode('latin-1')
+                    except UnicodeDecodeError:
+                        print "decode error..."
+            return text
+        else:
+            return None
+     
 
 class DumpDrupal(object):
     def __init__(self):
         # IMPORTANT: Choose which objects to add here
         # LM: Would want to run tags, users only if db doesnt have previous users, corpus, piece, movement, in that order
-        # self.get_tags()
-        # self.get_composers()
-        # self.get_users()
-        # self.get_corpus()
-        # self.get_pieces_movements("piece")
-        # self.get_pieces_movements("movement")
+         self.get_tags()
+         self.get_composers()
+         #self.get_users()
+         self.get_corpus()
+         self.get_pieces_movements("piece")
+         self.get_pieces_movements("movement")
 
     def __connect(self):
         self.conn = MySQLdb.connect(host="localhost", user="root", cursorclass=DictCursor, db="ddmal_elvis")
@@ -85,6 +102,7 @@ class DumpDrupal(object):
         conn.close()
         return u
 
+                                                               
     def get_corpus(self):
         users = self.__get_ddmal_users()
         self.__connect()
@@ -96,12 +114,14 @@ class DumpDrupal(object):
 
         print "Adding corpora"
         for corp in corpus:
+            print corp
             for user in users:
                 if corp.get('creator') == user.get('uid'):
                     u = User.objects.get(username=user.get('name'))
                     break
             corp['creator'] = u
-
+            corp['title'] = my_decoder(corp['title'])
+            corp['comment'] = my_decoder(corp['comment'])
             corp['created'] = datetime.datetime.fromtimestamp(corp['created'])
             corp['updated'] = datetime.datetime.fromtimestamp(corp['updated'])
             x = Corpus(**corp)
@@ -119,7 +139,7 @@ class DumpDrupal(object):
             print "Creating {0}".format(user.get('name'))
             u = {
                 'is_active': True,
-                'username': user.get('name'),
+                'username': my_decoder(user.get('name')),
                 'last_login': datetime.datetime.fromtimestamp(user.get('login')),
                 'date_joined': datetime.datetime.fromtimestamp(user.get('created')),
                 'email': user.get('mail')
@@ -152,6 +172,7 @@ class DumpDrupal(object):
             '''
             print(composer.get('name'))
             c = Composer(**composer)
+            c.name = my_decoder(c.name)
             c.save()
 
         self.__disconnect()
@@ -168,6 +189,8 @@ class DumpDrupal(object):
         for tag in tags:
             print tag
             t = Tag(**tag)
+            t.name = my_decoder(t.name)
+            t.description = my_decoder(t.name)
             t.save()
 
         print "Deleting tag hierarchy"
@@ -193,7 +216,7 @@ class DumpDrupal(object):
     def get_pieces_movements(self, rettype):
         
         users = self.__get_ddmal_users()
-        '''
+        
         query = PIECE_MOVEMENT_QUERY.format(rettype)
         self.__connect()
         self.curs.execute(query)
@@ -237,10 +260,10 @@ class DumpDrupal(object):
                 'uploader': user_obj,
                 'composer': composer_obj,
                 'old_id': item.get('old_id', None),
-                'title': item.get('title', None),
+                'title': my_decoder(item.get('title', None)),
                 'date_of_composition': pytz.utc.localize(item.get('date_of_composition', None)),  
                 'number_of_voices': item.get('number_of_voices', None),
-                'comment': item.get('comment', None),
+                'comment': my_decoder(item.get('comment', None)),
                 'created': datetime.datetime.fromtimestamp(item.get('created')),
                 'updated': datetime.datetime.fromtimestamp(item.get('updated'))
             }
@@ -277,7 +300,7 @@ class DumpDrupal(object):
                 item.save()
 
             self.__disconnect()
-            '''
+            
             
         ITEM_ATTACHMENT_QUERY = """SELECT ff.field_files_description AS description, fm.timestamp AS created,
                                     fm.uid AS uploader, fm.filename AS filename, fm.uri AS uri FROM field_data_field_files ff
