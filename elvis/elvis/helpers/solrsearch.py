@@ -30,9 +30,9 @@ class SolrSearch(object):
         self._parse_request()
         self._prepare_query()
         # LM: Debugging prints
-        #print('parsed_request', self.parsed_request, type(self.parsed_request))
-        #print('prepared_query', self.prepared_query, type(self.prepared_query))
-        #print('solr_params', self.solr_params, type(self.solr_params))
+        print('parsed_request', self.parsed_request, type(self.parsed_request))
+        print('prepared_query', self.prepared_query, type(self.prepared_query))
+        print('solr_params', self.solr_params, type(self.solr_params))
 
     def search(self, **kwargs):
         self.solr_params.update(kwargs)
@@ -70,6 +70,7 @@ class SolrSearch(object):
     def _parse_request(self):
         qdict = self.request.GET
         filter_query = ""
+        sort_query = ""
         for k, v in qdict.lists():
             # LM: modified from just self.parsed_request[k] = v to cut out nonsensical page requests to solr
             if k == 'page':
@@ -82,13 +83,15 @@ class SolrSearch(object):
                     filter_query += u"{0}{1}".format("type:", settings.SEARCH_FILTERS_DICT[k])
                 else:
                     filter_query += u"{0}{1}".format(" OR type:", settings.SEARCH_FILTERS_DICT[k])
+            elif k == 'sortby':
+               sort_query = qdict.get(k) 
             # LM: Otherwise, add to query
             else:
                 self.parsed_request[k] = v
 
         # LM: Update search parameters with the filter query --- test: u"type:elvis_piece OR type:elvis_composer"
-        print(filter_query)
-        self.solr_params.update({'fq': filter_query})
+        # print(filter_query)
+        self.solr_params.update({'fq': filter_query, 'sort': sort_query})
 
     def _prepare_query(self):
         if self.parsed_request:
@@ -102,7 +105,7 @@ class SolrSearch(object):
                 else:
                     arr.append(u"{0}:({1})".format(k, " OR ".join(["\"{0}\"".format(s) for s in v if v is not None])))
                 # LM: Debugging print
-                print('arr', arr)
+                #print('arr', arr)
             self.prepared_query = u" AND ".join(arr)            
         else:
             self.prepared_query = u"*:*"

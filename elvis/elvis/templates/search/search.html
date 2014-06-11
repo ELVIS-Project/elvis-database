@@ -78,8 +78,20 @@
               </label>
             </div>
           </div>
+          <!--
+          <h4> Filter by date: </h4>
 
-          </div>
+          -->
+          
+          <h4> Sort by: </h4>
+          <div class="col-sm-4">
+         <select name="sortby">
+         <option value=""> Default (Don't sort) </option>
+         <option value="title"> Title/Name </option>
+         <option value="date_of_composition">Composition Date</option>
+         <option value="birth_date">Birth Date </option>
+         </select>
+        </div> 
         </div>
       </div>
     </div>
@@ -90,7 +102,7 @@
 </form> 
 
 
-    {% if content %}
+    {% if content.current_query %}
             <h3>Results</h3>
             {% include "search/search_results.html" %}
     {% endif %}

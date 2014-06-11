@@ -29,6 +29,9 @@ class SearchView(APIView):
         # Constructs a SolrSearch object using the search request; specifically, it parses and prepares the query
         # and assigns it to s
         #print('request', request)
+        
+        
+        # note: Filters, sorts, and other modifiers to solr search are handled in the helper script solrsearch.py
         s = SolrSearch(request) 
 
         facets = s.facets([])  # LM TODO add here when facets are decided
