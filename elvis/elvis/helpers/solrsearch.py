@@ -1,5 +1,6 @@
 from django.conf import settings
 import solr
+import datetime
 
 class SolrSearch(object):
     """ 
@@ -71,6 +72,8 @@ class SolrSearch(object):
         qdict = self.request.GET
         filter_query = ""
         sort_query = ""
+        composer_date_filt_query = ""
+        piece_date_filt_query=""
         for k, v in qdict.lists():
             # LM: modified from just self.parsed_request[k] = v to cut out nonsensical page requests to solr
             if k == 'page':
@@ -85,10 +88,23 @@ class SolrSearch(object):
                     filter_query += u"{0}{1}".format(" OR type:", settings.SEARCH_FILTERS_DICT[k])
             elif k == 'sortby':
                sort_query = qdict.get(k) 
+            # LM: Date filtration
+           # elif k == 'datefiltf':
+           #    if v == "":
+           #        v = "*"
+           #    composer_date_filt_query += u"{0}{1}{2}".format("birth_date: [", v, "-00-00T00:00:00Z TO")
+           #    piece_date_filt_query += u"{0}{1}{2}".format("date_of_composition: [", v, "-00-00T00:00:00Z TO") 
+           # elif k == 'datefiltt':
+           #    if v == "":
+           #        v = "*"
+           #    composer_date_filt_query += u"{0}{1}{2}".format(v, "-00-00T00:00:00Z]")
+           #    piece_date_filt_query += u"{0}{1}{2}".format(v, "-00-00T00:00:00Z]") 
             # LM: Otherwise, add to query
             else:
                 self.parsed_request[k] = v
 
+        # LM: Update search parameters with date filter 
+        #self.parsed_request['q'] += u"AND ({0} OR {1})".format(composer_date_filt_query, piece_date_filt_query)
         # LM: Update search parameters with the filter query --- test: u"type:elvis_piece OR type:elvis_composer"
         # print(filter_query)
         self.solr_params.update({'fq': filter_query, 'sort': sort_query})
