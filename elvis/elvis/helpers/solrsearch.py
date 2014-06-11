@@ -72,13 +72,15 @@ class SolrSearch(object):
         qdict = self.request.GET
         filter_query = ""
         sort_query = ""
-        composer_date_filt_query = ""
-        piece_date_filt_query=""
+        date_filt_query = ""
+        from_date = "" 
+        to_date = ""
         for k, v in qdict.lists():
+
             # LM: modified from just self.parsed_request[k] = v to cut out nonsensical page requests to solr
             if k == 'page':
                 continue
-            # LM: elif for filtration
+            # LM: elif for Type filtration
             # check if user has ticked a filter for querying
             elif k in settings.SEARCH_FILTERS_DICT:
                 # LM: Update filter_query[], the query string, accordingly
@@ -87,27 +89,71 @@ class SolrSearch(object):
                 else:
                     filter_query += u"{0}{1}".format(" OR type:", settings.SEARCH_FILTERS_DICT[k])
             elif k == 'sortby':
-               sort_query = qdict.get(k) 
-            # LM: Date filtration
-           # elif k == 'datefiltf':
-           #    if v == "":
-           #        v = "*"
-           #    composer_date_filt_query += u"{0}{1}{2}".format("birth_date: [", v, "-00-00T00:00:00Z TO")
-           #    piece_date_filt_query += u"{0}{1}{2}".format("date_of_composition: [", v, "-00-00T00:00:00Z TO") 
-           # elif k == 'datefiltt':
-           #    if v == "":
-           #        v = "*"
-           #    composer_date_filt_query += u"{0}{1}{2}".format(v, "-00-00T00:00:00Z]")
-           #    piece_date_filt_query += u"{0}{1}{2}".format(v, "-00-00T00:00:00Z]") 
-            # LM: Otherwise, add to query
-            else:
+               sort_query = qdict.get(k)             
+            # LM: elif for Date filtration
+            
+#            elif k == 'datefiltf':
+#                if qdict.get(k) == "" and qdict.get('datefiltt') == "":
+ #                   pass
+ #               elif qdict.get(k) == "":
+ #                   v = "* TO"
+ #               else:
+ #                   v = qdict.get(k) + "-00-00T00:00:00Z TO "
+  #              composer_date_filt_query += u"{0}{1}".format("birth_date: [", v)
+  #              #piece_date_filt_query += u"{0}{1}{2}".format("date_of_composition: [", v, "-00-00T00:00:00Z TO ") 
+  #          elif k == 'datefiltt':
+  #              if qdict.get(k) == "" and qdict.get('datefiltf') == "":
+  #                 pass
+  #              elif qdict.get(k) == "":
+   #                 v = "*]"
+   #             else:
+   #                 v = qdict.get(k) + "-00-00T00:00:00Z]"
+   #             composer_date_filt_query += v
+                #piece_date_filt_query += u"{0}{1}".format(v, "-00-00T00:00:00Z]") 
+            elif k == 'datefiltf':
+                if qdict.get('datefiltf') == "" and qdict.get('datefiltt') == "":
+                    pass
+                elif qdict.get('datefiltf') == "":
+                    from_date = "[ * TO"
+                    to_date = u"{0}-00-00T00:00:00Z ]".format(qdict.get('datefiltt'))
+                elif qdict.get('datefiltt') == "":
+                    from_date =  u"[ {0}-00-00T00:00:00Z TO ".format(qdict.get('datefiltf'))
+                    to_date = "* ]"
+                else:
+                    from_date = u"[ {0}-00-00T00:00:00Z TO ".format(qdict.get('datefiltf'))
+                    to_date = u"{0}-00-00T00:00:00Z ]".format(qdict.get('datefiltt'))
+                date_filt_query = from_date + to_date
+            elif k == 'q' :
                 self.parsed_request[k] = v
+
+        self.solr_params.update({'fq': filter_query, 'sort': sort_query})
+
+        # Update fq with date filtration, depending on what type filter was set
+        if date_filt_query == "":
+            pass
+        elif filter_query == "" and "fcp" in qdict:
+            self.solr_params['fq'] += " birth_date: " + date_filt_query
+        elif filter_query == "" and "fp" in qdict or "fm" in qdict:
+            self.solr_params['fq'] += " date_of_composition: " + date_filt_query
+        elif "fcp" in qdict:
+            self.solr_params['fq'] += " AND birth_date: " + date_filt_query
+        elif "fp" in qdict or "fm" in qdict:
+            self.solr_params['fq'] += " AND date_of_composition: " + date_filt_query
+            # LM: Otherwise, add to query
+        else:
+            pass
+
+
+        
+
+        # LM: Update search parameters with the filter query --- test: u"type:elvis_piece OR type:elvis_composer"
+        # print(filter_query)
+        
 
         # LM: Update search parameters with date filter 
         #self.parsed_request['q'] += u"AND ({0} OR {1})".format(composer_date_filt_query, piece_date_filt_query)
-        # LM: Update search parameters with the filter query --- test: u"type:elvis_piece OR type:elvis_composer"
-        # print(filter_query)
-        self.solr_params.update({'fq': filter_query, 'sort': sort_query})
+
+
 
     def _prepare_query(self):
         if self.parsed_request:

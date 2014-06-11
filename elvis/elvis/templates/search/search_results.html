@@ -24,14 +24,14 @@
                 <span class="label label-primary pull-right">Movement</span>
                 <h4>{{ result.title }}</h4>
                 
-                <p class="list-group-item-text"> {{result.composer_name}} Date: {{ result.date_of_composition | date:"Y" }} Piece: {{result.parent_piece_name}} </p>
+                <p class="list-group-item-text"> Composer: {{result.composer_name}} <br> Composed On: {{ result.date_of_composition | date:"Y" }} Piece: {{result.parent_piece_name}} </p>
                 <p class="list-group-item-text"> {{result.comment}} </p>
             </a>
         {% elif result.type == "elvis_piece" %}
             <a href="/piece/{{ result.item_id }}" class="list-group-item">
                 <span class="label label-primary pull-right">Piece</span>
                 <h4>{{ result.title }}</h4>
-                <p class="list-group-item-text"> {{result.composer_name}} Date: {{ result.date_of_composition | date:"Y" }} </p>
+                <p class="list-group-item-text"> Composer: {{result.composer_name}} <br> Composed On: {{ result.date_of_composition | date:"Y" }} </p>
                 <p class="list-group-item-text"> {{result.comment}} </p>
             </a>
         {% elif result.type == "elvis_comment" %}
