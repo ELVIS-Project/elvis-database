@@ -78,19 +78,35 @@
               </label>
             </div>
           </div>
-          <!--
-          <h4> Filter by date: </h4>
-
-          -->
           
+      <!--    <h4> Filter by date: </h4>
+          <div class = "col-sm-12">
+            <input type="text" name="datefiltf" placeholder="From">
+            <input type="text" name="datefiltt" placeholder="To">
+          </div> 
+          -->
+          <script type="text/javascript">
+          function makeDisable(){
+                  var x=document.getElementById("dirSelect")
+                      x.disabled=true
+          }
+          function makeEnable(){
+                  var x=document.getElementById("dirSelect")
+                      x.disabled=false
+          }
+          </script>
           <h4> Sort by: </h4>
           <div class="col-sm-4">
          <select name="sortby">
          <option value=""> Default (Don't sort) </option>
-         <option value="title"> Title/Name </option>
-         <option value="date_of_composition">Composition Date</option>
-         <option value="birth_date">Birth Date </option>
+         <option value="title asc"> Title &#9650; </option>
+         <option value="title desc"> Title &#9660; </option>
+         <option value="date_of_composition asc">Composition Date &#9650;</option>
+         <option value="date_of_composition desc">Composition Date &#9660;</option>
+         <option value="birth_date asc">Birth Date &#9650;</option>
+         <option value="birth_date desc">Birth Date &#9660; </option>
          </select>
+        
         </div> 
         </div>
       </div>
