@@ -104,6 +104,10 @@ def solr_index(sender, instance, created, **kwargs):
     #    date_of_composition = pytz.utc.localize(piece.date_of_composition)
 
     #print(piece.title)
+    tags = []
+    for tag in piece.tags.all():
+        tags.append(tag.name)
+
     d = {
             'type': 'elvis_piece',
             'id': str(uuid.uuid4()),
@@ -117,6 +121,7 @@ def solr_index(sender, instance, created, **kwargs):
             'parent_corpus_name': parent_corpus_name,
             'composer_name': composer_name,
             'uploader_name': uploader_name,
+            'tags': tags,
     }
     solrconn.add(**d)
     solrconn.commit()

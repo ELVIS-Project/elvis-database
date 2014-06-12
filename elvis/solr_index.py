@@ -95,6 +95,10 @@ if __name__ == "__main__":
         else:
             parent_corpus_name = piece.corpus.title        
 
+        tags = []
+        for tag in piece.tags.all():
+            tags.append(tag.name)
+
         doc = {
             'type': 'elvis_piece',
             'id': str(uuid.uuid4()),
@@ -108,6 +112,7 @@ if __name__ == "__main__":
             'parent_corpus_name': parent_corpus_name,
             'composer_name': piece.composer.name,
             'uploader_name': piece.uploader.username,
+            'tags': tags,
         }
 
         all_pieces.append(doc)
@@ -139,6 +144,9 @@ if __name__ == "__main__":
         else:
             parent_corpus_name = movement.corpus.title
 
+        tags = []
+        for tag in movement.tags.all():
+            tags.append(tag.name)
 
         doc = {
             'type': 'elvis_movement',
@@ -154,6 +162,7 @@ if __name__ == "__main__":
             'parent_corpus_name': parent_corpus_name,
             'composer_name': movement.composer.name,
             'uploader_name': movement.uploader.username,
+            'tags': tags,
         }
 
         all_movements.append(doc)

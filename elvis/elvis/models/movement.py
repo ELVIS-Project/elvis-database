@@ -114,6 +114,11 @@ def solr_index(sender, instance, created, **kwargs):
     print(composer_name)
     print(movement_comment)
 
+
+    tags = []
+    for tag in movement.tags.all():
+        tags.append(tag.name)
+
     d = {
             'type': 'elvis_movement',
             'id': str(uuid.uuid4()),
@@ -128,6 +133,7 @@ def solr_index(sender, instance, created, **kwargs):
             'parent_corpus_name': parent_corpus_name,
             'composer_name': composer_name,
             'uploader_name': uploader_name,
+            'tags': tags,
     }
     solrconn.add(**d)
     solrconn.commit()
