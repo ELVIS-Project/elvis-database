@@ -72,6 +72,7 @@ class SolrSearch(object):
         qdict = self.request.GET
         filter_query = ""
         sort_query = ""
+        tag_filt_query = ""
         date_filt_query = ""
         from_date = "" 
         to_date = ""
@@ -97,15 +98,24 @@ class SolrSearch(object):
                 if qdict.get('datefiltf') == "" and qdict.get('datefiltt') == "":
                     pass
                 elif qdict.get('datefiltf') == "":
-                    from_date = "[ * TO"
+                    from_date = " date_general: [ * TO"
                     to_date = u"{0}-00-00T00:00:00Z ]".format(qdict.get('datefiltt'))
                 elif qdict.get('datefiltt') == "":
-                    from_date =  u"[ {0}-00-00T00:00:00Z TO ".format(qdict.get('datefiltf'))
+                    from_date =  u" date_general: [ {0}-00-00T00:00:00Z TO ".format(qdict.get('datefiltf'))
                     to_date = "* ]"
                 else:
-                    from_date = u"[ {0}-00-00T00:00:00Z TO ".format(qdict.get('datefiltf'))
+                    from_date = u" date_general: [ {0}-00-00T00:00:00Z TO ".format(qdict.get('datefiltf'))
                     to_date = u"{0}-00-00T00:00:00Z ]".format(qdict.get('datefiltt'))
                 date_filt_query = from_date + to_date
+
+            # LM: elif for Tag filtration
+            elif k == 'tagfilt':
+                for tag in v[0].split():
+                    if tag_filt_query == "":
+                        tag_filt_query += "tags: " + tag
+                    else:
+                        tag_filt_query += " AND tags: " + tag
+                
 
             # Otherwise, add to query
             elif k == 'q' :
@@ -115,17 +125,38 @@ class SolrSearch(object):
             #elif k == 'format':
             #    self.parsed_request[k] = v
 
-        self.solr_params.update({'fq': filter_query, 'sort': sort_query})
+
+        self.solr_params.update({'sort': sort_query})
+
+
+        if filter_query == "":
+            pass
+        else:
+            self.solr_params['fq'] = "( " + filter_query + " )"
+
+        if date_filt_query == "":
+            pass
+        elif not 'fq' in self.solr_params:
+            self.solr_params['fq'] = "( " + date_filt_query + " )"
+        else:
+            self.solr_params['fq'] += " AND ( " + date_filt_query + " )"
+
+        if tag_filt_query == "":
+            pass
+        elif not 'fq' in self.solr_params:
+            self.solr_params['fq'] = "( " + tag_filt_query + " )"
+        else:
+            self.solr_params['fq'] += " AND ( " + tag_filt_query + " )"
 
         # Update fq with date filtration, depending on what type filter was set
-        if date_filt_query == "":
-            pass            
-        elif filter_query =="":
-            self.solr_params['fq'] += " date_general: " + date_filt_query
-        else:
-            self.solr_params['fq'] = "( " + filter_query + " )" + " AND date_general: " + date_filt_query
+        #if date_filt_query == "":
+        #    pass            
+        #elif filter_query =="":
+        #    self.solr_params['fq'] += date_filt_query
+        #else:
+        #    self.solr_params['fq'] = "( " + filter_query + " )" + " AND " + date_filt_query
             # u"( {0} ) AND date_general: {1}".format(filter_query, date_filt_query) 
-            print self.solr_params['fq']
+            #print self.solr_params['fq']
         #elif filter_query == "" and "fcp" in qdict:
         #    self.solr_params['fq'] += " birth_date: " + date_filt_query
         #elif filter_query == "" and "fp" in qdict or "fm" in qdict:
