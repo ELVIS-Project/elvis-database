@@ -80,6 +80,7 @@ class SolrSearch(object):
             # LM: modified from just self.parsed_request[k] = v to cut out nonsensical page requests to solr
             if k == 'page':
                 continue
+
             # LM: elif for Type filtration
             # check if user has ticked a filter for querying
             elif k in settings.SEARCH_FILTERS_DICT:
@@ -89,27 +90,9 @@ class SolrSearch(object):
                 else:
                     filter_query += u"{0}{1}".format(" OR type:", settings.SEARCH_FILTERS_DICT[k])
             elif k == 'sortby':
-               sort_query = qdict.get(k)             
+               sort_query = qdict.get(k)
+
             # LM: elif for Date filtration
-            
-#            elif k == 'datefiltf':
-#                if qdict.get(k) == "" and qdict.get('datefiltt') == "":
- #                   pass
- #               elif qdict.get(k) == "":
- #                   v = "* TO"
- #               else:
- #                   v = qdict.get(k) + "-00-00T00:00:00Z TO "
-  #              composer_date_filt_query += u"{0}{1}".format("birth_date: [", v)
-  #              #piece_date_filt_query += u"{0}{1}{2}".format("date_of_composition: [", v, "-00-00T00:00:00Z TO ") 
-  #          elif k == 'datefiltt':
-  #              if qdict.get(k) == "" and qdict.get('datefiltf') == "":
-  #                 pass
-  #              elif qdict.get(k) == "":
-   #                 v = "*]"
-   #             else:
-   #                 v = qdict.get(k) + "-00-00T00:00:00Z]"
-   #             composer_date_filt_query += v
-                #piece_date_filt_query += u"{0}{1}".format(v, "-00-00T00:00:00Z]") 
             elif k == 'datefiltf':
                 if qdict.get('datefiltf') == "" and qdict.get('datefiltt') == "":
                     pass
@@ -123,6 +106,8 @@ class SolrSearch(object):
                     from_date = u"[ {0}-00-00T00:00:00Z TO ".format(qdict.get('datefiltf'))
                     to_date = u"{0}-00-00T00:00:00Z ]".format(qdict.get('datefiltt'))
                 date_filt_query = from_date + to_date
+                
+            # Otherwise, add to query
             elif k == 'q' :
                 self.parsed_request[k] = v
 
@@ -139,7 +124,6 @@ class SolrSearch(object):
             self.solr_params['fq'] += " AND birth_date: " + date_filt_query
         elif "fp" in qdict or "fm" in qdict:
             self.solr_params['fq'] += " AND date_of_composition: " + date_filt_query
-            # LM: Otherwise, add to query
         else:
             pass
 
