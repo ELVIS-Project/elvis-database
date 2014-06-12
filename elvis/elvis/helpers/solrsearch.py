@@ -31,9 +31,9 @@ class SolrSearch(object):
         self._parse_request()
         self._prepare_query()
         # LM: Debugging prints
-        print('parsed_request', self.parsed_request, type(self.parsed_request))
-        print('prepared_query', self.prepared_query, type(self.prepared_query))
-        print('solr_params', self.solr_params, type(self.solr_params))
+        #print('parsed_request', self.parsed_request, type(self.parsed_request))
+        #print('prepared_query', self.prepared_query, type(self.prepared_query))
+        #print('solr_params', self.solr_params, type(self.solr_params))
 
     def search(self, **kwargs):
         self.solr_params.update(kwargs)
@@ -109,6 +109,8 @@ class SolrSearch(object):
 
             # Otherwise, add to query
             elif k == 'q' :
+                if qdict.get(k) == "":
+                    v = "*"
                 self.parsed_request[k] = v
             #elif k == 'format':
             #    self.parsed_request[k] = v
@@ -117,11 +119,13 @@ class SolrSearch(object):
 
         # Update fq with date filtration, depending on what type filter was set
         if date_filt_query == "":
-            pass
+            pass            
         elif filter_query =="":
             self.solr_params['fq'] += " date_general: " + date_filt_query
         else:
-            self.solr_params['fq'] += " AND date_general: " + date_filt_query
+            self.solr_params['fq'] = "( " + filter_query + " )" + " AND date_general: " + date_filt_query
+            # u"( {0} ) AND date_general: {1}".format(filter_query, date_filt_query) 
+            print self.solr_params['fq']
         #elif filter_query == "" and "fcp" in qdict:
         #    self.solr_params['fq'] += " birth_date: " + date_filt_query
         #elif filter_query == "" and "fp" in qdict or "fm" in qdict:
