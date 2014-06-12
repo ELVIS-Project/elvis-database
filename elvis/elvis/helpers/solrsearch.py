@@ -106,26 +106,32 @@ class SolrSearch(object):
                     from_date = u"[ {0}-00-00T00:00:00Z TO ".format(qdict.get('datefiltf'))
                     to_date = u"{0}-00-00T00:00:00Z ]".format(qdict.get('datefiltt'))
                 date_filt_query = from_date + to_date
-                
+
             # Otherwise, add to query
             elif k == 'q' :
                 self.parsed_request[k] = v
+            #elif k == 'format':
+            #    self.parsed_request[k] = v
 
         self.solr_params.update({'fq': filter_query, 'sort': sort_query})
 
         # Update fq with date filtration, depending on what type filter was set
         if date_filt_query == "":
             pass
-        elif filter_query == "" and "fcp" in qdict:
-            self.solr_params['fq'] += " birth_date: " + date_filt_query
-        elif filter_query == "" and "fp" in qdict or "fm" in qdict:
-            self.solr_params['fq'] += " date_of_composition: " + date_filt_query
-        elif "fcp" in qdict:
-            self.solr_params['fq'] += " AND birth_date: " + date_filt_query
-        elif "fp" in qdict or "fm" in qdict:
-            self.solr_params['fq'] += " AND date_of_composition: " + date_filt_query
+        elif filter_query =="":
+            self.solr_params['fq'] += " date_general: " + date_filt_query
         else:
-            pass
+            self.solr_params['fq'] += " AND date_general: " + date_filt_query
+        #elif filter_query == "" and "fcp" in qdict:
+        #    self.solr_params['fq'] += " birth_date: " + date_filt_query
+        #elif filter_query == "" and "fp" in qdict or "fm" in qdict:
+        #    self.solr_params['fq'] += " date_of_composition: " + date_filt_query
+        #elif "fcp" in qdict:
+        #    self.solr_params['fq'] += " AND birth_date: " + date_filt_query
+        #elif "fp" in qdict or "fm" in qdict:
+        #    self.solr_params['fq'] += " AND date_of_composition: " + date_filt_query
+        #else:
+        #    pass
 
 
         
