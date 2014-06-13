@@ -23,7 +23,7 @@ from elvis.views.tag import TagList, TagDetail
 from elvis.views.attachment import AttachmentList, AttachmentDetail
 
 #views for forms
-from elvis.views.forms import create_composer, create_corpus, create_corpus_large, create_piece, create_movement, create_project, upload_file, patch_downloads
+from elvis.views.forms import create_composer, create_corpus, create_corpus_large, create_piece, create_movement, create_project, upload_file, patch_downloads, recursive_patch_downloads
 
 # Uncomment the next two lines to enable the admin:
 from django.contrib import admin
@@ -47,6 +47,7 @@ urlpatterns += format_suffix_patterns(
         url(r'^downloads/$', DownloadDetail.as_view(), name="download-detail"),
         url(r'^downloading/$', Downloading.as_view(), name="downloading"),
         url(r'^patchdownloads/$',  patch_downloads, name="patch-downloads"),
+        url(r'^rpatchdownloads/$',  recursive_patch_downloads, name="recursive-patch-downloads"),
 
         url(r'^user-profiles/$', UserProfileList.as_view(), name="userprofile-list"),
         url(r'^user-profile/(?P<pk>[0-9]+)/$', UserProfileDetail.as_view(), name="userprofile-detail"),

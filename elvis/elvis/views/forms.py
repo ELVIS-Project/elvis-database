@@ -3,8 +3,7 @@ from datetime import datetime
 from random import choice
 
 from django.shortcuts import render
-from django.http import HttpResponse
-from django.http import HttpResponseRedirect
+from django.http import HttpResponse, HttpResponseRedirect
 from django.core.servers.basehttp import FileWrapper
 from django.contrib.auth.decorators import login_required
 from django.views.decorators.http import require_http_methods
@@ -29,7 +28,7 @@ from elvis.models.tag import Tag
 from elvis.models.project import Project
 
 '''
-LM View to modify user's download object
+LM Views to modify user's download object
 '''
 
 @csrf_protect
@@ -46,6 +45,82 @@ def patch_downloads(request):
     user_download.save()
     return HttpResponseRedirect(request.POST.get('this_url'))
     #return HttpResponse("done", status=status.HTTP_200_OK)
+'''
+def download_helper(item_type, item_id, user_download):
+	if item_type == "movement":
+		mvt_object = Movement.objects.filter(pk=item_id).all()[0]
+		for a_object in mvt_object.attachments.all():
+			user_download.attachments.add(a_object)
+		user_download.save()
+
+	elif item_type == "piece":
+		p_object = Piece.objects.filter(pk=item_id).all()[0]
+		if not p_object.attachments is None:
+			for a_object in p_object.attachments.all():
+				user_download.attachments.add(a_object)
+			user_download.save()
+		if not p_object.movements is None:
+			for mvt_object in p_object.movements.all():
+				download_helper("movement", mvt_object.id, user_download)
+
+	elif item_type == "composer":
+		comp_object = Composer.objects.filter(pk=item_id).all()[0]
+		if not comp_object.pieces is None:
+			for p_object in comp_object.pieces.all():
+				download_helper("pieces", p_object.id, user_download)
+		if not comp_object.movements is None:
+			for mvt_object in comp_object.movements.all():
+				download_helper("movements", mvt_object.id, user_download)
+
+	elif item_type == "corpus":
+		corp_object = Corpus.objects.filter(pk=item_id).all()[0]
+		if not corp_object.pieces is None:
+			for p_object in corp_object.pieces.all():
+				download_helper("pieces", p_object.id, user_download)
+		if not corp_object.movements is None:
+			for mvt_object in corp_object.movements.all():
+				download_helper("movements", mvt_object.id, user_download)
+
+	elif item_type == "tag":
+		pass
+		'''
+
+def download_helper2(item, user_download):
+	if hasattr(item, 'attachments') and not item.attachments is None:
+		for a_object in item.attachments.all():
+			print a_object
+			user_download.attachments.add(a_object)
+		user_download.save()
+	if hasattr(item, 'pieces') and not item.pieces is None:
+		for piece in item.pieces.all():
+			download_helper2(piece, user_download)
+	if hasattr(item, 'movements') and not item.movements is None:
+		for movement in item.movements.all():
+			download_helper2(movement, user_download)
+
+@csrf_protect
+def recursive_patch_downloads(request):
+	print request
+	user_download = request.user.downloads.all()[0]
+	item_type = request.POST.get('item_type')
+	item_id = request.POST.get('item_id')
+	this_url = request.POST.get('this_url')
+
+	#download_helper(item_type, item_id, user_download)
+	if item_type == "movement":
+		item = Movement.objects.filter(pk=item_id).all()[0]
+	elif item_type == "piece":
+		item = Piece.objects.filter(pk=item_id).all()[0]
+	elif item_type == "composer":
+		item = Composer.objects.filter(pk=item_id).all()[0]
+	elif item_type == "corpus":
+		item = Corpus.objects.filter(pk=item_id).all()[0]
+	
+	#print item 
+	download_helper2(item, user_download)
+
+	return HttpResponseRedirect(this_url)
+	#return HttpResponse("")
 
 
 '''
