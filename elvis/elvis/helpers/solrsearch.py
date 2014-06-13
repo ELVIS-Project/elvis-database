@@ -98,7 +98,7 @@ class SolrSearch(object):
                 if qdict.get('datefiltf') == "" and qdict.get('datefiltt') == "":
                     pass
                 elif qdict.get('datefiltf') == "":
-                    from_date = " date_general: [ * TO"
+                    from_date = " date_general: [ * TO "
                     to_date = u"{0}-00-00T00:00:00Z ]".format(qdict.get('datefiltt'))
                 elif qdict.get('datefiltt') == "":
                     from_date =  u" date_general: [ {0}-00-00T00:00:00Z TO ".format(qdict.get('datefiltf'))
