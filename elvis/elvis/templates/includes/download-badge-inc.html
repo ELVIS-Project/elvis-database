@@ -10,11 +10,16 @@
 
    	<input type="hidden" name="item_type" id="item_type" value="{{ download_type }}" />
    	<input type="hidden" name="item_id" id="item_id" value="{{ download_item_id }}" />
-   	<input type="hidden" name="this_url" id="this_url" value="{{ current_url }}" />
+   	<input type="hidden" class="this_url" name="this_url" id="this_url" value="" />
 
-   	<!-- <script type="text/javascript">
-       document.getElementById('this_url').value = window.location.pathname;
-    </script> -->
+   	<script type="text/javascript">
+       	var inputs = document.getElementsByClassName('this_url');
+
+       	for(i = 0; i < inputs.length; i++){
+       		inputs[i].value = window.location.href;
+       	}
+
+    </script>
 
     <button type="submit" class="btn btn-xs btn-success"><span class="glyphicon glyphicon-plus"></span> </button>
 

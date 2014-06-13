@@ -88,7 +88,6 @@ def download_helper(item_type, item_id, user_download):
 def download_helper2(item, user_download):
 	if hasattr(item, 'attachments') and not item.attachments is None:
 		for a_object in item.attachments.all():
-			print a_object
 			user_download.attachments.add(a_object)
 		user_download.save()
 	if hasattr(item, 'pieces') and not item.pieces is None:
@@ -100,7 +99,6 @@ def download_helper2(item, user_download):
 
 @csrf_protect
 def recursive_patch_downloads(request):
-	print request
 	user_download = request.user.downloads.all()[0]
 	item_type = request.POST.get('item_type')
 	item_id = request.POST.get('item_id')
@@ -115,12 +113,11 @@ def recursive_patch_downloads(request):
 		item = Composer.objects.filter(pk=item_id).all()[0]
 	elif item_type == "corpus":
 		item = Corpus.objects.filter(pk=item_id).all()[0]
-	
-	#print item 
+
 	download_helper2(item, user_download)
 
 	return HttpResponseRedirect(this_url)
-	#return HttpResponse("")
+
 
 
 '''

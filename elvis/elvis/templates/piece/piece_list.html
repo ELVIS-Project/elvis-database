@@ -11,7 +11,7 @@
         <div class="media-body">
             <h4 class="media-heading"><a href="{{ piece.url }}">{{ piece.title }}</a> <small>({{ piece.composer.name }})</small></h4>
             <span class="badge">{{ piece.attachments | length }} Attachments</span>
-            {% include "includes/download-badge-inc.html" with download_type="piece" download_item_id=piece.item_id current_url="/pieces/" %}
+            {% include "includes/download-badge-inc.html" with download_type="piece" download_item_id=piece.item_id current_url="/pieces/" page=content.current %}
             <p>
                 <small>Uploaded by {{ piece.uploader.username }} on {{ piece.created | date:"d F Y"}}.</small>
             </p>
@@ -33,7 +33,7 @@
                     <tbody>
                         {% for movement in piece.movements %}
                             <tr>
-                                <td class="small-column">{% include "includes/download-badge-inc.html" with download_type="movement" download_item_id=movement.item_id current_url="/pieces/"  %}</td>
+                                <td class="small-column">{% include "includes/download-badge-inc.html" with download_type="movement" download_item_id=movement.item_id current_url="/pieces/" page=content.current  %}</td>
                                 <td><a href="{{ movement.url }}">{{ movement.title }}</a></td>
                             </tr>
                         {% endfor %}
