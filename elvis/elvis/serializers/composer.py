@@ -22,7 +22,7 @@ class ComposerPieceSerializer(serializers.HyperlinkedModelSerializer):
 class ComposerSerializer(serializers.HyperlinkedModelSerializer):
     pieces = ComposerPieceSerializer()
     movements = ComposerMovementSerializer()
-    item_id = serializers.Field("id")
+    item_id = serializers.Field("pk")
     
     class Meta:
         model = Composer

@@ -4,7 +4,7 @@
 <div class="row">
     <h2>{{ content.title }} <small>{{ content.pieces | length }} Pieces, {{ content.movements | length }} Movements</small></h2>
     <p>Created by {{ content.creator.full_name }} on {{ content.created }} Last updated {{ content.updated }}</p>
-    <p>{{ content.comment }}</p>
+    <p> {% autoescape off %}{{ content.comment }}{% endautoescape %} </p>
 </div>
 <div class="row">
     <h3>Pieces</h3>

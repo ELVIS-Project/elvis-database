@@ -5,7 +5,7 @@
 <div class="row">
     <h2>{{ content.title }}</h2>
     <p><span class="label label-primary">Movement</span> Created by {{ content.creator.full_name }} on {{ content.created }} Last updated {{ content.updated }}</p>
-    <p>Comments: {{ content.comment }}</p>
+    <p>Comments: {% autoescape off %}{{ content.comment }}{% endautoescape %}</p>
     <!-- {% include "includes/download-badge-inc.html" with download_type="movement" download_item_id=content.item_id title="Download Movement" %} -->
 </div>
 
@@ -26,7 +26,7 @@
         <dt>Tags</dt>
         <dd>
             {% for tag in content.tags %}
-                <a href="{{ tag.url }}">{{ tag.name }} </a>
+                <a href="{{ tag.url }}">{{ tag.name }}; </a>
             {% endfor %}
         </dd>
     </dl>
