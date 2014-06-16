@@ -22,6 +22,8 @@ class ComposerPieceSerializer(serializers.HyperlinkedModelSerializer):
 class ComposerSerializer(serializers.HyperlinkedModelSerializer):
     pieces = ComposerPieceSerializer()
     movements = ComposerMovementSerializer()
+    item_id = serializers.Field("id")
+    
     class Meta:
         model = Composer
         fields = ("url",

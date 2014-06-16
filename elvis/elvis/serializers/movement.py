@@ -23,7 +23,7 @@ class AttachmentMovementSerializer(serializers.HyperlinkedModelSerializer):
 
     class Meta:
         model = Attachment
-        fields = ("attachment","file_name", "id")
+        fields = ("file_name", "id")
 
 class CorpusMovementSerializer(serializers.HyperlinkedModelSerializer):
     class Meta:

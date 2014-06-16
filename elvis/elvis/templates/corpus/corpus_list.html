@@ -9,7 +9,7 @@
     {% for corpus in content.results %}
         <a class="list-group-item" href="{{ corpus.url }}">
             <span class="badge">{{ corpus.pieces | length }} Pieces, {{ corpus.movements | length }} Movements</span>
-            <h4 class="list-group-item-header">{{ corpus.title }}</h4>
+            <h4 class="list-group-item-header">{% include "includes/download-badge-inc.html" with download_type="corpus" download_item_id=corpus.item_id %}{{ corpus.title }} </h4> 
             <p class="list-group-item-text">
                 <small>Created by {{ corpus.creator.full_name }} on {{ corpus.created }}</small><br />
                 {{ corpus.comment | default_if_none:"No Comment" | truncatechars:100 }}

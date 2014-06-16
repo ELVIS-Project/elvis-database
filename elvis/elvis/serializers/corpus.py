@@ -46,6 +46,7 @@ class CorpusSerializer(serializers.HyperlinkedModelSerializer):
     creator = UserCorpusSerializer()
     pieces = PieceCorpusSerializer()
     movements = MovementCorpusSerializer()
+    item_id = serializers.Field("pk")
 
     class Meta:
         model = Corpus

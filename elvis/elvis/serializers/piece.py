@@ -24,7 +24,7 @@ class AttachmentPieceSerializer(serializers.HyperlinkedModelSerializer):
 
     class Meta:
         model = Attachment
-        fields = ("attachment","file_name", "id")
+        fields = ("file_name", "id")
 
 class CorpusPieceSerializer(serializers.HyperlinkedModelSerializer):
     class Meta:
