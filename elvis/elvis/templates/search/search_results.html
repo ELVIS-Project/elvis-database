@@ -9,20 +9,20 @@
         {% if result.type == "elvis_composer" %}
             <a href="/composer/{{ result.item_id }}" class="list-group-item">
                 <span class="label label-primary pull-right">Composer</span>
-                <h4>{% include "includes/download-badge-inc.html" with download_type="composer" download_item_id=result.item_id %}{{ result.name }}</h4>
+                <h4>{% include "includes/download-badge-inc.html" with download_type="elvis_composer" download_item_id=result.item_id %}{{ result.name }}</h4>
                 <p class="list-group-item-text">{{ result.birth_date | date:"Y" }}&ndash;{{ result.death_date | date:"Y" }}</p>
             </a>
         {% elif result.type == "elvis_corpus" %}
             <a href="/corpus/{{ result.item_id }}" class="list-group-item">
-                <span class="label label-primary pull-right">Corpus</span>
-                <h4>{% include "includes/download-badge-inc.html" with download_type="corpus" download_item_id=result.item_id %}{{ result.title }}</h4>
+                <span class="label label-primary pull-right">Corpus</span> 
+                <h4>{% include "includes/download-badge-inc.html" with download_type="elvis_corpus" download_item_id=result.item_id %}{{ result.title }}</h4>
                 <p class="list-group-item-text"> Created by {{result.creator_name}} on {{result.created}} </p>
                 <p class="list-group-item-text"> {{result.comment}} </p>
             </a>
         {% elif result.type == "elvis_movement" %}
             <a href="/movement/{{ result.item_id }}" class="list-group-item">
                 <span class="label label-primary pull-right">Movement</span>
-                <h4> {% include "includes/download-badge-inc.html" with download_type="movement" download_item_id=result.item_id %} {{ result.title }}</h4>
+                <h4> {% include "includes/download-badge-inc.html" with download_type="elvis_movement" download_item_id=result.item_id %} {{ result.title }}</h4>
                 <p class="list-group-item-text"> Composer: {{result.composer_name}} <br> Composed On: {{ result.date_of_composition | date:"Y" }} </p>
                 <p class="list-group-item-text"> Piece: {{result.parent_piece_name}} </p>
                 <p class="list-group-item-text"> Tags: {% for tag in result.tags %} {{tag}} {% endfor %}</p>
@@ -31,7 +31,7 @@
         {% elif result.type == "elvis_piece" %}
             <a href="/piece/{{ result.item_id }}" class="list-group-item">
                 <span class="label label-primary pull-right">Piece</span>
-                <h4> {% include "includes/download-badge-inc.html" with download_type="piece" download_item_id=result.item_id %} {{ result.title }}</h4>
+                <h4> {% include "includes/download-badge-inc.html" with download_type="elvis_piece" download_item_id=result.item_id %} {{ result.title }}</h4>
                 <p class="list-group-item-text"> Composer: {{result.composer_name}} <br> Composed On: {{ result.date_of_composition | date:"Y" }} </p>
                 <p class="list-group-item-text"> Tags: {% for tag in result.tags %} {{tag}} {% endfor %}</p>
                 <p class="list-group-item-text"> {{result.comment}} </p>
@@ -46,7 +46,7 @@
         {% elif result.type == "elvis_tag" %}
             <a href="/tag/{{ result.item_id }}" class="list-group-item">
                 <span class="label label-primary pull-right">Tag</span>
-                <h4>{{ result.name }}</h4>
+                <h4> {% include "includes/download-badge-inc.html" with download_type="elvis_tag" download_item_id=result.item_id %} {{ result.name }}</h4>
                 <p class="list-group-item-text"> {{result.description}}</p>
             </a>
         {% endif %}

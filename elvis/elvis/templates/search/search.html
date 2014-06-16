@@ -14,20 +14,21 @@
 
 <div class="col-md-10">
 
+
   <!-- Query Entry -->
    <div class="form-group"> 
       
-        <input type="text" name="q" class="search-input" placeholder="Search Query" />
-     
+    <input type="text" name="q" class="search-input" placeholder="Search Query" />
+    
   <!-- Button -->
     <button type="submit" class="btn btn-default btn-sm">
       Search
       <span class="glyphicon glyphicon-search"></span> 
     </button>
+  
   </div>
 
-
-
+   
   <!-- Search Options -->
   <div class="panel-group" id="accordion">
   <div class="panel panel-default">
@@ -104,7 +105,7 @@
           <h4> Sort by: </h4>
           <div class="col-sm-4">
          <select name="sortby">
-         <option value=""> Default (Don't sort) </option>
+         <option value=""> Default (Type) </option>
          <option value="title desc"> Title &#9650; </option>
          <option value="title asc"> Title &#9660; </option>
          <!--<option value="date_of_composition desc">Composition Date &#9650;</option>
@@ -126,10 +127,38 @@
 </form> 
 
 
-    {% if content.current_query %}
-            <h3>Results</h3>
-            {% include "search/search_results.html" %}
+{% if content.current_query %}
+
+  <form id="list-patch-download-form" action="/rpatchdownloads/" method="post"  >
+  {% csrf_token %}
+  <h3>Results 
+    <button type="submit" id="listDownload" onClick="return confirm('Are you sure you want to recursively add these items to your downloads?\nWARNING: use with caution -- this may take very long!')" class="btn btn-success btn-sm pull-right" >
+      Add All Results to Downloads <span class="glyphicon glyphicon-plus"></span> 
+    </button> 
+    <p></p>
+
+  {% for result in content.results %}
+    {% if result.type == "elvis_composer" or result.type == "elvis_piece" or result.type == "elvis_movement" or result.type == "elvis_corpus" or result.type == "elvis_tag" %}
+    <input type="hidden" name="item_id" value="{{ result.item_id }}" />
+    <input type="hidden" name="item_type" value="{{ result.type }}" />
     {% endif %}
+  {% endfor %} 
+
+  <input type="hidden" class="this_url" name="this_url"  value="" />
+    
+    <script type="text/javascript">
+        var inputs = document.getElementsByClassName('this_url');
+
+        for(i = 0; i < inputs.length; i++){
+          inputs[i].value = window.location.href;
+        }
+
+    </script>
+  </form> 
+
+  {% include "search/search_results.html" %}
+
+{% endif %}
 </div>
 
 <!-- <div class="col-md-4" >
@@ -171,7 +200,35 @@
                 event.preventDefault();
             });
         </script>
-    {% endif %} -->
+
+
+  <script type="text/javascript">
+  function downloadAll(){
+    document.getElementsById("list-patch-download-form").submit();
+  }
+
+  $('#listDownload').click(function(){
+    document.getElementsById("list-patch-download-form").submit();
+  });
+  </script> 
+    {% endif %}
+
+
+  <h3> Results <button id="listDownload" onclick="downloadAll()" class="btn btn-success btn-sm pull-right" style="display: inline;">
+      Add All Results to Downloads <span class="glyphicon glyphicon-plus"></span> 
+    </button> 
+  </h3>
+
+  <script type="text/javascript">
+  function downloadAll(){
+    var buttons = document.getElementsByClassName("recursive-patch-download-form");
+    for(i = 0; i<buttons.length; i++){
+      buttons[i].submit();
+    }
+  }
+  </script> 
+
+     -->
 </div>
 
 {% endblock %}

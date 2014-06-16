@@ -85,37 +85,49 @@ def download_helper(item_type, item_id, user_download):
 		pass
 		'''
 
-def download_helper2(item, user_download):
+def download_helper(item, user_download):
 	if hasattr(item, 'attachments') and not item.attachments is None:
 		for a_object in item.attachments.all():
 			user_download.attachments.add(a_object)
 		user_download.save()
 	if hasattr(item, 'pieces') and not item.pieces is None:
 		for piece in item.pieces.all():
-			download_helper2(piece, user_download)
+			download_helper(piece, user_download)
 	if hasattr(item, 'movements') and not item.movements is None:
 		for movement in item.movements.all():
-			download_helper2(movement, user_download)
+			download_helper(movement, user_download)
+
+
+def type_selector(item_type, item_id, user_download):
+	
+	if item_type == "elvis_movement":
+		item = Movement.objects.filter(pk=item_id).all()[0]
+	elif item_type == "elvis_piece":
+		item = Piece.objects.filter(pk=item_id).all()[0]
+	elif item_type == "elvis_composer":
+		item = Composer.objects.filter(pk=item_id).all()[0]
+	elif item_type == "elvis_corpus":
+		item = Corpus.objects.filter(pk=item_id).all()[0]
+	elif item_type == "elvis_tag":
+		item = Tag.objects.filter(pk=item_id).all()[0]
+
+	download_helper(item, user_download)
 
 @csrf_protect
 def recursive_patch_downloads(request):
 	user_download = request.user.downloads.all()[0]
-	item_type = request.POST.get('item_type')
-	item_id = request.POST.get('item_id')
 	this_url = request.POST.get('this_url')
-
+	#print request
 	#download_helper(item_type, item_id, user_download)
-	if item_type == "movement":
-		item = Movement.objects.filter(pk=item_id).all()[0]
-	elif item_type == "piece":
-		item = Piece.objects.filter(pk=item_id).all()[0]
-	elif item_type == "composer":
-		item = Composer.objects.filter(pk=item_id).all()[0]
-	elif item_type == "corpus":
-		item = Corpus.objects.filter(pk=item_id).all()[0]
+	print request.POST.lists()
 
-	download_helper2(item, user_download)
 
+	item_type = request.POST.getlist('item_type')
+	item_id = request.POST.getlist('item_id')
+	
+	for i in range(len(item_type)):
+		type_selector(item_type[i], item_id[i], user_download)
+	
 	return HttpResponseRedirect(this_url)
 
 
