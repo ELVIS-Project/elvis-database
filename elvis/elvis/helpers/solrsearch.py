@@ -116,6 +116,8 @@ class SolrSearch(object):
                     else:
                         tag_filt_query += " AND tags: " + tag
                 
+            elif k == 'rows':
+                self.solr_params.update({'rows': v})  
 
             # Otherwise, add to query
             elif k == 'q' :
@@ -124,7 +126,6 @@ class SolrSearch(object):
                 self.parsed_request[k] = v
             #elif k == 'format':
             #    self.parsed_request[k] = v
-
 
         self.solr_params.update({'sort': sort_query})
 
@@ -147,6 +148,8 @@ class SolrSearch(object):
             self.solr_params['fq'] = "( " + tag_filt_query + " )"
         else:
             self.solr_params['fq'] += " AND ( " + tag_filt_query + " )"
+
+
 
         # Update fq with date filtration, depending on what type filter was set
         #if date_filt_query == "":

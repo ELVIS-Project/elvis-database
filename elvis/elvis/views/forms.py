@@ -2,6 +2,10 @@ import os, zipfile, tempfile, mimetypes
 from datetime import datetime
 from random import choice
 
+from elvis.helpers.solrsearch import SolrSearch
+
+import urlparse
+
 from django.shortcuts import render
 from django.http import HttpResponse, HttpResponseRedirect
 from django.core.servers.basehttp import FileWrapper
@@ -121,13 +125,26 @@ def recursive_patch_downloads(request):
 	#download_helper(item_type, item_id, user_download)
 	print request.POST.lists()
 
+	# If we are saving all the attachments in the search results
+	if request.POST.get("search_query"):
+		from django.test.client import RequestFactory
+		
+		#parsed_query = urlparse.parse_qs(request.POST.get("search_query"), keep_blank_values=True)
+		print (request.POST.get("search_query") + "&rows=200000")
+		
+		# Make a dummy get request (because we're requerying without pagination)
+		dummy_request = RequestFactory().get(request.POST.get("search_query") + "&rows=20000000")
+		s = SolrSearch(dummy_request)
+		search_results = s.search()
+		for result in search_results.results:
+			type_selector(result.get("type"), result.get("item_id"), user_download)
 
-	item_type = request.POST.getlist('item_type')
-	item_id = request.POST.getlist('item_id')
-	
-	for i in range(len(item_type)):
-		type_selector(item_type[i], item_id[i], user_download)
-	
+	else:
+		item_type = request.POST.getlist('item_type')
+		item_id = request.POST.getlist('item_id')
+		for i in range(len(item_type)):
+			type_selector(item_type[i], item_id[i], user_download)
+		
 	return HttpResponseRedirect(this_url)
 
 
