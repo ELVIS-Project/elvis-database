@@ -35,7 +35,7 @@ class UserAttachmentSerializer(serializers.HyperlinkedModelSerializer):
     attachment_path = serializers.Field()
     class Meta:
         model = Attachment
-        fields = ('url', 'pieces', 'movements', 'attachment', 'file_name', 'id', 'attachment_path')
+        fields = ('url', 'pieces', 'movements', 'attachment', 'file_name', 'id')
 
 
 class DownloadSerializer(serializers.ModelSerializer):

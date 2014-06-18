@@ -15,7 +15,7 @@
       document.getElementById("search_query").value = window.location.href;
     </script>
 
-    <button type="submit" id="all_download" onClick="return confirm('Definitely only use this if you know what you're doing.)" class="btn btn-danger btn-sm pull-right" >
+    <button type="submit" id="all_download" onClick="return confirm('Are you sure you want to recursively add all results to your downloads?\nWARNING: use with caution -- this may add undesired items!')" class="btn btn-danger btn-sm pull-right" >
       Add All Query Results to Downloads <span class="glyphicon glyphicon-plus"></span> 
     </button> 
   </form>
@@ -25,7 +25,7 @@
   <form id="list-patch-download-form" action="/rpatchdownloads/" method="post"  >
   {% csrf_token %}
   
-    <button type="submit" id="list_download" onClick="return confirm('Are you sure you want to recursively add these items to your downloads?\nWARNING: use with caution -- this may add undesired results on this page!')" class="btn btn-success btn-sm pull-middle" >
+    <button type="submit" id="list_download"  class="btn btn-success btn-sm pull-middle" >
       Add Results on Current Page to Downloads <span class="glyphicon glyphicon-plus"></span> 
     </button> 
 
