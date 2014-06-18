@@ -131,7 +131,10 @@ else:
 
 # Solr Settings
 # =============
-SOLR_SERVER = "http://localhost:8080/elvis-solr"
+if LILLIO:
+    SOLR_SERVER = "http://localhost:8080/elvis-solr"
+else:
+    SOLR_SERVER = "http://localhost:8080/elvis-solr"
 SEARCH_FILTERS_DICT = {
     'fcp': 'elvis_composer',
     'fp': 'elvis_piece',
@@ -149,3 +152,9 @@ CELERY_RESULT_BACKEND = 'amqp://'
 CELERY_TASK_SERIALIZER = 'json'
 CELERY_RESULT_SERIALIZER = 'json'
 CELERY_ACCEPT_CONTENT = ['json']
+
+
+# Elvis Web App Settings
+# ======================
+ELVIS_EXTENSIONS = ['.xml', '.mxl', '.krn', '.md', '.nwc', '.tntxt', '.capx', '.abc', '.mid', '.midi']
+

@@ -1,4 +1,6 @@
-# LM: TODO lots of cleaning up
+# LM: TODO lots of cleaning up; make modular methods
+
+
 from rest_framework import generics
 from rest_framework import permissions
 from rest_framework import status
@@ -34,6 +36,8 @@ from elvis.models.movement import Movement
 from elvis.models.attachment import Attachment
 
 from django.core.exceptions import ObjectDoesNotExist
+
+from elvis.settings import ELVIS_EXTENSIONS
 
 class DownloadListHTMLRenderer(CustomHTMLRenderer):
     template_name = "download/download_list.html"
@@ -239,12 +243,56 @@ class Downloading(APIView):
                 if ((fileExt in extensions) or ((not (fileExt in default_exts)) and others_check)):
                     user_download.attachments.remove(a_object)
 
+            return HttpResponseRedirect('/downloads/')
 
+        # Optimize user downloads to contain the best file format for elvis
+        elif 'select-elvis' in request.POST:
+            user_download = request.user.downloads.all()[0]
 
+            # Do this for all the attachments in the user's downloads cart
+            for a_object in user_download.attachments.all():
+                try:
+                    parent_p = a_object.pieces.all()[0]
+                    ranked_remover(parent_p, user_download)
+                except Exception as e:
+                    parent_p = None
+                try:
+                    parent_m = a_object.movements.all()[0]
+                    ranked_remover(parent_m, user_download)
+                except Exception as e:
+                    parent_m = None
+                    
             return HttpResponseRedirect('/downloads/')
 
 
-
+            
+def ranked_remover(parent, user_download):
+    # Create a ranking for the attachments based on ELVIS_EXTENSIONS
+    # Find the best sibling attachment to keep
+    # Remove the sibling if its file type isn't supported
+    # Else, add it to the ranking list in the right location 
+    ranking_list = [None] * len(ELVIS_EXTENSIONS)
+    for sibling_a in parent.attachments.all():
+        fileName, fileExt = os.path.splitext(sibling_a.file_name)
+        if not fileExt in ELVIS_EXTENSIONS:
+            user_download.attachments.remove(sibling_a)
+        else:
+            # To handle repeat file types... which there shouldnt be
+            try:
+                ranking_list.insert(ELVIS_EXTENSIONS.index(fileExt), sibling_a)
+            except Exception:
+                ranking_list.append(sibling_a)
+    # Now, go through the ranking list and insert the first sibling attachment into the user's downloads.
+    # Remove all the other sibling attachments
+    chosen_a_file = False
+    for sibling_a in ranking_list:
+        if sibling_a is None:
+            pass
+        elif chosen_a_file is False:
+            chosen_a_file = True
+            user_download.attachments.add(sibling_a)
+        else:
+            user_download.attachments.remove(sibling_a)
 
 
 
