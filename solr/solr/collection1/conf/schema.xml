@@ -73,7 +73,8 @@
     <field name="item_id" type="string" indexed="true" stored="true" />
     <field name="old_id" type="int" indexed="true" stored="true" />
     <field name="tags" type="text_general" indexed="true" stored="true" multiValued="true"/>
-
+    <field name="name_general" type="text_general" indexed="true" stored="true" multiValued="true"/>
+    <field name="name_sort" type="string" indexed="true" stored="true"/>
     
      
     <!-- LM Date fields -->
@@ -153,7 +154,12 @@
     <!-- Advanced Search -->
     <copyField source="birth_date" dest="date_general"/>
     <copyField source="date_of_composition" dest="date_general" />	
-    
+    <copyField source="title" dest="name_general" />
+    <copyField source="name" dest="name_general"/>
+    <copyField source="title" dest="name_sort" />
+    <copyField source="name" dest="name_sort"/>
+
+
     <!--<copyField source="birth_date" dest="text" />
     <copyField source="date_of_composition" dest="text" /> -->   
     
