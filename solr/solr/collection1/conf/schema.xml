@@ -45,7 +45,7 @@
     that avoids logging every request
 -->
 
-<schema name="example" version="1.5">
+<schema name="elvis-solr" version="1.5">
   <!-- attribute "name" is the name of this schema and is only used for display purposes.
        version="x.y" is Solr's version number for the schema syntax and 
        semantics.  It should not normally be changed by applications.
@@ -72,13 +72,17 @@
     <field name="text" type="text_general" indexed="true" stored="false" multiValued="true"/>
     <field name="item_id" type="string" indexed="true" stored="true" />
     <field name="old_id" type="int" indexed="true" stored="true" />
+    <field name="tags" type="text_general" indexed="true" stored="true" multiValued="true"/>
+
     
+     
     <!-- LM Date fields -->
     <field name="created" type="date" indexed="true" stored="true" />
     <field name="updated" type="date" indexed="true" stored="true" />
     <field name="date_of_composition" type="date" indexed="true" stored="true" /> 
     <field name="birth_date" type="date" indexed="true" stored="true" />
     <field name="death_date" type="date" indexed="true" stored="true" />
+    <field name="date_general" type="date" indexed="true" stored="true" />
 
     <!-- LM Name and Title fields -->
     <field name="name" type="string" indexed="true" stored="true" />
@@ -107,7 +111,7 @@
     <field name="approved" type="boolean" indexed="true" stored="true" />
     <field name="_version_" type="long" indexed="true" stored="true"/>
 
- </fields>
+</fields>
 
 
  <!-- Field to use to determine and enforce document uniqueness. 
@@ -137,14 +141,24 @@
 	  Another way to map multiple source fields to the same 
 	  destination field is to use the dynamic field syntax. 
 	  copyField also supports a maxChars to copy setting.  -->
-	   
+    
+    <!-- General Search -->
+    <copyField source="name" dest="text" />
+    <copyField source="title" dest="text" />
+    <copyField source="composer_name" dest="text" />
+    <copyField source="tags" dest="text" />
+    <copyField source="parent_piece_name" dest="text" />
+    <copyField source="parent_corpus_name" dest="text" />
+             
+    <!-- Advanced Search -->
+    <copyField source="birth_date" dest="date_general"/>
+    <copyField source="date_of_composition" dest="date_general" />	
+    
+    <!--<copyField source="birth_date" dest="text" />
+    <copyField source="date_of_composition" dest="text" /> -->   
+    
+   
    <!-- <copyField source="*_t" dest="text" maxChars="3000"/> -->
-  <!-- LM copyFields to text used for searching -->
-  <copyField source="name" dest="text" />
-  <copyField source="title" dest="text" />
-  <!--<copyField source="birth_date" dest="text" />
-  <copyField source="date_of_composition" dest="text" /> -->   
-
    <!-- copy name to alphaNameSort, a field designed for sorting by name -->
    <!-- <copyField source="name" dest="alphaNameSort"/> -->
  
@@ -303,6 +317,7 @@
       <analyzer type="index">
         <tokenizer class="solr.StandardTokenizerFactory"/>
         <filter class="solr.StopFilterFactory" ignoreCase="true" words="stopwords.txt" />
+        <!-- LM: Old template had enablePositionIncrement -->
         <!-- in this example, we will only use synonyms at query time
         <filter class="solr.SynonymFilterFactory" synonyms="index_synonyms.txt" ignoreCase="true" expand="false"/>
         -->
