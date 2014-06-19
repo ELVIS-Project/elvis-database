@@ -1,133 +1,197 @@
 {% extends "base.html" %}
 
 {% block wrap %}
-<!--
-<div class="col-md-8">
-    <form id="search-form" action="/search" method="get">
-        <input type="text" name="q" class="search-input" />
-        <button type="submit" class="btn">Search</button>
-    </form> 
--->
 
+
+<div class="col-12">
+<!-- Tabs bar -->
+<ul class="nav nav-tabs">
+  <li class="active"><a href="#gsearch" data-toggle="tab">General Search</a></li>
+  <li><a href="#asearch" data-toggle="tab">Advanced Search</a></li>
+  <li><a href="#help" data-toggle="tab">Information & Help</a></li>
+</ul>
    
-<form id="search-form" action="/search" method="get">
+<!-- Content -->
 
-<div class="col-md-10">
+<div class="tab-content">
 
-
-  <!-- Query Entry -->
-   <div class="form-group"> 
-      
-    <input type="text" name="q" class="search-input" placeholder="Search Query" />
+    <!-- General Search -->
+    <div class="tab-pane fade in active" id="gsearch">
     
-  <!-- Button -->
-    <button type="submit" class="btn btn-default btn-sm">
-      Search
-      <span class="glyphicon glyphicon-search"></span> 
-    </button>
-  
-  </div>
+        <!-- Accordion -->
+        <div class="panel-group" id="accordion">
+              <div class="panel panel-default">
+                <div class="panel-heading">
+                    <h1 class="panel-title">
+                      <a data-toggle="collapse" data-parent="#accordion" href="#collapseOne"> Toggle General Search: </a>
+                    </h1>
+                </div>
+                <div id="collapseOne" class="panel-collapse collapse {% if not content.current_query %} in {% endif %}">
+                    <div class="panel-body">
 
-   
-  <!-- Search Options -->
-  <div class="panel-group" id="accordion">
-  <div class="panel panel-default">
-    <div class="panel-heading">
-        <h1 class="panel-title">
-          <a data-toggle="collapse" data-parent="#accordion" href="#collapseOne"> Advanced Search Options: </a>
-        </h1>
-    </div>
-    <div id="collapseOne" class="panel-collapse collapse">
-      <div class="panel-body">
-        <div class="form-group">
-          <div class="col-sm-12">
-          <!-- Checkbox Filters -->
-          <h4> Filter by type: </h4>
-          <div class="col-sm-4">
-            <div class="checkbox">
-              <label>
-                <input type="checkbox" name="fcp" value=""> Composers
-              </label>
-            </div>
-            <div class="checkbox">
-              <label>
-                <input type="checkbox" name="fp" value=""> Pieces
-              </label>
-            </div>
-          </div>
-          <div class="col-sm-4">
-            <div class="checkbox">
-              <label>
-                <input type="checkbox" name="fm" value=""> Movements
-              </label>
-            </div>
-            <div class="checkbox">
-              <label>
-                <input type="checkbox" name="fcr" value=""> Corpora
-              </label>
-            </div>
-          </div>
-          <div class="col-sm-4">
-            <div class="checkbox">
-              <label>
-                <input type="checkbox" name="ft" value=""> Tags
-              </label>
-            </div>
-            <div class="checkbox">
-              <label>
-                <input type="checkbox" name="fu" value=""> Users
-              </label>
-            </div>
-          </div>
-          <h4> Filter by tags: </h4>
-          <div class = "col-sm-12">
-            <input type="text" name="tagfilt" placeholder="Tag1 Tag2 ...">
-          </div> 
-          
-          <h4> Filter by date: </h4>
-          <div class = "col-sm-12">
-            <input type="text" name="datefiltf" placeholder="From: (YYYY)">
-            <input type="text" name="datefiltt" placeholder="To: (YYYY)">
-            <p></p>(Will filter by birth or composition date, depending on type filters chosen above)
-          </div> 
+                        <div class="col-md-4 col-md-offset-4">
+                        <form id="general-search-form" action="/search" method="get">
 
 
-          <script type="text/javascript">
-          function makeDisable(){
-                  var x=document.getElementById("dirSelect")
-                      x.disabled=true
-          }
-          function makeEnable(){
-                  var x=document.getElementById("dirSelect")
-                      x.disabled=false
-          }
-          </script>
 
-          <h4> Sort by: </h4>
-          <div class="col-sm-4">
-         <select name="sortby">
-         <option value=""> Default (Type) </option>
-         <option value="title desc"> Title &#9650; </option>
-         <option value="title asc"> Title &#9660; </option>
-         <!--<option value="date_of_composition desc">Composition Date &#9650;</option>
-         <option value="date_of_composition asc">Composition Date &#9660;</option>
-         <option value="birth_date desc">Birth Date &#9650; </option>
-         <option value="birth_date asc">Birth Date &#9660;</option> -->
-         <option value="date_general desc"> Date &#9650; </option>
-         <option value="date_general asc"> Date &#9660;</option>
-         </select>
-        
-        </div> 
+                              <!-- Query Entry -->
+                               <div class="form-group"> 
+                                  
+                                <input type="text" name="q" class="search-input" placeholder="Search Query" />
+                                
+                              <!-- Button -->
+                                <button type="submit" class="btn btn-default btn-sm">
+                                  Search
+                                  <span class="glyphicon glyphicon-search"></span> 
+                                </button>
+                                
+                                </div>
+
+                        </form> 
+                        </div>
+                    </div>
+                </div>
+            </div>
         </div>
-      </div>
+  
     </div>
-  </div>
-  </div> 
+
+    <!-- Advanced Search -->
+    <div class="tab-pane fade" id="asearch">
+    
+        <!-- Accordion -->
+        <div class="panel-group" id="accordion">
+            <div class="panel panel-default">
+                <div class="panel-heading">
+                    <h1 class="panel-title">
+                      <a data-toggle="collapse" data-parent="#accordion" href="#collapseTwo"> Toggle Advanced Search: </a>
+                    </h1>
+                </div>
+                <div id="collapseTwo" class="panel-collapse collapse {% if not content.current_query %} in {% endif %}">
+                    <div class="panel-body">
+
+                    <form id="advanced-search-form" action="/search" method="get">
+                    <div class="form-group">
+                      
+                      <!-- Checkbox Filters -->
+                      <h4> Filter by Result Type: </h4>
+                        <div class="col-sm-12">
+                          <div class="col-sm-4">
+                                <div class="checkbox">
+                                  <label>
+                                    <input type="checkbox" name="fcp" value=""> Composers
+                                  </label>
+                                </div>
+                                <div class="checkbox">
+                                  <label>
+                                    <input type="checkbox" name="fp" value=""> Pieces
+                                  </label>
+                                </div>
+                              </div>
+                              <div class="col-sm-4">
+                                <div class="checkbox">
+                                  <label>
+                                    <input type="checkbox" name="fm" value=""> Movements
+                                  </label>
+                                </div>
+                                <div class="checkbox">
+                                  <label>
+                                    <input type="checkbox" name="fcr" value=""> Corpora
+                                  </label>
+                                </div>
+                              </div>
+                              <div class="col-sm-4">
+                                <div class="checkbox">
+                                  <label>
+                                    <input type="checkbox" name="ft" value=""> Tags
+                                  </label>
+                                </div>
+                                <div class="checkbox">
+                                  <label>
+                                    <input type="checkbox" name="fu" value=""> Users
+                                  </label>
+                                </div>
+                               </div>
+                          </div>
+
+                    <!-- Tag Filter -->
+                      <h4> Filter by Tags: </h4>
+                          <div class = "col-sm-12">
+                            <input type="text" name="tagfilt" placeholder="Tag1 Tag2 ...">
+                          </div> 
+
+                    <!-- Date Filter -->
+                      <h4> Filter by Date: </h4>
+                          <div class = "col-sm-12">
+                            <input type="text" name="datefiltf" placeholder="From: (YYYY)">
+                            <input type="text" name="datefiltt" placeholder="To: (YYYY)">
+                            <p></p>(Will filter by birth or composition date, depending on type filters chosen above)
+                          </div> 
 
 
-</form> 
+                    <!-- Sorting --> 
+                       <h4> Sort by: </h4>
+                           <div class="col-sm-4">
+                                 <select name="sortby">
+                                 <option value=""> Default (Type) </option>
+                                 <option value="title desc"> Title &#9650; </option>
+                                 <option value="title asc"> Title &#9660; </option>
+                                 <!--<option value="date_of_composition desc">Composition Date &#9650;</option>
+                                 <option value="date_of_composition asc">Composition Date &#9660;</option>
+                                 <option value="birth_date desc">Birth Date &#9650; </option>
+                                 <option value="birth_date asc">Birth Date &#9660;</option> -->
+                                 <option value="date_general desc"> Date &#9650; </option>
+                                 <option value="date_general asc"> Date &#9660;</option>
+                                 </select>                   
+                            </div>                 
 
+                    <!-- Submit --> 
+                        <div class="col-sm-4">
+                            <button type="submit" class="btn btn-default btn-sm">
+                              Search
+                              <span class="glyphicon glyphicon-search"></span> 
+                            </button> 
+                        </div>
 
+                    </div>
+                    </form>
+                    </div>                    
+                </div>
+            </div>
+        </div>        
+    </div>
+
+       <!-- Help  -->
+    <div class="tab-pane fade" id="help">
+    
+        <!-- Accordion -->
+        <div class="panel-group" id="accordion">
+              <div class="panel panel-default">
+                <div class="panel-heading">
+                    <h1 class="panel-title">
+                      <a data-toggle="collapse" data-parent="#accordion" href="#collapseThree"> Toggle Information & Help: </a>
+                    </h1>
+                </div>
+                <div id="collapseThree" class="panel-collapse collapse {% if not content.current_query %} in {% endif %}">
+                    <div class="panel-body">
+                    <h4> General Searching </h4>
+                    <p> Here's some information! </p>
+                    <h4> Advanced Searching </h4>
+                    <p> Here's some more information! </p>
+                    <h4> Downloading Results </h4> 
+                    <p> Is this helping? </p>
+                    </div>
+                </div>
+            </div>
+        </div>
+  
+    </div>
+
+</div>
+
+</div>
+
+<div class="col-12">
 {% if content.current_query %}
 <h3>Results: </h3>
 
