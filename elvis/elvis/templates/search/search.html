@@ -29,7 +29,7 @@
                 <div id="collapseOne" class="panel-collapse collapse {% if not content.current_query %} in {% endif %}">
                     <div class="panel-body">
 
-                        <div class="col-md-4 col-md-offset-4">
+                        <div class="col-md-6 col-md-offset-3">
                         <form id="general-search-form" action="/search" method="get">
 
 
@@ -37,7 +37,7 @@
                               <!-- Query Entry -->
                                <div class="form-group"> 
                                   
-                                <input type="text" name="q" class="search-input" placeholder="Search Query" />
+                                <input type="text" name="q" class="search-input" placeholder="Search Query... &nbsp; Example: Bach Chorale Gott" size="35" style="float: none; margin: 0 auto;"/>
                                 
                               <!-- Button -->
                                 <button type="submit" class="btn btn-default btn-sm">
@@ -76,7 +76,7 @@
                       <!-- Checkbox Filters -->
                       <h4> Filter by Result Type: </h4>
                         <div class="col-sm-12">
-                          <div class="col-sm-4">
+                            <div class="col-sm-4">
                                 <div class="checkbox">
                                   <label>
                                     <input type="checkbox" name="fcp" value=""> Composers
@@ -87,8 +87,8 @@
                                     <input type="checkbox" name="fp" value=""> Pieces
                                   </label>
                                 </div>
-                              </div>
-                              <div class="col-sm-4">
+                            </div>
+                            <div class="col-sm-4">
                                 <div class="checkbox">
                                   <label>
                                     <input type="checkbox" name="fm" value=""> Movements
@@ -99,8 +99,8 @@
                                     <input type="checkbox" name="fcr" value=""> Corpora
                                   </label>
                                 </div>
-                              </div>
-                              <div class="col-sm-4">
+                            </div>
+                            <div class="col-sm-4">
                                 <div class="checkbox">
                                   <label>
                                     <input type="checkbox" name="ft" value=""> Tags
@@ -111,8 +111,23 @@
                                     <input type="checkbox" name="fu" value=""> Users
                                   </label>
                                 </div>
-                               </div>
+                            </div>
                           </div>
+
+                    <!-- Name Filter -->
+                      <h4> Filter by Title/Name: </h4>
+                          <div class = "col-sm-12">
+                            <input type="text" name="namefilt" placeholder="E.g: Mein Gott...">
+                            <div class="help-block">Will find results with all entered search terms (use "" to force ordered search) in their title or name, depending on result type filters chosen above. </div>
+                          </div> 
+
+                    <!-- Date Filter -->
+                      <h4> Filter by Date: </h4>
+                          <div class = "col-sm-12">
+                            <input type="text" name="datefiltf" placeholder="From: (YYYY)" maxlength="4">
+                            <input type="text" name="datefiltt" placeholder="To: (YYYY)" maxlength="4">
+                            <div class="help-block">Will filter by birth or composition date, depending on result type filters chosen above.</div>
+                          </div> 
 
                     <!-- Tag Filter -->
                       <h4> Filter by Tags: </h4>
@@ -120,12 +135,11 @@
                             <input type="text" name="tagfilt" placeholder="Tag1 Tag2 ...">
                           </div> 
 
-                    <!-- Date Filter -->
-                      <h4> Filter by Date: </h4>
+
+                    <!-- Voice Filter -->
+                      <h4> Filter by Number of Voices: </h4>
                           <div class = "col-sm-12">
-                            <input type="text" name="datefiltf" placeholder="From: (YYYY)">
-                            <input type="text" name="datefiltt" placeholder="To: (YYYY)">
-                            <p></p>(Will filter by birth or composition date, depending on type filters chosen above)
+                            <input type="text" name="voicefilt" placeholder="E.g.: 4" maxlength="2">
                           </div> 
 
 
@@ -134,8 +148,8 @@
                            <div class="col-sm-4">
                                  <select name="sortby">
                                  <option value=""> Default (Type) </option>
-                                 <option value="title desc"> Title &#9650; </option>
-                                 <option value="title asc"> Title &#9660; </option>
+                                 <option value="name_sort desc"> Title &#9650; </option>
+                                 <option value="name_sort asc"> Title &#9660; </option>
                                  <!--<option value="date_of_composition desc">Composition Date &#9650;</option>
                                  <option value="date_of_composition asc">Composition Date &#9660;</option>
                                  <option value="birth_date desc">Birth Date &#9650; </option>
@@ -175,11 +189,11 @@
                 <div id="collapseThree" class="panel-collapse collapse {% if not content.current_query %} in {% endif %}">
                     <div class="panel-body">
                     <h4> General Searching </h4>
-                    <p> Here's some information! </p>
+                    <p> A basic, Google-esque search. Results are based on occurrences of the search terms in the title/name, composer, parent piece, and tag fields of an item. Items returned may be any type (e.g. a composer, a piece, or a corpus). </p>
                     <h4> Advanced Searching </h4>
-                    <p> Here's some more information! </p>
+                    <p> A customisable search. Results are based on the search terms for specific, user-chosen fields of an item. Items returned may be restricted to specific types, and may be sorted on specific fields. </p>
                     <h4> Downloading Results </h4> 
-                    <p> Is this helping? </p>
+                    <p> More to come. </p>
                     </div>
                 </div>
             </div>
