@@ -64,6 +64,7 @@
                 <span class="label label-primary pull-right">Movement</span>
                 <h4> {% include "includes/download-badge-inc.html" with download_type="elvis_movement" download_item_id=result.item_id %} {{ result.title }}</h4>
                 <p class="list-group-item-text"> Composer: {{result.composer_name}} <br> Composed On: {{ result.date_of_composition | date:"Y" }} </p>
+                <p class="list-group-item-text"> Number of Voices: {{result.number_of_voices}} </p>
                 <p class="list-group-item-text"> Piece: {{result.parent_piece_name}} </p>
                 <p class="list-group-item-text"> Tags: {% for tag in result.tags %} {{tag}} {% endfor %}</p>
                 <p class="list-group-item-text"> {{result.comment}} </p>
@@ -73,6 +74,7 @@
                 <span class="label label-primary pull-right">Piece</span>
                 <h4> {% include "includes/download-badge-inc.html" with download_type="elvis_piece" download_item_id=result.item_id %} {{ result.title }}</h4>
                 <p class="list-group-item-text"> Composer: {{result.composer_name}} <br> Composed On: {{ result.date_of_composition | date:"Y" }} </p>
+                <p class="list-group-item-text"> Number of Voices: {{result.number_of_voices}} </p>
                 <p class="list-group-item-text"> Tags: {% for tag in result.tags %} {{tag}} {% endfor %}</p>
                 <p class="list-group-item-text"> {{result.comment}} </p>
             </a>

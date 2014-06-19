@@ -74,6 +74,8 @@ class SolrSearch(object):
         sort_query = ""
         tag_filt_query = ""
         date_filt_query = ""
+        name_filt_query = ""
+        voice_filt_query = ""
         from_date = "" 
         to_date = ""
         for k, v in qdict.lists():
@@ -90,8 +92,17 @@ class SolrSearch(object):
                     filter_query += u"{0}{1}".format("type:", settings.SEARCH_FILTERS_DICT[k])
                 else:
                     filter_query += u"{0}{1}".format(" OR type:", settings.SEARCH_FILTERS_DICT[k])
+
+            # LM: elif for sorting
             elif k == 'sortby':
                sort_query = qdict.get(k)
+
+            # LM: elif for Name filtration
+            elif k == 'namefilt':
+                    if qdict.get('namefilt') == "":
+                        pass
+                    else:
+                        name_filt_query = "name_general: " + ' '.join(v) 
 
             # LM: elif for Date filtration
             elif k == 'datefiltf':
@@ -115,6 +126,14 @@ class SolrSearch(object):
                         tag_filt_query += "tags: " + tag
                     else:
                         tag_filt_query += " AND tags: " + tag
+
+            # LM: elif for Voice filtration
+            elif k == 'voicefilt':
+                    if qdict.get('voicefilt') == "":
+                        pass
+                    else:
+                        voice_filt_query = "number_of_voices: " +  v[0]
+
                 
             elif k == 'rows':
                 self.solr_params.update({'rows': v})  
@@ -148,6 +167,20 @@ class SolrSearch(object):
             self.solr_params['fq'] = "( " + tag_filt_query + " )"
         else:
             self.solr_params['fq'] += " AND ( " + tag_filt_query + " )"
+
+        if name_filt_query == "":
+            pass
+        elif not 'fq' in self.solr_params:
+            self.solr_params['fq'] = "( " + name_filt_query + " )"
+        else:
+            self.solr_params['fq'] += " AND (" + name_filt_query + " )"
+
+        if voice_filt_query == "":
+            pass
+        elif not 'fq' in self.solr_params:
+            self.solr_params['fq'] = "( " + voice_filt_query + " )"
+        else:
+            self.solr_params['fq'] += " AND (" + voice_filt_query + " )"
 
 
 
