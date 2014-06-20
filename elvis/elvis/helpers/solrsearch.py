@@ -1,6 +1,7 @@
 from django.conf import settings
 import solr
 import datetime
+import string
 
 class SolrSearch(object):
     """ 
@@ -102,7 +103,7 @@ class SolrSearch(object):
                     if qdict.get('namefilt') == "":
                         pass
                     else:
-                        name_filt_query = "name_general: " + ' '.join(v) 
+                        name_filt_query = "name_general: " + string.join(string.split(v[0]), ' AND name_general: ') 
 
             # LM: elif for Date filtration
             elif k == 'datefiltf':
