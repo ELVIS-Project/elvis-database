@@ -117,8 +117,8 @@
                     <!-- Name Filter -->
                       <h4> Filter by Title/Name: </h4>
                           <div class = "col-sm-12">
-                            <input type="text" name="namefilt" placeholder="E.g: Mein Gott...">
-                            <div class="help-block">Will find results with all entered search terms (use "" to force ordered search) in their title or name, depending on result type filters chosen above. </div>
+                            <input type="text" name="namefilt" placeholder="E.g: Agnus Dei...">
+                            <div class="help-block">Will find results with all entered search terms in their title or name. Use double quotations "" to force querying with ordered search terms. </div>
                           </div> 
 
                     <!-- Date Filter -->
@@ -126,7 +126,6 @@
                           <div class = "col-sm-12">
                             <input type="text" name="datefiltf" placeholder="From: (YYYY)" maxlength="4">
                             <input type="text" name="datefiltt" placeholder="To: (YYYY)" maxlength="4">
-                            <div class="help-block">Will filter by birth or composition date, depending on result type filters chosen above.</div>
                           </div> 
 
                     <!-- Tag Filter -->
@@ -189,11 +188,11 @@
                 <div id="collapseThree" class="panel-collapse collapse {% if not content.current_query %} in {% endif %}">
                     <div class="panel-body">
                     <h4> General Searching </h4>
-                    <p> A basic, Google-esque search. Results are based on occurrences of the search terms in the title/name, composer, parent piece, and tag fields of an item. Items returned may be any type (e.g. a composer, a piece, or a corpus). </p>
+                    <p> A basic, Google-esque search. Results are based on occurrences of the search terms in the title/name, composer, parent piece, and tag fields of an item. Items returned may be any type (e.g. a composer, a piece, or a corpus). Use this if you want to quickly look for most relevant items - the database will order results based on relevancy. </p>
                     <h4> Advanced Searching </h4>
                     <p> A customisable search. Results are based on the search terms for specific, user-chosen fields of an item. Items returned may be restricted to specific types, and may be sorted on specific fields. </p>
                     <h4> Downloading Results </h4> 
-                    <p> More to come. </p>
+                    <p> Each <button class="btn btn-xs btn-success"><span class="glyphicon glyphicon-plus"></span></button> recursively sends its object's attachments to your downloads. For example, clicking this in a piece-typed result will send all of its attachments, and the attachments of its movements, to your downloads cart. The <button class="btn btn-success btn-sm">Add Results on Current Page to Downloads <span class="glyphicon glyphicon-plus"></span></button> will recursively send all the attachments of the current page's results to your downloads. In other words, it's like clicking all of the small green buttons at once. The <button class="btn btn-danger btn-sm"> Add All Query Results to Downloads <span class="glyphicon glyphicon-plus"></span></button> will do the same for every page of results in your query.</p>
                     </div>
                 </div>
             </div>
@@ -208,7 +207,6 @@
 <div class="col-12">
 {% if content.current_query %}
 <h3>Results: </h3>
-
 
 
   {% include "search/search_results.html" %}
