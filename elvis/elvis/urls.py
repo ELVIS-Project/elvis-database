@@ -94,7 +94,7 @@ urlpatterns += format_suffix_patterns(
         #url(r'^download/$', save_downloads, name="save_downloads"),
         #url(r'^download/$', DownloadList.as_view(), name="download-list"),
 
-        (r'^media/attachments/(?P<path>.*)$', 'django.views.static.serve', {'document_root': settings.STATIC_ROOT}),
+        (r'^media/(?P<path>.*)$', 'django.views.static.serve', {'document_root': settings.MEDIA_ROOT}),
     )
 )
 
