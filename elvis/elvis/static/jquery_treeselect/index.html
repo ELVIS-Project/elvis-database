@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html>
+
+  <head>
+    <meta charset='utf-8' />
+    <meta http-equiv="X-UA-Compatible" content="chrome=1" />
+    <meta name="description" content="jquery.treeselect.js : A minimalistic jQuery hierarchy select widget used for selecting hierarchy structures in a treeview format." />
+    <script src="//ajax.googleapis.com/ajax/libs/jquery/1.7.2/jquery.min.js"></script>
+    <script src="//ajax.googleapis.com/ajax/libs/jqueryui/1.8.16/jquery-ui.min.js"></script>
+    <link rel="stylesheet" href="//ajax.googleapis.com/ajax/libs/jqueryui/1.8/themes/smoothness/jquery-ui.css">
+    <script type='text/javascript' src='bin/jquery.treeselect.js'></script>
+    <link rel='stylesheet' type='text/css' href='bin/jquery.treeselect.css' />
+    <link rel="stylesheet" type="text/css" media="screen" href="assets/stylesheets/stylesheet.css">
+    <script type='text/javascript'>
+      var maxDepth = 3;
+      var loadChildren = function(node, level) {
+        var hasChildren = node.level < maxDepth;
+        for (var i=0; i<8; i++) {
+          var id = node.id + (i+1).toString();
+          node.children.push({
+            id:id,
+            title:'Node ' + id,
+            has_children:hasChildren,
+            level: node.level + 1,
+            children:[]
+          });
+          if (hasChildren && level < 2) {
+            loadChildren(node.children[i], (level+1));
+          }
+        }
+        return node;
+      };
+    </script>
+    <title>jquery.treeselect.js</title>
+  </head>
+
+  <body>
+
+    <!-- HEADER -->
+    <div id="header_wrap" class="outer">
+        <header class="inner">
+          <a id="forkme_banner" href="https://github.com/travist/jquery.treeselect.js">Fork Me on GitHub</a>
+
+          <h1 id="project_title">jquery.treeselect.js</h1>
+          <h2 id="project_tagline">A minimalistic jQuery hierarchy select widget used for selecting hierarchy structures in a treeview format.</h2>
+
+          <section id="downloads">
+            <a class="zip_download_link" href="https://github.com/travist/jquery.treeselect.js/zipball/master">Download this project as a .zip file</a>
+            <a class="tar_download_link" href="https://github.com/travist/jquery.treeselect.js/tarball/master">Download this project as a tar.gz file</a>
+          </section>
+        </header>
+    </div>
+
+    <!-- MAIN CONTENT -->
+    <div id="main_content_wrap" class="outer">
+      <section id="main_content" class="inner">
+        <h1>jQuery TreeSelect widget</h1>
+
+<p>This widget is used for transforming a hierarchy HTML lists with
+input's into a hierarchy tree select tool.  You can also call this widget
+with a structured JSON list and it will convert it to an HTML hierarchy select
+tool of those items.  In addition, you can also use this widget as an intuitive
+tree search tool using the input_type='search' parameter.</p>
+<h2>Examples</h2>
+<script type="text/javascript">
+  $(function() {
+    $('#examples').tabs();
+  });
+</script>
+<div id="examples">
+  <ul>
+    <li><a href="treeselect.html"><span>Tree Select</span></a></li>
+    <li><a href="treesearch.html"><span>Tree Search</span></a></li>
+  </ul>
+</div>
+      </section>
+    </div>
+
+    <!-- FOOTER  -->
+    <div id="footer_wrap" class="outer">
+      <footer class="inner">
+        <p class="copyright">jquery.treeselect.js maintained by <a href="https://github.com/travist">travist</a></p>
+        <p>Published with <a href="http://pages.github.com">GitHub Pages</a></p>
+      </footer>
+    </div>
+
+
+
+  </body>
+</html>

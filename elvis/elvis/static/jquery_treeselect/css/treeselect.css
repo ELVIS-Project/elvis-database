@@ -1,0 +1,104 @@
+.treewrapper {
+  padding:3px;
+  margin-top: 2px;
+  border: 1px solid #999;
+  background-color: #fff;
+}
+
+.treeselect {
+  margin:0;
+  padding:0;
+  font:90% Arial, Helvetica, sans-serif;
+  color:#555;
+  line-height:150%;
+  text-align:left;
+}
+
+.treeselect a {
+  display: inline-block;
+  text-decoration:none;
+  color:#057fac;
+}
+
+.treeselect a:hover{
+  text-decoration:none;
+  color:#999;
+}
+
+.treeselect, .treeselect ul, .treeselect .treenode {
+  margin:0;
+  padding:0;
+  list-style:none;
+}
+
+.treeselect ul {
+  display:none;
+}
+
+.treeselect .treenode {
+  line-height: 24px;
+  border-top: 1px solid #fff;
+  border-left: 1px solid #fff;
+  border-right: 1px solid #fff;
+  position:relative;
+  width:100%;
+}
+
+.treeselect .treenode ul ul {
+  margin: 0 15px 0 15px;
+}
+
+.treeselect li.even {
+  background:#f3f3f3;
+}
+.treeselect li.odd {
+  background:#f3f3f3;
+}
+
+.treeselect .treenode input, .treeselect .treenode .treenode-no-select {
+  float:left;
+  position:absolute;
+  top:3px;
+  width:13px;
+  height:13px;
+  cursor:auto;
+  font-size:0;
+}
+
+.treeselect .treenode span.treeselect-expand {
+  float:left;
+  position:absolute;
+  top:4px;
+  width:13px;
+  height:13px;
+  cursor:auto;
+  font-size:0;
+}
+
+.treeselect .treeselect-select-all {
+  font-weight: bold;
+  margin-left: 5px;
+}
+
+.treeselect .treenode span.treeselect-expand, .treeselect .treenode span.treeselect-expand.collapsed {
+  background:url(images/collapsed.gif) no-repeat 0 0;
+}
+
+.treeselect .treenode span.treeselect-expand.expanded {
+  background:url(images/expanded.gif) no-repeat 0 0;
+}
+
+.treeselect span.treebusy, .treeselect span.treebusy.treeselect-expand.expanded, .treeselect span.treebusy.treeselect-expand.collapsed  {
+  background:url(images/throbber.gif) no-repeat 0 0;
+  width:16px;
+  height:10px;
+}
+
+.treeselect .treenode span.treeselect-expand.treebusy {
+  top:5px;
+}
+
+.treeselect-title {
+  display: inline-block;
+  margin-right: 10px;
+}
