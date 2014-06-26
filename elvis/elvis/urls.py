@@ -6,8 +6,8 @@ import os
 from rest_framework.urlpatterns import format_suffix_patterns
 from django.contrib.staticfiles.urls import staticfiles_urlpatterns
 
-# temporary views for static pages
-from elvis.views.main import home, about, queries
+# temporary views for these pages
+from elvis.views.main import home, about, queries, temp
 
 from elvis.views.auth import LoginFormView, logout_view
 from elvis.views.search import SearchView
@@ -86,6 +86,8 @@ urlpatterns += format_suffix_patterns(
         url(r'^addcomposer/$', create_composer, name="create-composer"),
         url(r'^addcorpus/$', create_corpus, name="create-corpus"),
 
+        url(r'^temp/$', temp, name='temp'),
+
         # url(r'^(?P<entity>[a-z_]+)/(?P<pk>[0-9]+)/delete/', delete_model, name="delete-model"),
 
         # url(r'^downloads/$', download_list, name="download-list"),
@@ -105,6 +107,8 @@ urlpatterns += format_suffix_patterns(
 urlpatterns += patterns('', 
     url(r'^media/(?P<path>.*)$', 'django.views.static.serve', {'document_root': settings.MEDIA_ROOT}),
     )
+
+urlpatterns += static.static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)
 
 urlpatterns += staticfiles_urlpatterns()
 
