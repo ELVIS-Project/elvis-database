@@ -14,6 +14,9 @@ def about(request):
 def queries(request):
     return render(request, "query.html", {})    
 
+def temp(request):
+    return render(request, "temp/temp.html", {})
+
 '''
 LM: Unsure of what the below code is used for, above are temporary views
 
