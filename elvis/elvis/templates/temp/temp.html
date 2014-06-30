@@ -24,10 +24,11 @@ textarea{
     <link rel="stylesheet" href="//ajax.googleapis.com/ajax/libs/jqueryui/1.8/themes/smoothness/jquery-ui.css">
     <script type='text/javascript' src='{{STATIC_URL}}jquery_treeselect/bin/jquery.treeselect.js'></script>
     <link rel='stylesheet' type='text/css' href='{{STATIC_URL}}jquery_treeselect/bin/jquery.treeselect.css' />
-    <script src="{{ STATIC_URL }}js/bootstrap.min.js"></script> 
+    
+    <!-- <script src="{{ STATIC_URL }}js/bootstrap.min.js"></script> 
 
-    <script  src="{{ STATIC_URL}}js/jquery-1.9.1.min.js"></script>
-    <script>jQuery.noConflict();</script> <!-- Hack to stop jquery breaking the page with boostrap's js -->
+    <script src="{{ STATIC_URL}}js/jquery-1.9.1.min.js"></script>
+    <script>jQuery.noConflict();</script> --><!-- Hack to stop jquery breaking the page with boostrap's js -->
 
     
 
@@ -77,15 +78,19 @@ textarea{
                         active = false;
                         $('.panel-collapse').collapse('show');
                         $('.panel-title').attr('data-toggle', '');
+                        $('.btn.move').hide();
                         //$('.panel-collapse').attr('class', 'panel-collapse collapse in');
                         $(this).text('Collapse Form');
                     } 
                     else {
                         active = true;
                         $('.panel-collapse').collapse('hide');
-                        $('.panel-title').attr('data-toggle', 'collapse');
+                        $('.panel-title').attr('data-toggle', 'collapse'); // use 'collapse' for user collapseable panels
+                        $('.btn.move').show();
                         //$('.panel-collapse').attr('class', 'panel-collapse collapse');
                         $(this).text('Expand Form');
+                        setTimeout(function(){$('#collapse-fields').collapse('show')}, 400);
+                        
                     }
                 }
             );
@@ -99,13 +104,13 @@ textarea{
                     }
                 }
             );
-           /* $('#accordion').on('show.bs.collapse', 
+            $('#accordion').on('show.bs.collapse', 
                 function(){
                     if (active) {
-                        $('#accordion .in').collapse('hide');
+                        $('.main.in').collapse('hide');
                     }
                 }
-            ); */
+            ); 
         });
 
     </script>
@@ -132,7 +137,7 @@ textarea{
 
                     <!-- Fields Panel Body-->
 
-                    <div id="collapse-fields" class="panel-collapse collapse">
+                    <div id="collapse-fields" class="panel-collapse collapse main">
                         <div class="panel-body">
 
                             <span class="help-block"> Enter information for this piece. </span>
@@ -199,7 +204,7 @@ textarea{
                             Add Tags:  
                         </h1>
                     </div>
-                    <div id="collapse-tags" class="panel-collapse collapse ">
+                    <div id="collapse-tags" class="panel-collapse collapse main">
                         <div class="panel-body">
                             <span class="help-block">Tag this piece. It is recommended to have at least: one genre tag, one instrument tag, ... </span>
                             <!-- Tags Panel Body-->
@@ -246,7 +251,7 @@ textarea{
                             Add Comments:  
                         </h1>
                     </div>
-                    <div id="collapse-comments" class="panel-collapse collapse ">
+                    <div id="collapse-comments" class="panel-collapse collapse main">
                         <div class="panel-body">
                             <h4> Comments: </h4>
                             <textarea class="form-control" rows="6"></textarea>
@@ -278,7 +283,7 @@ textarea{
                             Add Attachments:  
                         </h1>
                     </div>
-                    <div id="collapse-files" class="panel-collapse collapse ">
+                    <div id="collapse-files" class="panel-collapse collapse main">
                         <div class="panel-body">
 
                             <!-- Files Panel Body -->
@@ -314,7 +319,7 @@ textarea{
                         </h1>
                     </div>
 
-                    <div id="collapse-movements" class="panel-collapse collapse ">
+                    <div id="collapse-movements" class="panel-collapse collapse main">
                         <div class="panel-body">
 
                             <!-- Movements Panel Body -->
@@ -342,7 +347,7 @@ textarea{
                                         var heading = '<div class="panel-heading"> <h4 class="panel-title"> <a data-toggle="collapse" data-target="#collapse'+ panelCount +'"> <span class="glyphicon glyphicon-collapse-down"></span> Movement '+ panelCount +':  </a> </h4> </div>';
 
 
-                                        var panel = '<div class="panel panel-default"> '+heading+'<div id="collapse'+ panelCount +'" class="panel-collapse collapse in"> <div class="panel-body"> '+titleInput + commentInput+ tagTreeScript + tagTree +' </div> </div> </div>';
+                                        var panel = '<div class="panel panel-default"> '+heading+'<div id="collapse'+ panelCount +'" class="panel-collapse collapse in movements"> <div class="panel-body"> '+titleInput + commentInput+ tagTreeScript + tagTree +' </div> </div> </div>';
 
                                         $( "#accordion-movements" ).append(
                                             panel
