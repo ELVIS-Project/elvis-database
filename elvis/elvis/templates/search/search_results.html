@@ -5,112 +5,167 @@
 <!-- TODO faceted/filtered search -->
 {% if content.results %}
 
-  <form id="all-patch-download-form" action="/rpatchdownloads/" method="post">
-    {% csrf_token %}
-    <input type="hidden" class="this_url" name="this_url"  value="" /> 
-    <input type="hidden" class="search_query" name="search_query" id="search_query" value="" />
 
 
-    <script type="text/javascript">
-      document.getElementById("search_query").value = window.location.href;
-    </script>
-
-    <button type="submit" id="all_download" onClick="return confirm('Are you sure you want to recursively add all results to your downloads?\nWARNING: use with caution -- this may add undesired items!')" class="btn btn-danger btn-sm pull-right" >
-      Add All Query Results to Downloads <span class="glyphicon glyphicon-plus"></span> 
-    </button> 
-  </form>
-
-
-
-  <form id="list-patch-download-form" action="/rpatchdownloads/" method="post"  >
-  {% csrf_token %}
-  
-    <button type="submit" id="list_download"  class="btn btn-success btn-sm pull-middle" >
-      Add Results on Current Page to Downloads <span class="glyphicon glyphicon-plus"></span> 
-    </button> 
+<!-- Get search query to resend without pagination... for downloading everything  Items {{ content.results.start_index |add:"1" }} to {{ content.results.end_index |add:"1" }} of {{ content.results.paginator.count }} Results-->
+<div class="row">
+    <div class="col-md-9">
+        <h3> Results: </h3>
+        
+        <form id="all-patch-download-form" action="/rpatchdownloads/" method="post">
+            {% csrf_token %}
+            <input type="hidden" class="this_url" name="this_url"  value="" /> 
+            <input type="hidden" class="search_query" name="search_query" id="search_query" value="" />
 
 
-    {% for result in content.results %}
-      {% if result.type == "elvis_composer" or result.type == "elvis_piece" or result.type == "elvis_movement" or result.type == "elvis_corpus" or result.type == "elvis_tag" %}
-      <input type="hidden" name="item_id" value="{{ result.item_id }}" />
-      <input type="hidden" name="item_type" value="{{ result.type }}" />
-      {% endif %}
-    {% endfor %} 
+            <script type="text/javascript">
+              document.getElementById("search_query").value = window.location.href;
+            </script>
 
-    <input type="hidden" class="this_url" name="this_url"  value="" />
-  </form> 
-
-  
-  <p></p>
+            <button type="submit" id="all_download" onClick="return confirm('Are you sure you want to recursively add all results to your downloads?\nWARNING: use with caution -- this may add undesired items!')" class="btn btn-danger btn-sm pull-right" >
+              Add All Query Results to Downloads <span class="glyphicon glyphicon-plus"></span> 
+            </button> 
+        </form>
 
 
-    <div class="list-group" >
-    {% for result in content.results %}
-        {% if result.type == "elvis_composer" %}
-            <a href="/composer/{{ result.item_id }}" class="list-group-item">
-                <span class="label label-primary pull-right">Composer</span>
-                <h4>{% include "includes/download-badge-inc.html" with download_type="elvis_composer" download_item_id=result.item_id %}{{ result.name }}</h4>
-                <p class="list-group-item-text">{{ result.birth_date | date:"Y" }}&ndash;{{ result.death_date | date:"Y" }}</p>
-            </a>
-        {% elif result.type == "elvis_corpus" %}
-            <a href="/corpus/{{ result.item_id }}" class="list-group-item">
-                <span class="label label-primary pull-right">Corpus</span> 
-                <h4>{% include "includes/download-badge-inc.html" with download_type="elvis_corpus" download_item_id=result.item_id %}{{ result.title }}</h4>
-                <p class="list-group-item-text"> Created by {{result.creator_name}} on {{result.created}} </p>
-                <p class="list-group-item-text"> {{result.comment}} </p>
-            </a>
-        {% elif result.type == "elvis_movement" %}
-            <a href="/movement/{{ result.item_id }}" class="list-group-item">
-                <span class="label label-primary pull-right">Movement</span>
-                <h4> {% include "includes/download-badge-inc.html" with download_type="elvis_movement" download_item_id=result.item_id %} {{ result.title }}</h4>
-                <p class="list-group-item-text"> Composer: {{result.composer_name}} <br> Composed On: {{ result.date_of_composition | date:"Y" }} </p>
-                <p class="list-group-item-text"> Number of Voices: {{result.number_of_voices}} </p>
-                <p class="list-group-item-text"> Piece: {{result.parent_piece_name}} </p>
-                <p class="list-group-item-text"> Tags: {% for tag in result.tags %} {{tag}} {% endfor %}</p>
-                <p class="list-group-item-text"> {{result.comment}} </p>
-            </a>
-        {% elif result.type == "elvis_piece" %}
-            <a href="/piece/{{ result.item_id }}" class="list-group-item">
-                <span class="label label-primary pull-right">Piece</span>
-                <h4> {% include "includes/download-badge-inc.html" with download_type="elvis_piece" download_item_id=result.item_id %} {{ result.title }}</h4>
-                <p class="list-group-item-text"> Composer: {{result.composer_name}} <br> Composed On: {{ result.date_of_composition | date:"Y" }} </p>
-                <p class="list-group-item-text"> Number of Voices: {{result.number_of_voices}} </p>
-                <p class="list-group-item-text"> Tags: {% for tag in result.tags %} {{tag}} {% endfor %}</p>
-                <p class="list-group-item-text"> {{result.comment}} </p>
-            </a>
-        {% elif result.type == "elvis_comment" %}
-            <a href="/comment/{{ result.item_id }}" class="list-group-item">
-                <span class="label label-primary pull-right">Comment</span>
-                <h4>{{ result.name }}</h4>
-                <p class="list-group-item-text"> Created by {{result.creator_name}} on {{result.created}} </p>
-                <p class="list-group-item-text"> {{result.comment_text}} </p>
-            </a>
-        {% elif result.type == "elvis_tag" %}
-            <a href="/tag/{{ result.item_id }}" class="list-group-item">
-                <span class="label label-primary pull-right">Tag</span>
-                <h4> {% include "includes/download-badge-inc.html" with download_type="elvis_tag" download_item_id=result.item_id %} {{ result.name }}</h4>
-                <p class="list-group-item-text"> {{result.description}}</p>
-            </a>
-        {% endif %}
-    {% endfor %}
+        
+
+        <form id="list-patch-download-form" action="/rpatchdownloads/" method="post"  >
+          {% csrf_token %}
+          
+            <button type="submit" id="list_download"  class="btn btn-success btn-sm pull-middle" >
+              Add Results on Current Page to Downloads <span class="glyphicon glyphicon-plus"></span> 
+            </button> 
+
+
+            {% for result in content.results %}
+              {% if result.type == "elvis_composer" or result.type == "elvis_piece" or result.type == "elvis_movement" or result.type == "elvis_corpus" or result.type == "elvis_tag" %}
+              <input type="hidden" name="item_id" value="{{ result.item_id }}" />
+              <input type="hidden" name="item_type" value="{{ result.type }}" />
+              {% endif %}
+            {% endfor %} 
+
+            <input type="hidden" class="this_url" name="this_url"  value="" />
+        </form> 
+
+      
+      <p></p>
+
+
+        <div class="list-group" >
+        {% for result in content.results %}
+            {% if result.type == "elvis_composer" %}
+                <a href="/composer/{{ result.item_id }}" class="list-group-item">
+                    <span class="label label-primary pull-right">Composer</span>
+                    <h4>{% include "includes/download-badge-inc.html" with download_type="elvis_composer" download_item_id=result.item_id %}{{ result.name }}</h4>
+                    <p class="list-group-item-text">{{ result.birth_date | date:"Y" }}&ndash;{{ result.death_date | date:"Y" }}</p>
+                </a>
+            {% elif result.type == "elvis_corpus" %}
+                <a href="/corpus/{{ result.item_id }}" class="list-group-item">
+                    <span class="label label-primary pull-right">Corpus</span> 
+                    <h4>{% include "includes/download-badge-inc.html" with download_type="elvis_corpus" download_item_id=result.item_id %}{{ result.title }}</h4>
+                    <p class="list-group-item-text"> Created by {{result.creator_name}} on {{result.created}} </p>
+                    <p class="list-group-item-text"> {{result.comment}} </p>
+                </a>
+            {% elif result.type == "elvis_movement" %}
+                <a href="/movement/{{ result.item_id }}" class="list-group-item">
+                    <span class="label label-primary pull-right">Movement</span>
+                    <h4> {% include "includes/download-badge-inc.html" with download_type="elvis_movement" download_item_id=result.item_id %} {{ result.title }}</h4>
+                    <p class="list-group-item-text"> Composer: {{result.composer_name}} <br> Composed On: {{ result.date_of_composition | date:"Y" }} </p>
+                    <p class="list-group-item-text"> Number of Voices: {{result.number_of_voices}} </p>
+                    <p class="list-group-item-text"> Piece: {{result.parent_piece_name}} </p>
+                    <p class="list-group-item-text"> Tags: {% for tag in result.tags %} {{tag}} {% endfor %}</p>
+                    <p class="list-group-item-text"> {{result.comment}} </p>
+                </a>
+            {% elif result.type == "elvis_piece" %}
+                <a href="/piece/{{ result.item_id }}" class="list-group-item">
+                    <span class="label label-primary pull-right">Piece</span>
+                    <h4> {% include "includes/download-badge-inc.html" with download_type="elvis_piece" download_item_id=result.item_id %} {{ result.title }}</h4>
+                    <p class="list-group-item-text"> Composer: {{result.composer_name}} <br> Composed On: {{ result.date_of_composition | date:"Y" }} </p>
+                    <p class="list-group-item-text"> Number of Voices: {{result.number_of_voices}} </p>
+                    <p class="list-group-item-text"> Tags: {% for tag in result.tags %} {{tag}} {% endfor %}</p>
+                    <p class="list-group-item-text"> {{result.comment}} </p>
+                </a>
+            {% elif result.type == "elvis_comment" %}
+                <a href="/comment/{{ result.item_id }}" class="list-group-item">
+                    <span class="label label-primary pull-right">Comment</span>
+                    <h4>{{ result.name }}</h4>
+                    <p class="list-group-item-text"> Created by {{result.creator_name}} on {{result.created}} </p>
+                    <p class="list-group-item-text"> {{result.comment_text}} </p>
+                </a>
+            {% elif result.type == "elvis_tag" %}
+                <a href="/tag/{{ result.item_id }}" class="list-group-item">
+                    <span class="label label-primary pull-right">Tag</span>
+                    <h4> {% include "includes/download-badge-inc.html" with download_type="elvis_tag" download_item_id=result.item_id %} {{ result.name }}</h4>
+                    <p class="list-group-item-text"> {{result.description}}</p>
+                </a>
+            {% endif %}
+        {% endfor %}
+        </div>
+
+        <div class="pager">
+            <span class="step-links">
+                {% if content.results.has_previous %}
+                    <a href="?{{ content.current_query }}&page={{ content.results.previous_page_number }}">&larr; Previous Page</a>
+                {% endif %}
+
+                <span class="current">
+                  | Results {{ content.results.start_index |add:"1" }} to {{ content.results.end_index |add:"1" }} of {{ content.results.paginator.count }} | Page {{ content.results.number }} of {{ content.results.paginator.num_pages }} |.
+                </span>
+
+                {% if content.results.has_next %}
+                    <a href="?{{ content.current_query }}&page={{ content.results.next_page_number }}">Next Page &rarr;</a>
+                {% endif %}
+            </span>
+        </div>
+
+        
     </div>
+
+    <div class="col-md-3">
+        <h2>Search Facets</h2>
+        {% for name, facets in content.facets.facet_fields.items %}
+        <div class="row">
+            <h4>{{ name }}</h4>
+            <ul>
+                {% for facet, count in facets.items %}
+                    <li><a class="facet-link" href="#" data-facet-name="{{ name }}" data-facet-value="{{ facet }}">{{ facet }} </a> ({{ count }})</li>
+                {% endfor %}
+            </ul>
+        </div>
+        {% endfor %}
+        <script type="text/javascript">
+            // this code manages what happens when a facet link is clicked.
+            $(".facet-link").on('click', function(event)
+            {
+                var qstr = window.location.search.replace("?", "");
+                var qstr_params = $.parseParams(qstr);
+
+                var facetName = $(this).data('facet-name');
+                var facetValue = $(this).data('facet-value');
+                if (!(facetName in qstr_params))
+                {
+                    var facetQ = facetName + "=" + facetValue;
+                    if (qstr != "")
+                    {
+                        // this makes sure that we either append the 
+                        // querystring to an existing query string
+                        // (with a "&") or we just append it to the
+                        // existing URL.
+                        facetQ = "&" + facetQ;
+                    }
+
+                    window.location.search = qstr + facetQ;
+                }
+                event.preventDefault();
+            });
+        </script>
+    </div>
+
+</div>
 
     
-    <div class="pager">
-        <span class="step-links">
-            {% if content.results.has_previous %}
-                <a href="?{{ content.current_query }}&page={{ content.results.previous_page_number }}">&larr; Previous Page</a>
-            {% endif %}
-
-            <span class="current">
-                Page {{ content.results.number }} of {{ content.results.paginator.num_pages }}.
-            </span>
-
-            {% if content.results.has_next %}
-                <a href="?{{ content.current_query }}&page={{ content.results.next_page_number }}">Next Page &rarr;</a>
-            {% endif %}
-        </span>
-    </div>
+    
 
 {% else %}
     <h5>No Results found.</h5>
