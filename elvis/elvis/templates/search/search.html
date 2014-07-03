@@ -33,7 +33,7 @@
     
     $(function(){
         $('#asearch-submit').click(function(){
-            $('.panel-collapse').collapse('hide');
+            //$('.panel-collapse').collapse('hide');
             $(':input').each(function(){
                 if($(this).val() == "" && $(this).attr('name')!= "q"){
                     $(this).attr('disabled', true);
@@ -48,7 +48,7 @@
 
     $(function(){
         $('#gsearch-submit').click(function(){
-            $('.panel-collapse').collapse('hide');
+            //$('.panel-collapse').collapse('hide');
             $(':input').each(function(){
                 if($(this).val() == "" && $(this).attr('name')!= "q"){
                     $(this).attr('disabled', true);
@@ -87,7 +87,7 @@
         <div class="tab-pane fade in active" id="gsearch">
         
             <!-- Accordion -->
-            <div class="panel-group" id="accordion">
+            <div class="panel-group" id="accordion-gsearch">
 
                 <!-- Search Box Panel -->
                   <div class="panel panel-default">
@@ -98,7 +98,7 @@
                         </h1>
                     </div>
 
-                    <div id="collapse-search" class="panel-collapse collapse {% if not content.results %} in {% endif %}">
+                    <div id="collapse-search" class="panel-collapse collapse in {% if not content.results %} in {% endif %}">
                         <div class="panel-body">
                             <form id="general-search-form" action="/search" method="get">
                                 <!-- Query Entry -->
@@ -144,7 +144,7 @@
                             Toggle Advanced Search: 
                         </h1>
                     </div>
-                    <div id="collapse-asearch" class="panel-collapse collapse {% if not content.current_query %} in {% endif %}">
+                    <div id="collapse-asearch" class="panel-collapse collapse in {% if not content.current_query %} in {% endif %}">
                         <div class="panel-body">
 
                         <form id="advanced-search-form" action="/search" method="get">
@@ -267,7 +267,7 @@
                         </h1>
                     </div>
 
-                    <div id="collapse-info" class="panel-collapse collapse {% if not content.results %} in {% endif %}">
+                    <div id="collapse-info" class="panel-collapse collapse in {% if not content.results %} in {% endif %}">
                         <div class="panel-body">
                         <h4> General Searching </h4>
                         <p> A basic, Google-esque search. Results are based on occurrences of the search terms in the title/name, composer, parent piece, and tag fields of an item. Items returned may be any type (e.g. a composer, a piece, or a corpus). Use this if you want to quickly look for the most relevant items - the database will order results based on relevancy. </p>

@@ -5,6 +5,14 @@
 <!-- TODO faceted/filtered search -->
 {% if content.results %}
 
+<style type="text/css">
+
+.panel-body.facets {
+   overflow-y: scroll;
+   max-height: 160px;
+}
+
+</style>
 
 
 <!-- Get search query to resend without pagination... for downloading everything  Items {{ content.results.start_index |add:"1" }} to {{ content.results.end_index |add:"1" }} of {{ content.results.paginator.count }} Results-->
@@ -22,7 +30,7 @@
               document.getElementById("search_query").value = window.location.href;
             </script>
 
-            <button type="submit" id="all_download" onClick="return confirm('Are you sure you want to recursively add all results to your downloads?\nWARNING: use with caution -- this may add undesired items!')" class="btn btn-danger btn-sm pull-right" >
+            <button type="submit" id="all_download" onClick="return confirm('Are you sure you want to recursively add all results to your downloads?\nWARNING: use with caution -- this may add undesired items!')" class="btn btn-success btn-sm pull-right" >
               Add All Query Results to Downloads <span class="glyphicon glyphicon-plus"></span> 
             </button> 
         </form>
@@ -123,38 +131,107 @@
     </div>
 
     <div class="col-md-3">
-        <h2>Search Facets</h2>
-        {% for name, facets in content.facets.facet_fields.items %}
-        <div class="row">
-            <h4>{{ name }}</h4>
-            <ul>
-                {% for facet, count in facets.items %}
-                    <li><a class="facet-link" href="#" data-facet-name="{{ name }}" data-facet-value="{{ facet }}">{{ facet }} </a> ({{ count }})</li>
-                {% endfor %}
-            </ul>
+
+
+        <h3>Refine Your Search:</h3> 
+        
+        <button id="collapse-init" class="btn btn-primary btn-sm">
+            Hide All Facets
+        </button>
+
+        <p></p>
+
+        <script type="text/javascript">
+            $(function(){
+                var active = true;
+                $('#collapse-init').click(
+                    // Importing the bootstrap js required for collapsing disables the panels; see below for non-bootstrap specific js
+                    function(){
+                        if (active) {
+                            active = false;
+                            $('.panel-collapse.facets').collapse('show');
+                            //$('.panel-title').attr('data-toggle', '');
+                            //$('.panel-collapse').attr('class', 'panel-collapse collapse in');
+                            $(this).text('Hide All Facets');
+                        } 
+                        else {
+                            active = true;
+                            $('.panel-collapse.facets').collapse('hide');
+                            //$('.panel-title').attr('data-toggle', 'collapse'); // use 'collapse' for user collapseable panels
+                            //$('.panel-collapse').attr('class', 'panel-collapse collapse');
+                            $(this).text('Show All Facets');
+                        }
+                    }
+                );
+            });
+        </script>
+
+
+        <div class="panel-group" id="accordion-facets">  
+            <!-- {% for name, facets in content.facets.facet_fields.items %}
+            <div class="row facets">
+                <h4>{{ name }}</h4>
+                <ul>
+                    {% for facet, count in facets.items %}
+                        <li><a class="facet-link" href="#" data-facet-name="{{ name }}" data-facet-value="{{ facet }}">{{ facet }} </a> ({{ count }})</li>
+                    {% endfor %}
+                </ul>
+            </div>
+            {% endfor %} -->
+            {% for name, facets in content.facets.facet_fields.items %}
+            {% if facets.items %}
+            <div class="panel panel-default">
+                    <div class="panel-heading">
+                        <h1 class="panel-title" data-toggle="collapse" data-target="#collapse-{{name}}" > 
+                            {{ name }}  
+                        </h1>
+                    </div>
+
+                    <div id="collapse-{{name}}" class="panel-collapse collapse facets in">
+                        <div class="panel-body facets">
+                            <ul>
+                                {% for facet, count in facets.items %}
+                                    <li><a class="facet-link" href="" data-facet-name="{{ name }}" data-facet-value="{{ facet }}">{{ facet }} </a> ({{ count }})</li>
+                                {% endfor %}
+                            </ul>
+                        </div>
+                    </div>
+            </div>
+            {% endif %}
+            {% endfor %}
+
         </div>
-        {% endfor %}
         <script type="text/javascript">
             // this code manages what happens when a facet link is clicked.
             $(".facet-link").on('click', function(event)
             {
+                
                 var qstr = window.location.search.replace("?", "");
                 var qstr_params = $.parseParams(qstr);
-
-                var facetName = $(this).data('facet-name');
+                var facetName = $(this).data('facet-name');          
                 var facetValue = $(this).data('facet-value');
                 if (!(facetName in qstr_params))
                 {
-                    var facetQ = facetName + "=" + facetValue;
+                    var facetQ = facetName + "=" + facetValue ;
                     if (qstr != "")
                     {
-                        // this makes sure that we either append the 
-                        // querystring to an existing query string
-                        // (with a "&") or we just append it to the
-                        // existing URL.
                         facetQ = "&" + facetQ;
                     }
+                    window.location.search = qstr + facetQ;
+                }
+                else if (qstr_params[facetName].indexOf(facetValue) == -1)
+                {
+                    //qstr.charAt(0) = "";
+                    //qstr.charAt(str.length-1) = "";
+                    //qstr = qstr.replace(qstr_params[facetName], encodeURI("(" + qstr_params[facetName] + " AND " + facetValue + ")"));
+                    //qstr = qstr.replace(qstr_params[facetName], qstr_params[facetName] + " AND " + facetValue );
+                    //window.location.search = qstr;
 
+                    var facetQ = facetName + "=" + facetValue ;
+                    if (qstr != "")
+                    {
+                        facetQ = "&" + facetQ;
+                    }
                     window.location.search = qstr + facetQ;
                 }
                 event.preventDefault();

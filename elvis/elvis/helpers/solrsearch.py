@@ -45,7 +45,8 @@ class SolrSearch(object):
         facet_params = {
             'facet': 'true',
             'facet_field': facet_fields,
-            'facet_mincount': 1
+            'facet_mincount': 1,
+            'facet_sort' : 'count',
         }
         self.solr_params.update(facet_params)
         self.solr_params.update(kwargs)
@@ -79,7 +80,6 @@ class SolrSearch(object):
         voice_filt_query = ""
         from_date = "" 
         to_date = ""
-        print qdict.lists()
         for k, v in qdict.lists():
 
             # LM: modified from just self.parsed_request[k] = v to cut out nonsensical page requests to solr
@@ -97,7 +97,6 @@ class SolrSearch(object):
 
             # LM: Elif for Type filtration
             elif k == 'typefilt':
-                print (k, v)
                 filter_query = "type: ("  + string.join((v), ' OR ') + ") "
 
             # LM: elif for sorting
@@ -142,13 +141,16 @@ class SolrSearch(object):
                     v = "*"
                 self.parsed_request[k] = v
 
+            else:
+                self.parsed_request[k] = v
+
+
+
 
         self.solr_params.update({'sort': sort_query})
 
 
-        if filter_query == "":
-            pass
-        else:
+        if filter_query != "":
             self.solr_params['fq'] = "( " + filter_query + " )"
 
         if date_filt_query == "":
@@ -223,7 +225,8 @@ class SolrSearch(object):
                     if v[0] != u"":
                         arr.insert(0, u"{0}".format(v[0]))
                 else:
-                    arr.append(u"{0}:({1})".format(k, " OR ".join(["\"{0}\"".format(s) for s in v if v is not None])))
+                    # was OR by default
+                    arr.append(u"{0}:({1})".format(k, " AND ".join(["\"{0}\"".format(s) for s in v if v is not None])))
                 # LM: Debugging print
                 #print('arr', arr)
             self.prepared_query = u" AND ".join(arr)            
