@@ -104,7 +104,7 @@ textarea{
                     }
                 }
             );
-            $('#accordion').on('show.bs.collapse', 
+            $('.panel-title:not(".movements")').on('click', 
                 function(){
                     if (active) {
                         $('.main.in').collapse('hide');
@@ -140,13 +140,13 @@ textarea{
                     <div id="collapse-fields" class="panel-collapse collapse main">
                         <div class="panel-body">
 
-                            <span class="help-block"> Enter information for this piece. </span>
+                            <span class="help-block"> Enter information for this piece... Lorem ipsum dolor sit amet, consectetur adipiscing elit. Vestibulum semper arcu quis sollicitudin rhoncus. Aliquam eu sagittis mauris. Sed facilisis lobortis orci, a sodales eros hendrerit at. Quisque bibendum odio id nulla iaculis, non scelerisque purus posuere. Suspendisse nisl urna, aliquam pellentesque justo in, malesuada tincidunt lorem.  </span>
 
                             <div class="input-group input-group-lg">
                                 <span class="input-group-addon lg">Piece Title</span>
                                 <input type="text" class="form-control" placeholder="E.g.: Messe de Nostre Dame">
                             </div>
-
+                            <span class="help-block"> Suspendisse pellentesque auctor nisi, id suscipit nulla feugiat a. Maecenas tincidunt elit ac fringilla dictum. Maecenas lobortis adipiscing dapibus. Quisque placerat volutpat aliquet. </span>
                             <p></p>
 
                             <div class="input-group input-group-lg">
@@ -178,6 +178,7 @@ textarea{
                                     </div>
                                 </div>
                             </div>
+                            <span class="help-block"> Ut pretium risus vel mauris eleifend consectetur. Nunc nunc libero, lacinia id convallis ut, lobortis vel neque. Proin eu placerat eros. Pellentesque massa sem, rutrum eu justo vitae, venenatis imperdiet nisl. Vestibulum pharetra, ligula et varius eleifend, arcu lacus sagittis lorem, ac mollis sem mi malesuada tortor. </span>
                             <p></p>
 
                             <div class="row">
@@ -206,7 +207,7 @@ textarea{
                     </div>
                     <div id="collapse-tags" class="panel-collapse collapse main">
                         <div class="panel-body">
-                            <span class="help-block">Tag this piece. It is recommended to have at least: one genre tag, one instrument tag, ... </span>
+                            <span class="help-block">Tag this piece. It is recommended to have at least: one genre tag, one instrument tag, ... Ut pretium risus vel mauris eleifend consectetur. Nunc nunc libero, lacinia id convallis ut, lobortis vel neque. Proin eu placerat eros. Pellentesque massa sem, rutrum eu justo vitae, venenatis imperdiet nisl. Vestibulum pharetra, ligula et varius eleifend, arcu lacus sagittis lorem, ac mollis sem mi malesuada tortor. </span>
                             <!-- Tags Panel Body-->
 
                              <script type="text/javascript">
@@ -223,6 +224,8 @@ textarea{
                                     <li><a href="{{STATIC_URL}}jquery_treeselect/treesearch_elvis.html"><span>Tree Search</span></a></li>
                                 </ul>
                             </div>
+
+                            <span class="help-block"> Proin vel ullamcorper mauris, sed dignissim libero. Aliquam ullamcorper purus id tincidunt lacinia. Cras eget congue magna. Fusce commodo mollis tortor non ultrices. Etiam mollis id nunc quis dignissim. Praesent cursus odio non lacinia tincidunt. </span>
 
                             <p></p>
                             <div class="row">
@@ -256,6 +259,8 @@ textarea{
                             <h4> Comments: </h4>
                             <textarea class="form-control" rows="6"></textarea>
 
+                            <span class="help-block"> Proin vel ullamcorper mauris, sed dignissim libero. Aliquam ullamcorper purus id tincidunt lacinia. Cras eget congue magna. Fusce commodo mollis tortor non ultrices. Etiam mollis id nunc quis dignissim. Praesent cursus odio non lacinia tincidunt. </span>
+
                             <p></p>
                             <div class="row">
                                 <div class="col-md-6">
@@ -288,7 +293,7 @@ textarea{
 
                             <!-- Files Panel Body -->
 
-                            <span class="help-block">Attach the files for this piece. </span>
+                            <span class="help-block">Attach the files for this piece...Proin vel ullamcorper mauris, sed dignissim libero. Aliquam ullamcorper purus id tincidunt lacinia. Cras eget congue magna. Fusce commodo mollis tortor non ultrices. Etiam mollis id nunc quis dignissim. Praesent cursus odio non lacinia tincidunt.</span>
                             <input name="upload[]" id="upload" type="file" multiple="multiple" onchange="displayFileList();"/>
 
                             <p></p>
@@ -323,8 +328,9 @@ textarea{
                         <div class="panel-body">
 
                             <!-- Movements Panel Body -->
+                            <span class="help-block"> Vivamus quis elit a eros lacinia tincidunt. Suspendisse aliquet neque ut euismod lacinia. Nullam sed metus in diam vulputate eleifend. Sed accumsan velit non nisi sollicitudin eleifend. Proin consectetur ante leo, eget aliquet felis sollicitudin in. Aenean convallis orci in euismod malesuada. </span>
 
-                            <h4><button type="button" class="btn btn-primary btn-xs" id="add-mvt" style="display: inline;">
+                            <h4><button type="button" class="btn btn-primary btn-sm" id="add-mvt" style="display: inline;">
                                 Add Movement <span class="glyphicon glyphicon-plus"></span> 
                             </button></h4> 
 
@@ -344,7 +350,7 @@ textarea{
 
                                         var tagTreeScript = '<script type="text/javascript">$(function() {$("#example'+ panelCount +'").tabs();});<\/script>';
 
-                                        var heading = '<div class="panel-heading"> <h4 class="panel-title"> <a data-toggle="collapse" data-target="#collapse'+ panelCount +'"> <span class="glyphicon glyphicon-collapse-down"></span> Movement '+ panelCount +':  </a> </h4> </div>';
+                                        var heading = '<div class="panel-heading"> <h4 class="panel-title movements" data-toggle="collapse" data-target="#collapse'+ panelCount +'"> <span class="glyphicon glyphicon-collapse-down"></span> Movement '+ panelCount +':  </h4> </div>';
 
 
                                         var panel = '<div class="panel panel-default"> '+heading+'<div id="collapse'+ panelCount +'" class="panel-collapse collapse in movements"> <div class="panel-body"> '+titleInput + commentInput+ tagTreeScript + tagTree +' </div> </div> </div>';
@@ -358,9 +364,10 @@ textarea{
                             });
                             </script> 
 
-                            <div class="panel-group" id="accordion-movements">
+                            <div class="panel-group movements" id="accordion-movements">
                             </div>
 
+                            <span class="help-block"> Phasellus ipsum enim, cursus id enim quis, pharetra imperdiet dolor. Nunc luctus sit amet tellus sed dapibus. Praesent quis tincidunt mi. Praesent lorem purus, vestibulum at eros vel, venenatis lobortis libero. Vestibulum gravida nulla in porta lobortis. Ut rutrum mauris non lectus feugiat imperdiet. Duis in faucibus felis, id molestie augue. </span>
 
                             <p></p>
                             <div class="row">

@@ -21,6 +21,7 @@
         <script src="{{ STATIC_URL }}js/holder.js"></script>
         <script src="{{ STATIC_URL }}js/plugins.js"></script>
         <script src="{{ STATIC_URL }}js/elvis-download-manager.js"></script>
+        <script src="{{ STATIC_URL }}js/scripts.js"></script>
 
         <script type="text/javascript">
             $(document).ready(function ($) {
@@ -51,6 +52,7 @@
                             <li><a href="/composers">Composers</a></li>
                         </ul>
                     </li>
+                    <li><a href="/temp">Temp Uploads</a></li>   
                 </ul>
                 <ul class="nav navbar-nav navbar-right">
                 {% if user.is_authenticated %}
