@@ -7,6 +7,8 @@ from elvis.models.corpus import Corpus
 from elvis.models.piece import Piece
 from django.contrib.auth.models import User
 
+import os
+from django.conf import settings
 
 class ComposerMovementSerializer(serializers.HyperlinkedModelSerializer):
     class Meta:
@@ -21,10 +23,17 @@ class TagMovementSerializer(serializers.HyperlinkedModelSerializer):
 class AttachmentMovementSerializer(serializers.HyperlinkedModelSerializer):
     # LM: Must add this to serializers explicitly, otherwise will raise KeyError
     file_name = serializers.Field()
+    attachment = serializers.SerializerMethodField("retrieve_attachment")
 
     class Meta:
         model = Attachment
-        fields = ("file_name", "id")
+        fields = ("file_name", "id", "attachment")
+
+    def retrieve_attachment(self, obj):
+        request = self.context.get('request', None)
+        path = os.path.relpath(obj.attachment.path, settings.MEDIA_ROOT)
+        url = request.build_absolute_uri(os.path.join(settings.MEDIA_URL, path))
+        return url
 
 class CorpusMovementSerializer(serializers.HyperlinkedModelSerializer):
     class Meta:

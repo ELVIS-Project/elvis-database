@@ -11,7 +11,6 @@ from django.conf import settings
 class AttachmentSerializer(serializers.HyperlinkedModelSerializer):
     attachment = serializers.SerializerMethodField("retrieve_attachment")
     file_name = serializers.Field()
-    attachment_path = serializers.Field()
     
     class Meta:
         model = Attachment
