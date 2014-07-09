@@ -143,7 +143,21 @@ SEARCH_FILTERS_DICT = {
     'ft': 'elvis_tag',
     'fu': 'elvis_user',
 }
-
+FACET_NAMES = {
+    'type': "Result Type",
+    'composer_name': "Composer",
+    'parent_corpus_name': "Corpus",
+    "number_of_voices": "Number of Voices",
+    "tags": "Tags",
+}
+TYPE_NAMES={
+    'elvis_user': "User",
+    'elvis_tag': "Tag",
+    'elvis_corpus': "Corpus",
+    'elvis_movement': "Movement",
+    'elvis_piece': "Piece",
+    'elvis_composer': "Composer",
+}
 
 # Celery Settings
 # ===============

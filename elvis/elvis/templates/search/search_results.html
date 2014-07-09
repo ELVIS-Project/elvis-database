@@ -14,6 +14,7 @@
 
 </style>
 
+{% load filter_methods %}
 
 <!-- Get search query to resend without pagination... for downloading everything  Items {{ content.results.start_index |add:"1" }} to {{ content.results.end_index |add:"1" }} of {{ content.results.paginator.count }} Results-->
 <div class="row">
@@ -183,7 +184,7 @@
             <div class="panel panel-default">
                     <div class="panel-heading">
                         <h1 class="panel-title" data-toggle="collapse" data-target="#collapse-{{name}}" > 
-                            {{ name }}  
+                            {{ content.FACET_NAMES|get_value:name }}  
                         </h1>
                     </div>
 
@@ -191,7 +192,7 @@
                         <div class="panel-body facets">
                             <ul>
                                 {% for facet, count in facets.items %}
-                                    <li><a class="facet-link" href="" data-facet-name="{{ name }}" data-facet-value="{{ facet }}">{{ facet }} </a> ({{ count }})</li>
+                                    <li><a class="facet-link" href="" data-facet-name="{{ name }}" data-facet-value="{{ facet }}"> {% if name == 'type' %} {{ content.TYPE_NAMES|get_value:facet }} {% else %} {{ facet }} {% endif %} </a> ({{ count }})</li>
                                 {% endfor %}
                             </ul>
                         </div>

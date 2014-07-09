@@ -12,6 +12,8 @@ from elvis.helpers import paginate
 
 from django.http import QueryDict
 
+from django.conf import settings
+
 class SearchViewHTMLRenderer(CustomHTMLRenderer):
     template_name = "search/search.html"
 
@@ -19,6 +21,8 @@ class SearchViewHTMLRenderer(CustomHTMLRenderer):
 class SearchView(APIView):
     serializer_class = SearchSerializer
     renderer_classes = (JSONRenderer, JSONPRenderer, SearchViewHTMLRenderer)
+
+
 
     def get(self, request, *args, **kwargs):
         #querydict = QueryDict("q=%s"%request.GET.get('q'))
@@ -96,9 +100,10 @@ class SearchView(APIView):
         #print(query_minus_page, type(query_minus_page))
 
 
-        result = {'results': paged_results, 'facets': facets.facet_counts, 'current_query': query_minus_page}
+        result = {'results': paged_results, 'facets': facets.facet_counts, 'current_query': query_minus_page, 'FACET_NAMES': settings.FACET_NAMES, 'TYPE_NAMES': settings.TYPE_NAMES}
         #print('paged_results', paged_results, type(paged_results))
         #print('result', result)
+        print(result.get('FACET_NAMES'))
 
         # LM: Now cast to REST framework's Response, which is simply the result with the status added to it
         response = Response(result, status=status.HTTP_200_OK)
