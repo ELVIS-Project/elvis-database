@@ -32,9 +32,9 @@ class SolrSearch(object):
         self._parse_request()
         self._prepare_query()
         # LM: Debugging prints
-        print('parsed_request', self.parsed_request, type(self.parsed_request))
-        print('prepared_query', self.prepared_query, type(self.prepared_query))
-        print('solr_params', self.solr_params, type(self.solr_params))
+        #print('parsed_request', self.parsed_request, type(self.parsed_request))
+        #print('prepared_query', self.prepared_query, type(self.prepared_query))
+        #print('solr_params', self.solr_params, type(self.solr_params))
 
     def search(self, **kwargs):
         self.solr_params.update(kwargs)
@@ -77,6 +77,7 @@ class SolrSearch(object):
         tag_filt_query = ""
         date_filt_query = ""
         name_filt_query = ""
+        title_filt_query = ""
         voice_filt_query = ""
         from_date = "" 
         to_date = ""
@@ -107,14 +108,15 @@ class SolrSearch(object):
             elif k == 'namefilt':
                 name_filt_query = "name_general: (" + string.join(v) +") "
 
+            elif k == 'titlefilt':
+                title_filt_query = "title_searchable: (" + string.join(v) +") "
+
             # LM: elif for Date filtration
-            elif k == 'datefiltf':
-                if qdict.get('datefiltf') == "" and qdict.get('datefiltt') == "":
-                    pass
-                elif qdict.get('datefiltf') == "":
+            elif k == 'datefiltf' or k == 'datefiltt':
+                if qdict.get('datefiltf') == "" or qdict.get('datefiltf') is None:
                     from_date = " date_general: [ * TO "
                     to_date = u"{0}-12-31T23:59:59Z ]".format(qdict.get('datefiltt'))
-                elif qdict.get('datefiltt') == "":
+                elif qdict.get('datefiltt') == "" or qdict.get('datefiltt') is None:
                     from_date =  u" date_general: [ {0}-00-00T00:00:00Z TO ".format(qdict.get('datefiltf'))
                     to_date = "* ]"
                 else:
@@ -173,6 +175,13 @@ class SolrSearch(object):
             self.solr_params['fq'] = "( " + name_filt_query + " )"
         else:
             self.solr_params['fq'] += " AND (" + name_filt_query + " )"
+
+        if title_filt_query == "":
+            pass
+        elif not 'fq' in self.solr_params:
+            self.solr_params['fq'] = "( " + title_filt_query + " )"
+        else:
+            self.solr_params['fq'] += " AND (" + title_filt_query + " )"
 
         if voice_filt_query == "":
             pass

@@ -30,7 +30,7 @@
             });
         });
     }); */
-    
+        
     $(function(){
         $('#asearch-submit').click(function(){
             //$('.panel-collapse').collapse('hide');
@@ -60,6 +60,33 @@
             setTimeout(function(){$('#general-search-form').submit()}, 300);
         });
     })
+
+    $(function(){
+        var qstr = window.location.search.replace("?", "");
+        var qstr_params = $.parseParams(qstr);
+        for (var key in qstr_params){
+            $('[name='+key+']').val(qstr_params[key]);
+            if(key == 'typefilt' || key=='type'){
+                $("[id='"+qstr_params[key]+"']").attr('checked', true);
+                //$('[type=checkbox][value="'+qstr_params[key]+'"]').attr('checked',true);
+            }
+        }
+    })
+    //onfocus="this.placeholder = ''" onblur="this.placeholder = 'E.g.: Agnus Dei...'"
+    $(function(){
+        $(':text').each(function{
+            var placeholder = $(this).attr('placeholder');
+            $(this).attr('placeholder-perm', placeholder);
+            alert($this.attr('placeholder-perm'));
+        })
+        $(':text').focus(function() {
+            $(this).attr('placeholder', "");
+        });
+        $(':text').blur(function() {
+            var placeholderPerm = $(this).attr('placeholder-perm');
+            $(this).attr('placeholder-perm', placeholderPerm);
+        });
+    })
     </script>
 </head>
 
@@ -71,7 +98,7 @@
 
         <ul class="nav nav-tabs nav-justified" >
 
-            <li class="active " ><a href="#gsearch" data-toggle="tab">General Search</a></li>
+            <li class="active"><a href="#gsearch" data-toggle="tab">General Search</a></li>
 
             <li class=""><a href="#asearch" data-toggle="tab">Advanced Search</a></li>
 
@@ -113,7 +140,7 @@
                                             </button> -->
 
                                             <div class="input-group input-group-lg col-md-8 col-md-offset-2">
-                                              <input type="text" class="form-control" name="q" placeholder="Search Query... &nbsp; &nbsp; &nbsp;E.g.: Bach Chorale Gott" style="text-align:center; ">
+                                              <input type="text" class="form-control" name="q" placeholder="Search Query... &nbsp; &nbsp; &nbsp;E.g.: Bach Chorale Gott" onfocus="this.placeholder = ''" onblur="this.placeholder = 'E.g.: Agnus Dei...'" style="text-align:center; ">
                                               <span class="input-group-btn">
                                                 <button class="btn btn-default submit" type="button" id="gsearch-submit"> Search <span class="glyphicon glyphicon-search"></span> </button>
                                               </span>
@@ -150,103 +177,114 @@
                         <form id="advanced-search-form" action="/search" method="get">
                         
 
-                        <div class="form-group">
-                          
-                          <!-- Submit Button -->
-                            <h4> Search Query: </h4> 
+                            <div class="form-group">
+                              
+                              <!-- Submit Button -->
+                                <h4> General Search Query: </h4> 
 
-                                <div class="col-sm-12">
-                                    <input type="text" name="q" class="search-input" placeholder="E.g.: Byrd Hornpipe" style="float: none; margin: 0 auto;"/>                              
-                                    <button type="button" class="btn btn-default btn-sm submit" id="asearch-submit">
-                                      Search
-                                      <span class="glyphicon glyphicon-search"></span> 
+                                    <div class="col-sm-12">
+                                        <input type="text" name="q" class="search-input" placeholder="E.g.: Byrd Hornpipe" style="float: none; margin: 0 auto;"/>                              
+                                    </div>
+
+                            <!-- Name Filter -->
+                                <h4> Limit by Title: </h4>
+                                    <div class = "col-sm-12">
+                                      <input type="text" name="titlefilt" placeholder="E.g.: Agnus Dei...">
+                                      <div class="help-block">Will find results with all entered search terms (use "" to force ordered search) in their title or name, depending on result type filters chosen above. </div>
+                                    </div> 
+
+                            <!-- Name Filter -->
+                                <h4> Limit by Composer Name: </h4>
+                                    <div class = "col-sm-12">
+                                      <input type="text" name="namefilt" placeholder="E.g.: Jacob Obrecht...">
+                                      <div class="help-block">Will find both composers matching this query and pieces/movements composed by composers matching this query. </div>
+                                    </div> 
+
+
+                            <!-- Tag Filter -->
+                                <h4> Limit by Tags: </h4>
+                                    <div class = "col-sm-12">
+                                      <input type="text" name="tagfilt" placeholder="Tag1 Tag2 ...">
+                                    </div> 
+
+
+                            <!-- Voice Filter -->
+                                <h4> Limit by Number of Voices: </h4>
+                                    <div class = "col-sm-12">
+                                      <input type="text" name="voicefilt" placeholder="E.g.: 4" maxlength="2">
+                                    </div> 
+
+                            <!-- Date Filter -->
+                                <h4> Limit by Date: </h4>
+                                    <div class = "col-sm-12">
+                                      <input type="text" name="datefiltf" placeholder="From: (YYYY)" maxlength="4">
+                                      <input type="text" name="datefiltt" placeholder="To: (YYYY)" maxlength="4">
+                                      <div class="help-block">Will filter by birth or composition date, depending on result type filters chosen above.</div>
+                                    </div> 
+
+                           <!-- Checkbox Filters -->
+                                <h4> Limit by Result Type: </h4>
+                                  <div class="col-sm-12">
+                                      <div class="col-sm-4">
+                                          <div class="checkbox">
+                                            <label>
+                                              <input type="checkbox" name="typefilt" id="elvis_composer" value="elvis_composer"> Composers
+                                            </label>
+                                          </div>
+                                          <div class="checkbox">
+                                            <label>
+                                              <input type="checkbox" name="typefilt" id="elvis_piece" value="elvis_piece"> Pieces
+                                            </label>
+                                          </div>
+                                      </div>
+                                      <div class="col-sm-4">
+                                          <div class="checkbox">
+                                            <label>
+                                              <input type="checkbox" name="typefilt" id="elvis_movement" value="elvis_movement"> Movements
+                                            </label>
+                                          </div>
+                                          <div class="checkbox">
+                                            <label>
+                                              <input type="checkbox" name="typefilt" id="elvis_corpus" value="elvis_corpus"> Corpora
+                                            </label>
+                                          </div>
+                                      </div>
+                                      <div class="col-sm-4">
+                                          <div class="checkbox">
+                                            <label>
+                                              <input type="checkbox" name="typefilt" id="elvis_tag" value="elvis_tag"> Tags
+                                            </label>
+                                          </div>
+                                          <div class="checkbox">
+                                            <label>
+                                              <input type="checkbox" name="typefilt" id="elvis_user" value="elvis_user"> Users
+                                            </label>
+                                          </div>
+                                      </div>
+                                    </div>
+
+                            <!-- Sorting --> 
+                                <h4> Sort by: </h4>
+                                    <div class="col-sm-12">
+                                          <select name="sortby">
+                                          <option value=""> Default (Type) </option>
+                                          <option value="name_sort desc"> Alphabetical &#9650; </option>
+                                          <option value="name_sort asc"> Alphabetical &#9660; </option>
+                                          <option value="date_general desc"> Date &#9650; </option>
+                                          <option value="date_general asc"> Date &#9660;</option>
+                                          </select>                   
+                                      </div>                 
+                                  <p></p>
+                            </div>
+
+                            <!-- Submit -->
+                                <div class="col-md-2 col-md-offset-5">
+                                    <button type="button" class="btn btn-default btn-xl submit" id="asearch-submit" >
+                                        Search
+                                        <span class="glyphicon glyphicon-search"></span> 
                                     </button>
-                                </div>
-
-                          <!-- Checkbox Filters -->
-                            <h4> Limit by Result Type: </h4>
-                              <div class="col-sm-12">
-                                  <div class="col-sm-4">
-                                      <div class="checkbox">
-                                        <label>
-                                          <input type="checkbox" name="typefilt" value="elvis_composer"> Composers
-                                        </label>
-                                      </div>
-                                      <div class="checkbox">
-                                        <label>
-                                          <input type="checkbox" name="typefilt" value="elvis_piece"> Pieces
-                                        </label>
-                                      </div>
-                                  </div>
-                                  <div class="col-sm-4">
-                                      <div class="checkbox">
-                                        <label>
-                                          <input type="checkbox" name="typefilt" value="elvis_movement"> Movements
-                                        </label>
-                                      </div>
-                                      <div class="checkbox">
-                                        <label>
-                                          <input type="checkbox" name="typefilt" value="elvis_corpus"> Corpora
-                                        </label>
-                                      </div>
-                                  </div>
-                                  <div class="col-sm-4">
-                                      <div class="checkbox">
-                                        <label>
-                                          <input type="checkbox" name="typefilt" value="elvis_tag"> Tags
-                                        </label>
-                                      </div>
-                                      <div class="checkbox">
-                                        <label>
-                                          <input type="checkbox" name="typefilt" value="elvis_user"> Users
-                                        </label>
-                                      </div>
-                                  </div>
-                                </div>
-
-                        <!-- Name Filter -->
-                            <h4> Limit by Title/Name: </h4>
-                                <div class = "col-sm-12">
-                                  <input type="text" name="namefilt" placeholder="E.g.: Agnus Dei...">
-                                  <div class="help-block">Will find results with all entered search terms (use "" to force ordered search) in their title or name, depending on result type filters chosen above. </div>
-                                </div> 
-
-
-                        <!-- Tag Filter -->
-                            <h4> Limit by Tags: </h4>
-                                <div class = "col-sm-12">
-                                  <input type="text" name="tagfilt" placeholder="Tag1 Tag2 ...">
-                                </div> 
-
-
-                        <!-- Voice Filter -->
-                            <h4> Limit by Number of Voices: </h4>
-                                <div class = "col-sm-12">
-                                  <input type="text" name="voicefilt" placeholder="E.g.: 4" maxlength="2">
-                                </div> 
-
-                        <!-- Date Filter -->
-                            <h4> Limit by Date: </h4>
-                                <div class = "col-sm-12">
-                                  <input type="text" name="datefiltf" placeholder="From: (YYYY)" maxlength="4">
-                                  <input type="text" name="datefiltt" placeholder="To: (YYYY)" maxlength="4">
-                                  <div class="help-block">Will filter by birth or composition date, depending on result type filters chosen above.</div>
-                                </div> 
-
-                        <!-- Sorting --> 
-                            <h4> Sort by: </h4>
-                                <div class="col-sm-12">
-                                      <select name="sortby">
-                                      <option value=""> Default (Type) </option>
-                                      <option value="name_sort desc"> Alphabetical &#9650; </option>
-                                      <option value="name_sort asc"> Alphabetical &#9660; </option>
-                                      <option value="date_general desc"> Date &#9650; </option>
-                                      <option value="date_general asc"> Date &#9660;</option>
-                                      </select>                   
-                                  </div>                 
-                              <p></p>
-
-                        </div>
+                                </div>                                  
+                            
                         </form>
                         </div>                    
                     </div>
