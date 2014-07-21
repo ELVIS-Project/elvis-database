@@ -143,7 +143,7 @@ class SolrSearch(object):
                 if qdict.get(k) == "":
                     v = "*"
                 self.parsed_request[k] = v
-
+            
             else:
                 self.parsed_request[k] = v
         
