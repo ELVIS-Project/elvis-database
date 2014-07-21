@@ -4,12 +4,12 @@
 <!-- LM: TODO Move download history elsewhere.... onsubmit="return confirm('Proceed?');"  --> 
 
 {% block wrap %}
-<div class="row">
-    <div class="col-md-12">
-        <h2>Your Downloads</h2>
-        <form id="download-form" action="/downloading/" method="post" > {% csrf_token %}
+<h2>Your Downloads</h2>
+<div class="col-md-12">
+    <form id="download-form" action="/downloading/" method="post" > {% csrf_token %}
+    
         <div class="row">
-        <span class="help-block">Select items for downloading. Unwanted files may also be removed from your downloads.</span>
+            <span class="help-block">Select items for downloading. Unwanted files may also be removed from your downloads.</span>
             <table class="table table-condensed">
                 <thead>
                     <tr>
@@ -76,6 +76,8 @@
                 });
             </script>
         </div>
+
+
         <div class="row">
             <h4>Select file types to download/remove:</h4>
             <!-- if these are modified, modify downloading_item view too -->
@@ -108,7 +110,7 @@
             
             <button id="remove-all" name="remove-all" type="submit" class="btn btn-danger" onClick="return confirm('Are you sure you want to remove these items?')"><span class="glyphicon glyphicon-remove"></span>Remove Selected</button>
             
-            <button id="select-elvis" name="select-elvis" type="submit" class="btn btn-danger" onMouseOver="window.status='Click here to go to HTML Goodies'; return true"><span class="glyphicon glyphicon-remove"></span>Filter for Web App</button> 
+            <button id="select-elvis" name="select-elvis" type="submit" class="btn btn-danger" onMouseOver="window.status='Click here to filter your files for the ELVIS Web App'; return true"><span class="glyphicon glyphicon-remove"></span>Filter for Web App</button> 
             
             <div id="select-help" style="display: none" class="help-block"> This will find the file best formatted for the ELVIS Web App in each piece or movement, and remove everything else regardless of which files or file types you have selected above. Formats incompatible with Music21 will be removed. </div>
 
@@ -121,12 +123,13 @@
               document.getElementById('select-help').style.display = 'none';
             }
             </script>
+            <p></p>
+        </div>
 
-        </div>
-        </div>
     </form>
-    <p></p>
-    </div>
+
+<p></p>
+</div>
 
 
 
@@ -149,6 +152,6 @@
             </tbody>
         </table>
     </div> -->
-</div>
+
 
 {% endblock %}

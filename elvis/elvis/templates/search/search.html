@@ -1,215 +1,338 @@
 {% extends "base.html" %}
 
+
 {% block wrap %}
 
+<style type="text/css">
+.panel-title:hover {
+    cursor: pointer;
+}
+</style>
+
+<head>
+    <script type="text/javascript">
+    /* $(function(){
+        $('#advanced-search-form').submit(function() {            
+            $(':input').each(function(){
+                if($(this).val() == "" && $(this).attr('name')!= "q"){
+                    $(this).attr('disabled', true);
+                }    
+            });
+        });
+    });
+
+    $(function(){
+        $('#general-search-form').submit(function() {         
+            $(':input').each(function(){
+                if($(this).val() == "" && $(this).attr('name')!= "q"){
+                    $(this).attr('disabled', true);
+                }    
+            });
+        });
+    }); */
+        
+    $(function(){
+        $('#asearch-submit').click(function(){
+            //$('.panel-collapse').collapse('hide');
+            $(':input').each(function(){
+                if($(this).val() == "" && $(this).attr('name')!= "q"){
+                    $(this).attr('disabled', true);
+                }    
+            });
+            //$('#collapse-asearch').on('hidden.bs.collapse', function () {
+            //  $('##advanced-search-form').submit();
+            //})
+            setTimeout(function(){$('#advanced-search-form').submit()}, 300);
+        });
+    })
+
+    $(function(){
+        $('#gsearch-submit').click(function(){
+            //$('.panel-collapse').collapse('hide');
+            $(':input').each(function(){
+                if($(this).val() == "" && $(this).attr('name')!= "q"){
+                    $(this).attr('disabled', true);
+                }    
+            });
+            //$('#collapse-search').on('hidden.bs.collapse', function () {
+            //  $('#general-search-form').submit();
+            //})
+            setTimeout(function(){$('#general-search-form').submit()}, 300);
+        });
+    })
+
+    $(function(){
+        var qstr = window.location.search.replace("?", "");
+        var qstr_params = $.parseParams(qstr);
+        for (var key in qstr_params){
+            $('[name='+key+']').val(qstr_params[key]);
+            if(key == 'typefilt' || key=='type'){
+                $("[id='"+qstr_params[key]+"']").attr('checked', true);
+                //$('[type=checkbox][value="'+qstr_params[key]+'"]').attr('checked',true);
+            }
+        }
+    })
+    //onfocus="this.placeholder = ''" onblur="this.placeholder = 'E.g.: Agnus Dei...'"
+    /*$(function(){
+        $(':text').each(function{
+            var placeholder = $(this).attr('placeholder');
+            $(this).attr('placeholder-perm', placeholder);
+            alert($this.attr('placeholder-perm'));
+        })
+        $(':text').focus(function() {
+            $(this).attr('placeholder', "");
+        });
+        $(':text').blur(function() {
+            var placeholderPerm = $(this).attr('placeholder-perm');
+            $(this).attr('placeholder-perm', placeholderPerm);
+        });
+    })*/
+    </script>
+</head>
+
+<body>
+<h2>Search the Database</h2>
 
 <div class="col-12">
-<!-- Tabs bar -->
-<ul class="nav nav-tabs">
-  <li class="active"><a href="#gsearch" data-toggle="tab">General Search</a></li>
-  <li><a href="#asearch" data-toggle="tab">Advanced Search</a></li>
-  <li><a href="#help" data-toggle="tab">Information & Help</a></li>
-</ul>
-   
-<!-- Content -->
+    <!-- Tabs bar -->
 
-<div class="tab-content">
+        <ul class="nav nav-tabs nav-justified" >
 
-    <!-- General Search -->
-    <div class="tab-pane fade in active" id="gsearch">
-    
-        <!-- Accordion -->
-        <div class="panel-group" id="accordion">
-              <div class="panel panel-default">
-                <div class="panel-heading">
-                    <h1 class="panel-title">
-                      <a data-toggle="collapse" data-parent="#accordion" href="#collapseOne"> Toggle General Search: </a>
-                    </h1>
-                </div>
-                <div id="collapseOne" class="panel-collapse collapse {% if not content.current_query %} in {% endif %}">
-                    <div class="panel-body">
+            <li class="active"><a href="#gsearch" data-toggle="tab">General Search</a></li>
 
-                        <div class="col-md-6 col-md-offset-3">
-                        <form id="general-search-form" action="/search" method="get">
+            <li class=""><a href="#asearch" data-toggle="tab">Advanced Search</a></li>
 
+            <li class=""><a href="#help" data-toggle="tab">Information & Help</a></li>
 
+        </ul>
 
-                              <!-- Query Entry -->
-                               <div class="form-group"> 
-                                  
-                                <input type="text" name="q" class="search-input" placeholder="Search Query... &nbsp; Example: Bach Chorale Gott" size="35" style="float: none; margin: 0 auto;"/>
-                                
-                              <!-- Button -->
-                                <button type="submit" class="btn btn-default btn-sm">
-                                  Search
-                                  <span class="glyphicon glyphicon-search"></span> 
-                                </button>
-                                
+    <!-- Content -->
+
+    <div class="tab-content">
+
+        <!-- General Search -->
+        <div class="tab-pane fade in active" id="gsearch">
+        
+            <!-- Accordion -->
+            <div class="panel-group" id="accordion-gsearch">
+
+                <!-- Search Box Panel -->
+                  <div class="panel panel-default">
+                    <div class="panel-heading">
+                        <h1 class="panel-title" data-toggle="collapse" data-target="#collapse-search" > 
+                            <span class="glyphicon glyphicon-collapse-down"></span> 
+                            Toggle General Search:  
+                        </h1>
+                    </div>
+
+                    <div id="collapse-search" class="panel-collapse collapse in {% if not content.results %} in {% endif %}">
+                        <div class="panel-body">
+                            <form id="general-search-form" action="/search" method="get">
+                                <!-- Query Entry -->
+                                <div class="row">
+                                    <div class="form-group">
+                               
+                                            
+                                            <!-- <input type="text" name="q" class="search-input" placeholder="Search Query... &nbsp; E.g.: Bach Chorale Gott" size="35" style="float: none; margin: 0 auto;"/>                              
+                                            <button type="submit" class="btn btn-default btn-sm" id="btn-submit">
+                                              Search
+                                              <span class="glyphicon glyphicon-search"></span> 
+                                            </button> -->
+
+                                            <div class="input-group input-group-lg col-md-8 col-md-offset-2">
+                                              <input type="text" class="form-control" name="q" placeholder="Search Query... &nbsp; &nbsp; &nbsp;E.g.: Bach Chorale Gott" onfocus="this.placeholder = ''" onblur="this.placeholder = 'E.g.: Agnus Dei...'" style="text-align:center; ">
+                                              <span class="input-group-btn">
+                                                <button class="btn btn-default submit" type="button" id="gsearch-submit"> Search <span class="glyphicon glyphicon-search"></span> </button>
+                                              </span>
+                                            </div><!-- /input-group -->
+                           
+                                    </div>
                                 </div>
+                                <p></p>
 
-                        </form> 
+                                <!-- Filters --> 
+                            </form>
                         </div>
+                             
                     </div>
                 </div>
             </div>
         </div>
-  
-    </div>
 
-    <!-- Advanced Search -->
-    <div class="tab-pane fade" id="asearch">
-    
-        <!-- Accordion -->
-        <div class="panel-group" id="accordion">
-            <div class="panel panel-default">
-                <div class="panel-heading">
-                    <h1 class="panel-title">
-                      <a data-toggle="collapse" data-parent="#accordion" href="#collapseTwo"> Toggle Advanced Search: </a>
-                    </h1>
-                </div>
-                <div id="collapseTwo" class="panel-collapse collapse {% if not content.current_query %} in {% endif %}">
-                    <div class="panel-body">
-
-                    <form id="advanced-search-form" action="/search" method="get">
-                    <div class="form-group">
-                      
-                      <!-- Checkbox Filters -->
-                      <h4> Filter by Result Type: </h4>
-                        <div class="col-sm-12">
-                            <div class="col-sm-4">
-                                <div class="checkbox">
-                                  <label>
-                                    <input type="checkbox" name="fcp" value=""> Composers
-                                  </label>
-                                </div>
-                                <div class="checkbox">
-                                  <label>
-                                    <input type="checkbox" name="fp" value=""> Pieces
-                                  </label>
-                                </div>
-                            </div>
-                            <div class="col-sm-4">
-                                <div class="checkbox">
-                                  <label>
-                                    <input type="checkbox" name="fm" value=""> Movements
-                                  </label>
-                                </div>
-                                <div class="checkbox">
-                                  <label>
-                                    <input type="checkbox" name="fcr" value=""> Corpora
-                                  </label>
-                                </div>
-                            </div>
-                            <div class="col-sm-4">
-                                <div class="checkbox">
-                                  <label>
-                                    <input type="checkbox" name="ft" value=""> Tags
-                                  </label>
-                                </div>
-                                <div class="checkbox">
-                                  <label>
-                                    <input type="checkbox" name="fu" value=""> Users
-                                  </label>
-                                </div>
-                            </div>
-                          </div>
-
-                    <!-- Name Filter -->
-                      <h4> Filter by Title/Name: </h4>
-                          <div class = "col-sm-12">
-                            <input type="text" name="namefilt" placeholder="E.g: Agnus Dei...">
-                            <div class="help-block">Will find results with all entered search terms in their title or name. Use double quotations "" to force querying with ordered search terms. </div>
-                          </div> 
-
-                    <!-- Date Filter -->
-                      <h4> Filter by Date: </h4>
-                          <div class = "col-sm-12">
-                            <input type="text" name="datefiltf" placeholder="From: (YYYY)" maxlength="4">
-                            <input type="text" name="datefiltt" placeholder="To: (YYYY)" maxlength="4">
-                          </div> 
-
-                    <!-- Tag Filter -->
-                      <h4> Filter by Tags: </h4>
-                          <div class = "col-sm-12">
-                            <input type="text" name="tagfilt" placeholder="Tag1 Tag2 ...">
-                          </div> 
-
-
-                    <!-- Voice Filter -->
-                      <h4> Filter by Number of Voices: </h4>
-                          <div class = "col-sm-12">
-                            <input type="text" name="voicefilt" placeholder="E.g.: 4" maxlength="2">
-                          </div> 
-
-
-                    <!-- Sorting --> 
-                       <h4> Sort by: </h4>
-                           <div class="col-sm-4">
-                                 <select name="sortby">
-                                 <option value=""> Default (Type) </option>
-                                 <option value="name_sort desc"> Title &#9650; </option>
-                                 <option value="name_sort asc"> Title &#9660; </option>
-                                 <!--<option value="date_of_composition desc">Composition Date &#9650;</option>
-                                 <option value="date_of_composition asc">Composition Date &#9660;</option>
-                                 <option value="birth_date desc">Birth Date &#9650; </option>
-                                 <option value="birth_date asc">Birth Date &#9660;</option> -->
-                                 <option value="date_general desc"> Date &#9650; </option>
-                                 <option value="date_general asc"> Date &#9660;</option>
-                                 </select>                   
-                            </div>                 
-
-                    <!-- Submit --> 
-                        <div class="col-sm-4">
-                            <button type="submit" class="btn btn-default btn-sm">
-                              Search
-                              <span class="glyphicon glyphicon-search"></span> 
-                            </button> 
-                        </div>
-
+        <!-- Advanced Search -->
+        <div class="tab-pane fade" id="asearch">
+        
+            <!-- Accordion -->
+            <div class="panel-group" id="accordion-asearch">
+                <div class="panel panel-default">
+                    <div class="panel-heading">
+                        <h1 class="panel-title" data-toggle="collapse" data-target="#collapse-asearch" > 
+                            <span class="glyphicon glyphicon-collapse-down"></span>
+                            Toggle Advanced Search: 
+                        </h1>
                     </div>
-                    </form>
-                    </div>                    
-                </div>
-            </div>
-        </div>        
-    </div>
+                    <div id="collapse-asearch" class="panel-collapse collapse in {% if not content.current_query %} in {% endif %}">
+                        <div class="panel-body">
 
-       <!-- Help  -->
-    <div class="tab-pane fade" id="help">
-    
-        <!-- Accordion -->
-        <div class="panel-group" id="accordion">
-              <div class="panel panel-default">
-                <div class="panel-heading">
-                    <h1 class="panel-title">
-                      <a data-toggle="collapse" data-parent="#accordion" href="#collapseThree"> Toggle Information & Help: </a>
-                    </h1>
-                </div>
-                <div id="collapseThree" class="panel-collapse collapse {% if not content.current_query %} in {% endif %}">
-                    <div class="panel-body">
-                    <h4> General Searching </h4>
-                    <p> A basic, Google-esque search. Results are based on occurrences of the search terms in the title/name, composer, parent piece, and tag fields of an item. Items returned may be any type (e.g. a composer, a piece, or a corpus). Use this if you want to quickly look for most relevant items - the database will order results based on relevancy. </p>
-                    <h4> Advanced Searching </h4>
-                    <p> A customisable search. Results are based on the search terms for specific, user-chosen fields of an item. Items returned may be restricted to specific types, and may be sorted on specific fields. </p>
-                    <h4> Downloading Results </h4> 
-                    <p> Each <button class="btn btn-xs btn-success"><span class="glyphicon glyphicon-plus"></span></button> recursively sends its object's attachments to your downloads. For example, clicking this in a piece-typed result will send all of its attachments, and the attachments of its movements, to your downloads cart. The <button class="btn btn-success btn-sm">Add Results on Current Page to Downloads <span class="glyphicon glyphicon-plus"></span></button> will recursively send all the attachments of the current page's results to your downloads. In other words, it's like clicking all of the small green buttons at once. The <button class="btn btn-danger btn-sm"> Add All Query Results to Downloads <span class="glyphicon glyphicon-plus"></span></button> will do the same for every page of results in your query.</p>
+                        <form id="advanced-search-form" action="/search" method="get">
+                        
+
+                            <div class="form-group">
+                              
+                              <!-- Submit Button -->
+                                <h4> General Search Query: </h4> 
+
+                                    <div class="col-sm-12">
+                                        <input type="text" name="q" class="search-input" placeholder="E.g.: Byrd Hornpipe" style="float: none; margin: 0 auto;"/>                              
+                                    </div>
+
+                            <!-- Name Filter -->
+                                <h4> Limit by Title: </h4>
+                                    <div class = "col-sm-12">
+                                      <input type="text" name="titlefilt" placeholder="E.g.: Agnus Dei...">
+                                      <div class="help-block">Will find results with all entered search terms (use "" to force ordered search) in their title or name, depending on result type filters chosen above. </div>
+                                    </div> 
+
+                            <!-- Name Filter -->
+                                <h4> Limit by Composer Name: </h4>
+                                    <div class = "col-sm-12">
+                                      <input type="text" name="namefilt" placeholder="E.g.: Jacob Obrecht...">
+                                      <div class="help-block">Will find both composers matching this query and pieces/movements composed by composers matching this query. </div>
+                                    </div> 
+
+
+                            <!-- Tag Filter -->
+                                <h4> Limit by Tags: </h4>
+                                    <div class = "col-sm-12">
+                                      <input type="text" name="tagfilt" placeholder="Tag1 Tag2 ...">
+                                    </div> 
+
+
+                            <!-- Voice Filter -->
+                                <h4> Limit by Number of Voices: </h4>
+                                    <div class = "col-sm-12">
+                                      <input type="text" name="voicefilt" placeholder="E.g.: 4" maxlength="2">
+                                    </div> 
+
+                            <!-- Date Filter -->
+                                <h4> Limit by Date: </h4>
+                                    <div class = "col-sm-12">
+                                      <input type="text" name="datefiltf" placeholder="From: (YYYY)" maxlength="4">
+                                      <input type="text" name="datefiltt" placeholder="To: (YYYY)" maxlength="4">
+                                      <div class="help-block">Will filter by birth or composition date, depending on result type filters chosen above.</div>
+                                    </div> 
+
+                           <!-- Checkbox Filters -->
+                                <h4> Limit by Result Type: </h4>
+                                  <div class="col-sm-12">
+                                      <div class="col-sm-4">
+                                          <div class="checkbox">
+                                            <label>
+                                              <input type="checkbox" name="typefilt" id="elvis_composer" value="elvis_composer"> Composers
+                                            </label>
+                                          </div>
+                                          <div class="checkbox">
+                                            <label>
+                                              <input type="checkbox" name="typefilt" id="elvis_piece" value="elvis_piece"> Pieces
+                                            </label>
+                                          </div>
+                                      </div>
+                                      <div class="col-sm-4">
+                                          <div class="checkbox">
+                                            <label>
+                                              <input type="checkbox" name="typefilt" id="elvis_movement" value="elvis_movement"> Movements
+                                            </label>
+                                          </div>
+                                          <div class="checkbox">
+                                            <label>
+                                              <input type="checkbox" name="typefilt" id="elvis_corpus" value="elvis_corpus"> Corpora
+                                            </label>
+                                          </div>
+                                      </div>
+                                      <div class="col-sm-4">
+                                          <div class="checkbox">
+                                            <label>
+                                              <input type="checkbox" name="typefilt" id="elvis_tag" value="elvis_tag"> Tags
+                                            </label>
+                                          </div>
+                                          <div class="checkbox">
+                                            <label>
+                                              <input type="checkbox" name="typefilt" id="elvis_user" value="elvis_user"> Users
+                                            </label>
+                                          </div>
+                                      </div>
+                                    </div>
+
+                            <!-- Sorting --> 
+                                <h4> Sort by: </h4>
+                                    <div class="col-sm-12">
+                                          <select name="sortby">
+                                          <option value=""> Default (Type) </option>
+                                          <option value="name_sort desc"> Alphabetical &#9650; </option>
+                                          <option value="name_sort asc"> Alphabetical &#9660; </option>
+                                          <option value="date_general desc"> Date &#9650; </option>
+                                          <option value="date_general asc"> Date &#9660;</option>
+                                          </select>                   
+                                      </div>                 
+                                  <p></p>
+                            </div>
+
+                            <!-- Submit -->
+                                <div class="col-md-2 col-md-offset-5">
+                                    <button type="button" class="btn btn-default btn-xl submit" id="asearch-submit" >
+                                        Search
+                                        <span class="glyphicon glyphicon-search"></span> 
+                                    </button>
+                                </div>                                  
+                            
+                        </form>
+                        </div>                    
                     </div>
                 </div>
-            </div>
+            </div>        
         </div>
-  
+
+           <!-- Help  -->
+        <div class="tab-pane fade" id="help">
+        
+            <!-- Accordion -->
+            <div class="panel-group" id="accordion-info">
+                  <div class="panel panel-default">
+                    <div class="panel-heading">
+                        <h1 class="panel-title" data-toggle="collapse" data-target="#collapse-info" > 
+                            <span class="glyphicon glyphicon-collapse-down"></span>
+                            Toggle Information & Help: 
+                        </h1>
+                    </div>
+
+                    <div id="collapse-info" class="panel-collapse collapse in {% if not content.results %} in {% endif %}">
+                        <div class="panel-body">
+                        <h4> General Searching </h4>
+                        <p> A basic, Google-esque search. Results are based on occurrences of the search terms in the title/name, composer, parent piece, and tag fields of an item. Items returned may be any type (e.g. a composer, a piece, or a corpus). Use this if you want to quickly look for the most relevant items - the database will order results based on relevancy. </p>
+                        <h4> Advanced Searching </h4>
+                        <p> A customisable search. Results are based on the search terms for specific, user-chosen fields of an item. Items returned may be restricted to specific types, and may be sorted on specific fields. Use this if you have a concrete idea of the items, and their attributes, that you are looking for. </p>
+                        <h4> Downloading Results </h4>
+                        <p> Each <button class="btn btn-xs btn-success"><span class="glyphicon glyphicon-plus"></span></button> recursively sends its object's attachments to your downloads. For example, clicking this in a piece-typed result will send all of its attachments, and the attachments of its movements, to your downloads cart. The <button class="btn btn-success btn-sm">Add Results on Current Page to Downloads <span class="glyphicon glyphicon-plus"></span></button> will recursively send all the attachments of the current page's results to your downloads. In other words, it's like clicking all of the small green buttons at once. The <button class="btn btn-danger btn-sm"> Add All Query Results to Downloads <span class="glyphicon glyphicon-plus"></span></button> will do the same for every page of results in your query.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+      
+        </div>
+
     </div>
 
 </div>
 
-</div>
+</body>
+
+
+
 
 <div class="col-12">
 {% if content.current_query %}
-<h3>Results: </h3>
 
-
-  {% include "search/search_results.html" %}
+ {% include "search/search_results.html" %}
 
 {% endif %}
 </div>
