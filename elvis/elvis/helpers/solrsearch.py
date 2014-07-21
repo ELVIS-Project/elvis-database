@@ -45,7 +45,8 @@ class SolrSearch(object):
         facet_params = {
             'facet': 'true',
             'facet_field': facet_fields,
-            'facet_mincount': 1
+            'facet_mincount': 1,
+            'facet_sort' : 'count',
         }
         self.solr_params.update(facet_params)
         self.solr_params.update(kwargs)
@@ -76,9 +77,11 @@ class SolrSearch(object):
         tag_filt_query = ""
         date_filt_query = ""
         name_filt_query = ""
+        title_filt_query = ""
         voice_filt_query = ""
         from_date = "" 
         to_date = ""
+        #print qdict.lists()
         for k, v in qdict.lists():
 
             # LM: modified from just self.parsed_request[k] = v to cut out nonsensical page requests to solr
@@ -87,12 +90,16 @@ class SolrSearch(object):
 
             # LM: elif for Type filtration
             # check if user has ticked a filter for querying
-            elif k in settings.SEARCH_FILTERS_DICT:
+            #elif k in settings.SEARCH_FILTERS_DICT:
                 # LM: Update filter_query[], the query string, accordingly
-                if not filter_query:
-                    filter_query += u"{0}{1}".format("type:", settings.SEARCH_FILTERS_DICT[k])
-                else:
-                    filter_query += u"{0}{1}".format(" OR type:", settings.SEARCH_FILTERS_DICT[k])
+            #    if not filter_query:
+            #        filter_query += u"{0}{1}".format("type:", settings.SEARCH_FILTERS_DICT[k])
+            #    else:
+            #        filter_query += u"{0}{1}".format(" OR type:", settings.SEARCH_FILTERS_DICT[k])
+
+            # LM: Elif for Type filtration
+            elif k == 'typefilt':
+                filter_query = "type: ("  + string.join((v), ' OR ') + ") "
 
             # LM: elif for sorting
             elif k == 'sortby':
@@ -100,40 +107,32 @@ class SolrSearch(object):
 
             # LM: elif for Name filtration
             elif k == 'namefilt':
-                    if qdict.get('namefilt') == "":
-                        pass
-                    else:
-                        name_filt_query = "name_general: " + string.join(string.split(v[0]), ' AND name_general: ') 
+                name_filt_query = "name_general: (" + string.join(v) +") "
+
+            elif k == 'titlefilt':
+                title_filt_query = "title_searchable: (" + string.join(v) +") "
 
             # LM: elif for Date filtration
-            elif k == 'datefiltf':
-                if qdict.get('datefiltf') == "" and qdict.get('datefiltt') == "":
-                    pass
-                elif qdict.get('datefiltf') == "":
+            elif k == 'datefiltf' or k == 'datefiltt':
+                if qdict.get('datefiltf') == "" or qdict.get('datefiltf') is None:
                     from_date = " date_general: [ * TO "
-                    to_date = u"{0}-00-00T00:00:00Z ]".format(qdict.get('datefiltt'))
-                elif qdict.get('datefiltt') == "":
+                    to_date = u"{0}-12-31T23:59:59Z ]".format(qdict.get('datefiltt'))
+                elif qdict.get('datefiltt') == "" or qdict.get('datefiltt') is None:
                     from_date =  u" date_general: [ {0}-00-00T00:00:00Z TO ".format(qdict.get('datefiltf'))
                     to_date = "* ]"
                 else:
                     from_date = u" date_general: [ {0}-00-00T00:00:00Z TO ".format(qdict.get('datefiltf'))
-                    to_date = u"{0}-00-00T00:00:00Z ]".format(qdict.get('datefiltt'))
+                    to_date = u"{0}-12-31T23:59:59Z ]".format(qdict.get('datefiltt'))
                 date_filt_query = from_date + to_date
 
             # LM: elif for Tag filtration
             elif k == 'tagfilt':
-                for tag in v[0].split():
-                    if tag_filt_query == "":
-                        tag_filt_query += "tags: " + tag
-                    else:
-                        tag_filt_query += " AND tags: " + tag
+                tag_filt_query = "tags_searchable: (" + string.join(v) + ") "
+
 
             # LM: elif for Voice filtration
             elif k == 'voicefilt':
-                    if qdict.get('voicefilt') == "":
-                        pass
-                    else:
-                        voice_filt_query = "number_of_voices: " +  v[0]
+                voice_filt_query = "number_of_voices: (" + string.join(v) + ") "
 
                 
             elif k == 'rows':
@@ -144,15 +143,14 @@ class SolrSearch(object):
                 if qdict.get(k) == "":
                     v = "*"
                 self.parsed_request[k] = v
-            #elif k == 'format':
-            #    self.parsed_request[k] = v
+
+            else:
+                self.parsed_request[k] = v
 
         self.solr_params.update({'sort': sort_query})
 
 
-        if filter_query == "":
-            pass
-        else:
+        if filter_query != "":
             self.solr_params['fq'] = "( " + filter_query + " )"
 
         if date_filt_query == "":
@@ -175,6 +173,13 @@ class SolrSearch(object):
             self.solr_params['fq'] = "( " + name_filt_query + " )"
         else:
             self.solr_params['fq'] += " AND (" + name_filt_query + " )"
+
+        if title_filt_query == "":
+            pass
+        elif not 'fq' in self.solr_params:
+            self.solr_params['fq'] = "( " + title_filt_query + " )"
+        else:
+            self.solr_params['fq'] += " AND (" + title_filt_query + " )"
 
         if voice_filt_query == "":
             pass
@@ -227,7 +232,8 @@ class SolrSearch(object):
                     if v[0] != u"":
                         arr.insert(0, u"{0}".format(v[0]))
                 else:
-                    arr.append(u"{0}:({1})".format(k, " OR ".join(["\"{0}\"".format(s) for s in v if v is not None])))
+                    # was OR by default
+                    arr.append(u"{0}:({1})".format(k, " AND ".join([u"\"{0}\"".format(s) for s in v if v is not None])))
                 # LM: Debugging print
                 #print('arr', arr)
             self.prepared_query = u" AND ".join(arr)            

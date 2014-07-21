@@ -72,7 +72,9 @@
     <field name="text" type="text_general" indexed="true" stored="false" multiValued="true"/>
     <field name="item_id" type="string" indexed="true" stored="true" />
     <field name="old_id" type="int" indexed="true" stored="true" />
-    <field name="tags" type="text_general" indexed="true" stored="true" multiValued="true"/>
+    <field name="tags" type="string" indexed="true" stored="true" multiValued="true"/>
+    <field name="tags_searchable" type="text_general" indexed="true" stored="true" multiValued="true"/>
+    <field name="title_searchable" type="text_general" indexed="true" stored="true" multiValued="true"/>
     <field name="name_general" type="text_general" indexed="true" stored="true" multiValued="true"/>
     <field name="name_sort" type="string" indexed="true" stored="true"/>
     
@@ -150,14 +152,17 @@
     <copyField source="tags" dest="text" />
     <copyField source="parent_piece_name" dest="text" />
     <copyField source="parent_corpus_name" dest="text" />
+    <copyField source="comment" dest="text" />
              
     <!-- Advanced Search -->
     <copyField source="birth_date" dest="date_general"/>
     <copyField source="date_of_composition" dest="date_general" />	
-    <copyField source="title" dest="name_general" />
+    <copyField source="composer_name" dest="name_general" />
     <copyField source="name" dest="name_general"/>
     <copyField source="title" dest="name_sort" />
+    <copyField source="title" dest="title_searchable"/>
     <copyField source="name" dest="name_sort"/>
+    <copyField source="tags" dest="tags_searchable" />
 
 
     <!--<copyField source="birth_date" dest="text" />
@@ -322,18 +327,23 @@
     <fieldType name="text_general" class="solr.TextField" positionIncrementGap="100">
       <analyzer type="index">
         <tokenizer class="solr.StandardTokenizerFactory"/>
-        <filter class="solr.StopFilterFactory" ignoreCase="true" words="stopwords.txt" />
+        <filter class="solr.StopFilterFactory" ignoreCase="true" words="stopwords.txt" enablePositionIncrements="true"/>
         <!-- LM: Old template had enablePositionIncrement -->
         <!-- in this example, we will only use synonyms at query time
         <filter class="solr.SynonymFilterFactory" synonyms="index_synonyms.txt" ignoreCase="true" expand="false"/>
         -->
+        <filter class="solr.ASCIIFoldingFilterFactory"/>
+        <!--<filter class="solr.ISOLatin1AccentFilterFactory"/>-->
         <filter class="solr.LowerCaseFilterFactory"/>
+        <!----> 
       </analyzer>
       <analyzer type="query">
         <tokenizer class="solr.StandardTokenizerFactory"/>
-        <filter class="solr.StopFilterFactory" ignoreCase="true" words="stopwords.txt" />
+        <filter class="solr.StopFilterFactory" ignoreCase="true" words="stopwords.txt" enablePositionIncrements="true"/>
         <filter class="solr.SynonymFilterFactory" synonyms="synonyms.txt" ignoreCase="true" expand="true"/>
-        <filter class="solr.LowerCaseFilterFactory"/>
+        <filter class="solr.ASCIIFoldingFilterFactory"/>
+        <!--<filter class="solr.ISOLatin1AccentFilterFactory"/>--> 
+        <filter class="solr.LowerCaseFilterFactory"/>         
       </analyzer>
     </fieldType>
 
