@@ -22,7 +22,7 @@ BASE_DIR = os.path.dirname(__file__)
 # SECURITY WARNING: don't run with debug turned on in production!
 # CRA: Set "LILLIO" to True if you're Lillio.
 PRODUCTION = False
-LILLIO = False if PRODUCTION else True  # we'll be Lillio by default...
+LILLIO = False #if PRODUCTION else True  # we'll be Lillio by default...
 
 
 # Simple Settings
@@ -114,10 +114,10 @@ MEDIA_URL = '/media/'
 
 if DEBUG and LILLIO:
     MEDIA_ROOT = "/Users/lmok/Documents/workspace/elvis-site/elvis"
-elif DEBUG:
-    MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
+#elif DEBUG:
+#    MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 else:
-    MEDIA_ROOT = os.path.join(BASE_DIR, '..', '..', 'media_root')
+    MEDIA_ROOT = os.path.join(BASE_DIR, '..', '..', '..', 'media_root')
 # httpd will serve static files from this directory
 STATIC_URL = '/static/'
 if DEBUG and LILLIO:
@@ -143,7 +143,21 @@ SEARCH_FILTERS_DICT = {
     'ft': 'elvis_tag',
     'fu': 'elvis_user',
 }
-
+FACET_NAMES = {
+    'type': "Result Type",
+    'composer_name': "Composer",
+    'parent_corpus_name': "Corpus",
+    "number_of_voices": "Number of Voices",
+    "tags": "Tags",
+}
+TYPE_NAMES={
+    'elvis_user': "User",
+    'elvis_tag': "Tag",
+    'elvis_corpus': "Corpus",
+    'elvis_movement': "Movement",
+    'elvis_piece': "Piece",
+    'elvis_composer': "Composer",
+}
 
 # Celery Settings
 # ===============

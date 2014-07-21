@@ -146,7 +146,7 @@ class SolrSearch(object):
 
             else:
                 self.parsed_request[k] = v
-
+        
         self.solr_params.update({'sort': sort_query})
 
 
