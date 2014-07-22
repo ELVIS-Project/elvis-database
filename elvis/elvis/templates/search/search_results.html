@@ -11,6 +11,11 @@
    overflow-y: scroll;
    max-height: 160px;
 }
+label {
+    display: block;
+    padding-left: 10px;
+    text-indent: -20px;
+}
 
 </style>
 
@@ -189,11 +194,10 @@
 
                     <div id="collapse-{{name}}" class="panel-collapse collapse facets in">
                         <div class="panel-body facets">
-                            <ul>
                                 {% for facet, count in facets.items %}
-                                    <li><a class="facet-link" href="" data-facet-name="{{ name }}" data-facet-value="{{ facet }}"> {% if name == 'type' %} {{ content.TYPE_NAMES|get_value:facet }} {% else %} {{ facet }} {% endif %} </a> ({{ count }})</li>
+                                    <li><label><input type="checkbox" class="facet-link" href="" data-facet-name="{{ name }}" data-facet-value="{{ facet }}"> {% if name == 'type' %} {{ content.TYPE_NAMES|get_value:facet }} {% else %} {{ facet }} {% endif %}  ({{ count }})
+                                    </label></li>
                                 {% endfor %}
-                            </ul>
                         </div>
                     </div>
             </div>
@@ -203,39 +207,46 @@
         </div>
         <script type="text/javascript">
             // this code manages what happens when a facet link is clicked.
-            $(".facet-link").on('click', function(event)
+
+            $(function()
             {
-                
                 var qstr = window.location.search.replace("?", "");
                 var qstr_params = $.parseParams(qstr);
-                var facetName = $(this).data('facet-name');          
-                var facetValue = $(this).data('facet-value');
-                if (!(facetName in qstr_params))
-                {
-                    var facetQ = facetName + "=" + facetValue ;
-                    if (qstr != "")
-                    {
-                        facetQ = "&" + facetQ;
-                    }
-                    window.location.search = qstr + facetQ;
-                }
-                else if (qstr_params[facetName].indexOf(facetValue) == -1)
-                {
-                    //qstr.charAt(0) = "";
-                    //qstr.charAt(str.length-1) = "";
-                    //qstr = qstr.replace(qstr_params[facetName], encodeURI("(" + qstr_params[facetName] + " AND " + facetValue + ")"));
-                    //qstr = qstr.replace(qstr_params[facetName], qstr_params[facetName] + " AND " + facetValue );
-                    //window.location.search = qstr;
 
-                    var facetQ = facetName + "=" + facetValue ;
-                    if (qstr != "")
+                $.each(qstr_params, function(param, val) 
+                {   
+                    if (typeof val == "object") 
                     {
-                        facetQ = "&" + facetQ;
+                        $.each(val, function(num, v) 
+                        {
+                            $("input[data-facet-name='" + param + "'][data-facet-value='" + v + "']").attr('checked', true);
+                        });
+                    } 
+                    else 
+                    {
+                        $("input[data-facet-name='" + param + "'][data-facet-value='" + val + "']").attr('checked', true);
                     }
-                    window.location.search = qstr + facetQ;
-                }
-                event.preventDefault();
-            });
+                });
+
+                $(".facet-link").on('click', function(event)
+                {
+                    var facetName = $(this).data('facet-name');          
+                    var facetValue = $(this).data('facet-value');
+
+                    if ($(this).is(':checked')) 
+                    {
+                        qstr_add = "&" + facetName + "=" + facetValue;
+                        window.location.search = qstr + qstr_add;
+                    } 
+                    else 
+                    {
+                        qstr_remove = qstr.replace('&' + facetName + "=" + encodeURI(facetValue), "");
+                        window.location.search = qstr_remove;
+                    }
+                    event.preventDefault();
+                });
+            })
+
         </script>
     </div>
 
