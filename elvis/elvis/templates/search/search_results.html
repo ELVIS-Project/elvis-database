@@ -85,9 +85,9 @@ label {
                 <a href="/movement/{{ result.item_id }}" class="list-group-item">
                     <span class="label label-primary pull-right">Movement</span>
                     <h4> {% include "includes/download-badge-inc.html" with download_type="elvis_movement" download_item_id=result.item_id %} {{ result.title }}</h4>
+                    <p class="list-group-item-text"> Piece: {{result.parent_piece_name}} </p>
                     <p class="list-group-item-text"> Composer: {{result.composer_name}} <br> Composed On: {{ result.date_of_composition | date:"Y" }} </p>
                     <p class="list-group-item-text"> Number of Voices: {{result.number_of_voices}} </p>
-                    <p class="list-group-item-text"> Piece: {{result.parent_piece_name}} </p>
                     <p class="list-group-item-text"> Tags: {% for tag in result.tags %} {{tag}} {% endfor %}</p>
                     <p class="list-group-item-text"> {{result.comment}} </p>
                 </a>
@@ -184,7 +184,7 @@ label {
             </div>
             {% endfor %} -->
             {% for name, facets in content.facets.facet_fields.items %}
-            {% if facets.items %}
+            {% if facets %}
             <div class="panel panel-default">
                     <div class="panel-heading">
                         <h1 class="panel-title" data-toggle="collapse" data-target="#collapse-{{name}}" > 
@@ -194,7 +194,7 @@ label {
 
                     <div id="collapse-{{name}}" class="panel-collapse collapse facets in">
                         <div class="panel-body facets">
-                                {% for facet, count in facets.items %}
+                                {% for facet, count in facets %}
                                     <li><label><input type="checkbox" class="facet-link" href="" data-facet-name="{{ name }}" data-facet-value="{{ facet }}"> {% if name == 'type' %} {{ content.TYPE_NAMES|get_value:facet }} {% else %} {{ facet }} {% endif %}  ({{ count }})
                                     </label></li>
                                 {% endfor %}
