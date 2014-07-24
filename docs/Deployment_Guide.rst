@@ -421,10 +421,25 @@ Make celery_start.sh script in elvis_database to
     1. start virtual environment
     2. run celery worker in that virtual environment
     3. run celery beat in that virtual environment
+    
+    It should look something like this (replace execution with celery -A elvis beat --pidfile="/run/celery/%n.pid --schedule=/var/lib/celery/celerybeat-schedule... for the cron):
+
+    #!/bin/bash
+
+    # Virtual env path
+    VIRTUAL_ENV=/usr/local/elvis_database/edda_virtualenv
+    PROJECT_PATH=/usr/local/elvis_database/elvis-site/elvis
+    # Activate
+    source ${VIRTUAL_ENV}/bin/activate
+    # Move to project directory
+    cd ${PROJECT_PATH}
+    # Run your worker... old: exec celery worker -A elvis -l DEBUG --loglevel=INFO 
+    exec celery worker -A elvis --pidfile="/run/celery/%n.pid"
+
 
 Make a user: celery with usergroup celery. It should have /sbin/nologin for its shell
 
-Edit /etc/supervisord.conf to include a celery 'programme' to supervise. It should have the following things:
+Edit /etc/supervisord.conf to include a celery 'programme' to supervise. It should have the following things (replace accordingly for celery_beat_start.sh):
     [program:elvis-celery]
     command=/usr/local/elvis_database/elvis-site/elvis/celery_start.sh
     directory=/usr/local/elvis_database/elvis-site/elvis
@@ -438,6 +453,7 @@ Edit /etc/supervisord.conf to include a celery 'programme' to supervise. It shou
     stderr_logfile = /var/log/celery/supervised_celery.log
     stdout_logfile_maxbytes=50MB
     killasgroup=true
+
 
 Make sure that the prority for rabbitmq is higher than supervisord on startup
 
