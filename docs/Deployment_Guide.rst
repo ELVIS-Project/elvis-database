@@ -103,6 +103,16 @@ In ``solr/collection1/conf/solrconfig.xml``::
 In the ``solr/collection1/conf/schema.xml``::
     <schema name="elvis-solr" version="1.5">
 
+IMPORTANT Modify $CATALINA_HOME/conf/Catalina/localhost/solr.xml. See readme in solr-mvn-template:
+    " ) Configure a Context fragment
+
+        cp tomcat-context.xml $CATALINA_HOME/conf/Catalina/localhost/solr.xml
+
+    and edit the `solr/home` `<Environment>` value. Note that you can set up
+    as many different contexts as you want with different `solr/home` values,
+    each using the same `solr.war`"
+
+
 Make sure you're in the same directory as ``pom.xml``, then run::
     $ sudo mvn package
 
@@ -237,6 +247,8 @@ We recommend you use a "virtualenv" environment, but you may use system packages
     #. Use pip to install the EDDA's dependencies::
         $ pip install -r elvis_site/requirements.txt
 
+       Note that, if mysql isn't installed, then it is required for MySQL-Python and the package for mysql should be installed through yum
+
     #. If pip cannot find a satisfactory Django version, find the URL manually from the `Django website<hthttps://www.djangoproject.com/download/>`__ then re-run the previous command. ::
         $ pip install https://www.djangoproject.com/download/1.7.b4/tarball/
 
@@ -358,6 +370,16 @@ You get something like this:::
 Restart httpd: ``$ sudo systemctl restart httpd``
 
 
+Populate Database 
+-----------------
+Prepare sql dump files, and elvis attachment files
+
+Install mariaDB, and import the dump files to their respective databases
+
+Run dump_drupal.py as root (sudo -i, activate environment, then python dump_drupal.py)
+
+
+
 
 Other Settings
 --------------
@@ -389,6 +411,38 @@ In addition, if you installed the EDDA with virtualenv, uncomment the following 
 
 
 
+Celery Service for Downloads using Supervisord
+--------------------––––––––------------------
+
+Install supervisord package
+    sudo yum install supervisord
+
+Make celery_start.sh script in elvis_database to
+    1. start virtual environment
+    2. run celery worker in that virtual environment
+
+Make a user: celery with usergroup celery. It should have /sbin/nologin for its shell
+
+Edit /etc/supervisord.conf to include a celery 'programme' to supervise. It should have the following things:
+    [program:elvis-celery]
+    command=/usr/local/elvis_database/elvis-site/elvis/celery_start.sh
+    directory=/usr/local/elvis_database/elvis-site/elvis
+    chown=celery:celery
+    user=celery
+    autostart=true
+    autorestart=true
+    redirect_stderr=true
+    redirect_stdout=true
+    stdout_logfile = /var/log/celery/supervised_celery.log
+    stderr_logfile = /var/log/celery/supervised_celery.log
+    stdout_logfile_maxbytes=50MB
+    killasgroup=true
+
+Make sure that the prority for rabbitmq is higher than supervisord on startup
+
+Celery will attempt to write into MEDIA_ROOT/user_downloads. If that directory doesn't exist, celery would probably not be able to write into MEDIA_ROOT. This is because MEDIA_ROOT is owned by Django. So, mkdir /user_downloads and chown celery:celery.
+
+
 
 
 
@@ -398,6 +452,7 @@ TODO: Consider These Settings
 - CSRF_COOKIE_SECURE and SESSION_COOKIE_SECURE
 - CONN_MAX_AGE and TEMPLATE_LOADERS
 - ADMINS and MANAGERS
+- Check supervisord: searches for supervisord.conf & security concerns over fake .conf file
 
 
 Other Things
