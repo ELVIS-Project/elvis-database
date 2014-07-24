@@ -76,18 +76,19 @@ def zip_files(paths, username):
 
 @app.task(name='elvis.celery.clean_zip_files')
 def clean_zip_files():
-    downloads_dir = os.path.join(settings.MEDIA_ROOT, 'user_downloads')
-    if not os.path.isdir(downloads_dir):
+    print "clean_zip_files beating."
+    downloads_dir_path = os.path.join(settings.MEDIA_ROOT, 'user_downloads')
+    if not os.path.isdir(downloads_dir_path):
         print 'User_downloads not detected'
         return False
-
     # Get the time a day before now
     one_day_ago = time.time() - 86400
     # Look at all the temporary download task folders
-    for user_download_dir, task_dirs, y in os.walk(downloads_dir):
-        for task_dir in task_dirs:
+    for user_dir in os.listdir(downloads_dir_path):
+        user_dir_path = os.path.join(downloads_dir_path, user_dir)
+        for task_dir in os.listdir(user_dir_path):
             # Join path accordingly, check the time
-            task_dir_path = os.path.join(downloads_dir, user_download_dir, task_dir)
+            task_dir_path = os.path.join(user_dir_path, task_dir)
             modified_time = os.path.getmtime(task_dir_path)
             if modified_time < one_day_ago:
                 # Uncomment when sure of correct file detection
