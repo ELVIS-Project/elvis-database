@@ -5,7 +5,7 @@ from elvis.celery import app
 from django.conf import settings
 
 # For tracking progress
-from time import sleep
+import time
 from celery.result import AsyncResult
 from celery import task, current_task
 
@@ -13,6 +13,8 @@ from django.http import HttpResponse, HttpResponseRedirect
 from django.core.urlresolvers import reverse
 import json
 from django.conf.urls import patterns, url
+import os
+import shutil
 
 def int_round(num):
     if (num > 0):
@@ -58,7 +60,7 @@ def zip_files(paths, username):
         file_name = os.path.basename(item)
         shutil.copy2(item, os.path.join(dummy_path, file_name))
         archive_file.write(file_name)
-        sleep(1)
+        #sleep(1)
         i += 1
         percent = int_round((i * 100) / total)
         zip_files.update_state(state='PROGRESS', meta={'curr': i, 'total': total, 'percent': percent})
@@ -71,5 +73,27 @@ def zip_files(paths, username):
 
     #print(dummy_root_dir, dummy_path)
     return {"path": zip_path, "percent" : 110}
+
+@app.task(name='elvis.celery.clean_zip_files')
+def clean_zip_files():
+    downloads_dir = os.path.join(settings.MEDIA_ROOT, 'user_downloads')
+    if not os.path.isdir(downloads_dir):
+        print 'User_downloads not detected'
+        return False
+
+    # Get the time a day before now
+    one_day_ago = time.time() - 86400
+    # Look at all the temporary download task folders
+    for user_download_dir, task_dirs, y in os.walk(downloads_dir):
+        for task_dir in task_dirs:
+            # Join path accordingly, check the time
+            task_dir_path = os.path.join(downloads_dir, user_download_dir, task_dir)
+            modified_time = os.path.getmtime(task_dir_path)
+            if modified_time < one_day_ago:
+                # Uncomment when sure of correct file detection
+                print "Deleting " + str(task_dir_path)
+                shutil.rmtree(task_dir_path)
+    return True
+
 
 

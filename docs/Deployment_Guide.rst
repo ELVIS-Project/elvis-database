@@ -420,6 +420,7 @@ Install supervisord package
 Make celery_start.sh script in elvis_database to
     1. start virtual environment
     2. run celery worker in that virtual environment
+    3. run celery beat in that virtual environment
 
 Make a user: celery with usergroup celery. It should have /sbin/nologin for its shell
 

@@ -7,9 +7,13 @@ https://docs.djangoproject.com/en/1.6/topics/settings/
 For the full list of settings and their values, see
 https://docs.djangoproject.com/en/1.6/ref/settings/
 """
+from __future__ import absolute_import
 
 # for dynamic SECRET_KEY generation
 from random import SystemRandom
+
+# for scheduling file removal using celery
+from celery import schedules
 
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 import os
@@ -166,7 +170,13 @@ CELERY_RESULT_BACKEND = 'amqp://'
 CELERY_TASK_SERIALIZER = 'json'
 CELERY_RESULT_SERIALIZER = 'json'
 CELERY_ACCEPT_CONTENT = ['json']
-
+# See documentation for crontab settings
+CELERYBEAT_SCHEDULE = {
+    'clean_zip_files': {
+        'task': 'elvis.celery.clean_zip_files',
+        'schedule': schedules.crontab(minute=0, hour=0)
+    },
+}
 
 # Elvis Web App Settings
 # ======================
