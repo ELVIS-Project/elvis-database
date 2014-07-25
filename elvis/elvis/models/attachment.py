@@ -7,7 +7,6 @@ from django.conf import settings
 
 from datetime import datetime
 
-
 def upload_path(instance, filename):
     return os.path.join(instance.attachment_path, filename)
 
@@ -67,6 +66,17 @@ class Attachment(models.Model):
         if os.path.exists(self.attachment_path):
             shutil.rmtree(self.attachment_path)
         super(Attachment, self).delete(*args, **kwargs)
+
+    def rename(self, new_filename, *args, **kwargs):
+        (path, current_name) = os.path.split(self.attachment.name)
+        (current_file_name, current_extension) = os.path.splitext(current_name)
+        new_filename += current_extension
+        new_path = os.path.join(path, new_filename)
+        print self.attachment
+        print new_path
+        #shutil.move(self.attachment, new_path)
+        #self.attachment.name = new_path
+        #self.save()
 
     def __unicode__(self):
         return u"{0}".format(self.attachment)
