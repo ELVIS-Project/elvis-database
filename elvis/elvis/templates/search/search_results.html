@@ -11,11 +11,6 @@
    overflow-y: scroll;
    max-height: 160px;
 }
-label {
-    display: block;
-    padding-left: 10px;
-    text-indent: -20px;
-}
 
 </style>
 
@@ -139,12 +134,14 @@ label {
 
 
         <h3>Refine Your Search:</h3> 
+        <div class="row">
+            <button id="collapse-init" class="btn btn-primary btn-sm">
+                Hide Facets
+            </button>
+            <input type="text" class="facet-search" id="facet-search" placeholder="Find a Facet">
+            <p></p>
+        </div>
         
-        <button id="collapse-init" class="btn btn-primary btn-sm">
-            Hide All Facets
-        </button>
-
-        <p></p>
 
         <script type="text/javascript">
             $(function(){
@@ -157,14 +154,14 @@ label {
                             $('.panel-collapse.facets').collapse('show');
                             //$('.panel-title').attr('data-toggle', '');
                             //$('.panel-collapse').attr('class', 'panel-collapse collapse in');
-                            $(this).text('Hide All Facets');
+                            $(this).text('Hide Facets');
                         } 
                         else {
                             active = true;
                             $('.panel-collapse.facets').collapse('hide');
                             //$('.panel-title').attr('data-toggle', 'collapse'); // use 'collapse' for user collapseable panels
                             //$('.panel-collapse').attr('class', 'panel-collapse collapse');
-                            $(this).text('Show All Facets');
+                            $(this).text('Show Facets');
                         }
                     }
                 );
@@ -195,8 +192,13 @@ label {
                     <div id="collapse-{{name}}" class="panel-collapse collapse facets in">
                         <div class="panel-body facets">
                                 {% for facet, count in facets %}
-                                    <li><label><input type="checkbox" class="facet-link" href="" data-facet-name="{{ name }}" data-facet-value="{{ facet }}"> {% if name == 'type' %} {{ content.TYPE_NAMES|get_value:facet }} {% else %} {{ facet }} {% endif %}  ({{ count }})
-                                    </label></li>
+                                    <li style="list-style: none;">
+                                        <div style="white-space:nowrap;">
+                                            <input type="checkbox" class="facet-link" data-facet-name="{{ name }}" data-facet-value="{{ facet }}">
+                                            <label class="facet-label"> {% if name == 'type' %} {{ content.TYPE_NAMES|get_value:facet }} {% else %} {{ facet }} {% endif %}  ({{ count }})
+                                            </label>
+                                        </div>
+                                    </li>
                                 {% endfor %}
                         </div>
                     </div>
@@ -210,6 +212,34 @@ label {
 
             $(function()
             {
+                var facetLabels = document.getElementsByClassName("facet-label");
+
+                setInterval(function()
+                {
+                    var searchFacet = document.getElementById("facet-search").value.toLowerCase();
+                    //var searchFacet = $(".facet-search").value;
+                    //alert(searchFacet);
+                    //if(searchFacet != ""){
+                    //    $(".facet-label:contains(" + searchFacet + ")").css("border", "4px solid blue");
+                    //};
+                    for(var i=0; i<facetLabels.length; i++)
+                    {
+                        if(searchFacet != "" && facetLabels[i].innerHTML.toLowerCase().indexOf(searchFacet) > -1)
+                        {
+                            //alert(facetLabels[i].innerHTML.toLowerCase());
+                            facetLabels[i].style.color = "red";
+                            //facetLabels[i].style.border = "4px solid blue";
+                        }
+                        else
+                        {
+                            facetLabels[i].style.color = "black";
+                            //facetLabels[i].style.border = "";
+                        }
+                    }
+                },
+                2000);
+
+
                 var qstr = window.location.search.replace("?", "");
                 var qstr_params = $.parseParams(qstr);
 
