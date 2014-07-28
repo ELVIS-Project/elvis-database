@@ -29,7 +29,7 @@
         </dd>
     </dl>
         
-        {% if content.attachments %}
+        {% if content.attachments and user.is_authenticated %}
         <h3>Available Attachments</h3>
         <table class="table table-condensed">
         <!-- Attachments & Form -->

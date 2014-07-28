@@ -84,6 +84,15 @@
         </nav>
 
         <div class="container">
+            {% if not user.is_authenticated %}
+            <div class="row text-center" >
+                <div class="alert alert-info">
+                    <a href="#" class="close" data-dismiss="alert">&times;</a>
+                    <strong>Note!</strong> &nbsp; &nbsp; &nbsp; You aren't logged in... download functionality is disabled.
+                </div>
+            </div>  
+           {% endif %}       
+            
             <div class="row">
                 <div class="col-12">
 
