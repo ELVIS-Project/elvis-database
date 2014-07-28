@@ -44,6 +44,15 @@ class Movement(models.Model):
     def __unicode__(self):
         return u"{0}".format(self.title)
 
+    def save(self, *args, **kwargs):
+        (composer_last_name, composer_first_name) = self.composer.name.split(',')
+        piece_title_short = ''.join(self.piece.title.split()[:6])
+        movement_title_short = ''.join(self.title.split()[:1])
+        attachment_name =  "_".join([composer_last_name, piece_title_short, movement_title_short])
+        for attachment in self.attachments.all():
+            attachment.rename(new_filename=attachment_name)
+        super(Movement, self).save()
+
 @receiver(post_save, sender=Movement)
 def solr_index(sender, instance, created, **kwargs):
     import uuid
