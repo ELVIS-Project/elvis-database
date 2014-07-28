@@ -68,6 +68,7 @@ def solr_index(sender, instance, created, **kwargs):
             'id': str(uuid.uuid4()),
             'item_id': int(corpus.id),
             'title': corpus_title,
+            'parent_corpus_name': corpus_title,
             'created': corpus.created,
             'updated': corpus.updated,
             'comment': corpus_comment,

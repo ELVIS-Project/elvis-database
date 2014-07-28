@@ -159,7 +159,6 @@
     <copyField source="date_of_composition" dest="date_general" />	
     <copyField source="composer_name" dest="name_general" />
     <copyField source="name" dest="name_general"/>
-    <copyField source="name" dest="composer_name"/>
     <copyField source="title" dest="name_sort" />
     <copyField source="title" dest="title_searchable"/>
     <copyField source="name" dest="name_sort"/>

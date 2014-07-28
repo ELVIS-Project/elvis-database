@@ -84,7 +84,7 @@ def solr_index(sender, instance, created, **kwargs):
             'type': 'elvis_composer',
             'id': str(uuid.uuid4()),
             'item_id': int(composer.id), # called composer_id in elvis/solr_index.py 
-            'name': composer_name,
+            'composer_name': composer_name,
             'birth_date': composer_birth_date,
             'death_date': composer_death_date,
             'created': composer.created,
