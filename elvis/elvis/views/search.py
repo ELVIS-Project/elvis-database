@@ -1,20 +1,59 @@
 from rest_framework.views import APIView
 from rest_framework.response import Response
+from django.http import HttpResponse, QueryDict
 from rest_framework import status
 from rest_framework.renderers import JSONRenderer, JSONPRenderer
+import json
+import datetime
 
 
-from elvis.serializers.search import SearchSerializer
+from elvis.serializers.search import SearchSerializer#, PaginatedSearchSerializer
+from django.core.serializers.json import DjangoJSONEncoder
 from elvis.renderers.custom_html_renderer import CustomHTMLRenderer
 from elvis.helpers.solrsearch import SolrSearch
 
 from elvis.helpers import paginate
 
-from django.http import QueryDict
-
 from django.conf import settings
 
 import operator
+
+import types
+
+# My hacks to try to fix json encoding
+#class MyEncoder(json.JSONEncoder):
+#    def default(self, o):
+#        try:
+#            return o.__dict__   
+#        except Exception as e:
+#            print e
+
+#def dict_dump(obj):
+#    obj_dict = {}
+#    for key, value in obj.__dict__.items():
+#        if isinstance(value, (type(None), int, long, float, str, unicode, list, dict, set)):
+#            obj_dict[key] = value
+#        elif isinstance(value, (datetime.datetime, datetime.date)):
+#            obj_dict[key] = value.isoformat()
+#        elif isinstance(value, (types.MethodType, types.UnboundMethodType, types.BuiltinFunctionType, types.BuiltinMethodType)):
+#            obj_dict[key] = value.__name__
+#        else:
+#            try:
+#                obj_dict[key] = dict_dump(value)
+#            except Exception as e:
+#                pass
+#    return obj_dict
+#MyEncoder().encode(result)
+        #response = HttpResponse(json.dumps(result), mimetype="application/json")
+        #response = HttpResponse(json.dumps([item.get_json() for item in result['results'].object_list]), content_type='application/json')
+
+# In paginator
+#def simplified_json(self):
+#    result_dict = self.result.__dict__
+#    number_dict = self.number
+#    paginator_dict = self.paginator.__dict__
+#    object_list_dict = map(lambda x: x.__dict__, self.object_list)
+#    return {'result': result_dict, 'number': number_dict, 'paginator': paginator_dict, 'object_list': object_list_dict}
 
 class SearchViewHTMLRenderer(CustomHTMLRenderer):
     template_name = "search/search.html"
@@ -23,8 +62,6 @@ class SearchViewHTMLRenderer(CustomHTMLRenderer):
 class SearchView(APIView):
     serializer_class = SearchSerializer
     renderer_classes = (JSONRenderer, JSONPRenderer, SearchViewHTMLRenderer)
-
-
 
     def get(self, request, *args, **kwargs):
         #querydict = QueryDict("q=%s"%request.GET.get('q'))
@@ -59,7 +96,6 @@ class SearchView(APIView):
             'number_of_voices': facet_number_of_voices,
         }
         facets.facet_counts['facet_fields'] = facet_fields
-        print facets.facet_counts
 
         # if we don't have a query parameter, send empty search results
         # back to the template, but still send along the facets.
@@ -91,23 +127,16 @@ class SearchView(APIView):
             #print('Requested Page Num', page_number)
             paged_results = paginator.page(page_number)
         except paginate.PageNotAnInteger:
-            #print('caught pagenotint')
             try:
                 paged_results = paginator.page(1)
             except paginate.EmptyPage:
                 paged_results = []
         except paginate.EmptyPage:
-            #print('caught empty')
             try:
                 paged_results = paginator.page(paginator.num_pages)
             except paginate.EmptyPage:
                 paged_results = []
          
-            #try: 
-                # paged_results = paginator.page(paginator.num_pages)
-            #except paginate.EmptyPage:
-            #   paged_results = None
-        
         # LM: For moving between pages on the search template
         #query_minus_page = request.GET.pop('page')
         query_minus_page = request.GET.copy()
@@ -118,12 +147,15 @@ class SearchView(APIView):
 
         query_minus_page = query_minus_page.urlencode(['*'])     
 
+        if request.GET.get('format') == 'json':
+            result = paged_results.__dict__
+            result['object_list'] = [item.__dict__ for item in result['object_list']]
+            result['paginator'] = result['paginator'].__dict__
+            result['paginator'].pop('result', None)
+            result['paginator'].pop('query', None)
+            response = HttpResponse(json.dumps(result, cls=DjangoJSONEncoder), content_type='application/json')
+            return response
+
         result = {'results': paged_results, 'facets': facets.facet_counts, 'current_query': query_minus_page, 'FACET_NAMES': settings.FACET_NAMES, 'TYPE_NAMES': settings.TYPE_NAMES}
-        
-        # LM: Now cast to REST framework's Response, which is simply the result with the status added to it
         response = Response(result, status=status.HTTP_200_OK)
-
-
-
-
         return response

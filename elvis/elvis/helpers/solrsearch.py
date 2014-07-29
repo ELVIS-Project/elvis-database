@@ -84,8 +84,8 @@ class SolrSearch(object):
         #print qdict.lists()
         for k, v in qdict.lists():
 
-            # LM: modified from just self.parsed_request[k] = v to cut out nonsensical page requests to solr
-            if k == 'page':
+            # LM: modified from just self.parsed_request[k] = v to cut out nonsensical page/format requests to solr
+            if k == 'page' or k == 'format':
                 continue
 
             # LM: elif for Type filtration
