@@ -1,3 +1,4 @@
+{% if user.is_authenticated %}
 <form class="recursive-patch-download-form" id="recursive-patch-download-form" action="/rpatchdownloads/" method="post" style="display: inline;">
         {% csrf_token %}
     <button type="submit" class="btn btn-xs btn-success"><span class="glyphicon glyphicon-plus"> </span> </button>
@@ -16,3 +17,4 @@
     </script>
 
 </form>
+{% endif %}
