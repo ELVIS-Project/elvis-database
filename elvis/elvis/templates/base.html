@@ -29,59 +29,78 @@
                 initializeDownloadBadges();
             });
         </script>
+
+        <style type="text/css">
+        * {
+            margin: 0;
+        }
+        html, body {
+            height: 100%;
+        }
+        .wrapper {
+            min-height: 100%;
+            height: auto !important;
+            height: 100%;
+            margin: 0 auto -4em;
+        }
+        .footer, .push {
+            height: 4em;
+        }
+        </style>
     </head>
     
     <body>
-        <nav class="navbar navbar-default" role="navigation"> 
-            <div class="navbar-header">
-                <a class="navbar-brand" href="/">ELVIS</a>
-            </div>
+        <div class="wrapper">
+            <nav class="navbar navbar-default" role="navigation"> 
+                <div class="navbar-header">
+                    <a class="navbar-brand" href="/">ELVIS</a>
+                </div>
 
-            <div class="navbar-collapse collapse">
-                <ul class="nav navbar-nav">
-                    <li><a href="/about">About</a></li>
-                    <li><a href="/projects">Projects</a></li>
-                    <li><a href="/queries">Queries</a></li>
-                    <li><a href="/search">Search</a></li>
-                    <li class="dropdown">
-                        <a href="#" class="dropdown-toggle" data-toggle="dropdown"> Browse <b class="caret"></b></a>
-                        <ul class="dropdown-menu">
-                            <li><a href="/pieces">Pieces</a></li>
-                            <li><a href="/movements">Movements</a></li>
-                            <li><a href="/corpora">Corpora</a></li>
-                            <li><a href="/composers">Composers</a></li>
-                        </ul>
-                    </li>
-                    <!--<li><a href="/upload">Upload</a></li>-->
-                    <li><a href="/temp">(Mock/New) Upload Page </a></li>
-                </ul>
-                <ul class="nav navbar-nav navbar-right">
-                {% if user.is_authenticated %}
-                    <li><a href="/upload">(Old) Upload</a></li>
-                    <li>
-                        {% with download_num=user.downloads.all.first.attachments.all %}
-                        <a href="/downloads">
-                            <span class="glyphicon glyphicon-circle-arrow-down"></span> Downloads
-                        ({{ download_num | length }})
-                        </a>
-                        {% endwith %}
-                    </li>
-                    <li class="dropdown">
-                        <a href="#" class="dropdown-toggle" data-toggle="dropdown">Welcome {{ user.username }} <b class="caret"></b></a>
-                        <ul class="dropdown-menu">
-                            <li class="divider"></li>
-                            <li><a href="/user/{{ user.id }}">Account Settings</a></li>
-                            <li><a href="/logout/">Logout</a></li>
-                            <li id="separator"></li>
-                            <li><a href="/user-profiles">View other users</a></li>
-                        </ul>
-                    </li>
-                {% else %}
-                    <li><a href="/login/">Login</a></li>
-                {% endif %}
-                </ul>
-            </div>
-        </nav>
+                <div class="navbar-collapse collapse">
+                    <ul class="nav navbar-nav">
+                        <li><a href="/about">About</a></li>
+                        <li><a href="/projects">Projects</a></li>
+                        <li><a href="/queries">Queries</a></li>
+                        <li><a href="/search">Search</a></li>
+                        <li class="dropdown">
+                            <a href="#" class="dropdown-toggle" data-toggle="dropdown"> Browse <b class="caret"></b></a>
+                            <ul class="dropdown-menu">
+                                <li><a href="/pieces">Pieces</a></li>
+                                <li><a href="/movements">Movements</a></li>
+                                <li><a href="/corpora">Corpora</a></li>
+                                <li><a href="/composers">Composers</a></li>
+                            </ul>
+                        </li>
+                        <!--<li><a href="/upload">Upload</a></li>-->
+                        <li><a href="/temp">(Mock/New) Upload Page </a></li>
+                    </ul>
+                    <ul class="nav navbar-nav navbar-right">
+                    {% if user.is_authenticated %}
+                        <li><a href="/upload">(Old) Upload</a></li>
+                        <li>
+                            {% with download_num=user.downloads.all.first.attachments.all %}
+                            <a href="/downloads">
+                                <span class="glyphicon glyphicon-circle-arrow-down"></span> Downloads
+                            ({{ download_num | length }})
+                            </a>
+                            {% endwith %}
+                        </li>
+                        <li class="dropdown">
+                            <a href="#" class="dropdown-toggle" data-toggle="dropdown">Welcome {{ user.username }} <b class="caret"></b></a>
+                            <ul class="dropdown-menu">
+                                <li class="divider"></li>
+                                <li><a href="/user/{{ user.id }}">Account Settings</a></li>
+                                <li><a href="/logout/">Logout</a></li>
+                                <li id="separator"></li>
+                                <li><a href="/user-profiles">View other users</a></li>
+                            </ul>
+                        </li>
+                    {% else %}
+                        <li><a href="/login/">Login</a></li>
+                    {% endif %}
+                    </ul>
+                </div>
+            </nav>
 
         <div class="container">
             {% if not user.is_authenticated %}
@@ -96,12 +115,26 @@
             <div class="row">
                 <div class="col-12">
 
-                    {% block wrap %}
 
-                    {% endblock %}
+                        {% block wrap %}
+
+                        {% endblock %}
+                    </div>
+                </div>
+            </div>
+
+            <div class="push"></div>
+        </div>
+        
+        <div class="footer">
+            <div class="container">
+                <div class="row text-muted">
+                ELVIS Project -- SIMSSA -- McGill University (c) 2014.
                 </div>
             </div>
         </div>
+        
+
     </body>
 
 
