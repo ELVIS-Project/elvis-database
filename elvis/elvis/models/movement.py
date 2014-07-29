@@ -45,7 +45,10 @@ class Movement(models.Model):
         return u"{0}".format(self.title)
 
     def save(self, *args, **kwargs):
-        (composer_last_name, composer_first_name) = self.composer.name.split(',')
+        try:
+            (composer_last_name, composer_first_name) = self.composer.name.split(',', 1)
+        except ValueError as v:
+            (composer_last_name, composer_first_name) = self.composer.name.split(' ', 1)
         piece_title_short = ''.join(self.piece.title.split()[:6])
         movement_title_short = ''.join(self.title.split()[:1])
         attachment_name =  "_".join([composer_last_name, piece_title_short, movement_title_short])

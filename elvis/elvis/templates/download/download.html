@@ -13,7 +13,7 @@
             <table class="table table-condensed">
                 <thead>
                     <tr>
-                        <th> <input type="checkbox" name="select-all" id="select-all" checked="true"/> Select All </th>
+                        <th> <input type="checkbox" name="select-all" id="select-all" checked="true"/> Toggle All </th>
                         <th>Title</th>
                         <th>File Name </th>
                         <th>Composer</th>
@@ -78,6 +78,7 @@
         </div>
 
 
+        {% if content.attachments %}
         <div class="row">
             <h4>Select file types to download/remove:</h4>
             <!-- if these are modified, modify downloading_item view too -->
@@ -125,6 +126,7 @@
             </script>
             <p></p>
         </div>
+        {% endif %}
 
     </form>
 
