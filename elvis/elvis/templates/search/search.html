@@ -16,56 +16,75 @@
 .nav-tabs {
     margin-bottom: 0;
 }
+.input-group-addon.lg {
+    min-width:200px;
+    text-align:left;
+}
 </style>
 
 <head>
+    <script type="text/javascript" src="{{STATIC_URL}}js/bootstrap-multiselect.min.js"></script>
+    <link rel="stylesheet" href="{{STATIC_URL}}css/bootstrap-multiselect.css" type="text/css"/>
     <script type="text/javascript">
-    /* $(function(){
-        $('#advanced-search-form').submit(function() {            
-            $(':input').each(function(){
-                if($(this).val() == "" && $(this).attr('name')!= "q"){
-                    $(this).attr('disabled', true);
-                }    
-            });
+
+    $(function() 
+    {   
+        $('#typefilt').multiselect(
+        {
+            buttonWidth: '100%',
+            numberDisplayed: 3,
+            checkboxName: 'typefilt',
+            nonSelectedText: 'Any Type',
+            nSelectedText: 'Selected Types',
+            templates: {
+                button: '<button type="button" class="btn-default btn-lg" data-toggle="dropdown" style="height:47px; padding: 10px 16px; line-height: 1.33; font-size: 16px; border: solid 1px;"></button>',
+            },
+            buttonText: function(options, select) 
+            {
+                if (options.length == 0 || options.length == 6) 
+                {
+                  return this.nonSelectedText + ' <b class="caret"></b>';
+                }
+                else 
+                {
+                    if (options.length > this.numberDisplayed) 
+                    {
+                        return options.length + ' ' + this.nSelectedText + ' <b class="caret"></b>';
+                    }
+                    else 
+                    {
+                        var selected = '';
+                        options.each(function() 
+                        {
+                            var label = ($(this).attr('label') !== undefined) ? $(this).attr('label') : $(this).html();
+             
+                            selected += label + ', ';
+                        });
+                        return selected.substr(0, selected.length - 2) + ' <b class="caret"></b>';
+                    }
+                }
+            },
         });
     });
 
     $(function(){
-        $('#general-search-form').submit(function() {         
-            $(':input').each(function(){
-                if($(this).val() == "" && $(this).attr('name')!= "q"){
-                    $(this).attr('disabled', true);
-                }    
-            });
-        });
-    }); */
-        
-    $(function(){
         $('#asearch-submit').click(function(){
-            //$('.panel-collapse').collapse('hide');
             $(':input').each(function(){
                 if($(this).val() == "" && $(this).attr('name')!= "q"){
                     $(this).attr('disabled', true);
                 }    
             });
-            //$('#collapse-asearch').on('hidden.bs.collapse', function () {
-            //  $('##advanced-search-form').submit();
-            //})
             setTimeout(function(){$('#advanced-search-form').submit()}, 300);
         });
     })
 
     $(function(){
         $('#gsearch-submit').click(function(){
-            //$('.panel-collapse').collapse('hide');
             $(':input').each(function(){
                 if($(this).val() == "" && $(this).attr('name')!= "q"){
                     $(this).attr('disabled', true);
                 }    
             });
-            //$('#collapse-search').on('hidden.bs.collapse', function () {
-            //  $('#general-search-form').submit();
-            //})
             setTimeout(function(){$('#general-search-form').submit()}, 300);
         });
     })
@@ -73,12 +92,14 @@
     $(function(){
         var qstr = window.location.search.replace("?", "");
         var qstr_params = $.parseParams(qstr);
-        for (var key in qstr_params){
-            $('[name='+key+']').val(qstr_params[key]);
-            if(key == 'typefilt' || key=='type'){
-                $("[id='"+qstr_params[key]+"']").attr('checked', true);
-                //$('[type=checkbox][value="'+qstr_params[key]+'"]').attr('checked',true);
+        for (var key in qstr_params)
+        {
+            if(key == 'typefilt' || key=='type')
+            {
+                $('#typefilt').multiselect('select', qstr_params[key]);
+                continue;
             }
+            $('[name='+key+']').val(qstr_params[key]);
         }
     })
     //onfocus="this.placeholder = ''" onblur="this.placeholder = 'E.g.: Agnus Dei...'"
@@ -102,11 +123,7 @@
 <body>
 <h2>Search the Database</h2>
 
-<div class="row col-12" style="  background-color: #ffffff;
-
-
-  -webkit-box-shadow: 0 1px 1px rgba(0, 0, 0, 0.05);
-          box-shadow: 0 1px 1px rgba(0, 0, 0, 0.05);">
+<div class="row col-12" style="background-color: #ffffff; -webkit-box-shadow: 0 1px 1px rgba(0, 0, 0, 0.05); box-shadow: 0 1px 1px rgba(0, 0, 0, 0.05);">
     <!-- Tabs bar -->
 
         <ul class="nav nav-tabs nav-justified" style=>
@@ -166,102 +183,117 @@
 
                             <div class="form-group">
                               
-                              <!-- Submit Button -->
-                                <h4> General Search Query: </h4> 
+                            <h3> General Search Query: </h3> 
+                            
+                            <div class="input-group input-group-lg">
+                                    <span class="input-group-addon lg">Search Query</span>
+                                    <input type="text" class="form-control" name="q" placeholder="E.g.: Byrd Hornpipe...">
+                                    <span class="input-group-addon">
+                                        <span class="glyphicon glyphicon-info-sign"></span>
+                                    </span> 
+                                </div>
+                            
 
-                                    <div class="col-sm-12">
-                                        <input type="text" name="q" class="search-input" placeholder="E.g.: Byrd Hornpipe" style="float: none; margin: 0 auto;"/>                              
-                                    </div>
+                            <h3> Limit Results by... </h3>
+                            
 
                             <!-- Name Filter -->
-                                <h4> Limit by Title: </h4>
-                                    <div class = "col-sm-12">
-                                      <input type="text" name="titlefilt" placeholder="E.g.: Agnus Dei...">
-                                      <div class="help-block">Will find results with all entered search terms (use "" to force ordered search) in their title or name, depending on result type filters chosen above. </div>
-                                    </div> 
 
+                                <div class="input-group input-group-lg">
+                                    <span class="input-group-addon lg">Title</span>
+                                    <input type="text" class="form-control" name="titlefilt" placeholder="E.g.: Agnus Dei...">
+                                    <span class="input-group-addon">
+                                        <span class="glyphicon glyphicon-info-sign"></span>
+                                    </span> 
+                                </div>
+                                <p></p>
                             <!-- Name Filter -->
-                                <h4> Limit by Composer Name: </h4>
-                                    <div class = "col-sm-12">
-                                      <input type="text" name="namefilt" placeholder="E.g.: Jacob Obrecht...">
-                                      <div class="help-block">Will find both composers matching this query and pieces/movements composed by composers matching this query. </div>
-                                    </div> 
 
+                                <div class="input-group input-group-lg">
+                                    <span class="input-group-addon lg">Composer's Name</span>
+                                    <input type="text" class="form-control" name="namefilt" placeholder="E.g.: Jacob Obrecht...">
+                                    <span class="input-group-addon">
+                                        <span class="glyphicon glyphicon-info-sign"></span>
+                                    </span> 
+                                </div>
+                                <p></p>
 
                             <!-- Tag Filter -->
-                                <h4> Limit by Tags: </h4>
-                                    <div class = "col-sm-12">
-                                      <input type="text" name="tagfilt" placeholder="Tag1 Tag2 ...">
-                                    </div> 
 
+                                <div class="input-group input-group-lg">
+                                    <span class="input-group-addon lg">Tags</span>
+                                    <input type="text" class="form-control" name="tagfilt" placeholder="E.g.: Tag1 Tag2 ...">
+                                    <span class="input-group-addon">
+                                        <span class="glyphicon glyphicon-info-sign"></span>
+                                    </span> 
+                                </div>
+                                <p></p>
 
                             <!-- Voice Filter -->
-                                <h4> Limit by Number of Voices: </h4>
-                                    <div class = "col-sm-12">
-                                      <input type="text" name="voicefilt" placeholder="E.g.: 4">
-                                    </div> 
+
+                                <div class="input-group input-group-lg">
+                                    <span class="input-group-addon lg">Number of Voices</span>
+                                    <input type="text" class="form-control" name="voicefilt" placeholder="E.g.: 4">
+                                    <span class="input-group-addon">
+                                        <span class="glyphicon glyphicon-info-sign"></span>
+                                    </span> 
+                                </div> 
+                                <p></p>
 
                             <!-- Date Filter -->
-                                <h4> Limit by Date: </h4>
-                                    <div class = "col-sm-12">
-                                      <input type="text" name="datefiltf" placeholder="From: (YYYY)" maxlength="4">
-                                      <input type="text" name="datefiltt" placeholder="To: (YYYY)" maxlength="4">
-                                      <div class="help-block">Will filter by birth or composition date, depending on result type filters chosen above.</div>
-                                    </div> 
-
-                           <!-- Checkbox Filters -->
-                                <h4> Limit by Result Type: </h4>
-                                  <div class="col-sm-12">
-                                      <div class="col-sm-4">
-                                          <div class="checkbox">
-                                            <label>
-                                              <input type="checkbox" name="typefilt" id="elvis_composer" value="elvis_composer"> Composers
-                                            </label>
-                                          </div>
-                                          <div class="checkbox">
-                                            <label>
-                                              <input type="checkbox" name="typefilt" id="elvis_piece" value="elvis_piece"> Pieces
-                                            </label>
-                                          </div>
-                                      </div>
-                                      <div class="col-sm-4">
-                                          <div class="checkbox">
-                                            <label>
-                                              <input type="checkbox" name="typefilt" id="elvis_movement" value="elvis_movement"> Movements
-                                            </label>
-                                          </div>
-                                          <div class="checkbox">
-                                            <label>
-                                              <input type="checkbox" name="typefilt" id="elvis_corpus" value="elvis_corpus"> Corpora
-                                            </label>
-                                          </div>
-                                      </div>
-                                      <div class="col-sm-4">
-                                          <div class="checkbox">
-                                            <label>
-                                              <input type="checkbox" name="typefilt" id="elvis_tag" value="elvis_tag"> Tags
-                                            </label>
-                                          </div>
-                                          <div class="checkbox">
-                                            <label>
-                                              <input type="checkbox" name="typefilt" id="elvis_user" value="elvis_user"> Users
-                                            </label>
-                                          </div>
-                                      </div>
+                                <div class="row">
+                                    <div class="col-lg-6">
+                                        <div class="input-group input-group-lg">
+                                        <span class="input-group-addon lg">Date Range</span>
+                                            <input type="text" class="form-control" name="datefiltf" placeholder="From: (YYYY)" >
+                                        </div>
                                     </div>
 
-                            <!-- Sorting --> 
-                                <h4> Sort by: </h4>
-                                    <div class="col-sm-12">
-                                          <select name="sortby">
-                                          <option value=""> Default (Type) </option>
-                                          <option value="name_sort desc"> Alphabetical &#9650; </option>
-                                          <option value="name_sort asc"> Alphabetical &#9660; </option>
-                                          <option value="date_general desc"> Date &#9650; </option>
-                                          <option value="date_general asc"> Date &#9660;</option>
-                                          </select>                   
-                                      </div>                 
-                                  <p></p>
+                                    <div class="col-lg-6">
+                                        <div class="input-group input-group-lg">
+                                            <input type="text" class="form-control" name="datefiltt" placeholder="To: (YYYY)" >
+                                            <span class="input-group-addon sm">
+                                                <span class="glyphicon glyphicon-info-sign"></span>
+                                            </span>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <p></p>
+
+                           <!-- Checkbox Filters -->
+                                <div class="row">
+                                    <div class="col-md-6">
+                                        <div class="input-group input-group-lg">
+                                            <span class="input-group-addon lg">Result Type</span>
+                                            <select id="typefilt" multiple="multiple">
+                                                <option id="elvis_composer" value="elvis_composer">Composers</option>
+                                                <option id="elvis_piece" value="elvis_piece">Pieces</option>
+                                                <option id="elvis_movement" value="elvis_movement">Movements</option>
+                                                <option id="elvis_corpus" value="elvis_corpus">Corpora</option>
+                                                <option id="elvis_tag" value="elvis_tag">Tags</option>
+                                                <option id="elvis_user" value="elvis_user">Users</option>
+                                            </select>
+                                            <span class="input-group-addon">
+                                                <span class="glyphicon glyphicon-info-sign"></span>
+                                            </span> 
+                                        </div> 
+                                    </div>
+                                </div>
+
+                                <!-- Sorting --> 
+                                    <h3> Sort by: </h3>
+                                        <div class="col-sm-12">
+                                            <select name="sortby">
+                                                <option value=""> Default (Type) </option>
+                                                <option value="name_sort desc"> Alphabetical &#9650; </option>
+                                                <option value="name_sort asc"> Alphabetical &#9660; </option>
+                                                <option value="date_general desc"> Date &#9650; </option>
+                                                <option value="date_general asc"> Date &#9660;</option>
+                                            </select>                   
+                                          </div>                 
+                                      <p></p>
+                                
                             </div>
 
                             <!-- Submit -->
@@ -305,76 +337,6 @@
  {% include "search/search_results.html" %}
 
 {% endif %}
-</div>
-
-<!-- <div class="col-md-4" >
-    {% if content.facets %}
-        <h2>Search Facets</h2>
-        {% for name, facets in content.facets.facet_fields.items %}
-        <div class="row">
-            <h4>{{ name }}</h4>
-            <ul>
-                {% for facet, count in facets.items %}
-                    <li><a class="facet-link" href="#" data-facet-name="{{ name }}" data-facet-value="{{ facet }}">{{ facet }} </a> ({{ count }})</li>
-                {% endfor %}
-            </ul>
-        </div>
-        {% endfor %}
-        <script type="text/javascript">
-            // this code manages what happens when a facet link is clicked.
-            $(".facet-link").on('click', function(event)
-            {
-                var qstr = window.location.search.replace("?", "");
-                var qstr_params = $.parseParams(qstr);
-
-                var facetName = $(this).data('facet-name');
-                var facetValue = $(this).data('facet-value');
-                if (!(facetName in qstr_params))
-                {
-                    var facetQ = facetName + "=" + facetValue;
-                    if (qstr != "")
-                    {
-                        // this makes sure that we either append the 
-                        // querystring to an existing query string
-                        // (with a "&") or we just append it to the
-                        // existing URL.
-                        facetQ = "&" + facetQ;
-                    }
-
-                    window.location.search = qstr + facetQ;
-                }
-                event.preventDefault();
-            });
-        </script>
-
-
-  <script type="text/javascript">
-  function downloadAll(){
-    document.getElementsById("list-patch-download-form").submit();
-  }
-
-  $('#listDownload').click(function(){
-    document.getElementsById("list-patch-download-form").submit();
-  });
-  </script> 
-    {% endif %}
-
-
-  <h3> Results <button id="listDownload" onclick="downloadAll()" class="btn btn-success btn-sm pull-right" style="display: inline;">
-      Add All Results to Downloads <span class="glyphicon glyphicon-plus"></span> 
-    </button> 
-  </h3>
-
-  <script type="text/javascript">
-  function downloadAll(){
-    var buttons = document.getElementsByClassName("recursive-patch-download-form");
-    for(i = 0; i<buttons.length; i++){
-      buttons[i].submit();
-    }
-  }
-  </script> 
-
-     -->
 </div>
 
 {% endblock %}
