@@ -32,8 +32,8 @@
               document.getElementById("search_query").value = window.location.href;
             </script>
 
-            <button type="submit" id="all_download" onClick="return confirm('Are you sure you want to recursively add all results to your downloads?\nWARNING: use with caution -- this may add undesired items!')" class="btn btn-success btn-sm pull-right" >
-              Add All Query Results to Downloads <span class="glyphicon glyphicon-plus"></span> 
+            <button type="submit" id="all_download" onClick="return confirm('Are you sure you want to recursively add all results to your downloads?\nWarning: use with caution -- this may add undesired items!')" class="btn btn-success btn-sm pull-right" >
+              Add All Results in Current Query to Downloads <span class="glyphicon glyphicon-plus"></span> 
             </button> 
         </form>
 
@@ -133,68 +133,36 @@
 
     <div class="col-md-3">
 
-
-        <h3>Refine Your Search:</h3> 
         <div class="row">
+            <h3>Narrow Your Search:</h3> 
             <button id="collapse-init" class="btn btn-primary btn-sm">
                 Hide Facets
             </button>
-            <input type="text" class="facet-search" id="facet-search" placeholder="Find a Facet">
+            <input type="text" class="facet-search pull-right" id="facet-search" style="text-align:center" placeholder="Look for a Facet">
             <p></p>
         </div>
         
 
         <script type="text/javascript">
-            $(function(){
-                var active = true;
-                $('#collapse-init').click(
-                    // Importing the bootstrap js required for collapsing disables the panels; see below for non-bootstrap specific js
-                    function(){
-                        if (active) {
-                            active = false;
-                            $('.panel-collapse.facets').collapse('show');
-                            //$('.panel-title').attr('data-toggle', '');
-                            //$('.panel-collapse').attr('class', 'panel-collapse collapse in');
-                            $(this).text('Hide Facets');
-                        } 
-                        else {
-                            active = true;
-                            $('.panel-collapse.facets').collapse('hide');
-                            //$('.panel-title').attr('data-toggle', 'collapse'); // use 'collapse' for user collapseable panels
-                            //$('.panel-collapse').attr('class', 'panel-collapse collapse');
-                            $(this).text('Show Facets');
-                        }
-                    }
-                );
-            });
+            
         </script>
 
 
-        <div class="panel-group" id="accordion-facets">  
-            <!-- {% for name, facets in content.facets.facet_fields.items %}
-            <div class="row facets">
-                <h4>{{ name }}</h4>
-                <ul>
-                    {% for facet, count in facets.items %}
-                        <li><a class="facet-link" href="#" data-facet-name="{{ name }}" data-facet-value="{{ facet }}">{{ facet }} </a> ({{ count }})</li>
-                    {% endfor %}
-                </ul>
-            </div>
-            {% endfor %} -->
+        <div class="row panel-group" id="accordion-facets">  
             {% for name, facets in content.facets.facet_fields.items %}
             {% if facets %}
             <div class="panel panel-default">
-                    <div class="panel-heading">
-                        <h1 class="panel-title" data-toggle="collapse" data-target="#collapse-{{name}}" > 
+                    <div class="panel-heading facets" style="height:50%;">
+                        <h1 class="panel-title" data-toggle="collapse" data-target="#collapse-{{name}}" style="font-size:100%;"> 
                             {{ content.FACET_NAMES|get_value:name }}  
                         </h1>
                     </div>
 
                     <div id="collapse-{{name}}" class="panel-collapse collapse facets in">
-                        <div class="panel-body facets">
+                        <div class="panel-body facets" id="facet-panel-{{name}}">
                                 {% for facet, count in facets %}
                                     <li style="list-style: none;">
-                                        <div style="white-space:nowrap;">
+                                        <div id="facet-container-{{facet}}" style="white-space:nowrap;">
                                             <input type="checkbox" class="facet-link" data-facet-name="{{ name }}" data-facet-value="{{ facet }}">
                                             <label class="facet-label"> {% if name == 'type' %} {{ content.TYPE_NAMES|get_value:facet }} {% else %} {{ facet }} {% endif %}  ({{ count }})
                                             </label>
@@ -208,46 +176,94 @@
             {% endfor %}
 
         </div>
-        <script type="text/javascript">
-            // this code manages what happens when a facet link is clicked.
-
+        <script type='text/javascript' src='{{STATIC_URL}}js/jquery.scrollTo.min.js'></script>
+        <script type="text/javascript"> 
+            // this code manages the facet collapse
             $(function()
             {
-                var facetLabels = document.getElementsByClassName("facet-label");
+                var hidden = false;
+                $('#collapse-init').click(
+                    // Importing the bootstrap js required for collapsing disables the panels; see below for non-bootstrap specific js
+                    function()
+                    {
+                        if (hidden) 
+                        {
+                            hidden = false;
+                            $('.panel-collapse.facets').collapse('show');
+                            //$('.panel-title').attr('data-toggle', '');
+                            //$('.panel-collapse').attr('class', 'panel-collapse collapse in');
+                            $(this).text('Hide Facets');
+                        } 
+                        else 
+                        {
+                            hidden = true;
+                            $('.panel-collapse.facets').collapse('hide');
+                            //$('.panel-title').attr('data-toggle', 'collapse'); // use 'collapse' for user collapseable panels
+                            //$('.panel-collapse').attr('class', 'panel-collapse collapse');
+                            $(this).text('Show Facets');
+                        }
+                    }
+                );
+            });
 
-                setInterval(function()
+            // this code manages what happens when a facet link is clicked.
+           $(function()
+            {
+                var facetLabels = $(".facet-label");
+                var lastSearch = "";
+                /*document.getElementById("facet-search").onkeyup = (function(event)
                 {
-                    var searchFacet = document.getElementById("facet-search").value.toLowerCase();
-                    //var searchFacet = $(".facet-search").value;
-                    //alert(searchFacet);
-                    //if(searchFacet != ""){
-                    //    $(".facet-label:contains(" + searchFacet + ")").css("border", "4px solid blue");
-                    //};
+                    if(event.keyCode == 13)
+                    {
+                        var searchFacet = document.getElementById("facet-search").value.toLowerCase();
+                        for(var i=0; i<facetLabels.length; i++)
+                        {
+                            if(searchFacet != "" && facetLabels[i].innerHTML.toLowerCase().indexOf(searchFacet) > -1)
+                            {
+                                facetLabels[i].style.fontWeight = "bold";
+                                facetLabels[i].style.background = "#E0E0E0";
+                                find(searchFacet);
+                            }
+                            else
+                            {
+                                facetLabels[i].style.fontWeight = "";
+                                facetLabels[i].style.background = "";
+                            }
+                        }
+                        document.getElementById("facet-search").focus();
+                    }       
+                }); */
+
+                $('#facet-search').keyup(function()
+                {
+                    var searchFacet = $(this).val().toLowerCase();
                     for(var i=0; i<facetLabels.length; i++)
                     {
-                        if(searchFacet != "" && facetLabels[i].innerHTML.toLowerCase().indexOf(searchFacet) > -1)
+                        if(searchFacet.length > 2 && facetLabels[i].innerHTML.toLowerCase().indexOf(searchFacet) > -1)
                         {
-                            //alert(facetLabels[i].innerHTML.toLowerCase());
                             facetLabels[i].style.fontWeight = "bold";
-                            //facetLabels[i].style.color = "red";
                             facetLabels[i].style.background = "#E0E0E0";
-                            //if(searchFacet != lastSearch)
-                            //{
-                            //    lastSearch = searchFacet;
-                            //    facetLabels[i].parentNode.parentNode.parentNode.scrollTop = facetLabels[i].parentNode.offsetParent.offsetTop;
-                            //}
-                            //facetLabels[i].style.border = "4px solid blue";
+                            if(searchFacet != lastSearch)
+                            {
+                                //find(searchFacet);
+                                //document.getElementById("facet-search").focus();
+                                //alert(facetLabels[i].parentNode.parentNode.parentNode.id);
+                                //alert(facetLabels[i].parentNode.id);
+                                //facetLabels[i].parentNode.parentNode.parentNode.scrollTop = facetLabels[i].parentNode.offsetTop;
+                                //facetLabels[i].scrollIntoView(false);
+                                //facetLabels[i].parentNode.parentNode.parentNode.scrollTo(facetLabels[i]);
+                                //$(facetLabels[i].parentNode.parentNode.parentNode).scrollTop($(facetLabels[i].parentNode.parentNode.parentNode).scrollTop()+$(facetLabels[i]).position().top);
+                                $(facetLabels[i].parentNode.parentNode.parentNode).stop().scrollTo($(facetLabels[i]), 200);
+                            }
                         }
                         else
                         {
                             facetLabels[i].style.fontWeight = "";
-                            //facetLabels[i].style.color = "black";
                             facetLabels[i].style.background = "";
-                            //facetLabels[i].style.border = "";
                         }
                     }
-                },
-                500);
+                    lastSearch = searchFacet;
+                }).keyup(); 
 
 
                 var qstr = window.location.search.replace("?", "");

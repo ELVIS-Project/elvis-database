@@ -7,6 +7,15 @@
 .panel-title:hover {
     cursor: pointer;
 }
+.tab-content {
+    border-left: 1px solid #ddd;
+    border-right: 1px solid #ddd;
+    border-bottom: 1px solid #ddd;
+    padding: 10px;
+}
+.nav-tabs {
+    margin-bottom: 0;
+}
 </style>
 
 <head>
@@ -93,16 +102,20 @@
 <body>
 <h2>Search the Database</h2>
 
-<div class="col-12">
+<div class="row col-12" style="  background-color: #ffffff;
+
+
+  -webkit-box-shadow: 0 1px 1px rgba(0, 0, 0, 0.05);
+          box-shadow: 0 1px 1px rgba(0, 0, 0, 0.05);">
     <!-- Tabs bar -->
 
-        <ul class="nav nav-tabs nav-justified" >
+        <ul class="nav nav-tabs nav-justified" style=>
 
-            <li class="active"><a href="#gsearch" data-toggle="tab">General Search</a></li>
+            <li class="active"><a href="#gsearch" data-toggle="tab"><h4>General Search</h4></a></li>
 
-            <li class=""><a href="#asearch" data-toggle="tab">Advanced Search</a></li>
+            <li class=""><a href="#asearch" data-toggle="tab"><h4>Advanced Search</h4></a></li>
 
-            <li class=""><a href="#help" data-toggle="tab">Information & Help</a></li>
+            <li class=""><a href="#help" data-toggle="tab"><h4>Information & Help</h4></a></li>
 
         </ul>
 
@@ -114,64 +127,38 @@
         <div class="tab-pane fade in active" id="gsearch">
         
             <!-- Accordion -->
-            <div class="panel-group" id="accordion-gsearch">
-
-                <!-- Search Box Panel -->
-                  <div class="panel panel-default">
-                    <div class="panel-heading">
-                        <h1 class="panel-title" data-toggle="collapse" data-target="#collapse-search" > 
-                            <span class="glyphicon glyphicon-collapse-down"></span> 
-                            Toggle General Search:  
-                        </h1>
-                    </div>
-
-                    <div id="collapse-search" class="panel-collapse collapse in {% if not content.results %} in {% endif %}">
-                        <div class="panel-body">
+                        <div class="panel-body" style="margin-bottom: 15px; margin-top:25px; ">
                             <form id="general-search-form" action="/search" method="get">
                                 <!-- Query Entry -->
                                 <div class="row">
-                                    <div class="form-group">
                                
-                                            
                                             <!-- <input type="text" name="q" class="search-input" placeholder="Search Query... &nbsp; E.g.: Bach Chorale Gott" size="35" style="float: none; margin: 0 auto;"/>                              
                                             <button type="submit" class="btn btn-default btn-sm" id="btn-submit">
                                               Search
                                               <span class="glyphicon glyphicon-search"></span> 
+                                              placeholder="Search Query... &nbsp; &nbsp; &nbsp;E.g.: Bach Chorale Gott" onfocus="this.placeholder = ''" onblur="this.placeholder = 'Search Query... &nbsp; &nbsp; &nbsp;E.g.: Bach Chorale Gott'"
                                             </button> -->
 
-                                            <div class="input-group input-group-lg col-md-8 col-md-offset-2">
-                                              <input type="text" class="form-control" name="q" placeholder="Search Query... &nbsp; &nbsp; &nbsp;E.g.: Bach Chorale Gott" onfocus="this.placeholder = ''" onblur="this.placeholder = 'Search Query... &nbsp; &nbsp; &nbsp;E.g.: Bach Chorale Gott'" style="text-align:center; ">
-                                              <span class="input-group-btn">
+                                    <div class="input-group input-group-lg col-md-8 col-md-offset-2">
+                                            <input type="text" class="form-control search" name="q"  style="text-align:center; border-radius:4px;">
+                                            <span class="input-group-btn">
                                                 <button class="btn btn-default submit" type="button" id="gsearch-submit"> Search <span class="glyphicon glyphicon-search"></span> </button>
-                                              </span>
-                                            </div><!-- /input-group -->
+                                            </span>
+                                    </div><!-- /input-group -->
                            
-                                    </div>
                                 </div>
                                 <p></p>
 
                                 <!-- Filters --> 
                             </form>
                         </div>
-                             
-                    </div>
-                </div>
-            </div>
+
         </div>
 
         <!-- Advanced Search -->
         <div class="tab-pane fade" id="asearch">
         
             <!-- Accordion -->
-            <div class="panel-group" id="accordion-asearch">
-                <div class="panel panel-default">
-                    <div class="panel-heading">
-                        <h1 class="panel-title" data-toggle="collapse" data-target="#collapse-asearch" > 
-                            <span class="glyphicon glyphicon-collapse-down"></span>
-                            Toggle Advanced Search: 
-                        </h1>
-                    </div>
-                    <div id="collapse-asearch" class="panel-collapse collapse in {% if not content.current_query %} in {% endif %}">
                         <div class="panel-body">
 
                         <form id="advanced-search-form" action="/search" method="get">
@@ -211,7 +198,7 @@
                             <!-- Voice Filter -->
                                 <h4> Limit by Number of Voices: </h4>
                                     <div class = "col-sm-12">
-                                      <input type="text" name="voicefilt" placeholder="E.g.: 4" maxlength="2">
+                                      <input type="text" name="voicefilt" placeholder="E.g.: 4">
                                     </div> 
 
                             <!-- Date Filter -->
@@ -287,25 +274,12 @@
                             
                         </form>
                         </div>                    
-                    </div>
-                </div>
-            </div>        
+  
         </div>
 
            <!-- Help  -->
         <div class="tab-pane fade" id="help">
-        
-            <!-- Accordion -->
-            <div class="panel-group" id="accordion-info">
-                  <div class="panel panel-default">
-                    <div class="panel-heading">
-                        <h1 class="panel-title" data-toggle="collapse" data-target="#collapse-info" > 
-                            <span class="glyphicon glyphicon-collapse-down"></span>
-                            Toggle Information & Help: 
-                        </h1>
-                    </div>
 
-                    <div id="collapse-info" class="panel-collapse collapse in {% if not content.results %} in {% endif %}">
                         <div class="panel-body">
                         <h4> General Searching </h4>
                         <p> A basic, Google-esque search. Results are based on occurrences of the search terms in the title/name, composer, parent piece, and tag fields of an item. Items returned may be any type (e.g. a composer, a piece, or a corpus). Use this if you want to quickly look for the most relevant items - the database will order results based on relevancy. </p>
@@ -314,9 +288,6 @@
                         <h4> Downloading Results </h4>
                         <p> Each <button class="btn btn-xs btn-success"><span class="glyphicon glyphicon-plus"></span></button> recursively sends its object's attachments to your downloads. For example, clicking this in a piece-typed result will send all of its attachments, and the attachments of its movements, to your downloads cart. The <button class="btn btn-success btn-sm">Add Results on Current Page to Downloads <span class="glyphicon glyphicon-plus"></span></button> will recursively send all the attachments of the current page's results to your downloads. In other words, it's like clicking all of the small green buttons at once. The <button class="btn btn-danger btn-sm"> Add All Query Results to Downloads <span class="glyphicon glyphicon-plus"></span></button> will do the same for every page of results in your query.</p>
                         </div>
-                    </div>
-                </div>
-            </div>
       
         </div>
 
@@ -326,7 +297,7 @@
 
 </body>
 
-<div class="col-12">
+<div class="row col-12">
 
 
 {% if content.current_query %}

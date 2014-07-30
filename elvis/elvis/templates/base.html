@@ -46,6 +46,11 @@
         .footer, .push {
             height: 4em;
         }
+        .btn-mini {
+            padding: 2px 6px;
+            font-size: 11px;
+            line-height: 13px;
+        }
         </style>
     </head>
     
@@ -102,28 +107,29 @@
                 </div>
             </nav>
 
-        <div class="container">
-            {% if not user.is_authenticated %}
-            <div class="row text-center" >
-                <div class="alert alert-info">
-                    <a href="#" class="close" data-dismiss="alert">&times;</a>
-                    <strong>Note!</strong> &nbsp; &nbsp; &nbsp; You aren't logged in... download functionality is disabled.
-                </div>
-            </div>  
-           {% endif %}       
-            
-            <div class="row">
-                <div class="col-12">
+            <div class="container">
+                {% if not user.is_authenticated %}
+                <div class="row text-center" >
+                    <div class="alert alert-info">
+                        <a href="#" class="close" data-dismiss="alert">&times;</a>
+                        <strong>Note!</strong> &nbsp; &nbsp; &nbsp; You aren't logged in... download functionality is disabled.
+                    </div>
+                </div>  
+               {% endif %}       
+                
+                <div class="row">
+                    <div class="col-12">
 
 
-                        {% block wrap %}
+                            {% block wrap %}
 
-                        {% endblock %}
+                            {% endblock %}
                     </div>
                 </div>
             </div>
 
             <div class="push"></div>
+
         </div>
         
         <div class="footer">

@@ -45,6 +45,7 @@ class SolrSearch(object):
         facet_params = {
             'facet': 'true',
             'facet_field': facet_fields,
+            'facet_limit': 1000,
             'facet_mincount': 1,
             'facet_sort' : 'count',
         }
@@ -209,9 +210,6 @@ class SolrSearch(object):
         #    self.solr_params['fq'] += " AND date_of_composition: " + date_filt_query
         #else:
         #    pass
-
-
-        
 
         # LM: Update search parameters with the filter query --- test: u"type:elvis_piece OR type:elvis_composer"
         # print(filter_query)
