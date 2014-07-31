@@ -16,7 +16,7 @@ class ComposerPieceSerializer(serializers.HyperlinkedModelSerializer):
     item_id = serializers.Field("pk")
     class Meta:
         model = Piece
-        fields = ('url', 'title', 'movements', "item_id")
+        fields = ('url', 'title', 'movements', "item_id", "date_of_composition")
 
 
 class ComposerSerializer(serializers.HyperlinkedModelSerializer):

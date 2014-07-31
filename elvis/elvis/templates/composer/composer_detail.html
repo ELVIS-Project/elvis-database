@@ -14,35 +14,55 @@
     </div>
 </div>
 
-
+<!--
 <div class="row">
     <div class="col-md-12">
         <h3>Pieces</h3>
         <table class="table table-hover">
             <thead>
                 <tr>
-                    <th></th>
                     <th>Title</th>
+                    <th> Date </th>
                 </tr>
             </thead>
             <tbody>
                 {% for piece in content.pieces %}
-                    <tr>
-                        <td class="small-column">
+                    <tr>  
+                        <td class="col-md-10">
                             {% include "includes/download-badge-inc.html" with download_type="piece" download_item_id=piece.item_id %}
+                            <a href="{{ piece.url }}">{{ piece.title }}</a>
                         </td>
                         <td>
-                            <a href="{{ piece.url }}">{{ piece.title }}</a>
-                            {% if piece.movements %}
-                            <h5>Movements</h5>
-                                <ul>
-                                {% for movement in piece.movements %}
-                                    <li>{% include "includes/download-badge-inc.html" with title="" download_type="movement" download_item_id=movement.item_id %}<a href="{{ movement.url }}"> {{ movement.title }}</a>
-                                    </li>
-                                {% endfor %}
-                                </ul>
-                            {% endif %}
+                            {{ piece.date_of_composition | date:"Y"}}
                         </td>
+                    
+                    {% if piece.movements %}
+                    <td colspan="2">
+                        <br />
+                        <div class="btn-group" style="width: 100%;">
+                            <button class="btn btn-default btn-xs dropdown-toggle" data-toggle="collapse" data-target="#movements-piece-{{ forloop.counter }}" style="width: 100%;">Movements ({{ piece.movements | length }}) <span class="caret"></span></button>
+                        </div>
+                        <div id="movements-piece-{{ forloop.counter }}" class="collapse collapsed" style="width: 100%;">
+                            <table class="table table-condensed table-hover">
+                                <thead>
+                                    <tr>
+                                        <th></th>
+                                        <th>Movement Name</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    {% for movement in piece.movements %}
+                                        <tr>
+                                            <td class="small-column">{% include "includes/download-badge-inc.html" with download_type="elvis_movement" download_item_id=movement.item_id %}</td>
+                                            <td><a href="{{ movement.url }}">{{ movement.title }}</a></td>
+                                        </tr>
+                                    {% endfor %}
+                                </tbody>
+                            </table>
+                        </div>
+                        <br />
+                    </td>
+                    {% endif %}
                     </tr>
                 {% empty %}
                     <tr>
@@ -52,5 +72,48 @@
             </tbody>
         </table>
     </div>
+</div> -->
+
+
+
+<div class="row">
+        <h3>Pieces</h3>
+        <ul class="media-list">
+        {% for piece in content.pieces %}
+            <li class="media">
+                <a href="{{ piece.url }}" class="list-group-item">
+                    <h4 class="list-group-item-heading"> 
+                    <div>
+                        <p>{% include "includes/download-badge-inc.html" with download_type="elvis_piece" download_item_id=piece.item_id %} <u>{{ piece.title }}</u> <span style="float:right;">{{ piece.date_of_composition | date:"Y"}}</span> </p>  
+                    </div> 
+                </h4>
+                </a>
+                    {% if piece.movements %}
+                        <div class="btn-group" style="width:100%;">
+                            <button class="btn btn-default btn-xs dropdown-toggle" data-toggle="collapse" data-target="#movements-piece-{{ forloop.counter }}" style="width:100%;">Movements ({{ piece.movements | length }}) <span class="caret"></span></button>
+                        </div>
+                        <div id="movements-piece-{{ forloop.counter }}" class="collapse collapsed">
+                            <table class="table table-condensed table-hover">
+                                <thead>
+                                    <tr>
+                                        <th></th>
+                                        <th>Movement Name</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    {% for movement in piece.movements %}
+                                        <tr>
+                                            <td class="small-column">{% include "includes/download-badge-inc.html" with download_type="elvis_movement" download_item_id=movement.item_id %}</td>
+                                            <td><a href="{{ movement.url }}">{{ movement.title }}</a></td>
+                                        </tr>
+                                    {% endfor %}
+                                </tbody>
+                            </table>
+                        </div>
+                    {% endif %}
+            </li>
+            <br />
+        {% endfor %}
+        </ul>
 </div>
 {% endblock %}

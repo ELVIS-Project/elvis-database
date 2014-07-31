@@ -1,21 +1,39 @@
 {% extends "base.html" %}
 
 {% block wrap %}
-<h2>Movements <small>({{ content.count }})</small></h2>
-
+<div class="page-header">
+    <h2>Movements <small>({{ content.count }})</small></h2>
+</div>
 {% include "paginate.html" with content=content %}
 
-<div class="list-group">
+<ul class="media-list">
 {% for movement in content.results %}
-    <a href="{{ movement.url }}" class="list-group-item">
-        <h4 class="list-group-item-heading">{{ movement.title }} ({{ movement.composer.name }})</h4>
-        <p class="list-group-item-text">
-            <small>Uploaded by {{ movement.uploader.username }} on {{ movement.created }}</small><br />
-            {{ movement.comment | truncatechars:100 }}
-        </p>
-    </a>
+    <li class="media">
+        <a href="{{ movement.url }}" class="list-group-item">
+            <h4 class="list-group-item-heading">{% include "includes/download-badge-inc.html" with download_type="elvis_movement" download_item_id=movement.item_id %} <u> {{ movement.title }} </u> <span style="float:right;">{{ movement.date_of_composition | date:"Y"}}</span></h4>
+            <p class="list-group-item-text"> In {{ movement.piece.title}} by {{ movement.composer.name }}
+            </p>
+            <p >
+                <ul>
+                    <li>
+                        Uploaded by {{ movement.uploader.username }} on {{ movement.created | date:"d F Y"}} <em> with {{ movement.attachments | length }} {% if movement.attachments|length == 1 %} File {% else %} Files {% endif %}. </em>
+                    </li>
+                    <li>
+                        Tags: 
+                        {% for tag in movement.tags %}
+                        <span class="label label-default" style="border-radius:4px;"> {{tag.name}} &nbsp;</span>
+                        {% endfor %}
+                    </li>
+                    {% if not movement.comment == None %}
+                         <li>{{ movement.comment}} </li>
+                    {% endif %}
+                </ul>
+            </p>
+        </a>
+    </li>
+    <br />
 {% endfor %}
-</div>
+</ul>
 
 {% include "paginate.html" with content=content %}
 

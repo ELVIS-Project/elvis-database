@@ -13,7 +13,134 @@
 }
 
 </style>
+<script type='text/javascript' src='{{STATIC_URL}}js/jquery.scrollTo.min.js'></script>
+<script type="text/javascript"> 
+    // this code manages the facet collapse
+    $(function()
+    {
+        var hidden = false;
+        $('#collapse-init').click(
+            // Importing the bootstrap js required for collapsing disables the panels; see below for non-bootstrap specific js
+            function()
+            {
+                if (hidden) 
+                {
+                    hidden = false;
+                    $('.panel-collapse.facets').collapse('show');
+                    //$('.panel-title').attr('data-toggle', '');
+                    //$('.panel-collapse').attr('class', 'panel-collapse collapse in');
+                    $(this).text('Hide Facets');
+                } 
+                else 
+                {
+                    hidden = true;
+                    $('.panel-collapse.facets').collapse('hide');
+                    //$('.panel-title').attr('data-toggle', 'collapse'); // use 'collapse' for user collapseable panels
+                    //$('.panel-collapse').attr('class', 'panel-collapse collapse');
+                    $(this).text('Show Facets');
+                }
+            }
+        );
+    });
 
+    // this code manages what happens when a facet link is clicked.
+   $(function()
+    {
+        var facetLabels = $(".facet-label");
+        var lastSearch = "";
+        /*document.getElementById("facet-search").onkeyup = (function(event)
+        {
+            if(event.keyCode == 13)
+            {
+                var searchFacet = document.getElementById("facet-search").value.toLowerCase();
+                for(var i=0; i<facetLabels.length; i++)
+                {
+                    if(searchFacet != "" && facetLabels[i].innerHTML.toLowerCase().indexOf(searchFacet) > -1)
+                    {
+                        facetLabels[i].style.fontWeight = "bold";
+                        facetLabels[i].style.background = "#E0E0E0";
+                        find(searchFacet);
+                    }
+                    else
+                    {
+                        facetLabels[i].style.fontWeight = "";
+                        facetLabels[i].style.background = "";
+                    }
+                }
+                document.getElementById("facet-search").focus();
+            }       
+        }); */
+
+        $('#facet-search').keyup(function()
+        {
+            var searchFacet = $(this).val().toLowerCase();
+            for(var i=0; i<facetLabels.length; i++)
+            {
+                if(searchFacet.length > 2 && facetLabels[i].innerHTML.toLowerCase().indexOf(searchFacet) > -1)
+                {
+                    facetLabels[i].style.fontWeight = "bold";
+                    facetLabels[i].style.background = "#E0E0E0";
+                    if(searchFacet != lastSearch)
+                    {
+                        //find(searchFacet);
+                        //document.getElementById("facet-search").focus();
+                        //alert(facetLabels[i].parentNode.parentNode.parentNode.id);
+                        //alert(facetLabels[i].parentNode.id);
+                        //facetLabels[i].parentNode.parentNode.parentNode.scrollTop = facetLabels[i].parentNode.offsetTop;
+                        //facetLabels[i].scrollIntoView(false);
+                        //facetLabels[i].parentNode.parentNode.parentNode.scrollTo(facetLabels[i]);
+                        //$(facetLabels[i].parentNode.parentNode.parentNode).scrollTop($(facetLabels[i].parentNode.parentNode.parentNode).scrollTop()+$(facetLabels[i]).position().top);
+                        $(facetLabels[i].parentNode.parentNode.parentNode).stop().scrollTo($(facetLabels[i]), 200);
+                    }
+                }
+                else
+                {
+                    facetLabels[i].style.fontWeight = "";
+                    facetLabels[i].style.background = "";
+                }
+            }
+            lastSearch = searchFacet;
+        }).keyup(); 
+
+
+        var qstr = window.location.search.replace("?", "");
+        var qstr_params = $.parseParams(qstr);
+
+        $.each(qstr_params, function(param, val) 
+        {   
+            if (typeof val == "object") 
+            {
+                $.each(val, function(num, v) 
+                {
+                    $("input[data-facet-name='" + param + "'][data-facet-value='" + v + "']").attr('checked', true);
+                });
+            } 
+            else 
+            {
+                $("input[data-facet-name='" + param + "'][data-facet-value='" + val + "']").attr('checked', true);
+            }
+        });
+
+        $(".facet-link").on('click', function(event)
+        {
+            var facetName = $(this).data('facet-name');          
+            var facetValue = $(this).data('facet-value');
+
+            if ($(this).is(':checked')) 
+            {
+                qstr_add = "&" + facetName + "=" + facetValue;
+                window.location.search = qstr + qstr_add;
+            } 
+            else 
+            {
+                qstr_remove = qstr.replace('&' + facetName + "=" + encodeURI(facetValue), "");
+                window.location.search = qstr_remove;
+            }
+            event.preventDefault();
+        });
+    })
+
+</script>
 {% load filter_methods %}
 
 <!-- Get search query to resend without pagination... for downloading everything  Items {{ content.results.start_index |add:"1" }} to {{ content.results.end_index |add:"1" }} of {{ content.results.paginator.count }} Results-->
@@ -141,11 +268,6 @@
             <input type="text" class="facet-search pull-right" id="facet-search" style="text-align:center" placeholder="Look for a Facet">
             <p></p>
         </div>
-        
-
-        <script type="text/javascript">
-            
-        </script>
 
 
         <div class="row panel-group" id="accordion-facets">  
@@ -176,134 +298,7 @@
             {% endfor %}
 
         </div>
-        <script type='text/javascript' src='{{STATIC_URL}}js/jquery.scrollTo.min.js'></script>
-        <script type="text/javascript"> 
-            // this code manages the facet collapse
-            $(function()
-            {
-                var hidden = false;
-                $('#collapse-init').click(
-                    // Importing the bootstrap js required for collapsing disables the panels; see below for non-bootstrap specific js
-                    function()
-                    {
-                        if (hidden) 
-                        {
-                            hidden = false;
-                            $('.panel-collapse.facets').collapse('show');
-                            //$('.panel-title').attr('data-toggle', '');
-                            //$('.panel-collapse').attr('class', 'panel-collapse collapse in');
-                            $(this).text('Hide Facets');
-                        } 
-                        else 
-                        {
-                            hidden = true;
-                            $('.panel-collapse.facets').collapse('hide');
-                            //$('.panel-title').attr('data-toggle', 'collapse'); // use 'collapse' for user collapseable panels
-                            //$('.panel-collapse').attr('class', 'panel-collapse collapse');
-                            $(this).text('Show Facets');
-                        }
-                    }
-                );
-            });
 
-            // this code manages what happens when a facet link is clicked.
-           $(function()
-            {
-                var facetLabels = $(".facet-label");
-                var lastSearch = "";
-                /*document.getElementById("facet-search").onkeyup = (function(event)
-                {
-                    if(event.keyCode == 13)
-                    {
-                        var searchFacet = document.getElementById("facet-search").value.toLowerCase();
-                        for(var i=0; i<facetLabels.length; i++)
-                        {
-                            if(searchFacet != "" && facetLabels[i].innerHTML.toLowerCase().indexOf(searchFacet) > -1)
-                            {
-                                facetLabels[i].style.fontWeight = "bold";
-                                facetLabels[i].style.background = "#E0E0E0";
-                                find(searchFacet);
-                            }
-                            else
-                            {
-                                facetLabels[i].style.fontWeight = "";
-                                facetLabels[i].style.background = "";
-                            }
-                        }
-                        document.getElementById("facet-search").focus();
-                    }       
-                }); */
-
-                $('#facet-search').keyup(function()
-                {
-                    var searchFacet = $(this).val().toLowerCase();
-                    for(var i=0; i<facetLabels.length; i++)
-                    {
-                        if(searchFacet.length > 2 && facetLabels[i].innerHTML.toLowerCase().indexOf(searchFacet) > -1)
-                        {
-                            facetLabels[i].style.fontWeight = "bold";
-                            facetLabels[i].style.background = "#E0E0E0";
-                            if(searchFacet != lastSearch)
-                            {
-                                //find(searchFacet);
-                                //document.getElementById("facet-search").focus();
-                                //alert(facetLabels[i].parentNode.parentNode.parentNode.id);
-                                //alert(facetLabels[i].parentNode.id);
-                                //facetLabels[i].parentNode.parentNode.parentNode.scrollTop = facetLabels[i].parentNode.offsetTop;
-                                //facetLabels[i].scrollIntoView(false);
-                                //facetLabels[i].parentNode.parentNode.parentNode.scrollTo(facetLabels[i]);
-                                //$(facetLabels[i].parentNode.parentNode.parentNode).scrollTop($(facetLabels[i].parentNode.parentNode.parentNode).scrollTop()+$(facetLabels[i]).position().top);
-                                $(facetLabels[i].parentNode.parentNode.parentNode).stop().scrollTo($(facetLabels[i]), 200);
-                            }
-                        }
-                        else
-                        {
-                            facetLabels[i].style.fontWeight = "";
-                            facetLabels[i].style.background = "";
-                        }
-                    }
-                    lastSearch = searchFacet;
-                }).keyup(); 
-
-
-                var qstr = window.location.search.replace("?", "");
-                var qstr_params = $.parseParams(qstr);
-
-                $.each(qstr_params, function(param, val) 
-                {   
-                    if (typeof val == "object") 
-                    {
-                        $.each(val, function(num, v) 
-                        {
-                            $("input[data-facet-name='" + param + "'][data-facet-value='" + v + "']").attr('checked', true);
-                        });
-                    } 
-                    else 
-                    {
-                        $("input[data-facet-name='" + param + "'][data-facet-value='" + val + "']").attr('checked', true);
-                    }
-                });
-
-                $(".facet-link").on('click', function(event)
-                {
-                    var facetName = $(this).data('facet-name');          
-                    var facetValue = $(this).data('facet-value');
-
-                    if ($(this).is(':checked')) 
-                    {
-                        qstr_add = "&" + facetName + "=" + facetValue;
-                        window.location.search = qstr + qstr_add;
-                    } 
-                    else 
-                    {
-                        qstr_remove = qstr.replace('&' + facetName + "=" + encodeURI(facetValue), "");
-                        window.location.search = qstr_remove;
-                    }
-                    event.preventDefault();
-                });
-            })
-
-        </script>
     </div>
 
 </div>
