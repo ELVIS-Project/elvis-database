@@ -1,7 +1,6 @@
 {% extends "base.html" %}
 
 {% block wrap %}
-
 <div class="row">
     <h2>{{ content.title }}</h2>
     <p><span class="label label-primary">Movement</span> Created by {{ content.creator.full_name }} on {{ content.created }} Last updated {{ content.updated }}</p>
@@ -11,22 +10,22 @@
 
 <div class="row">
     <dl class="dl-horizontal">
-        <dt>Composer</dt>
-        <dd><a href="{{ content.composer.url }}">{{ content.composer.name }}</a></dd>
-        <dt>Date of Composition</dt>
-        <dd>{{ content.date_of_composition }}</dd>
-        <dt>Corpus</dt>
-        <dd><a href="{{content.corpus.url}}">{{ content.corpus.title }}</a></dd>
-        <dt>Number of voices:</dt>
-        <dd>{{content.number_of_voices}}</dd>
         {% if content.piece %}
         <dt>Piece</dt>
         <dd><a href="{{content.piece.url}}">{{content.piece.title}}</a></dd>
         {% endif %}
+        <dt>Composer</dt>
+        <dd><a href="{{ content.composer.url }}">{{ content.composer.name }}</a></dd>
+        <dt>Date of Composition</dt>
+        <dd>{{ content.date_of_composition | date:"Y" }}</dd>
+        <dt>Corpus</dt>
+        <dd><a href="{{content.corpus.url}}">{{ content.corpus.title }}</a></dd>
+        <dt>Number of voices:</dt>
+        <dd>{{content.number_of_voices}}</dd>
         <dt>Tags</dt>
         <dd>
             {% for tag in content.tags %}
-                <a href="{{ tag.url }}">{{ tag.name }}; </a>
+                <a href="{{ tag.url }}" class="label label-primary" style="border-radius:4px;">{{tag.name}} </a> &nbsp;
             {% endfor %}
         </dd>
     </dl>

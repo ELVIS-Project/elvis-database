@@ -21,7 +21,7 @@
                     <li>
                         Tags: 
                         {% for tag in movement.tags %}
-                        <span class="label label-default" style="border-radius:4px;"> {{tag.name}} &nbsp;</span>
+                            <span class="label label-primary" style="border-radius:4px;"> {{tag.name}} </span> &nbsp;
                         {% endfor %}
                     </li>
                     {% if not movement.comment == None %}

@@ -155,12 +155,12 @@ FACET_NAMES = {
     "tags": "Tags",
 }
 TYPE_NAMES={
-    'elvis_user': "User",
-    'elvis_tag': "Tag",
-    'elvis_corpus': "Corpus",
-    'elvis_movement': "Movement",
-    'elvis_piece': "Piece",
-    'elvis_composer': "Composer",
+    'elvis_user': "Users",
+    'elvis_tag': "Tags",
+    'elvis_corpus': "Corpora",
+    'elvis_movement': "Movements",
+    'elvis_piece': "Pieces",
+    'elvis_composer': "Composers",
 }
 
 # Celery Settings

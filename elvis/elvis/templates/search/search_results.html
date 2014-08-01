@@ -80,6 +80,7 @@
                 {
                     facetLabels[i].style.fontWeight = "bold";
                     facetLabels[i].style.background = "#E0E0E0";
+                    facetLabels[i].style.color = "black";
                     if(searchFacet != lastSearch)
                     {
                         //find(searchFacet);
@@ -97,6 +98,7 @@
                 {
                     facetLabels[i].style.fontWeight = "";
                     facetLabels[i].style.background = "";
+                    facetLabels[i].style.color = "";
                 }
             }
             lastSearch = searchFacet;
@@ -243,15 +245,17 @@
         <div class="pager">
             <span class="step-links">
                 {% if content.results.has_previous %}
+                    <a href="?{{ content.current_query }}">&larr; &larr; First Page</a>|
                     <a href="?{{ content.current_query }}&page={{ content.results.previous_page_number }}">&larr; Previous Page</a>
                 {% endif %}
 
                 <span class="current">
-                  | Results {{ content.results.start_index |add:"1" }} to {{ content.results.end_index |add:"1" }} of {{ content.results.paginator.count }} | Page {{ content.results.number }} of {{ content.results.paginator.num_pages }} |.
+                  | Results {{ content.results.start_index |add:"1" }} to {{ content.results.end_index |add:"1" }} of {{ content.results.paginator.count }} | Page {{ content.results.number }} of {{ content.results.paginator.num_pages }} |
                 </span>
 
                 {% if content.results.has_next %}
-                    <a href="?{{ content.current_query }}&page={{ content.results.next_page_number }}">Next Page &rarr;</a>
+                    <a href="?{{ content.current_query }}&page={{ content.results.next_page_number }}">Next Page &rarr;</a> |
+                    <a href="?{{ content.current_query }}&page={{ content.results.paginator.num_pages }}">Last Page &rarr; &rarr;</a>
                 {% endif %}
             </span>
         </div>
@@ -265,7 +269,7 @@
             <button id="collapse-init" class="btn btn-primary btn-sm">
                 Hide Facets
             </button>
-            <input type="text" class="facet-search pull-right" id="facet-search" style="text-align:center" placeholder="Look for a Facet">
+            <input type="text" class="facet-search pull-right" id="facet-search" style="text-align:center; height:30px;" placeholder="Look for a Facet">
             <p></p>
         </div>
 
@@ -285,8 +289,8 @@
                                 {% for facet, count in facets %}
                                     <li style="list-style: none;">
                                         <div id="facet-container-{{facet}}" style="white-space:nowrap;">
-                                            <input type="checkbox" class="facet-link" data-facet-name="{{ name }}" data-facet-value="{{ facet }}">
-                                            <label class="facet-label"> {% if name == 'type' %} {{ content.TYPE_NAMES|get_value:facet }} {% else %} {{ facet }} {% endif %}  ({{ count }})
+                                            <input type="checkbox" class="facet-link" data-facet-name="{{ name }}" data-facet-value="{{ facet }}" id="facet-link-{{facet}}">
+                                            <label class="facet-label" for="facet-link-{{ facet }}"> {% if name == 'type' %} {{ content.TYPE_NAMES|get_value:facet }} {% else %} {{ facet }} {% endif %}  ({{ count }})
                                             </label>
                                         </div>
                                     </li>
