@@ -30,7 +30,7 @@ def zip_files(paths, username):
     # Start with status at 0 - so jQuery has something to do
     i = 0
     total = len(paths)
-    percent = int_round((i * 100) / total)
+    percent = int_round(float(i) / float(total))  * 100
     zip_files.update_state(state='PROGRESS', meta={'curr': i, 'total': total, 'percent': percent })
 
     # Now do imports after that (again so jQuery has something to do)
@@ -62,7 +62,7 @@ def zip_files(paths, username):
         archive_file.write(file_name)
         #sleep(1)
         i += 1
-        percent = int_round((i * 100) / total)
+        percent = int_round(float(i) / float(total)) * 100
         zip_files.update_state(state='PROGRESS', meta={'curr': i, 'total': total, 'percent': percent})
 
 
@@ -72,7 +72,7 @@ def zip_files(paths, username):
     zip_path = os.path.join(dummy_path, zip_name)
 
     #print(dummy_root_dir, dummy_path)
-    return {"path": zip_path, "percent" : 110}
+    return {"path": zip_path, "percent" : 100}
 
 @app.task(name='elvis.celery.clean_zip_files')
 def clean_zip_files():
@@ -90,7 +90,7 @@ def clean_zip_files():
             # Join path accordingly, check the time
             task_dir_path = os.path.join(user_dir_path, task_dir)
             modified_time = os.path.getmtime(task_dir_path)
-            if modified_time < one_day_ago:
+            if modified_time < one_day_ago and os.path.isdir(task_dir_path):
                 # Uncomment when sure of correct file detection
                 print "Deleting " + str(task_dir_path)
                 shutil.rmtree(task_dir_path)

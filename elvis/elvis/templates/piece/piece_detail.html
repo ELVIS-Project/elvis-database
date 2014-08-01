@@ -81,7 +81,7 @@
             {% for movement in content.movements %}
                 <tr>
                     <td class="small-column">
-                        {% include "includes/download-badge-inc.html" %}
+                        {% include "includes/download-badge-inc.html" with download_type="elvis_movement" download_item_id=movement.item_id title="Add to Downloads" %}
                     </td>
                     <td><a href="{{ movement.url }}">{{ movement.title }}</a></td>
                 </tr>
