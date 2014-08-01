@@ -2,45 +2,65 @@
 
 {% block wrap %}
 <div class="row">
-    <h2>{{ content.title }} <small>{{ content.pieces | length }} Pieces, {{ content.movements | length }} Movements</small></h2>
+    <div class="page-header"><h2>{{ content.title }} <small>{{ content.pieces | length }} Pieces, {{ content.movements | length }} Movements</small></h2> </div>
     <p>Created by {{ content.creator.full_name }} on {{ content.created }} Last updated {{ content.updated }}</p>
     <p> {% autoescape off %}{{ content.comment }}{% endautoescape %} </p>
 </div>
+
 <div class="row">
     <h3>Pieces</h3>
+</div> 
+
+<div class="row">
     <table class="table table-condensed">
         <thead>
             <tr>
-                <th>Title</th>
-                <th>Composer</th>
+                <th class="col-md-8">Title</th>
+                <th class="col-md-3">Composer</th>
+                <th class="col-md-1">Date</th>
             </tr>
         </thead>
+    </table>
+    <div style="height:400px; overflow-y: scroll;">
+    <table class="table table-condensed">
         <tbody>
             {% for piece in content.pieces %}
                 <tr>
-                    <td><a href="{{ piece.url }}">{{ piece.title }}</a></td>
+                    <td>{% include "includes/download-badge-inc.html" with download_type="elvis_piece" download_item_id=piece.item_id title="Add to Downloads" %}<a href="{{ piece.url }}">{{ piece.title }}</a></td>
                     <td><a href="{{ piece.composer.url }}">{{ piece.composer.name }}</a></td>
+                    <td>{{ piece.date_of_composition | date:"Y"}}</td>
                 </tr>
             {% endfor %}
         </tbody>
     </table>
+    </div>
 </div>
 
 <div class="row">
-    <h3>Movements</h3>
+    <h3>Movements</h3> 
+</div> 
+
+<div class="row" style="height:400px; overflow-y: scroll;">
     <table class="table table-condensed">
         <thead>
             <tr>
-                <th>Title</th>
-                <th>Composer</th>
+                <th class="col-md-4">Title</th>
+                <th class="col-md-4">Parent Piece</th>
+                <th class="col-md-3">Composer</th>
+                <th class="col-md-1">Date</th>
+                
             </tr>
         </thead>
         <tbody>
             {% for movement in content.movements %}
+                {% if not movement.piece.title in content.pieces %} 
                 <tr>
-                    <td><a href="{{ movement.url }}">{{ movement.title }}</a></td>
+                    <td>{% include "includes/download-badge-inc.html" with download_type="elvis_movement" download_item_id=movement.item_id title="Add to Downloads" %} <a href="{{ movement.url }}">{{ movement.title }}</a></td>
+                    <td><a href="{{ movement.piece.url }}"> {{movement.piece.title}} </a></td>
                     <td><a href="{{ movement.composer.url }}">{{ movement.composer.name }}</a></td>
+                    <td>{{ movement.date_of_composition | date:"Y"}}</td>
                 </tr>
+                {% endif %} 
             {% endfor %}
         </tbody>
     </table>

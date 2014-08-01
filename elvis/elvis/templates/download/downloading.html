@@ -6,20 +6,22 @@
  </script> 
  -->
 <div class="col-md-12">
-    <h2>Your Downloads</h2>
+    <div class="page-header">
+        <h2>Your Downloads</h2>
+    </div>
     Zip progress:
-    <div class="progress progress-striped active" id="progressouter" style="height: 26px">
-      <div class="progress-bar progress-bar-info" id="progress" style="width: 0%; height: 20px"></div>
+    <div class="progress progress-striped active" id="progressouter" style="">
+      <div class="progress-bar progress-bar-info" id="progress" style=""></div>
     </div> 
     <iframe id="downloadFrame" style="display:none"></iframe>
 
 
-    <a href="" id="download_now" class="button" style="display: none">Download your file...</a>
+    <a href="" id="download_now" class="button" style="display: none">Download your files...</a>
     <!-- <a class="btn btn-inverse" type="button" id="download_now" href=""> Download your file </a> -->
 
 <!-- LM TODO: Catch exceptions to stop it from setIntervalling over the exception infinitely -->
 
-  <script type="text/javascript" >
+    <script type="text/javascript" >
 
       $(document).ready(function(){
         
