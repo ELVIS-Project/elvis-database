@@ -2738,9 +2738,10 @@ select[multiple].input-lg {
   outline: 5px auto -webkit-focus-ring-color;
   outline-offset: -2px;
 }
+/* Edited from #ffffff */
 .btn:hover,
 .btn:focus {
-  color: #ffffff;
+  color: #5A5454;
   text-decoration: none;
 }
 .btn:active,
