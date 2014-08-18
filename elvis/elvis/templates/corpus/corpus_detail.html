@@ -12,23 +12,23 @@
 </div> 
 
 <div class="row">
-    <table class="table table-condensed">
+    <table class="table table-condensed table-hover">
         <thead>
             <tr>
-                <th class="col-md-8">Title</th>
-                <th class="col-md-3">Composer</th>
-                <th class="col-md-1">Date</th>
+                <th width="67%">Title</th>
+                <th width="23%">Composer</th>
+                <th width="10%">Date</th>
             </tr>
         </thead>
     </table>
-    <div style="height:400px; overflow-y: scroll;">
-    <table class="table table-condensed">
+    <div style="max-height: 400px; width: 100%; margin: 0; overflow-y: scroll;">
+    <table class="table table-condensed table-hover" style="margin: 0; padding: 0;">
         <tbody>
             {% for piece in content.pieces %}
                 <tr>
-                    <td>{% include "includes/download-badge-inc.html" with download_type="elvis_piece" download_item_id=piece.item_id title="Add to Downloads" %}<a href="{{ piece.url }}">{{ piece.title }}</a></td>
-                    <td><a href="{{ piece.composer.url }}">{{ piece.composer.name }}</a></td>
-                    <td>{{ piece.date_of_composition | date:"Y"}}</td>
+                    <td width="68%">{% include "includes/download-badge-inc.html" with download_type="elvis_piece" download_item_id=piece.item_id title="Add to Downloads" %}<a href="{{ piece.url }}">{{ piece.title }}</a></td>
+                    <td width="23%"><a href="{{ piece.composer.url }}">{{ piece.composer.name }}</a></td>
+                    <td width="9%">{{ piece.date_of_composition | date:"Y"}}</td>
                 </tr>
             {% endfor %}
         </tbody>
@@ -40,30 +40,34 @@
     <h3>Movements</h3> 
 </div> 
 
-<div class="row" style="height:400px; overflow-y: scroll;">
-    <table class="table table-condensed">
+<div class="row">
+    <table class="table table-condensed table-hover">
         <thead>
             <tr>
-                <th class="col-md-4">Title</th>
-                <th class="col-md-4">Parent Piece</th>
-                <th class="col-md-3">Composer</th>
-                <th class="col-md-1">Date</th>
+                <th width="33%">Title</th>
+                <th width="34%">Parent Piece</th>
+                <th width="23%">Composer</th>
+                <th width="10%">Date</th>
                 
             </tr>
         </thead>
+    </table>
+    <div style="max-height: 400px; width: 100%; margin: 0; overflow-y: scroll;">
+    <table class="table table-condensed table-hover" style="margin: 0; padding: 0;">
         <tbody>
             {% for movement in content.movements %}
                 {% if not movement.piece.title in content.pieces %} 
                 <tr>
-                    <td>{% include "includes/download-badge-inc.html" with download_type="elvis_movement" download_item_id=movement.item_id title="Add to Downloads" %} <a href="{{ movement.url }}">{{ movement.title }}</a></td>
-                    <td><a href="{{ movement.piece.url }}"> {{movement.piece.title}} </a></td>
-                    <td><a href="{{ movement.composer.url }}">{{ movement.composer.name }}</a></td>
-                    <td>{{ movement.date_of_composition | date:"Y"}}</td>
+                    <td width="33.5%">{% include "includes/download-badge-inc.html" with download_type="elvis_movement" download_item_id=movement.item_id title="Add to Downloads" %} <a href="{{ movement.url }}">{{ movement.title }}</a></td>
+                    <td width="34.5%"><a href="{{ movement.piece.url }}"> {{movement.piece.title}} </a></td>
+                    <td width="23%"><a href="{{ movement.composer.url }}">{{ movement.composer.name }}</a></td>
+                    <td width="9%">{{ movement.date_of_composition | date:"Y"}}</td>
                 </tr>
                 {% endif %} 
             {% endfor %}
         </tbody>
     </table>
+    </div>  
 </div>
 
 {% endblock %}
