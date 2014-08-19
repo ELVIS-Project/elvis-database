@@ -31,6 +31,8 @@ class AttachmentMovementSerializer(serializers.HyperlinkedModelSerializer):
 
     def retrieve_attachment(self, obj):
         request = self.context.get('request', None)
+        if not request.user.is_authenticated():
+            return ""
         path = os.path.relpath(obj.attachment.path, settings.MEDIA_ROOT)
         url = request.build_absolute_uri(os.path.join(settings.MEDIA_URL, path))
         return url
