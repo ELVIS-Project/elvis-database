@@ -83,9 +83,11 @@
     <field name="created" type="date" indexed="true" stored="true" />
     <field name="updated" type="date" indexed="true" stored="true" />
     <field name="date_of_composition" type="date" indexed="true" stored="true" /> 
+    <field name="date_of_composition2" type="date" indexed="true" stored="true" />
     <field name="birth_date" type="date" indexed="true" stored="true" />
     <field name="death_date" type="date" indexed="true" stored="true" />
     <field name="date_general" type="date" indexed="true" stored="true" />
+    <field name="date_general2" type="date" indexed="true" stored="true" />
 
     <!-- LM Name and Title fields -->
     <field name="name" type="string" indexed="true" stored="true" />
@@ -156,7 +158,9 @@
              
     <!-- Advanced Search -->
     <copyField source="birth_date" dest="date_general"/>
-    <copyField source="date_of_composition" dest="date_general" />	
+    <copyField source="date_of_composition" dest="date_general" />
+    <copyField source="death_date" dest="date_general2"/>	
+    <copyField source="date_of_composition2" dest="date_general2"/>
     <copyField source="composer_name" dest="name_general" />
     <copyField source="name" dest="name_general"/>
     <copyField source="title" dest="name_sort" />
