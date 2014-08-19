@@ -145,10 +145,10 @@ class SolrSearch(object):
             elif k == 'q' :
                 if qdict.get(k) == "":
                     v = "*:*"
-                self.parsed_request[k] = v
+                self.parsed_request[k] = v[0]
             
             else:
-                self.parsed_request[k] = v
+                self.parsed_request[k] = v[0]
         
         self.solr_params.update({'sort': sort_query})
 
