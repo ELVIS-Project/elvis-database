@@ -20,6 +20,7 @@ class Movement(models.Model):
     corpus = models.ForeignKey("elvis.Corpus", blank=True, null=True, related_name="movements")
     composer = models.ForeignKey("elvis.Composer", blank=True, null=True, related_name="movements")
     date_of_composition = models.DateField(blank=True, null=True)
+    date_of_composition2 = models.DateField(blank=True, null=True)
     number_of_voices = models.IntegerField(blank=True, null=True)
     tags = models.ManyToManyField("elvis.Tag", blank=True, null=True)
     attachments = models.ManyToManyField("elvis.Attachment", blank=True, null=True, related_name="movements")
@@ -137,6 +138,7 @@ def solr_index(sender, instance, created, **kwargs):
             'item_id': int(movement.id),
             'title': movement_title,
             'date_of_composition': movement.date_of_composition,
+            'date_of_composition2': movement.date_of_composition2,
             'number_of_voices': movement.number_of_voices,
             'comment': movement_comment,
             'created': movement.created,

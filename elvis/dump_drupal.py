@@ -32,7 +32,7 @@ COMPOSERS_QUERY = """SELECT td.tid AS old_id, td.name, dt.field_dates_value AS b
                      WHERE td.vid = 3"""
 
 PIECE_MOVEMENT_QUERY = """SELECT rv.title, cp.field_composer_tid AS composer_id, rv.nid AS old_id,
-                 rv.uid AS uploader, fd.field_date_value AS date_of_composition,
+                 rv.uid AS uploader, fd.field_date_value AS date_of_composition, fd.field_date_value2 AS date_of_composition2,
                  fv.field_voices_value AS number_of_voices, fc.field_comment_value AS comment,
                  n.created AS created, n.changed AS updated, b.bid AS book_id FROM node n
                   LEFT JOIN node_revision rv ON (n.vid = rv.vid)
@@ -261,12 +261,16 @@ class DumpDrupal(object):
                 'composer': composer_obj,
                 'old_id': item.get('old_id', None),
                 'title': my_decoder(item.get('title', None)),
-                'date_of_composition': pytz.utc.localize(item.get('date_of_composition', None)),  
+                'date_of_composition': pytz.utc.localize(item.get('date_of_composition', None)),
+                'date_of_composition2': pytz.utc.localize(item.get('date_of_composition2', None)),  
                 'number_of_voices': item.get('number_of_voices', None),
                 'comment': my_decoder(item.get('comment', None)),
                 'created': datetime.datetime.fromtimestamp(item.get('created')),
                 'updated': datetime.datetime.fromtimestamp(item.get('updated'))
             }
+
+            #if not item.get('date_of_composition', None) == item.get('date_of_composition2', None):
+            print p
 
             if rettype == "piece":
                 p.update({'corpus': parent_obj})
@@ -274,9 +278,11 @@ class DumpDrupal(object):
             elif rettype == "movement":
                 p.update({'piece': parent_obj, 'corpus': corpus_obj})
                 x = Movement(**p)
+            
             x.save()
-        self.__disconnect()
 
+        self.__disconnect()
+        
         print "Tagging {0}".format(rettype)
         # filters out composers (tid 3)
         ITEM_TAG_QUERY = """SELECT ti.nid, ti.tid FROM taxonomy_index ti

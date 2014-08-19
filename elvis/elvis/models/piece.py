@@ -18,6 +18,7 @@ class Piece(models.Model):
     corpus = models.ForeignKey("elvis.Corpus", blank=True, null=True, related_name="pieces")
     composer = models.ForeignKey("elvis.Composer", db_index=True, blank=True, null=True, related_name="pieces")
     date_of_composition = models.DateField(blank=True, null=True)
+    date_of_composition2 = models.DateField(blank=True, null=True)
     number_of_voices = models.IntegerField(blank=True, null=True)
     tags = models.ManyToManyField("elvis.Tag", blank=True, null=True, related_name="pieces")
     attachments = models.ManyToManyField("elvis.Attachment", blank=True, null=True, related_name="pieces")
@@ -125,6 +126,7 @@ def solr_index(sender, instance, created, **kwargs):
             'item_id': int(piece.id),
             'title': piece_title,
             'date_of_composition': piece.date_of_composition,
+            'date_of_composition2': piece.date_of_composition2,
             'number_of_voices': piece.number_of_voices,
             'comment': piece_comment,
             'created': piece.created,
