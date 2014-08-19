@@ -1,0 +1,9 @@
+{% extends "base.html" %}
+
+{% block wrap %}
+
+<h3> 403: Forbidden </h3>
+
+<p> Sorry, you don't have permission to be here! {% if not user.is_authenticated %} Have you <a href="/login" id="nologin"> logged in</a>?  {% endif %} </p>
+
+{% endblock %}

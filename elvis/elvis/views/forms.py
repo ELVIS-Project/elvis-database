@@ -7,7 +7,7 @@ from elvis.helpers.solrsearch import SolrSearch
 import urlparse
 
 from django.shortcuts import render
-from django.http import HttpResponse, HttpResponseRedirect
+from django.http import HttpResponse, HttpResponseRedirect, Http404
 from django.core.servers.basehttp import FileWrapper
 from django.contrib.auth.decorators import login_required
 from django.views.decorators.http import require_http_methods
@@ -37,6 +37,8 @@ LM Views to modify user's download object
 
 @csrf_protect
 def patch_downloads(request):
+    if not request.user.is_authenticated():
+        raise Http404
     #current_user = request.user
     user_download = request.user.downloads.all()[0]
     add_attachments = request.POST.getlist('a_ids')
@@ -121,6 +123,8 @@ def type_selector(item_type, item_id, user_download):
 
 @csrf_protect
 def recursive_patch_downloads(request):
+    if not request.user.is_authenticated:
+        raise Http404
     user_download = request.user.downloads.all()[0]
     this_url = request.POST.get('this_url')
     #print request

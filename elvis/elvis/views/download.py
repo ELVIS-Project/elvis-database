@@ -62,7 +62,7 @@ class DownloadList(generics.ListCreateAPIView):
 
 class DownloadDetail(generics.RetrieveUpdateAPIView):
     model = Download
-    permission_classes = (permissions.IsAuthenticatedOrReadOnly,)
+    permission_classes = (permissions.IsAuthenticated,)
     serializer_class = DownloadSerializer
     renderer_classes = (JSONRenderer, JSONPRenderer, DownloadDetailHTMLRenderer)
 
@@ -79,7 +79,6 @@ class DownloadDetail(generics.RetrieveUpdateAPIView):
         return self.retrieve(request, *args, **kwargs)
 
     def patch(self, request, *args, **kwargs):
-        # print("I AM BEING PATCHED");
         itype = request.DATA.get("type", None)
         item_id = request.DATA.get('item_id', None)
 
@@ -106,7 +105,7 @@ class DownloadDetail(generics.RetrieveUpdateAPIView):
 
 # LM: New view 2, was original view but updated with post-only view below
 class Downloading(APIView):
-    permission_classes = (permissions.IsAuthenticatedOrReadOnly,)
+    permission_classes = (permissions.IsAuthenticated,)
     serializer_class = DownloadingSerializer
     renderer_classes = (JSONRenderer, JSONPRenderer, DownloadingHTMLRenderer)
         
@@ -239,7 +238,6 @@ class Downloading(APIView):
             for a_id in a_ids:
                 a_object = Attachment.objects.filter(pk=a_id).all()[0]
                 fileName, fileExt = os.path.splitext(a_object.file_name)
-                print(fileExt)
                 if ((fileExt in extensions) or ((not (fileExt in default_exts)) and others_check)):
                     user_download.attachments.remove(a_object)
 
