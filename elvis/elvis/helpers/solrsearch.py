@@ -114,17 +114,19 @@ class SolrSearch(object):
                 title_filt_query = "title_searchable: (" + string.join(v) +") "
 
             # LM: elif for Date filtration
+            # Logic: We want start date to be any time before 2nd search date, and end date to be any time after 1st search date
+            # However, we want things that have start and end dates between the two search dates to be ordered first -- thus the 
+            # ^2 weighting.
             elif k == 'datefiltf' or k == 'datefiltt':
                 if qdict.get('datefiltf') == "" or qdict.get('datefiltf') is None:
-                    from_date = " date_general: [ * TO "
-                    to_date = u"{0}-12-31T23:59:59Z ]".format(qdict.get('datefiltt'))
-                elif qdict.get('datefiltt') == "" or qdict.get('datefiltt') is None:
-                    from_date =  u" date_general: [ {0}-00-00T00:00:00Z TO ".format(qdict.get('datefiltf'))
-                    to_date = "* ]"
+                    from_date = " * "
                 else:
-                    from_date = u" date_general: [ {0}-00-00T00:00:00Z TO ".format(qdict.get('datefiltf'))
-                    to_date = u"{0}-12-31T23:59:59Z ]".format(qdict.get('datefiltt'))
-                date_filt_query = from_date + to_date
+                    from_date = u" {0}-00-00T00:00:00Z ".format(qdict.get('datefiltf'))
+                if qdict.get('datefiltt') == "" or qdict.get('datefiltt') is None:
+                    to_date = " * "
+                else:
+                    to_date = u" {0}-12-31T23:59:59Z ".format(qdict.get('datefiltt'))
+                date_filt_query = "(date_general: [{0} TO {1}] AND date_general2: [{2} TO {3}])^2 OR (date_general: [ * TO {4}] AND date_general2:[{5} TO * ])".format(from_date, to_date, from_date, to_date, to_date, from_date)
 
             # LM: elif for Tag filtration
             elif k == 'tagfilt':
@@ -142,7 +144,7 @@ class SolrSearch(object):
             # Otherwise, add to query
             elif k == 'q' :
                 if qdict.get(k) == "":
-                    v = "*"
+                    v = "*:*"
                 self.parsed_request[k] = v
             
             else:
@@ -153,13 +155,6 @@ class SolrSearch(object):
 
         if filter_query != "":
             self.solr_params['fq'] = "( " + filter_query + " )"
-
-        if date_filt_query == "":
-            pass
-        elif not 'fq' in self.solr_params:
-            self.solr_params['fq'] = "( " + date_filt_query + " )"
-        else:
-            self.solr_params['fq'] += " AND ( " + date_filt_query + " )"
 
         if tag_filt_query == "":
             pass
@@ -190,6 +185,12 @@ class SolrSearch(object):
             self.solr_params['fq'] += " AND (" + voice_filt_query + " )"
 
 
+        if date_filt_query == "":
+            pass
+        elif not 'q' in self.parsed_request:
+            self.parsed_request['q'] = "( " + date_filt_query + " )"
+        else:
+            self.parsed_request['q'] += " AND ( " + date_filt_query + " )"
 
         # Update fq with date filtration, depending on what type filter was set
         #if date_filt_query == "":
@@ -228,7 +229,7 @@ class SolrSearch(object):
                     continue
                 if k == 'q':
                     if v[0] != u"":
-                        arr.insert(0, u"{0}".format(v[0]))
+                        arr.insert(0, u"{0}".format(v))
                 else:
                     # was OR by default
                     arr.append(u"{0}:({1})".format(k, " AND ".join([u"\"{0}\"".format(s) for s in v if v is not None])))
