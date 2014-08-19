@@ -47,16 +47,15 @@ class Piece(models.Model):
         return " ".join([t.name for t in self.tags.all()])
 
     def save(self, *args, **kwargs):
+        super(Piece, self).save()
         try:
-            (composer_last_name, composer_first_name) = self.composer.name.split(',', 1)
+            composer_last_name = self.composer.name.split(',', 1)[0]
         except ValueError as v:
-            (composer_last_name, composer_first_name) = self.composer.name.split(' ', 1)
+            composer_last_name = self.composer.name.split(' ', 1)[0]
         piece_title_short = ''.join(self.title.split()[:6])
         attachment_name = "_".join([composer_last_name, piece_title_short])
         for attachment in self.attachments.all():
             attachment.rename(new_filename=attachment_name)
-        super(Piece, self).save()
-
 
 @receiver(post_save, sender=Piece)
 def solr_index(sender, instance, created, **kwargs):

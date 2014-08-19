@@ -72,11 +72,9 @@ class Attachment(models.Model):
         (current_file_name, current_extension) = os.path.splitext(current_name)
         new_filename += current_extension
         new_path = os.path.join(path, new_filename)
-        print self.attachment
-        print new_path
-        #shutil.move(self.attachment, new_path)
-        #self.attachment.name = new_path
-        #self.save()
+        shutil.move(self.attachment.name, new_path)
+        self.attachment.name = new_path
+        self.save()
 
     def __unicode__(self):
         return u"{0}".format(self.attachment)
