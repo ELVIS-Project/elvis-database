@@ -26,10 +26,12 @@
         <script src="{{ STATIC_URL }}js/scripts.js"></script>
 
         <script type="text/javascript">
-            $(document).ready(function ($) {
+            $(document).ready(function ($) 
+            {
                 // initialize the download manager script
                 initializeDownloadBadges();
             });
+            
         </script>
 
         <style type="text/css">
@@ -92,7 +94,6 @@
                             <a href="#" class="dropdown-toggle" data-toggle="dropdown">Welcome {{ user.username }} <b class="caret"></b></a>
                             <ul class="dropdown-menu">
                                 <li class="divider"></li>
-                                <li><a href="/user/{{ user.id }}">Account Settings</a></li>
                                 <li><a href="/logout/">Logout</a></li>
                             </ul>
                         </li>

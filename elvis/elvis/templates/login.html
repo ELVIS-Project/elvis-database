@@ -2,6 +2,24 @@
 
 {% block wrap %}
 
+<script type="text/javascript">  
+    $(document).ready(function ($) 
+    {
+        // initialize the download manager script
+        $.cookie('test_cookie', 'cookie_value', { path: '/' });
+        if ($.cookie('test_cookie') == 'cookie_value') 
+        {
+            $('#login-submit').attr('class', 'btn btn-default');
+        }
+        else
+        {
+            //window.alert("You don't have cookies enabled... this site requires the use of cookies.");
+            $('#login-submit').attr('class', 'btn btn-default disabled');
+            $('#login-submit').tooltip('show');
+        }
+    });
+</script>
+
 {% if form.errors %}
 <p>Your username and password didn't match. Please try again.</p>
 {% endif %}
@@ -24,7 +42,7 @@
             {{ form.password }}
         </div>
     </div>
-    <button type="submit" class="btn btn-default">Login</button>
+    <button type="submit" class="btn btn-default" id="login-submit" data-toggle="tooltip" data-container="body" data-placement="right" data-html='true' title="You haven't enabled cookies... this site requires cookies.">Login</button>
     <input type="hidden" name="next" value="{{ next }}" />
 </form>
 {% endblock %}
