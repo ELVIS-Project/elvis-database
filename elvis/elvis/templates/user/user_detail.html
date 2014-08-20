@@ -1,9 +1,18 @@
 {% extends "base.html" %}
 
 {% block wrap %}
+    
+    <h2>Account Settings for {{ content.username }}</h2>
+    
+    {% if content.picture %}
+        <img src="{{ content.picture }}" />
+    {% else %}
+        <img data-src="holder.js/100x100/text:No Picture" />
+    {% endif %}
 
-<h2>Account settings for {{ content.username }}</h2>
-<p>Joined {{ user.date_joined | date:"d F Y" }}</p>
-<p>Last Login {{ user.last_login | date:"d F Y" }}</p>
+    <p></p>
+    
+    <p>Joined {{ user.date_joined | date:"d F Y" }}</p>
+    <p>Last Login {{ user.last_login | date:"d F Y" }}</p>
 
 {% endblock %}

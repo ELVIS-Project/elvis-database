@@ -211,7 +211,7 @@
                     <span class="label label-primary pull-right">Movement</span>
                     <h4> {% include "includes/download-badge-inc.html" with download_type="elvis_movement" download_item_id=result.item_id %} {{ result.title }}</h4>
                     <p class="list-group-item-text"> Piece: {{result.parent_piece_name}} </p>
-                    <p class="list-group-item-text"> Composer: {{result.composer_name}} <br> Composed On: {{ result.date_of_composition | date:"Y" }} </p>
+                    <p class="list-group-item-text"> Composer: {{result.composer_name}} <br> {% if result.date_of_composition  == result.date_of_composition2 %} Composed on: {{ result.date_of_composition | date:"Y" }} {% else %} Composed between: {{ result.date_of_composition | date:"Y" }}-{{ result.date_of_composition2 | date:"Y" }} {% endif %}</p>
                     <p class="list-group-item-text"> Number of Voices: {{result.number_of_voices}} </p>
                     <p class="list-group-item-text"> Tags: {% for tag in result.tags %} {{tag}} {% endfor %}</p>
                     <p class="list-group-item-text"> {{result.comment}} </p>
@@ -220,7 +220,7 @@
                 <a href="/piece/{{ result.item_id }}" class="list-group-item">
                     <span class="label label-primary pull-right">Piece</span>
                     <h4> {% include "includes/download-badge-inc.html" with download_type="elvis_piece" download_item_id=result.item_id %} {{ result.title }}</h4>
-                    <p class="list-group-item-text"> Composer: {{result.composer_name}} <br> Composed On: {{ result.date_of_composition | date:"Y" }} </p>
+                    <p class="list-group-item-text"> Composer: {{result.composer_name}} <br> {% if result.date_of_composition  == result.date_of_composition2 %} Composed on: {{ result.date_of_composition | date:"Y" }} {% else %} Composed between: {{ result.date_of_composition | date:"Y" }}-{{ result.date_of_composition2 | date:"Y" }} {% endif %} </p>
                     <p class="list-group-item-text"> Number of Voices: {{result.number_of_voices}} </p>
                     <p class="list-group-item-text"> Tags: {% for tag in result.tags %} {{tag}} {% endfor %}</p>
                     <p class="list-group-item-text"> {{result.comment}} </p>
@@ -236,7 +236,7 @@
                 <a href="/tag/{{ result.item_id }}" class="list-group-item">
                     <span class="label label-primary pull-right">Tag</span>
                     <h4> {% include "includes/download-badge-inc.html" with download_type="elvis_tag" download_item_id=result.item_id %} {{ result.name }}</h4>
-                    <p class="list-group-item-text"> {{result.description}}</p>
+                    {% if result.description %} <p class="list-group-item-text"> {{result.description}}</p> {% endif %}
                 </a>
             {% endif %}
         {% endfor %}
@@ -259,6 +259,22 @@
                 {% endif %}
             </span>
         </div>
+
+        <!-- <ul class="pager">
+            {% if content.results.has_previous %}
+            <li class="previous" style="vertical-align:11%;"><a href="?{{ content.current_query }}">&larr; &larr; First Page</a></li>
+            <li class="previous"><a href="?{{ content.current_query }}&page={{ content.results.previous_page_number }}">&larr; Previous Page</a></li>
+            {% endif %}
+            
+            <span class="current">
+                | Results {{ content.results.start_index |add:"1" }} to {{ content.results.end_index |add:"1" }} of {{ content.results.paginator.count }} | Page {{ content.results.number }} of {{ content.results.paginator.num_pages }} |
+            </span>
+
+            {% if content.results.has_next %}
+            <li class="next"><a href="?{{ content.current_query }}&page={{ content.results.paginator.num_pages }}">Last Page &rarr; &rarr;</a></li>
+            <li class="next"><a href="?{{ content.current_query }}&page={{ content.results.next_page_number }}">Next Page &rarr;</a></li>
+            {% endif %}
+        </ul> -->
 
     </div>
 

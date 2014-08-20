@@ -34,7 +34,7 @@
         </a>
             {% if piece.movements %}
                 <div class="btn-group" style="width:100%;">
-                    <button class="btn btn-default btn-xs dropdown-toggle" data-toggle="collapse" data-target="#movements-piece-{{ forloop.counter }}" style="width:100%;">Movements ({{ piece.movements | length }}) <span class="caret"></span></button>
+                    <button class="btn btn-xs dropdown-toggle" data-toggle="collapse" data-target="#movements-piece-{{ forloop.counter }}" style="width:100%;">Movements ({{ piece.movements | length }}) <span class="caret"></span></button>
                 </div>
                 <div id="movements-piece-{{ forloop.counter }}" class="collapse collapsed">
                     <table class="table table-condensed table-hover">
