@@ -27,6 +27,12 @@
     <link rel="stylesheet" href="{{STATIC_URL}}css/bootstrap-multiselect.css" type="text/css"/>
     <script type="text/javascript">
 
+    $(function()
+    {
+        $('.input-group-addon').tooltip();
+            
+    });
+
     $(function() 
     {   
         $('#typefilt').multiselect(
@@ -161,31 +167,31 @@
         <div class="tab-pane fade in active" id="gsearch">
         
             <!-- Accordion -->
-                        <div class="panel-body" style="margin-bottom: 15px; margin-top:25px; ">
-                            <form id="general-search-form" action="/search" method="get">
-                                <!-- Query Entry -->
-                                <div class="row">
-                               
-                                            <!-- <input type="text" name="q" class="search-input" placeholder="Search Query... &nbsp; E.g.: Bach Chorale Gott" size="35" style="float: none; margin: 0 auto;"/>                              
-                                            <button type="submit" class="btn btn-default btn-sm" id="btn-submit">
-                                              Search
-                                              <span class="glyphicon glyphicon-search"></span> 
-                                              placeholder="Search Query... &nbsp; &nbsp; &nbsp;E.g.: Bach Chorale Gott" onfocus="this.placeholder = ''" onblur="this.placeholder = 'Search Query... &nbsp; &nbsp; &nbsp;E.g.: Bach Chorale Gott'"
-                                            </button> -->
+            <div class="panel-body" style="margin-bottom: 15px; margin-top:25px; ">
+                <form id="general-search-form" action="/search" method="get">
+                    <!-- Query Entry -->
+                    <div class="row">
+                   
+                                <!-- <input type="text" name="q" class="search-input" placeholder="Search Query... &nbsp; E.g.: Bach Chorale Gott" size="35" style="float: none; margin: 0 auto;"/>                              
+                                <button type="submit" class="btn btn-default btn-sm" id="btn-submit">
+                                  Search
+                                  <span class="glyphicon glyphicon-search"></span> 
+                                  placeholder="Search Query... &nbsp; &nbsp; &nbsp;E.g.: Bach Chorale Gott" onfocus="this.placeholder = ''" onblur="this.placeholder = 'Search Query... &nbsp; &nbsp; &nbsp;E.g.: Bach Chorale Gott'"
+                                </button> -->
 
-                                    <div class="input-group input-group-lg col-md-8 col-md-offset-2">
-                                            <input type="text" class="form-control search" name="q"  style="text-align:center; height:70px;">
-                                            <span class="input-group-btn" style="width:160px;">
-                                                <button class="btn btn-default submit" type="button" id="gsearch-submit" style="height:70px; width:160px;"> Search <span class="glyphicon glyphicon-search"></span> </button>
-                                            </span>
-                                    </div><!-- /input-group -->
-                           
-                                </div>
-                                <p></p>
+                        <div class="input-group input-group-lg col-md-8 col-md-offset-2">
+                                <input type="text" class="form-control search" name="q"  style="text-align:center; height:70px;">
+                                <span class="input-group-btn" style="width:160px;">
+                                    <button class="btn btn-default submit" type="button" id="gsearch-submit" style="height:70px; width:160px;"> Search <span class="glyphicon glyphicon-search"></span> </button>
+                                </span>
+                        </div><!-- /input-group -->
+               
+                    </div>
+                    <p></p>
 
-                                <!-- Filters --> 
-                            </form>
-                        </div>
+                    <!-- Filters --> 
+                </form>
+            </div>
 
         </div>
 
@@ -193,142 +199,142 @@
         <div class="tab-pane fade" id="asearch">
         
             <!-- Accordion -->
-                        <div class="panel-body">
+            <div class="panel-body">
 
-                        <form id="advanced-search-form" action="/search" method="get">
-                        
+            <form id="advanced-search-form" action="/search" method="get">
+            
 
-                            <div class="form-group">
-                              
-                            <h3> General Search Query: </h3> 
-                            
+                <div class="form-group">
+                  
+                <h3> General Search Query: </h3> 
+                
+                <div class="input-group input-group-lg">
+                        <span class="input-group-addon lg">Search Query</span>
+                        <input type="text" class="form-control" name="q" placeholder="E.g.: Byrd Hornpipe...">
+                        <span class="input-group-addon" data-toggle="tooltip" data-container="body" data-placement="right" data-html='true' title="This searches across the <em>textual content of all entities </em> in the database for matches with the queried terms." >
+                            <span class="glyphicon glyphicon-info-sign"></span>
+                        </span> 
+                    </div>
+                
+
+                <h3> Limit Results by... </h3>
+                
+
+                <!-- Name Filter -->
+
+                    <div class="input-group input-group-lg">
+                        <span class="input-group-addon lg">Title</span>
+                        <input type="text" class="form-control" name="titlefilt" placeholder="E.g.: Agnus Dei...">
+                        <span class="input-group-addon" data-toggle="tooltip" data-container="body" data-placement="right" data-html='true' title="Terms entered here will be searched for in the <em> titles of pieces and movements</em>.">
+                            <span class="glyphicon glyphicon-info-sign"></span>
+                        </span> 
+                    </div>
+                    <p></p>
+                <!-- Name Filter -->
+
+                    <div class="input-group input-group-lg">
+                        <span class="input-group-addon lg">Composer's Name</span>
+                        <input type="text" class="form-control" name="namefilt" placeholder="E.g.: Jacob Obrecht...">
+                        <span class="input-group-addon" data-toggle="tooltip" data-container="body" data-placement="right" data-html='true' title="Terms entered here will be searched for in the <em> names of composers </em>, and in the <em> composer-names of pieces and movements</em>. For example, a search for 'Handel' should return Handel the composer, as well as the pieces and movements he composed.">
+                            <span class="glyphicon glyphicon-info-sign"></span>
+                        </span> 
+                    </div>
+                    <p></p>
+
+                <!-- Tag Filter -->
+
+                    <div class="input-group input-group-lg">
+                        <span class="input-group-addon lg">Tags</span>
+                        <input type="text" class="form-control" name="tagfilt" placeholder="E.g.: Tag1 Tag2 ...">
+                        <span class="input-group-addon" data-toggle="tooltip" data-container="body" data-placement="right" data-html='true' title="Terms entered here will be searched for in the <em> tags of pieces and movements</em>.">
+                            <span class="glyphicon glyphicon-info-sign"></span>
+                        </span> 
+                    </div>
+                    <p></p>
+
+                <!-- Voice Filter -->
+
+                    <div class="input-group input-group-lg">
+                        <span class="input-group-addon lg">Number of Voices</span>
+                        <input type="text" class="form-control" name="voicefilt" placeholder="E.g.: 4">
+                        <span class="input-group-addon" data-toggle="tooltip" data-container="body" data-placement="right" data-html='true' title="Numbers entered here will be searched for in the <em> number-of-voices field of pieces and movements</em>.">
+                            <span class="glyphicon glyphicon-info-sign" ></span>
+                        </span> 
+                    </div> 
+                    <p></p>
+
+                <!-- Date Filter -->
+                    <div class="row">
+                        <div class="col-lg-6">
                             <div class="input-group input-group-lg">
-                                    <span class="input-group-addon lg">Search Query</span>
-                                    <input type="text" class="form-control" name="q" placeholder="E.g.: Byrd Hornpipe...">
-                                    <span class="input-group-addon">
-                                        <span class="glyphicon glyphicon-info-sign"></span>
-                                    </span> 
-                                </div>
-                            
-
-                            <h3> Limit Results by... </h3>
-                            
-
-                            <!-- Name Filter -->
-
-                                <div class="input-group input-group-lg">
-                                    <span class="input-group-addon lg">Title</span>
-                                    <input type="text" class="form-control" name="titlefilt" placeholder="E.g.: Agnus Dei...">
-                                    <span class="input-group-addon">
-                                        <span class="glyphicon glyphicon-info-sign"></span>
-                                    </span> 
-                                </div>
-                                <p></p>
-                            <!-- Name Filter -->
-
-                                <div class="input-group input-group-lg">
-                                    <span class="input-group-addon lg">Composer's Name</span>
-                                    <input type="text" class="form-control" name="namefilt" placeholder="E.g.: Jacob Obrecht...">
-                                    <span class="input-group-addon">
-                                        <span class="glyphicon glyphicon-info-sign"></span>
-                                    </span> 
-                                </div>
-                                <p></p>
-
-                            <!-- Tag Filter -->
-
-                                <div class="input-group input-group-lg">
-                                    <span class="input-group-addon lg">Tags</span>
-                                    <input type="text" class="form-control" name="tagfilt" placeholder="E.g.: Tag1 Tag2 ...">
-                                    <span class="input-group-addon">
-                                        <span class="glyphicon glyphicon-info-sign"></span>
-                                    </span> 
-                                </div>
-                                <p></p>
-
-                            <!-- Voice Filter -->
-
-                                <div class="input-group input-group-lg">
-                                    <span class="input-group-addon lg">Number of Voices</span>
-                                    <input type="text" class="form-control" name="voicefilt" placeholder="E.g.: 4">
-                                    <span class="input-group-addon">
-                                        <span class="glyphicon glyphicon-info-sign"></span>
-                                    </span> 
-                                </div> 
-                                <p></p>
-
-                            <!-- Date Filter -->
-                                <div class="row">
-                                    <div class="col-lg-6">
-                                        <div class="input-group input-group-lg">
-                                        <span class="input-group-addon lg">Date Range</span>
-                                            <input type="text" class="form-control" name="datefiltf" placeholder="From: (YYYY)" >
-                                        </div>
-                                    </div>
-
-                                    <div class="col-lg-6">
-                                        <div class="input-group input-group-lg">
-                                            <input type="text" class="form-control" name="datefiltt" placeholder="To: (YYYY)" >
-                                            <span class="input-group-addon sm">
-                                                <span class="glyphicon glyphicon-info-sign"></span>
-                                            </span>
-                                        </div>
-                                    </div>
-                                </div>
-
-                                <p></p>
-
-                           <!-- Checkbox Filters -->
-                           <div class="col-md-6">
-                                <div class="row">
-                                        <div class="input-group input-group-lg">
-                                            <span class="input-group-addon lg">Result Type</span>
-                                            <select id="typefilt" multiple="multiple">
-                                                <option id="elvis_composer" value="elvis_composer">Composers</option>
-                                                <option id="elvis_piece" value="elvis_piece">Pieces</option>
-                                                <option id="elvis_movement" value="elvis_movement">Movements</option>
-                                                <option id="elvis_corpus" value="elvis_corpus">Corpora</option>
-                                                <option id="elvis_tag" value="elvis_tag">Tags</option>
-                                                <option id="elvis_user" value="elvis_user">Users</option>
-                                            </select>
-                                            <span class="input-group-addon">
-                                                <span class="glyphicon glyphicon-info-sign"></span>
-                                            </span> 
-                                        </div> 
-                                </div>
-
-                                <!-- Sorting --> 
-                                <h3> Sort Results By... </h3>
-                                <div class="row">
-                                        <div class="input-group input-group-lg">
-                                            <span class="input-group-addon lg">Ordering Scheme</span>
-                                            <select id="sortby">
-                                                <option value=""> Default (Result Type) </option>
-                                                <option value="name_sort asc"> Alphabetical &#9660; </option>
-                                                <option value="name_sort desc"> Reverse Alphabetical &#9650; </option>
-                                                <option value="date_general asc"> Chronological &#9660;</option>
-                                                <option value="date_general desc"> Reverse Chronological &#9650; </option>
-                                            </select>
-                                            <span class="input-group-addon">
-                                                <span class="glyphicon glyphicon-info-sign"></span>
-                                            </span> 
-                                        </div> 
-                                </div>                   
-                            </div>                 
+                            <span class="input-group-addon lg">Date Range</span>
+                                <input type="text" class="form-control" name="datefiltf" placeholder="From: (YYYY)" >
                             </div>
+                        </div>
 
-                            <!-- Submit -->
-                                <div class="col-md-6 text-center">
-                                    <br />
-                                    <br />
-                                    <button type="button" class="btn btn-default btn-lg submit" id="asearch-submit" style="height:90px; width:200px; font-size:30px">
-                                        Search
-                                        <span class="glyphicon glyphicon-search"></span> 
-                                    </button>
-                                </div>                                  
-                            
-                        </form>
-                        </div>                    
+                        <div class="col-lg-6">
+                            <div class="input-group input-group-lg">
+                                <input type="text" class="form-control" name="datefiltt" placeholder="To: (YYYY)" >
+                                <span class="input-group-addon" data-toggle="tooltip" data-container="body" data-placement="right" data-html='true' title="The date range entered here will be searched for overlaps with the <em> composition range of pieces and movements</em>, and the <em>lifetime of composers</em>.">
+                                    <span class="glyphicon glyphicon-info-sign"></span>
+                                </span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <p></p>
+
+               <!-- Checkbox Filters -->
+               <div class="col-lg-6">
+                    <div class="row">
+                            <div class="input-group input-group-lg">
+                                <span class="input-group-addon lg">Result Type</span>
+                                <select id="typefilt" multiple="multiple">
+                                    <option id="elvis_composer" value="elvis_composer">Composers</option>
+                                    <option id="elvis_piece" value="elvis_piece">Pieces</option>
+                                    <option id="elvis_movement" value="elvis_movement">Movements</option>
+                                    <option id="elvis_corpus" value="elvis_corpus">Corpora</option>
+                                    <option id="elvis_tag" value="elvis_tag">Tags</option>
+                                    <option id="elvis_user" value="elvis_user">Users</option>
+                                </select>
+                                <span class="input-group-addon" data-toggle="tooltip" data-container="body" data-placement="right" data-html='true' title="Results will be limited to the types chosen here.">
+                                    <span class="glyphicon glyphicon-info-sign"></span>
+                                </span> 
+                            </div> 
+                    </div>
+
+                    <!-- Sorting --> 
+                    <h3> Sort Results By... </h3>
+                    <div class="row">
+                            <div class="input-group input-group-lg">
+                                <span class="input-group-addon lg">Ordering Scheme</span>
+                                <select id="sortby">
+                                    <option value=""> Default </option>
+                                    <option value="name_sort asc"> Alphabetical &#9660; </option>
+                                    <option value="name_sort desc"> Reverse Alphabetical &#9650; </option>
+                                    <option value="date_general asc"> Chronological &#9660;</option>
+                                    <option value="date_general desc"> Reverse Chronological &#9650; </option>
+                                </select>
+                                <span class="input-group-addon" data-toggle="tooltip" data-container="body" data-placement="right" title="The 'Default' ordering scheme orders by relevance; tied results are ordered by result type." >
+                                    <span class="glyphicon glyphicon-info-sign"></span>
+                                </span> 
+                            </div> 
+                    </div>                   
+                </div>                 
+                </div>
+
+                <!-- Submit -->
+                    <div class="col-md-6 text-center">
+                        <br />
+                        <br />
+                        <button type="button" class="btn btn-default btn-lg submit" id="asearch-submit" style="height:90px; width:200px; font-size:30px">
+                            Search
+                            <span class="glyphicon glyphicon-search"></span> 
+                        </button>
+                    </div>                                  
+                
+            </form>
+            </div>                    
   
         </div>
 
@@ -341,7 +347,7 @@
                 <h4> Advanced Searching </h4>
                 <p> A customisable search. Results are based on the search terms for specific, user-chosen fields of an item. Items returned may be restricted to specific types, and may be sorted on specific fields. Use this if you have a concrete idea of the items, and their attributes, that you are looking for. </p>
                 <h4> Downloading Results </h4>
-                <p> Each <button class="btn btn-xs btn-success"><span class="glyphicon glyphicon-plus"></span></button> recursively sends its object's attachments to your downloads. For example, clicking this in a piece-typed result will send all of its attachments, and the attachments of its movements, to your downloads cart. The <button class="btn btn-success btn-sm">Add Results on Current Page to Downloads <span class="glyphicon glyphicon-plus"></span></button> will recursively send all the attachments of the current page's results to your downloads. In other words, it's like clicking all of the small green buttons at once. The <button class="btn btn-danger btn-sm"> Add All Query Results to Downloads <span class="glyphicon glyphicon-plus"></span></button> will do the same for every page of results in your query.</p>
+                <p> Each <button class="btn btn-mini btn-success"><span class="glyphicon glyphicon-plus"></span></button> recursively sends its object's attachments to your downloads. For example, clicking this in a piece-typed result will send all of its attachments, and the attachments of its movements, to your downloads cart. The <button class="btn btn-success btn-sm">Add Results on Current Page to Downloads <span class="glyphicon glyphicon-plus"></span></button> will recursively send all the attachments of the current page's results to your downloads. In other words, it's like clicking all of the small green buttons at once. The <button class="btn btn-danger btn-sm"> Add All Query Results to Downloads <span class="glyphicon glyphicon-plus"></span></button> will do the same for every page of results in your query.</p>
             </div>
       
         </div>
