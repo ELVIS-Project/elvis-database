@@ -188,6 +188,7 @@ if __name__ == "__main__":
             'id': str(uuid.uuid4()),
             'item_id': int(tag.id),
             'name': tag.name,
+            'tags': tag.name,
             'description': tag.description,
             'approved': tag.approved,
         }

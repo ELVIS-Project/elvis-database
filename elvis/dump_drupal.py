@@ -77,12 +77,12 @@ class DumpDrupal(object):
     def __init__(self):
         # IMPORTANT: Choose which objects to add here
         # LM: Would want to run tags, users only if db doesnt have previous users, corpus, piece, movement, in that order
-         self.get_tags()
-         self.get_composers()
-         #self.get_users()
-         self.get_corpus()
-         self.get_pieces_movements("piece")
-         self.get_pieces_movements("movement")
+        #self.get_tags()
+        #self.get_composers()
+        #self.get_users()
+        #self.get_corpus()
+        #self.get_pieces_movements("piece")
+        self.get_pieces_movements("movement")
 
     def __connect(self):
         self.conn = MySQLdb.connect(host="localhost", user="root", cursorclass=DictCursor, db="ddmal_elvis")
@@ -182,6 +182,7 @@ class DumpDrupal(object):
         self.curs.execute(TAG_QUERY)
         tags = self.curs.fetchall()
 
+        
         print "Deleting all tags"
         Tag.objects.all().delete()
 
@@ -190,7 +191,7 @@ class DumpDrupal(object):
             print tag
             t = Tag(**tag)
             t.name = my_decoder(t.name)
-            t.description = my_decoder(t.name)
+            t.description = my_decoder(t.description)
             t.save()
 
         print "Deleting tag hierarchy"
@@ -207,7 +208,19 @@ class DumpDrupal(object):
                 parent = None
             t = TagHierarchy(tag=tag, parent=parent)
             t.save()
+        
 
+        # Tag export to CSV
+        '''
+        import csv
+        csv_file = csv.writer(open('old_tags.csv', 'wb'), dialect='excel')
+        csv_file.writerow(['Old Tag', 'Tag Description', 'New Parent Field', 'New Name'])
+        for tag in tags:
+            csv_file.writerow([(tag['name']), (tag['description']), '', ''])
+        csv_file = csv.reader(open('old_tags.csv', 'rb'), dialect='excel')
+        for row in csv_file:
+            print row
+        '''
         self.__disconnect()
 
     def get_attachments(self):
@@ -396,7 +409,7 @@ class DumpDrupal(object):
 
         self.__disconnect()
         print('failed attachments', failures)
-
+        
     def __resolve_movement_parent(self, old_id):
         q = """SELECT REPLACE(ml1.link_path, 'node/', '') AS parent_nid,
                REPLACE(ml2.link_path, 'node/', '') AS nid
