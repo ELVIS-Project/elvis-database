@@ -67,8 +67,6 @@
                 <div class="navbar-collapse collapse">
                     <ul class="nav navbar-nav">
                         <li><a href="/about">About</a></li>
-                        <li><a href="/projects">Projects</a></li>
-                        <li><a href="/queries">Queries</a></li>
                         <li><a href="/search">Search</a></li>
                         <li class="dropdown">
                             <a href="#" class="dropdown-toggle" data-toggle="dropdown"> Browse <b class="caret"></b></a>
@@ -79,12 +77,9 @@
                                 <li><a href="/composers">Composers</a></li>
                             </ul>
                         </li>
-                        <!--<li><a href="/upload">Upload</a></li>-->
-                        <li><a href="/temp">(Mock/New) Upload Page </a></li>
                     </ul>
                     <ul class="nav navbar-nav navbar-right">
                     {% if user.is_authenticated %}
-                        <li><a href="/upload">(Old) Upload</a></li>
                         <li>
                             {% with download_num=user.downloads.all.first.attachments.all %}
                             <a href="/downloads">
@@ -99,8 +94,6 @@
                                 <li class="divider"></li>
                                 <li><a href="/user/{{ user.id }}">Account Settings</a></li>
                                 <li><a href="/logout/">Logout</a></li>
-                                <li id="separator"></li>
-                                <li><a href="/user-profiles">View other users</a></li>
                             </ul>
                         </li>
                     {% else %}

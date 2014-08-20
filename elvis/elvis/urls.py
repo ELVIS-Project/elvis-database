@@ -7,7 +7,7 @@ from rest_framework.urlpatterns import format_suffix_patterns
 from django.contrib.staticfiles.urls import staticfiles_urlpatterns
 
 # temporary views for these pages
-from elvis.views.main import home, about, queries, temp
+from elvis.views.main import home, about, queries, temp, temp2
 
 from elvis.views.auth import LoginFormView, logout_view
 from elvis.views.search import SearchView
@@ -49,10 +49,11 @@ urlpatterns += format_suffix_patterns(
         url(r'^patchdownloads/$',  patch_downloads, name="patch-downloads"),
         url(r'^rpatchdownloads/$',  recursive_patch_downloads, name="recursive-patch-downloads"),
 
-        url(r'^user-profiles/$', UserProfileList.as_view(), name="userprofile-list"),
-        url(r'^user-profile/(?P<pk>[0-9]+)/$', UserProfileDetail.as_view(), name="userprofile-detail"),
-        url(r'^projects/$', ProjectList.as_view(), name="projects-list"),
-        url(r'^project/(?P<pk>[0-9]+)/$', ProjectDetail.as_view(), name="project-detail"),
+        # LM: Old views
+        #url(r'^user-profiles/$', UserProfileList.as_view(), name="userprofile-list"),
+        #url(r'^user-profile/(?P<pk>[0-9]+)/$', UserProfileDetail.as_view(), name="userprofile-detail"),
+        #url(r'^projects/$', ProjectList.as_view(), name="projects-list"),
+        #url(r'^project/(?P<pk>[0-9]+)/$', ProjectDetail.as_view(), name="project-detail"),
 
         url(r'^pieces/$', PieceList.as_view(), name="piece-list"),
         url(r'^piece/(?P<pk>[0-9]+)/$', PieceDetail.as_view(), name="piece-detail"),
@@ -68,9 +69,10 @@ urlpatterns += format_suffix_patterns(
         url(r'^attachments/$', AttachmentList.as_view(), name="attachment-list"),
         url(r'^attachment/(?P<pk>[0-9]+)/$', AttachmentDetail.as_view(), name="attachment-detail"),
 
-        url(r'^tags/$', TagList.as_view(), name="tag-list"),
+        # LM Old tag list view
+        #url(r'^tags/$', TagList.as_view(), name="tag-list"),
+        
         url(r'^tag/(?P<pk>[0-9]+)/$', TagDetail.as_view(), name="tag-detail"),
-
 
         url(r'^about/', about, name='about'),
 
@@ -81,12 +83,16 @@ urlpatterns += format_suffix_patterns(
         url(r'^upload/project/$', create_project, name="create-project"),
         # LM Won't need this with embedded search results in search
         # url(r'^search_results/$', search_view, name="search_results"),
-        url(r'^upload/$', upload_file, name="upload"),
-        url(r'^queries/$', queries, name="queries"),
-        url(r'^addcomposer/$', create_composer, name="create-composer"),
-        url(r'^addcorpus/$', create_corpus, name="create-corpus"),
+        
+        # LM Old views
+        #url(r'^upload/$', upload_file, name="upload"),
+        #url(r'^queries/$', queries, name="queries"),
+        #url(r'^addcomposer/$', create_composer, name="create-composer"),
+        #url(r'^addcorpus/$', create_corpus, name="create-corpus"),
 
-        url(r'^temp/$', temp, name='temp'),
+        # LM New upload views
+        #url(r'^temp/$', temp, name='temp'),
+        #url(r'^temp2/$', temp2, name='temp2'),
 
         # url(r'^(?P<entity>[a-z_]+)/(?P<pk>[0-9]+)/delete/', delete_model, name="delete-model"),
 
