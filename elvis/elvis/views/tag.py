@@ -5,10 +5,10 @@ from rest_framework.renderers import JSONRenderer, JSONPRenderer
 from elvis.renderers.custom_html_renderer import CustomHTMLRenderer
 from elvis.serializers.tag import TagSerializer
 from elvis.models.tag import Tag
-
+#from elvis.models.tag_hierarchy import TagHierarchy
 
 class TagListHTMLRenderer(CustomHTMLRenderer):
-    template_name = "tag/tag_list.html"
+    template_name = "tag/tag_tree.html"
 
 
 class TagDetailHTMLRenderer(CustomHTMLRenderer):

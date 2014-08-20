@@ -1,13 +1,64 @@
 {% extends "base.html" %}
 
 {% block wrap %}
-{{ content.name }}
 
-<h3>Pieces tagged with this tag</h3>
-<ul>
-{% for piece in content.pieces %}
-    <li><a href="{{ piece.url }}">{{ piece.title }}</a></li>
-{% endfor %}
-</ul>
+<div class="row">
+    <h3>{{ content.name }}</h3>
 
+    <p>Pieces associated with this tag: </p>
+
+    {% if content.description %} <p> {{content.description}} </p> {% endif %}
+</div> 
+
+<div class="row">
+    <table class="table table-condensed table-hover">
+        <thead>
+            <tr>
+                <th width="67%">Title</th>
+                <th width="23%">Composer</th>
+                <th width="10%">Date</th>
+            </tr>
+        </thead>
+    </table>
+    <div style="max-height: 650px; width: 100%; margin: 0; overflow-y: scroll;">
+    <table class="table table-condensed" style="margin: 0; padding: 0;">
+        <tbody>
+            {% for piece in content.pieces %}
+                <tr >
+                    <td width="68%">{% include "includes/download-badge-inc.html" with download_type="elvis_piece" download_item_id=piece.item_id title="Add to Downloads" %}<a href="{{ piece.url }}">{{ piece.title }}</a></td>
+                    <td width="23%"><a href="{{ piece.composer.url }}">{{ piece.composer.name }}</a></td>
+                    <td width="9%">{{ piece.date_of_composition | date:"Y"}}</td>
+                </tr>
+                {% if piece.movements %}
+                <tr>
+                    <td width="100%" colspan="2" style="border: 0;">
+                    <div class="btn-group" style="width:95%;">
+                        <button class="btn btn-xs dropdown-toggle" data-toggle="collapse" data-target="#movements-piece-{{ forloop.counter }}" style="text-align:left; width:100%; border-width:1px; border-color: white; background-color: white;">Movements ({{ piece.movements | length }}) <span class="caret"></span></button>
+                    </div>
+                    <div id="movements-piece-{{ forloop.counter }}" class="collapse collapsed" style="border-width:1px; border-style: solid; border-color: grey; width:95%;">
+                        <table class="table table-condensed table-hover">
+                            <thead>
+                                <tr>
+                                    <th></th>
+                                    <th>Movement Name</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for movement in piece.movements %}
+                                    <tr>
+                                        <td class="small-column">{% include "includes/download-badge-inc.html" with download_type="elvis_movement" download_item_id=movement.item_id %}</td>
+                                        <td><a href="{{ movement.url }}">{{ movement.title }}</a></td>
+                                    </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                    </td>
+                </tr>
+                {% endif %} 
+            {% endfor %}
+        </tbody>
+    </table>
+    </div>
+</div>
 {% endblock %}
