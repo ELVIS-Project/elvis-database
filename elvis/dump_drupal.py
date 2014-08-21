@@ -80,8 +80,8 @@ class DumpDrupal(object):
         #self.get_tags()
         #self.get_composers()
         #self.get_users()
-        #self.get_corpus()
-        #self.get_pieces_movements("piece")
+        self.get_corpus()
+        self.get_pieces_movements("piece")
         self.get_pieces_movements("movement")
 
     def __connect(self):
@@ -283,7 +283,6 @@ class DumpDrupal(object):
             }
 
             #if not item.get('date_of_composition', None) == item.get('date_of_composition2', None):
-            print p
 
             if rettype == "piece":
                 p.update({'corpus': parent_obj})

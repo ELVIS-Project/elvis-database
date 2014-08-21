@@ -2,6 +2,7 @@ from django.db import models
 from django.contrib.auth.models import User
 #import pytz
 from datetime import datetime
+import pytz
 
 #django signal handlers
 from django.dispatch import receiver
@@ -29,7 +30,7 @@ class Movement(models.Model):
     # number_of_queries = models.IntegerField(blank=True, null=True)
     # number_of_downloads = models.IntegerField(blank=True, null=True)
 
-    created = models.DateTimeField(auto_now_add=True)
+    created = models.DateTimeField(default=datetime.now)
     updated = models.DateTimeField(auto_now=True)
 
     @property
@@ -44,21 +45,6 @@ class Movement(models.Model):
 
     def __unicode__(self):
         return u"{0}".format(self.title)
-
-    def save(self, *args, **kwargs):
-        super(Movement, self).save()
-        try:
-            composer_last_name = self.composer.name.split(',', 1)[0]
-        except ValueError as v:
-            composer_last_name = self.composer.name.split(' ', 1)[0]
-        if self.piece:
-            piece_title_short = ''.join(self.piece.title.split()[:4])
-        else:
-            piece_title_short = ''
-        movement_title_short = ''.join(self.title.split()[:1])
-        attachment_name =  "_".join([composer_last_name, piece_title_short, movement_title_short])
-        for attachment in self.attachments.all():
-            attachment.rename(new_filename=attachment_name)
 
 @receiver(post_save, sender=Movement)
 def solr_index(sender, instance, created, **kwargs):
@@ -124,12 +110,16 @@ def solr_index(sender, instance, created, **kwargs):
     #else:
     #    date_of_composition = pytz.utc.localize(movement.date_of_composition)
 
-    print(movement.title)
-    print(parent_piece_name)
-    print(parent_corpus_name)
-    print(composer_name)
-    print(movement_comment)
+    #print(movement.title)
+    #print(parent_piece_name)
+    #print(parent_corpus_name)
+    #print(composer_name)
+    #print(movement_comment)
 
+    try:
+        movement_created = pytz.utc.localize(movement.created)
+    except ValueError:
+        movement_created = movement.created
 
     tags = []
     for tag in movement.tags.all():
@@ -144,7 +134,7 @@ def solr_index(sender, instance, created, **kwargs):
             'date_of_composition2': movement.date_of_composition2,
             'number_of_voices': movement.number_of_voices,
             'comment': movement_comment,
-            'created': movement.created,
+            'created': movement_created,
             'updated': movement.updated,
             'parent_piece_name': parent_piece_name,  
             'parent_corpus_name': parent_corpus_name,
@@ -155,6 +145,19 @@ def solr_index(sender, instance, created, **kwargs):
     solrconn.add(**d)
     solrconn.commit()
 
+    # Rename attachments accordingly
+    try:
+        composer_last_name = movement.composer.name.split(',', 1)[0]
+    except ValueError as v:
+        composer_last_name = movement.composer.name.split(' ', 1)[0]
+    if movement.piece:
+        piece_title_short = ''.join(movement.piece.title.split()[:4])
+    else:
+        piece_title_short = ''
+    movement_title_short = ''.join(movement.title.split()[:1])
+    attachment_name =  "_".join([composer_last_name, piece_title_short, movement_title_short])
+    for attachment in movement.attachments.all():
+        attachment.rename(new_filename=attachment_name)
 
 @receiver(post_delete, sender=Movement)
 def solr_delete(sender, instance, **kwargs):

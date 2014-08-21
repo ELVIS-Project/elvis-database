@@ -5,6 +5,9 @@ from django.contrib.auth.models import User
 from django.dispatch import receiver
 from django.db.models.signals import post_save, post_delete
 
+from datetime import datetime
+import pytz
+
 class Corpus(models.Model):
     class Meta:
         ordering = ["title"]
@@ -17,7 +20,7 @@ class Corpus(models.Model):
     comment = models.TextField(blank=True, null=True)
     # number_of_queries = models.IntegerField(blank=True, null=True)
 
-    created = models.DateTimeField(auto_now_add=True)
+    created = models.DateTimeField(default=datetime.now)
     updated = models.DateTimeField(auto_now=True)
 
     def __unicode__(self):
@@ -61,7 +64,12 @@ def solr_index(sender, instance, created, **kwargs):
         except UnicodeDecodeError:
             corpus_comment = corpus.comment.decode('utf-8')
             
-    
+    try:
+        corpus_created = pytz.utc.localize(corpus.created)
+    except ValueError:
+        corpus_created = corpus.created
+
+
     #print(corpus.title)
     d = {
             'type': 'elvis_corpus',
@@ -69,7 +77,7 @@ def solr_index(sender, instance, created, **kwargs):
             'item_id': int(corpus.id),
             'title': corpus_title,
             'parent_corpus_name': corpus_title,
-            'created': corpus.created,
+            'created': corpus_created,
             'updated': corpus.updated,
             'comment': corpus_comment,
             'creator_name': creator_name,

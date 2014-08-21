@@ -44,7 +44,7 @@ class Attachment(models.Model):
     uploader = models.ForeignKey(User, blank=True, null=True, related_name="attachments")
     description = models.CharField(max_length=255, blank=True, null=True)
 
-    created = models.DateTimeField(auto_now_add=True)
+    created = models.DateTimeField(default=datetime.now)
     updated = models.DateTimeField(auto_now=True)
 
     @property

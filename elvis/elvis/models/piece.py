@@ -2,6 +2,7 @@ from django.db import models
 from django.contrib.auth.models import User
 #import pytz
 from datetime import datetime
+import pytz
 
 #django signal handlers
 from django.dispatch import receiver
@@ -27,7 +28,7 @@ class Piece(models.Model):
     # number_of_queries = models.IntegerField(blank=True, null=True)
     # number_of_downloads = models.IntegerField(blank=True, null=True)
 
-    created = models.DateTimeField(auto_now_add=True)
+    created = models.DateTimeField(default=datetime.now)
     updated = models.DateTimeField(auto_now=True)
 
     def __unicode__(self):
@@ -45,17 +46,6 @@ class Piece(models.Model):
     @property
     def tagged_as(self):
         return " ".join([t.name for t in self.tags.all()])
-
-    def save(self, *args, **kwargs):
-        super(Piece, self).save()
-        try:
-            composer_last_name = self.composer.name.split(',', 1)[0]
-        except ValueError as v:
-            composer_last_name = self.composer.name.split(' ', 1)[0]
-        piece_title_short = ''.join(self.title.split()[:6])
-        attachment_name = "_".join([composer_last_name, piece_title_short])
-        for attachment in self.attachments.all():
-            attachment.rename(new_filename=attachment_name)
 
 @receiver(post_save, sender=Piece)
 def solr_index(sender, instance, created, **kwargs):
@@ -115,6 +105,12 @@ def solr_index(sender, instance, created, **kwargs):
     #    date_of_composition = pytz.utc.localize(piece.date_of_composition)
 
     #print(piece.title)
+
+    try:
+        piece_created = pytz.utc.localize(piece.created)
+    except ValueError:
+        piece_created = piece.created
+
     tags = []
     for tag in piece.tags.all():
         tags.append(tag.name)
@@ -128,7 +124,7 @@ def solr_index(sender, instance, created, **kwargs):
             'date_of_composition2': piece.date_of_composition2,
             'number_of_voices': piece.number_of_voices,
             'comment': piece_comment,
-            'created': piece.created,
+            'created': piece_created,
             'updated': piece.updated,
             'parent_corpus_name': parent_corpus_name,
             'composer_name': composer_name,
@@ -138,6 +134,15 @@ def solr_index(sender, instance, created, **kwargs):
     solrconn.add(**d)
     solrconn.commit()
 
+    # Rename attachments accordingly
+    try:
+        composer_last_name = piece.composer.name.split(',', 1)[0]
+    except ValueError as v:
+        composer_last_name = piece.composer.name.split(' ', 1)[0]
+    piece_title_short = ''.join(piece.title.split()[:6])
+    attachment_name = "_".join([composer_last_name, piece_title_short])
+    for attachment in piece.attachments.all():
+        attachment.rename(new_filename=attachment_name)
 
 @receiver(post_delete, sender=Piece)
 def solr_delete(sender, instance, **kwargs):
