@@ -10,6 +10,7 @@
         if ($.cookie('test_cookie') == 'cookie_value') 
         {
             $('#login-submit').attr('class', 'btn btn-default');
+            $.cookie("test_cookie", null, { path: '/' });
         }
         else
         {
