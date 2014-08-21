@@ -16,6 +16,7 @@ if __name__ == "__main__":
     django.setup()
 
     from elvis.models.corpus import Corpus
+    from elvis.models.collection import Collection
     from elvis.models.composer import Composer
     from elvis.models.piece import Piece
     from elvis.models.movement import Movement
@@ -55,6 +56,30 @@ if __name__ == "__main__":
     print "Done adding corpora."
 
     '''
+    Collections: title
+    comment, creator
+    '''
+    collections = Collection.objects.all()
+    all_collections = []
+    print "Adding collections..."
+    for collection in collections:
+        doc = {
+            'type': 'elvis_collection',
+            'id': str(uuid.uuid4()),
+            'item_id': int(collection.id),
+            'title': unicode(collection.title),
+            'parent_collection_names': unicode(collection.title),
+            'created': collection.created,
+            'updated': collection.updated,
+            'comment': collection.comment,
+            'creator_name': collection.creator.username,
+        }
+        all_collections.append(doc)
+    solrconn.add_many(all_collections)
+    solrconn.commit()
+    print "Done adding collections."
+
+    '''
     Composers: name, birthday, death date 
     '''
     composers = Composer.objects.all()
@@ -77,7 +102,7 @@ if __name__ == "__main__":
     print "Done adding composers."
 
     '''
-    Pieces: title, composer name, corpus name, uploader name, comment, num_voices, date of composition,
+    Pieces: title, composer name, corpus name, collection names, uploader name, comment, num_voices, date of composition,
     tags, attachments,
     numqueries, numdownloads
     '''
@@ -100,6 +125,10 @@ if __name__ == "__main__":
         for tag in piece.tags.all():
             tags.append(tag.name)
 
+        collections = []
+        for collection in piece.collections.all():
+            collections.append(collection.title)
+
         doc = {
             'type': 'elvis_piece',
             'id': str(uuid.uuid4()),
@@ -112,6 +141,7 @@ if __name__ == "__main__":
             'created': piece.created,
             'updated': piece.updated,
             'parent_corpus_name': parent_corpus_name,
+            'parent_collection_names': collections
             'composer_name': piece.composer.name,
             'uploader_name': piece.uploader.username,
             'tags': tags,
@@ -124,7 +154,7 @@ if __name__ == "__main__":
     print "Done adding pieces."
 
     '''
-    Movements: title, piece title, composer name, corpus name, date of composition, num voices, uploader_name
+    Movements: title, piece title, composer name, corpus name, collection names, date of composition, num voices, uploader_name
     tags, attachments, comment, numqueries, numdownloads
     '''
     movements = Movement.objects.all()
@@ -150,6 +180,10 @@ if __name__ == "__main__":
         for tag in movement.tags.all():
             tags.append(tag.name)
 
+        collections = []
+        for collection in movement.collections.all():
+            collections.append(collection.title)
+
         doc = {
             'type': 'elvis_movement',
             'id': str(uuid.uuid4()),
@@ -163,6 +197,7 @@ if __name__ == "__main__":
             'updated': movement.updated,
             'parent_piece_name': parent_piece_name,  
             'parent_corpus_name': parent_corpus_name,
+            'parent_collection_names': collections,
             'composer_name': movement.composer.name,
             'uploader_name': movement.uploader.username,
             'tags': tags,
