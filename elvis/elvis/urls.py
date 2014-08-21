@@ -39,7 +39,7 @@ urlpatterns += format_suffix_patterns(
 
         url(r'^search/', SearchView.as_view(), name="search-view"),
 
-        url(r'^users/$', UserList.as_view(), name="user-list"),
+        #url(r'^users/$', UserList.as_view(), name="user-list"),
         url(r'^user/(?P<pk>[0-9]+)/$', UserDetail.as_view(), name="user-detail"),
         url(r'^login/?', LoginFormView.as_view(), name="login-form"),
         url(r'^logout/?', logout_view),
@@ -71,7 +71,7 @@ urlpatterns += format_suffix_patterns(
 
         # LM Old tag list view
         #url(r'^tags/$', TagList.as_view(), name="tag-list"),
-        
+
         url(r'^tag/(?P<pk>[0-9]+)/$', TagDetail.as_view(), name="tag-detail"),
 
         url(r'^about/', about, name='about'),

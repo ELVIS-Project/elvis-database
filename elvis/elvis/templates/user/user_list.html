@@ -4,20 +4,15 @@
 {% block wrap %}
 
 {% if content %}
-	{% if content|length = 1 %}
-		<h4> 1 user found: </h4>
-	{% else %}
-	<h4> {{ content|length }} users found: </h4>
-	{% endif %}
 
-	<ul>
-	{% for user in content %}
-		<li> {{ user.username }}</li>
-	{% endfor %}
-	</ul>
-	
+    <ul>
+    {% for user in content.results %}
+        <li> {{ user.user.username }}</li>
+    {% endfor %}
+    </ul>
+    
 {% else %}
-	There are no users.
+    There are no users.
 {% endif %}
 
 {% endblock %}

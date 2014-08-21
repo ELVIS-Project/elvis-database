@@ -93,13 +93,6 @@ class SolrPaginator(object):
                 new_params[str(k)] = v.encode('utf-8')
             except AttributeError as e:
                 new_params[str(k)] = [item.encode('utf-8') for item in v]
-        # LM: need to handle case where a list of parameters is passed in, e.g. a list for facet.fields
-        # Otherwise encode doesn't work
-        #for k, v in self.params.items():
-            #if isinstance(v, basestring):
-            #    new_params[str(k)] = v.encode('utf-8')
-            #else:
-            #    new_params[str(k)] = string.split((";".join(v)).encode('utf-8'), ";")
 
         # get the new start index
         new_params['start'] = start

@@ -1,4 +1,5 @@
 from elvis.models.userprofile import UserProfile
+from django.contrib.auth.models import User
 from rest_framework import generics
 from rest_framework import permissions
 from rest_framework.renderers import JSONRenderer, JSONPRenderer
