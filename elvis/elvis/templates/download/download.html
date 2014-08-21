@@ -1,10 +1,10 @@
 {% extends "base.html" %}
 
 
-<!-- LM: TODO Move download history elsewhere.... onsubmit="return confirm('Proceed?');"  --> 
-
 {% block wrap %}
-<h2>Your Downloads</h2>
+<div class="page-header">
+    <h2>Your Downloads </h2>
+</div>
 <div class="col-md-12">
     <form id="download-form" action="/downloading/" method="post" > {% csrf_token %}
     

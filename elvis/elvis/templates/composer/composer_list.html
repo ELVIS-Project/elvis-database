@@ -1,23 +1,22 @@
 {% extends "base.html" %}
 
 {% block wrap %}
-    <h2>Composers <small>({{ content.count }})</small></h2>
-
+    <div class="page-header">
+        <h2>Composers <small>({{ content.count }})</small></h2>
+    </div>
     {% include "paginate.html" with content=content %}
 
     <ul class="media-list">
     {% for composer in content.results %}
         <li class="media">
-            <a class="pull-left" href="#">
-                {% if composer.picture %}
-                <img src="{{ composer.picture }}" class="media-object" />
-                {% else %}
-                <img data-src="holder.js/100x100/text:No Picture" class="media-object" />
-                {% endif %}
-            </a>
+            <div class="col-md-2">
+                <div style="position:relative; overflow:hidden; padding-bottom:100%;">
+                    <img src="{% if content.image %} {{ content.image }}  {% else %} holder.js/180x180/text:No Picture {% endif %}" class="img-responsive" style="position:absolute;"/>
+                </div>
+            </div>
             <div class="media-body">
                 <h4 class="media-heading"><a href="{{ composer.url }}">{{ composer.name }}</a> <small>({{ composer.birth_date | date:"Y" }}&ndash;{{ composer.death_date | date:"Y" }})</small></h4>
-                <span class="badge">{{ composer.pieces | length }} Pieces</span>
+                <span class="badge alert-info">{{ composer.pieces | length }} Pieces</span>
                 <p>
                 </p>
                 {% include "includes/download-badge-inc.html" with download_type="elvis_composer" download_item_id=composer.id %}

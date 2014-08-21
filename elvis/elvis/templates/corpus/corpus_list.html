@@ -10,7 +10,7 @@
     <div class="list-group">
     {% for corpus in content.results %}
         <a class="list-group-item" href="{{ corpus.url }}">
-            <span class="badge">{{ corpus.pieces | length }} Pieces, {{ corpus.movements | length }} Movements</span>
+            <span class="badge alert-info">{{ corpus.pieces | length }} Pieces, {{ corpus.movements | length }} Movements</span>
             <h4 class="list-group-item-header">{% include "includes/download-badge-inc.html" with download_type="elvis_corpus" download_item_id=corpus.item_id %}{{ corpus.title }} </h4> 
             <p class="list-group-item-text">
                 <small>Created by {{ corpus.creator.full_name }} on {{ corpus.created }}</small><br />
