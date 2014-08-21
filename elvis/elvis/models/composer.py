@@ -7,8 +7,10 @@ from django.contrib.auth.models import User
 from django.dispatch import receiver
 from django.db.models.signals import post_save, post_delete
 
+from django.conf import settings
+
 def picture_path(instance, filename):
-    return os.path.join("photos", "composers", filename)
+    return os.path.join(settings.MEDIA_ROOT, "pictures", "composers", filename)
 
 
 class Composer(models.Model):
@@ -30,7 +32,6 @@ class Composer(models.Model):
     def __unicode__(self):
         return u"{0}".format(self.name)
 
-
 @receiver(post_save, sender=Composer)
 def solr_index(sender, instance, created, **kwargs):
     import uuid  #unique id
@@ -45,8 +46,6 @@ def solr_index(sender, instance, created, **kwargs):
 
     # take instance, build dictionary around instance && use shorthand ** to add to solr
     composer = instance
-
-
 
     # Everything between here...
     try:
@@ -92,6 +91,8 @@ def solr_index(sender, instance, created, **kwargs):
     }
     solrconn.add(**d) 
     solrconn.commit() # update based on previous dictionary
+
+    #Update solr & attachments for all composed pieces/movements -- by resaving each piece/movement
 
 
 @receiver(post_delete, sender=Composer)

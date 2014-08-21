@@ -2,7 +2,8 @@ from rest_framework import serializers
 from elvis.models.composer import Composer
 from elvis.models.piece import Piece
 from elvis.models.movement import Movement
-
+from django.conf import settings
+import os
 
 class ComposerMovementSerializer(serializers.HyperlinkedModelSerializer):
     item_id = serializers.Field("pk")
@@ -22,6 +23,7 @@ class ComposerPieceSerializer(serializers.HyperlinkedModelSerializer):
 class ComposerSerializer(serializers.HyperlinkedModelSerializer):
     pieces = ComposerPieceSerializer()
     movements = ComposerMovementSerializer()
+    image = serializers.SerializerMethodField("retrieve_image")
     item_id = serializers.Field("pk")
     
     class Meta:
@@ -32,7 +34,15 @@ class ComposerSerializer(serializers.HyperlinkedModelSerializer):
                   "name",
                   "birth_date",
                   "death_date",
-                  "picture",
                   "pieces",
                   "created",
-                  "updated")
+                  "updated",
+                  "image")
+
+    def retrieve_image(self, obj):
+        if not obj.picture:
+          return None
+        request = self.context.get('request', None)
+        path = os.path.relpath(obj.picture.path, settings.MEDIA_ROOT)
+        url = request.build_absolute_uri(os.path.join(settings.MEDIA_URL, path))
+        return url
