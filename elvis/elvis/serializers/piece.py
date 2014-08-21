@@ -4,6 +4,7 @@ from elvis.models.composer import Composer
 from elvis.models.tag import Tag
 from elvis.models.attachment import Attachment
 from elvis.models.corpus import Corpus
+from elvis.models.collection import Collection
 from elvis.models.movement import Movement
 from django.contrib.auth.models import User
 
@@ -42,6 +43,11 @@ class CorpusPieceSerializer(serializers.HyperlinkedModelSerializer):
         model = Corpus
         fields = ("url", "title")
 
+class CollectionPieceSerializer(serializers.HyperlinkedModelSerializer):
+    class Meta:
+        model = Collection
+        fields = ("url", "title")
+
 class UserPieceSerializer(serializers.HyperlinkedModelSerializer):
     class Meta:
         model = User
@@ -58,6 +64,7 @@ class PieceSerializer(serializers.HyperlinkedModelSerializer):
     tags = TagPieceSerializer()
     attachments = AttachmentPieceSerializer()
     corpus = CorpusPieceSerializer()
+    collections = CollectionPieceSerializer()
     uploader = UserPieceSerializer()
     movements = MovementPieceSerializer()
     item_id = serializers.Field("pk")

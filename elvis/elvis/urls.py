@@ -19,6 +19,7 @@ from elvis.views.user import UserList, UserDetail
 from elvis.views.userprofile import UserProfileList, UserProfileDetail
 from elvis.views.movement import MovementList, MovementDetail
 from elvis.views.composer import ComposerList, ComposerDetail
+from elvis.views.collection import CollectionList, CollectionDetail
 from elvis.views.tag import TagList, TagDetail
 from elvis.views.attachment import AttachmentList, AttachmentDetail
 
@@ -60,6 +61,10 @@ urlpatterns += format_suffix_patterns(
 
         url(r'^corpora/$', CorpusList.as_view(), name="corpus-list"),
         url(r'^corpus/(?P<pk>[0-9]+)/$', CorpusDetail.as_view(), name="corpus-detail"),
+
+        url(r'^collections/$', CollectionList.as_view(), name="collection-list"),
+        url(r'^collection/(?P<pk>[0-9]+)/$', CollectionDetail.as_view(), name="collection-detail"),
+
         url(r'^composers/$', ComposerList.as_view(), name="composer-list"),
         url(r'^composer/(?P<pk>[0-9]+)/$', ComposerDetail.as_view(), name="composer-detail"),
 

@@ -17,6 +17,10 @@
         <dd>{{ content.date_of_composition | date:"Y"}}</dd>
         <dt>Corpus</dt>
         <dd><a href="{{content.corpus.url}}">{{ content.corpus.title }}</a></dd>
+        <dt>Collections</dt>
+        {% for collection in content.collections %}
+            <dd><a href="{{collection.url}}">{{ collection.title }}</a></dd>
+        {% endfor %}
         <dt>Number of voices:</dt>
         <dd>{{content.number_of_voices}}</dd>
         {% if content.piece %}

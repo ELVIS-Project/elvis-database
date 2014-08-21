@@ -17,6 +17,7 @@ class Piece(models.Model):
     title = models.CharField(max_length=255)
     uploader = models.ForeignKey(User, blank=True, null=True, related_name="pieces")
     corpus = models.ForeignKey("elvis.Corpus", blank=True, null=True, related_name="pieces")
+    collections = models.ManyToManyField("elvis.Collection", blank=True, null=True, related_name="pieces")
     composer = models.ForeignKey("elvis.Composer", db_index=True, blank=True, null=True, related_name="pieces")
     date_of_composition = models.DateField(blank=True, null=True)
     date_of_composition2 = models.DateField(blank=True, null=True)
@@ -46,6 +47,9 @@ class Piece(models.Model):
     @property
     def tagged_as(self):
         return " ".join([t.name for t in self.tags.all()])
+
+    def get_collections(self):
+        return "\n".join([collection.title for collection in self.collections.all()])
 
 @receiver(post_save, sender=Piece)
 def solr_index(sender, instance, created, **kwargs):

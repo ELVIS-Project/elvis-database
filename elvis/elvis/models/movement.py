@@ -8,7 +8,6 @@ import pytz
 from django.dispatch import receiver
 from django.db.models.signals import post_save, post_delete
 
-
 class Movement(models.Model):
     class Meta:
         app_label = "elvis"
@@ -19,6 +18,7 @@ class Movement(models.Model):
     uploader = models.ForeignKey(User, blank=True, null=True, related_name="movements")
     piece = models.ForeignKey("elvis.Piece", blank=True, null=True, related_name="movements")
     corpus = models.ForeignKey("elvis.Corpus", blank=True, null=True, related_name="movements")
+    collections = models.ForeignKey("elvis.Collection", blank=True, null=True, related_name="movements")
     composer = models.ForeignKey("elvis.Composer", blank=True, null=True, related_name="movements")
     date_of_composition = models.DateField(blank=True, null=True)
     date_of_composition2 = models.DateField(blank=True, null=True)
@@ -45,6 +45,9 @@ class Movement(models.Model):
 
     def __unicode__(self):
         return u"{0}".format(self.title)
+
+    def get_collections(self):
+        return "\n".join([collection.title for collection in self.collections.all()])
 
 @receiver(post_save, sender=Movement)
 def solr_index(sender, instance, created, **kwargs):
