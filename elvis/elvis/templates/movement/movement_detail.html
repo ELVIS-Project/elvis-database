@@ -3,7 +3,7 @@
 {% block wrap %}
 <div class="row">
     <h2>{{ content.title }}</h2>
-    <p><span class="label label-primary">Movement</span> Created by {{ content.creator.full_name }} on {{ content.created }} Last updated {{ content.updated }}</p>
+    <p><span class="label label-primary">Movement</span> Uploaded by {{ content.uploader.username }} on {{ content.created | date:"d F Y"}}. Last updated on {{ content.updated | date:"d F Y"}}.</p>
     <p>Comments: {% autoescape off %}{{ content.comment }}{% endautoescape %}</p>
     <!-- {% include "includes/download-badge-inc.html" with download_type="movement" download_item_id=content.item_id title="Download Movement" %} -->
 </div>
