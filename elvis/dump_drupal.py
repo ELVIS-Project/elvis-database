@@ -15,6 +15,7 @@ from elvis.models.tag_hierarchy import TagHierarchy
 from elvis.models.composer import Composer
 from django.contrib.auth.models import User
 from elvis.models.corpus import Corpus
+from elvis.models.collection import Collection
 from elvis.models.piece import Piece
 from elvis.models.attachment import Attachment
 from elvis.models.movement import Movement
@@ -81,6 +82,7 @@ class DumpDrupal(object):
         #self.get_composers()
         #self.get_users()
         self.get_corpus()
+        self.get_collection()
         self.get_pieces_movements("piece")
         self.get_pieces_movements("movement")
 
@@ -125,6 +127,32 @@ class DumpDrupal(object):
             corp['created'] = datetime.datetime.fromtimestamp(corp['created'])
             corp['updated'] = datetime.datetime.fromtimestamp(corp['updated'])
             x = Corpus(**corp)
+            x.save()
+
+        self.__disconnect()
+
+    def get_collection(self):
+        users = self.__get_ddmal_users()
+        self.__connect()
+
+        self.curs.execute(CORPUS_QUERY)
+        collection = self.curs.fetchall()
+        print "Deleting collections"
+        Collection.objects.all().delete()
+
+        print "Adding collections"
+        for coll in collection:
+            print coll
+            for user in users:
+                if coll.get('creator') == user.get('uid'):
+                    u = User.objects.get(username=user.get('name'))
+                    break
+            coll['creator'] = u
+            coll['title'] = my_decoder(coll['title'])
+            coll['comment'] = my_decoder(coll['comment'])
+            coll['created'] = datetime.datetime.fromtimestamp(coll['created'])
+            coll['updated'] = datetime.datetime.fromtimestamp(coll['updated'])
+            x = Collection(**coll)
             x.save()
 
         self.__disconnect()
@@ -256,11 +284,18 @@ class DumpDrupal(object):
                     break
 
             if rettype == "piece":
-                parent_obj = Corpus.objects.filter(old_id=item['book_id'])
-                if not parent_obj.exists():
-                    parent_obj = None
+                corpus_obj = Corpus.objects.filter(old_id=item['book_id'])
+                if not corpus_obj.exists():
+                    corpus_obj = None
                 else:
-                    parent_obj = parent_obj[0]
+                    corpus_obj = corpus_obj[0]
+
+                collection_objs = Collection.objects.filter(old_id=item['book_id'])
+                if not collection_objs.exists():
+                    collection_objs = None
+                else:
+                    collection_objs = collection_objs
+
             elif rettype == "movement":
                 parent_obj = self.__resolve_movement_parent(item['old_id'])
                 corpus_obj = Corpus.objects.filter(old_id=item['book_id'])
@@ -268,6 +303,12 @@ class DumpDrupal(object):
                     corpus_obj = None
                 else:
                     corpus_obj = corpus_obj[0]
+
+                collection_objs = Collection.objects.filter(old_id=item['book_id'])
+                if not collection_objs.exists():
+                    collection_objs = None
+                else:
+                    collection_objs = collection_objs
 
             p = {
                 'uploader': user_obj,
@@ -285,10 +326,10 @@ class DumpDrupal(object):
             #if not item.get('date_of_composition', None) == item.get('date_of_composition2', None):
 
             if rettype == "piece":
-                p.update({'corpus': parent_obj})
+                p.update({'corpus': corpus_obj, 'collections': collection_objs})
                 x = Piece(**p)
             elif rettype == "movement":
-                p.update({'piece': parent_obj, 'corpus': corpus_obj})
+                p.update({'piece': parent_obj, 'corpus': corpus_obj, 'collections': collection_objs})
                 x = Movement(**p)
             
             x.save()
