@@ -7,6 +7,8 @@ Also, it's best to use the "virtio" network adapter, if the host supports it.
 Our deployment server is Fedora 19 (RHEL 7) virtual machine with lots of memory and some CPU space.
 When asked to install additional (server) packages, I didn't select any, because we'd probably have installed more software than needed, which is an unnecessary maintenance burden.
 
+Note: Install EPEL repository for a whole lot of things... including rabbitmq.
+
 Minor Customization and Install Updates
 ---------------------------------------
 
@@ -76,6 +78,7 @@ Setup Directories
 ::
     $ cd /usr/local
     $ sudo mkdir elvis_database
+    $ sudo git init
 
 Install Solr
 ------------
@@ -111,6 +114,8 @@ IMPORTANT Modify $CATALINA_HOME/conf/Catalina/localhost/solr.xml. See readme in 
     and edit the `solr/home` `<Environment>` value. Note that you can set up
     as many different contexts as you want with different `solr/home` values,
     each using the same `solr.war`"
+
+    cp this file to /etc/tomcat/Catalina/localhost/ if using systemctl 
 
 
 Make sure you're in the same directory as ``pom.xml``, then run::
@@ -149,8 +154,6 @@ Enable:::
     $ sudo systemctl enable rabbitmq-server
     $ sudo systemctl start rabbitmq-server
 
-
-
 Install PostgreSQL
 ------------------
 
@@ -171,13 +174,15 @@ Create the Database's database user. Use a good password for the database user.:
     <something easy>
     $ su postgres
     $ psql
-    # CREATE USER elvisdatabase PASSWORD '';
+    # CREATE USER elvisdatabase PASSWORD 'some-long-password-here-that-you-keep-of';
     CREATE ROLE
     # CREATE DATABASE elvisdatabase OWNER elvisdatabase;
     CREATE DATABASE
     # \q
 
 --> TODO: change the "postgres" user password, or else you won't be able to log in with it after the next step
+
+    Note: The elvisdatabase password in postgres has been tuned to asdf1234 in settings.py
 
 Change the "postgres" user's password to something difficult to guess.::
     $ exit
@@ -219,6 +224,10 @@ Edit the server's general configuration file at ``/etc/httpd/conf/httpd.conf``::
     ServerSignature Off
     ServerTokens Prod
 
+Enable:::
+    $ sudo systemctl enable httpd
+    $ sudo systemctl start httpd
+
 Install the ELVIS Database Django Application
 ---------------------------------------------
 
@@ -247,8 +256,9 @@ We recommend you use a "virtualenv" environment, but you may use system packages
     #. Use pip to install the EDDA's dependencies::
         $ pip install -r elvis_site/requirements.txt
 
-       Note that, if mysql isn't installed, then it is required for MySQL-Python and the package for mysql should be installed through yum
-
+        Note that, if mysql isn't installed, then it is required for MySQL-Python and the package for mysql should be installed through yum
+        $ sudo yum install mysql-devel
+    
     #. If pip cannot find a satisfactory Django version, find the URL manually from the `Django website<hthttps://www.djangoproject.com/download/>`__ then re-run the previous command. ::
         $ pip install https://www.djangoproject.com/download/1.7.b4/tarball/
 
@@ -316,7 +326,7 @@ In one of the files in /etc/httpd/conf.d, adjust the following things:
 
     * WSGIScriptAlias first\_thing second\_thing.
         * The first\_thing is the URL path; use ``/`` for the root. This must not end with a trailing slash.
-        * The second\_thing is the path to the django\_vis directory. It must be the full pathname, not the python module.
+        * The second\_thing is the path to the django\elvis-database directory. It must be the full pathname, not the python module.
     * Make sure the <Directory> directive has the directory of the wsgi.py file.
     * Add Alias directives for static files.
 
