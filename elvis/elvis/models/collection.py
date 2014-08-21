@@ -76,7 +76,7 @@ def solr_index(sender, instance, created, **kwargs):
             'id': str(uuid.uuid4()),
             'item_id': int(collection.id),
             'title': collection_title,
-            'parent_collection_name': collection_title,
+            'parent_collection_names': collection_title,
             'created': collection_created,
             'updated': collection.updated,
             'comment': collection_comment,

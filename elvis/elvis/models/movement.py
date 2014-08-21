@@ -128,6 +128,10 @@ def solr_index(sender, instance, created, **kwargs):
     for tag in movement.tags.all():
         tags.append(tag.name)
 
+    collections = []
+    for collection in movement.collections.all():
+        collections.append(collection.title)
+
     d = {
             'type': 'elvis_movement',
             'id': str(uuid.uuid4()),
@@ -141,6 +145,7 @@ def solr_index(sender, instance, created, **kwargs):
             'updated': movement.updated,
             'parent_piece_name': parent_piece_name,  
             'parent_corpus_name': parent_corpus_name,
+            'parent_collection_names': collections,
             'composer_name': composer_name,
             'uploader_name': uploader_name,
             'tags': tags,
