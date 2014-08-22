@@ -26,7 +26,7 @@ BASE_DIR = os.path.dirname(__file__)
 # SECURITY WARNING: don't run with debug turned on in production!
 # CRA: Set "LILLIO" to True if you're Lillio.
 PRODUCTION = False
-LILLIO = False #if PRODUCTION else True  # we'll be Lillio by default...
+LILLIO = False if PRODUCTION else True  # we'll be Lillio by default...
 
 
 # Simple Settings
@@ -153,6 +153,7 @@ FACET_NAMES = {
     'parent_corpus_name': "Corpus",
     "number_of_voices": "Number of Voices",
     "tags": "Tags",
+    "parent_collection_names": "Collection",
 }
 TYPE_NAMES={
     'elvis_user': "Users",
@@ -161,6 +162,7 @@ TYPE_NAMES={
     'elvis_movement': "Movements",
     'elvis_piece': "Pieces",
     'elvis_composer': "Composers",
+    'elvis_collection': "Collections",
 }
 
 # Celery Settings

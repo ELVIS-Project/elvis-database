@@ -75,7 +75,7 @@ class SearchView(APIView):
         # note: Filters, sorts, and other modifiers to solr search are handled in the helper script solrsearch.py
         s = SolrSearch(request) 
 
-        facets = s.facets(facet_fields=['type', 'composer_name', 'tags', 'parent_corpus_name', 'number_of_voices'])  # LM TODO add here when facets are decided
+        facets = s.facets(facet_fields=['type', 'composer_name', 'tags', 'parent_corpus_name', 'parent_collection_names', 'number_of_voices'])  # LM TODO add here when facets are decided
 
         facet_fields = facets.facet_counts['facet_fields']
         #, key=operator.itemgetter(1)
@@ -87,12 +87,14 @@ class SearchView(APIView):
         facet_tags = sorted(facet_fields['tags'].iteritems(), key=lambda (k,v): (v,k), reverse=True)
         facet_parent_corpus_name = sorted(facet_fields['parent_corpus_name'].iteritems(), key=lambda (k,v): (v,k), reverse=True)
         facet_number_of_voices = sorted(facet_fields['number_of_voices'].iteritems(), key=lambda (k,v): (v,k), reverse=True)
+        facet_parent_collection_names = sorted(facet_fields['parent_collection_names'].iteritems(), key=lambda (k,v):(v, k), reverse=True)
 
         facet_fields = {
             'type': facet_type,
             'composer_name': facet_composer_name,
             'tags': facet_tags,
             'parent_corpus_name': facet_parent_corpus_name,
+            'parent_collection_names': facet_parent_collection_names,
             'number_of_voices': facet_number_of_voices,
         }
         facets.facet_counts['facet_fields'] = facet_fields
