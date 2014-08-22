@@ -120,8 +120,10 @@ def solr_index(sender, instance, created, **kwargs):
         tags.append(tag.name)
 
     collections = []
-    for collection in piece.collections.all():
-        collections.append(collection.title)
+    if not piece.collections is None:
+        collections = []
+        for collection in piece.collections.all():
+            collections.append(collection.title)
 
     d = {
             'type': 'elvis_piece',

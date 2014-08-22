@@ -81,8 +81,8 @@ class DumpDrupal(object):
         #self.get_tags()
         #self.get_composers()
         #self.get_users()
-        self.get_corpus()
-        self.get_collection()
+        #self.get_corpus()
+        #self.get_collection()
         self.get_pieces_movements("piece")
         self.get_pieces_movements("movement")
 
@@ -326,12 +326,18 @@ class DumpDrupal(object):
             #if not item.get('date_of_composition', None) == item.get('date_of_composition2', None):
 
             if rettype == "piece":
-                p.update({'corpus': corpus_obj, 'collections': collection_objs})
+                p.update({'corpus': corpus_obj})
                 x = Piece(**p)
+
             elif rettype == "movement":
-                p.update({'piece': parent_obj, 'corpus': corpus_obj, 'collections': collection_objs})
+                p.update({'piece': parent_obj, 'corpus': corpus_obj})
                 x = Movement(**p)
+                
             
+            x.save()
+            if not (collection_objs is None or collection_objs is []):
+                for collection_obj in collection_objs:
+                    x.collections.add(collection_obj)
             x.save()
 
         self.__disconnect()

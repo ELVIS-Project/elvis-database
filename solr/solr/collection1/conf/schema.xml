@@ -155,7 +155,7 @@
     <copyField source="tags" dest="text" />
     <copyField source="parent_piece_name" dest="text" />
     <copyField source="parent_corpus_name" dest="text" />
-    <copyField source="parent_collection_names" dest="test" />
+    <copyField source="parent_collection_names" dest="text" />
     <copyField source="comment" dest="text" />
              
     <!-- Advanced Search -->

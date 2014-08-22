@@ -18,7 +18,7 @@ class Movement(models.Model):
     uploader = models.ForeignKey(User, blank=True, null=True, related_name="movements")
     piece = models.ForeignKey("elvis.Piece", blank=True, null=True, related_name="movements")
     corpus = models.ForeignKey("elvis.Corpus", blank=True, null=True, related_name="movements")
-    collections = models.ForeignKey("elvis.Collection", blank=True, null=True, related_name="movements")
+    collections = models.ManyToManyField("elvis.Collection", blank=True, null=True, related_name="movements")
     composer = models.ForeignKey("elvis.Composer", blank=True, null=True, related_name="movements")
     date_of_composition = models.DateField(blank=True, null=True)
     date_of_composition2 = models.DateField(blank=True, null=True)
@@ -129,8 +129,10 @@ def solr_index(sender, instance, created, **kwargs):
         tags.append(tag.name)
 
     collections = []
-    for collection in movement.collections.all():
-        collections.append(collection.title)
+    if not movement.collections is None:
+        collections = []
+        for collection in movement.collections.all():
+            collections.append(collection.title)
 
     d = {
             'type': 'elvis_movement',

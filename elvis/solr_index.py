@@ -141,7 +141,7 @@ if __name__ == "__main__":
             'created': piece.created,
             'updated': piece.updated,
             'parent_corpus_name': parent_corpus_name,
-            'parent_collection_names': collections
+            'parent_collection_names': collections,
             'composer_name': piece.composer.name,
             'uploader_name': piece.uploader.username,
             'tags': tags,
