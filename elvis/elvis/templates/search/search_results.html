@@ -314,8 +314,8 @@
                                 {% for facet, count in facets %}
                                     <li style="list-style: none;">
                                         <div id="facet-container-{{facet}}" style="white-space:nowrap;">
-                                            <input type="checkbox" class="facet-link" data-facet-name="{{ name }}" data-facet-value="{{ facet }}" id="facet-link-{{facet}}">
-                                            <label class="facet-label" for="facet-link-{{ facet }}"> {% if name == 'type' %} {{ content.TYPE_NAMES|get_value:facet }} {% else %} {{ facet }} {% endif %}  ({{ count }})
+                                            <input type="checkbox" class="facet-link" data-facet-name="{{ name }}" data-facet-value="{{ facet }}" id="facet-link-{{facet}}-{{name}}">
+                                            <label class="facet-label" for="facet-link-{{ facet }}-{{name}}"> {% if name == 'type' %} {{ content.TYPE_NAMES|get_value:facet }} {% else %} {{ facet }} {% endif %}  ({{ count }})
                                             </label>
                                         </div>
                                     </li>
