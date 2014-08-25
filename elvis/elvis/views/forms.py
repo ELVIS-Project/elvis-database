@@ -24,6 +24,7 @@ from elvis.forms.project import ProjectForm
 from django.contrib.auth.models import User
 from elvis.models.composer import Composer
 from elvis.models.corpus import Corpus
+from elvis.models.collection import Collection
 from elvis.models.attachment import Attachment
 from elvis.models.piece import Piece
 from elvis.models.download import Download
@@ -112,8 +113,8 @@ def type_selector(item_type, item_id, user_download):
         item = Piece.objects.filter(pk=item_id).all()[0]
     elif item_type == "elvis_composer":
         item = Composer.objects.filter(pk=item_id).all()[0]
-    elif item_type == "elvis_corpus":
-        item = Corpus.objects.filter(pk=item_id).all()[0]
+    elif item_type == "elvis_collection":
+        item = Collection.objects.filter(pk=item_id).all()[0]
     elif item_type == "elvis_tag":
         item = Tag.objects.filter(pk=item_id).all()[0]
     else:
