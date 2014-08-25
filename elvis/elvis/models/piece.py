@@ -16,7 +16,6 @@ class Piece(models.Model):
     old_id = models.IntegerField(db_index=True, blank=True, null=True)
     title = models.CharField(max_length=255)
     uploader = models.ForeignKey(User, blank=True, null=True, related_name="pieces")
-    corpus = models.ForeignKey("elvis.Corpus", blank=True, null=True, related_name="pieces")
     collections = models.ManyToManyField("elvis.Collection", blank=True, null=True, related_name="pieces")
     composer = models.ForeignKey("elvis.Composer", db_index=True, blank=True, null=True, related_name="pieces")
     date_of_composition = models.DateField(blank=True, null=True)
@@ -71,14 +70,6 @@ def solr_index(sender, instance, created, **kwargs):
     except UnicodeDecodeError:
         piece_title = piece.title.decode('utf-8')
 
-    if piece.corpus is None:
-        parent_corpus_name = None
-    else:
-        try:
-            parent_corpus_name = unicode(piece.corpus.title)
-        except UnicodeDecodeError:
-            parent_corpus_name = piece.corpus.title.decode('utf-8')
-
     if piece.comment is None:
         piece_comment = None
     else:
@@ -123,7 +114,10 @@ def solr_index(sender, instance, created, **kwargs):
     if not piece.collections is None:
         collections = []
         for collection in piece.collections.all():
-            collections.append(collection.title)
+            try:
+                collections.append(unicode(collection.title))
+            except UnicodeDecodeError:
+                collections.append(collection.title.decode('utf-8'))
 
     d = {
             'type': 'elvis_piece',
@@ -136,7 +130,6 @@ def solr_index(sender, instance, created, **kwargs):
             'comment': piece_comment,
             'created': piece_created,
             'updated': piece.updated,
-            'parent_corpus_name': parent_corpus_name,
             'parent_collection_names': collections,
             'composer_name': composer_name,
             'uploader_name': uploader_name,

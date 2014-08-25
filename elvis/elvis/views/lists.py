@@ -1,7 +1,7 @@
 '''
 MODEL LISTS
 '''
-
+'''
 from django.shortcuts import render
 
 from elvis.models.composer import Composer
@@ -172,3 +172,4 @@ def download_list(request):
     downloads = paginate(Download.objects.all(), request.GET, num=40)
 
     return render(request, 'download/download_list.html', {"content": downloads})
+    '''

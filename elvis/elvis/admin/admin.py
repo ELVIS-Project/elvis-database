@@ -5,7 +5,6 @@ from elvis import settings
 
 from elvis.models.project import Project
 from elvis.models.piece import Piece
-from elvis.models.corpus import Corpus
 from elvis.models.composer import Composer
 from elvis.models.tag import Tag
 from elvis.models.tag_hierarchy import TagHierarchy
@@ -62,7 +61,7 @@ class ProjectAdmin(admin.ModelAdmin):
 
 
 class PieceAdmin(admin.ModelAdmin):
-    list_display = ("title", "composer", "date_of_composition", "number_of_voices", "uploader", "old_id", "corpus", "get_collections")
+    list_display = ("title", "composer", "date_of_composition", "number_of_voices", "uploader", "old_id", "get_collections")
     # Other things for interest: , "attached_files", "tagged_as"
     filter_horizontal = ("tags",)
     readonly_fields = ("attachments",)
@@ -72,7 +71,7 @@ class PieceAdmin(admin.ModelAdmin):
 
 
 class MovementAdmin(admin.ModelAdmin):
-    list_display = ("title", "composer", "date_of_composition", "number_of_voices", "uploader", "old_id", "piece", "corpus", "get_collections")
+    list_display = ("title", "composer", "date_of_composition", "number_of_voices", "uploader", "old_id", "piece", "get_collections")
     # Other things for interest , "attached_files", "tagged_as"
     filter_horizontal = ("tags",)
     readonly_fields = ("attachments",)
@@ -80,11 +79,6 @@ class MovementAdmin(admin.ModelAdmin):
     list_per_page = listperpage
     list_max_show_all = listmaxshowall
 
-class CorpusAdmin(admin.ModelAdmin):
-    #pass
-    actions = [reindex_in_solr, delete_in_solr]
-    list_per_page = listperpage
-    list_max_show_all = listmaxshowall
 
 class CollectionAdmin(admin.ModelAdmin):
     #pass
@@ -154,7 +148,6 @@ admin.site.register(Project, ProjectAdmin)
 admin.site.register(TagHierarchy, TagHierarchyAdmin)
 admin.site.register(Piece, PieceAdmin)
 admin.site.register(Tag, TagAdmin)
-admin.site.register(Corpus, CorpusAdmin)
 admin.site.register(Collection, CollectionAdmin)
 admin.site.register(Composer, ComposerAdmin)
 admin.site.register(Attachment, AttachmentAdmin)

@@ -18,8 +18,6 @@
         <dd><a href="{{ content.composer.url }}">{{ content.composer.name }}</a></dd>
         <dt>Date of Composition</dt>
         <dd>{{ content.date_of_composition | date:"Y" }}</dd>
-        <dt>Corpus</dt>
-        <dd><a href="{{content.corpus.url}}">{{ content.corpus.title }}</a></dd>
         <dt>Collections</dt>
         {% for collection in content.collections %}
             <dd><a href="{{collection.url}}">{{ collection.title }}</a></dd>

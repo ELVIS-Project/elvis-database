@@ -81,7 +81,6 @@ class DumpDrupal(object):
         #self.get_tags()
         #self.get_composers()
         #self.get_users()
-        #self.get_corpus()
         #self.get_collection()
         self.get_pieces_movements("piece")
         self.get_pieces_movements("movement")
@@ -104,7 +103,7 @@ class DumpDrupal(object):
         conn.close()
         return u
 
-                                                               
+    '''                                                           
     def get_corpus(self):
         users = self.__get_ddmal_users()
         self.__connect()
@@ -130,6 +129,7 @@ class DumpDrupal(object):
             x.save()
 
         self.__disconnect()
+        '''
 
     def get_collection(self):
         users = self.__get_ddmal_users()

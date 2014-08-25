@@ -18,12 +18,11 @@ from rest_framework import status
 
 import elvis.models 
 
-from elvis.forms.entity import ComposerForm, CorpusForm, PieceForm, MovementForm, AttachmentForm
+from elvis.forms.entity import ComposerForm, PieceForm, MovementForm, AttachmentForm
 from elvis.forms.project import ProjectForm
 
 from django.contrib.auth.models import User
 from elvis.models.composer import Composer
-from elvis.models.corpus import Corpus
 from elvis.models.collection import Collection
 from elvis.models.attachment import Attachment
 from elvis.models.piece import Piece
@@ -177,7 +176,7 @@ def create_composer(request):
                                     'death_date': 'death date'} )
     return render(request, 'forms/composer.html', {'form': form, 'picture':picture})
 
-
+'''
 def corpus_handler(request):
     picture = choice(os.listdir(os.path.abspath('elvis/media/generics/corpora')))
     if request.method == 'POST':
@@ -203,6 +202,7 @@ def create_corpus(request):
 def create_corpus_large(request):
     form, picture = corpus_handler(request)
     return render(request, 'forms/corpus_large.html', {'form': form, 'picture':picture})
+
 
 def tag_handler(tags):
     new_tags = []
@@ -446,6 +446,7 @@ def create_movement(request):
                                     'tags': 'Comma-separated list of tags',
                                     'description':'Description of movement file...'})
     return render(request, 'forms/movement.html', {'form':form})
+'''
 
 # TODO: Send email to each email in invited list 
 def user_handler(users):

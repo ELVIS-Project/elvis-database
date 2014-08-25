@@ -17,7 +17,6 @@ class Movement(models.Model):
     title = models.CharField(max_length=255)
     uploader = models.ForeignKey(User, blank=True, null=True, related_name="movements")
     piece = models.ForeignKey("elvis.Piece", blank=True, null=True, related_name="movements")
-    corpus = models.ForeignKey("elvis.Corpus", blank=True, null=True, related_name="movements")
     collections = models.ManyToManyField("elvis.Collection", blank=True, null=True, related_name="movements")
     composer = models.ForeignKey("elvis.Composer", blank=True, null=True, related_name="movements")
     date_of_composition = models.DateField(blank=True, null=True)
@@ -76,13 +75,6 @@ def solr_index(sender, instance, created, **kwargs):
         except UnicodeDecodeError:
             parent_piece_name = movement.piece.title.decode('utf-8')
 
-    if movement.corpus is None:
-        parent_corpus_name = None
-    else:
-        try:
-            parent_corpus_name = unicode(movement.corpus.title)
-        except UnicodeDecodeError:
-            parent_corpus_name = movement.corpus.title.decode('utf-8')
     
     if movement.composer is None:
         composer_name = None
@@ -115,7 +107,6 @@ def solr_index(sender, instance, created, **kwargs):
 
     #print(movement.title)
     #print(parent_piece_name)
-    #print(parent_corpus_name)
     #print(composer_name)
     #print(movement_comment)
 
@@ -132,7 +123,10 @@ def solr_index(sender, instance, created, **kwargs):
     if not movement.collections is None:
         collections = []
         for collection in movement.collections.all():
-            collections.append(collection.title)
+            try:
+                collections.append(unicode(collection.title))
+            except UnicodeDecodeError:
+                collections.append(collection.title.decode('utf-8'))
 
     d = {
             'type': 'elvis_movement',
@@ -146,7 +140,6 @@ def solr_index(sender, instance, created, **kwargs):
             'created': movement_created,
             'updated': movement.updated,
             'parent_piece_name': parent_piece_name,  
-            'parent_corpus_name': parent_corpus_name,
             'parent_collection_names': collections,
             'composer_name': composer_name,
             'uploader_name': uploader_name,

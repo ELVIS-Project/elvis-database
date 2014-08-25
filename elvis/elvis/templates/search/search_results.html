@@ -178,7 +178,7 @@
 
 
             {% for result in content.results %}
-              {% if result.type == "elvis_composer" or result.type == "elvis_piece" or result.type == "elvis_movement" or result.type == "elvis_corpus" or result.type == "elvis_collection" or result.type == "elvis_tag" %}
+              {% if result.type == "elvis_composer" or result.type == "elvis_piece" or result.type == "elvis_movement" or result.type == "elvis_collection" or result.type == "elvis_tag" %}
               <input type="hidden" name="item_id" value="{{ result.item_id }}" />
               <input type="hidden" name="item_type" value="{{ result.type }}" />
               {% endif %}
@@ -198,13 +198,6 @@
                     <span class="label label-primary pull-right">Composer</span>
                     <h4>{% include "includes/download-badge-inc.html" with download_type="elvis_composer" download_item_id=result.item_id %}{{ result.composer_name }}</h4>
                     <p class="list-group-item-text">{{ result.birth_date | date:"Y" }}&ndash;{{ result.death_date | date:"Y" }}</p>
-                </a>
-            {% elif result.type == "elvis_corpus" %}
-                <a href="/corpus/{{ result.item_id }}" class="list-group-item">
-                    <span class="label label-primary pull-right">Corpus</span> 
-                    <h4>{% include "includes/download-badge-inc.html" with download_type="elvis_corpus" download_item_id=result.item_id %}{{ result.title }}</h4>
-                    <p class="list-group-item-text"> Created by {{result.creator_name}} on {{result.created}} </p>
-                    <p class="list-group-item-text"> {{result.comment}} </p>
                 </a>
 
             {% elif result.type == "elvis_collection" %}

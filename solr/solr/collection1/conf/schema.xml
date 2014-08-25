@@ -97,7 +97,6 @@
     <field name="composer_name" type="string" indexed="true" stored="true" />
     <field name="uploader_name" type="string" indexed="true" stored="true" />
     <field name="parent_piece_name" type="string" indexed="true" stored="true" /> 
-    <field name="parent_corpus_name" type="string" indexed="true" stored="true" />
     <field name="parent_collection_names" type="string" indexed="true" stored="true" multiValued="true"/>
     <field name="parent_project_name" type="string" indexed="true" stored="true" />
 
@@ -154,7 +153,6 @@
     <copyField source="composer_name" dest="text" />
     <copyField source="tags" dest="text" />
     <copyField source="parent_piece_name" dest="text" />
-    <copyField source="parent_corpus_name" dest="text" />
     <copyField source="parent_collection_names" dest="text" />
     <copyField source="comment" dest="text" />
              

@@ -143,14 +143,12 @@ SEARCH_FILTERS_DICT = {
     'fcp': 'elvis_composer',
     'fp': 'elvis_piece',
     'fm': 'elvis_movement',
-    'fcr': 'elvis_corpus',
     'ft': 'elvis_tag',
     'fu': 'elvis_user',
 }
 FACET_NAMES = {
     'type': "Result Type",
     'composer_name': "Composer",
-    'parent_corpus_name': "Corpus",
     "number_of_voices": "Number of Voices",
     "tags": "Tags",
     "parent_collection_names": "Collection",
@@ -158,7 +156,6 @@ FACET_NAMES = {
 TYPE_NAMES={
     'elvis_user': "Users",
     'elvis_tag': "Tags",
-    'elvis_corpus': "Corpora",
     'elvis_movement': "Movements",
     'elvis_piece': "Pieces",
     'elvis_composer': "Composers",

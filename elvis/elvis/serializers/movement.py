@@ -3,7 +3,6 @@ from elvis.models.movement import Movement
 from elvis.models.composer import Composer
 from elvis.models.tag import Tag
 from elvis.models.attachment import Attachment
-from elvis.models.corpus import Corpus
 from elvis.models.collection import Collection
 from elvis.models.piece import Piece
 from django.contrib.auth.models import User
@@ -38,10 +37,6 @@ class AttachmentMovementSerializer(serializers.HyperlinkedModelSerializer):
         url = request.build_absolute_uri(os.path.join(settings.MEDIA_URL, path))
         return url
 
-class CorpusMovementSerializer(serializers.HyperlinkedModelSerializer):
-    class Meta:
-        model = Corpus
-        fields = ("url", "title")
 
 class CollectionMovementSerializer(serializers.HyperlinkedModelSerializer):
     class Meta:
@@ -63,7 +58,6 @@ class MovementSerializer(serializers.HyperlinkedModelSerializer):
     composer = ComposerMovementSerializer()
     tags = TagMovementSerializer()
     attachments = AttachmentMovementSerializer()
-    corpus = CorpusMovementSerializer()
     collections = CollectionMovementSerializer()
     uploader = UserMovementSerializer()
     piece = PieceMovementSerializer()

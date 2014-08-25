@@ -15,7 +15,6 @@ if __name__ == "__main__":
 
     django.setup()
 
-    from elvis.models.corpus import Corpus
     from elvis.models.collection import Collection
     from elvis.models.composer import Composer
     from elvis.models.piece import Piece
@@ -30,30 +29,6 @@ if __name__ == "__main__":
     solrconn.delete_query("*:*")
     solrconn.commit()
 
-
-    '''
-    Corpora: title
-    comment, creator
-    '''
-    corpora = Corpus.objects.all()
-    all_corpora = []
-    print "Adding corpora..."
-    for corpus in corpora:
-        doc = {
-            'type': 'elvis_corpus',
-            'id': str(uuid.uuid4()),
-            'item_id': int(corpus.id),
-            'title': unicode(corpus.title),
-            'parent_corpus_name': unicode(corpus.title),
-            'created': corpus.created,
-            'updated': corpus.updated,
-            'comment': corpus.comment,
-            'creator_name': corpus.creator.username,
-        }
-        all_corpora.append(doc)
-    solrconn.add_many(all_corpora)
-    solrconn.commit()
-    print "Done adding corpora."
 
     '''
     Collections: title
@@ -102,7 +77,7 @@ if __name__ == "__main__":
     print "Done adding composers."
 
     '''
-    Pieces: title, composer name, corpus name, collection names, uploader name, comment, num_voices, date of composition,
+    Pieces: title, composer name, collection names, uploader name, comment, num_voices, date of composition,
     tags, attachments,
     numqueries, numdownloads
     '''
@@ -113,13 +88,6 @@ if __name__ == "__main__":
 
         user = piece.uploader.first_name + " " + piece.uploader.last_name
         username = piece.uploader.username
-        corpus = piece.corpus.title if piece.corpus else ""
-        
-
-        if piece.corpus is None:
-            parent_corpus_name = None
-        else:
-            parent_corpus_name = piece.corpus.title        
 
         tags = []
         for tag in piece.tags.all():
@@ -127,7 +95,10 @@ if __name__ == "__main__":
 
         collections = []
         for collection in piece.collections.all():
-            collections.append(collection.title)
+            try:
+                collections.append(unicode(collection.title))
+            except UnicodeDecodeError:
+                collections.append(collection.title.decode('utf-8'))
 
         doc = {
             'type': 'elvis_piece',
@@ -140,7 +111,6 @@ if __name__ == "__main__":
             'comment': piece.comment,
             'created': piece.created,
             'updated': piece.updated,
-            'parent_corpus_name': parent_corpus_name,
             'parent_collection_names': collections,
             'composer_name': piece.composer.name,
             'uploader_name': piece.uploader.username,
@@ -154,7 +124,7 @@ if __name__ == "__main__":
     print "Done adding pieces."
 
     '''
-    Movements: title, piece title, composer name, corpus name, collection names, date of composition, num voices, uploader_name
+    Movements: title, piece title, composer name, collection names, date of composition, num voices, uploader_name
     tags, attachments, comment, numqueries, numdownloads
     '''
     movements = Movement.objects.all()
@@ -164,17 +134,11 @@ if __name__ == "__main__":
 
         user = movement.uploader.first_name + " " + movement.uploader.last_name
         username = movement.uploader.username
-        corpus = movement.corpus.title if movement.corpus else ""
         
         if movement.piece is None:
             parent_piece_name = None
         else:
             parent_piece_name = movement.piece.title
-
-        if movement.corpus is None:
-            parent_corpus_name = None
-        else:
-            parent_corpus_name = movement.corpus.title
 
         tags = []
         for tag in movement.tags.all():
@@ -182,7 +146,10 @@ if __name__ == "__main__":
 
         collections = []
         for collection in movement.collections.all():
-            collections.append(collection.title)
+            try:
+                collections.append(unicode(collection.title))
+            except UnicodeDecodeError:
+                collections.append(collection.title.decode('utf-8'))
 
         doc = {
             'type': 'elvis_movement',
@@ -196,7 +163,6 @@ if __name__ == "__main__":
             'created': movement.created,
             'updated': movement.updated,
             'parent_piece_name': parent_piece_name,  
-            'parent_corpus_name': parent_corpus_name,
             'parent_collection_names': collections,
             'composer_name': movement.composer.name,
             'uploader_name': movement.uploader.username,
