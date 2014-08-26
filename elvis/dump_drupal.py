@@ -14,11 +14,11 @@ from elvis.models.tag import Tag
 from elvis.models.tag_hierarchy import TagHierarchy
 from elvis.models.composer import Composer
 from django.contrib.auth.models import User
-from elvis.models.corpus import Corpus
 from elvis.models.collection import Collection
 from elvis.models.piece import Piece
 from elvis.models.attachment import Attachment
 from elvis.models.movement import Movement
+from elvis.models.download import Download
 
 DRUPAL_FILE_PATH = "elvis-files"  # path to the old drupal files.
 
@@ -78,10 +78,10 @@ class DumpDrupal(object):
     def __init__(self):
         # IMPORTANT: Choose which objects to add here
         # LM: Would want to run tags, users only if db doesnt have previous users, corpus, piece, movement, in that order
-        #self.get_tags()
-        #self.get_composers()
-        #self.get_users()
-        #self.get_collection()
+        self.get_tags()
+        self.get_composers()
+        self.get_users()
+        self.get_collection()
         self.get_pieces_movements("piece")
         self.get_pieces_movements("movement")
 
@@ -173,6 +173,8 @@ class DumpDrupal(object):
                 'email': user.get('mail')
             }
             x = User(**u)
+            x.save()
+            x.downloads.add(Download())
             x.save()
 
         curs.close()
@@ -284,11 +286,6 @@ class DumpDrupal(object):
                     break
 
             if rettype == "piece":
-                corpus_obj = Corpus.objects.filter(old_id=item['book_id'])
-                if not corpus_obj.exists():
-                    corpus_obj = None
-                else:
-                    corpus_obj = corpus_obj[0]
 
                 collection_objs = Collection.objects.filter(old_id=item['book_id'])
                 if not collection_objs.exists():
@@ -298,11 +295,7 @@ class DumpDrupal(object):
 
             elif rettype == "movement":
                 parent_obj = self.__resolve_movement_parent(item['old_id'])
-                corpus_obj = Corpus.objects.filter(old_id=item['book_id'])
-                if not corpus_obj.exists():
-                    corpus_obj = None
-                else:
-                    corpus_obj = corpus_obj[0]
+
 
                 collection_objs = Collection.objects.filter(old_id=item['book_id'])
                 if not collection_objs.exists():
@@ -326,11 +319,9 @@ class DumpDrupal(object):
             #if not item.get('date_of_composition', None) == item.get('date_of_composition2', None):
 
             if rettype == "piece":
-                p.update({'corpus': corpus_obj})
                 x = Piece(**p)
 
             elif rettype == "movement":
-                p.update({'piece': parent_obj, 'corpus': corpus_obj})
                 x = Movement(**p)
                 
             
