@@ -24,7 +24,6 @@ class Composer(models.Model):
     death_date = models.DateField(blank=True, null=True)
     # LM: I suspect this is because of the new django beta, but image fields require blank=True to be optional; else it is required in admin
     picture = models.ImageField(upload_to=picture_path, null=True, blank=True)
-    # number_of_queries = models.IntegerField(blank=True, null=True)
 
     created = models.DateTimeField(auto_now_add=True)
     updated = models.DateTimeField(auto_now=True)
@@ -47,7 +46,7 @@ def solr_index(sender, instance, created, **kwargs):
     # take instance, build dictionary around instance && use shorthand ** to add to solr
     composer = instance
 
-    # Everything between here...
+    # Remove between here...
     try:
         composer_name = unicode(composer.name)
     except UnicodeDecodeError:
@@ -71,14 +70,8 @@ def solr_index(sender, instance, created, **kwargs):
             composer_death_date = pytz.utc.localize(composer.death_date)
         except AttributeError:
            composer_death_date = composer.death_date
-    # ... and here are specifically for drupal dumping
+    # ... and here after encoding issues are fixed
 
-
-    print(composer_name)
-    print(composer_birth_date)
-    print(composer_death_date)
-
-    #print(composer.name)
     d = {
             'type': 'elvis_composer',
             'id': str(uuid.uuid4()),

@@ -14,7 +14,6 @@ class Location(models.Model):
 
     name = models.CharField(max_length=255, blank=True, null=True)
     comment = models.TextField(blank=True, null=True)
-    # number_of_queries = models.IntegerField(blank=True, null=True)
 
     created = models.DateTimeField(default=datetime.now)
     updated = models.DateTimeField(auto_now=True)
@@ -38,7 +37,7 @@ def solr_index(sender, instance, created, **kwargs):
 
     location = instance
 
-    #LM: Same ugly bit of code as in movement model, but edited for piece model. Again, this is for drupal dump 
+    #LM: Same ugly bit of code as in all the models, remove when encoding issues are fixed.
     try:
         location_name = unicode(location.name)
     except UnicodeDecodeError:

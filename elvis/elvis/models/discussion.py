@@ -20,7 +20,6 @@ class Discussion(models.Model):
     class Meta:
         app_label = "elvis"
 
-# LM TODO parent project name
 
 @receiver(post_save, sender=Discussion)
 def solr_index(sender, instance, created, **kwargs):

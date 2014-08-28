@@ -1,6 +1,5 @@
 from django.db import models
 from django.contrib.auth.models import User
-#import pytz
 from datetime import datetime
 import pytz
 
@@ -29,9 +28,6 @@ class Piece(models.Model):
     sources = models.ManyToManyField("elvis.Source", blank=True, null=True, related_name="pieces")
     attachments = models.ManyToManyField("elvis.Attachment", blank=True, null=True, related_name="pieces")
     comment = models.TextField(blank=True, null=True)
-
-    # number_of_queries = models.IntegerField(blank=True, null=True)
-    # number_of_downloads = models.IntegerField(blank=True, null=True)
 
     created = models.DateTimeField(default=datetime.now)
     updated = models.DateTimeField(auto_now=True)
@@ -83,7 +79,9 @@ def solr_index(sender, instance, created, **kwargs):
 
     piece = instance
 
-    #LM: Same ugly bit of code as in movement model, but edited for piece model. Again, this is for drupal dump 
+    #LM: Same ugly bit of code as in movement model, but edited for piece model. Remove when:
+    # 1. Upload UI and backend restrics encoding
+    # 2. Finished with importing old files
 
     try:
         piece_title = unicode(piece.title)
@@ -114,17 +112,12 @@ def solr_index(sender, instance, created, **kwargs):
         except UnicodeDecodeError:
             uploader_name = piece.uploader.name.decode('utf-8')
 
-    #if piece.date_of_composition is None:
-    #    date_of_composition = None
-    #else:
-    #    date_of_composition = pytz.utc.localize(piece.date_of_composition)
-
-    #print(piece.title)
-
     try:
         piece_created = pytz.utc.localize(piece.created)
     except ValueError:
         piece_created = piece.created
+
+    # Index all the M2M relationships between pieces & tags, and pieces & other fields 
 
     tags = []
     for tag in piece.tags.all():

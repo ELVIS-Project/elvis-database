@@ -1,6 +1,5 @@
 from django.db import models
 from django.contrib.auth.models import User
-#import pytz
 from datetime import datetime
 import pytz
 
@@ -31,8 +30,6 @@ class Movement(models.Model):
     attachments = models.ManyToManyField("elvis.Attachment", blank=True, null=True, related_name="movements")
     comment = models.TextField(blank=True, null=True)
     
-    # number_of_queries = models.IntegerField(blank=True, null=True)
-    # number_of_downloads = models.IntegerField(blank=True, null=True)
 
     created = models.DateTimeField(default=datetime.now)
     updated = models.DateTimeField(auto_now=True)
@@ -81,7 +78,9 @@ def solr_index(sender, instance, created, **kwargs):
 
     movement = instance
 
-    # LM: Ugly bit of code to migrate the discrepancies in drupal database encoding. Used only for drupal dump
+    # LM: Ugly bit of code to migrate the discrepancies in drupal database encoding. Remove when:
+    # 1. Upload UI and backend restrics encoding
+    # 2. Finished with importing old files
     try:
         movement_title = unicode(movement.title)
     except UnicodeDecodeError:
@@ -120,20 +119,12 @@ def solr_index(sender, instance, created, **kwargs):
         except UnicodeDecodeError:
             uploader_name = movement.uploader.name.decode('utf-8')
 
-    #if movement.date_of_composition is None:
-    #    date_of_composition = None
-    #else:
-    #    date_of_composition = pytz.utc.localize(movement.date_of_composition)
-
-    #print(movement.title)
-    #print(parent_piece_name)
-    #print(composer_name)
-    #print(movement_comment)
-
     try:
         movement_created = pytz.utc.localize(movement.created)
     except ValueError:
         movement_created = movement.created
+
+    # Index all the M2M relationships between mvts & tags, and mvts & other fields 
 
     tags = []
     for tag in movement.tags.all():

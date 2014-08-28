@@ -101,8 +101,6 @@ class DownloadDetail(generics.RetrieveUpdateAPIView):
         d = DownloadSerializer(dlobj).data
         return Response(d)
 
-        # return self.partial_update(request, *args, **kwargs)
-
 # LM: New view 2, was original view but updated with post-only view below
 class Downloading(APIView):
     permission_classes = (permissions.IsAuthenticated,)
@@ -117,7 +115,6 @@ class Downloading(APIView):
         # 5. Track subprocess
         # 6. Serve
         # 7. Remove dummy directory and zipped file - do this daily
-        # 
 
     def get(self, request, *args, **kwargs):
         """ A view to report the progress to the user """
@@ -133,21 +130,13 @@ class Downloading(APIView):
 
         if task.result and hasattr(task, 'result') and "path" in task.result:
             path = task.result["path"]
-            #print('path', path)
             file_name = os.path.basename(path)
-            #print('file_name', file_name)
-        ##    zipped_file = File(open(path, "r"))
-            #response = Response(task.result, status=status.HTTP_200_OK)
-            try:
-                # Doesn't work with Response for some reason, even though it works in the console. Has to be HttpResponse 
-                response = HttpResponse(FileWrapper(file(path, "r")), content_type='application/zip')
-            except Exception as e:
-                print e
             
+            response = HttpResponse(FileWrapper(file(path, "r")), content_type='application/zip')
+            
+            # Required for download responses
             response["Content-Length"] = os.path.getsize(path)
-            #print("Content-Length", os.path.getsize(path)) 
             response["Content-Disposition"] = 'attachment; filename=%s' % file_name
-            #print("Content-Disposition", 'attachment; filename=%s' %file_name)
 
             # to detect the download, set a cookie for an hour
             cookie_age = datetime.datetime.strftime(datetime.datetime.utcnow() + datetime.timedelta(seconds=3600), "%a, %d-%b-%Y %H:%M:%S GMT")
@@ -156,7 +145,6 @@ class Downloading(APIView):
             return response
         
         data = task.result or task.state
-        #print data
         return Response(data, status=status.HTTP_200_OK)
 
 
@@ -285,7 +273,7 @@ def ranked_remover(parent, user_download):
     chosen_a_file = False
     for sibling_a in ranking_list:
         if sibling_a is None:
-            pass
+            continue
         elif chosen_a_file is False:
             chosen_a_file = True
             user_download.attachments.add(sibling_a)

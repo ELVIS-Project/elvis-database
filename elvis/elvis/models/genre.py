@@ -14,7 +14,6 @@ class Genre(models.Model):
 
     name = models.CharField(max_length=255, blank=True, null=True)
     comment = models.TextField(blank=True, null=True)
-    # number_of_queries = models.IntegerField(blank=True, null=True)
 
     created = models.DateTimeField(default=datetime.now)
     updated = models.DateTimeField(auto_now=True)
@@ -38,6 +37,7 @@ def solr_index(sender, instance, created, **kwargs):
 
     genre = instance
 
+    #LM: Same ugly bit of code as in all the models, remove when encoding issues are fixed.
     try:
         genre_name = unicode(genre.name)
     except UnicodeDecodeError:

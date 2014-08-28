@@ -81,7 +81,6 @@ class MovementAdmin(admin.ModelAdmin):
 
 
 class CollectionAdmin(admin.ModelAdmin):
-    #pass
     actions = [reindex_in_solr, delete_in_solr]
     list_per_page = listperpage
     list_max_show_all = listmaxshowall
@@ -136,8 +135,6 @@ class AttachmentAdmin(admin.ModelAdmin):
                 print('Delete failure')
 
     delete_attachments_filesys.short_description = "Delete attachments from File System"
-    #pass
-    #actions = [reindex_in_solr, delete_in_solr]
 
     
 
