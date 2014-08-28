@@ -20,40 +20,6 @@ import operator
 
 import types
 
-# My hacks to try to fix json encoding
-#class MyEncoder(json.JSONEncoder):
-#    def default(self, o):
-#        try:
-#            return o.__dict__   
-#        except Exception as e:
-#            print e
-
-#def dict_dump(obj):
-#    obj_dict = {}
-#    for key, value in obj.__dict__.items():
-#        if isinstance(value, (type(None), int, long, float, str, unicode, list, dict, set)):
-#            obj_dict[key] = value
-#        elif isinstance(value, (datetime.datetime, datetime.date)):
-#            obj_dict[key] = value.isoformat()
-#        elif isinstance(value, (types.MethodType, types.UnboundMethodType, types.BuiltinFunctionType, types.BuiltinMethodType)):
-#            obj_dict[key] = value.__name__
-#        else:
-#            try:
-#                obj_dict[key] = dict_dump(value)
-#            except Exception as e:
-#                pass
-#    return obj_dict
-#MyEncoder().encode(result)
-        #response = HttpResponse(json.dumps(result), mimetype="application/json")
-        #response = HttpResponse(json.dumps([item.get_json() for item in result['results'].object_list]), content_type='application/json')
-
-# In paginator
-#def simplified_json(self):
-#    result_dict = self.result.__dict__
-#    number_dict = self.number
-#    paginator_dict = self.paginator.__dict__
-#    object_list_dict = map(lambda x: x.__dict__, self.object_list)
-#    return {'result': result_dict, 'number': number_dict, 'paginator': paginator_dict, 'object_list': object_list_dict}
 
 class SearchViewHTMLRenderer(CustomHTMLRenderer):
     template_name = "search/search.html"
@@ -64,10 +30,7 @@ class SearchView(APIView):
     renderer_classes = (JSONRenderer, JSONPRenderer, SearchViewHTMLRenderer)
 
     def get(self, request, *args, **kwargs):
-        #querydict = QueryDict("q=%s"%request.GET.get('q'))
         querydict = request.GET
-        #querydict2 = request.GET.getlist('filters') #original 
-        #print('querydict', querydict2, type(querydict))
 
         # LM: Some explanations as to what is going on here
         # Constructs a SolrSearch object using the search request; specifically, it parses and prepares the query
@@ -77,11 +40,7 @@ class SearchView(APIView):
 
         facets = s.facets(facet_fields=['type', 'composer_name', 'tags',  'parent_collection_names', 'number_of_voices'])  # LM TODO add here when facets are decided
 
-        facet_fields = facets.facet_counts['facet_fields']
-        #, key=operator.itemgetter(1)
-        #, key=facet_fields['type'].get, reverse=True
-        #facet_type = {item: facet_fields['type'][item] for item in sorted(facet_fields['type'], key=facet_fields['type'].get, reverse=True)}
-        
+        facet_fields = facets.facet_counts['facet_fields']        
         facet_type = sorted(facet_fields['type'].iteritems(), key=lambda (k,v): (v,k), reverse=True)
         facet_composer_name = sorted(facet_fields['composer_name'].iteritems(), key=lambda (k,v): (v,k), reverse=True)
         facet_tags = sorted(facet_fields['tags'].iteritems(), key=lambda (k,v): (v,k), reverse=True)
@@ -107,11 +66,9 @@ class SearchView(APIView):
         # LM: Continuing from above, the search() function belongs to SolrSearch, and simply returns the response for
         # the aforementioned parsed and prepared query
         search_results = s.search()
-        #print('search_results', search_results)
        
         # LM: Paginate results
         paginator = paginate.SolrPaginator(search_results)
-        #print('available pages', paginator.num_pages)
         
         page_number = request.GET.get('page')
         
@@ -120,11 +77,8 @@ class SearchView(APIView):
         except TypeError:
             pass
 
-        #paged_results = paginator.page(page_number)
-        
         # Chubby chunk of code to try to get a page for the client 
         try:
-            #print('Requested Page Num', page_number)
             paged_results = paginator.page(page_number)
         except paginate.PageNotAnInteger:
             try:

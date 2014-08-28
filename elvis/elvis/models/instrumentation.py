@@ -14,7 +14,6 @@ class InstrumentVoice(models.Model):
 
     name = models.CharField(max_length=255, blank=True, null=True)
     comment = models.TextField(blank=True, null=True)
-    # number_of_queries = models.IntegerField(blank=True, null=True)
 
     created = models.DateTimeField(default=datetime.now)
     updated = models.DateTimeField(auto_now=True)
@@ -38,6 +37,7 @@ def solr_index(sender, instance, created, **kwargs):
 
     instrument_voice = instance
 
+    #LM: Same ugly bit of code as in all the models, remove when encoding issues are fixed.
     try:
         instrument_voice_name = unicode(instrument_voice.name)
     except UnicodeDecodeError:

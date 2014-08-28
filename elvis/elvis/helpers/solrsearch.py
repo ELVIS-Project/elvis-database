@@ -31,10 +31,6 @@ class SolrSearch(object):
         self.solr_params = {}
         self._parse_request()
         self._prepare_query()
-        # LM: Debugging prints
-        #print('parsed_request', self.parsed_request, type(self.parsed_request))
-        #print('prepared_query', self.prepared_query, type(self.prepared_query))
-        #print('solr_params', self.solr_params, type(self.solr_params))
 
     def search(self, **kwargs):
         self.solr_params.update(kwargs)
@@ -88,16 +84,6 @@ class SolrSearch(object):
             # LM: modified from just self.parsed_request[k] = v to cut out nonsensical page/format requests to solr
             if k == 'page' or k == 'format':
                 continue
-
-            # LM: elif for Type filtration
-            # check if user has ticked a filter for querying
-            #elif k in settings.SEARCH_FILTERS_DICT:
-                # LM: Update filter_query[], the query string, accordingly
-            #    if not filter_query:
-            #        filter_query += u"{0}{1}".format("type:", settings.SEARCH_FILTERS_DICT[k])
-            #    else:
-            #        filter_query += u"{0}{1}".format(" OR type:", settings.SEARCH_FILTERS_DICT[k])
-
             # LM: Elif for Type filtration
             elif k == 'typefilt':
                 filter_query = "type: ("  + string.join((v), ' OR ') + ") "
@@ -152,7 +138,7 @@ class SolrSearch(object):
         
         self.solr_params.update({'sort': sort_query})
 
-
+        # Use filtered queries for advanced searches
         if filter_query != "":
             self.solr_params['fq'] = "( " + filter_query + " )"
 
@@ -184,41 +170,13 @@ class SolrSearch(object):
         else:
             self.solr_params['fq'] += " AND (" + voice_filt_query + " )"
 
-
+        # ... with the exception of dates, for which the default select solr method is used to preserve ranking by date
         if date_filt_query == "":
             pass
         elif not 'q' in self.parsed_request:
             self.parsed_request['q'] = "( " + date_filt_query + " )"
         else:
             self.parsed_request['q'] += " AND ( " + date_filt_query + " )"
-
-        # Update fq with date filtration, depending on what type filter was set
-        #if date_filt_query == "":
-        #    pass            
-        #elif filter_query =="":
-        #    self.solr_params['fq'] += date_filt_query
-        #else:
-        #    self.solr_params['fq'] = "( " + filter_query + " )" + " AND " + date_filt_query
-            # u"( {0} ) AND date_general: {1}".format(filter_query, date_filt_query) 
-            #print self.solr_params['fq']
-        #elif filter_query == "" and "fcp" in qdict:
-        #    self.solr_params['fq'] += " birth_date: " + date_filt_query
-        #elif filter_query == "" and "fp" in qdict or "fm" in qdict:
-        #    self.solr_params['fq'] += " date_of_composition: " + date_filt_query
-        #elif "fcp" in qdict:
-        #    self.solr_params['fq'] += " AND birth_date: " + date_filt_query
-        #elif "fp" in qdict or "fm" in qdict:
-        #    self.solr_params['fq'] += " AND date_of_composition: " + date_filt_query
-        #else:
-        #    pass
-
-        # LM: Update search parameters with the filter query --- test: u"type:elvis_piece OR type:elvis_composer"
-        # print(filter_query)
-        
-
-        # LM: Update search parameters with date filter 
-        #self.parsed_request['q'] += u"AND ({0} OR {1})".format(composer_date_filt_query, piece_date_filt_query)
-
 
 
     def _prepare_query(self):
@@ -233,8 +191,6 @@ class SolrSearch(object):
                 else:
                     # was OR by default
                     arr.append(u"{0}:({1})".format(k, " AND ".join([u"\"{0}\"".format(s) for s in v if v is not None])))
-                # LM: Debugging print
-                #print('arr', arr)
             self.prepared_query = u" AND ".join(arr)            
         else:
             self.prepared_query = u"*:*"

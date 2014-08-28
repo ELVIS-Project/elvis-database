@@ -19,8 +19,6 @@ class Project(models.Model):
         app_label = "elvis"
 
 
-# TODO LM manytomany field: users
-
 @receiver(post_save, sender=Project)
 def solr_index(sender, instance, created, **kwargs):
     import uuid
