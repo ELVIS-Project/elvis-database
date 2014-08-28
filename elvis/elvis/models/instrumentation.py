@@ -38,11 +38,10 @@ def solr_index(sender, instance, created, **kwargs):
 
     instrument_voice = instance
 
-    #LM: Same ugly bit of code as in movement model, but edited for piece model. Again, this is for drupal dump 
     try:
-        instrument_voice_title = unicode(instrument_voice.name)
+        instrument_voice_name = unicode(instrument_voice.name)
     except UnicodeDecodeError:
-        instrument_voice_title = instrument_voice.title.decode('utf-8')
+        instrument_voice_name = instrument_voice.name.decode('utf-8')
 
 
     if instrument_voice.comment is None:
@@ -63,8 +62,8 @@ def solr_index(sender, instance, created, **kwargs):
             'type': 'elvis_instrument_voice',
             'id': str(uuid.uuid4()),
             'item_id': int(instrument_voice.id),
-            'title': instrument_voice_name,
-            'instrument_voice_name': instrument_voice_name,
+            'name': instrument_voice_name,
+            'instruments_voices': instrument_voice_name,
             'created': instrument_voice_created,
             'updated': instrument_voice.updated,
             'comment': instrument_voice_comment,

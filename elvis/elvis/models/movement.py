@@ -50,8 +50,23 @@ class Movement(models.Model):
     def __unicode__(self):
         return u"{0}".format(self.title)
 
-    def get_collections(self):
-        return "\n".join([collection.title for collection in self.collections.all()])
+    def movement_collections(self):
+        return " ".join([collection.title for collection in self.collections.all()])
+
+    def movement_genres(self):
+        return " ".join([genre.name for genre in self.genres.all()])
+
+    def movement_instruments_voices(self):
+        return " ".join([instrument_voice.name for instrument_voice in self.instruments_voices.all()])
+
+    def movement_languages(self):
+        return " ".join([language.name for language in self.languages.all()])
+
+    def movement_locations(self):
+        return " ".join([location.name for location in self.locations.all()])
+
+    def movement_sources(self):
+        return " ".join([source.name for source in self.sources.all()])
 
 @receiver(post_save, sender=Movement)
 def solr_index(sender, instance, created, **kwargs):
@@ -124,6 +139,25 @@ def solr_index(sender, instance, created, **kwargs):
     for tag in movement.tags.all():
         tags.append(tag.name)
 
+    for genre in movement.genres.all():
+        genres.append(genre.name)
+
+    instruments_voices = []
+    for instrument_voice in movement.instruments_voices.all():
+        instruments_voices.append(instrument_voice.name)
+
+    languages = []
+    for language in movement.languages.all():
+        languages.append(language.name)
+
+    locations = []
+    for location in movement.locations.all():
+        locations.append(location.name)
+
+    sources = []
+    for source in movement.sources.all():
+        sources.append(source.name)
+
     collections = []
     if not movement.collections is None:
         collections = []
@@ -149,6 +183,11 @@ def solr_index(sender, instance, created, **kwargs):
             'composer_name': composer_name,
             'uploader_name': uploader_name,
             'tags': tags,
+            'genres': genres,
+            'instruments_voices': instruments_voices,
+            'languages': languages,
+            'locations': locations,
+            'sources': sources,
     }
     solrconn.add(**d)
     solrconn.commit()

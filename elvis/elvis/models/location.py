@@ -40,9 +40,9 @@ def solr_index(sender, instance, created, **kwargs):
 
     #LM: Same ugly bit of code as in movement model, but edited for piece model. Again, this is for drupal dump 
     try:
-        location_title = unicode(location.name)
+        location_name = unicode(location.name)
     except UnicodeDecodeError:
-        location_title = location.title.decode('utf-8')
+        location_name = location.name.decode('utf-8')
 
 
     if location.comment is None:
@@ -63,8 +63,8 @@ def solr_index(sender, instance, created, **kwargs):
             'type': 'elvis_location',
             'id': str(uuid.uuid4()),
             'item_id': int(location.id),
-            'title': location_name,
-            'location_name': location_name,
+            'name': location_name,
+            'locations': location_name,
             'created': location_created,
             'updated': location.updated,
             'comment': location_comment,

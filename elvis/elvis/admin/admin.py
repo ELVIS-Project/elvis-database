@@ -61,7 +61,7 @@ class ProjectAdmin(admin.ModelAdmin):
 
 
 class PieceAdmin(admin.ModelAdmin):
-    list_display = ("title", "composer", "date_of_composition", "number_of_voices", "uploader", "old_id", "get_collections")
+    list_display = ("title", "composer", "date_of_composition", "number_of_voices", "uploader", "old_id", "piece_collections", "piece_genres", "piece_instruments_voices", "piece_languages", "piece_locations", "piece_sources")
     # Other things for interest: , "attached_files", "tagged_as"
     filter_horizontal = ("tags",)
     readonly_fields = ("attachments",)
@@ -71,7 +71,7 @@ class PieceAdmin(admin.ModelAdmin):
 
 
 class MovementAdmin(admin.ModelAdmin):
-    list_display = ("title", "composer", "date_of_composition", "number_of_voices", "uploader", "old_id", "piece", "get_collections")
+    list_display = ("title", "composer", "date_of_composition", "number_of_voices", "uploader", "old_id", "piece", "movement_collections", "movement_genres", "movement_instruments_voices", "movement_languages", "movement_locations", "movement_sources")
     # Other things for interest , "attached_files", "tagged_as"
     filter_horizontal = ("tags",)
     readonly_fields = ("attachments",)

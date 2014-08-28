@@ -38,11 +38,10 @@ def solr_index(sender, instance, created, **kwargs):
 
     genre = instance
 
-    #LM: Same ugly bit of code as in movement model, but edited for piece model. Again, this is for drupal dump 
     try:
-        genre_title = unicode(genre.name)
+        genre_name = unicode(genre.name)
     except UnicodeDecodeError:
-        genre_title = genre.title.decode('utf-8')
+        genre_name = genre.name.decode('utf-8')
 
 
     if genre.comment is None:
@@ -63,8 +62,8 @@ def solr_index(sender, instance, created, **kwargs):
             'type': 'elvis_genre',
             'id': str(uuid.uuid4()),
             'item_id': int(genre.id),
-            'title': genre_name,
-            'genre_name': genre_name,
+            'name': genre_name,
+            'genres': genre_name,
             'created': genre_created,
             'updated': genre.updated,
             'comment': genre_comment,

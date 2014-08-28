@@ -40,9 +40,9 @@ def solr_index(sender, instance, created, **kwargs):
 
     #LM: Same ugly bit of code as in movement model, but edited for piece model. Again, this is for drupal dump 
     try:
-        language_title = unicode(language.name)
+        language_name = unicode(language.name)
     except UnicodeDecodeError:
-        language_title = language.title.decode('utf-8')
+        language_name = language.name.decode('utf-8')
 
 
     if language.comment is None:
@@ -63,8 +63,8 @@ def solr_index(sender, instance, created, **kwargs):
             'type': 'elvis_language',
             'id': str(uuid.uuid4()),
             'item_id': int(language.id),
-            'title': language_name,
-            'language_name': language_name,
+            'name': language_name,
+            'languages': language_name,
             'created': language_created,
             'updated': language.updated,
             'comment': language_comment,
