@@ -77,7 +77,18 @@
     <field name="title_searchable" type="text_general" indexed="true" stored="true" multiValued="true"/>
     <field name="name_general" type="text_general" indexed="true" stored="true" multiValued="true"/>
     <field name="name_sort" type="string" indexed="true" stored="true"/>
-    
+
+    <!-- Field-fields -->
+    <field name="genres" type="string" indexed="true" stored="true" multiValued="true"/>
+    <field name="genres_searchable" type="text_general" indexed="true" stored="true" multiValued="true"/>
+    <field name="instruments_voices" type="string" indexed="true" stored="true" multiValued="true" />
+    <field name="instruments_voices_searchable" type="text_general" indexed="true" stored="true" multiValued="true"/>
+    <field name="languages" type="string" indexed="true" stored="true" multiValued="true"/>
+    <field name="languages_searchable" type="text_general" indexed="true" stored="true" multiValued="true"/>
+    <field name="locations" type="string" indexed="true" stored="true" multiValued="true"/>
+    <field name="locations_searchable" type="text_general" indexed="true" stored="true" multiValued="true"/>
+    <field name="sources" type="string" indexed="true" stored="true" multiValued="true"/>
+    <field name="sources_searchable" type="text_general" indexed="true" stored="true" multiValued="true"/>
      
     <!-- LM Date fields -->
     <field name="created" type="date" indexed="true" stored="true" />
@@ -155,6 +166,11 @@
     <copyField source="parent_piece_name" dest="text" />
     <copyField source="parent_collection_names" dest="text" />
     <copyField source="comment" dest="text" />
+    <copyField source="genres" dest="text" />
+    <copyField source="instruments_voices" dest="text" />
+    <copyField source="languages" dest="text" />
+    <copyField source="locations" dest="text" />
+    <copyField source="sources" dest="text" />
              
     <!-- Advanced Search -->
     <copyField source="birth_date" dest="date_general"/>
@@ -167,6 +183,11 @@
     <copyField source="title" dest="title_searchable"/>
     <copyField source="name" dest="name_sort"/>
     <copyField source="tags" dest="tags_searchable" />
+    <copyField source="genres" dest="genres_searchable" />
+    <copyField source="instruments_voices" dest="instruments_voices_searchable" />
+    <copyField source="languages" dest="languages_searchable" />
+    <copyField source="locations" dest="locations_searchable" />
+    <copyField source="sources" dest="sources_searchable" />
 
 
     <!--<copyField source="birth_date" dest="text" />
