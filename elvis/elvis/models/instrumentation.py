@@ -1,0 +1,84 @@
+from django.db import models
+
+#django signal handlers
+from django.dispatch import receiver
+from django.db.models.signals import post_save, post_delete
+
+from datetime import datetime
+import pytz
+
+class InstrumentVoice(models.Model):
+    class Meta:
+        ordering = ["name"]
+        app_label = "elvis"
+
+    name = models.CharField(max_length=255, blank=True, null=True)
+    comment = models.TextField(blank=True, null=True)
+    # number_of_queries = models.IntegerField(blank=True, null=True)
+
+    created = models.DateTimeField(default=datetime.now)
+    updated = models.DateTimeField(auto_now=True)
+
+    def __unicode__(self):
+        return u"{0}".format(self.name)
+
+
+
+@receiver(post_save, sender=InstrumentVoice)
+def solr_index(sender, instance, created, **kwargs):
+    import uuid
+    from django.conf import settings
+    import solr
+
+    solrconn = solr.SolrConnection(settings.SOLR_SERVER)
+    record = solrconn.query("type:elvis_instrument_voice item_id:{0}".format(instance.id))
+    if record:
+        # the record already exists, so we'll remove it first.
+        solrconn.delete(record.results[0]['id'])
+
+    instrument_voice = instance
+
+    #LM: Same ugly bit of code as in movement model, but edited for piece model. Again, this is for drupal dump 
+    try:
+        instrument_voice_title = unicode(instrument_voice.name)
+    except UnicodeDecodeError:
+        instrument_voice_title = instrument_voice.title.decode('utf-8')
+
+
+    if instrument_voice.comment is None:
+        instrument_voice_comment = None
+    else:
+        try:
+            instrument_voice_comment = unicode(instrument_voice.comment)
+        except UnicodeDecodeError:
+            instrument_voice_comment = instrument_voice.comment.decode('utf-8')
+            
+    try:
+        instrument_voice_created = pytz.utc.localize(instrument_voice.created)
+    except ValueError:
+        instrument_voice_created = instrument_voice.created
+
+
+    d = {
+            'type': 'elvis_instrument_voice',
+            'id': str(uuid.uuid4()),
+            'item_id': int(instrument_voice.id),
+            'title': instrument_voice_name,
+            'instrument_voice_name': instrument_voice_name,
+            'created': instrument_voice_created,
+            'updated': instrument_voice.updated,
+            'comment': instrument_voice_comment,
+    }
+    solrconn.add(**d)
+    solrconn.commit()
+
+
+@receiver(post_delete, sender=InstrumentVoice)
+def solr_delete(sender, instance, **kwargs):
+    from django.conf import settings
+    import solr
+    solrconn = solr.SolrConnection(settings.SOLR_SERVER)
+    record = solrconn.query("type:elvis_instrument_voice item_id:{0}".format(instance.id))
+    if record:
+        # the record already exists, so we'll remove it.
+        solrconn.delete(record.results[0]['id'])
