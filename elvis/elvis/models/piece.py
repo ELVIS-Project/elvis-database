@@ -22,6 +22,11 @@ class Piece(models.Model):
     date_of_composition2 = models.DateField(blank=True, null=True)
     number_of_voices = models.IntegerField(blank=True, null=True)
     tags = models.ManyToManyField("elvis.Tag", blank=True, null=True, related_name="pieces")
+    genres = models.ManyToManyField("elvis.Genre", blank=True, null=True, related_name="pieces")
+    instruments_voices = models.ManyToManyField("elvis.InstrumentVoice", blank=True, null=True, related_name="pieces")
+    languages = models.ManyToManyField("elvis.Language", blank=True, null=True, related_name="pieces")
+    locations = models.ManyToManyField("elvis.Location", blank=True, null=True, related_name="pieces")
+    sources = models.ManyToManyField("elvis.Source", blank=True, null=True, related_name="pieces")
     attachments = models.ManyToManyField("elvis.Attachment", blank=True, null=True, related_name="pieces")
     comment = models.TextField(blank=True, null=True)
 

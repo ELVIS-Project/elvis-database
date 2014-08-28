@@ -23,6 +23,11 @@ class Movement(models.Model):
     date_of_composition2 = models.DateField(blank=True, null=True)
     number_of_voices = models.IntegerField(blank=True, null=True)
     tags = models.ManyToManyField("elvis.Tag", blank=True, null=True)
+    genres = models.ManyToManyField("elvis.Genre", blank=True, null=True, related_name="movements")
+    instruments_voices = models.ManyToManyField("elvis.InstrumentVoice", blank=True, null=True, related_name="movements")
+    languages = models.ManyToManyField("elvis.Language", blank=True, null=True, related_name="movements")
+    locations = models.ManyToManyField("elvis.Location", blank=True, null=True, related_name="movements")
+    sources = models.ManyToManyField("elvis.Source", blank=True, null=True, related_name="movements")
     attachments = models.ManyToManyField("elvis.Attachment", blank=True, null=True, related_name="movements")
     comment = models.TextField(blank=True, null=True)
     

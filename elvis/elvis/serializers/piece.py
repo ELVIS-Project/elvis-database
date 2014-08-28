@@ -2,6 +2,11 @@ from rest_framework import serializers
 from elvis.models.piece import Piece
 from elvis.models.composer import Composer
 from elvis.models.tag import Tag
+from elvis.models.genre import Genre
+from elvis.models.instrumentation import InstrumentVoice
+from elvis.models.language import Language
+from elvis.models.location import Location
+from elvis.models.source import Source
 from elvis.models.attachment import Attachment
 from elvis.models.collection import Collection
 from elvis.models.movement import Movement
@@ -19,6 +24,31 @@ class TagPieceSerializer(serializers.HyperlinkedModelSerializer):
     class Meta:
         model = Tag
         fields = ("url", "name")
+
+class GenrePieceSerializer(serializers.HyperlinkedModelSerializer):
+    class Meta:
+        model = Genre
+        fields = ("name", )
+
+class InstrumentVoicePieceSerializer(serializers.HyperlinkedModelSerializer):
+    class Meta:
+        model = InstrumentVoice
+        fields = ("name", )
+
+class LanguagePieceSerializer(serializers.HyperlinkedModelSerializer):
+    class Meta:
+        model = Language
+        fields = ("name", )
+
+class LocationPieceSerializer(serializers.HyperlinkedModelSerializer):
+    class Meta:
+        model = Location
+        fields =("name", )
+
+class SourcePieceSerializer(serializers.HyperlinkedModelSerializer):
+    class Meta:
+        model = Source
+        fields = ("name", )
 
 class AttachmentPieceSerializer(serializers.HyperlinkedModelSerializer):
     # LM: Must add this to serializers explicitly, otherwise will raise KeyError because file_name isn't *really* a field
@@ -56,6 +86,11 @@ class MovementPieceSerializer(serializers.HyperlinkedModelSerializer):
 class PieceSerializer(serializers.HyperlinkedModelSerializer):
     composer = ComposerPieceSerializer()
     tags = TagPieceSerializer()
+    genres = GenrePieceSerializer()
+    instruments_voices = InstrumentVoicePieceSerializer()
+    languages = LanguagePieceSerializer()
+    locations = LocationPieceSerializer()
+    sources = SourcePieceSerializer()
     attachments = AttachmentPieceSerializer()
     collections = CollectionPieceSerializer()
     uploader = UserPieceSerializer()
