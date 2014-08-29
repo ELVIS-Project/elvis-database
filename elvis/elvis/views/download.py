@@ -32,6 +32,7 @@ from elvis.models.piece import Piece
 from elvis.models.movement import Movement
 from elvis.models.attachment import Attachment
 from elvis.models.collection import Collection
+from elvis.models.tag import Tag
 
 from django.core.exceptions import ObjectDoesNotExist
 
