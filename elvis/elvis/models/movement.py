@@ -130,6 +130,7 @@ def solr_index(sender, instance, created, **kwargs):
     for tag in movement.tags.all():
         tags.append(tag.name)
 
+    genres = []
     for genre in movement.genres.all():
         genres.append(genre.name)
 
