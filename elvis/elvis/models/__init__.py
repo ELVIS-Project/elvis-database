@@ -13,4 +13,10 @@ from elvis.models.comment import Comment
 from elvis.models.discussion import Discussion
 from elvis.models.query import Query
 
+from elvis.models.genre import Genre
+from elvis.models.instrumentation import InstrumentVoice
+from elvis.models.language import Language
+from elvis.models.location import Location
+from elvis.models.source import Source
+
 #from elvis.models.search_indexes import CorpusIndex
