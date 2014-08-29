@@ -151,7 +151,7 @@
         <h3> Results: </h3>
        
         {% if user.is_authenticated %}
-        <form id="all-patch-download-form" action="/rpatchdownloads/" method="post">
+        <form id="all-patch-download-form" action="/downloads/" method="post">
             {% csrf_token %}
             <input type="hidden" class="this_url" name="this_url"  value="" /> 
             <input type="hidden" class="search_query" name="search_query" id="search_query" value="" />
@@ -169,7 +169,7 @@
 
         
 
-        <form id="list-patch-download-form" action="/rpatchdownloads/" method="post"  >
+        <form id="list-patch-download-form" action="/downloads/" method="post" >
           {% csrf_token %}
           
             <button type="submit" id="list_download"  class="btn btn-success btn-sm pull-middle" >
