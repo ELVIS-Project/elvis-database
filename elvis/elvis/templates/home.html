@@ -3,9 +3,49 @@
 {% block wrap %}
 
 <div class="jumbotron">
-    <h1>ELVIS Database</h1>
+    <h1 style="color:black;">ELVIS Database</h1>
     <p class="lead">Cool people doing cool stuff.</p>
     <p>Elvis is...</p>
 </div>
-<p> <strong> Test user --- &nbsp; Username: test &nbsp; &nbsp;  Password: acronym for our lab in lowercase </strong> </p>
+
+<br />
+<br />
+
+<div class="row">
+    <div class="col-md-4">
+        <div class="media ">
+            <a class="pull-left">
+                <img class="media-object"  src="{{STATIC_URL}}/img/glyphicons_up.svg" class="img-responsive">
+            </a>
+            <div class="media-body">
+                <h4 class="media-heading">Upload...</h4>
+                <p> ... your symbolic music encoded in MusicXML to the database.
+            </div>
+        </div>
+    </div>
+    <div class="col-md-4">
+        <div class="media">
+            <a class="pull-left">
+                <img class="media-object"  src="{{STATIC_URL}}/img/glyphicons_search.svg" class="img-responsive">
+            </a>
+            <div class="media-body">
+                <h4 class="media-heading">Search...</h4>
+                <p> ... for other symbolic music files, metadata, and collections and test-sets.
+            </div>
+        </div>
+    </div>
+    <div class="col-md-4">
+        <div class="media">
+            <a class="pull-left">
+                <img class="media-object"  src="{{STATIC_URL}}/img/glyphicons_down.svg" class="img-responsive">
+            </a>
+            <div class="media-body">
+                <h4 class="media-heading">Download...</h4>
+                <p> ... files for use in the ELVIS Counterpoint Web Application or your own apps.
+            </div>
+        </div>
+    </div>
+</div>
+
+
 {% endblock %}

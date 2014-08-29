@@ -10,7 +10,7 @@
     {% for composer in content.results %}
         <li class="media">
             <div class="col-md-2">
-                <div style="position:relative; overflow:hidden; padding-bottom:100%;">
+                <div class="img-wrapper">
                     <img src="{% if content.image %} {{ content.image }}  {% else %} holder.js/180x180/text:No Picture {% endif %}" class="img-responsive" style="position:absolute;"/>
                 </div>
             </div>

@@ -17,13 +17,20 @@
             <p>
                 <ul>
                     <li>
+                        {% if piece.date_of_composition  == piece.date_of_composition2 %} 
+                        Composed in {{ piece.date_of_composition | date:"Y"}}</dd> 
+                        {% else %}
+                        Composed between {{ piece.date_of_composition | date:"Y"}}-{{ piece.date_of_composition2 | date:"Y" }} </dd> 
+                        {% endif %}
+                    </li>
+                    <li>
                         Uploaded by {{ piece.uploader.username }} on {{ piece.created | date:"d F Y"}} <em>  
                         {%  if piece.attachments|length == 0 %}  {% elif piece.attachments|length == 1 %} with 1 File  {% else %} with {{ piece.attachments | length }} Files {% endif %}. </em>
                     </li>
                     <li>
                         Tags: 
                         {% for tag in piece.tags %}
-                            <span class="label label-primary" style="border-radius:4px;"> {{tag.name}} </span> &nbsp;
+                            <span class="label label-primary rounded"> {{tag.name}} </span> &nbsp;
                         {% endfor %}
                     </li>
                     {% if not piece.comment == None %}

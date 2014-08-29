@@ -11,12 +11,8 @@
         <meta name="description" content="">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-
-        <!-- Place favicon.ico and apple-touch-icon.png in the root directory -->
-        <!--<link rel="stylesheet" href="{{ STATIC_URL }}css/themes/yeti/bootstrap.min.css" rel="stylesheet" media="screen"> -->
-        <!--<link rel="stylesheet" href="{{ STATIC_URL }}bootstrap-3.0/css/bootstrap.min.css" rel="stylesheet" media="screen">-->
         <link rel="stylesheet" href="{{ STATIC_URL }}css/themes/spacelab/bootstrap.css" rel="stylesheet" media="screen">
-        <link rel="stylesheet" href="{{ STATIC_URL }}css/style.css" rel="stylesheet" media="screen" />
+        <link rel="stylesheet" href="{{ STATIC_URL }}css/elvis-style.css" rel="stylesheet" media="screen" />
         <script src="{{ STATIC_URL }}js/jquery-1.9.1.min.js"></script>
         <script src="{{ STATIC_URL }}js/modernizr-2.6.2.min.js"></script>
         <script src="{{ STATIC_URL }}js/bootstrap.min.js"></script>
@@ -33,32 +29,7 @@
             });
             
         </script>
-
-        <style type="text/css">
-        * {
-            margin: 0;
-        }
-        html, body {
-            height: 100%;
-        }
-        .wrapper {
-            min-height: 100%;
-            height: auto !important;
-            height: 100%;
-            margin: 0 auto -4em;
-        }
-        .footer, .push {
-            height: 4em;
-        }
-        .btn-mini {
-            vertical-align: 11%;
-            padding: 1px 6px;
-            font-size: 11px;
-            line-height: 13px;
-        }
-        </style>
     </head>
-    
     <body>
         <div class="wrapper">
             <nav class="navbar navbar-default" role="navigation"> 
@@ -73,10 +44,10 @@
                         <li class="dropdown">
                             <a href="#" class="dropdown-toggle" data-toggle="dropdown"> Browse <b class="caret"></b></a>
                             <ul class="dropdown-menu">
+                                <li><a href="/composers">Composers</a></li>
+                                <li><a href="/collections">Collections</a></li>
                                 <li><a href="/pieces">Pieces</a></li>
                                 <li><a href="/movements">Movements</a></li>
-                                <li><a href="/collections">Collections</a></li>
-                                <li><a href="/composers">Composers</a></li>
                             </ul>
                         </li>
                     </ul>
@@ -112,7 +83,15 @@
                         <strong>Note!</strong> &nbsp; &nbsp; &nbsp; You aren't logged in... download functionality has been disabled.
                     </div>
                 </div>  
-               {% endif %}       
+               {% endif %}    
+                <noscript>
+                    <div class="row text-center" >
+                    <div class="alert alert-info">
+                        <a href="#" class="close" data-dismiss="alert">&times;</a>
+                        <strong>Note!</strong> &nbsp; &nbsp; &nbsp; Your browser doesn't support JavaScript... many features will be unavailable.
+                    </div>
+                </div>  
+                </noscript>    
                 
                 <div class="row">
                     <div class="col-12">
@@ -130,7 +109,7 @@
         </div>
         
         <div class="footer">
-            <hr style="color:black;"/>
+            <hr id="footer-hr"/>
             <div class="container">
                 <div class="row text-muted">
                 ELVIS Project -- SIMSSA -- McGill University

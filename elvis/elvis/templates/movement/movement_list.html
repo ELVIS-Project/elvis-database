@@ -16,12 +16,19 @@
             <p >
                 <ul>
                     <li>
+                        {% if movement.date_of_composition  == movement.date_of_composition2 %} 
+                        Composed in {{ movement.date_of_composition | date:"Y"}}</dd> 
+                        {% else %}
+                        Composed between {{ movement.date_of_composition | date:"Y"}}-{{ movement.date_of_composition2 | date:"Y" }} </dd> 
+                        {% endif %}
+                    </li>
+                    <li>
                         Uploaded by {{ movement.uploader.username }} on {{ movement.created | date:"d F Y"}} <em> with {{ movement.attachments | length }} {% if movement.attachments|length == 1 %} File {% else %} Files {% endif %}. </em>
                     </li>
                     <li>
                         Tags: 
                         {% for tag in movement.tags %}
-                            <span class="label label-primary" style="border-radius:4px;"> {{tag.name}} </span> &nbsp;
+                            <span class="label label-primary rounded"> {{tag.name}} </span> &nbsp;
                         {% endfor %}
                     </li>
                     {% if not movement.comment == None %}

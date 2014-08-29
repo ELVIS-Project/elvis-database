@@ -1,10 +1,7 @@
 {% extends "base.html" %}
 
 {% block wrap %}
- <!--<script src="{{ STATIC_URL }}js/jquery-1.10.1.min.js"></script>
- 
- </script> 
- -->
+
 <div class="col-md-12">
     <div class="page-header">
         <h2>Your Downloads</h2>
@@ -17,105 +14,67 @@
 
 
     <a href="" id="download_now" class="button" style="display: none">Download your files...</a>
-    <!-- <a class="btn btn-inverse" type="button" id="download_now" href=""> Download your file </a> -->
 
 <!-- LM TODO: Catch exceptions to stop it from setIntervalling over the exception infinitely -->
 
     <script type="text/javascript" >
 
-      $(document).ready(function(){
+    $(document).ready(function()
+    {
         
         // To get the query string from current url, http://snipplr.com/view/799/get-url-variables/
-        function getUrlVars(){
-          var vars = [], hash;
-          var hashes = window.location.href.slice(window.location.href.indexOf('?') + 1).split('&');
-          for(var i = 0; i < hashes.length; i++){
-            hash = hashes[i].split('=');
-            vars.push(hash[0]);
-            vars[hash[0]] = hash[1];
-          }
-          return vars;
+        function getUrlVars()
+        {
+            var vars = [], hash;
+            var hashes = window.location.href.slice(window.location.href.indexOf('?') + 1).split('&');
+            for(var i = 0; i < hashes.length; i++)
+            {
+                hash = hashes[i].split('=');
+                vars.push(hash[0]);
+                vars[hash[0]] = hash[1];
+            }
+            return vars;
         }
 
         // To check for the download cookie, http://stackoverflow.com/questions/10730362/get-cookie-by-name
 
-        function getCookie(name) {
-          var value = "; " + document.cookie;
-          var parts = value.split("; " + name + "=");
-          if (parts.length == 2) return parts.pop().split(";").shift();
+        function getCookie(name) 
+        {
+            var value = "; " + document.cookie;
+            var parts = value.split("; " + name + "=");
+            if (parts.length == 2) return parts.pop().split(";").shift();
         }
 
-        //$.ajaxSetup({async:false});
 
         // To update the progress bars, modified from http://elfga.com/blog/2012/10/03/bootstrap-progress-bar-update-jqueryajax/
-        var statePoll = setInterval(function(){
-          /* query the completion percentage from the server */
-          // Get current task_id
-          var task_id = getUrlVars()["task"];
-          // Make it the next query and do the query
-          var download_cookie = getCookie(task_id);
+        var statePoll = setInterval(function()
+        {
+            /* query the completion percentage from the server */
+            // Get current task_id
+            var task_id = getUrlVars()["task"];
+            // Make it the next query and do the query
+            var download_cookie = getCookie(task_id);
           
-          //$.get(window.location.pathname, done(function(data)
-          $.get(
-            "") 
-            .done(function(data){
-              // Old checks: "Content-Length" in data || !("percent" in data) || data["percent"] >= 100 || 
-              if(download_cookie){
-                clearInterval(statePoll);
-                //$("#progressouter").removeClass("active");
-                $("#progress").css('width',100+'%');
-                $("#progress").html("Files Ready");
-                $("#download_now").href=document.URL;
-                $('#download_now').show();
-                //$.ajaxSetup({async:true});
-                //var path = data["path"];
-                //var iframe = document.getElementById("downloadFrame");
-                //iframe.src = path;
-              }
-              // TODO: Handle bad requests
-
-              $("#progress").css('width',data["percent"]+'%');
-              //$("#progress").css('width','30'+'%');
-              if(data["percent"]) $("#progress").html(data["percent"]+'% of Files Zipped');
-              //$("#progress").html('30'+'%');
-
-            }
-          ); 
-
-     /*     $.ajax({
-            url: "",
-            data: {task: task_id},
-            success: function(data){
-
-              $("#progress").css('width',data["percent"]+'%');
-              //$("#progress").css('width','30'+'%');
-
-              $("#progress").html(data["percent"]+'% of Files Zipped');
-              //$("#progress").html('30'+'%');
-
-
-              if(!("percent" in data) || data["percent"] >= 100){
-                clearInterval(statePoll);
-                $("#progressouter").removeClass("active");
-                $("#progress").html("100% of Files Zipped");
-                //var path = data["path"];
-                //var iframe = document.getElementById("downloadFrame");
-                //iframe.src = path;
-              }
-            },
-            async: false      
-          });  */
-
-
-
-
+                $.get("").done(function(data)
+                {
+                  // Old checks: "Content-Length" in data || !("percent" in data) || data["percent"] >= 100 || 
+                    if(download_cookie)
+                    {
+                        clearInterval(statePoll);
+                        $("#progress").css('width',100+'%');
+                        $("#progress").html("Files Ready");
+                        $("#download_now").href=document.URL;
+                        $('#download_now').show();
+                    }
+                    // TODO: Handle bad requests
+                    $("#progress").css('width',data["percent"]+'%');
+                    if(data["percent"]) $("#progress").html(data["percent"]+'% of Files Zipped');
+                }
+            ); 
         }, 500);
-      }); 
+    }); 
 
     </script> 
-    <noscript>Sorry, your browser does not support JavaScript!</noscript> 
-  
-
 
 </div>
 

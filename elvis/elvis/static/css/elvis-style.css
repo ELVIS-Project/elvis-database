@@ -1,0 +1,106 @@
+/* Body css */
+* {
+    margin: 0;
+}
+html, body {
+    height: 100%;
+}
+.wrapper {
+    min-height: 100%;
+    height: auto !important; /* have to figure out a way of doing this without !important */
+    height: 100%;
+    margin: 0 auto -4em;
+}
+.footer, .push {
+    height: 4em;
+}
+.btn-mini {
+    vertical-align: 11%;
+    padding: 1px 6px;
+    font-size: 11px;
+    line-height: 13px;
+}
+#footer-hr {
+    color:black;
+}
+.label, .rounded{
+    border-radius:4px;
+}
+/* Detail & List templates */
+.detail-table-wrapper, .collection{
+    max-height: 400px; 
+    width: 100%; 
+    margin: 0; 
+    overflow-y: scroll;
+}
+.detail-table-wrapper, .composer{
+    max-height: 600px; 
+    width: 100%; 
+    margin: 0; 
+    overflow-y: scroll;
+}
+.detail-table{
+    margin: 0; 
+    padding: 0;
+}
+.img-wrapper{
+    position:relative; 
+    overflow:hidden; 
+    padding-bottom:100%;
+}
+.recursive-patch-download-form{
+    display: inline;
+}
+.movement-dropdown-button{
+    text-align:left;
+    width:100%; 
+    border-width:1px; 
+    border-color: white; 
+    background-color: white;
+}
+.movement-dropdown-collapse{
+    border-width: 1px; 
+    border-style: solid; 
+    width:95%;
+}
+/* Search templates */
+.panel-title:hover {
+    cursor: pointer;
+}
+.tab-content {
+    border-left: 1px solid #ddd;
+    border-right: 1px solid #ddd;
+    border-bottom: 1px solid #ddd;
+    padding: 10px;
+}
+.nav-tabs {
+    margin-bottom: 0; 
+}
+.input-group-addon.lg {
+    min-width:200px;
+    text-align:left;
+}
+.multiselect-button{
+    height:54px; 
+    line-height: 1.33; 
+    font-size: 16px; 
+    border-radius: 0px;
+    border-color: gray;
+    background-color: white;
+    background-image: none;
+    color: black;
+}
+.multiselect-button:hover{
+    height:54px; 
+    line-height: 1.33; 
+    font-size: 16px; 
+    border-radius: 0px;
+    border-color: gray;
+    background-color: white;
+    background-image: none;
+    color: black;
+}
+.search-input-group{
+    padding: 7px 0px 7px 0px
+}
+

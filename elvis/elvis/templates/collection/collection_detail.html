@@ -21,8 +21,8 @@
             </tr>
         </thead>
     </table>
-    <div style="max-height: 400px; width: 100%; margin: 0; overflow-y: scroll;">
-    <table class="table table-condensed table-hover" style="margin: 0; padding: 0;">
+    <div class="detail-table-wrapper collection">
+    <table class="table table-condensed table-hover detail-table">
         <tbody>
             {% for piece in content.pieces %}
                 <tr>
@@ -52,8 +52,8 @@
             </tr>
         </thead>
     </table>
-    <div style="max-height: 400px; width: 100%; margin: 0; overflow-y: scroll;">
-    <table class="table table-condensed table-hover" style="margin: 0; padding: 0;">
+    <div class="detail-table-wrapper collection">
+    <table class="table table-condensed table-hover detail-table">
         <tbody>
             {% for movement in content.movements %}
                 {% if not movement.piece.title in content.pieces %} 

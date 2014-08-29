@@ -12,8 +12,13 @@
     <dl class="dl-horizontal">
         <dt>Composer</dt>
         <dd><a href="{{ content.composer.url }}">{{ content.composer.name }}</a></dd>
+        {% if content.date_of_composition  == content.date_of_composition2 %} 
         <dt>Date of Composition</dt>
-        <dd>{{ content.date_of_composition | date:"Y"}}</dd>
+        <dd>{{ content.date_of_composition | date:"Y"}}</dd> 
+        {% else %}
+        <dt>Dates of Composition</dt>
+        <dd>{{ content.date_of_composition | date:"Y"}}-{{ content.date_of_composition2 | date:"Y" }} </dd> 
+        {% endif %}
         <dt>Collections</dt>
         {% for collection in content.collections %}
             <dd><a href="{{collection.url}}">{{ collection.title }}</a></dd>
@@ -27,7 +32,7 @@
         <dt>Tags</dt>
         <dd>
             {% for tag in content.tags %}
-                <a href="{{ tag.url }}" class="label label-primary" style="border-radius:4px;">{{tag.name}} </a> &nbsp;
+                <a href="{{ tag.url }}" class="label label-primary rounded">{{tag.name}} </a> &nbsp;
             {% endfor %}
         </dd>
     </dl>
