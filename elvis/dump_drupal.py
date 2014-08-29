@@ -322,6 +322,7 @@ class DumpDrupal(object):
                 x = Piece(**p)
 
             elif rettype == "movement":
+                p.update({'piece': parent_obj})
                 x = Movement(**p)
                 
             
