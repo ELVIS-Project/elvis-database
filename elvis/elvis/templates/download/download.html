@@ -2,6 +2,15 @@
 
 
 {% block wrap %}
+<script type="text/javascript">
+    var e = document.getElementById('select-elvis');
+    e.onmouseover = function() {
+      document.getElementById('select-help').style.display = 'block';
+    }
+    e.onmouseout = function() {
+      document.getElementById('select-help').style.display = 'none';
+    }
+</script>
 <div class="page-header">
     <h2>Your Downloads </h2>
 </div>
@@ -18,7 +27,6 @@
                         <th>File Name </th>
                         <th>Composer</th>
                         <th>Type</th>
-                        <!--<th>Delete</th>-->
                     </tr>
                 </thead>
                 <tbody>
@@ -34,9 +42,6 @@
                                 <td> {{ attachment.file_name }} </td>
                                 <td><a href="{{ piece.composer.url }}">{{ piece.composer.name }}</a></td>
                                 <td><span class="label label-success">Piece</span></td>
-                                <!--<td class="danger">
-                                    {% include "includes/delete-badge-inc.html" %}
-                                </td>-->
                             {% endfor %}
                             {% for mvmt in attachment.movements %}
                                 <td>
@@ -46,9 +51,6 @@
                                 <td> {{ attachment.file_name }} </td>
                                 <td><a href="{{ mvmt.composer.url }}">{{ mvmt.composer.name }}</a></td>
                                 <td><span class="label label-info">Movement</span></td>
-                               <!-- <td class="danger">
-                                    {% include "includes/delete-badge-inc.html" %}
-                                </td> -->
                             {% endfor %}
                         </tr>
                     {% empty %}
@@ -62,14 +64,19 @@
             </table>
             <script type="text/javascript">
             // From http://stackoverflow.com/questions/386281/how-to-implement-select-all-check-box-in-html
-                $('#select-all').click(function(event) {
-                    if(this.checked) {
-                        $('.checkable').each(function() {
+                $('#select-all').click(function(event) 
+                {
+                    if(this.checked) 
+                    {
+                        $('.checkable').each(function() 
+                        {
                             this.checked = true;
                         });
                     }
-                    else {
-                        $('.checkable').each(function() {
+                    else 
+                    {
+                        $('.checkable').each(function() 
+                        {
                             this.checked = false;
                         });
                     }
@@ -115,15 +122,7 @@
             
             <div id="select-help" style="display: none" class="help-block"> This will find the file best formatted for the ELVIS Web App in each piece or movement, and remove everything else regardless of which files or file types you have selected above. Formats incompatible with Music21 will be removed. </div>
 
-            <script type="text/javascript">
-            var e = document.getElementById('select-elvis');
-            e.onmouseover = function() {
-              document.getElementById('select-help').style.display = 'block';
-            }
-            e.onmouseout = function() {
-              document.getElementById('select-help').style.display = 'none';
-            }
-            </script>
+            
             <p></p>
         </div>
         {% endif %}
@@ -133,27 +132,6 @@
 <p></p>
 </div>
 
-
-
-
-    <!-- LM: TODO move elsewhere 
-    <div class="col-md-0">
-        <h4>Download History</h4>
-        <table class="table table-condensed">
-            <thead>
-                <tr>
-                    <th></th>
-                </tr>
-            </thead>
-            <tbody>
-                {% for download in user.downloads.items %}
-                    <tr>
-                        <td>{{ download.created }}</td>
-                    </tr>
-                {% endfor %}
-            </tbody>
-        </table>
-    </div> -->
 
 
 {% endblock %}

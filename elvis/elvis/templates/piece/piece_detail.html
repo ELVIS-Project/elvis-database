@@ -5,7 +5,6 @@
     <h2>{{ content.title }}</h2>
     <p><span class="label label-primary">Piece</span> Created by {{ content.uploader.username }} on {{ content.created | date:"d F Y" }}. Last updated on {{ content.updated | date:"d F Y" }}.</p>
     <p>Comments: {% autoescape off %}{{ content.comment }}{% endautoescape %}</p>
-    <!--{% include "includes/download-badge-inc.html" with download_type="piece" download_item_id=content.item_id title="Add to Downloads" %} -->
 
 </div>
 
@@ -37,7 +36,7 @@
         <h3>Available Attachments</h3>
         <table class="table table-condensed">
         <!-- Attachments & Form -->
-        <form id="patch-download-form" action="/patchdownloads/" method="post">
+        <form id="patch-download-form" action="/downloads/" method="post">
         {% csrf_token %}
         <dd>
                 <tr>
@@ -47,7 +46,6 @@
                 {% for attachment in content.attachments %}
                 <tr>
                     <td>
-                        <!-- LM: Having the strangest problems with accessing the id of attachment -->
                     <input type="checkbox" name="a_ids" value="{{ attachment.id }}" checked="true">
                     </td>
                     <td>

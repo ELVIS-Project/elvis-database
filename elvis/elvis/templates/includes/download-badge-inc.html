@@ -1,5 +1,5 @@
 {% if user.is_authenticated %}
-<form class="recursive-patch-download-form" id="recursive-patch-download-form" action="/rpatchdownloads/" method="post" style="display: inline;">
+<form class="recursive-patch-download-form" id="recursive-patch-download-form" action="/downloads/" method="post" style="display: inline;">
         {% csrf_token %}
     <button type="submit" class="btn btn-mini btn-success" data-container="body" data-toggle="tooltip" data-placement="left" title="Add all files associated with this item to your downloads cart." ><span class="glyphicon glyphicon-plus"> </span> </button>
 
@@ -12,7 +12,8 @@
 <script type="text/javascript">
     var inputs = document.getElementsByClassName('this_url');
 
-    for(i = 0; i < inputs.length; i++){
+    for(i = 0; i < inputs.length; i++)
+    {
       inputs[i].value = window.location.href;
     }
 

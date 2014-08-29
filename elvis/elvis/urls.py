@@ -22,9 +22,6 @@ from elvis.views.collection import CollectionList, CollectionDetail
 from elvis.views.tag import TagList, TagDetail
 from elvis.views.attachment import AttachmentList, AttachmentDetail
 
-#views for forms
-from elvis.views.forms import patch_downloads, recursive_patch_downloads
-
 # Uncomment the next two lines to enable the admin:
 from django.contrib import admin
 admin.autodiscover()
@@ -46,20 +43,9 @@ urlpatterns += format_suffix_patterns(
 
         url(r'^downloads/$', DownloadDetail.as_view(), name="download-detail"),
         url(r'^downloading/$', Downloading.as_view(), name="downloading"),
-        url(r'^patchdownloads/$',  patch_downloads, name="patch-downloads"),
-        url(r'^rpatchdownloads/$',  recursive_patch_downloads, name="recursive-patch-downloads"),
-
-        # LM: Old views
-        #url(r'^user-profiles/$', UserProfileList.as_view(), name="userprofile-list"),
-        #url(r'^user-profile/(?P<pk>[0-9]+)/$', UserProfileDetail.as_view(), name="userprofile-detail"),
-        #url(r'^projects/$', ProjectList.as_view(), name="projects-list"),
-        #url(r'^project/(?P<pk>[0-9]+)/$', ProjectDetail.as_view(), name="project-detail"),
 
         url(r'^pieces/$', PieceList.as_view(), name="piece-list"),
         url(r'^piece/(?P<pk>[0-9]+)/$', PieceDetail.as_view(), name="piece-detail"),
-
-        #url(r'^corpora/$', CorpusList.as_view(), name="corpus-list"),
-        #url(r'^corpus/(?P<pk>[0-9]+)/$', CorpusDetail.as_view(), name="corpus-detail"),
 
         url(r'^collections/$', CollectionList.as_view(), name="collection-list"),
         url(r'^collection/(?P<pk>[0-9]+)/$', CollectionDetail.as_view(), name="collection-detail"),
@@ -73,45 +59,15 @@ urlpatterns += format_suffix_patterns(
         url(r'^attachments/$', AttachmentList.as_view(), name="attachment-list"),
         url(r'^attachment/(?P<pk>[0-9]+)/$', AttachmentDetail.as_view(), name="attachment-detail"),
 
-        # LM Old tag list view
-        #url(r'^tags/$', TagList.as_view(), name="tag-list"),
-
         url(r'^tag/(?P<pk>[0-9]+)/$', TagDetail.as_view(), name="tag-detail"),
 
         url(r'^about/', about, name='about'),
-
-        # LM Added urls for create_* views.... why are there add* urls as well?
-        #url(r'^upload/corpus/$', create_corpus_large, name="create-corpus-large"),
-        #url(r'^upload/piece/$', create_piece, name="create-piece"),
-        #url(r'^upload/movement/$', create_movement, name="create-movement"),
-        #url(r'^upload/project/$', create_project, name="create-project"),
-        # LM Won't need this with embedded search results in search
-        # url(r'^search_results/$', search_view, name="search_results"),
-        
-        # LM Old views
-        #url(r'^upload/$', upload_file, name="upload"),
-        #url(r'^queries/$', queries, name="queries"),
-        #url(r'^addcomposer/$', create_composer, name="create-composer"),
-        #url(r'^addcorpus/$', create_corpus, name="create-corpus"),
-
-        # LM New upload views
-        #url(r'^temp/$', temp, name='temp'),
-        #url(r'^temp2/$', temp2, name='temp2'),
-
-        # url(r'^(?P<entity>[a-z_]+)/(?P<pk>[0-9]+)/delete/', delete_model, name="delete-model"),
-
-        # url(r'^downloads/$', download_list, name="download-list"),
-        #url(r'^downloads/$', DownloadList.as_view(), name="download-list"),
-        #url(r'^download/(?P<pk>[0-9]+)/$', DownloadDetail.as_view(), name="download-detail"),
-        #url(r'^download/$', save_downloads, name="save_downloads"),
-        #url(r'^download/$', DownloadList.as_view(), name="download-list"),
 
         (r'^media/(?P<path>.*)$', 'django.views.static.serve', {'document_root': settings.MEDIA_ROOT}),
     )
 )
 
 # Serving static files
-#urlpatterns += staticfiles_urlpatterns()
 
 # Media stuff
 urlpatterns += patterns('', 
@@ -127,49 +83,3 @@ if 'django.contrib.admin' in settings.INSTALLED_APPS:
     urlpatterns += patterns('',
         url(r'^admin/', include(admin.site.urls)),
     )
-
-
-# For serving stuff under MEDIA_ROOT in debug mode only
-# if settings.DEBUG:
-#     urlpatterns += static.static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
-
-
-
-####
-# from elvis.views.main import home
-# from elvis.views.main import upload
-# from elvis.views.main import save_downloads
-# from elvis.views.main import user_profiles, user_view
-# from elvis.views.main import projects_list, project_view, project_participants, project_discussions, discussion_view
-# from elvis.views.main import search_view, queries
-# from elvis.views.main import corpora_list, corpora_list_min, corpus_view
-# from elvis.views.main import composer_list, composer_list_min, composer_view
-# from elvis.views.main import piece_list, piece_view
-# from elvis.views.main import movement_list, movement_view
-# from elvis.views.main import download_list
-
-# from elvis.views.forms import create_composer, create_corpus, create_corpus_large, create_project
-# from elvis.views.forms import create_piece, create_movement
-# from elvis.views.forms import upload_file, delete_model
-# from elvis.views.forms import download_piece, save_piece, download_movement, save_movement
-
-# url(r'^userprofiles/$', user_profiles, name="userprofile-list"),
-# url(r'^userprofiles/(?P<pk>[0-9]+)/$', user_view, name="userprofile-detail"),
-# url(r'^projects/$', projects_list, name="projects-list"),
-# url(r'^projects/(?P<pk>[0-9]+)/$', project_view, name="project-detail"),
-# url(r'^projects/(?P<pk>[0-9]+)/participants$', project_participants, name="project-participants"),
-# url(r'^projects/(?P<pk>[0-9]+)/discussions$', project_discussions, name="project-discussions"),
-# url(r'^projects/(?P<pk>[0-9]+)/discussions/(?P<did>[0-9]+)$', discussion_view, name="project-discussions"),
-
-# url(r'^pieces/$', piece_list, name="piece-list"),
-# url(r'^pieces/(?P<pk>[0-9]+)/$', piece_view, name="piece-detail"),
-# url(r'^corpora/$', corpora_list, name="corpus-list"),
-# url(r'^corporamin/$', corpora_list_min, name="corpus-list-min"),
-# url(r'^corpora/(?P<pk>[0-9]+)/$', corpus_view, name="corpus-detail"),
-# url(r'^composers/$', composer_list, name="composer-list"),
-# url(r'^composersmin/$', composer_list_min, name="composer-list-min"),
-# url(r'^composers/(?P<pk>[0-9]+)/$', composer_view, name="composer-detail"),
-# url(r'^movements/$', movement_list, name="movement-list"),
-# url(r'^movements/(?P<pk>[0-9]+)/$', movement_view, name="movement-detail"),
-
-

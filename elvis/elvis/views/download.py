@@ -1,6 +1,4 @@
 # LM: TODO lots of cleaning up; make modular methods
-
-
 from rest_framework import generics
 from rest_framework import permissions
 from rest_framework import status
@@ -12,7 +10,6 @@ from django.views.decorators.http import require_http_methods
 from django.views.decorators.csrf import csrf_protect
 from django.conf import settings
 
-from django.core.files import File
 from django.core.servers.basehttp import FileWrapper
 
 from celery.result import AsyncResult
@@ -34,6 +31,7 @@ from elvis.models.download import Download
 from elvis.models.piece import Piece
 from elvis.models.movement import Movement
 from elvis.models.attachment import Attachment
+from elvis.models.collection import Collection
 
 from django.core.exceptions import ObjectDoesNotExist
 
@@ -100,6 +98,83 @@ class DownloadDetail(generics.RetrieveUpdateAPIView):
 
         d = DownloadSerializer(dlobj).data
         return Response(d)
+
+    # Method to alter user's download object based on a singular attachment id
+    def _patch_downloads(self, request):
+        if not request.user.is_authenticated():
+            raise Http404
+        user_download = request.user.downloads.all()[0]
+        add_attachments = request.POST.getlist('a_ids')
+
+        #add_attachments is a list of ids
+        for a in add_attachments:
+            a_object = Attachment.objects.filter(pk=a).all()[0]
+            user_download.attachments.add(a_object)
+
+        user_download.save()
+        return HttpResponseRedirect(request.POST.get('this_url'))
+
+    # Method to help recursive-alteration of user's download object
+    def _download_helper(self, item, user_download):
+        if hasattr(item, 'attachments') and not item.attachments is None:
+            for a_object in item.attachments.all():
+                user_download.attachments.add(a_object)
+            user_download.save()
+        if hasattr(item, 'pieces') and not item.pieces is None:
+            for piece in item.pieces.all():
+                self._download_helper(piece, user_download)
+        if hasattr(item, 'movements') and not item.movements is None:
+            for movement in item.movements.all():
+                self._download_helper(movement, user_download)
+
+    # Choose the right model based on request, again to help recursive-patching
+    def _type_selector(self, item_type, item_id, user_download):
+        if item_type == "elvis_movement":
+            item = Movement.objects.filter(pk=item_id).all()[0]
+        elif item_type == "elvis_piece":
+            item = Piece.objects.filter(pk=item_id).all()[0]
+        elif item_type == "elvis_composer":
+            item = Composer.objects.filter(pk=item_id).all()[0]
+        elif item_type == "elvis_collection":
+            item = Collection.objects.filter(pk=item_id).all()[0]
+        elif item_type == "elvis_tag":
+            item = Tag.objects.filter(pk=item_id).all()[0]
+        else:
+            raise TypeError("Item type '"+ item_type +"' passed not found in database.")
+
+        self._download_helper(item, user_download)
+
+    # Recursive version of the flat-downloads
+    def _recursive_patch_downloads(self, request):
+        if not request.user.is_authenticated:
+            raise Http404
+        user_download = request.user.downloads.all()[0]
+        this_url = request.POST.get('this_url')
+
+        # If we are saving all the attachments in the search results
+        if request.POST.get("search_query"):
+            from django.test.client import RequestFactory
+            # Make a dummy get request (because we're requerying without pagination)
+            dummy_request = RequestFactory().get(request.POST.get("search_query") + "&rows=20000000")
+            s = SolrSearch(dummy_request)
+            search_results = s.search()
+            for result in search_results.results:
+                self._type_selector(result.get("type"), result.get("item_id"), user_download)
+        else:
+            item_type = request.POST.getlist('item_type')
+            item_id = request.POST.getlist('item_id')
+            for i in range(len(item_type)):
+                self._type_selector(item_type[i], item_id[i], user_download)
+            
+        return HttpResponseRedirect(this_url)
+
+    @method_decorator(csrf_protect)
+    def post(self, request, *args, **kwargs):
+        # If attachment ids are sent in via request, then add attachments to downloads
+        # Else recursively add all children attachments to downloads
+        if request.POST.get('a_ids'):
+            return self._patch_downloads(request)
+        return self._recursive_patch_downloads(request)
 
 # LM: New view 2, was original view but updated with post-only view below
 class Downloading(APIView):
@@ -192,8 +267,6 @@ class Downloading(APIView):
                 #print(fileExt)
                 if ((fileExt in extensions) or ((not (fileExt in default_exts)) and others_check)):
                     files.append(item)
-                else:
-                    pass
 
             # Call celery tasks with our parsed files
             zip_task = tasks.zip_files.delay(files, request.user.username)
