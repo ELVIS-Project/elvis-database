@@ -140,3 +140,6 @@ html, body {
 .facet-list{
     list-style: none;
 }
+.results-intermediate-buttons{
+    padding-bottom:10px;
+}

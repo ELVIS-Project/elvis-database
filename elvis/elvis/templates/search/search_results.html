@@ -109,7 +109,8 @@
 <div class="row">
     <div class="col-md-9">
         <h3> Results: </h3>
-       
+        
+        <div class="results-intermediate-buttons">
         {% if user.is_authenticated %}
         <form id="all-patch-download-form" action="/downloads/" method="post">
             {% csrf_token %}
@@ -121,7 +122,7 @@
               document.getElementById("search_query").value = window.location.href;
             </script>
 
-            <button type="submit" id="all_download" onClick="return confirm('Are you sure you want to recursively add all results to your downloads?\nWarning: use with caution -- this may add undesired items!')" class="btn btn-success btn-sm pull-right" >
+            <button type="submit" id="all-download" onClick="return confirm('Are you sure you want to recursively add all results in this query to your downloads?\nWarning: use with caution -- this may add undesired items!')" class="btn btn-success btn-sm pull-right" >
               Add All Results in Current Query to Downloads <span class="glyphicon glyphicon-plus"></span> 
             </button> 
         </form>
@@ -129,10 +130,10 @@
 
         
 
-        <form id="list-patch-download-form" action="/downloads/" method="post" >
+        <form id="page-patch-download-form" action="/downloads/" method="post" >
           {% csrf_token %}
           
-            <button type="submit" id="list_download"  class="btn btn-success btn-sm pull-middle" >
+            <button type="submit" id="page-download"  class="btn btn-success btn-sm pull-middle" >
               Add Results on Current Page to Downloads <span class="glyphicon glyphicon-plus"></span> 
             </button> 
 
@@ -147,8 +148,8 @@
             <input type="hidden" class="this_url" name="this_url"  value="" />
         </form> 
         {% endif %}
+        </div>
       
-      <p></p>
 
 
         <div class="list-group" >
@@ -225,13 +226,12 @@
 
     <div class="col-md-3">
 
-        <div class="row">
+        <div class="row results-intermediate-buttons">
             <h3>Narrow Your Search:</h3> 
             <button id="collapse-init" class="btn btn-primary btn-sm">
                 Hide Facets
             </button>
             <input type="text" class="facet-search pull-right" id="facet-search" placeholder="Look for a Facet">
-            <p></p>
         </div>
 
 
