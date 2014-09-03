@@ -5,14 +5,6 @@
 <!-- TODO faceted/filtered search -->
 {% if content.results %}
 
-<style type="text/css">
-
-.panel-body.facets {
-   overflow-y: scroll;
-   max-height: 160px;
-}
-
-</style>
 <script type='text/javascript' src='{{STATIC_URL}}js/jquery.scrollTo.min.js'></script>
 <script type="text/javascript"> 
     // this code manages the facet collapse
@@ -238,7 +230,7 @@
             <button id="collapse-init" class="btn btn-primary btn-sm">
                 Hide Facets
             </button>
-            <input type="text" class="facet-search pull-right" id="facet-search" style="text-align:center; height:30px;" placeholder="Look for a Facet">
+            <input type="text" class="facet-search pull-right" id="facet-search" placeholder="Look for a Facet">
             <p></p>
         </div>
 
@@ -247,8 +239,8 @@
             {% for name, facets in content.facets.facet_fields.items %}
             {% if facets %}
             <div class="panel panel-default">
-                    <div class="panel-heading facets" style="height:50%;">
-                        <h1 class="panel-title" data-toggle="collapse" data-target="#collapse-{{name}}" style="font-size:100%;"> 
+                    <div class="panel-heading facets">
+                        <h1 class="panel-title facets" data-toggle="collapse" data-target="#collapse-{{name}}"> 
                             {{ content.FACET_NAMES|get_value:name }}  
                         </h1>
                     </div>
@@ -256,8 +248,8 @@
                     <div id="collapse-{{name}}" class="panel-collapse collapse facets in">
                         <div class="panel-body facets" id="facet-panel-{{name}}">
                                 {% for facet, count in facets %}
-                                    <li style="list-style: none;">
-                                        <div id="facet-container-{{facet}}" style="white-space:nowrap;">
+                                    <li class="facet-list">
+                                        <div id="facet-container-{{facet}}" class="facet-wrapper">
                                             <input type="checkbox" class="facet-link" data-facet-name="{{ name }}" data-facet-value="{{ facet }}" id="facet-link-{{facet}}-{{name}}">
                                             <label class="facet-label" for="facet-link-{{ facet }}-{{name}}"> {% if name == 'type' %} {{ content.TYPE_NAMES|get_value:facet }} {% else %} {{ facet }} {% endif %}  ({{ count }})
                                             </label>

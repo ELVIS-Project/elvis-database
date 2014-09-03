@@ -18,8 +18,8 @@
             </tr>
         </thead>
     </table>
-    <div style="max-height: 650px; width: 100%; margin: 0; overflow-y: scroll;">
-    <table class="table table-condensed" style="margin: 0; padding: 0;">
+    <div class="detail-table-wrapper tags">
+    <table class="table table-condensed detail-table">
         <tbody>
             {% for piece in content.pieces %}
                 <tr >
@@ -30,27 +30,7 @@
                 {% if piece.movements %}
                 <tr>
                     <td width="100%" colspan="2" style="border: 0;">
-                    <div class="btn-group" style="width:95%;">
-                        <button class="btn btn-xs dropdown-toggle" data-toggle="collapse" data-target="#movements-piece-{{ forloop.counter }}" style="text-align:left; width:100%; border-width:1px; border-color: white; background-color: white;">Movements ({{ piece.movements | length }}) <span class="caret"></span></button>
-                    </div>
-                    <div id="movements-piece-{{ forloop.counter }}" class="collapse collapsed" style="border-width:1px; border-style: solid; border-color: grey; width:95%;">
-                        <table class="table table-condensed table-hover">
-                            <thead>
-                                <tr>
-                                    <th></th>
-                                    <th>Movement Name</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                {% for movement in piece.movements %}
-                                    <tr>
-                                        <td class="small-column">{% include "includes/download-badge-inc.html" with download_type="elvis_movement" download_item_id=movement.item_id %}</td>
-                                        <td><a href="{{ movement.url }}">{{ movement.title }}</a></td>
-                                    </tr>
-                                {% endfor %}
-                            </tbody>
-                        </table>
-                    </div>
+                    {% include "includes/movement-dropdown.html" with piece=piece %}
                     </td>
                 </tr>
                 {% endif %} 

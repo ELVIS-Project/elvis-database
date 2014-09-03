@@ -25,7 +25,7 @@
             nSelectedText: 'Selected Types',
             templates: 
             {
-                button: '<button type="button" class="btn btn-default btn-lg multiselect-button" data-toggle="dropdown"></button>',
+                button: '<button type="button" class="btn btn-lg multiselect-button" data-toggle="dropdown"></button>',
             },
             buttonText: function(options, select) 
             {
@@ -59,7 +59,7 @@
             checkboxName: 'sortby',
             templates: 
             {
-                button: '<button type="button" class="btn btn-default btn-lg multiselect-button" data-toggle="dropdown"></button>',
+                button: '<button type="button" class="btn btn-lg multiselect-button" data-toggle="dropdown"></button>',
             },
         });
     });
@@ -122,10 +122,10 @@
     <h2>Search the Database</h2>
 </div>
 
-<div class="row col-12" style="background-color: #ffffff; -webkit-box-shadow: 0 1px 1px rgba(0, 0, 0, 0.05); box-shadow: 0 1px 1px rgba(0, 0, 0, 0.05);">
+<div class="row " >
     <!-- Tabs bar -->
 
-        <ul class="nav nav-tabs nav-justified" style=>
+        <ul class="nav nav-tabs nav-justified">
 
             <li class="active"><a href="#gsearch" data-toggle="tab"><h4>General Search</h4></a></li>
 
@@ -143,22 +143,19 @@
         <div class="tab-pane fade in active" id="gsearch">
         
             <!-- Accordion -->
-            <div class="panel-body" style="margin-bottom: 15px; margin-top:25px; ">
+            <div class="panel-body gsearch">
                 <form id="general-search-form" action="/search" method="get">
                     <!-- Query Entry -->
                     <div class="row">
 
                         <div class="input-group input-group-lg col-md-8 col-md-offset-2">
-                                <input type="text" class="form-control search" name="q"  style="text-align:center; height:70px;">
-                                <span class="input-group-btn" style="width:160px;">
-                                    <button class="btn btn-default submit" type="button" id="gsearch-submit" style="height:70px; width:160px;"> Search <span class="glyphicon glyphicon-search"></span> </button>
+                                <input type="text" class="form-control gsearch" name="q"  >
+                                <span class="input-group-btn">
+                                    <button class="btn btn-default submit" type="button" id="gsearch-submit"> Search <span class="glyphicon glyphicon-search"></span> </button>
                                 </span>
-                        </div><!-- /input-group -->
+                        </div>
                
                     </div>
-
-
-                    <!-- Filters --> 
                 </form>
             </div>
 
@@ -180,7 +177,7 @@
                     <div class="input-group input-group-lg search-input-group" >
                         <span class="input-group-addon lg">Search Query</span>
                         <input type="text" class="form-control" name="q" placeholder="Byrd Hornpipe" >
-                        <span class="input-group-addon" data-toggle="tooltip" data-container="body" data-placement="right" data-html='true' title="This searches across the <em>textual content of all entities </em> in the database for matches with the queried terms. The default operator is AND." >
+                        <span class="input-group-addon" data-toggle="tooltip" data-container="body" data-placement="right" data-html='true' title="This searches across the <em>textual content and metadata of all entities </em> in the database for matches with the queried terms. The default operator is AND." >
                             <span class="glyphicon glyphicon-info-sign"></span>
                         </span> 
                     </div>
@@ -339,7 +336,7 @@
 
                 <!-- Submit -->
                     <div class="col-lg-12 text-center">
-                        <button type="button" class="btn btn-default btn-lg submit" id="asearch-submit" style="height:90px; width:200px; font-size:30px">
+                        <button type="button" class="btn btn-default btn-lg submit" id="asearch-submit">
                             Search
                             <span class="glyphicon glyphicon-search"></span> 
                         </button>
@@ -370,12 +367,10 @@
 
 </body>
 
-<div class="row col-12">
-
-
+<div class="row">
 {% if content.current_query %}
 
- {% include "search/search_results.html" %}
+    {% include "search/search_results.html" %}
 
 {% endif %}
 </div>
