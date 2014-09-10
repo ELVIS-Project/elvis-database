@@ -1,18 +1,18 @@
 from rest_framework import serializers
-from elvis.models.tag import Tag
+from elvis.models.location import Location
 from elvis.models.movement import Movement
 from elvis.models.piece import Piece
 from elvis.models.composer import Composer
 from elvis.serializers.piece import PieceSerializer
 
-class TagComposerSerializer(serializers.HyperlinkedModelSerializer):
+class LocationComposerSerializer(serializers.HyperlinkedModelSerializer):
     item_id = serializers.Field("pk")
 
     class Meta:
         model = Composer
         fields = ("url", "name", "item_id")
 
-class TagMovementSerializer(serializers.HyperlinkedModelSerializer):
+class LocationMovementSerializer(serializers.HyperlinkedModelSerializer):
     item_id = serializers.Field("pk")
 
     class Meta:
@@ -20,9 +20,9 @@ class TagMovementSerializer(serializers.HyperlinkedModelSerializer):
         fields = ('url', 'title', "item_id")
 
 
-class TagPieceSerializer(serializers.HyperlinkedModelSerializer):
-    movements = TagMovementSerializer()
-    composer = TagComposerSerializer()
+class LocationPieceSerializer(serializers.HyperlinkedModelSerializer):
+    movements = LocationMovementSerializer()
+    composer = LocationComposerSerializer()
     item_id = serializers.Field("pk")
 
     class Meta:
@@ -30,9 +30,9 @@ class TagPieceSerializer(serializers.HyperlinkedModelSerializer):
         fields = ('url', 'title', 'movements', "item_id", "date_of_composition", "composer")
 
 
-class TagSerializer(serializers.HyperlinkedModelSerializer):
-    pieces = TagPieceSerializer()
+class LocationSerializer(serializers.HyperlinkedModelSerializer):
+    pieces = LocationPieceSerializer()
 
     class Meta:
-        model = Tag
-        fields = ('pieces', 'description', 'name')
+        model = Location
+        fields = ('pieces', 'comment', 'name')
