@@ -33,6 +33,9 @@ from elvis.models.movement import Movement
 from elvis.models.attachment import Attachment
 from elvis.models.collection import Collection
 from elvis.models.tag import Tag
+from elvis.models.composer import Composer
+
+from elvis.helpers.solrsearch import SolrSearch
 
 from django.core.exceptions import ObjectDoesNotExist
 
@@ -265,7 +268,6 @@ class Downloading(APIView):
             files = []
             for item in items:
                 fileName, fileExt = os.path.splitext(item)
-                #print(fileExt)
                 if ((fileExt in extensions) or ((not (fileExt in default_exts)) and others_check)):
                     files.append(item)
 
