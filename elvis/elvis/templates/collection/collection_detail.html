@@ -8,7 +8,7 @@
 </div>
 
 <div class="row">
-    <h3>Pieces</h3>
+    <h3>Pieces ({{ content.pieces | length }})</h3>
 </div> 
 
 <div class="row">
@@ -30,6 +30,13 @@
                     <td width="23%"><a href="{{ piece.composer.url }}">{{ piece.composer.name }}</a></td>
                     <td width="9%">{{ piece.date_of_composition | date:"Y"}}</td>
                 </tr>
+                {% if piece.movements %}
+                <tr>
+                    <td width="100%" colspan="2" style="border: 0;">
+                    {% include "includes/movement-dropdown.html" with piece=piece %}
+                    </td>
+                </tr>
+                {% endif %} 
             {% endfor %}
         </tbody>
     </table>
@@ -37,7 +44,7 @@
 </div>
 
 <div class="row">
-    <h3>Movements</h3> 
+    <h3>Movements ({{ content.movements | length }})</h3> 
 </div> 
 
 <div class="row">

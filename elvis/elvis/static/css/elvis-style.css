@@ -27,23 +27,21 @@ html, body {
     border-radius:4px;
 }
 /* Detail & List templates */
+.detail-table-wrapper{
+    max-height: 600px;
+    width: 100%; 
+    margin: 0; 
+    overflow-y: scroll;
+    padding-bottom: 0px;
+}
 .detail-table-wrapper.collection {
     max-height: 400px; 
-    width: 100%; 
-    margin: 0; 
-    overflow-y: scroll;
 }
 .detail-table-wrapper.composer {
-    max-height: 600px; 
-    width: 100%; 
-    margin: 0; 
-    overflow-y: scroll;
+    max-height: 600px;
 }
 .detail-table-wrapper.tags {
-    max-height: 600px; 
-    width: 100%; 
-    margin: 0; 
-    overflow-y: scroll;
+    max-height: 400px;
 }
 .detail-table {
     margin: 0; 
