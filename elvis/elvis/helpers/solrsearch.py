@@ -103,16 +103,19 @@ class SolrSearch(object):
             # Logic: We want start date to be any time before 2nd search date, and end date to be any time after 1st search date
             # However, we want things that have start and end dates between the two search dates to be ordered first -- thus the 
             # ^2 weighting.
-            elif k == 'datefiltf' or k == 'datefiltt':
-                if qdict.get('datefiltf') == "" or qdict.get('datefiltf') is None:
+            elif k == 'datefiltf' or k == 'datefiltt' or k == 'strictdates':
+                if qdict.get('datefiltf') is None or qdict.get('datefiltf').replace(" ", "") in ["", "*"]:
                     from_date = " * "
                 else:
                     from_date = u" {0}-00-00T00:00:00Z ".format(qdict.get('datefiltf'))
-                if qdict.get('datefiltt') == "" or qdict.get('datefiltt') is None:
+                if qdict.get('datefiltt') is None or qdict.get('datefiltt').replace(" ", "") in ["", "*"]:
                     to_date = " * "
                 else:
                     to_date = u" {0}-12-31T23:59:59Z ".format(qdict.get('datefiltt'))
-                date_filt_query = "(date_general: [{0} TO {1}] AND date_general2: [{2} TO {3}])^2 OR (date_general: [ * TO {4}] AND date_general2:[{5} TO * ])".format(from_date, to_date, from_date, to_date, to_date, from_date)
+                if not qdict.get('strictdates') is None:
+                    date_filt_query = "(date_general: [{0} TO {1}] AND date_general2: [{2} TO {3}])".format(from_date, to_date, from_date, to_date)
+                else:
+                    date_filt_query = "(date_general: [{0} TO {1}] AND date_general2: [{2} TO {3}])^2 OR (date_general: [ * TO {4}] AND date_general2:[{5} TO * ])".format(from_date, to_date, from_date, to_date, to_date, from_date)
 
             # LM: elif for Tag filtration
             elif k == 'tagfilt':
