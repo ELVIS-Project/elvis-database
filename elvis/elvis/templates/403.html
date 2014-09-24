@@ -2,7 +2,9 @@
 
 {% block wrap %}
 
-<h3> 403: Forbidden </h3>
+<div class="page-header">
+    <h2>403: Forbidden</h2>
+</div>
 
 <p> Sorry, you don't have permission to be here! Have you enabled cookies? {% if not user.is_authenticated %} Have you <a href="/login" id="nologin"> logged in</a>?  {% endif %} </p>
 
