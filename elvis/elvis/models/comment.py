@@ -82,3 +82,5 @@ def solr_delete(sender, instance, **kwargs):
     if record:
         # the record already exists, so we'll remove it.
         solrconn.delete(record.results[0]['id'])
+        solrconn.commit()
+        
