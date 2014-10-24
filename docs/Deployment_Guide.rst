@@ -384,7 +384,14 @@ Populate Database
 -----------------
 Prepare sql dump files, and elvis attachment files
 
-Install mariaDB, and import the dump files to their respective databases
+Install mariaDB
+    $ sudo yum install mariadb
+    $ sudo yum install mariadb-server
+
+Start mariadb.service from systemctl
+
+Import the dump files to their respective databases
+
 
 Run dump_drupal.py as root (sudo -i, activate environment, then python dump_drupal.py)
 
@@ -425,7 +432,7 @@ Celery Service for Downloads using Supervisord
 --------------------––––––––------------------
 
 Install supervisord package
-    sudo yum install supervisord
+    sudo yum install supervisor
 
 Make celery_start.sh script in elvis_database to
     1. start virtual environment
@@ -446,8 +453,11 @@ Make celery_start.sh script in elvis_database to
     # Run your worker... old: exec celery worker -A elvis -l DEBUG --loglevel=INFO 
     exec celery worker -A elvis --pidfile="/run/celery/%n.pid"
 
+If the aformentioned pid file is saved in /run/celery/, make sure that the directory exists and has been chowned to celery:celery.
 
 Make a user: celery with usergroup celery. It should have /sbin/nologin for its shell
+    $ groupadd celery
+    $ useradd -s /sbin/nologin -g celery -d /usr/share/celery celery 
 
 Edit /etc/supervisord.conf to include a celery 'programme' to supervise. It should have the following things (replace accordingly for celery_beat_start.sh):
     [program:elvis-celery]
@@ -464,12 +474,11 @@ Edit /etc/supervisord.conf to include a celery 'programme' to supervise. It shou
     stdout_logfile_maxbytes=50MB
     killasgroup=true
 
-
 Make sure that the prority for rabbitmq is higher than supervisord on startup
 
 Celery will attempt to write into MEDIA_ROOT/user_downloads. If that directory doesn't exist, celery would probably not be able to write into MEDIA_ROOT. This is because MEDIA_ROOT is owned by Django. So, mkdir /user_downloads and chown celery:celery.
 
-
+Ensure that the celery directories in /var/log, /var/lib, and /run/ are all chowned properly.
 
 
 
