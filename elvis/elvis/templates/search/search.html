@@ -122,18 +122,18 @@
     <h2>Search the Database</h2>
 </div>
 
-<div class="row " >
+<div class="row">
     <!-- Tabs bar -->
 
-        <ul class="nav nav-tabs nav-justified">
+    <ul class="nav nav-tabs nav-justified">
 
-            <li class="active"><a href="#gsearch" data-toggle="tab"><h4>General Search</h4></a></li>
+        <li class="active"><a href="#gsearch" data-toggle="tab"><h4>General Search</h4></a></li>
 
-            <li class=""><a href="#asearch" data-toggle="tab"><h4>Advanced Search</h4></a></li>
+        <li class=""><a href="#asearch" data-toggle="tab"><h4>Advanced Search</h4></a></li>
 
-            <li class=""><a href="#help" data-toggle="tab"><h4>Information & Help</h4></a></li>
+        <li class=""><a href="#help" data-toggle="tab"><h4>Information & Help</h4></a></li>
 
-        </ul>
+    </ul>
 
     <!-- Content -->
 
@@ -168,12 +168,10 @@
             <div class="panel-body">
 
             <form id="advanced-search-form" action="/search" method="get">
-            
 
-                <div class="form-group">
                   
-                    <h3> General Search Query: </h3> 
-                    
+                <h3> General Search Query: </h3> 
+                <div class="form-group search-form-group">
                     <div class="input-group input-group-lg search-input-group" >
                         <span class="input-group-addon lg">Search Query</span>
                         <input type="text" class="form-control" name="q" placeholder="Byrd Hornpipe" >
@@ -181,11 +179,13 @@
                             <span class="glyphicon glyphicon-info-sign"></span>
                         </span> 
                     </div>
-                    
+                </div>
 
-                    <h3> Limit Results by... </h3>
-                    
 
+                <hr></hr>
+                <h3> Limit Results by... </h3>
+                    
+                <div class="form-group search-form-group">
                     <!-- Name Filter -->
 
                     <div class="input-group input-group-lg search-input-group">
@@ -285,7 +285,7 @@
                     <div class="row">
 
                         <!-- Voice Filter -->
-                        <div class="col-lg-6">
+                        <div class="col-lg-12">
                             <div class="input-group input-group-lg search-input-group">
                                 <span class="input-group-addon lg">Number of Voices</span>
                                 <input type="text" class="form-control" name="voicefilt" placeholder="3 OR 4 OR 5">
@@ -314,9 +314,13 @@
                             <span class="glyphicon glyphicon-info-sign"></span>
                         </span> 
                     </div> 
+                </div>
 
-                    <!-- Sorting --> 
-                    <h3> Sort Results By... </h3>
+                <!-- Sorting --> 
+                <hr></hr>
+                <h3> Sort Results By... </h3>
+
+                <div class="form-group search-form-group">
 
                     <div class="input-group input-group-lg search-input-group">
                         <span class="input-group-addon lg">Ordering Scheme</span>
@@ -331,16 +335,18 @@
                             <span class="glyphicon glyphicon-info-sign"></span>
                         </span> 
                     </div> 
-
                 </div>
 
+
                 <!-- Submit -->
-                    <div class="col-lg-12 text-center">
-                        <button type="button" class="btn btn-default btn-lg submit" id="asearch-submit">
-                            Search
-                            <span class="glyphicon glyphicon-search"></span> 
-                        </button>
-                    </div>                                  
+                <hr></hr>
+                <div>
+                    <button type="button" class="btn btn-default btn-lg submit" id="asearch-submit">  Search
+                        <span class="glyphicon glyphicon-search"></span>
+                    </button>
+                     &nbsp;  <a id="asearch-reset">Reset Your Search </a>                              
+                </div>
+
                 
             </form>
             </div>                    
@@ -363,16 +369,17 @@
 
     </div>
 
-</div>
 
-</body>
 
-<div class="row">
 {% if content.current_query %}
 
     {% include "search/search_results.html" %}
 
 {% endif %}
+
 </div>
+
+</body>
+
 
 {% endblock %}

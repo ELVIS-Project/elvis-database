@@ -44,12 +44,12 @@
         {% csrf_token %}
         <dd>
                 <tr>
-                    <th>Add to Downloads</th>
+                    <th width="20%">Add to Downloads</th>
                     <th>Filename and Format</th>
                 </tr>
                 {% for attachment in content.attachments %}
                 <tr>
-                    <td>
+                    <td width="20%">
                     <input type="checkbox" name="a_ids" value="{{ attachment.id }}" checked="true">
                     </td>
                     <td>

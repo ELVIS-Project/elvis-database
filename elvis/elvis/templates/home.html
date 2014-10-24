@@ -2,23 +2,22 @@
 
 {% block wrap %}
 
-<div class="jumbotron">
-    <h1 style="color:black;">ELVIS Database</h1>
-    <p class="lead">Cool people doing cool stuff.</p>
-    <p>Elvis is...</p>
+<div id="home-jumbotron">
+    <div class="jumbotron" >
+        <h1 id="home-title"> ELVIS Database</h1>
+        <p class="lead"> Polyphonic music in symbolic notation to search and download.</p>
+    </div>
 </div>
 
-<br />
-<br />
 
-<div class="row">
+<div class="row" id"home-nav">
     <div class="col-md-4">
         <div class="media ">
             <a class="pull-left">
                 <img class="media-object"  src="{{STATIC_URL}}/img/glyphicons_up.svg" class="img-responsive">
             </a>
             <div class="media-body">
-                <h4 class="media-heading">Upload...</h4>
+                <h4 class="media-heading">Upload</h4>
                 <p> ... your symbolic music encoded in MusicXML to the database.
             </div>
         </div>
@@ -29,7 +28,7 @@
                 <img class="media-object"  src="{{STATIC_URL}}/img/glyphicons_search.svg" class="img-responsive">
             </a>
             <div class="media-body">
-                <h4 class="media-heading">Search...</h4>
+                <h4 class="media-heading">Search</h4>
                 <p> ... for other symbolic music files, metadata, and collections and test-sets.
             </div>
         </div>
@@ -40,7 +39,7 @@
                 <img class="media-object"  src="{{STATIC_URL}}/img/glyphicons_down.svg" class="img-responsive">
             </a>
             <div class="media-body">
-                <h4 class="media-heading">Download...</h4>
+                <h4 class="media-heading">Download</h4>
                 <p> ... files for use in the ELVIS Counterpoint Web Application or your own apps.
             </div>
         </div>
