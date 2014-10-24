@@ -2,8 +2,6 @@ import os, zipfile, tempfile, mimetypes
 from datetime import datetime
 from random import choice
 
-from elvis.helpers.solrsearch import SolrSearch
-
 import urlparse
 
 from django.shortcuts import render
@@ -34,6 +32,12 @@ from elvis.models.project import Project
 '''
 Views that create and add an entity to the database 
 '''
+
+def register_user(request):
+    if request.method == 'POST':
+        return HttpResponse()
+    else:
+        return HttpResponse()
 
 def create_composer(request):
     picture = choice(os.listdir(os.path.abspath('elvis/media/generics/composers')))

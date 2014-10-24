@@ -26,6 +26,28 @@ html, body {
 .label, .rounded {
     border-radius:4px;
 }
+/* Misc Templates */
+#home-jumbotron{
+    padding-top: 40px;
+    padding-bottom: 40px;
+}
+#home-title{
+    padding-left: 0px;
+    color: black;
+}
+.account-form-group{
+    width: 100%;
+}
+.account-input-group {
+    padding: 7px 0px 7px 0px;
+}
+#account-submit{
+    vertical-align: bottom;
+}
+#password-recovery{
+    line-height: 0px;
+    font-size: 16px;
+}
 /* Detail & List templates */
 .detail-table-wrapper{
     max-height: 600px;
@@ -94,8 +116,11 @@ html, body {
     background-image: none;
     color: black;
 }
+.search-form-group{
+    width: 100%;
+}
 .search-input-group {
-    padding: 7px 0px 7px 0px
+    padding: 7px 0px 7px 0px;
 }
 .search-result-item {
     min-height: 100px;
@@ -113,9 +138,14 @@ html, body {
     width: 160px;
 }
 #asearch-submit {
-    height: 90px; 
-    width: 200px; 
-    font-size: 30px
+    height: 70px; 
+    width: 150px; 
+    font-size: 24px;
+    vertical-align: bottom;
+}
+#asearch-reset{
+    line-height: 0px;
+    font-size: 18px;
 }
 /* Result template */
 .panel-body.facets {
@@ -129,8 +159,13 @@ html, body {
     font-size: 100%
 }
 #facet-search {
-    text-align: center; 
+    border-radius:4px;
+    text-align: left; 
     height: 30px;
+    width: 65%;
+}
+#facet-collapse-init{
+    width: 30%;
 }
 .facet-wrapper{
     white-space: nowrap;

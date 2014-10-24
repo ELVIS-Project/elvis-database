@@ -1,0 +1,159 @@
+{% extends "base.html" %}
+
+{% block wrap %}
+
+
+<script type="text/javascript">
+    $(function()
+    {
+        $('.input-group-addon').tooltip({
+            trigger: 'click'
+        });
+            
+    });
+
+</script>
+
+
+<div class="page-header">
+    <h2>Account</h2>
+</div>
+
+<ul class="nav nav-tabs nav-justified">
+    {% if user.is_authenticated %}
+        <li class="active"><a href="#existing" data-toggle="tab"><h3>Account Information</h3></a></li>
+    {% endif %}
+
+    <li class="{% if user.is_authenticated %} {% else %} active {% endif %}"><a href="#registration" data-toggle="tab"><h3> {% if user.is_authenticated %} Modify Account {% else %} Register (New User) {% endif %}</h3></a></li>
+</ul>
+
+<div class="tab-content">
+
+    <div class="tab-pane fade in {% if user.is_authenticated %} {% else %} active {% endif %}" id="registration">
+
+         <div class="panel-body">
+            <form class="" action='' method="POST">
+
+                <div class="input-group col-md-9 input-group-lg account-input-group">
+                    <span class="input-group-addon lg">Username</span>
+                    <input type="text" class="form-control" name="username" placeholder="billybob">
+                    <span class="input-group-addon" data-toggle="tooltip" data-container="body" data-placement="right" data-html='true' title="Username can contain any letters or numbers, without spaces.">
+                        <span class="glyphicon glyphicon-info-sign" ></span>
+                    </span> 
+                </div> 
+             
+                <div class="input-group col-md-9 input-group-lg account-input-group">
+                    <span class="input-group-addon lg">Email</span>
+                    <input type="text" class="form-control" name="email" placeholder="timmytom@mail.com">
+                    <span class="input-group-addon" data-toggle="tooltip" data-container="body" data-placement="right" data-html='true' title="Please provide your (real) Email.">
+                        <span class="glyphicon glyphicon-info-sign" ></span>
+                    </span> 
+                </div> 
+
+                <div class="input-group col-md-9 input-group-lg account-input-group">
+                    <span class="input-group-addon lg">First Name</span>
+                    <input type="text" class="form-control" name="first_name" placeholder="Jimmy">
+                    <span class="input-group-addon" data-toggle="tooltip" data-container="body" data-placement="right" data-html='true' title="Please provide your (real) Email.">
+                        <span class="glyphicon glyphicon-info-sign" ></span>
+                    </span> 
+                </div> 
+
+                <div class="input-group col-md-9 input-group-lg account-input-group">
+                    <span class="input-group-addon lg">Family Name</span>
+                    <input type="text" class="form-control" name="last_name" placeholder="John">
+                    <span class="input-group-addon" data-toggle="tooltip" data-container="body" data-placement="right" data-html='true' title="Please provide your (real) Email.">
+                        <span class="glyphicon glyphicon-info-sign" ></span>
+                    </span> 
+                </div> 
+             
+                <div class="input-group col-md-9 input-group-lg account-input-group">
+                    <span class="input-group-addon lg">Password</span>
+                    <input type="password" class="form-control" name="username" placeholder="pwd321">
+                    <span class="input-group-addon" data-toggle="tooltip" data-container="body" data-placement="right" data-html='true' title="Password should be at least 6 characters.">
+                        <span class="glyphicon glyphicon-info-sign" ></span>
+                    </span> 
+                </div> 
+             
+                <div class="input-group col-md-9 input-group-lg account-input-group">
+                    <span class="input-group-addon lg">Confirm Password</span>
+                    <input type="password" class="form-control" name="username" placeholder="pwd321">
+                    <span class="input-group-addon" data-toggle="tooltip" data-container="body" data-placement="right" data-html='true' title="Confirm your password.">
+                        <span class="glyphicon glyphicon-info-sign" ></span>
+                    </span> 
+                </div>
+
+                <hr />
+
+                <div class="control-group">
+                  <!-- Button -->
+                  <div class="controls">
+                    <button class="btn btn-default btn-lg" id="account-submit"> {% if user.is_authenticated %} Update {% else %} Register {% endif %}</button>
+                    &nbsp;
+                    <a href="/account" id="password-recovery"> Forgot your password? </a>
+                  </div>
+                </div>
+
+            </form>
+        </div>
+
+    </div>
+
+    {% if user.is_authenticated %}
+    <div class="tab-pane fade in active" id="existing">
+
+            <div class="panel-body">
+                  <div class="row">
+                    <div class="col-md-3 col-lg-3 " align="center"> <img alt="User Pic" src="https://lh5.googleusercontent.com/-b0-k99FZlyE/AAAAAAAAAAI/AAAAAAAAAAA/eu7opA4byxI/photo.jpg?sz=100" class="img-circle"> 
+                    </div>
+                    <div class=" col-md-9 col-lg-9 "> 
+                      <table class="table table-user-information">
+                        <tbody>
+                            <tr>
+                                <td>Name: </td>
+                                <td>{{user.get_full_name}} </td>
+                            </tr>
+                            <tr>
+                                <td>Username:</td>
+                                <td>{{user.username}}</td>
+                            </tr>
+                            <tr>
+                                <td>Last Login:</td>
+                                <td>{{user.last_login}}</td>
+                            </tr>
+                            <tr>
+                                <td>Date Joined: </td>
+                                <td>{{user.date_joined}}</td>
+                            </tr>
+                            <tr>
+                                <td>Staff Status: </td>
+                                <td>{% if user.is_staff %} Staff {% else %} None {% endif %}</td>
+                            </tr>
+                            <tr>
+                                <td>Email</td>
+                                <td><a href="mailto:{{user.email}}">{{user.email}}</a></td>
+                            </tr>
+                            <tr>
+                                <td>Recent Contributions </td>
+                                <td> </td>
+                            </tr>
+                            <tr>
+                                <td>Recent Queries </td>
+                                <td> </td>
+                            </tr>
+                            <tr>
+                                <td>Collections </td>
+                                <td> </td>
+                            </tr>
+                        </tbody>
+                      </table>
+                    </div>
+                  </div>
+            </div>
+            <div class="panel-footer">
+                <a data-original-title="Broadcast Message" data-toggle="tooltip" type="button" class="btn btn-sm btn-primary"><i class="glyphicon glyphicon-envelope"></i></a>  
+            </div>
+    </div>
+    {% endif %}
+
+</div>
+{% endblock %}

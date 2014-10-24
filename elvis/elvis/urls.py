@@ -9,12 +9,14 @@ from django.contrib.staticfiles.urls import staticfiles_urlpatterns
 # temporary views for these pages
 from elvis.views.main import home, about, queries, temp, temp2
 
+from elvis.views.forms import register_user
+
 from elvis.views.auth import LoginFormView, logout_view
 from elvis.views.search import SearchView
 from elvis.views.project import ProjectList, ProjectDetail
 from elvis.views.download import DownloadDetail, Downloading
 from elvis.views.piece import PieceList, PieceDetail
-from elvis.views.user import UserList, UserDetail
+from elvis.views.user import UserList, UserDetail, UserAccount
 from elvis.views.userprofile import UserProfileList, UserProfileDetail
 from elvis.views.movement import MovementList, MovementDetail
 from elvis.views.composer import ComposerList, ComposerDetail
@@ -38,6 +40,7 @@ urlpatterns += format_suffix_patterns(
 
         #url(r'^users/$', UserList.as_view(), name="user-list"),
         url(r'^user/(?P<pk>[0-9]+)/$', UserDetail.as_view(), name="user-detail"),
+        url(r'^account/', UserAccount.as_view(), name = "user-account"),
         url(r'^login/?', LoginFormView.as_view(), name="login-form"),
         url(r'^logout/?', logout_view),
 
@@ -62,6 +65,8 @@ urlpatterns += format_suffix_patterns(
         url(r'^tag/(?P<pk>[0-9]+)/$', TagDetail.as_view(), name="tag-detail"),
 
         url(r'^about/', about, name='about'),
+
+        url(r'^temp/', temp, name="temp"),
 
         (r'^media/(?P<path>.*)$', 'django.views.static.serve', {'document_root': settings.MEDIA_ROOT}),
     )
