@@ -23,8 +23,8 @@ class SolrSearch(object):
         do all the work.
 
     """
-    def __init__(self, request):
-        self.server = solr.Solr(settings.SOLR_SERVER)
+    def __init__(self, request, server=settings.SOLR_SERVER):
+        self.server = solr.Solr(server)
         self.request = request
         self.parsed_request = {}
         self.prepared_query = u""
@@ -139,7 +139,8 @@ class SolrSearch(object):
             else:
                 self.parsed_request[k] = v
         
-        self.solr_params.update({'sort': sort_query})
+        if sort_query:
+            self.solr_params.update({'sort': sort_query})
 
         # Use filtered queries for advanced searches
         if filter_query != "":
