@@ -91,12 +91,11 @@ def my_decoder(text):
             return None
      
 
-class DumpDrupal(object):
+class TestSql(object):
 
     def __init__(self):
         # IMPORTANT: Choose which objects to add here
         # LM: Would want to run tags, users only if db doesnt have previous users, corpus, piece, movement, in that order
-
         self.get_tags()
         self.get_composers()
         self.get_users()
@@ -135,7 +134,6 @@ class DumpDrupal(object):
                 print row
 
     def __read_tags_in_csv(self,tags):
-        pass
         with open(TAG_CSV_PATH, 'rb') as csv_file:
             csv_reader = csv.reader(csv_file, dialect='excel')
             # Check that you're done
@@ -150,19 +148,8 @@ class DumpDrupal(object):
         self.curs.execute(CORPUS_QUERY)
         collection = self.curs.fetchall()
 
-
         print "====== Testing collections ======"
         print("number", len(collection))
-        for coll in collection:
-            for user in users:
-                if coll.get('creator') == user.get('uid'):
-                    u = User.objects.get(username=user.get('name'))
-                    break
-            coll['creator'] = u
-            coll['title'] = my_decoder(coll['title'])
-            coll['comment'] = my_decoder(coll['comment'])
-            coll['created'] = datetime.datetime.fromtimestamp(coll['created'])
-            coll['updated'] = datetime.datetime.fromtimestamp(coll['updated'])
 
         self.__disconnect()
 
@@ -175,14 +162,6 @@ class DumpDrupal(object):
 
         print "====== Testing Users ======"
         print ("number", len(users))
-        for user in users:
-            u = {
-                'is_active': True,
-                'username': my_decoder(user.get('name')),
-                'last_login': datetime.datetime.fromtimestamp(user.get('login')),
-                'date_joined': datetime.datetime.fromtimestamp(user.get('created')),
-                'email': user.get('mail')
-            }
 
         curs.close()
         conn.close()
@@ -192,8 +171,7 @@ class DumpDrupal(object):
         self.curs.execute(COMPOSERS_QUERY)
         composers = self.curs.fetchall()
 
-
-        print "====== Testing composers ======"
+        print "====== Testing Composers ======"
         print ("number", len(composers))
         self.__disconnect()
 
@@ -202,23 +180,14 @@ class DumpDrupal(object):
         self.curs.execute(TAG_QUERY)
         tags = self.curs.fetchall()
 
-        print "====== Testing tags ======"
+        print "====== Testing Tags ======"
         print ("number", len(tags))
-        for tag in tags:
-            t = Tag(**tag)
-            t.name = my_decoder(t.name)
-            t.description = my_decoder(t.description)
 
-        print "Adding tag hierarchy"
         self.curs.execute(TAG_HIERARCHY_QUERY)
         tag_hierarchy = self.curs.fetchall()
-        for t in tag_hierarchy:
-            tag = Tag.objects.get(old_id=t.get('tid', None))
-            if not t.get('parent') == 0:
-                parent = Tag.objects.get(old_id=t.get('parent', None))
-            else:
-                parent = None
-            t = TagHierarchy(tag=tag, parent=parent)
+
+        print "====== Testing Tag Hierarchy ======"
+        print ("number", len(tag_hierarchy))
 
         self.__disconnect()
 
@@ -236,46 +205,7 @@ class DumpDrupal(object):
 
         print("====== Testing " + rettype + " ======")
         print("number", len(objects))
-        print "Adding {0}".format(rettype)
-        for item in objects:
-            # LM: composer may be none
-            try:
-                composer_obj = Composer.objects.get(old_id=item['composer_id'])
-            except Composer.DoesNotExist:
-                composer_obj = None
-
-            for user in users:
-                if item.get('uploader') == user.get('uid'):
-                    user_obj = User.objects.get(username=user.get('name'))
-                    break
-
-            if rettype == "piece":
-                collection_objs = Collection.objects.filter(old_id=item['book_id'])
-                if not collection_objs.exists():
-                    collection_objs = None
-                else:
-                    collection_objs = collection_objs
-            elif rettype == "movement":
-                parent_obj = self.__resolve_movement_parent(item['old_id'])
-                collection_objs = Collection.objects.filter(old_id=item['book_id'])
-                if not collection_objs.exists():
-                    collection_objs = None
-                else:
-                    collection_objs = collection_objs
-
-            p = {
-                'uploader': user_obj,
-                'composer': composer_obj,
-                'old_id': item.get('old_id', None),
-                'title': my_decoder(item.get('title', None)),
-                'date_of_composition': pytz.utc.localize(item.get('date_of_composition', None)),
-                'date_of_composition2': pytz.utc.localize(item.get('date_of_composition2', None)),  
-                'number_of_voices': item.get('number_of_voices', None),
-                'comment': my_decoder(item.get('comment', None)),
-                'created': datetime.datetime.fromtimestamp(item.get('created')),
-                'updated': datetime.datetime.fromtimestamp(item.get('updated'))
-            }
-
+    
         self.__disconnect()
         
         print "====== Testing Tags for {0} =======".format(rettype)
@@ -289,6 +219,8 @@ class DumpDrupal(object):
         elif rettype == "movement":
             objects = Movement.objects.all()
 
+        tag_failures = 0
+
         for item in objects:
             self.__connect()
             self.curs.execute(ITEM_TAG_QUERY, [item.old_id])
@@ -296,8 +228,10 @@ class DumpDrupal(object):
             for tag in tags:
                 tag_obj = Tag.objects.filter(old_id=tag.get('tid'))
                 if not tag_obj.exists():
-                    continue
+                    tag_failures += 1
             self.__disconnect()
+
+        print "Tag failures: {0}".format(tag_failures)
             
             
         ITEM_ATTACHMENT_QUERY = """SELECT ff.field_files_description AS description, fm.timestamp AS created,
@@ -305,16 +239,12 @@ class DumpDrupal(object):
                                     LEFT JOIN file_managed fm ON ff.field_files_fid = fm.fid
                                     WHERE ff.entity_id = %s"""
 
-        print "Attaching files to {0}".format(rettype)
+        print "====== Testing Files for {0} ======".format(rettype)
         if rettype == "piece":
             objects = Piece.objects.all()
 
         elif rettype == "movement":
             objects = Movement.objects.all()
-
-        
-
-        print("Attaching for real - LM")
 
         self.__connect()
         failures = 0
@@ -336,6 +266,7 @@ class DumpDrupal(object):
                 try:
                     filepath = os.path.join(DRUPAL_FILE_PATH, filename)
                     f = open(filepath, 'rb')
+                    f.close()
                 except IOError:
                     # print('Failed to open: ' + filename)
                     # Some files have _0 appended to name before extension.... try that
@@ -344,11 +275,10 @@ class DumpDrupal(object):
                         filename = filename_temp + '_0' + extension_temp
                         filepath = os.path.join(DRUPAL_FILE_PATH, filename)
                         f = open(filepath)
-                        print('Trying to attach ' + filename)
                         tries_with_0s = tries_with_0s + 1
+                        f.close()
                     # If that doesn't work then pass
                     except IOError:
-                        print('Failure: ' + filename)
                         failures = failures + 1
                         continue     
 
@@ -384,4 +314,4 @@ class DumpDrupal(object):
             return None
 
 if __name__ == "__main__":
-    x = DumpDrupal()
+    x = TestSql()
