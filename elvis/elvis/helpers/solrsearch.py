@@ -86,7 +86,7 @@ class SolrSearch(object):
                 continue
             # LM: Elif for Type filtration
             elif k == 'typefilt':
-                filter_query = "type: ("  + string.join((v), ' OR ') + ") "
+                filter_query = "type: ("  + string.join(v, ' OR ') + ") "
 
             # LM: elif for sorting
             elif k == 'sortby':
@@ -134,7 +134,7 @@ class SolrSearch(object):
             elif k == 'q' :
                 if qdict.get(k) == "":
                     v = "*:*"
-                self.parsed_request[k] = v[0]
+                self.parsed_request[k] = "( " + v[0] + " )"
             
             else:
                 self.parsed_request[k] = v
