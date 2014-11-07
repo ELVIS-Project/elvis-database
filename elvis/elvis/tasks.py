@@ -60,18 +60,15 @@ def zip_files(paths, username):
         file_name = os.path.basename(item)
         shutil.copy2(item, os.path.join(dummy_path, file_name))
         archive_file.write(file_name)
-        #sleep(1)
         i += 1
-        percent = int_round(float(i) / float(total)) * 100
+        percent = int(float(i) * 100.0 / float(total))
         zip_files.update_state(state='PROGRESS', meta={'curr': i, 'total': total, 'percent': percent})
-
 
     archive_file.close()
     zip_files.update_state(state='PROGRESS', meta={'curr': total, 'total': total, 'percent': 100})
     # Path to the archive file
     zip_path = os.path.join(dummy_path, zip_name)
 
-    #print(dummy_root_dir, dummy_path)
     return {"path": zip_path, "percent" : 100}
 
 @app.task(name='elvis.celery.clean_zip_files')

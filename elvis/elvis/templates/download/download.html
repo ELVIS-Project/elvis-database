@@ -9,6 +9,28 @@
             
     });
 </script>
+
+<script type="text/javascript">
+// From http://stackoverflow.com/questions/386281/how-to-implement-select-all-check-box-in-html
+    $('#select-all').click(function(event) 
+    {
+        if(this.checked) 
+        {
+            $('.checkable').each(function() 
+            {
+                this.checked = true;
+            });
+        }
+        else 
+        {
+            $('.checkable').each(function() 
+            {
+                this.checked = false;
+            });
+        }
+    });
+</script>
+
 <div class="page-header">
     <h2>Your Downloads </h2>
 </div>
@@ -60,26 +82,7 @@
                     {% endfor %}
                 </tbody>
             </table>
-            <script type="text/javascript">
-            // From http://stackoverflow.com/questions/386281/how-to-implement-select-all-check-box-in-html
-                $('#select-all').click(function(event) 
-                {
-                    if(this.checked) 
-                    {
-                        $('.checkable').each(function() 
-                        {
-                            this.checked = true;
-                        });
-                    }
-                    else 
-                    {
-                        $('.checkable').each(function() 
-                        {
-                            this.checked = false;
-                        });
-                    }
-                });
-            </script>
+
         </div>
 
 

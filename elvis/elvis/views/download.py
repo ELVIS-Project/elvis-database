@@ -197,43 +197,34 @@ class Downloading(APIView):
 
     def get(self, request, *args, **kwargs):
         """ A view to report the progress to the user """
-        if 'task' in request.GET:
-            task_id = request.GET['task']
-        else:
-            # TODO change to appropriate response type
-            return Response({"None" : "None"}, status=status.HTTP_400_BAD_REQUEST)
         try:
+            task_id = request.GET['task']
             task = AsyncResult(task_id)
         except Exception:
             return Response({"None" : "None"}, status=status.HTTP_400_BAD_REQUEST)
 
-        if task.result and hasattr(task, 'result') and "path" in task.result:
+        if "path" in task.result and 'service' in request.GET:
             path = task.result["path"]
             file_name = os.path.basename(path)
-            
             response = HttpResponse(FileWrapper(file(path, "r")), content_type='application/zip')
-            
-            # Required for download responses
+            # Required for download responses 
             response["Content-Length"] = os.path.getsize(path)
             response["Content-Disposition"] = 'attachment; filename=%s' % file_name
-
+            return response
+        elif "path" in task.result:
             # to detect the download, set a cookie for an hour
+            response = Response({"None" : "None"}, status=status.HTTP_200_OK)
             cookie_age = datetime.datetime.strftime(datetime.datetime.utcnow() + datetime.timedelta(seconds=3600), "%a, %d-%b-%Y %H:%M:%S GMT")
             response.set_cookie(task_id, "downloading", max_age=600, expires=cookie_age, domain=settings.SESSION_COOKIE_DOMAIN, secure=settings.SESSION_COOKIE_SECURE or None)  
-            
             return response
         
-        data = task.result or task.state
+        data = task.info
         return Response(data, status=status.HTTP_200_OK)
-
 
     @method_decorator(csrf_protect)
     def post(self, request, *args, **kwargs):
         # Download selected
         if 'download-all' in request.POST:
-
-            # LM TODO cleanup
-
             # get attachment ids 
             a_ids = request.POST.getlist('a_ids')
 
@@ -279,7 +270,6 @@ class Downloading(APIView):
 
         # Remove selected
         elif 'remove-all' in request.POST:
-
             # get ids
             a_ids = request.POST.getlist('a_ids')
             # get user
