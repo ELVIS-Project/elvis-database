@@ -8,4 +8,4 @@ source ${VIRTUAL_ENV}/bin/activate
 # Move to project directory
 cd ${PROJECT_PATH}
 # Run your worker... old: exec celery worker -A elvis -l DEBUG --loglevel=INFO 
-exec celery worker -A elvis --pidfile="/run/celery/%n.pid"
+exec celery worker -A elvis info --pidfile="/run/celery/%n.pid"

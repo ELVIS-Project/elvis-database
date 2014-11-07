@@ -8,4 +8,4 @@ source ${VIRTUAL_ENV}/bin/activate
 # Move to project directory
 cd ${PROJECT_PATH}
 # Run your scheduled tasks using beat
-exec celery -A elvis beat  --pidfile="/run/celery/%n.pid" --schedule="/run/celery/celerybeat-schedule"
+exec celery -A elvis beat info --pidfile="/run/celery/%n.pid" --schedule="/run/celery/celerybeat-schedule"
