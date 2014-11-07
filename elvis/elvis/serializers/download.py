@@ -20,13 +20,13 @@ class AttachmentPieceSerializer(serializers.HyperlinkedModelSerializer):
     composer = AttachmentComposerSerializer()
     class Meta:
         model = Piece
-        fields = ('url', 'title', 'composer', 'id')
+        fields = ('url', 'title', 'date_of_composition',  'date_of_composition2', 'composer', 'id')
 
 class AttachmentMovementSerializer(serializers.HyperlinkedModelSerializer):
     composer = AttachmentComposerSerializer()
     class Meta:
         model = Movement
-        fields = ('url', 'title', 'composer', 'id')
+        fields = ('url', 'title', 'date_of_composition', 'date_of_composition2', 'composer', 'id')
 
 class UserAttachmentSerializer(serializers.HyperlinkedModelSerializer):
     pieces = AttachmentPieceSerializer()

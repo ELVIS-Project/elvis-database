@@ -65,6 +65,9 @@ html, body {
 .detail-table-wrapper.tags {
     max-height: 400px;
 }
+.detail-table-wrapper.download {
+    max-height: 520px;
+}
 .detail-table {
     margin: 0; 
     padding: 0;
