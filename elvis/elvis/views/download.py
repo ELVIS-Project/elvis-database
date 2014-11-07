@@ -203,7 +203,8 @@ class Downloading(APIView):
         except Exception:
             return Response({"None" : "None"}, status=status.HTTP_400_BAD_REQUEST)
 
-        if "path" in task.result and 'service' in request.GET:
+        # Path is given in task.result only if it's ready.
+        if task.result and "path" in task.result and'service' in request.GET:
             path = task.result["path"]
             file_name = os.path.basename(path)
             response = HttpResponse(FileWrapper(file(path, "r")), content_type='application/zip')
@@ -211,7 +212,7 @@ class Downloading(APIView):
             response["Content-Length"] = os.path.getsize(path)
             response["Content-Disposition"] = 'attachment; filename=%s' % file_name
             return response
-        elif "path" in task.result:
+        elif task.result and "path" in task.result:
             # to detect the download, set a cookie for an hour
             response = Response({"None" : "None"}, status=status.HTTP_200_OK)
             cookie_age = datetime.datetime.strftime(datetime.datetime.utcnow() + datetime.timedelta(seconds=3600), "%a, %d-%b-%Y %H:%M:%S GMT")
