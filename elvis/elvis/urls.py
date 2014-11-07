@@ -9,8 +9,6 @@ from django.contrib.staticfiles.urls import staticfiles_urlpatterns
 # temporary views for these pages
 from elvis.views.main import home, about, queries, temp, temp2
 
-from elvis.views.forms import register_user
-
 from elvis.views.auth import LoginFormView, logout_view
 from elvis.views.search import SearchView
 from elvis.views.project import ProjectList, ProjectDetail
