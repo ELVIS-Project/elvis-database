@@ -10,26 +10,6 @@
     });
 </script>
 
-<script type="text/javascript">
-// From http://stackoverflow.com/questions/386281/how-to-implement-select-all-check-box-in-html
-    $('#select-all').click(function(event) 
-    {
-        if(this.checked) 
-        {
-            $('.checkable').each(function() 
-            {
-                this.checked = true;
-            });
-        }
-        else 
-        {
-            $('.checkable').each(function() 
-            {
-                this.checked = false;
-            });
-        }
-    });
-</script>
 
 <div class="page-header">
     <h2>Your Downloads </h2>
@@ -39,38 +19,43 @@
     
         <div class="row">
             <span class="help-block">Select items for downloading. Unwanted files may also be removed from your downloads.</span>
-            <table class="table table-condensed">
+            <table class="table table-condensed table-hover">
                 <thead>
                     <tr>
-                        <th width="9%"> <input type="checkbox" name="select-all" id="select-all" checked="true"/> Toggle All </th>
-                        <th>Title</th>
-                        <th>File Name </th>
-                        <th>Composer</th>
+                        <th width="2%"> <input type="checkbox" name="select-all" id="select-all" checked="true"/>  </th>
+                        <th width="21%">Title</th>
+                        <th width="22%">File Name </th>
+                        <th width="20%">Composer</th>
+                        <th width="11%">Date</th>
                         <th width="8%">Type</th>
                     </tr>
                 </thead>
+            </table>
+            <div class="detail-table-wrapper download">
+            <table class="table table-condensed table-hover detail-table">
                 <tbody>
                     {% for attachment in content.attachments %}
                         <tr>
-
                             {% for piece in attachment.pieces %}
                                 <!-- Old item value {{ attachment.attachment_path }}/{{ attachment.file_name }} -->
-                                <td> 
+                                <td width="2.5%"> 
                                 <input class="checkable" type="checkbox" name="a_ids" value="{{ attachment.id }}" checked="true">
                                 </td>
-                                <td><a href="{{ piece.url }}">{{ piece.title }}</a></td>
-                                <td> {{ attachment.file_name }} </td>
-                                <td><a href="{{ piece.composer.url }}">{{ piece.composer.name }}</a></td>
-                                <td><span class="label label-success">Piece</span></td>
+                                <td width="21%"><a href="{{ piece.url }}">{{ piece.title }}</a></td>
+                                <td width="22.5%"> {{ attachment.file_name }} </td>
+                                <td width="20.5%"><a href="{{ piece.composer.url }}">{{ piece.composer.name }}</a></td>
+                                <td width="11.5%">{% if piece.date_of_composition  == piece.date_of_composition2 %}{{ piece.date_of_composition | date:"Y" }}{% else %}{{ piece.date_of_composition | date:"Y" }}-{{ piece.date_of_composition2 | date:"Y" }}{% endif %}</td>
+                                <td width="7%"><span class="label label-success">Piece</span></td>
                             {% endfor %}
                             {% for mvmt in attachment.movements %}
-                                <td>
+                                <td width="2.5%">
                                 <input class="checkable" type="checkbox" name="a_ids" value="{{ attachment.id }}" checked="true">
                                 </td>
-                                <td><a href="{{ mvmt.url }}">{{ mvmt.title }}</a></td>
-                                <td> {{ attachment.file_name }} </td>
-                                <td><a href="{{ mvmt.composer.url }}">{{ mvmt.composer.name }}</a></td>
-                                <td><span class="label label-info">Movement</span></td>
+                                <td width="21%"><a href="{{ mvmt.url }}">{{ mvmt.title }}</a></td>
+                                <td width="22.5%"> {{ attachment.file_name }} </td>
+                                <td width="20.5%"><a href="{{ mvmt.composer.url }}">{{ mvmt.composer.name }}</a></td>
+                                <td width="11.5%">{% if mvmt.date_of_composition  == mvmt.date_of_composition2 %}{{ mvmt.date_of_composition | date:"Y" }}{% else %}{{ mvmt.date_of_composition | date:"Y" }}-{{ mvmt.date_of_composition2 | date:"Y" }}{% endif %}</td>
+                                <td width="7%"><span class="label label-info">Movement</span></td>
                             {% endfor %}
                         </tr>
                     {% empty %}
@@ -82,7 +67,31 @@
                     {% endfor %}
                 </tbody>
             </table>
-
+            </div>
+            <script type="text/javascript">
+            // This script HAS to be here.
+                $('#select-all-label').click(function(event)
+                {
+                    $('#select-all').click();
+                });
+                $('#select-all').click(function(event) 
+                {
+                    if(this.checked) 
+                    {
+                        $('.checkable').each(function() 
+                        {
+                            this.checked = true;
+                        });
+                    }
+                    else 
+                    {
+                        $('.checkable').each(function() 
+                        {
+                            this.checked = false;
+                        });
+                    }
+                });
+            </script>
         </div>
 
 
