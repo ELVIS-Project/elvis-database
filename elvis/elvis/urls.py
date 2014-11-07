@@ -7,7 +7,7 @@ from rest_framework.urlpatterns import format_suffix_patterns
 from django.contrib.staticfiles.urls import staticfiles_urlpatterns
 
 # temporary views for these pages
-from elvis.views.main import home, about, queries, temp, temp2
+from elvis.views.main import home, about, queries, temp
 
 from elvis.views.forms import register_user
 

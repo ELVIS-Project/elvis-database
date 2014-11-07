@@ -26,15 +26,15 @@ BASE_DIR = os.path.dirname(__file__)
 # SECURITY WARNING: don't run with debug turned on in production!
 # CRA: Set "LILLIO" to True if you're Lillio.
 PRODUCTION = False
-LILLIO = False if PRODUCTION else True  # we'll be Lillio by default...
+LILLIO = False #if PRODUCTION else True  # we'll be Lillio by default...
 
 
 # Simple Settings
 # ===============
-DEBUG = False if PRODUCTION else True
+DEBUG = False #if PRODUCTION else True
 TEMPLATE_DEBUG = DEBUG
 
-ALLOWED_HOSTS = ['database.elvisproject.ca', 'db-devel.elvisproject.ca'] if PRODUCTION else []
+ALLOWED_HOSTS = ['database.elvisproject.ca', 'db-devel.elvisproject.ca']# if PRODUCTION else []
 
 if PRODUCTION:
     # TODO: Try loading from a temp file; if not present, automatically generate SECRET_KEY then
@@ -94,8 +94,8 @@ else:
             'ENGINE': 'django.db.backends.postgresql_psycopg2',
             'NAME': 'elvisdatabase',
             'USER': 'elvisdatabase',
-            'PASSWORD': 'asdf1234',
-            'HOST': '',  # empty means localhost through domain sockets
+            'PASSWORD': '5115C67O2v3GN31T49Md',
+	    'HOST': '',  # empty means localhost through domain sockets
             'PORT': '',  # empty means 5432
         }
     }
@@ -130,7 +130,7 @@ if DEBUG and LILLIO:
 elif DEBUG:
     STATIC_ROOT = os.path.join(BASE_DIR, '..', '..', 'static_root')
 else:
-    STATIC_ROOT = os.path.join(BASE_DIR, 'static')
+    STATIC_ROOT = os.path.join(BASE_DIR, '..', '..', '..', 'static_root')
 
 
 # Solr Settings
