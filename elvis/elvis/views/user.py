@@ -1,11 +1,13 @@
 from django.contrib.auth.models import User
+from django.contrib.auth import authenticate, login
 from rest_framework import generics
 from rest_framework import permissions
 from rest_framework.renderers import JSONRenderer, JSONPRenderer
 
 from elvis.serializers.user import UserSerializer
 from elvis.renderers.custom_html_renderer import CustomHTMLRenderer
-from django.http import HttpResponse
+from elvis.forms import UserForm
+from django.http import HttpResponse, HttpResponseRedirect
 
 from django.utils.decorators import method_decorator
 from django.views.decorators.csrf import csrf_protect
@@ -50,5 +52,14 @@ class UserAccount(generics.CreateAPIView):
             
     @method_decorator(csrf_protect)
     def post(self, request, *args, **kwargs):
-        pass
+        form = UserForm(data=request.POST)
+        if not request.POST['account-create'] is None and form.is_valid():
+            user = form.save()        
+            user = authenticate(username=request.POST['username'], password=request.POST['password1'])
+            login(request, user)
+            return HttpResponseRedirect("/")
+        elif form.is_valid():
+            return HttpResponseRedirect("/")
+        else:
+            return render(request, "user/user_account.html", {'form': form})
 

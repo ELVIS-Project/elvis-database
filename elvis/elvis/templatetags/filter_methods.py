@@ -38,6 +38,15 @@ NUMBERS = {
     '30' : 'thirty'
 }
 
+REGISTRATION_FIELDS = {
+    'password1': 'Password',
+    'password2': 'Password Confirmation',
+    'email': 'E-mail',
+    'username': 'Username',
+    'first_name': 'First Name',
+    'last_name': 'Last Name'
+}
+
 '''
 Custom filters must fail silently. Must register filters using register.filter(function_name_str, function).
 Or can use decorator (@register.filter).
@@ -87,6 +96,13 @@ def get_range(number): return range(1, number)
 def pager(l, page_num): 
     start = 0 if (page_num-5) < 0 else (page_num-5)
     return l[start:page_num+5]
+
+@register.filter
+def legible_fields(field):
+    try:
+        return REGISTRATION_FIELDS[field]
+    except:
+        return field
 
 # @register.filter
 # def format_time(timestamp):

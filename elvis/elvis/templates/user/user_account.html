@@ -2,6 +2,7 @@
 
 {% block wrap %}
 
+{% load filter_methods %}
 
 <script type="text/javascript">
     $(function()
@@ -32,10 +33,9 @@
     <div class="tab-pane fade in {% if user.is_authenticated %} {% else %} active {% endif %}" id="registration">
 
          <div class="panel-body">
-            <form class="" action='' method="POST">
-
+            <form id="register-form" action='/account/' method="post"> {% csrf_token %}
                 <div class="input-group col-md-9 input-group-lg account-input-group">
-                    <span class="input-group-addon lg">Username</span>
+                    <span class="input-group-addon lg">Username*</span>
                     <input type="text" class="form-control" name="username" placeholder="billybob">
                     <span class="input-group-addon" data-toggle="tooltip" data-container="body" data-placement="right" data-html='true' title="Username can contain any letters or numbers, without spaces.">
                         <span class="glyphicon glyphicon-info-sign" ></span>
@@ -43,7 +43,7 @@
                 </div> 
              
                 <div class="input-group col-md-9 input-group-lg account-input-group">
-                    <span class="input-group-addon lg">Email</span>
+                    <span class="input-group-addon lg">Email*</span>
                     <input type="text" class="form-control" name="email" placeholder="timmytom@mail.com">
                     <span class="input-group-addon" data-toggle="tooltip" data-container="body" data-placement="right" data-html='true' title="Please provide your (real) Email.">
                         <span class="glyphicon glyphicon-info-sign" ></span>
@@ -67,31 +67,41 @@
                 </div> 
              
                 <div class="input-group col-md-9 input-group-lg account-input-group">
-                    <span class="input-group-addon lg">Password</span>
-                    <input type="password" class="form-control" name="username" placeholder="pwd321">
+                    <span class="input-group-addon lg">Password*</span>
+                    <input type="password" class="form-control" name="password1" placeholder="pwd321">
                     <span class="input-group-addon" data-toggle="tooltip" data-container="body" data-placement="right" data-html='true' title="Password should be at least 6 characters.">
                         <span class="glyphicon glyphicon-info-sign" ></span>
                     </span> 
                 </div> 
              
                 <div class="input-group col-md-9 input-group-lg account-input-group">
-                    <span class="input-group-addon lg">Confirm Password</span>
-                    <input type="password" class="form-control" name="username" placeholder="pwd321">
+                    <span class="input-group-addon lg">Confirm Password*</span>
+                    <input type="password" class="form-control" name="password2" placeholder="pwd321">
                     <span class="input-group-addon" data-toggle="tooltip" data-container="body" data-placement="right" data-html='true' title="Confirm your password.">
                         <span class="glyphicon glyphicon-info-sign" ></span>
                     </span> 
                 </div>
+                
+                {% if form.errors.items %}
+                <h4>Errors: </h4>
+                {% endif %}
+                {% for field, errors in form.errors.items %}
+                        {{field | legible_fields}}:
+                    {% for error in errors %}
+                        {{error}}
+                    {% endfor %}
+                {% endfor %}
 
+                * Required fields.
                 <hr />
 
-                <div class="control-group">
+           
                   <!-- Button -->
-                  <div class="controls">
-                    <button class="btn btn-default btn-lg" id="account-submit"> {% if user.is_authenticated %} Update {% else %} Register {% endif %}</button>
+ 
+                    <button type="submit" class="btn btn-default btn-lg" id="account-submit" name="{% if user.is_authenticated %}{% else %}account-create{% endif %}"> {% if user.is_authenticated %} Update {% else %} Register {% endif %}</button>
                     &nbsp;
                     <a href="/account" id="password-recovery"> Forgot your password? </a>
-                  </div>
-                </div>
+
 
             </form>
         </div>
@@ -133,15 +143,15 @@
                                 <td><a href="mailto:{{user.email}}">{{user.email}}</a></td>
                             </tr>
                             <tr>
-                                <td>Recent Contributions </td>
+                                <td>Recent Contributions: </td>
                                 <td> </td>
                             </tr>
                             <tr>
-                                <td>Recent Queries </td>
+                                <td>Recent Queries: </td>
                                 <td> </td>
                             </tr>
                             <tr>
-                                <td>Collections </td>
+                                <td>Collections: </td>
                                 <td> </td>
                             </tr>
                         </tbody>
