@@ -6,7 +6,7 @@ from rest_framework.renderers import JSONRenderer, JSONPRenderer
 
 from elvis.serializers.user import UserSerializer
 from elvis.renderers.custom_html_renderer import CustomHTMLRenderer
-from elvis.forms import UserForm
+from elvis.forms import UserForm, UserUpdateForm
 from django.http import HttpResponse, HttpResponseRedirect
 
 from django.utils.decorators import method_decorator
@@ -52,14 +52,19 @@ class UserAccount(generics.CreateAPIView):
             
     @method_decorator(csrf_protect)
     def post(self, request, *args, **kwargs):
-        form = UserForm(data=request.POST)
-        if not request.POST['account-create'] is None and form.is_valid():
-            user = form.save()        
-            user = authenticate(username=request.POST['username'], password=request.POST['password1'])
-            login(request, user)
-            return HttpResponseRedirect("/")
-        elif form.is_valid():
-            return HttpResponseRedirect("/")
+        user = request.user
+        if user.is_anonymous():
+            form = UserForm(data=request.POST)
+            if form.is_valid():
+                user = form.save()        
+                user = authenticate(username=request.POST['username'], password=request.POST['password1'])
+                login(request, user)
+                return HttpResponseRedirect("/")
         else:
-            return render(request, "user/user_account.html", {'form': form})
+            form = UserUpdateForm(data=request.POST, instance=request.user)
+            if form.is_valid():
+                user = form.save()
+            print form
+        return render(request, "user/user_account.html", {'form': form})
+
 

@@ -34,6 +34,7 @@
 
          <div class="panel-body">
             <form id="register-form" action='/account/' method="post"> {% csrf_token %}
+                {% if user.is_authenticated %} Currently Unavailable... sorry! {% else %} The Database is under development, so please only use temporary details to create a temporary account.  {% endif %}
                 <div class="input-group col-md-9 input-group-lg account-input-group">
                     <span class="input-group-addon lg">Username*</span>
                     <input type="text" class="form-control" name="username" placeholder="billybob">
@@ -98,9 +99,9 @@
            
                   <!-- Button -->
  
-                    <button type="submit" class="btn btn-default btn-lg" id="account-submit" name="{% if user.is_authenticated %}{% else %}account-create{% endif %}"> {% if user.is_authenticated %} Update {% else %} Register {% endif %}</button>
+                    <button type="submit" class="btn btn-default btn-lg" id="account-submit" name="{% if user.is_authenticated %}{% else %}account-create{% endif %}" {% if user.is_authenticated %}disabled{% endif %}> {% if user.is_authenticated %} Update (Unavailable){% else %} Register {% endif %}</button>
                     &nbsp;
-                    <a href="/account" id="password-recovery"> Forgot your password? </a>
+                    <a href="/account" id="password-recovery"> Forgot your password (Unavailable)? </a>
 
 
             </form>
