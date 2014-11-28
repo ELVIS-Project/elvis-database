@@ -1,5 +1,6 @@
 from django.db import models
 from django.contrib.auth.models import User
+from django.db.models.signals import post_save
 
 class Download(models.Model):
     class Meta:
@@ -11,3 +12,10 @@ class Download(models.Model):
 
     def __unicode__(self):
         return u"{0}".format(self.attachments.all())
+
+def create_user_download(sender, instance, created, **kwargs):
+    if created:
+        Download.objects.create(user=instance)
+
+post_save.connect(create_user_download, sender=User)
+

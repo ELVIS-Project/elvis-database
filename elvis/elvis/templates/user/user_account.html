@@ -37,7 +37,7 @@
                 {% if user.is_authenticated %} Currently Unavailable... sorry! {% else %} The Database is under development, so please only use temporary details to create a temporary account.  {% endif %}
                 <div class="input-group col-md-9 input-group-lg account-input-group">
                     <span class="input-group-addon lg">Username*</span>
-                    <input type="text" class="form-control" name="username" placeholder="billybob">
+                    <input type="text" class="form-control" name="username" placeholder="E.g. billybob">
                     <span class="input-group-addon" data-toggle="tooltip" data-container="body" data-placement="right" data-html='true' title="Username can contain any letters or numbers, without spaces.">
                         <span class="glyphicon glyphicon-info-sign" ></span>
                     </span> 
@@ -45,7 +45,7 @@
              
                 <div class="input-group col-md-9 input-group-lg account-input-group">
                     <span class="input-group-addon lg">Email*</span>
-                    <input type="text" class="form-control" name="email" placeholder="timmytom@mail.com">
+                    <input type="text" class="form-control" name="email" placeholder="E.g. timmytom@mail.com">
                     <span class="input-group-addon" data-toggle="tooltip" data-container="body" data-placement="right" data-html='true' title="Please provide your (real) Email.">
                         <span class="glyphicon glyphicon-info-sign" ></span>
                     </span> 
@@ -53,45 +53,50 @@
 
                 <div class="input-group col-md-9 input-group-lg account-input-group">
                     <span class="input-group-addon lg">First Name</span>
-                    <input type="text" class="form-control" name="first_name" placeholder="Jimmy">
-                    <span class="input-group-addon" data-toggle="tooltip" data-container="body" data-placement="right" data-html='true' title="Please provide your (real) Email.">
+                    <input type="text" class="form-control" name="first_name" placeholder="E.g. Jimmy">
+                    <span class="input-group-addon" data-toggle="tooltip" data-container="body" data-placement="right" data-html='true' title="(Optional): Enter First Name.">
                         <span class="glyphicon glyphicon-info-sign" ></span>
                     </span> 
                 </div> 
 
                 <div class="input-group col-md-9 input-group-lg account-input-group">
                     <span class="input-group-addon lg">Family Name</span>
-                    <input type="text" class="form-control" name="last_name" placeholder="John">
-                    <span class="input-group-addon" data-toggle="tooltip" data-container="body" data-placement="right" data-html='true' title="Please provide your (real) Email.">
+                    <input type="text" class="form-control" name="last_name" placeholder="E.g. John">
+                    <span class="input-group-addon" data-toggle="tooltip" data-container="body" data-placement="right" data-html='true' title="(Optional): Enter Last Name.">
                         <span class="glyphicon glyphicon-info-sign" ></span>
                     </span> 
                 </div> 
              
                 <div class="input-group col-md-9 input-group-lg account-input-group">
                     <span class="input-group-addon lg">Password*</span>
-                    <input type="password" class="form-control" name="password1" placeholder="pwd321">
-                    <span class="input-group-addon" data-toggle="tooltip" data-container="body" data-placement="right" data-html='true' title="Password should be at least 6 characters.">
+                    <input type="password" class="form-control" name="password1" placeholder="E.g. pwd321">
+                    <span class="input-group-addon" data-toggle="tooltip" data-container="body" data-placement="right" data-html='true' title="Strong passwords should be at least 6 characters, with a mixture of alphanumeric symbols.">
                         <span class="glyphicon glyphicon-info-sign" ></span>
                     </span> 
                 </div> 
              
                 <div class="input-group col-md-9 input-group-lg account-input-group">
                     <span class="input-group-addon lg">Confirm Password*</span>
-                    <input type="password" class="form-control" name="password2" placeholder="pwd321">
+                    <input type="password" class="form-control" name="password2" placeholder="E.g. pwd321">
                     <span class="input-group-addon" data-toggle="tooltip" data-container="body" data-placement="right" data-html='true' title="Confirm your password.">
                         <span class="glyphicon glyphicon-info-sign" ></span>
                     </span> 
                 </div>
                 
+                <div class-"col-md-9">
+                 * Required fields. 
                 {% if form.errors.items %}
-                <h4>Errors: </h4>
-                {% endif %}
+                <h4 style="color: red;">Errors:</h4>
+                 <font color="red">
                 {% for field, errors in form.errors.items %}
                         {{field | legible_fields}}:
                     {% for error in errors %}
                         {{error}}
                     {% endfor %}
                 {% endfor %}
+                </font>
+                {% endif %}
+                </div>
 
                 * Required fields.
                 <hr />
@@ -101,7 +106,7 @@
  
                     <button type="submit" class="btn btn-default btn-lg" id="account-submit" name="{% if user.is_authenticated %}{% else %}account-create{% endif %}" {% if user.is_authenticated %}disabled{% endif %}> {% if user.is_authenticated %} Update (Unavailable){% else %} Register {% endif %}</button>
                     &nbsp;
-                    <a href="/account" id="password-recovery"> Forgot your password (Unavailable)? </a>
+                    <a href="/account" id="password-recovery"> Forgot your password? (Unavailable... email lillio DOT mok AT mail.mcgill.ca) </a>
 
 
             </form>
