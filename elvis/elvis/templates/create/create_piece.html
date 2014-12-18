@@ -1,0 +1,459 @@
+{% extends "base.html" %}
+
+{% block wrap %}
+
+<h2>Upload a Piece</h2>
+<head>
+    <meta charset='utf-8' />
+    <meta http-equiv="X-UA-Compatible" content="chrome=1" />
+    <!-- <script type='text/javascript' src='//code.jquery.com/jquery-2.0.2.js'></script>  BREAKS CODE ??!?!-->
+    <script src="//ajax.googleapis.com/ajax/libs/jqueryui/1.8.16/jquery-ui.min.js"></script>
+    <link rel="stylesheet" href="//ajax.googleapis.com/ajax/libs/jqueryui/1.8/themes/smoothness/jquery-ui.css">
+    <script type='text/javascript' src='{{STATIC_URL}}jquery_treeselect/bin/jquery.treeselect.js'></script>
+    <link rel='stylesheet' type='text/css' href='{{STATIC_URL}}jquery_treeselect/bin/jquery.treeselect.css' />
+    
+    <!-- <script src="{{ STATIC_URL }}js/bootstrap.min.js"></script> 
+
+    <script src="{{ STATIC_URL}}js/jquery-1.9.1.min.js"></script>
+    <script>jQuery.noConflict();</script> --><!-- Hack to stop jquery breaking the page with boostrap's js -->
+
+    <script type='text/javascript'>
+      var maxDepth = 3;
+      var loadChildren = function(node, level) {
+        var hasChildren = node.level < maxDepth;
+        for (var i=0; i<4; i++) {
+          var id = node.id + (i+1).toString();
+          node.children.push({
+            id:id,
+            title:'Node ' + id,
+            has_children:hasChildren,
+            level: node.level + 1,
+            children:[]
+          });
+          if (hasChildren && level < 2) {
+            loadChildren(node.children[i], (level+1));
+          }
+        }
+        return node;
+      };
+    </script>
+
+</head>
+
+<body>
+<div class="col-12">
+
+    <span class="help-block">Upload a piece object to the database with the appropriate attachment files. </span>
+
+    <!-- Collapse/Expand-All button ... dysfunctional right now -->
+
+    <button id="collapse-init" class="btn btn-primary btn-sm">
+    Expand Form
+    </button>
+    <br/><br/>
+
+    <!-- From the very excellent http://stackoverflow.com/questions/20347553/bootstrap-3-collapse-accordion-collapse-all-works-but-then-cannot-expand-all-wh -->
+    <script type="text/javascript">
+        $(function(){
+            var active = true;
+            $('#collapse-fields').collapse('show');
+            $('#collapse-init').click(
+                // Importing the bootstrap js required for collapsing disables the panels; see below for non-bootstrap specific js
+                function(){
+                    if (active) {
+                        active = false;
+                        $('.panel-collapse').collapse('show');
+                        $('.panel-title').attr('data-toggle', '');
+                        $('.btn.move').hide();
+                        //$('.panel-collapse').attr('class', 'panel-collapse collapse in');
+                        $(this).text('Collapse Form');
+                    } 
+                    else {
+                        active = true;
+                        $('.panel-collapse').collapse('hide');
+                        $('.panel-title').attr('data-toggle', 'collapse'); // use 'collapse' for user collapseable panels
+                        $('.btn.move').show();
+                        //$('.panel-collapse').attr('class', 'panel-collapse collapse');
+                        $(this).text('Expand Form');
+                        setTimeout(function(){$('#collapse-fields').collapse('show')}, 400);
+                        
+                    }
+                }
+            );
+
+            $('.btn.move').click(
+                function(){
+                    if (active){
+                        var movePanel = $(this).attr('movePanel');
+                        $('#accordion .in').collapse('hide');
+                        $(movePanel).collapse('show');
+                    }
+                }
+            );
+            $('.panel-title:not(".movements")').on('click', 
+                function(){
+                    if (active) {
+                        $('.main.in').collapse('hide');
+                    }
+                }
+            ); 
+        });
+
+    </script>
+
+
+    <form action="" method="post" enctype="multipart/form-data">
+    {% csrf_token %} 
+
+
+
+        <div class="col-12"> 
+
+            <!-- Default accordion behaviour: <a data-toggle="collapse" data-parent="#accordion" href="#collapse-fields">  -->
+            <div class="panel-group" id="accordion">
+
+                <!-- Fields panel -->
+                <div class="panel panel-default">
+                    <div class="panel-heading">
+                        <h1 class="panel-title" data-toggle="collapse" data-target="#collapse-fields" > 
+                            <span class="glyphicon glyphicon-collapse-down"></span> 
+                            Add Fields: 
+                        </h1>
+                    </div>
+
+                    <!-- Fields Panel Body-->
+
+                    <div id="collapse-fields" class="panel-collapse collapse main">
+                        <div class="panel-body">
+
+                            <span class="help-block"> Enter information for this piece... Lorem ipsum dolor sit amet, consectetur adipiscing elit. Vestibulum semper arcu quis sollicitudin rhoncus. Aliquam eu sagittis mauris. Sed facilisis lobortis orci, a sodales eros hendrerit at. Quisque bibendum odio id nulla iaculis, non scelerisque purus posuere. Suspendisse nisl urna, aliquam pellentesque justo in, malesuada tincidunt lorem.  </span>
+
+                            <div class="input-group input-group-lg upload-input-group">
+                                <span class="input-group-addon lg">Piece Title</span>
+                                <input type="text" class="form-control" placeholder="E.g. Messe de Nostre Dame">
+                            </div>
+                            <span class="help-block"> Suspendisse pellentesque auctor nisi, id suscipit nulla feugiat a. Maecenas tincidunt elit ac fringilla dictum. Maecenas lobortis adipiscing dapibus. Quisque placerat volutpat aliquet. </span>
+
+                            <div class="input-group input-group-lg upload-input-group">
+                                <span class="input-group-addon lg">Composer</span>
+                                <input type="text" class="form-control" placeholder="E.g. Machaut, Guillaume de">
+                            </div>
+
+
+                            <div class="input-group input-group-lg upload-input-group">
+                                <span class="input-group-addon lg">Collection (Optional)</span>
+                                <input type="text" class="form-control" placeholder="E.g. ELVIS Three Generations Test Set">
+                            </div>
+
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <div class="input-group input-group-lg upload-input-group">
+                                        <span class="input-group-addon lg">Composition Start Date</span>
+                                        <input type="text" class="form-control" placeholder="YYYY(-MM-DD)" maxlength="10">
+                                    </div>
+                                </div>
+
+                                <div class="col-md-6">
+                                    <div class="input-group input-group-lg upload-input-group">
+                                        <span class="input-group-addon lg">Composition End Date</span>
+                                        <input type="text" class="form-control" placeholder="YYYY(-MM-DD)" maxlength="10">
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <div class="input-group input-group-lg upload-input-group">
+                                        <span class="input-group-addon lg">Number of Voices</span>
+                                        <input type="text" class="form-control" placeholder="E.g. 4" maxlength="2">
+                                    </div>
+                                </div>
+
+                                <div class="col-md-6">
+                                </div>
+                            </div>
+   
+
+                            <span class="help-block"> Ut pretium risus vel mauris eleifend consectetur. Nunc nunc libero, lacinia id convallis ut, lobortis vel neque. Proin eu placerat eros. Pellentesque massa sem, rutrum eu justo vitae, venenatis imperdiet nisl. Vestibulum pharetra, ligula et varius eleifend, arcu lacus sagittis lorem, ac mollis sem mi malesuada tortor. </span>
+                            
+                            <div class="row">
+                                <div class="col-md-6">
+                                </div>
+                                <div class="col-md-6">
+                                    <button type="button" class="btn btn-success btn-sm pull-right move" movePanel="#collapse-additional">
+                                    Next  <span class="glyphicon glyphicon-chevron-right"><span>
+                                    </button>
+                                </div>
+                            </div>
+
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Comments Panel -->
+                <div class="panel panel-default">
+                    <div class="panel-heading">
+                        <h1 class="panel-title"  data-toggle="collapse" data-target="#collapse-additional"> 
+                            <span class="glyphicon glyphicon-collapse-down"></span> 
+                            Add Additional Fields:  
+                        </h1>
+                    </div>
+                    <div id="collapse-additional" class="panel-collapse collapse main">
+                        <div class="panel-body">
+
+                            <span class="help-block"> Ut pretium risus vel mauris eleifend consectetur. Nunc nunc libero, lacinia id convallis ut, lobortis vel neque. Proin eu placerat eros. Pellentesque massa sem, rutrum eu justo vitae, venenatis imperdiet nisl. Vestibulum pharetra, ligula et varius eleifend, arcu lacus sagittis lorem, ac mollis sem mi malesuada tortor. </span>
+
+                        
+                            <div class="input-group input-group-lg upload-input-group">
+                                <span class="input-group-addon lg">Genre</span>
+                                <input type="text" class="form-control" placeholder="E.g. Mass, Parody">
+                            </div>
+
+                            <div class="input-group input-group-lg upload-input-group">
+                                <span class="input-group-addon lg">Instruments/Voices</span>
+                                <input type="text" class="form-control" placeholder="E.g. SATB">
+                            </div>
+
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <div class="input-group input-group-lg upload-input-group">
+                                        <span class="input-group-addon lg">Composer's Country</span>
+                                        <input type="text" class="form-control" placeholder="E.g. France" maxlength="10">
+                                    </div>
+                                </div>
+
+                                <div class="col-md-6">
+                                    <div class="input-group input-group-lg upload-input-group">
+                                        <span class="input-group-addon lg">Language</span>
+                                        <input type="text" class="form-control" placeholder="E.g. Latin" maxlength="10">
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="input-group input-group-lg upload-input-group">
+                                <span class="input-group-addon lg">Source Information</span>
+                                <input type="text" class="form-control" placeholder="E.g. Josquin Research Project">
+                            </div>
+
+                            <div class="row">
+                                <div class="col-md-6">
+                                <button type="button" class="btn btn-default btn-sm move" movePanel="#collapse-fields"> 
+                                <span class="glyphicon glyphicon-chevron-left"><span> Previous
+                                </button>
+                                </div>
+                                <div class="col-md-6">
+                                <button type="button" class="btn btn-success btn-sm pull-right move" movePanel="#collapse-tags">
+                                Next  <span class="glyphicon glyphicon-chevron-right"><span>
+                                </button>
+                                </div>
+                            </div>
+
+                        </div>
+                    </div>
+                </div>
+
+
+                <!-- Tags Panel -->
+                <div class="panel panel-default">
+                    <div class="panel-heading">
+                        <h1 class="panel-title"  data-toggle="collapse" data-target="#collapse-tags"> 
+                            <span class="glyphicon glyphicon-collapse-down"></span> 
+                            Add Tags:  
+                        </h1>
+                    </div>
+                    <div id="collapse-tags" class="panel-collapse collapse main">
+                        <div class="panel-body">
+                            <span class="help-block">Tag this piece. It is recommended to have at least: one genre tag, one instrument tag, ... Ut pretium risus vel mauris eleifend consectetur. Nunc nunc libero, lacinia id convallis ut, lobortis vel neque. Proin eu placerat eros. Pellentesque massa sem, rutrum eu justo vitae, venenatis imperdiet nisl. Vestibulum pharetra, ligula et varius eleifend, arcu lacus sagittis lorem, ac mollis sem mi malesuada tortor. </span>
+                            <!-- Tags Panel Body-->
+
+                             <script type="text/javascript">
+                              $(function() {
+                                $('#examples').tabs();
+                              });
+                            </script> 
+                            
+                            <!--<script type='text/javascript' src='{{STATIC_URL}}jquery_treeselect/bin/treetab_elvis.js'></script>-->
+
+                            <div id="examples">
+                                <ul>
+                                    <li><a href="{{STATIC_URL}}jquery_treeselect/treeselect_elvis.html"><span>Tree Select</span></a></li>
+                                    <li><a href="{{STATIC_URL}}jquery_treeselect/treesearch_elvis.html"><span>Tree Search</span></a></li>
+                                </ul>
+                            </div>
+
+                            <span class="help-block"> Proin vel ullamcorper mauris, sed dignissim libero. Aliquam ullamcorper purus id tincidunt lacinia. Cras eget congue magna. Fusce commodo mollis tortor non ultrices. Etiam mollis id nunc quis dignissim. Praesent cursus odio non lacinia tincidunt. </span>
+
+                            <p></p>
+                            <div class="row">
+                                <div class="col-md-6">
+                                <button type="button" class="btn btn-default btn-sm move" movePanel="#collapse-fields"> 
+                                <span class="glyphicon glyphicon-chevron-left"><span> Previous
+                                </button>
+                                </div>
+                                <div class="col-md-6">
+                                <button type="button" class="btn btn-success btn-sm pull-right move" movePanel="#collapse-comments">
+                                Next  <span class="glyphicon glyphicon-chevron-right"><span>
+                                </button>
+                                </div>
+                            </div>
+
+                        </div>
+                    </div>
+                </div>
+
+
+                <!-- Comments Panel -->
+                <div class="panel panel-default">
+                    <div class="panel-heading">
+                        <h1 class="panel-title"  data-toggle="collapse" data-target="#collapse-comments"> 
+                            <span class="glyphicon glyphicon-collapse-down"></span> 
+                            Add Comments:  
+                        </h1>
+                    </div>
+                    <div id="collapse-comments" class="panel-collapse collapse main">
+                        <div class="panel-body">
+                            <h4> Comments: </h4>
+                            <textarea class="form-control" rows="6"></textarea>
+
+                            <span class="help-block"> Proin vel ullamcorper mauris, sed dignissim libero. Aliquam ullamcorper purus id tincidunt lacinia. Cras eget congue magna. Fusce commodo mollis tortor non ultrices. Etiam mollis id nunc quis dignissim. Praesent cursus odio non lacinia tincidunt. </span>
+
+                            <p></p>
+                            <div class="row">
+                                <div class="col-md-6">
+                                <button type="button" class="btn btn-default btn-sm move" movePanel="#collapse-tags">
+                                <span class="glyphicon glyphicon-chevron-left"><span> Previous
+                                </button>
+                                </div>
+                                <div class="col-md-6">
+                                <button type="button" class="btn btn-success btn-sm pull-right move" movePanel="#collapse-files">
+                                Next  <span class="glyphicon glyphicon-chevron-right"><span>
+                                </button>
+                                </div>
+                            </div>
+
+                        </div>
+                    </div>
+                </div>
+
+                
+                <!-- Files Panel -->
+                <div class="panel panel-default">
+                    <div class="panel-heading">
+                        <h1 class="panel-title" data-toggle="collapse" data-target="#collapse-files"> 
+                            <span class="glyphicon glyphicon-collapse-down"></span> 
+                            Add Attachments:  
+                        </h1>
+                    </div>
+                    <div id="collapse-files" class="panel-collapse collapse main">
+                        <div class="panel-body">
+
+                            <!-- Files Panel Body -->
+
+                            <span class="help-block">Attach the files for this piece...Proin vel ullamcorper mauris, sed dignissim libero. Aliquam ullamcorper purus id tincidunt lacinia. Cras eget congue magna. Fusce commodo mollis tortor non ultrices. Etiam mollis id nunc quis dignissim. Praesent cursus odio non lacinia tincidunt.</span>
+                            <input name="upload[]" id="upload" type="file" multiple="multiple" onchange="displayFileList();"/>
+
+                            <p></p>
+                            <div class="row">
+                                <div class="col-md-6">
+                                <button type="button" class="btn btn-default btn-sm move" movePanel="#collapse-comments">
+                                <span class="glyphicon glyphicon-chevron-left"><span> Previous
+                                </button>
+                                </div>
+                                <div class="col-md-6">
+                                <button type="button" class="btn btn-success btn-sm pull-right move" movePanel="#collapse-movements">
+                                Next  <span class="glyphicon glyphicon-chevron-right"><span>
+                                </button>
+                                </div>
+                            </div>
+
+                        </div>
+                    </div>
+                </div>
+            
+
+                <!-- Movements Panel -->
+                <div class="panel panel-default">
+                    <div class="panel-heading">
+                        <h1 class="panel-title" data-toggle="collapse" data-target="#collapse-movements"> 
+                            <span class="glyphicon glyphicon-collapse-down"></span> 
+                            Add Movements:  
+                        </h1>
+                    </div>
+
+                    <div id="collapse-movements" class="panel-collapse collapse main">
+                        <div class="panel-body">
+
+                            <!-- Movements Panel Body -->
+                            <span class="help-block"> Vivamus quis elit a eros lacinia tincidunt. Suspendisse aliquet neque ut euismod lacinia. Nullam sed metus in diam vulputate eleifend. Sed accumsan velit non nisi sollicitudin eleifend. Proin consectetur ante leo, eget aliquet felis sollicitudin in. Aenean convallis orci in euismod malesuada. </span>
+
+                            <h4><button type="button" class="btn btn-primary btn-sm" id="add-mvt" style="display: inline;">
+                                Add Movement <span class="glyphicon glyphicon-plus"></span> 
+                            </button></h4> 
+
+                            <script type="text/javascript">
+                            $(function(){
+                                var panelCount = 0;
+                                $("#add-mvt").click(
+                                    function(){
+                                        panelCount++;
+
+
+                                        var titleInput = '<div class="input-group"> <span class="input-group-addon small">Movement Title</span> <input type="text" class="form-control" placeholder="E.g.: Messe de Nostre Dame"> </div> <p></p>';
+
+                                        var commentInput = '<label for="name">Comments: </label><textarea class="form-control" rows="3"></textarea> <p></p>';
+
+                                        var tagTree = '<div id="example'+ panelCount +'"><ul><li><a href="{{STATIC_URL}}jquery_treeselect/treeselect_elvis.html"><span>Tree Select</span></a></li><li><a href="{{STATIC_URL}}jquery_treeselect/treesearch_elvis.html"><span>Tree Search</span></a></li></ul></div>';
+
+                                        var tagTreeScript = '<script type="text/javascript">$(function() {$("#example'+ panelCount +'").tabs();});<\/script>';
+
+                                        var heading = '<div class="panel-heading"> <h4 class="panel-title movements" data-toggle="collapse" data-target="#collapse'+ panelCount +'"> <span class="glyphicon glyphicon-collapse-down"></span> Movement '+ panelCount +':  </h4> </div>';
+
+
+                                        var panel = '<div class="panel panel-default"> '+heading+'<div id="collapse'+ panelCount +'" class="panel-collapse collapse in movements"> <div class="panel-body"> '+titleInput + commentInput+ tagTreeScript + tagTree +' </div> </div> </div>';
+
+                                        $( "#accordion-movements" ).append(
+                                            panel
+                                        ); 
+
+                                    }
+                                );
+                            });
+                            </script> 
+
+                            <div class="panel-group movements" id="accordion-movements">
+                            </div>
+
+                            <span class="help-block"> Phasellus ipsum enim, cursus id enim quis, pharetra imperdiet dolor. Nunc luctus sit amet tellus sed dapibus. Praesent quis tincidunt mi. Praesent lorem purus, vestibulum at eros vel, venenatis lobortis libero. Vestibulum gravida nulla in porta lobortis. Ut rutrum mauris non lectus feugiat imperdiet. Duis in faucibus felis, id molestie augue. </span>
+
+                            <p></p>
+                            <div class="row">
+                                <div class="col-md-6">
+                                <button type="button" class="btn btn-default btn-sm move" movePanel="#collapse-files">
+                                <span class="glyphicon glyphicon-chevron-left"><span> Previous
+                                </button>
+                                </div>
+                                <div class="col-md-6">
+                                <button type="button" class="btn btn-success btn-sm pull-right move">
+                                Next  <span class="glyphicon glyphicon-chevron-right"><span>
+                                </button>
+                                </div>
+                            </div>
+
+
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+
+            
+
+        </div>
+
+
+    </form>
+    <br></br>
+
+</div>
+</body>
+{% endblock %}
