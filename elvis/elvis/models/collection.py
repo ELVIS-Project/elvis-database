@@ -14,6 +14,8 @@ class Collection(models.Model):
         verbose_name_plural = "collections"
         app_label = "elvis"
 
+    public = models.NullBooleanField(blank=True) 
+
     old_id = models.IntegerField(db_index=True, blank=True, null=True)
     creator = models.ForeignKey(User)
     title = models.CharField(max_length=255, blank=True, null=True)

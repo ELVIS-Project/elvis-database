@@ -21,6 +21,7 @@ from elvis.views.composer import ComposerList, ComposerDetail
 from elvis.views.collection import CollectionList, CollectionDetail
 from elvis.views.tag import TagList, TagDetail
 from elvis.views.attachment import AttachmentList, AttachmentDetail
+from elvis.views.create import CreatePiece
 
 # Uncomment the next two lines to enable the admin:
 from django.contrib import admin
@@ -65,6 +66,7 @@ urlpatterns += format_suffix_patterns(
         url(r'^about/', about, name='about'),
 
         url(r'^temp/', temp, name="temp"),
+        url(r'^create/piece/', CreatePiece.as_view(), name="create-piece"),
 
         (r'^media/(?P<path>.*)$', 'django.views.static.serve', {'document_root': settings.MEDIA_ROOT}),
     )

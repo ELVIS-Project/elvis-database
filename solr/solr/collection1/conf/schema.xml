@@ -64,7 +64,8 @@
      -->
 
  <fields>
-    <!-- ***** LM **** foreign keys in django not implemented yet in schema --> 
+    <!-- ***** LM **** _searchable fields are text_general version to enable searching with tokenisation etc.
+    regular fields are stored as strings for faceting purposes... with the exception of tags --> 
 
     <!-- LM General fields -->
     <field name="id" type="string" indexed="true" stored="true" required="true" />
@@ -364,6 +365,13 @@
       </analyzer>
       <analyzer type="query">
         <tokenizer class="solr.StandardTokenizerFactory"/>
+        <!-- Protected words to stop stemming -->
+        <!-- <filter class="solr.KeywordMarkerFilterFactory" protected="protwords.txt" /> -->
+        <!-- Custom stemming for specific words -->
+        <filter class="solr.StemmerOverrideFilterFactory" dictionary="stemdict.txt" />
+        <!-- Porter stemming... use solr.PorterStemFilterFactory for regular Porter Stemming; SnowballPorterFilterFactory is
+        more aggressive, and specify language="English" -->
+        <!-- <filter class="solr.PorterStemFilterFactory"/> -->
         <filter class="solr.StopFilterFactory" ignoreCase="true" words="stopwords.txt" enablePositionIncrements="true"/>
         <filter class="solr.SynonymFilterFactory" synonyms="synonyms.txt" ignoreCase="true" expand="true"/>
         <filter class="solr.ASCIIFoldingFilterFactory"/>

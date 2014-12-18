@@ -1,4 +1,6 @@
 # LM: TODO lots of cleaning up; make modular methods
+import os, json
+import datetime
 from rest_framework import generics
 from rest_framework import permissions
 from rest_framework import status
@@ -6,27 +8,17 @@ from rest_framework.renderers import JSONRenderer, JSONPRenderer
 from rest_framework.response import Response
 from rest_framework.views import APIView
 from django.utils.decorators import method_decorator
-from django.views.decorators.http import require_http_methods
 from django.views.decorators.csrf import csrf_protect
 from django.conf import settings
-
+from django.core.exceptions import ObjectDoesNotExist
 from django.core.servers.basehttp import FileWrapper
-
-from celery.result import AsyncResult
 from django.http import HttpResponse, HttpResponseRedirect, JsonResponse
-from django.core.urlresolvers import reverse
-
-from django.template import RequestContext
-from django.shortcuts import render_to_response
+from celery.result import AsyncResult
 from elvis import tasks
-import os, json
-
-from time import sleep
-
-import datetime
-
 from elvis.renderers.custom_html_renderer import CustomHTMLRenderer
 from elvis.serializers.download import DownloadSerializer, DownloadingSerializer
+from elvis.helpers.solrsearch import SolrSearch
+from elvis.settings import ELVIS_EXTENSIONS
 from elvis.models.download import Download
 from elvis.models.piece import Piece
 from elvis.models.movement import Movement
@@ -34,12 +26,6 @@ from elvis.models.attachment import Attachment
 from elvis.models.collection import Collection
 from elvis.models.tag import Tag
 from elvis.models.composer import Composer
-
-from elvis.helpers.solrsearch import SolrSearch
-
-from django.core.exceptions import ObjectDoesNotExist
-
-from elvis.settings import ELVIS_EXTENSIONS
 
 class DownloadListHTMLRenderer(CustomHTMLRenderer):
     template_name = "download/download_list.html"

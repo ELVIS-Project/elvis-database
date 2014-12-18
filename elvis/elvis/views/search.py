@@ -6,8 +6,7 @@ from rest_framework.renderers import JSONRenderer, JSONPRenderer
 import json
 import datetime
 
-
-from elvis.serializers.search import SearchSerializer#, PaginatedSearchSerializer
+from elvis.serializers.search import SearchSerializer
 from django.core.serializers.json import DjangoJSONEncoder
 from elvis.renderers.custom_html_renderer import CustomHTMLRenderer
 from elvis.helpers.solrsearch import SolrSearch
@@ -101,7 +100,7 @@ class SearchView(APIView):
 
         query_minus_page = query_minus_page.urlencode(['*'])     
 
-        if request.GET.get('format') == 'json':
+        if request.GET.get('format') == 'json' or 'json' in request.META.get('HTTP_ACCEPT'):
             result = paged_results.__dict__
             result['object_list'] = [item.__dict__ for item in result['object_list']]
             result['paginator'] = result['paginator'].__dict__

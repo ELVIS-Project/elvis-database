@@ -28,7 +28,7 @@
                 <tr>
                     <td width="68%">{% include "includes/download-badge-inc.html" with download_type="elvis_piece" download_item_id=piece.item_id title="Add to Downloads" %}<a href="{{ piece.url }}">{{ piece.title }}</a></td>
                     <td width="23%"><a href="{{ piece.composer.url }}">{{ piece.composer.name }}</a></td>
-                    <td width="9%">{{ piece.date_of_composition | date:"Y"}}</td>
+                    <td width="9%">{{ piece.date_of_composition | date:"Y"}}-{{ piece.date_of_composition2 | date:"Y"}}</td>
                 </tr>
                 {% if piece.movements %}
                 <tr>

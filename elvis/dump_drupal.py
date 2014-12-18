@@ -6,6 +6,8 @@ from MySQLdb.cursors import DictCursor
 
 import django
 
+import csv
+
 os.environ.setdefault("DJANGO_SETTINGS_MODULE", "elvis.settings")
 
 django.setup()
@@ -56,6 +58,21 @@ TAG_HIERARCHY_QUERY = """SELECT * FROM taxonomy_term_hierarchy"""
 
 ATTACHMENT_QUERY = """"""
 
+TAG_DICT = {"Composer": "pass", 
+            "Source Information": "Source", 
+            "Instruments / Voices": "InstrumentVoice", 
+            "Country / City of Composer": "Location", 
+            "Free": "pass", 
+            "Language": "Language", 
+            "Provenance": "Source",
+            }
+
+TAG_CSV_PATH = 'old_tags.csv'
+
+FIELD_INSTRUCTIONS = ()
+
+
+
 # There may be even more problems dumping the database on different oses... this attempts to decode in utf-8 and then latin-1
 def my_decoder(text):
         if not text is None:
@@ -75,9 +92,11 @@ def my_decoder(text):
      
 
 class DumpDrupal(object):
+
     def __init__(self):
         # IMPORTANT: Choose which objects to add here
         # LM: Would want to run tags, users only if db doesnt have previous users, corpus, piece, movement, in that order
+
         self.get_tags()
         self.get_composers()
         self.get_users()
@@ -103,33 +122,27 @@ class DumpDrupal(object):
         conn.close()
         return u
 
-    '''                                                           
-    def get_corpus(self):
-        users = self.__get_ddmal_users()
-        self.__connect()
+    def __write_tags_to_csv(self, tags):
+        with open(TAG_CSV_PATH, 'wb') as csv_file:
+            csv_writer = csv.writer(csv_file, dialect='excel')
+            csv_writer.writerow(['Old Tag', 'Tag Description', 'New Parent Field', 'New Name'])
+            for tag in tags:
+                csv_writer.writerow([(tag['name']), (tag['description']), '', ''])
+        with open(TAG_CSV_PATH, 'rb') as csv_file:
+            csv_reader = csv.reader(csv_file, dialect='excel')
+            # Check that you're done
+            for row in csv_reader:
+                print row
 
-        self.curs.execute(CORPUS_QUERY)
-        corpus = self.curs.fetchall()
-        print "Deleting corpora"
-        Corpus.objects.all().delete()
+    def __read_tags_in_csv(self,tags):
+        pass
+        with open(TAG_CSV_PATH, 'rb') as csv_file:
+            csv_reader = csv.reader(csv_file, dialect='excel')
+            # Check that you're done
+            for row in csv_reader:
+                print row
 
-        print "Adding corpora"
-        for corp in corpus:
-            print corp
-            for user in users:
-                if corp.get('creator') == user.get('uid'):
-                    u = User.objects.get(username=user.get('name'))
-                    break
-            corp['creator'] = u
-            corp['title'] = my_decoder(corp['title'])
-            corp['comment'] = my_decoder(corp['comment'])
-            corp['created'] = datetime.datetime.fromtimestamp(corp['created'])
-            corp['updated'] = datetime.datetime.fromtimestamp(corp['updated'])
-            x = Corpus(**corp)
-            x.save()
-
-        self.__disconnect()
-        '''
+    #def __
 
     def get_collection(self):
         users = self.__get_ddmal_users()
@@ -241,16 +254,8 @@ class DumpDrupal(object):
         
 
         # Tag export to CSV
-        '''
-        import csv
-        csv_file = csv.writer(open('old_tags.csv', 'wb'), dialect='excel')
-        csv_file.writerow(['Old Tag', 'Tag Description', 'New Parent Field', 'New Name'])
-        for tag in tags:
-            csv_file.writerow([(tag['name']), (tag['description']), '', ''])
-        csv_file = csv.reader(open('old_tags.csv', 'rb'), dialect='excel')
-        for row in csv_file:
-            print row
-        '''
+        #self.__write_tags_to_csv(tags)
+        
         self.__disconnect()
 
     def get_attachments(self):
@@ -286,17 +291,13 @@ class DumpDrupal(object):
                     break
 
             if rettype == "piece":
-
                 collection_objs = Collection.objects.filter(old_id=item['book_id'])
                 if not collection_objs.exists():
                     collection_objs = None
                 else:
                     collection_objs = collection_objs
-
             elif rettype == "movement":
                 parent_obj = self.__resolve_movement_parent(item['old_id'])
-
-
                 collection_objs = Collection.objects.filter(old_id=item['book_id'])
                 if not collection_objs.exists():
                     collection_objs = None

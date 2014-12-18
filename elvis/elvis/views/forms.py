@@ -19,6 +19,7 @@ import elvis.models
 from elvis.forms.entity import ComposerForm, PieceForm, MovementForm, AttachmentForm
 from elvis.forms.project import ProjectForm
 
+
 from django.contrib.auth.models import User
 from elvis.models.composer import Composer
 from elvis.models.collection import Collection
@@ -33,11 +34,6 @@ from elvis.models.project import Project
 Views that create and add an entity to the database 
 '''
 
-def register_user(request):
-    if request.method == 'POST':
-        return HttpResponse()
-    else:
-        return HttpResponse()
 
 def create_composer(request):
     picture = choice(os.listdir(os.path.abspath('elvis/media/generics/composers')))
