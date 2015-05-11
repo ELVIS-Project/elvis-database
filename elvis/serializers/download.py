@@ -6,15 +6,18 @@ from elvis.models.movement import Movement
 from elvis.models.composer import Composer
 from django.contrib.auth.models import User
 
+
 class UserDownloadSerializer(serializers.HyperlinkedModelSerializer):
     class Meta:
         model = User
         fields = ('url', 'username')
 
+
 class AttachmentComposerSerializer(serializers.HyperlinkedModelSerializer):
     class Meta:
         model = Composer
         fields = ('url', 'name', 'id')
+
 
 class AttachmentPieceSerializer(serializers.HyperlinkedModelSerializer):
     composer = AttachmentComposerSerializer()
@@ -22,11 +25,13 @@ class AttachmentPieceSerializer(serializers.HyperlinkedModelSerializer):
         model = Piece
         fields = ('url', 'title', 'date_of_composition',  'date_of_composition2', 'composer', 'id')
 
+
 class AttachmentMovementSerializer(serializers.HyperlinkedModelSerializer):
     composer = AttachmentComposerSerializer()
     class Meta:
         model = Movement
         fields = ('url', 'title', 'date_of_composition', 'date_of_composition2', 'composer', 'id')
+
 
 class UserAttachmentSerializer(serializers.HyperlinkedModelSerializer):
     pieces = AttachmentPieceSerializer(many=True)
@@ -43,6 +48,7 @@ class DownloadSerializer(serializers.ModelSerializer):
     attachments = UserAttachmentSerializer(many=True)
     class Meta:
         model = Download
+
 
 class DownloadingSerializer(serializers.Serializer):
     class Meta:
