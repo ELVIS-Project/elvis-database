@@ -1,9 +1,12 @@
 *.pyc
 *.sqlite3
+.idea
 solr/target/*
 elvis_env/*
 .DS_Store
 dumps
+elvis/settings.py
+elvis/wsgi.py
 **/media/*
 **/attachments/*
 **/elvis-files/*
@@ -11,6 +14,6 @@ dumps
 elvis-files.tgz
 ddmal_elvis.sql
 ddmal_drupal.sql
-elvis/elvis/media/
-!elvis/elvis/media/.gitignore
+elvis/media/
+!elvis/media/.gitignore
 pom.xml

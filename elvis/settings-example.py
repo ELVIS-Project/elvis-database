@@ -17,7 +17,7 @@ from celery import schedules
 
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 import os
-BASE_DIR = os.path.dirname(__file__)
+BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
 # Automatically adjust settings to be suitable or insuitable for proudction environments
 # CRA: I used this to help...
@@ -26,15 +26,15 @@ BASE_DIR = os.path.dirname(__file__)
 # SECURITY WARNING: don't run with debug turned on in production!
 # CRA: Set "LILLIO" to True if you're Lillio.
 PRODUCTION = False
-LILLIO = False #if PRODUCTION else True  # we'll be Lillio by default...
+RUN_LOCAL = True #If set to true, be sure to configure the local paths to the project below.
 
 
 # Simple Settings
 # ===============
-DEBUG = False #if PRODUCTION else True
+DEBUG = True #if PRODUCTION else True
 TEMPLATE_DEBUG = DEBUG
 
-ALLOWED_HOSTS = ['database.elvisproject.ca', 'db-devel.elvisproject.ca']# if PRODUCTION else []
+#ALLOWED_HOSTS = ['database.elvisproject.ca', 'db-devel.elvisproject.ca']# if PRODUCTION else []
 
 if PRODUCTION:
     # TODO: Try loading from a temp file; if not present, automatically generate SECRET_KEY then
@@ -77,7 +77,7 @@ MIDDLEWARE_CLASSES = (
 
 # Database Configuration
 # ======================
-if not PRODUCTION and LILLIO:
+if RUN_LOCAL:
     DATABASES = {
         'default': {
             'ENGINE': 'django.db.backends.postgresql_psycopg2',
@@ -116,17 +116,17 @@ USE_TZ = True
 #      them back, check commit dc8f8afe75b7137440c6488483566b8e2c366379
 MEDIA_URL = '/media/'
 
-if DEBUG and LILLIO:
-    MEDIA_ROOT = "/Users/lmok/Documents/workspace/elvis-site/elvis"
+if DEBUG and RUN_LOCAL:
+    MEDIA_ROOT = "/PATH-TO/elvis-database/elvis/"
 #elif DEBUG:
 #    MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 else:
     MEDIA_ROOT = os.path.join(BASE_DIR, '..', '..', '..', 'media_root')
 # httpd will serve static files from this directory
 STATIC_URL = '/static/'
-if DEBUG and LILLIO:
+if DEBUG and RUN_LOCAL:
     STATIC_ROOT = os.path.join(BASE_DIR, 'static')
-    STATIC_URL = '/Users/lmok/Documents/workspace/elvis-site/elvis/elvis/static/'
+    STATIC_URL = '/PATH-To/elvis-database/elvis/static/'
 elif DEBUG:
     STATIC_ROOT = os.path.join(BASE_DIR, '..', '..', 'static_root')
 else:
@@ -135,10 +135,11 @@ else:
 
 # Solr Settings
 # =============
-if LILLIO:
-    SOLR_SERVER = "http://localhost:8080/elvis-solr"
+if RUN_LOCAL:
+    SOLR_SERVER = "http://localhost:8080/elvis-solr"]
 else:
     SOLR_SERVER = "http://localhost:8080/elvis-solr"
+
 SEARCH_FILTERS_DICT = {
     'fcp': 'elvis_composer',
     'fp': 'elvis_piece',
@@ -180,4 +181,3 @@ CELERYBEAT_SCHEDULE = {
 # Elvis Web App Settings
 # ======================
 ELVIS_EXTENSIONS = ['.xml', '.mxl', '.krn', '.md', '.nwc', '.tntxt', '.capx', '.abc', '.mid', '.midi']
-
