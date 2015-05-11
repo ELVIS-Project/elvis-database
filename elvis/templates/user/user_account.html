@@ -20,15 +20,77 @@
     <h2>Account</h2>
 </div>
 
-<ul class="nav nav-tabs nav-justified">
-    {% if user.is_authenticated %}
-        <li class="active"><a href="#existing" data-toggle="tab"><h3>Account Information</h3></a></li>
-    {% endif %}
+{% if user.is_authenticated %}
 
-    <li class="{% if user.is_authenticated %} {% else %} active {% endif %}"><a href="#registration" data-toggle="tab"><h3> {% if user.is_authenticated %} Modify Account {% else %} Register (New User) {% endif %}</h3></a></li>
+<ul class="nav nav-tabs nav-justified">
+    <li class="active"><a href="#existing" data-toggle="tab"><h3>Account Information</h3></a></li>
+    <li><a href="#update" data-toggle="tab"><h3> Modify Account</h3></a></li>
 </ul>
 
+{% else %}
+
+<ul class="nav nav-tabs nav-justified">
+    <li class="active"><a href="#registration" data-toggle="tab"><h3>Register</h3></a></li>
+</ul>
+
+{% endif %}
+
+
 <div class="tab-content">
+    {% if user.is_authenticated %}
+    <div class="tab-pane fade in active" id="existing">
+        <div class="panel-body">
+            <div class="row">
+                <div class="col-md-3 col-lg-3 " align="center"> <img alt="User Pic" src="https://lh5.googleusercontent.com/-b0-k99FZlyE/AAAAAAAAAAI/AAAAAAAAAAA/eu7opA4byxI/photo.jpg?sz=100" class="img-circle"> </div>
+                <div class=" col-md-9 col-lg-9 ">
+                    <table class="table table-user-information">
+                        <tbody>
+                            <tr>
+                                <td>Name: </td>
+                                <td>{{user.get_full_name}} </td>
+                            </tr>
+                            <tr>
+                                <td>Username:</td>
+                                <td>{{user.username}}</td>
+                            </tr>
+                            <tr>
+                                <td>Last Login:</td>
+                                <td>{{user.last_login}}</td>
+                            </tr>
+                            <tr>
+                                <td>Date Joined: </td>
+                                <td>{{user.date_joined}}</td>
+                            </tr>
+                            <tr>
+                                <td>Staff Status: </td>
+                                <td>{% if user.is_staff %} Staff {% else %} None {% endif %}</td>
+                            </tr>
+                            <tr>
+                                <td>Email</td>
+                                <td><a href="mailto:{{user.email}}">{{user.email}}</a></td>
+                            </tr>
+                            <tr>
+                                <td>Recent Contributions: </td>
+                                <td> </td>
+                            </tr>
+                            <tr>
+                                <td>Recent Queries: </td>
+                                <td> </td>
+                            </tr>
+                            <tr>
+                                <td>Collections: </td>
+                                <td> </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+            <div class="panel-footer">
+                <a data-original-title="Broadcast Message" data-toggle="tooltip" type="button" class="btn btn-sm btn-primary"><i class="glyphicon glyphicon-envelope"></i></a>
+            </div>
+    </div>
+    {% endif %}
 
     <div class="tab-pane fade in {% if user.is_authenticated %} {% else %} active {% endif %}" id="registration">
 
@@ -83,7 +145,7 @@
                     </span> 
                 </div>
                 
-                <div class-"col-md-9">
+                <div class="col-md-9">
                  * Required fields. 
                 {% if form.errors.items %}
                 <h4 style="color: red;">Errors:</h4>
@@ -104,72 +166,19 @@
            
                   <!-- Button -->
  
-                    <button type="submit" class="btn btn-default btn-lg" id="account-submit" name="{% if user.is_authenticated %}{% else %}account-create{% endif %}" {% if user.is_authenticated %}disabled{% endif %}> {% if user.is_authenticated %} Update (Unavailable){% else %} Register {% endif %}</button>
+                    <button type="submit" class="btn btn-default btn-lg" id="account-submit"
+                    name="{% if user.is_authenticated %}account-update{% else %}account-create{% endif %}">
+                        {% if user.is_authenticated %} Update (Unavailable)
+                        {% else %} Register {% endif %}
+                    </button>
                     &nbsp;
                     <a href="/account" id="password-recovery"> Forgot your password? (Unavailable... email lillio DOT mok AT mail.mcgill.ca) </a>
-
-
             </form>
         </div>
 
     </div>
 
-    {% if user.is_authenticated %}
-    <div class="tab-pane fade in active" id="existing">
 
-            <div class="panel-body">
-                  <div class="row">
-                    <div class="col-md-3 col-lg-3 " align="center"> <img alt="User Pic" src="https://lh5.googleusercontent.com/-b0-k99FZlyE/AAAAAAAAAAI/AAAAAAAAAAA/eu7opA4byxI/photo.jpg?sz=100" class="img-circle"> 
-                    </div>
-                    <div class=" col-md-9 col-lg-9 "> 
-                      <table class="table table-user-information">
-                        <tbody>
-                            <tr>
-                                <td>Name: </td>
-                                <td>{{user.get_full_name}} </td>
-                            </tr>
-                            <tr>
-                                <td>Username:</td>
-                                <td>{{user.username}}</td>
-                            </tr>
-                            <tr>
-                                <td>Last Login:</td>
-                                <td>{{user.last_login}}</td>
-                            </tr>
-                            <tr>
-                                <td>Date Joined: </td>
-                                <td>{{user.date_joined}}</td>
-                            </tr>
-                            <tr>
-                                <td>Staff Status: </td>
-                                <td>{% if user.is_staff %} Staff {% else %} None {% endif %}</td>
-                            </tr>
-                            <tr>
-                                <td>Email</td>
-                                <td><a href="mailto:{{user.email}}">{{user.email}}</a></td>
-                            </tr>
-                            <tr>
-                                <td>Recent Contributions: </td>
-                                <td> </td>
-                            </tr>
-                            <tr>
-                                <td>Recent Queries: </td>
-                                <td> </td>
-                            </tr>
-                            <tr>
-                                <td>Collections: </td>
-                                <td> </td>
-                            </tr>
-                        </tbody>
-                      </table>
-                    </div>
-                  </div>
-            </div>
-            <div class="panel-footer">
-                <a data-original-title="Broadcast Message" data-toggle="tooltip" type="button" class="btn btn-sm btn-primary"><i class="glyphicon glyphicon-envelope"></i></a>  
-            </div>
-    </div>
-    {% endif %}
 
 </div>
 {% endblock %}
