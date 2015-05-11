@@ -23,7 +23,7 @@ class MovementList(generics.ListCreateAPIView):
     paginate_by = 20
     paginate_by_param = 'page_size'
     max_paginate_by = 20
-
+    queryset = Movement.objects.all()
 
 
 class MovementDetail(generics.RetrieveUpdateDestroyAPIView):
@@ -31,3 +31,4 @@ class MovementDetail(generics.RetrieveUpdateDestroyAPIView):
     permission_classes = (permissions.IsAuthenticatedOrReadOnly,)
     serializer_class = MovementSerializer
     renderer_classes = (JSONRenderer, MovementDetailHTMLRenderer)
+    queryset = Movement.objects.all()

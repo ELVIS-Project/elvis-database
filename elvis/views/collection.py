@@ -23,7 +23,7 @@ class CollectionList(generics.ListCreateAPIView):
     paginate_by = 10
     paginate_by_param = 'page_size'
     max_paginate_by = 100
-
+    queryset = Collection.objects.all()
 
 
 class CollectionDetail(generics.RetrieveUpdateDestroyAPIView):
@@ -31,3 +31,4 @@ class CollectionDetail(generics.RetrieveUpdateDestroyAPIView):
     permission_classes = (permissions.IsAuthenticatedOrReadOnly,)
     serializer_class = CollectionSerializer
     renderer_classes = (JSONRenderer, CollectionDetailHTMLRenderer)
+    queryset = Collection.objects.all()

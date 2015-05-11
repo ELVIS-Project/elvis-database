@@ -28,6 +28,7 @@ class PieceList(generics.ListCreateAPIView):
     paginate_by = 10
     paginate_by_param = 'page_size'
     max_paginate_by = 100
+    queryset = Piece.objects.all()
 
 
 class PieceDetail(generics.RetrieveUpdateDestroyAPIView):
@@ -35,5 +36,4 @@ class PieceDetail(generics.RetrieveUpdateDestroyAPIView):
     permission_classes = (permissions.IsAuthenticatedOrReadOnly,)
     serializer_class = PieceSerializer
     renderer_classes = (JSONRenderer, PieceDetailHTMLRenderer)
-
-    
+    queryset = Piece.objects.all()
