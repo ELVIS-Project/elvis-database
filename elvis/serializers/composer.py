@@ -6,7 +6,7 @@ from django.conf import settings
 import os
 
 class ComposerMovementSerializer(serializers.HyperlinkedModelSerializer):
-    item_id = serializers.Field("pk")
+    item_id = serializers.Field(source='pk')
     class Meta:
         model = Movement
         fields = ('url', 'title', "item_id")
@@ -14,7 +14,7 @@ class ComposerMovementSerializer(serializers.HyperlinkedModelSerializer):
 
 class ComposerPieceSerializer(serializers.HyperlinkedModelSerializer):
     movements = ComposerMovementSerializer()
-    item_id = serializers.Field("pk")
+    item_id = serializers.Field(source='pk')
     class Meta:
         model = Piece
         fields = ('url', 'title', 'movements', "item_id", "date_of_composition")
@@ -24,7 +24,7 @@ class ComposerSerializer(serializers.HyperlinkedModelSerializer):
     pieces = ComposerPieceSerializer()
     movements = ComposerMovementSerializer()
     image = serializers.SerializerMethodField("retrieve_image")
-    item_id = serializers.Field("pk")
+    item_id = serializers.Field(source='pk')
     
     class Meta:
         model = Composer

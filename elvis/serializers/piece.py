@@ -78,7 +78,7 @@ class UserPieceSerializer(serializers.HyperlinkedModelSerializer):
         fields = ('url', 'username', 'first_name', "last_name")
 
 class MovementPieceSerializer(serializers.HyperlinkedModelSerializer):
-    item_id = serializers.Field('pk')
+    item_id = serializers.Field()
     class Meta:
         model = Movement
         fields = ('url', 'title', 'item_id')
@@ -95,7 +95,7 @@ class PieceSerializer(serializers.HyperlinkedModelSerializer):
     collections = CollectionPieceSerializer()
     uploader = UserPieceSerializer()
     movements = MovementPieceSerializer()
-    item_id = serializers.Field("pk")
+    item_id = serializers.Field(source='pk')
 
     class Meta:
         model = Piece

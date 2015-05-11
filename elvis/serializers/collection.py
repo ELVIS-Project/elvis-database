@@ -15,7 +15,7 @@ class ComposerCollectionSerializer(serializers.HyperlinkedModelSerializer):
 
 class PieceCollectionSerializer(serializers.HyperlinkedModelSerializer):
     composer = ComposerCollectionSerializer()
-    item_id = serializers.Field('pk')
+    item_id = serializers.Field(source='pk')
     number_of_movements = serializers.Field(source="number_of_movements")
     class Meta:
         model = Piece
@@ -29,7 +29,7 @@ class PieceMovementCollectionSerializer(serializers.HyperlinkedModelSerializer):
 class MovementCollectionSerializer(serializers.HyperlinkedModelSerializer):
     composer = ComposerCollectionSerializer()
     piece = PieceMovementCollectionSerializer()
-    item_id = serializers.Field('pk')
+    item_id = serializers.Field(source='pk')
     class Meta:
         model = Movement
         fields = ("url", "title", "composer", "date_of_composition", "item_id", "piece")
@@ -51,7 +51,7 @@ class CollectionSerializer(serializers.HyperlinkedModelSerializer):
     creator = UserCollectionSerializer()
     pieces = PieceCollectionSerializer()
     movements = MovementCollectionSerializer()
-    item_id = serializers.Field("pk")
+    item_id = serializers.Field(source='pk')
 
     class Meta:
         model = Collection
