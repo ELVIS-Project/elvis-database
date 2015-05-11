@@ -1,6 +1,6 @@
 from rest_framework import generics
 from rest_framework import permissions
-from rest_framework.renderers import JSONRenderer, JSONPRenderer
+from rest_framework.renderers import JSONRenderer
 
 from elvis.renderers.custom_html_renderer import CustomHTMLRenderer
 from elvis.serializers.tag import TagSerializer
@@ -19,7 +19,7 @@ class TagList(generics.ListCreateAPIView):
     model = Tag
     permission_classes = (permissions.IsAuthenticatedOrReadOnly,)
     serializer_class = TagSerializer
-    renderer_classes = (JSONRenderer, JSONPRenderer, TagListHTMLRenderer)
+    renderer_classes = (JSONRenderer, TagListHTMLRenderer)
     paginate_by = 10
     paginate_by_param = 'page_size'
     max_paginate_by = 100
@@ -29,4 +29,4 @@ class TagDetail(generics.RetrieveUpdateDestroyAPIView):
     model = Tag
     permission_classes = (permissions.IsAuthenticatedOrReadOnly,)
     serializer_class = TagSerializer
-    renderer_classes = (JSONRenderer, JSONPRenderer, TagDetailHTMLRenderer)
+    renderer_classes = (JSONRenderer, TagDetailHTMLRenderer)

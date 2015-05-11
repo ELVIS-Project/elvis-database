@@ -1,6 +1,6 @@
 from rest_framework import generics
 from rest_framework import permissions
-from rest_framework.renderers import JSONRenderer, JSONPRenderer
+from rest_framework.renderers import JSONRenderer
 
 from elvis.renderers.custom_html_renderer import CustomHTMLRenderer
 from elvis.serializers.collection import CollectionSerializer
@@ -19,7 +19,7 @@ class CollectionList(generics.ListCreateAPIView):
     model = Collection
     permission_classes = (permissions.IsAuthenticatedOrReadOnly,)
     serializer_class = CollectionSerializer
-    renderer_classes = (JSONRenderer, JSONPRenderer, CollectionListHTMLRenderer)
+    renderer_classes = (JSONRenderer, CollectionListHTMLRenderer)
     paginate_by = 10
     paginate_by_param = 'page_size'
     max_paginate_by = 100
@@ -30,4 +30,4 @@ class CollectionDetail(generics.RetrieveUpdateDestroyAPIView):
     model = Collection
     permission_classes = (permissions.IsAuthenticatedOrReadOnly,)
     serializer_class = CollectionSerializer
-    renderer_classes = (JSONRenderer, JSONPRenderer, CollectionDetailHTMLRenderer)
+    renderer_classes = (JSONRenderer, CollectionDetailHTMLRenderer)

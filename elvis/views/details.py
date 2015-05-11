@@ -6,7 +6,6 @@ from django.shortcuts import render
 from django.http import HttpResponseRedirect
 
 from elvis.models.composer import Composer
-from elvis.views.corpus import Corpus
 from elvis.views.piece import Piece
 from elvis.views.movement import Movement
 

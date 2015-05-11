@@ -2,7 +2,7 @@
 from rest_framework import generics
 from rest_framework import permissions
 from rest_framework import status
-from rest_framework.renderers import JSONRenderer, JSONPRenderer
+from rest_framework.renderers import JSONRenderer
 from rest_framework.response import Response
 from rest_framework.views import APIView
 from django.utils.decorators import method_decorator
@@ -34,7 +34,7 @@ class CreatePieceHTMLRenderer(CustomHTMLRenderer):
 class CreatePiece(generics.CreateAPIView):
     permission_classes = (permissions.IsAuthenticated,)
     serializer_class = CreatePieceSerializer
-    renderer_classes = (JSONRenderer, JSONPRenderer, CreatePieceHTMLRenderer)
+    renderer_classes = (JSONRenderer, CreatePieceHTMLRenderer)
 
     def get(self, request, *args, **kwargs):
         return Response(status=status.HTTP_200_OK)

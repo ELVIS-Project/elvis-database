@@ -1,6 +1,6 @@
 from rest_framework import generics
 from rest_framework import permissions
-from rest_framework.renderers import JSONRenderer, JSONPRenderer
+from rest_framework.renderers import JSONRenderer
 
 from elvis.renderers.custom_html_renderer import CustomHTMLRenderer
 from elvis.serializers.genre import GenreSerializer
@@ -13,4 +13,4 @@ class GenreDetail(generics.RetrieveUpdateDestroyAPIView):
     model = Genre
     permission_classes = (permissions.IsAuthenticatedOrReadOnly,)
     serializer_class = GenreSerializer
-    renderer_classes = (JSONRenderer, JSONPRenderer, GenreDetailHTMLRenderer)
+    renderer_classes = (JSONRenderer, GenreDetailHTMLRenderer)

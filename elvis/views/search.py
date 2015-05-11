@@ -2,7 +2,7 @@ from rest_framework.views import APIView
 from rest_framework.response import Response
 from django.http import HttpResponse, QueryDict
 from rest_framework import status
-from rest_framework.renderers import JSONRenderer, JSONPRenderer
+from rest_framework.renderers import JSONRenderer
 import json
 import datetime
 
@@ -26,7 +26,7 @@ class SearchViewHTMLRenderer(CustomHTMLRenderer):
 
 class SearchView(APIView):
     serializer_class = SearchSerializer
-    renderer_classes = (JSONRenderer, JSONPRenderer, SearchViewHTMLRenderer)
+    renderer_classes = (JSONRenderer, SearchViewHTMLRenderer)
 
     def get(self, request, *args, **kwargs):
         querydict = request.GET

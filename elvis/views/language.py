@@ -1,6 +1,6 @@
 from rest_framework import generics
 from rest_framework import permissions
-from rest_framework.renderers import JSONRenderer, JSONPRenderer
+from rest_framework.renderers import JSONRenderer
 
 from elvis.renderers.custom_html_renderer import CustomHTMLRenderer
 from elvis.serializers.language import LanguageSerializer
@@ -13,4 +13,4 @@ class LanguageDetail(generics.RetrieveUpdateDestroyAPIView):
     model = Language
     permission_classes = (permissions.IsAuthenticatedOrReadOnly,)
     serializer_class = LanguageSerializer
-    renderer_classes = (JSONRenderer, JSONPRenderer, LanguageDetailHTMLRenderer)
+    renderer_classes = (JSONRenderer, LanguageDetailHTMLRenderer)

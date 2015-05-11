@@ -4,7 +4,7 @@ import datetime
 from rest_framework import generics
 from rest_framework import permissions
 from rest_framework import status
-from rest_framework.renderers import JSONRenderer, JSONPRenderer
+from rest_framework.renderers import JSONRenderer
 from rest_framework.response import Response
 from rest_framework.views import APIView
 from django.utils.decorators import method_decorator
@@ -41,7 +41,7 @@ class DownloadList(generics.ListCreateAPIView):
     model = Download
     permission_classes = (permissions.IsAuthenticatedOrReadOnly,)
     serializer_class = DownloadSerializer
-    renderer_classes = (JSONRenderer, JSONPRenderer, DownloadListHTMLRenderer)
+    renderer_classes = (JSONRenderer, DownloadListHTMLRenderer)
 
     def get_queryset(self):
         user = self.request.user
@@ -52,7 +52,7 @@ class DownloadDetail(generics.RetrieveUpdateAPIView):
     model = Download
     permission_classes = (permissions.IsAuthenticated,)
     serializer_class = DownloadSerializer
-    renderer_classes = (JSONRenderer, JSONPRenderer, DownloadDetailHTMLRenderer)
+    renderer_classes = (JSONRenderer, DownloadDetailHTMLRenderer)
 
     def get_object(self):
         user = self.request.user
@@ -170,7 +170,7 @@ class DownloadDetail(generics.RetrieveUpdateAPIView):
 class Downloading(APIView):
     permission_classes = (permissions.IsAuthenticated,)
     serializer_class = DownloadingSerializer
-    renderer_classes = (JSONRenderer, JSONPRenderer, DownloadingHTMLRenderer)
+    renderer_classes = (JSONRenderer, DownloadingHTMLRenderer)
         
         # LM: Things needed:
         # 1. Parse request to extract path to all requested files

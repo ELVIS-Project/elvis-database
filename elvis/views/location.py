@@ -1,6 +1,6 @@
 from rest_framework import generics
 from rest_framework import permissions
-from rest_framework.renderers import JSONRenderer, JSONPRenderer
+from rest_framework.renderers import JSONRenderer
 
 from elvis.renderers.custom_html_renderer import CustomHTMLRenderer
 from elvis.serializers.location import LocationSerializer
@@ -13,4 +13,4 @@ class LocationDetail(generics.RetrieveUpdateDestroyAPIView):
     model = Location
     permission_classes = (permissions.IsAuthenticatedOrReadOnly,)
     serializer_class = LocationSerializer
-    renderer_classes = (JSONRenderer, JSONPRenderer, LocationDetailHTMLRenderer)
+    renderer_classes = (JSONRenderer, LocationDetailHTMLRenderer)

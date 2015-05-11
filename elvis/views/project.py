@@ -1,6 +1,6 @@
 from rest_framework import generics
 from rest_framework import permissions
-from rest_framework.renderers import JSONRenderer, JSONPRenderer
+from rest_framework.renderers import JSONRenderer
 
 from elvis.renderers.custom_html_renderer import CustomHTMLRenderer
 from elvis.serializers.project import ProjectSerializer
@@ -19,11 +19,11 @@ class ProjectList(generics.ListCreateAPIView):
     model = Project
     permission_classes = (permissions.IsAuthenticatedOrReadOnly,)
     serializer_class = ProjectSerializer
-    renderer_classes = (JSONRenderer, JSONPRenderer, ProjectListHTMLRenderer)
+    renderer_classes = (JSONRenderer, ProjectListHTMLRenderer)
 
 
 class ProjectDetail(generics.RetrieveUpdateDestroyAPIView):
     model = Project
     permission_classes = (permissions.IsAuthenticatedOrReadOnly,)
     serializer_class = ProjectSerializer
-    renderer_classes = (JSONRenderer, JSONPRenderer, ProjectDetailHTMLRenderer)
+    renderer_classes = (JSONRenderer, ProjectDetailHTMLRenderer)

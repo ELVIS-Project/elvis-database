@@ -1,6 +1,6 @@
 from rest_framework import generics
 from rest_framework import permissions
-from rest_framework.renderers import JSONRenderer, JSONPRenderer
+from rest_framework.renderers import JSONRenderer
 
 from elvis.renderers.custom_html_renderer import CustomHTMLRenderer
 from elvis.serializers.source import SourceSerializer
@@ -13,4 +13,4 @@ class SourceDetail(generics.RetrieveUpdateDestroyAPIView):
     model = Source
     permission_classes = (permissions.IsAuthenticatedOrReadOnly,)
     serializer_class = SourceSerializer
-    renderer_classes = (JSONRenderer, JSONPRenderer, SourceDetailHTMLRenderer)
+    renderer_classes = (JSONRenderer, SourceDetailHTMLRenderer)
