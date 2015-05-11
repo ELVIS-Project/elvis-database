@@ -86,16 +86,16 @@ class PieceMovementSerializer(serializers.HyperlinkedModelSerializer):
 
 class MovementSerializer(serializers.HyperlinkedModelSerializer):
     composer = ComposerMovementSerializer()
-    tags = TagMovementSerializer()
-    genres = GenreMovementSerializer()
-    instruments_voices = InstrumentVoiceMovementSerializer()
-    languages = LanguageMovementSerializer()
-    locations = LocationMovementSerializer()
-    sources = SourceMovementSerializer()
-    attachments = AttachmentMovementSerializer()
-    collections = CollectionMovementSerializer()
+    tags = TagMovementSerializer(many=True)
+    genres = GenreMovementSerializer(many=True)
+    instruments_voices = InstrumentVoiceMovementSerializer(many=True)
+    languages = LanguageMovementSerializer(many=True)
+    locations = LocationMovementSerializer(many=True)
+    sources = SourceMovementSerializer(many=True)
+    attachments = AttachmentMovementSerializer(many=True)
+    collections = CollectionMovementSerializer(many=True)
     uploader = UserMovementSerializer()
     piece = PieceMovementSerializer()
-    item_id = serializers.Field(source='pk')
+    #item_id = serializers.Field()
     class Meta:
         model = Movement

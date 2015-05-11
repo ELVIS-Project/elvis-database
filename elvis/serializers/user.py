@@ -16,8 +16,8 @@ class UserMovementSerializer(serializers.HyperlinkedModelSerializer):
 
 class UserSerializer(serializers.HyperlinkedModelSerializer):
     full_name = serializers.SerializerMethodField('get_full_name')
-    pieces = UserPieceSerializer()
-    movements = UserMovementSerializer()
+    pieces = UserPieceSerializer(many=True)
+    movements = UserMovementSerializer(many=True)
 
     class Meta:
         model = User

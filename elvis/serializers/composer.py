@@ -6,25 +6,25 @@ from django.conf import settings
 import os
 
 class ComposerMovementSerializer(serializers.HyperlinkedModelSerializer):
-    item_id = serializers.Field(source='pk')
+    #item_id = serializers.Field()
     class Meta:
         model = Movement
-        fields = ('url', 'title', "item_id")
+        fields = ('url', 'title')
 
 
 class ComposerPieceSerializer(serializers.HyperlinkedModelSerializer):
-    movements = ComposerMovementSerializer()
-    item_id = serializers.Field(source='pk')
+    movements = ComposerMovementSerializer(many=True)
+    #item_id = serializers.Field()
     class Meta:
         model = Piece
-        fields = ('url', 'title', 'movements', "item_id", "date_of_composition")
+        fields = ('url', 'title', 'movements', "date_of_composition")
 
 
 class ComposerSerializer(serializers.HyperlinkedModelSerializer):
-    pieces = ComposerPieceSerializer()
-    movements = ComposerMovementSerializer()
+    pieces = ComposerPieceSerializer(many=True)
+    movements = ComposerMovementSerializer(many=True)
     image = serializers.SerializerMethodField("retrieve_image")
-    item_id = serializers.Field(source='pk')
+    #item_id = serializers.Field()
     
     class Meta:
         model = Composer
@@ -35,9 +35,10 @@ class ComposerSerializer(serializers.HyperlinkedModelSerializer):
                   "birth_date",
                   "death_date",
                   "pieces",
+                  "movements",
+                  "image",
                   "created",
-                  "updated",
-                  "image")
+                  "updated")
 
     def retrieve_image(self, obj):
         if not obj.picture:
