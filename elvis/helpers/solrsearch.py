@@ -43,7 +43,7 @@ class SolrSearch(object):
             'facet_field': facet_fields,
             'facet_limit': 1000,
             'facet_mincount': 1,
-            'facet_sort' : 'count',
+            'facet_sort': 'count',
         }
         self.solr_params.update(facet_params)
         self.solr_params.update(kwargs)
