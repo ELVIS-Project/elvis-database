@@ -2,6 +2,7 @@
 *.sqlite3
 .idea
 solr/target/*
+solr/logs/*
 elvis_env/*
 .DS_Store
 dumps
