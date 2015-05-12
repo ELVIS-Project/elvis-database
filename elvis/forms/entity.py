@@ -13,16 +13,7 @@ class CorpusForm(forms.Form):
 	comment = forms.CharField(widget=forms.Textarea, required=False)
 	picture = forms.ImageField(required=False)
 
-class PieceForm(forms.Form):
-    title = forms.CharField(max_length=255)
-    composer = forms.CharField(max_length=255)
-    corpus = forms.CharField(max_length=255)
-    date_of_composition = forms.CharField(required=False)
-    number_of_voices = forms.IntegerField(required=False)
-    tags = forms.CharField(widget=forms.Textarea)
-    comment = forms.CharField(widget=forms.Textarea, required=False)
-    attachment = forms.FileField(required=False)
-    description = forms.CharField(widget=forms.Textarea, required=False)
+
 
 class AttachmentForm(forms.Form):
 	title = forms.CharField(max_length=255)

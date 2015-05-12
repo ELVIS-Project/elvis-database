@@ -49,7 +49,7 @@ class UserUpdateForm(forms.ModelForm):
     # Fill any blanks user left by looking at instance
     def fill_blanks(self):
         self.username = self.username if self.username else self.instance.username
-        self.email = self.email if self.email  else self.instance.email
+        self.email = self.email if self.email else self.instance.email
         self.first_name = self.first_name  if self.first_name else self.instance.first_name
         self.last_name = self.last_name if self.last_name else self.instance.last_name
         self.picture = self.picture if self.picture  else self.instance.picture
