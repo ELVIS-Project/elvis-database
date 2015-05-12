@@ -50,6 +50,9 @@
                                 <li><a href="/movements">Movements</a></li>
                             </ul>
                         </li>
+                        {% if user.is_authenticated %}
+                        <li><a href="/create/piece">Upload</a></li>
+                        {% endif %}
                     </ul>
                     <ul class="nav navbar-nav navbar-right">
                     {% if user.is_authenticated %}
