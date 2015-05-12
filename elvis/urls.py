@@ -13,7 +13,7 @@ from elvis.views.auth import LoginFormView, logout_view
 from elvis.views.search import SearchView
 from elvis.views.project import ProjectList, ProjectDetail
 from elvis.views.download import DownloadDetail, Downloading
-from elvis.views.piece import PieceList, PieceDetail
+from elvis.views.piece import PieceList, PieceDetail, PieceCreate
 from elvis.views.user import UserList, UserDetail, UserAccount
 from elvis.views.userprofile import UserProfileList, UserProfileDetail
 from elvis.views.movement import MovementList, MovementDetail
@@ -46,6 +46,7 @@ urlpatterns += format_suffix_patterns(
         url(r'^downloads/$', DownloadDetail.as_view(), name="download-detail"),
         url(r'^downloading/$', Downloading.as_view(), name="downloading"),
 
+        url(r'^pieces/create/$', PieceCreate.as_view(), name="piece-create"),
         url(r'^pieces/$', PieceList.as_view(), name="piece-list"),
         url(r'^piece/(?P<pk>[0-9]+)/$', PieceDetail.as_view(), name="piece-detail"),
 
@@ -66,7 +67,6 @@ urlpatterns += format_suffix_patterns(
         url(r'^about/', about, name='about'),
 
         url(r'^temp/', temp, name="temp"),
-        url(r'^create/piece/', CreatePiece.as_view(), name="create-piece"),
 
         (r'^media/(?P<path>.*)$', 'django.views.static.serve', {'document_root': settings.MEDIA_ROOT}),
     )
