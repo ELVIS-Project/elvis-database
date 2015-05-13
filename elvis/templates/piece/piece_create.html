@@ -1,0 +1,80 @@
+{% extends "base.html" %}
+
+{% block extra_hd %}
+        <script type='text/javascript' src="{{ STATIC_URL }}js/typeahead/typeahead.bundle.js"></script>
+{% endblock %}
+
+
+{% block wrap %}
+
+<!-- The javascript function for the typeahead functionality on the fields. -->
+<script type="text/javascript">
+$(function(){
+    var substringMatcher = function(strs) {
+      return function findMatches(q, cb) {
+        var matches, substrRegex;
+        matches = [];
+        substrRegex = new RegExp(q, 'i');
+        $.each(strs, function(i, str) {
+          if (substrRegex.test(str)) {
+            matches.push(str);
+          }
+        });
+        cb(matches);
+      };
+    };
+
+    //I can do this smarter with ajax I think but I haven't looked into it.
+    var composers = [];
+    {% for composer in content.composers %}
+    composers.push('{{ composer }}');
+    {% endfor %}
+
+
+    $('#composer-typeahead .typeahead').typeahead({
+      hint: true,
+      highlight: true,
+      minLength: 1
+    },
+    {
+      name: 'composers',
+      source: substringMatcher(composers)
+    });
+});
+
+</script>
+
+<h2>Upload a Piece</h2>
+
+<div id="composer-typeahead" class="input-group input-group-lg">
+  <span class="input-group-addon" id="sizing-addon1">@</span>
+  <input type="text" class="form-control" placeholder="Username" aria-describedby="sizing-addon1">
+</div>
+
+<br><br><br><br><br>
+<form action="/pieces/" method="post">
+    {% csrf_token %}
+    <input type="hidden" name="csrfmiddlewaretoken" value="fxEDKF7Zr49WliezO22MYHdH85iYnvDA">
+    <li><label for="id_title">Title:</label> <input id="id_title" name="title" type="text"></li>
+    <li><div id="composer-list">
+    <label for="id_composer">Composer:</label> <input class="typeahead" id="id_composer" name="composer" type="text">
+    </div></li>
+    <li><label for="id_collection">Collection:</label> <input id="id_collection" name="collection" type="text"></li>
+    <li><label for="id_comp_start">Comp start:</label> <input id="id_comp_start" name="comp_start" type="text"></li>
+    <li><label for="id_comp_end">Comp end:</label> <input id="id_comp_end" name="comp_end" type="text"></li>
+    <li><label for="id_number_of_voices">Number of voices:</label> <input id="id_number_of_voices" name="number_of_voices" type="number"></li>
+    <li><label for="id_genre">Genre:</label> <input id="id_genre" name="genre" type="text"></li>
+    <li><label for="id_voices">Voices:</label> <input id="id_voices" name="voices" type="text"></li>
+    <li><label for="id_composer_country">Composer country:</label> <input id="id_composer_country" name="composer_country" type="text"></li>
+    <li><label for="id_language">Language:</label> <input id="id_language" name="language" type="text"></li>
+    <li><label for="id_source">Source:</label> <input id="id_source" name="source" type="text"></li>
+    <li><label for="id_tags">Tags:</label> <input id="id_tags" name="tags" type="text"></li>
+    <li><label for="id_comment">Comment:</label> <input id="id_comment" name="comment" type="text"></li>
+    <li><label for="id_attachment">Attachment:</label> <input id="id_attachment" name="attachment" type="file"></li>
+    <li><label for="id_movements">Movements:</label> <input id="id_movements" name="movements" type="text"></li>
+    <input type="submit" value="Submit" />
+    </form>
+</form>
+
+{%  endblock %}
+
