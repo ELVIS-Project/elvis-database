@@ -11,15 +11,16 @@
         <meta name="description" content="">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-        <link rel="stylesheet" href="{{ STATIC_URL }}css/themes/spacelab/bootstrap.css" rel="stylesheet" media="screen">
-        <link rel="stylesheet" href="{{ STATIC_URL }}css/elvis-style.css" rel="stylesheet" media="screen" />
-        <script src="{{ STATIC_URL }}js/jquery-1.9.1.min.js"></script>
-        <script src="{{ STATIC_URL }}js/modernizr-2.6.2.min.js"></script>
-        <script src="{{ STATIC_URL }}js/bootstrap.min.js"></script>
-        <script src="{{ STATIC_URL }}js/holder.js"></script>
-        <script src="{{ STATIC_URL }}js/plugins.js"></script>
-        <script src="{{ STATIC_URL }}js/elvis-download-manager.js"></script>
-        <script src="{{ STATIC_URL }}js/scripts.js"></script>
+        <link href="{{ STATIC_URL }}css/themes/spacelab/bootstrap.css" rel="stylesheet" media="screen">
+        <link href="{{ STATIC_URL }}css/elvis-style.css" rel="stylesheet" media="screen" />
+        <script type='text/javascript' src="{{ STATIC_URL }}js/jquery-1.9.1.min.js"></script>
+        <script type='text/javascript' src="{{ STATIC_URL }}js/modernizr-2.6.2.min.js"></script>
+        <script type='text/javascript' src="{{ STATIC_URL }}js/bootstrap.min.js"></script>
+        <script type='text/javascript' src="{{ STATIC_URL }}js/holder.js"></script>
+        <script type='text/javascript' src="{{ STATIC_URL }}js/plugins.js"></script>
+        <script type='text/javascript' src="{{ STATIC_URL }}js/elvis-download-manager.js"></script>
+        <script type='text/javascript' src="{{ STATIC_URL }}js/scripts.js"></script>
+        {% block extra_hd %} {% endblock%}
 
         <script type="text/javascript">
             $(document).ready(function ($) 
