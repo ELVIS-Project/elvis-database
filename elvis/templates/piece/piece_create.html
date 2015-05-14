@@ -1,55 +1,39 @@
 {% extends "base.html" %}
 
-{% block extra_hd %}
-        <script type='text/javascript' src="{{ STATIC_URL }}js/typeahead/typeahead.bundle.js"></script>
-{% endblock %}
-
-
 {% block wrap %}
 
 <!-- The javascript function for the typeahead functionality on the fields. -->
-<script type="text/javascript">
-$(function(){
-    var substringMatcher = function(strs) {
-      return function findMatches(q, cb) {
-        var matches, substrRegex;
-        matches = [];
-        substrRegex = new RegExp(q, 'i');
-        $.each(strs, function(i, str) {
-          if (substrRegex.test(str)) {
-            matches.push(str);
-          }
+<!--     var composerSuggestions = $.ajax({url: "/suggest", dataType: "json", data: {q: "ba"}}); -->
+
+<script>
+    $(document).ready(function($) {
+        //The autocomplete function
+        $('#composer_search').on("keyup", function(event){
+            var key = event['keyCode'];
+
+            //Adding or removing alhabetic chars calls for a suggestion
+            if ((key > 63 && key < 91) || key == 8){
+                var query = $("#composer_search").val();
+                var composers = $.ajax({
+                    url: "/suggest/",
+                    data: {q: query},
+                    success: function(data){
+                                $('#suggestions').html("");
+                            for (i = 0; i < data.length; i++){
+                                $('#suggestions').append(data[i].name + "<br>");
+                            }
+                        },
+                    dataType: "json"
+                    });
+            }
         });
-        cb(matches);
-      };
-    };
-
-    //I can do this smarter with ajax I think but I haven't looked into it.
-    var composers = [];
-    {% for composer in content.composers %}
-    composers.push('{{ composer }}');
-    {% endfor %}
-
-
-    $('#composer-typeahead .typeahead').typeahead({
-      hint: true,
-      highlight: true,
-      minLength: 1
-    },
-    {
-      name: 'composers',
-      source: substringMatcher(composers)
-    });
-});
-
+    })
 </script>
 
 <h2>Upload a Piece</h2>
 
-<div id="composer-typeahead" class="input-group input-group-lg">
-  <span class="input-group-addon" id="sizing-addon1">@</span>
-  <input type="text" class="form-control typeahead" placeholder="composer" aria-describedby="sizing-addon1">
-</div>
+<input id="composer_search" type="text">
+<div id="suggestions"></div>
 
 <br><br><br><br><br>
 <form action="/pieces/" method="post">
