@@ -3,6 +3,7 @@
 .idea
 solr/target/*
 solr/logs/*
+solr/analyzingInfixSuggester*
 elvis_env/*
 .DS_Store
 dumps
