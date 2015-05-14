@@ -81,6 +81,7 @@ def solr_index(sender, instance, created, **kwargs):
             'death_date': composer_death_date,
             'created': composer.created,
             'updated': composer.updated,
+            'composer_suggestions': composer_name
     }
     solrconn.add(**d) 
     solrconn.commit() # update based on previous dictionary
