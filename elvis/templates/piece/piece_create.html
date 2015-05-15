@@ -7,13 +7,24 @@
 <script>
 $(document).ready(function($)
 {
-    //The autocomplete function
-    var menuActive = -1;
-    var menuSize = 0;
-
     // This code could be very easily duplicate to support autocomplete on another input,
     // but I need to set up a new suggester module to consider that...
-    $('#composer-search').on("keydown", function(event)
+
+    var menuActive = -1;
+    var menuSize = 0;
+    var $composerSearch =  $('#composer-search');
+
+    $composerSearch.on("keydown", function(event)
+    {
+        var key = event['keyCode'];
+
+        if (key == 40 || key == 38)
+        {
+            event.preventDefault();
+        }
+    });
+
+    $composerSearch.on("keyup", function(event)
     {
         var key = event['keyCode'];
 
@@ -21,12 +32,6 @@ $(document).ready(function($)
         if ((key > 63 && key < 91) || key == 8)
         {
             var query = $("#composer-search").val();
-
-            if ((key > 63 && key < 91))
-                query = query + String.fromCharCode(key);
-
-            if (key == 8)
-                    query = query.substring(0, query.length-1);
 
             //Sends the query to /suggest/ and prints the results to the suggestion-menu
             $.ajax({
@@ -58,7 +63,6 @@ $(document).ready(function($)
         // Arrow key down moves the active block down the menu
         if (key == 40)
         {
-            event.preventDefault();
             $("#suggestion-item" + menuActive).toggleClass("active");
             menuActive = (menuActive + 1)% menuSize;
             $("#suggestion-item" + menuActive).toggleClass("active");
@@ -67,7 +71,6 @@ $(document).ready(function($)
         //Arrow key up moves the active block up the menu
         if (key == 38)
         {
-            event.preventDefault();
             $("#suggestion-item" + menuActive).toggleClass("active");
             menuActive = (menuActive - 1);
 
