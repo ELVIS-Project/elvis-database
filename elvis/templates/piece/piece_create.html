@@ -13,6 +13,7 @@ $(document).ready(function($)
     var menuActive = -1;
     var menuSize = 0;
     var $composerSearch =  $('#composer-search');
+    var $composerSuggestionMenu = $('#composer-suggestion-menu');
 
     $composerSearch.on("keydown", function(event)
     {
@@ -39,7 +40,7 @@ $(document).ready(function($)
                 data: {q: query},
                 success: function(data)
                 {
-                    $('#composer-suggestion-menu').html("");
+                    $composerSuggestionMenu.html("");
                     menuSize = data.length;
                     menuActive = 0;
 
@@ -47,12 +48,12 @@ $(document).ready(function($)
                     {
                         if (i == menuActive)
                         {
-                            $('#composer-suggestion-menu').append(
+                            $composerSuggestionMenu.append(
                             "<li class='list-group-item active' id='suggestion-item"+i+"'>"+ data[i].name + "</li>");
                         }
                         else
                         {
-                            $('#composer-suggestion-menu').append("<li class='list-group-item' id='suggestion-item"+i+"'>"+ data[i].name + "</li>");
+                            $composerSuggestionMenu.append("<li class='list-group-item' id='suggestion-item"+i+"'>"+ data[i].name + "</li>");
                         }
                     }
                 },
