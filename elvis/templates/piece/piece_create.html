@@ -14,6 +14,7 @@ $(document).ready(function($)
     var menuSize = 0;
     var $inputField =  $('#composer-search');
     var $suggestionMenu = $('#composer-suggestion-menu');
+    var searchURL = "/suggest/";
 
     $inputField.on("keydown", function(event)
     {
@@ -69,7 +70,7 @@ $(document).ready(function($)
 
             //Sends the query to /suggest/ and prints the results to the suggestion-menu
             $.ajax({
-                url: "/suggest/",
+                url: searchURL,
                 data: {q: query},
                 success: function(data)
                 {
