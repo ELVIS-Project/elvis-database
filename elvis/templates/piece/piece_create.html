@@ -80,7 +80,7 @@ $(document).ready(function($)
         //Enter key sends the active menu item to the input and deselects the input
         if (key == 13)
         {
-            $("#composer-search").val($("#suggestion-item"+menuActive).text())
+            $("#composer-search").val($("#suggestion-item"+menuActive).text());
             $('#suggestion-menu').html("");
             menuActive = -1;
             menuSize=0;
