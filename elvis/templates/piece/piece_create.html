@@ -26,7 +26,7 @@ $(document).ready(function($)
                 query = query + String.fromCharCode(key);
 
             if (key == 8)
-                query = query.substring(0, query.length-1);
+                    query = query.substring(0, query.length-1);
 
             //Sends the query to /suggest/ and prints the results to the suggestion-menu
             $.ajax({
@@ -34,7 +34,7 @@ $(document).ready(function($)
                 data: {q: query},
                 success: function(data)
                 {
-                    $('#suggestion-menu').html("");
+                    $('#composer-suggestion-menu').html("");
                     menuSize = data.length;
                     menuActive = 0;
 
@@ -42,11 +42,12 @@ $(document).ready(function($)
                     {
                         if (i == menuActive)
                         {
-                            $('#suggestion-menu').append("<li class='list-group-item active' id='suggestion-item"+i+"'>"+ data[i].name + "</li>");
+                            $('#composer-suggestion-menu').append(
+                            "<li class='list-group-item active' id='suggestion-item"+i+"'>"+ data[i].name + "</li>");
                         }
                         else
                         {
-                            $('#suggestion-menu').append("<li class='list-group-item' id='suggestion-item"+i+"'>"+ data[i].name + "</li>");
+                            $('#composer-suggestion-menu').append("<li class='list-group-item' id='suggestion-item"+i+"'>"+ data[i].name + "</li>");
                         }
                     }
                 },
@@ -78,18 +79,24 @@ $(document).ready(function($)
         }
 
         //Enter key sends the active menu item to the input and deselects the input
-        if (key == 13)
+        if (key == 13 && menuActive != -1)
         {
             $("#composer-search").val($("#suggestion-item"+menuActive).text());
-            $('#suggestion-menu').html("");
+            $('#composer-suggestion-menu').html("");
             menuActive = -1;
             menuSize=0;
-            this.blur();
+        }
+
+        //Tab clears the suggestions before doing its default activity (switching input fields)
+        if (key == 9)
+        {
+            $('#composer-suggestion-menu').html("");
+            menuActive = -1;
         }
     });
 
     //Mouseover on suggestion item activates it
-    $("#suggestion-menu").on("mouseover", function(event)
+    $("#composer-suggestion-menu").on("mouseover", function(event)
     {
         var mouseTarget = $(event['target']);
         if(mouseTarget.hasClass("list-group-item"))
@@ -102,15 +109,14 @@ $(document).ready(function($)
     });
 
     //Clicking suggestion item sends its value to the input field
-    $("#suggestion-menu").on("click", function(event)
+    $("#composer-suggestion-menu").on("click", function(event)
     {
         if(event['target'])
         {
             $("#composer-search").val($("#suggestion-item"+menuActive).text())
-            $('#suggestion-menu').html("");
+            $('#composer-suggestion-menu').html("");
             menuActive = -1;
             menuSize=0;
-            this.blur();
         }
     })
 })
@@ -121,13 +127,19 @@ $(document).ready(function($)
   <span class="input-group-addon" id="basic-addon1">Composer</span>
   <input type="text" id=composer-search class="form-control" placeholder="Username" aria-describedby="basic-addon1">
 </div>
+<ul class="list-group" style="position: absolute; z-index: 10">
+    <div id="composer-suggestion-menu"></div>
+</ul>
+
+<br>
+<div class="input-group">
+  <span class="input-group-addon" id="basic-addon1">Title</span>
+  <input type="text" class="form-control" placeholder="Username" aria-describedby="basic-addon1">
+</div>
 
 <!--
 <input type="text" id="composer_search" class="form-control" placeholder="Composer" aria-describedby="basic-addon1">
 -->
-<ul class="list-group">
-    <div id="suggestion-menu"></div>
-</ul>
 
 <!--
 <form action="/pieces/" method="post">
