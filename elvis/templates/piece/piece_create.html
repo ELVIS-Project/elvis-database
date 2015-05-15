@@ -3,39 +3,133 @@
 {% block wrap %}
 
 <!-- The javascript function for the typeahead functionality on the fields. -->
-<!--     var composerSuggestions = $.ajax({url: "/suggest", dataType: "json", data: {q: "ba"}}); -->
 
 <script>
-    $(document).ready(function($) {
-        //The autocomplete function
-        $('#composer_search').on("keyup", function(event){
-            var key = event['keyCode'];
+$(document).ready(function($)
+{
+    //The autocomplete function
+    var menuActive = -1;
+    var menuSize = 0;
 
-            //Adding or removing alhabetic chars calls for a suggestion
-            if ((key > 63 && key < 91) || key == 8){
-                var query = $("#composer_search").val();
-                var composers = $.ajax({
-                    url: "/suggest/",
-                    data: {q: query},
-                    success: function(data){
-                                $('#suggestions').html("");
-                            for (i = 0; i < data.length; i++){
-                                $('#suggestions').append(data[i].name + "<br>");
-                            }
-                        },
-                    dataType: "json"
-                    });
-            }
-        });
+    // This code could be very easily duplicate to support autocomplete on another input,
+    // but I need to set up a new suggester module to consider that...
+    $('#composer-search').on("keydown", function(event)
+    {
+        var key = event['keyCode'];
+
+        //This block triggers on a-z and del to populate the suggestion list.
+        if ((key > 63 && key < 91) || key == 8)
+        {
+            var query = $("#composer-search").val();
+
+            if ((key > 63 && key < 91))
+                query = query + String.fromCharCode(key);
+
+            if (key == 8)
+                query = query.substring(0, query.length-1);
+
+            //Sends the query to /suggest/ and prints the results to the suggestion-menu
+            $.ajax({
+                url: "/suggest/",
+                data: {q: query},
+                success: function(data)
+                {
+                    $('#suggestion-menu').html("");
+                    menuSize = data.length;
+                    menuActive = 0;
+
+                    for (i = 0; i < data.length; i++)
+                    {
+                        if (i == menuActive)
+                        {
+                            $('#suggestion-menu').append("<li class='list-group-item active' id='suggestion-item"+i+"'>"+ data[i].name + "</li>");
+                        }
+                        else
+                        {
+                            $('#suggestion-menu').append("<li class='list-group-item' id='suggestion-item"+i+"'>"+ data[i].name + "</li>");
+                        }
+                    }
+                },
+                dataType: "json"
+            });
+        }
+
+        // Arrow key down moves the active block down the menu
+        if (key == 40)
+        {
+            event.preventDefault();
+            $("#suggestion-item" + menuActive).toggleClass("active");
+            menuActive = (menuActive + 1)% menuSize;
+            $("#suggestion-item" + menuActive).toggleClass("active");
+        }
+
+        //Arrow key up moves the active block up the menu
+        if (key == 38)
+        {
+            event.preventDefault();
+            $("#suggestion-item" + menuActive).toggleClass("active");
+            menuActive = (menuActive - 1);
+
+            if (menuActive < 0)
+                menuActive = menuSize-1;
+
+            $("#suggestion-item" + menuActive).toggleClass("active");
+            return;
+        }
+
+        //Enter key sends the active menu item to the input and deselects the input
+        if (key == 13)
+        {
+            $("#composer-search").val($("#suggestion-item"+menuActive).text())
+            $('#suggestion-menu').html("");
+            menuActive = -1;
+            menuSize=0;
+            this.blur();
+        }
+    });
+
+    //Mouseover on suggestion item activates it
+    $("#suggestion-menu").on("mouseover", function(event)
+    {
+        var mouseTarget = $(event['target']);
+        if(mouseTarget.hasClass("list-group-item"))
+        {
+            $("[id^=suggestion-item]").toggleClass("active", false);
+            $(event['target']).toggleClass("active", true);
+            var mouseoverTargetid = $(event['target']).attr('id');
+            menuActive = mouseoverTargetid[mouseoverTargetid.length-1];
+        }
+    });
+
+    //Clicking suggestion item sends its value to the input field
+    $("#suggestion-menu").on("click", function(event)
+    {
+        if(event['target'])
+        {
+            $("#composer-search").val($("#suggestion-item"+menuActive).text())
+            $('#suggestion-menu').html("");
+            menuActive = -1;
+            menuSize=0;
+            this.blur();
+        }
     })
+})
 </script>
 
 <h2>Upload a Piece</h2>
+<div class="input-group">
+  <span class="input-group-addon" id="basic-addon1">Composer</span>
+  <input type="text" id=composer-search class="form-control" placeholder="Username" aria-describedby="basic-addon1">
+</div>
 
-<input id="composer_search" type="text">
-<div id="suggestions"></div>
+<!--
+<input type="text" id="composer_search" class="form-control" placeholder="Composer" aria-describedby="basic-addon1">
+-->
+<ul class="list-group">
+    <div id="suggestion-menu"></div>
+</ul>
 
-<br><br><br><br><br>
+<!--
 <form action="/pieces/" method="post">
     {% csrf_token %}
     <input type="hidden" name="csrfmiddlewaretoken" value="fxEDKF7Zr49WliezO22MYHdH85iYnvDA">
@@ -59,6 +153,6 @@
     <input type="submit" value="Submit" />
     </form>
 </form>
-
+-->
 {%  endblock %}
 
