@@ -12,20 +12,53 @@ $(document).ready(function($)
 
     var menuActive = -1;
     var menuSize = 0;
-    var $composerSearch =  $('#composer-search');
-    var $composerSuggestionMenu = $('#composer-suggestion-menu');
+    var $inputField =  $('#composer-search');
+    var $suggestionMenu = $('#composer-suggestion-menu');
 
-    $composerSearch.on("keydown", function(event)
+    $inputField.on("keydown", function(event)
     {
         var key = event['keyCode'];
 
-        if (key == 40 || key == 38)
+        // Arrow key down moves the active block down the menu
+        if (key == 40)
         {
             event.preventDefault();
+            $suggestionMenu.children().eq(menuActive).toggleClass("active");
+            menuActive = (menuActive + 1)% menuSize;
+            $suggestionMenu.children().eq(menuActive).toggleClass("active");
+        }
+
+        //Arrow key up moves the active block up the menu
+        if (key == 38)
+        {
+            event.preventDefault();
+            $suggestionMenu.children().eq(menuActive).toggleClass("active");
+            menuActive = (menuActive - 1);
+
+            if (menuActive < 0)
+                menuActive = menuSize-1;
+
+            $suggestionMenu.children().eq(menuActive).toggleClass("active");
+        }
+
+        //Enter key sends the active menu item to the input and deletes suggestions
+        if (key == 13 && menuActive != -1)
+        {
+            $inputField.val($suggestionMenu.children().eq(menuActive).text());
+            $suggestionMenu.html("");
+            menuActive = -1;
+            menuSize=0;
+        }
+
+        //Overriding default action for tab key
+        if (key == 9)
+        {
+            $suggestionMenu.html("");
+            menuActive = -1;
         }
     });
 
-    $composerSearch.on("keyup", function(event)
+    $inputField.on("keyup", function(event)
     {
         var key = event['keyCode'];
 
@@ -40,7 +73,7 @@ $(document).ready(function($)
                 data: {q: query},
                 success: function(data)
                 {
-                    $composerSuggestionMenu.html("");
+                    $suggestionMenu.html("");
                     menuSize = data.length;
                     menuActive = 0;
 
@@ -48,77 +81,42 @@ $(document).ready(function($)
                     {
                         if (i == menuActive)
                         {
-                            $composerSuggestionMenu.append(
+                            $suggestionMenu.append(
                             "<li class='list-group-item active' id='suggestion-item"+i+"'>"+ data[i].name + "</li>");
                         }
                         else
                         {
-                            $composerSuggestionMenu.append("<li class='list-group-item' id='suggestion-item"+i+"'>"+ data[i].name + "</li>");
+                            $suggestionMenu.append(
+                            "<li class='list-group-item' id='suggestion-item"+i+"'>"+ data[i].name + "</li>");
                         }
                     }
                 },
                 dataType: "json"
             });
         }
-
-        // Arrow key down moves the active block down the menu
-        if (key == 40)
-        {
-            $("#suggestion-item" + menuActive).toggleClass("active");
-            menuActive = (menuActive + 1)% menuSize;
-            $("#suggestion-item" + menuActive).toggleClass("active");
-        }
-
-        //Arrow key up moves the active block up the menu
-        if (key == 38)
-        {
-            $("#suggestion-item" + menuActive).toggleClass("active");
-            menuActive = (menuActive - 1);
-
-            if (menuActive < 0)
-                menuActive = menuSize-1;
-
-            $("#suggestion-item" + menuActive).toggleClass("active");
-            return;
-        }
-
-        //Enter key sends the active menu item to the input and deselects the input
-        if (key == 13 && menuActive != -1)
-        {
-            $("#composer-search").val($("#suggestion-item"+menuActive).text());
-            $('#composer-suggestion-menu').html("");
-            menuActive = -1;
-            menuSize=0;
-        }
-
-        //Tab clears the suggestions before doing its default activity (switching input fields)
-        if (key == 9)
-        {
-            $('#composer-suggestion-menu').html("");
-            menuActive = -1;
-        }
     });
 
     //Mouseover on suggestion item activates it
-    $("#composer-suggestion-menu").on("mouseover", function(event)
+    $suggestionMenu.on("mouseover", function(event)
     {
-        var mouseTarget = $(event['target']);
-        if(mouseTarget.hasClass("list-group-item"))
+        var $mouseTarget = $(event['target']);
+
+        if($mouseTarget.hasClass("list-group-item"))
         {
-            $("[id^=suggestion-item]").toggleClass("active", false);
-            $(event['target']).toggleClass("active", true);
-            var mouseoverTargetid = $(event['target']).attr('id');
-            menuActive = mouseoverTargetid[mouseoverTargetid.length-1];
+            $suggestionMenu.children().eq(menuActive).toggleClass("active", false);
+            $mouseTarget.toggleClass("active", true);
+            var mouseoverTargetID = $mouseTarget.attr('id');
+            menuActive = mouseoverTargetID[mouseoverTargetID.length-1];
         }
     });
 
     //Clicking suggestion item sends its value to the input field
-    $("#composer-suggestion-menu").on("click", function(event)
+    $suggestionMenu.on("click", function(event)
     {
         if(event['target'])
         {
-            $("#composer-search").val($("#suggestion-item"+menuActive).text())
-            $('#composer-suggestion-menu').html("");
+            $inputField.val($suggestionMenu.children().eq(menuActive).text());
+            $suggestionMenu.html("");
             menuActive = -1;
             menuSize=0;
         }
