@@ -1322,6 +1322,47 @@
       -->
   </searchComponent>
 
+ <!-- The suggestor compenents for user autocompleting -->
+
+ <searchComponent name="suggest" class="solr.SuggestComponent">
+    <lst name="suggester">
+     <str name="name">composerSuggest</str>
+     <str name="lookupImpl">AnalyzingInfixLookupFactory</str>
+     <str name="storeDir">composerSuggest_dict</str>
+     <str name="dictionaryImpl">DocumentDictionaryFactory</str>
+     <str name="field">composer_suggestions</str>
+     <str name="weightField">price</str>
+     <str name="suggestAnalyzerFieldType">suggestTypeLc</str>
+     <str name="buildOnStartup">true</str>
+     <str name="buildOnCommit">false</str>
+     <str name="highlight">false</str>
+    </lst>
+      <lst name="suggester">
+        <str name="name">pieceSuggest</str>
+        <str name="lookupImpl">AnalyzingInfixLookupFactory</str>
+        <str name="storeDir">pieceSuggest_dict</str>
+        <str name="dictionaryImpl">DocumentDictionaryFactory</str>
+        <str name="field">piece_suggestions</str>
+        <str name="weightField">price</str>
+        <str name="suggestAnalyzerFieldType">suggestTypeLc</str>
+        <str name="buildOnStartup">true</str>
+        <str name="buildOnCommit">false</str>
+        <str name="highlight">false</str>
+      </lst>
+
+ </searchComponent>
+
+ <requestHandler name="/suggest" class="solr.SearchHandler" startup="lazy" >
+   <lst name="defaults">
+     <str name="suggest">true</str>
+     <str name="suggest.count">5</str>
+   </lst>
+   <arr name="components">
+     <str>suggest</str>
+   </arr>
+ </requestHandler>
+
+
   <!-- A request handler for demonstrating the spellcheck component.  
 
        NOTE: This is purely as an example.  The whole purpose of the

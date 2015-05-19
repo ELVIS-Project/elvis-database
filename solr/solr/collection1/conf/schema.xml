@@ -104,7 +104,8 @@
     <!-- LM Name and Title fields -->
     <field name="name" type="string" indexed="true" stored="true" />
     <field name="title" type="string" indexed="true" stored="true" />
-    <!-- underscore_ used for fields indexed from ForeignKeys--> 
+
+    <!-- underscore_ used for fields indexed from ForeignKeys-->
     <field name="creator_name" type="string" indexed="true" stored="true" />
     <field name="composer_name" type="string" indexed="true" stored="true" />
     <field name="uploader_name" type="string" indexed="true" stored="true" />
@@ -127,6 +128,10 @@
     <field name="comment_text" type="string" indexed="true" stored="true" />
     <field name="approved" type="boolean" indexed="true" stored="true" />
     <field name="_version_" type="long" indexed="true" stored="true"/>
+
+    <!-- Suggestor fields -->
+    <field name="composer_suggestions" type="string" indexed="true" stored="true"/>
+    <field name="piece_suggestions" type="string" indexed="true" stored="true"/>
 
 </fields>
 
@@ -189,6 +194,9 @@
     <copyField source="languages" dest="languages_searchable" />
     <copyField source="locations" dest="locations_searchable" />
     <copyField source="sources" dest="sources_searchable" />
+
+    <!-- Suggestions -->
+
 
 
     <!--<copyField source="birth_date" dest="text" />
@@ -1025,6 +1033,15 @@
         <filter class="solr.TurkishLowerCaseFilterFactory"/>
         <filter class="solr.StopFilterFactory" ignoreCase="false" words="lang/stopwords_tr.txt" />
         <filter class="solr.SnowballPorterFilterFactory" language="Turkish"/>
+      </analyzer>
+    </fieldType>
+
+    <!-- Used for the suggester feature to suggest regardless of case -->
+    <fieldType name="suggestTypeLc" class="solr.TextField" positionIncrementGap="100">
+      <analyzer>
+        <charFilter class="solr.PatternReplaceCharFilterFactory" pattern="[^a-zA-Z0-9]" replacement=" " />
+        <tokenizer class="solr.WhitespaceTokenizerFactory"/>
+        <filter class="solr.LowerCaseFilterFactory"/>
       </analyzer>
     </fieldType>
 
