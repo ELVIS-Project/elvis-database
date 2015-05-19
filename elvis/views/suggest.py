@@ -6,7 +6,7 @@ import urllib2
 import solr
 
 
-def suggest(request):
+def SolrSuggest(request):
     results = []
 
     if request.method == "GET" and request.GET.has_key(u'q') and request.GET.has_key(u'd'):
