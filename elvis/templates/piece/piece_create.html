@@ -6,6 +6,8 @@
 
 {% block extra_hd %}
         <script type='text/javascript' src="{{ STATIC_URL }}js/elvis-scripts/upload-autocomplete.js"></script>
+        <script type="text/javascript" src="{{STATIC_URL}}js/bootstrap-multiselect.min.js"></script>
+        <link rel="stylesheet" href="{{STATIC_URL}}css/bootstrap-multiselect.css" type="text/css"/>
 {% endblock %}
 
 <script>
@@ -13,36 +15,70 @@ $(document).ready(function($)
 {
     autocomplete("id_title", "title-suggestion-menu", "pieceSuggest");
     autocomplete("id_composer", "composer-suggestion-menu", "composerSuggest");
+    autocomplete("id_collection", "collection-suggestion-menu", "collectionSuggest");
+
 });
 </script>
 
 <div class="page-header">
-    <h2>Upload</h2>
+    <h2>Upload a Piece</h2>
 </div>
-{% csrf_token %}
-<form action="/pieces/" method="post">
 
-    <div class="input-group" style="width:767px">
-        <span class="input-group-addon" id="basic-addon1">Title</span>
-        <input type="text" id="id_title" class="form-control" placeholder="Title" aria-describedby="basic-addon1">
-    </div>
-        <ul class="list-group" style="position: absolute; z-index:10; width: 767px">
-            <div id="title-suggestion-menu"></div>
-        </ul>
-    <br>
 
-    <div class="input-group" style="width:767px">
-        <span class="input-group-addon" id="basic-addon1">Composer</span>
-        <input type="text" id="id_composer" class="form-control" placeholder="Composer" aria-describedby="basic-addon1">
-    </div>
-    <ul class="list-group" style="position: absolute; z-index:10; width: 767px">
-      <div id="composer-suggestion-menu"></div>
+<div class="bs-example">
+    <ul class="nav nav-tabs">
+        <li class="active"><a data-toggle="tab" href="#required">Basics</a></li>
+        <li><a data-toggle="tab" href="#advanced-info">Advanced</a></li>
     </ul>
-</form>
+    <form action="/pieces/" method="post">
+    {% csrf_token %}
+
+        <div class="tab-content">
+            <div id="required" class="tab-pane fade in active">
+
+                <div class="input-group">
+                  <span class="input-group-addon" id="basic-addon1">Title</span>
+                  <input type="text" id="id_title" name="title" autocomplete="off" class="form-control" placeholder="e.g. Ach Gott, vom Himmel sieh darein, BWV 2" aria-describedby="basic-addon1">
+                </div>
+                <ul class="list-group" style="position: absolute; z-index:10">
+                   <div id="title-suggestion-menu"></div>
+                </ul>
+
+                <br>
+
+                <div class="input-group">
+                    <span class="input-group-addon" id="basic-addon1">Composer</span>
+                    <input type="text" id="id_composer" autocomplete="off" name="composer" class="form-control" placeholder="e.g. Bach, Johann Sebastian" aria-describedby="basic-addon1">
+                </div>
+                <ul class="list-group" style="position: absolute; z-index:10">
+                   <div id="composer-suggestion-menu"></div>
+                </ul>
+
+                <br>
+
+                <div class="input-group">
+                    <span class="input-group-addon" id="basic-addon1">Collection</span>
+                    <input type="text" id="id_collection" name="collection" autocomplete="off" class="form-control" placeholder="e.g. Bach, Johann Sebastian" aria-describedby="basic-addon1">
+                </div>
+                <ul class="list-group" style="position: absolute; z-index:10">
+                   <div id="collection-suggestion-menu"></div>
+                </ul>
+
+            </div>
+
+            <div id="advanced-info" class="tab-pane fade">
+                <h3>Advanced</h3>
+                <p>Maybe put tags and stuff here.</p>
+            </div>
+        </div>
+        <br>
+
+        <button type="submit" id="piece-submit" name="piece-submit" class="btn btn-success btn-sm pull-right move">Submit <span class="glyphicon glyphicon-chevron-right"></span></button>
+    </form>
+</div>
 
 
 
-<br>
 
 
 <!--
@@ -51,7 +87,6 @@ $(document).ready(function($)
 
 <!--
 <form action="/pieces/" method="post">
-    {% csrf_token %}
     <input type="hidden" name="csrfmiddlewaretoken" value="fxEDKF7Zr49WliezO22MYHdH85iYnvDA">
     <li><label for="id_title">Title:</label> <input id="id_title" name="title" type="text"></li>
     <li><div id="composer-list">
