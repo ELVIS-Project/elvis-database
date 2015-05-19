@@ -172,7 +172,8 @@ def solr_index(sender, instance, created, **kwargs):
             'languages': languages,
             'locations': locations,
             'sources': sources,
-    }
+            'piece_suggestions': piece_title
+            }
     solrconn.add(**d)
     solrconn.commit()
 
