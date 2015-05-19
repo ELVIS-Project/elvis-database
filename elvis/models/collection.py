@@ -81,6 +81,7 @@ def solr_index(sender, instance, created, **kwargs):
             'updated': collection.updated,
             'comment': collection_comment,
             'creator_name': creator_name,
+            'collection_suggestions': collection_title
     }
     solrconn.add(**d)
     solrconn.commit()
