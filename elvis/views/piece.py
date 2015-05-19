@@ -1,11 +1,14 @@
 from django.views.decorators.csrf import ensure_csrf_cookie, csrf_protect
+from django.contrib.auth.models import User
 from rest_framework import generics
 from rest_framework import status
 from rest_framework import permissions
 from django.shortcuts import render
 from django.shortcuts import redirect
 from rest_framework.renderers import JSONRenderer
+from django.http import JsonResponse
 from rest_framework.response import Response
+from django.http import HttpRequest
 import pdb;
 
 from elvis.renderers.custom_html_renderer import CustomHTMLRenderer
@@ -32,6 +35,28 @@ class PieceCreateHTMLRenderer(CustomHTMLRenderer):
     template_name = "piece/piece_create.html"
 
 
+class PieceDetail(generics.RetrieveUpdateDestroyAPIView):
+    model = Piece
+    permission_classes = (permissions.IsAuthenticatedOrReadOnly,)
+    serializer_class = PieceSerializer
+    renderer_classes = (JSONRenderer, PieceDetailHTMLRenderer)
+    queryset = Piece.objects.all()
+
+
+class PieceCreate(generics.GenericAPIView):
+    model = Piece
+    permission_classes = (permissions.IsAuthenticated,)
+    serializer_class = PieceSerializer
+    renderer_classes = (JSONRenderer, PieceCreateHTMLRenderer)
+    queryset = Piece.objects.all()
+
+    def get(self, request, *args, **kwargs):
+        if User.is_authenticated(request.user):
+            return Response(status=status.HTTP_200_OK)
+        else:
+            return Response(status=status.HTTP_401_UNAUTHORIZED)
+
+
 class PieceList(generics.ListCreateAPIView):
     model = Piece
     permission_classes = (permissions.IsAuthenticatedOrReadOnly,)
@@ -47,37 +72,22 @@ class PieceList(generics.ListCreateAPIView):
         return self.create(request, *args, **kwargs)
 
     def create(self, request, *args, **kwargs):
-        form = PieceForm(request.POST, request.FILES)
-        if form.is_valid():
-            clean_form = form.cleaned_data
-            piece = Piece(title=clean_form['title'],
-                          composer=Composer.objects.get(name__icontains="{0}".format(clean_form['composer']))
-                          )
-            piece.save()
-
-            return HttpResponseRedirect("http://localhost:8000/piece/{0}".format(piece.id))
+        if not (User.is_active(request.user)):
+            return Response(status=status.HTTP_401_UNAUTHORIZED)
         else:
-            return HttpResponseRedirect("http://localhost:8000/pieces/")
+            form = PieceForm(request.POST, request.FILES)
+            if form.is_valid():
+                clean_form = form.cleaned_data
+                composer = handleComposer(clean_form['composer'])
+                piece = Piece(title=clean_form['title'],
+                              composer=Composer.objects.get(name__icontains="{0}".format(clean_form['composer']))
+                              )
+                piece.save()
 
-    def handle(self, composer):
-        return
+                return HttpResponseRedirect("http://localhost:8000/piece/{0}".format(piece.id))
+            else:
+                return HttpResponseRedirect("http://localhost:8000/pieces/")
 
 
-class PieceDetail(generics.RetrieveUpdateDestroyAPIView):
-    model = Piece
-    permission_classes = (permissions.IsAuthenticatedOrReadOnly,)
-    serializer_class = PieceSerializer
-    renderer_classes = (JSONRenderer, PieceDetailHTMLRenderer)
-    queryset = Piece.objects.all()
-
-
-class PieceCreate(generics.CreateAPIView):
-    model = Piece
-    permission_classes = (permissions.IsAuthenticated,)
-    serializer_class = PieceSerializer
-    renderer_classes = (JSONRenderer, PieceCreateHTMLRenderer)
-    queryset = Piece.objects.all()
-
-    def get(self, request, *args, **kwargs):
-        return Response(status=status.HTTP_200_OK)
-
+def handleComposer(self, composer):
+    pass
