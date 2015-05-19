@@ -1326,18 +1326,18 @@
 
  <searchComponent name="suggest" class="solr.SuggestComponent">
     <lst name="suggester">
-     <str name="name">composerSuggest</str>
-     <str name="lookupImpl">AnalyzingInfixLookupFactory</str>
-     <str name="storeDir">composerSuggest_dict</str>
-     <str name="dictionaryImpl">DocumentDictionaryFactory</str>
-     <str name="field">composer_suggestions</str>
-     <str name="weightField">price</str>
-     <str name="suggestAnalyzerFieldType">suggestTypeLc</str>
-     <str name="buildOnStartup">true</str>
-     <str name="buildOnCommit">false</str>
-     <str name="highlight">false</str>
+        <str name="name">composerSuggest</str>
+        <str name="lookupImpl">AnalyzingInfixLookupFactory</str>
+        <str name="storeDir">composerSuggest_dict</str>
+        <str name="dictionaryImpl">DocumentDictionaryFactory</str>
+        <str name="field">composer_suggestions</str>
+        <str name="weightField">price</str>
+        <str name="suggestAnalyzerFieldType">suggestTypeLc</str>
+        <str name="buildOnStartup">true</str>
+        <str name="buildOnCommit">false</str>
+        <str name="highlight">false</str>
     </lst>
-      <lst name="suggester">
+    <lst name="suggester">
         <str name="name">pieceSuggest</str>
         <str name="lookupImpl">AnalyzingInfixLookupFactory</str>
         <str name="storeDir">pieceSuggest_dict</str>
@@ -1348,8 +1348,19 @@
         <str name="buildOnStartup">true</str>
         <str name="buildOnCommit">false</str>
         <str name="highlight">false</str>
-      </lst>
-
+    </lst>
+    <lst name="suggester">
+        <str name="name">collectionSuggest</str>
+        <str name="lookupImpl">AnalyzingInfixLookupFactory</str>
+        <str name="storeDir">collectionSuggest_dict</str>
+        <str name="dictionaryImpl">DocumentDictionaryFactory</str>
+        <str name="field">collection_suggestions</str>
+        <str name="weightField">price</str>
+        <str name="suggestAnalyzerFieldType">suggestTypeLc</str>
+        <str name="buildOnStartup">true</str>
+        <str name="buildOnCommit">false</str>
+        <str name="highlight">false</str>
+    </lst>
  </searchComponent>
 
  <requestHandler name="/suggest" class="solr.SearchHandler" startup="lazy" >

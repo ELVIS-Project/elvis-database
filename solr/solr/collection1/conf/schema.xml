@@ -130,8 +130,9 @@
     <field name="_version_" type="long" indexed="true" stored="true"/>
 
     <!-- Suggestor fields -->
-    <field name="composer_suggestions" type="string" indexed="true" stored="true"/>
     <field name="piece_suggestions" type="string" indexed="true" stored="true"/>
+    <field name="composer_suggestions" type="string" indexed="true" stored="true"/>
+    <field name="collection_suggestions" type="string" indexed="true" stored="true"/>
 
 </fields>
 
