@@ -6,30 +6,31 @@ from django.conf import settings
 import os
 
 class ComposerMovementSerializer(serializers.HyperlinkedModelSerializer):
-    #item_id = serializers.Field()
+    item_id = serializers.ReadOnlyField(source='pk')
     class Meta:
         model = Movement
-        fields = ('url', 'title')
+        fields = ('url', 'item_id', 'title')
 
 
 class ComposerPieceSerializer(serializers.HyperlinkedModelSerializer):
     movements = ComposerMovementSerializer(many=True)
-    #item_id = serializers.Field()
+    item_id = serializers.ReadOnlyField(source='pk')
     class Meta:
         model = Piece
-        fields = ('url', 'title', 'movements', "date_of_composition")
+        fields = ('url', 'item_id', 'title', 'movements', "date_of_composition")
 
 
 class ComposerSerializer(serializers.HyperlinkedModelSerializer):
     pieces = ComposerPieceSerializer(many=True)
     movements = ComposerMovementSerializer(many=True)
     image = serializers.SerializerMethodField("retrieve_image")
-    #item_id = serializers.Field()
+    item_id = serializers.ReadOnlyField(source='pk')
     
     class Meta:
         model = Composer
         fields = ("url",
                   "id",
+                  "item_id",
                   "old_id",
                   "name",
                   "birth_date",

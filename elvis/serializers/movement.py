@@ -96,6 +96,6 @@ class MovementSerializer(serializers.HyperlinkedModelSerializer):
     collections = CollectionMovementSerializer(many=True)
     uploader = UserMovementSerializer()
     piece = PieceMovementSerializer()
-    #item_id = serializers.Field()
+    item_id = serializers.ReadOnlyField(source='pk')
     class Meta:
         model = Movement

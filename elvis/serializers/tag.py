@@ -6,28 +6,28 @@ from elvis.models.composer import Composer
 from elvis.serializers.piece import PieceSerializer
 
 class TagComposerSerializer(serializers.HyperlinkedModelSerializer):
-    #item_id = serializers.Field()
+    item_id = serializers.ReadOnlyField(source='pk')
 
     class Meta:
         model = Composer
-        fields = ("url", "name")
+        fields = ("url", 'item_id', "name")
 
 class TagMovementSerializer(serializers.HyperlinkedModelSerializer):
-    #item_id = serializers.Field()
+    item_id = serializers.ReadOnlyField(source='pk')
 
     class Meta:
         model = Movement
-        fields = ('url', 'title')
+        fields = ('url', 'item_id', 'title')
 
 
 class TagPieceSerializer(serializers.HyperlinkedModelSerializer):
     movements = TagMovementSerializer(many=True)
     composer = TagComposerSerializer()
-    #item_id = serializers.Field()
+    item_id = serializers.ReadOnlyField(source='pk')
 
     class Meta:
         model = Piece
-        fields = ('url', 'title', 'movements', "date_of_composition", "composer")
+        fields = ('url', 'item_id', 'title', 'movements', "date_of_composition", "composer")
 
 
 class TagSerializer(serializers.HyperlinkedModelSerializer):
