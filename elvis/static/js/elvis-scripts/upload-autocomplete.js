@@ -49,7 +49,6 @@ function autocomplete(inputField, suggestionField, dictionary) {
         {
             event.preventDefault();
             $inputField.val($suggestionMenu.children().eq(menuActive).text());
-            console.log($suggestionMenu.children().eq(menuActive).text());
             $suggestionMenu.html("");
             menuActive = -1;
             menuSize = 0;
@@ -71,7 +70,7 @@ function autocomplete(inputField, suggestionField, dictionary) {
             if (key == 8)
                 previousSize = -1;
 
-            if (!(previousSize == -1 && menuSize == 0))
+            if (!(previousSize == -1) && !(menuSize == 0))
                 previousSize = menuSize;
 
             //Sends the query to /suggest/ and prints the results to the suggestion-menu
