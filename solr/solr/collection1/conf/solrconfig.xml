@@ -1334,7 +1334,7 @@
         <str name="weightField">price</str>
         <str name="suggestAnalyzerFieldType">suggestTypeLc</str>
         <str name="buildOnStartup">true</str>
-        <str name="buildOnCommit">false</str>
+        <str name="buildOnCommit">true</str>
         <str name="highlight">false</str>
     </lst>
     <lst name="suggester">
@@ -1346,7 +1346,7 @@
         <str name="weightField">price</str>
         <str name="suggestAnalyzerFieldType">suggestTypeLc</str>
         <str name="buildOnStartup">true</str>
-        <str name="buildOnCommit">false</str>
+        <str name="buildOnCommit">true</str>
         <str name="highlight">false</str>
     </lst>
     <lst name="suggester">
@@ -1358,7 +1358,7 @@
         <str name="weightField">price</str>
         <str name="suggestAnalyzerFieldType">suggestTypeLc</str>
         <str name="buildOnStartup">true</str>
-        <str name="buildOnCommit">false</str>
+        <str name="buildOnCommit">true</str>
         <str name="highlight">false</str>
     </lst>
  </searchComponent>
