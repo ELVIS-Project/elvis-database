@@ -1,5 +1,6 @@
 # LM: TODO lots of cleaning up; make modular methods
 import os, json
+import pdb
 import datetime
 from rest_framework import generics
 from rest_framework import permissions
@@ -106,14 +107,16 @@ class DownloadDetail(generics.RetrieveUpdateAPIView):
 
     # Method to help recursive-alteration of user's download object
     def _download_helper(self, item, user_download):
-        if hasattr(item, 'attachments') and not item.attachments is None:
+        if hasattr(item, 'attachments') and not item.attachments.count() == 0:
             for a_object in item.attachments.all():
                 user_download.attachments.add(a_object)
             user_download.save()
-        if hasattr(item, 'pieces') and not item.pieces is None:
+        if hasattr(item, 'pieces') and not item.pieces.count() == 0:
             for piece in item.pieces.all():
                 self._download_helper(piece, user_download)
-        if hasattr(item, 'movements') and not item.movements is None:
+
+        pdb.set_trace()
+        if hasattr(item, 'movements') and not item.movements.count() == 0:
             for movement in item.movements.all():
                 self._download_helper(movement, user_download)
 
@@ -162,7 +165,7 @@ class DownloadDetail(generics.RetrieveUpdateAPIView):
     def post(self, request, *args, **kwargs):
         # If attachment ids are sent in via request, then add attachments to downloads
         # Else recursively add all children attachments to downloads
-        if request.POST.get('a_ids'):
+        if 'a_ids' in request.POST:
             return self._patch_downloads(request)
         return self._recursive_patch_downloads(request)
 
