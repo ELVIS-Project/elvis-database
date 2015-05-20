@@ -87,6 +87,8 @@ class PieceSerializer(serializers.HyperlinkedModelSerializer):
     composer = ComposerPieceSerializer()
     tags = TagPieceSerializer(many=True)
     genres = GenrePieceSerializer(many=True)
+    date_of_composition = serializers.DateField()
+    date_of_composition2 = serializers.DateField()
     instruments_voices = InstrumentVoicePieceSerializer()
     languages = LanguagePieceSerializer(many=True)
     locations = LocationPieceSerializer(many=True)
@@ -95,6 +97,8 @@ class PieceSerializer(serializers.HyperlinkedModelSerializer):
     collections = CollectionPieceSerializer(many=True)
     uploader = UserPieceSerializer()
     movements = MovementPieceSerializer(many=True)
+    created = serializers.DateField()
+    updated = serializers.DateField()
     item_id = serializers.ReadOnlyField(source='pk')
 
     class Meta:
