@@ -97,8 +97,8 @@ class PieceSerializer(serializers.HyperlinkedModelSerializer):
     collections = CollectionPieceSerializer(many=True)
     uploader = UserPieceSerializer()
     movements = MovementPieceSerializer(many=True)
-    created = serializers.DateField()
-    updated = serializers.DateField()
+    created = serializers.DateTimeField()
+    updated = serializers.DateTimeField()
     item_id = serializers.ReadOnlyField(source='pk')
 
     class Meta:
