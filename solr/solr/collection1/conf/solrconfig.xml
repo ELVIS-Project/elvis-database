@@ -1328,7 +1328,7 @@
     <lst name="suggester">
         <str name="name">composerSuggest</str>
         <str name="lookupImpl">AnalyzingInfixLookupFactory</str>
-        <str name="storeDir">composerSuggest_dict</str>
+        <str name="indexPath">composerSuggest_dict</str>
         <str name="dictionaryImpl">DocumentDictionaryFactory</str>
         <str name="field">composer_suggestions</str>
         <str name="weightField">price</str>
@@ -1340,7 +1340,7 @@
     <lst name="suggester">
         <str name="name">pieceSuggest</str>
         <str name="lookupImpl">AnalyzingInfixLookupFactory</str>
-        <str name="storeDir">pieceSuggest_dict</str>
+        <str name="indexPath">pieceSuggest_dict</str>
         <str name="dictionaryImpl">DocumentDictionaryFactory</str>
         <str name="field">piece_suggestions</str>
         <str name="weightField">price</str>
@@ -1352,7 +1352,7 @@
     <lst name="suggester">
         <str name="name">collectionSuggest</str>
         <str name="lookupImpl">AnalyzingInfixLookupFactory</str>
-        <str name="storeDir">collectionSuggest_dict</str>
+        <str name="indexPath">collectionSuggest_dict</str>
         <str name="dictionaryImpl">DocumentDictionaryFactory</str>
         <str name="field">collection_suggestions</str>
         <str name="weightField">price</str>
