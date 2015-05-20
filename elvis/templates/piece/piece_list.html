@@ -33,7 +33,7 @@
                             <span class="label label-primary rounded"> {{tag.name}} </span> &nbsp;
                         {% endfor %}
                     </li>
-                    {% if not piece.comment == None %}
+                    {% if not piece.comment == "" %}
                      <li> {{ piece.comment }} </li>
                     {% endif %}
                 </ul>
