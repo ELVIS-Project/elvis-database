@@ -16,6 +16,8 @@ function autocomplete(inputField, suggestionField, dictionary) {
     var menuSize = -1;
     var isInit = true;
     var gotResults = true;
+    var query = "";
+    var selectedSuggestion;
     var $inputField = $("#" + inputField);
     var $suggestionMenu = $("#" + suggestionField);
 
@@ -30,6 +32,7 @@ function autocomplete(inputField, suggestionField, dictionary) {
             $suggestionMenu.children().eq(menuActive).toggleClass("active");
             menuActive = (menuActive + 1) % menuSize;
             $suggestionMenu.children().eq(menuActive).toggleClass("active");
+            selectedSuggestion = $suggestionMenu.children().eq(menuActive).text();
         }
 
         //Arrow key up moves the active block up the menu
@@ -43,13 +46,14 @@ function autocomplete(inputField, suggestionField, dictionary) {
                 menuActive = menuSize - 1;
 
             $suggestionMenu.children().eq(menuActive).toggleClass("active");
+            selectedSuggestion = $suggestionMenu.children().eq(menuActive).text();
         }
 
         //Enter key sends the active menu item to the input and deletes suggestions
-        if (key === 13 && menuActive !== -1 && menuSize > 0)
+        if (key === 13 && menuActive !== -1)
         {
             event.preventDefault();
-            $inputField.val($suggestionMenu.children().eq(menuActive).text());
+            $inputField.val(selectedSuggestion);
             $suggestionMenu.html("");
             menuActive = -1;
             menuSize = 0;
@@ -59,27 +63,30 @@ function autocomplete(inputField, suggestionField, dictionary) {
             event.preventDefault()
     });
 
-    $inputField.on("keyup", function (event)
+    $inputField.on("keyup focusin", function (event)
     {
         var key = event['keyCode'];
 
-        //This block triggers on a-z and del to populate the suggestion list.
-        if ((key > 63 && key < 91) || key === 8)
+        //Typing a-z, deleteing, or focusing on the input will generate a suggestion list
+        if ((key > 63 && key < 91) || key === 8 || event['type'] === "focusin")
         {
-            var query = $inputField.val();
 
-            if (key === 8)
+            if (key === 8 || (query.length - $inputField.val().length) > 1)
                 isInit = true;
-            
+
+            query = $inputField.val();
+
             //Sends the query to /suggest/ and prints the results to the suggestion-menu
-            if (gotResults || isInit)
+            if ((gotResults || isInit) && selectedSuggestion !== $inputField.val())
             {
                 $.ajax({
                     url: "/suggest/",
                     data: {q: query, d: dictionary},
-                    success: function (data) {
+                    success: function (data)
+                    {
                         $suggestionMenu.html("");
                         menuSize = data.length;
+                        menuActive = 0;
 
                         if (isInit && menuSize !== 0)
                             isInit = false;
@@ -89,18 +96,20 @@ function autocomplete(inputField, suggestionField, dictionary) {
                         else
                             gotResults = false;
 
-                        menuActive = 0;
-
-                        for (i = 0; i < data.length; i++) {
-                            if (i === menuActive) {
+                        for (var i = 0; i < data.length; i++)
+                        {
+                            if (i === menuActive)
+                            {
                                 $suggestionMenu.append(
-                                    "<li class='list-group-item active' id='suggestion-item" + i + "'>" + data[i].name + "</li>");
+                                    "<li class='list-group-item active' id='suggestion-item" + i + "'>" + data[i]['name'] + "</li>");
                             }
-                            else {
+                            else
+                            {
                                 $suggestionMenu.append(
-                                    "<li class='list-group-item' id='suggestion-item" + i + "'>" + data[i].name + "</li>");
+                                    "<li class='list-group-item' id='suggestion-item" + i + "'>" + data[i]['name'] + "</li>");
                             }
                         }
+                        selectedSuggestion = $suggestionMenu.children().eq(menuActive).text();
                     },
                     dataType: "json"
                 });
@@ -110,30 +119,34 @@ function autocomplete(inputField, suggestionField, dictionary) {
 
     $inputField.on("focusout", function()
     {
-        menuActive = -1;
         $suggestionMenu.html("");
+        isInit = true;
     });
 
     //Mouseover on suggestion item activates it
-    $suggestionMenu.on("mouseover", function (event) {
+    $suggestionMenu.on("mouseover", function (event)
+    {
         var $mouseTarget = $(event['target']);
 
-        if ($mouseTarget.hasClass("list-group-item")) {
+        if ($mouseTarget.hasClass("list-group-item"))
+        {
             $suggestionMenu.children().eq(menuActive).toggleClass("active", false);
             $mouseTarget.toggleClass("active", true);
             var mouseoverTargetID = $mouseTarget.attr('id');
             menuActive = mouseoverTargetID[mouseoverTargetID.length - 1];
+            selectedSuggestion = $suggestionMenu.children().eq(menuActive).text();
         }
     });
 
     //Clicking suggestion item sends its value to the input field
-    $suggestionMenu.on("click", function (event) {
-        if (event['target']) {
-            $inputField.val($suggestionMenu.children().eq(menuActive).text());
+    $suggestionMenu.on("mousedown", function (event)
+    {
+        if (event['target'])
+        {
+            $inputField.val(selectedSuggestion);
             $suggestionMenu.html("");
             menuActive = -1;
             menuSize = 0;
         }
-    })
-
+    });
 }
