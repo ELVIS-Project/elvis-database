@@ -22,3 +22,62 @@ def solr_suggest(request):
                     results.append({'name': suggestion['term']})
     j_results = json.dumps(results)
     return HttpResponse(j_results, content_type="json")
+
+
+# Uploads files to the media/temp directory. Automatically unzips
+# any zip archives. Returns a list of uploaded files.
+def upload_files(request):
+
+    files = []
+
+    if not os.path.exists(settings.MEDIA_ROOT+'temp/'):
+        os.makedirs(settings.MEDIA_ROOT+'temp/')
+
+    file_list = request.FILES.getlist('files')
+
+    # Upload all acceptable files to media/temp
+    for f in file_list:
+
+        # If the file has an accepted extension, upload it.
+        if any(f.name.endswith(x) for x in settings.ELVIS_EXTENSIONS) and \
+                not any(f.name.startswith(x) for x in settings.ELVIS_BAD_PREFIX):
+
+            with open(settings.MEDIA_ROOT+'temp/' + f.name, 'wb+') as destination:
+                for chunk in f.chunks():
+                    destination.write(chunk)
+            files.append({'name': f.name, 'uploader': request.user.username, 'path': settings.MEDIA_ROOT+'temp/'})
+
+        # Or, if the file is a zip file, upload, extract good files, then delete the archive.
+        if f.name.endswith('.zip'):
+            #Upload the zip file
+            with open(settings.MEDIA_ROOT+'temp/' + f.name, 'wb+') as destination:
+                for chunk in f.chunks():
+                    destination.write(chunk)
+
+            #Unzip any files with an extension the database accepts
+            unzipped_files = unzip_file(settings.MEDIA_ROOT+'temp/', f.name)
+            for file_name in unzipped_files:
+                files.append({'name': file_name, 'uploader': request.user.username, 'path': settings.MEDIA_ROOT+'temp/'})
+
+            os.remove(settings.MEDIA_ROOT+'temp/' + f.name)
+
+    return files
+
+
+# Unzips a zip file, extracting only files with the extensions in settings.ELVIS_EXTENSIONS.
+# The files are placed in the same directory as the archive. Returns a list of extracted filenames.
+def unzip_file(file_dir, file_name):
+
+    files = []
+    zipped_file = zipfile.ZipFile(file_dir + file_name, 'r')
+    file_contents = zipped_file.namelist()
+    pdb.set_trace()
+
+    for f_name in file_contents:
+        if any(f_name.endswith(x) for x in settings.ELVIS_EXTENSIONS) and \
+                not any(f_name.startswith(x) for x in settings.ELVIS_BAD_PREFIX):
+
+            zipped_file.extract(f_name, file_dir)
+            files.append(f_name)
+
+    return files

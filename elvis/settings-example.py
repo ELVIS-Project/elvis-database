@@ -136,7 +136,7 @@ else:
 # Solr Settings
 # =============
 if RUN_LOCAL:
-    SOLR_SERVER = "http://localhost:8080/elvis-solr"]
+    SOLR_SERVER = "http://localhost:8080/elvis-solr"
 else:
     SOLR_SERVER = "http://localhost:8080/elvis-solr"
 
@@ -181,3 +181,4 @@ CELERYBEAT_SCHEDULE = {
 # Elvis Web App Settings
 # ======================
 ELVIS_EXTENSIONS = ['.xml', '.mxl', '.krn', '.md', '.nwc', '.tntxt', '.capx', '.abc', '.mid', '.midi']
+ELVIS_BAD_PREFIX = ['.', '..', '_', '__', '/', '\\']
