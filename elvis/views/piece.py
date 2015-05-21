@@ -80,19 +80,19 @@ class PieceList(generics.ListCreateAPIView):
         else:
             form = PieceForm(request.POST, request.FILES)
         if form.is_valid():
-                clean_form = form.cleaned_data
-                composer = handle_composer(clean_form['composer'])
-                handle_attachments(request)
-                piece = Piece(title=clean_form['title'],
-                              composer=composer,
-                              uploader=request.user,
-                              created=datetime.datetime.now()
-                              )
-                piece.save()
+            clean_form = form.cleaned_data
+            composer = handle_composer(clean_form['composer'])
+            handle_attachments(request)
+            piece = Piece(title=clean_form['title'],
+                          composer=composer,
+                          uploader=request.user,
+                          created=datetime.datetime.now()
+                          )
+            piece.save()
 
-                return HttpResponseRedirect("http://localhost:8000/piece/{0}".format(piece.id))
+            return HttpResponseRedirect("http://localhost:8000/piece/{0}".format(piece.id))
         else:
-                return HttpResponseRedirect("http://localhost:8000/pieces/")
+            return HttpResponseRedirect("http://localhost:8000/pieces/")
 
 
 def handle_composer(composer):
@@ -111,3 +111,5 @@ def handle_attachments(request):
     pdb.set_trace()
     if files == []:
         print("No files were uploaded")
+
+        # TODO:: Hash files into dirs. Create attachments from files. Return attachments.
