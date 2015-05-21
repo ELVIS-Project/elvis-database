@@ -33,7 +33,8 @@ $(document).ready(function($)
 
         <div class="tab-content">
             <div id="required" class="tab-pane fade in active">
-
+                <h4>Required</h4>
+                <hr>
                 <div class="input-group">
                   <span class="input-group-addon" id="basic-addon1">Title</span>
                   <input type="text" id="id_title" name="title" autocomplete="off" class="form-control" placeholder="e.g. Ach Gott, vom Himmel sieh darein, BWV 2" aria-describedby="basic-addon1">
@@ -53,7 +54,12 @@ $(document).ready(function($)
                 </ul>
 
                 <br>
+                <span class="help-block">Attach the files for this piece. Acceptable file types are </span>
+                <input name="files" id="id_files" type="file" multiple="multiple"/>
+                <br>
 
+                <h4>Optional</h4>
+                <hr>
                 <div class="input-group">
                     <span class="input-group-addon" id="basic-addon1">Collection</span>
                     <input type="text" id="id_collection" name="collection" autocomplete="off" class="form-control" placeholder="e.g. Bach, Johann Sebastian" aria-describedby="basic-addon1">
@@ -61,7 +67,6 @@ $(document).ready(function($)
                 <ul class="list-group" style="position: absolute; z-index:10; cursor: pointer">
                    <div id="collection-suggestion-menu"></div>
                 </ul>
-
             </div>
 
             <div id="advanced-info" class="tab-pane fade">
