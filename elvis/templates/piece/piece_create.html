@@ -28,7 +28,7 @@ $(document).ready(function($)
         <li class="active"><a data-toggle="tab" href="#required">Basics</a></li>
         <li><a data-toggle="tab" href="#advanced-info">Advanced</a></li>
     </ul>
-    <form action="/pieces/" method="post">
+    <form action="/pieces/" method="post" enctype="multipart/form-data">
     {% csrf_token %}
 
         <div class="tab-content">
