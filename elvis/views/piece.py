@@ -3,6 +3,8 @@ from django.contrib.auth.models import User
 from rest_framework import generics
 from rest_framework import status
 from rest_framework import permissions
+import datetime
+from elvis import settings
 from django.shortcuts import render
 from django.shortcuts import redirect
 from rest_framework.renderers import JSONRenderer
@@ -18,9 +20,10 @@ from elvis.models.composer import Composer
 from elvis.forms import PieceForm
 from elvis.models.download import Download
 from elvis.models.attachment import Attachment
-
+from elvis.views.views import upload_files
 from django.utils.decorators import method_decorator
 from django.http import HttpResponseRedirect
+import pdb
 
 
 class PieceListHTMLRenderer(CustomHTMLRenderer):
@@ -72,22 +75,39 @@ class PieceList(generics.ListCreateAPIView):
         return self.create(request, *args, **kwargs)
 
     def create(self, request, *args, **kwargs):
-        if not (User.is_active(request.user)):
+        if not request.user.is_active:
             return Response(status=status.HTTP_401_UNAUTHORIZED)
         else:
             form = PieceForm(request.POST, request.FILES)
-            if form.is_valid():
+        if form.is_valid():
                 clean_form = form.cleaned_data
-                composer = handleComposer(clean_form['composer'])
+                composer = handle_composer(clean_form['composer'])
+                handle_attachments(request)
                 piece = Piece(title=clean_form['title'],
-                              composer=Composer.objects.get(name__icontains="{0}".format(clean_form['composer']))
+                              composer=composer,
+                              uploader=request.user,
+                              created=datetime.datetime.now()
                               )
                 piece.save()
 
                 return HttpResponseRedirect("http://localhost:8000/piece/{0}".format(piece.id))
-            else:
+        else:
                 return HttpResponseRedirect("http://localhost:8000/pieces/")
 
 
-def handleComposer(self, composer):
+def handle_composer(composer):
+    try:
+        new_composer = Composer.objects.get(name=composer)
+        return new_composer
+    except:
+        new_composer = Composer(name=composer, created=datetime.date)
+        new_composer.save()
+        return new_composer
     pass
+
+
+def handle_attachments(request):
+    files = upload_files(request)
+    pdb.set_trace()
+    if files == []:
+        print("No files were uploaded")
