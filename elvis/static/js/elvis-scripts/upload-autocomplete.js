@@ -13,8 +13,9 @@
  */
 function autocomplete(inputField, suggestionField, dictionary) {
     var menuActive = -1;
-    var previousSize = -1;
     var menuSize = -1;
+    var isInit = true;
+    var gotResults = true;
     var $inputField = $("#" + inputField);
     var $suggestionMenu = $("#" + suggestionField);
 
@@ -23,7 +24,7 @@ function autocomplete(inputField, suggestionField, dictionary) {
         var key = event['keyCode'];
 
         // Arrow key down moves the active block down the menu
-        if (key == 40)
+        if (key === 40)
         {
             event.preventDefault();
             $suggestionMenu.children().eq(menuActive).toggleClass("active");
@@ -32,7 +33,7 @@ function autocomplete(inputField, suggestionField, dictionary) {
         }
 
         //Arrow key up moves the active block up the menu
-        if (key == 38)
+        if (key === 38)
         {
             event.preventDefault();
             $suggestionMenu.children().eq(menuActive).toggleClass("active");
@@ -45,7 +46,7 @@ function autocomplete(inputField, suggestionField, dictionary) {
         }
 
         //Enter key sends the active menu item to the input and deletes suggestions
-        if (key == 13 && menuActive != -1 && menuSize > 0)
+        if (key === 13 && menuActive !== -1 && menuSize > 0)
         {
             event.preventDefault();
             $inputField.val($suggestionMenu.children().eq(menuActive).text());
@@ -54,7 +55,7 @@ function autocomplete(inputField, suggestionField, dictionary) {
             menuSize = 0;
         }
 
-        if (key == 13)
+        if (key === 13)
             event.preventDefault()
     });
 
@@ -63,18 +64,15 @@ function autocomplete(inputField, suggestionField, dictionary) {
         var key = event['keyCode'];
 
         //This block triggers on a-z and del to populate the suggestion list.
-        if ((key > 63 && key < 91) || key == 8)
+        if ((key > 63 && key < 91) || key === 8)
         {
             var query = $inputField.val();
 
-            if (key == 8)
-                previousSize = -1;
-
-            if (!(previousSize == -1) && !(menuSize == 0))
-                previousSize = menuSize;
-
+            if (key === 8)
+                isInit = true;
+            
             //Sends the query to /suggest/ and prints the results to the suggestion-menu
-            if (previousSize != 0)
+            if (gotResults || isInit)
             {
                 $.ajax({
                     url: "/suggest/",
@@ -82,17 +80,23 @@ function autocomplete(inputField, suggestionField, dictionary) {
                     success: function (data) {
                         $suggestionMenu.html("");
                         menuSize = data.length;
+
+                        if (isInit && menuSize !== 0)
+                            isInit = false;
+
+                        if (menuSize > 0)
+                            gotResults = true;
+                        else
+                            gotResults = false;
+
                         menuActive = 0;
 
-                        for (i = 0; i < data.length; i++)
-                        {
-                            if (i == menuActive)
-                            {
+                        for (i = 0; i < data.length; i++) {
+                            if (i === menuActive) {
                                 $suggestionMenu.append(
                                     "<li class='list-group-item active' id='suggestion-item" + i + "'>" + data[i].name + "</li>");
                             }
-                            else
-                            {
+                            else {
                                 $suggestionMenu.append(
                                     "<li class='list-group-item' id='suggestion-item" + i + "'>" + data[i].name + "</li>");
                             }
