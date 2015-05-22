@@ -69,8 +69,9 @@ def unzip_file(file_dir, file_name):
     pdb.set_trace()
 
     for f_name in file_contents:
-        if any(f_name.endswith(x) for x in settings.ELVIS_EXTENSIONS) and not any(
-                f_name.startswith(x) for x in settings.ELVIS_BAD_PREFIX):
+        if (any(f_name.endswith(x) for x in settings.ELVIS_EXTENSIONS) and
+                not any(f_name.startswith(x) for x in settings.ELVIS_BAD_PREFIX) and
+                not any(x in f_name for x in ('/', '\\'))):
             zipped_file.extract(f_name, file_dir)
             files.append(f_name)
 
