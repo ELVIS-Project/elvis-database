@@ -1,5 +1,8 @@
 from django.http import HttpResponse
 from django.conf import settings
+from elvis.models import Attachment
+from django.core.files.base import File
+import shutil
 import json
 import urllib2
 import os
@@ -80,4 +83,36 @@ def unzip_file(file_dir, file_name):
             zipped_file.extract(f_name, file_dir)
             files.append(f_name)
 
+    zipped_file.close()
     return files
+
+# Takes the request.FILES and uploads them, processes them, then creates attachments and adds them to parents
+# attachment field.
+def handle_attachments(request, parent):
+    results = []
+
+    files = upload_files(request)
+    # TODO redirect to an error page or throw up a message if nothing is acceptable.
+    if files == []:
+        pass
+
+    for f in files:
+        att = Attachment(description="TESTING")
+        att.save()  # needed to create hash dir.
+        att.uploader = request.user
+
+        new_name = "{0}_{1}.".format(parent.title.replace(" ", "-"), parent.composer.name.replace(" ", "-")) + f['name'].rsplit('.')[-1]
+        os.rename(f['path'] + f['name'], f['path'] + new_name)
+
+        with open("{0}/{1}".format(f['path'], new_name), 'r+') as dest:
+            file_content = File(dest)
+            att.attachment.save("{0}/{1}".format(att.attachment_path, new_name), file_content)
+        os.remove(f['path'] + new_name)
+        att.save()
+        results.append(att)
+
+    for att in results:
+        parent.attachments.add(att)
+
+    parent.save()
+
