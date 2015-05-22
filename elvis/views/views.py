@@ -42,7 +42,9 @@ def upload_files(request):
             with open(settings.MEDIA_ROOT + 'temp/' + f.name, 'wb+') as destination:
                 for chunk in f.chunks():
                     destination.write(chunk)
-            files.append({'name': f.name, 'uploader': request.user.username, 'path': settings.MEDIA_ROOT + 'temp/'})
+                files.append({'name': f.name,
+                              'uploader': request.user.username,
+                              'path': settings.MEDIA_ROOT + 'temp/'})
 
         # Or, if the file is a zip file, upload, extract good files, then delete the archive.
         if f.name.endswith('.zip'):
@@ -50,10 +52,14 @@ def upload_files(request):
                 for chunk in f.chunks():
                     destination.write(chunk)
 
-            unzipped_files = unzip_file(settings.MEDIA_ROOT + 'temp/', f.name)
-            for file_name in unzipped_files:
-                files.append(
-                    {'name': file_name, 'uploader': request.user.username, 'path': settings.MEDIA_ROOT + 'temp/'})
+            try:
+                unzipped_files = unzip_file(settings.MEDIA_ROOT + 'temp/', f.name)
+                for file_name in unzipped_files:
+                    files.append({'name': file_name,
+                                  'uploader': request.user.username,
+                                  'path': settings.MEDIA_ROOT + 'temp/'})
+            except zipfile.BadZipfile:
+                files.append({'name': f.name, 'error': "Zip file could not be opened."})
 
             os.remove(settings.MEDIA_ROOT + 'temp/' + f.name)
 
@@ -66,7 +72,6 @@ def unzip_file(file_dir, file_name):
     files = []
     zipped_file = zipfile.ZipFile(file_dir + file_name, 'r')
     file_contents = zipped_file.namelist()
-    pdb.set_trace()
 
     for f_name in file_contents:
         if (any(f_name.endswith(x) for x in settings.ELVIS_EXTENSIONS) and
