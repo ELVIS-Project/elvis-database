@@ -31,31 +31,31 @@ class TagPieceSerializer(serializers.HyperlinkedModelSerializer):
 class GenrePieceSerializer(serializers.HyperlinkedModelSerializer):
     class Meta:
         model = Genre
-        fields = "name"
+        fields = ("name",)
 
 
 class InstrumentVoicePieceSerializer(serializers.HyperlinkedModelSerializer):
     class Meta:
         model = InstrumentVoice
-        fields = "name"
+        fields = ("name",)
 
 
 class LanguagePieceSerializer(serializers.HyperlinkedModelSerializer):
     class Meta:
         model = Language
-        fields = "name"
+        fields = ("name",)
 
 
 class LocationPieceSerializer(serializers.HyperlinkedModelSerializer):
     class Meta:
         model = Location
-        fields = "name"
+        fields = ("name",)
 
 
 class SourcePieceSerializer(serializers.HyperlinkedModelSerializer):
     class Meta:
         model = Source
-        fields = "name"
+        fields = ("name",)
 
 
 class AttachmentPieceSerializer(serializers.HyperlinkedModelSerializer):

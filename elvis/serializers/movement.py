@@ -30,31 +30,31 @@ class TagMovementSerializer(serializers.HyperlinkedModelSerializer):
 class GenreMovementSerializer(serializers.HyperlinkedModelSerializer):
     class Meta:
         model = Genre
-        fields = "name"
+        fields = ("name",)
 
 
 class InstrumentVoiceMovementSerializer(serializers.HyperlinkedModelSerializer):
     class Meta:
         model = InstrumentVoice
-        fields = "name"
+        fields = ("name",)
 
 
 class LanguageMovementSerializer(serializers.HyperlinkedModelSerializer):
     class Meta:
         model = Language
-        fields = "name"
+        fields = ("name",)
 
 
 class LocationMovementSerializer(serializers.HyperlinkedModelSerializer):
     class Meta:
         model = Location
-        fields = "name"
+        fields = ("name",)
 
 
 class SourceMovementSerializer(serializers.HyperlinkedModelSerializer):
     class Meta:
         model = Source
-        fields = "name"
+        fields = ("name",)
 
 
 class AttachmentMovementSerializer(serializers.HyperlinkedModelSerializer):
