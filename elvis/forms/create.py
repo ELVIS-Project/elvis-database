@@ -1,6 +1,5 @@
 from django import forms
 
-
 class PieceForm(forms.Form):
     # Basic Fields
     title = forms.CharField()
@@ -20,6 +19,6 @@ class PieceForm(forms.Form):
     # Comment
     comment = forms.CharField(required=False)
     # Attachment
-    attachment = forms.FileField(required=False)
+    files = forms.FileField(required=False)
     # Movements
     movements = forms.CharField(required=False)
