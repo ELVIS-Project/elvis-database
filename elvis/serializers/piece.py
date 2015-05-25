@@ -15,40 +15,48 @@ from django.contrib.auth.models import User
 import os
 from django.conf import settings
 
+
 class ComposerPieceSerializer(serializers.HyperlinkedModelSerializer):
     class Meta:
         model = Composer
         fields = ('url', "name")
+
 
 class TagPieceSerializer(serializers.HyperlinkedModelSerializer):
     class Meta:
         model = Tag
         fields = ("url", "name")
 
+
 class GenrePieceSerializer(serializers.HyperlinkedModelSerializer):
     class Meta:
         model = Genre
-        fields = ("name", )
+        fields = "name"
+
 
 class InstrumentVoicePieceSerializer(serializers.HyperlinkedModelSerializer):
     class Meta:
         model = InstrumentVoice
-        fields = ("name", )
+        fields = "name"
+
 
 class LanguagePieceSerializer(serializers.HyperlinkedModelSerializer):
     class Meta:
         model = Language
-        fields = ("name", )
+        fields = "name"
+
 
 class LocationPieceSerializer(serializers.HyperlinkedModelSerializer):
     class Meta:
         model = Location
-        fields =("name", )
+        fields = "name"
+
 
 class SourcePieceSerializer(serializers.HyperlinkedModelSerializer):
     class Meta:
         model = Source
-        fields = ("name", )
+        fields = "name"
+
 
 class AttachmentPieceSerializer(serializers.HyperlinkedModelSerializer):
     # LM: Must add this to serializers explicitly, otherwise will raise KeyError because file_name isn't *really* a field
@@ -67,28 +75,33 @@ class AttachmentPieceSerializer(serializers.HyperlinkedModelSerializer):
         url = request.build_absolute_uri(os.path.join(settings.MEDIA_URL, path))
         return url
 
+
 class CollectionPieceSerializer(serializers.HyperlinkedModelSerializer):
     class Meta:
         model = Collection
         fields = ("url", "title")
+
 
 class UserPieceSerializer(serializers.HyperlinkedModelSerializer):
     class Meta:
         model = User
         fields = ('url', 'username', 'first_name', "last_name")
 
+
 class MovementPieceSerializer(serializers.HyperlinkedModelSerializer):
     item_id = serializers.ReadOnlyField(source='pk')
+
     class Meta:
         model = Movement
         fields = ('url', 'item_id', 'title')
+
 
 class PieceSerializer(serializers.HyperlinkedModelSerializer):
     composer = ComposerPieceSerializer()
     tags = TagPieceSerializer(many=True)
     genres = GenrePieceSerializer(many=True)
-    date_of_composition = serializers.DateField()
-    date_of_composition2 = serializers.DateField()
+    date_of_composition = serializers.DateField(format=None)
+    date_of_composition2 = serializers.DateField(format=None)
     instruments_voices = InstrumentVoicePieceSerializer()
     languages = LanguagePieceSerializer(many=True)
     locations = LocationPieceSerializer(many=True)
@@ -97,8 +110,8 @@ class PieceSerializer(serializers.HyperlinkedModelSerializer):
     collections = CollectionPieceSerializer(many=True)
     uploader = UserPieceSerializer()
     movements = MovementPieceSerializer(many=True)
-    created = serializers.DateTimeField()
-    updated = serializers.DateTimeField()
+    created = serializers.DateTimeField(format=None)
+    updated = serializers.DateTimeField(format=None)
     item_id = serializers.ReadOnlyField(source='pk')
 
     class Meta:

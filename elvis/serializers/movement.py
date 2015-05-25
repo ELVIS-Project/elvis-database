@@ -11,44 +11,51 @@ from elvis.models.attachment import Attachment
 from elvis.models.collection import Collection
 from elvis.models.piece import Piece
 from django.contrib.auth.models import User
-
-import os
 from django.conf import settings
+import os
+
 
 class ComposerMovementSerializer(serializers.HyperlinkedModelSerializer):
     class Meta:
         model = Composer
         fields = ('url', "name")
 
+
 class TagMovementSerializer(serializers.HyperlinkedModelSerializer):
     class Meta:
         model = Tag
         fields = ("url", "name")
 
+
 class GenreMovementSerializer(serializers.HyperlinkedModelSerializer):
     class Meta:
         model = Genre
-        fields = ("name", )
+        fields = "name"
+
 
 class InstrumentVoiceMovementSerializer(serializers.HyperlinkedModelSerializer):
     class Meta:
         model = InstrumentVoice
-        fields = ("name", )
+        fields = "name"
+
 
 class LanguageMovementSerializer(serializers.HyperlinkedModelSerializer):
     class Meta:
         model = Language
-        fields = ("name", )
+        fields = "name"
+
 
 class LocationMovementSerializer(serializers.HyperlinkedModelSerializer):
     class Meta:
         model = Location
-        fields =("name", )
+        fields = "name"
+
 
 class SourceMovementSerializer(serializers.HyperlinkedModelSerializer):
     class Meta:
         model = Source
-        fields = ("name", )
+        fields = "name"
+
 
 class AttachmentMovementSerializer(serializers.HyperlinkedModelSerializer):
     # LM: Must add this to serializers explicitly, otherwise will raise KeyError
@@ -73,10 +80,12 @@ class CollectionMovementSerializer(serializers.HyperlinkedModelSerializer):
         model = Collection
         fields = ("url", "title")
 
+
 class UserMovementSerializer(serializers.HyperlinkedModelSerializer):
     class Meta:
         model = User
         fields = ('url', 'username', 'first_name', "last_name")
+
 
 class PieceMovementSerializer(serializers.HyperlinkedModelSerializer):
     class Meta:
@@ -97,5 +106,10 @@ class MovementSerializer(serializers.HyperlinkedModelSerializer):
     uploader = UserMovementSerializer()
     piece = PieceMovementSerializer()
     item_id = serializers.ReadOnlyField(source='pk')
+    date_of_composition = serializers.DateField(format=None)
+    date_of_composition2 = serializers.DateField(format=None)
+    created = serializers.DateTimeField(format=None)
+    updated = serializers.DateTimeField(format=None)
+
     class Meta:
         model = Movement

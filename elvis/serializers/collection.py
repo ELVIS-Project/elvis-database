@@ -1,5 +1,4 @@
 from rest_framework import serializers
-from elvis.serializers.user import UserSerializer
 from elvis.models.collection import Collection
 from elvis.models.piece import Piece
 from elvis.models.movement import Movement
@@ -17,6 +16,7 @@ class PieceCollectionSerializer(serializers.HyperlinkedModelSerializer):
     composer = ComposerCollectionSerializer()
     item_id = serializers.ReadOnlyField(source='pk')
     number_of_movements = serializers.ReadOnlyField()
+    date_of_composition = serializers.DateField(format=None)
 
     class Meta:
         model = Piece
@@ -33,6 +33,7 @@ class MovementCollectionSerializer(serializers.HyperlinkedModelSerializer):
     composer = ComposerCollectionSerializer()
     piece = PieceMovementCollectionSerializer()
     item_id = serializers.ReadOnlyField(source='pk')
+    date_of_composition = serializers.DateField(format=None)
 
     class Meta:
         model = Movement

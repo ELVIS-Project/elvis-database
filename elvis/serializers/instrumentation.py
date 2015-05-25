@@ -3,7 +3,7 @@ from elvis.models.instrumentation import InstrumentVoice
 from elvis.models.movement import Movement
 from elvis.models.piece import Piece
 from elvis.models.composer import Composer
-from elvis.serializers.piece import PieceSerializer
+
 
 class InstrumentVoiceComposerSerializer(serializers.HyperlinkedModelSerializer):
     item_id = serializers.ReadOnlyField(source='pk')
@@ -11,6 +11,7 @@ class InstrumentVoiceComposerSerializer(serializers.HyperlinkedModelSerializer):
     class Meta:
         model = Composer
         fields = ("url", 'item_id', "name")
+
 
 class InstrumentVoiceMovementSerializer(serializers.HyperlinkedModelSerializer):
     item_id = serializers.ReadOnlyField(source='pk')
@@ -24,6 +25,7 @@ class InstrumentVoicePieceSerializer(serializers.HyperlinkedModelSerializer):
     movements = InstrumentVoiceMovementSerializer(many=True)
     composer = InstrumentVoiceComposerSerializer()
     item_id = serializers.ReadOnlyField(source='pk')
+    date_of_composition = serializers.DateField(format=None)
 
     class Meta:
         model = Piece

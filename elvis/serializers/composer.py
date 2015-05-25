@@ -5,8 +5,10 @@ from elvis.models.movement import Movement
 from django.conf import settings
 import os
 
+
 class ComposerMovementSerializer(serializers.HyperlinkedModelSerializer):
     item_id = serializers.ReadOnlyField(source='pk')
+
     class Meta:
         model = Movement
         fields = ('url', 'item_id', 'title')
@@ -15,6 +17,8 @@ class ComposerMovementSerializer(serializers.HyperlinkedModelSerializer):
 class ComposerPieceSerializer(serializers.HyperlinkedModelSerializer):
     movements = ComposerMovementSerializer(many=True)
     item_id = serializers.ReadOnlyField(source='pk')
+    date_of_composition = serializers.DateField(format=None)
+
     class Meta:
         model = Piece
         fields = ('url', 'item_id', 'title', 'movements', "date_of_composition")
@@ -25,7 +29,11 @@ class ComposerSerializer(serializers.HyperlinkedModelSerializer):
     movements = ComposerMovementSerializer(many=True)
     image = serializers.SerializerMethodField("retrieve_image")
     item_id = serializers.ReadOnlyField(source='pk')
-    
+    birth_date = serializers.DateField(format=None)
+    death_date = serializers.DateField(format=None)
+    created = serializers.DateTimeField(format=None)
+    updated = serializers.DateTimeField(format=None)
+
     class Meta:
         model = Composer
         fields = ("url",
