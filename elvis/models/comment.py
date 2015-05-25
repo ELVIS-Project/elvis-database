@@ -36,6 +36,7 @@ def solr_index(sender, instance, created, **kwargs):
     if record:
         solrconn.delete(record.results[0]['id'])
 
+    comment = instance
     try:
         comment_name = unicode(comment.name)
     except UnicodeDecodeError:
