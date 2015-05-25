@@ -114,8 +114,6 @@ class DownloadDetail(generics.RetrieveUpdateAPIView):
         if hasattr(item, 'pieces') and not item.pieces.count() == 0:
             for piece in item.pieces.all():
                 self._download_helper(piece, user_download)
-
-        pdb.set_trace()
         if hasattr(item, 'movements') and not item.movements.count() == 0:
             for movement in item.movements.all():
                 self._download_helper(movement, user_download)
