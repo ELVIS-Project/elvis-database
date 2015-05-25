@@ -1,12 +1,13 @@
+# AP: NO LONGER USED. Keeping it here so I can reference the work already done for uploads.
+
 # LM: TODO lots of cleaning up; make modular methods
 from rest_framework import generics
 from rest_framework import permissions
 from rest_framework import status
 from rest_framework.renderers import JSONRenderer
 from rest_framework.response import Response
-from rest_framework.views import APIView
 from django.utils.decorators import method_decorator
-from django.views.decorators.http import require_http_methods
+from django.shortcuts import render
 from django.views.decorators.csrf import csrf_protect
 from django.conf import settings
 
