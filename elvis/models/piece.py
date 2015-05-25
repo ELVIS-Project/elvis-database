@@ -178,14 +178,14 @@ def solr_index(sender, instance, created, **kwargs):
     solrconn.commit()
 
     # Rename attachments accordingly
-    try:
-        composer_last_name = piece.composer.name.split(',', 1)[0]
-    except ValueError as v:
-        composer_last_name = piece.composer.name.split(' ', 1)[0]
-    piece_title_short = ''.join(piece.title.split()[:6])
-    attachment_name = "_".join([composer_last_name, piece_title_short])
-    for attachment in piece.attachments.all():
-        attachment.rename(new_filename=attachment_name)
+    #try:
+    #    composer_last_name = piece.composer.name.split(',', 1)[0]
+    #except ValueError as v:
+    #    composer_last_name = piece.composer.name.split(' ', 1)[0]
+    #piece_title_short = ''.join(piece.title.split()[:6])
+    #attachment_name = "_".join([composer_last_name, piece_title_short])
+    #for attachment in piece.attachments.all():
+    #    attachment.rename(new_filename=attachment_name)
 
 @receiver(post_delete, sender=Piece)
 def solr_delete(sender, instance, **kwargs):
