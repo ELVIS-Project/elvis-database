@@ -19,14 +19,13 @@ def solr_suggest(request):
     results = []
 
     if request.method == "GET" and request.GET.has_key(u'q') and request.GET.has_key(u'd'):
-        value = request.GET[u'q']
-        dictionary = request.GET[u'd']
+        value = request.GET['q']
+        dictionary = request.GET['d']
         if len(value) > 1:
-            url_val = value.replace(" ", "+")
             json_string = urllib2.urlopen(
-                settings.SOLR_SERVER + "/suggest/?wt=json&suggest.dictionary={0}&q={1}".format(dictionary, url_val))
-            data = json.loads(json_string.read())['suggest']['{0}'.format(dictionary)]['{0}'.format(value)]
-
+                settings.SOLR_SERVER + "/suggest/?wt=json&suggest.dictionary={0}&q={1}".format(dictionary, value))
+            resp = json.loads(json_string.read())['suggest']['{0}'.format(dictionary)]
+            data = resp[resp.keys()[0]]
             if data['numFound'] > 0:
                 for suggestion in data['suggestions']:
                     results.append({'name': suggestion['term']})
