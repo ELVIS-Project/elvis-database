@@ -27,12 +27,12 @@ $(document).ready(function($)
         if (query.length > 0)
         {
              $.ajax({
-                url: "/query_db/",
+                url: "/composers/",
                 data: {q: query},
                 success: function (data)
                 {
                     debugger;
-                    if (data['found'] == "false")
+                    if (data['count'] == 0)
                     {
                         $("#composer-create-new-menu").slideDown("slow");
                     }

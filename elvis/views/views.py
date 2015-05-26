@@ -32,20 +32,6 @@ def solr_suggest(request):
     j_results = json.dumps(results)
     return HttpResponse(j_results, content_type="json")
 
-
-#TODO generalize for other fields?
-def query_db(request):
-    if request.method == "GET" and request.GET.has_key('q'):
-        value = request.GET[u'q']
-        try:
-            composer = Composer.objects.get(name__iexact=value)
-            data = json.dumps({'found': 'true'})
-            return HttpResponse(composer, content_type="json")
-        except:
-            data = json.dumps({'found': 'false'})
-            return HttpResponse(data, content_type="json")
-
-
 # Uploads files to the media/temp directory. Automatically unzips
 # any zip archives. Returns a list of uploaded files.
 def upload_files(request):

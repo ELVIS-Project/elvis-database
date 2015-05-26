@@ -25,6 +25,12 @@ class ComposerList(generics.ListCreateAPIView):
     max_paginate_by = 20
     queryset = Composer.objects.all()
 
+    def get_queryset(self):
+        query = self.request.GET.get('q', None)
+        if query:
+            return self.queryset.filter(name=query)
+        else:
+            return self.queryset
 
 class ComposerDetail(generics.RetrieveUpdateDestroyAPIView):
     model = Composer
