@@ -16,9 +16,9 @@ $(document).ready(function($)
     autocomplete("id_composer", "composer-suggestion-menu", "composerSuggest");
     autocomplete("id_collection", "collection-suggestion-menu", "collectionSuggest");
 
-
+    var $newComposerMenu = $("#composer-create-new-menu");
     var $composerInput = $("#id_composer");
-    $("#composer-create-new-menu").hide();
+    $newComposerMenu.hide();
 
     $composerInput.on("focusout", function(event)
     {
@@ -31,10 +31,9 @@ $(document).ready(function($)
                 data: {q: query},
                 success: function (data)
                 {
-                    debugger;
                     if (data['count'] == 0)
                     {
-                        $("#composer-create-new-menu").slideDown("slow");
+                        $newComposerMenu.slideDown("slow");
                     }
                 }
             });
@@ -43,7 +42,7 @@ $(document).ready(function($)
 
     $composerInput.on("focusin", function(event)
     {
-            $("#composer-create-new-menu").slideUp("slow");
+            $newComposerMenu.slideUp("slow");
     })
 });
 </script>
@@ -100,8 +99,8 @@ $(document).ready(function($)
                 </div>
 
                 <br>
-                <span class="help-block">Attach the files for this piece. Acceptable file types are </span>
-                <input name="files" class="filestyle" data-input="false" data-buttonText="Attach Files" data-iconName="glyphicon-inbox" id="id_files" type="file" multiple="multiple"/>
+                <span class="help-block">Attach the files for this piece. Acceptable file types are .zip, .pdf, and .mtxt</span>
+                <input name="files" class="filestyle" data-input="false" data-size="sm" data-buttonText="Attach Files" data-iconName="glyphicon-inbox" id="id_files" type="file" multiple="multiple"/>
                 <br>
 
                 <h4>Optional</h4>
