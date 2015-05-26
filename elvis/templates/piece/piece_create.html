@@ -15,6 +15,8 @@ $(document).ready(function($)
     autocomplete("id_title", "title-suggestion-menu", "pieceSuggest");
     autocomplete("id_composer", "composer-suggestion-menu", "composerSuggest");
     autocomplete("id_collection", "collection-suggestion-menu", "collectionSuggest");
+    $("#id_att_files").filestyle({input:false, iconName: "glyphicon-file", buttonText: "Upload Files"});
+    $("#id_comp_pic").filestyle({input:false, iconName: "glyphicon-picture", buttonText: "Composer Picture", disabled: "true"});
 
     var $newComposerMenu = $("#composer-create-new-menu");
     var $composerInput = $("#id_composer");
@@ -33,6 +35,10 @@ $(document).ready(function($)
                 {
                     if (data['count'] == 0)
                     {
+                        $newComposerMenu.children().remove(".top-message");
+                        $newComposerMenu.prepend("<div class='top-message'><hr><h5>We don't have <strong>" + query + "</strong> in our database. " +
+                            "Submitting a piece by an unknown composer will add the composer to the database. <br>" +
+                            "Do you have additional information to add to this new composer?</h5><br></div>");
                         $newComposerMenu.slideDown("slow");
                     }
                 }
@@ -40,10 +46,15 @@ $(document).ready(function($)
         }
     });
 
-    $composerInput.on("focusin", function(event)
+    $composerInput.on("keydown", function(event)
     {
-            $newComposerMenu.slideUp("slow");
+        $newComposerMenu.slideUp("slow");
+    });
+
+    $("#hide-composer-create").on("click", function(event){
+        $newComposerMenu.slideUp("slow");
     })
+
 });
 </script>
 <div class="page-header">
@@ -59,9 +70,11 @@ $(document).ready(function($)
     {% csrf_token %}
 
         <div class="tab-content">
+
             <div id="required" class="tab-pane fade in active">
                 <h4>Piece Information</h4>
                 <hr>
+
                 <div class="input-group">
                   <span class="input-group-addon" id="basic-addon1">Title</span>
                   <input type="text" id="id_title" name="title" autocomplete="off" class="form-control" placeholder="e.g. Ach Gott, vom Himmel sieh darein, BWV 2" aria-describedby="basic-addon1">
@@ -75,13 +88,13 @@ $(document).ready(function($)
                     <input type="text" id="id_composer" autocomplete="off" name="composer" class="form-control" placeholder="e.g. Bach, Johann Sebastian" aria-describedby="basic-addon1">
                 </div>
                 <div id="composer-suggestion-menu"></div>
-                <div id="composer-create-new-menu">
-                    <hr><h5>We don't have that composer in the database. Do you have any additional information to add to this new composer?</h5><br>
+
+                <div id="composer-create-new-menu" style="padding-left:50px; padding-right:50px">
                     <div class="row">
                         <div class="col-md-4">
                             <div class="form-group">
                                 <div class="input-group">
-                                    <input type='date' name="composer-birth-date" class="form-control" />
+                                    <input type='date' name="composer_birth_date" class="form-control unstyled"/>
                                     <span class="input-group-addon">Birth</span>
                                 </div>
                             </div>
@@ -89,8 +102,15 @@ $(document).ready(function($)
                         <div class="col-md-4">
                             <div class="form-group">
                                 <div class="input-group">
-                                    <input type='date' name="composer-death-date" class="form-control" />
+                                    <input type='date' name="composer_death_date" class="form-control unstyled"/>
                                     <span class="input-group-addon">Death</span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-2">
+                            <div class="form-group">
+                                <div class="input-group">
+                                    <input name="comp_pic" id="id_comp_pic" type="file" multiple="multiple"/>
                                 </div>
                             </div>
                         </div>
@@ -99,11 +119,32 @@ $(document).ready(function($)
                 </div>
 
                 <br>
+
+                <div class="row">
+                    <div class="col-md-4">
+                        <div class="form-group">
+                            <div class="input-group">
+                                <span class="input-group-addon">Composition Start Date</span>
+                                <input type='date' name="composition_start_date" class="form-control unstyled"/>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <div class="form-group">
+                            <div class="input-group">
+                                <span class="input-group-addon">Composition End Date</span>
+                                <input type='date' name="composition_end_date" class="form-control unstyled"/>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <hr>
                 <span class="help-block">Attach the files for this piece. Acceptable file types are .zip, .pdf, and .mtxt</span>
-                <input name="files" class="filestyle" data-input="false" data-size="sm" data-buttonText="Attach Files" data-iconName="glyphicon-inbox" id="id_files" type="file" multiple="multiple"/>
+                <input name="att_files" id="id_att_files" type="file" multiple="multiple"/>
                 <br>
 
-                <h4>Optional</h4>
+                <h4>Movements</h4>
                 <hr>
                 <div class="input-group">
                     <span class="input-group-addon" id="basic-addon1">Collection</span>
