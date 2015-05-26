@@ -4,26 +4,19 @@ from rest_framework import generics
 from rest_framework import status
 from rest_framework import permissions
 import datetime
-import os
-from elvis import settings
 from django.shortcuts import render
-from django.shortcuts import redirect
 from rest_framework.renderers import JSONRenderer
-from django.http import JsonResponse
 from rest_framework.response import Response
-from django.http import HttpRequest
 import pdb
 import shutil
 
+from elvis.exceptions import NoFilesError
 from elvis.renderers.custom_html_renderer import CustomHTMLRenderer
 from elvis.serializers.piece import PieceSerializer
 from elvis.models.piece import Piece
-from elvis.models.composer import Composer
 from elvis.forms import PieceForm
-from elvis.models.download import Download
-from elvis.models.attachment import Attachment
-from elvis.views.views import upload_files, handle_attachments
-from zipfile import BadZipfile
+
+from elvis.views.views import handle_attachments, handle_composer
 from django.utils.decorators import method_decorator
 from django.http import HttpResponseRedirect
 
@@ -84,27 +77,23 @@ class PieceList(generics.ListCreateAPIView):
 
         if form.is_valid():
             clean_form = form.cleaned_data
+
             composer = handle_composer(clean_form['composer'])
             piece = Piece(title=clean_form['title'],
                           composer=composer,
                           uploader=request.user,
                           created=datetime.datetime.now(),
+                          updated=datetime.datetime.now()
                           )
             piece.save()
-            handle_attachments(request, piece)
+
+            try:
+                handle_attachments(request, piece)
+            except NoFilesError:
+                piece.delete()
+                return render(request, "415.html")
 
             return HttpResponseRedirect("http://localhost:8000/piece/{0}".format(piece.id))
         else:
-            return HttpResponseRedirect("http://localhost:8000/pieces/")
-
-#TODO implement better behaviour for creating composers.
-def handle_composer(composer):
-    try:
-        new_composer = Composer.objects.get(name=composer)
-        return new_composer
-    except:
-        new_composer = Composer(name=composer, created=datetime.date)
-        new_composer.save()
-        return new_composer
-    pass
+            return render(request, "415.html")
 
