@@ -4,6 +4,11 @@ class PieceForm(forms.Form):
     # Basic Fields
     title = forms.CharField()
     composer = forms.CharField()
+
+    # New composer fields
+    composer_birth_date = forms.DateField(required=False)
+    composer_death_date = forms.DateField(required=False)
+
     collection = forms.CharField(required=False)
     comp_start = forms.CharField(required=False)
     comp_end = forms.CharField(required=False)
@@ -19,6 +24,6 @@ class PieceForm(forms.Form):
     # Comment
     comment = forms.CharField(required=False)
     # Attachment
-    files = forms.FileField(required=False)
+    files = forms.FileField()
     # Movements
     movements = forms.CharField(required=False)
