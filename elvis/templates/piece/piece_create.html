@@ -6,6 +6,7 @@
 
 {% block extra_hd %}
         <script type='text/javascript' src="{{ STATIC_URL }}js/elvis-scripts/upload-autocomplete.js"></script>
+        <script type='text/javascript' src="{{ STATIC_URL }}js/bs-filestyle.js"></script>
 {% endblock %}
 
 <script>
@@ -15,13 +16,40 @@ $(document).ready(function($)
     autocomplete("id_composer", "composer-suggestion-menu", "composerSuggest");
     autocomplete("id_collection", "collection-suggestion-menu", "collectionSuggest");
 
+
+    var $composerInput = $("#id_composer");
+    $("#composer-create-new-menu").hide();
+
+    $composerInput.on("focusout", function(event)
+    {
+        var query = $("#id_composer").val();
+
+        if (query.length > 0)
+        {
+             $.ajax({
+                url: "/query_db/",
+                data: {q: query},
+                success: function (data)
+                {
+                    debugger;
+                    if (data['found'] == "false")
+                    {
+                        $("#composer-create-new-menu").slideDown("slow");
+                    }
+                }
+            });
+        }
+    });
+
+    $composerInput.on("focusin", function(event)
+    {
+            $("#composer-create-new-menu").slideUp("slow");
+    })
 });
 </script>
-
 <div class="page-header">
     <h2>Upload a Piece</h2>
 </div>
-
 
 <div class="bs-example">
     <ul class="nav nav-tabs">
@@ -33,15 +61,13 @@ $(document).ready(function($)
 
         <div class="tab-content">
             <div id="required" class="tab-pane fade in active">
-                <h4>Required</h4>
+                <h4>Piece Information</h4>
                 <hr>
                 <div class="input-group">
                   <span class="input-group-addon" id="basic-addon1">Title</span>
                   <input type="text" id="id_title" name="title" autocomplete="off" class="form-control" placeholder="e.g. Ach Gott, vom Himmel sieh darein, BWV 2" aria-describedby="basic-addon1">
                 </div>
-                <ul class="list-group" style="position: absolute; z-index:10; cursor: pointer">
-                   <div id="title-suggestion-menu"></div>
-                </ul>
+                <div id="title-suggestion-menu"></div>
 
                 <br>
 
@@ -49,13 +75,33 @@ $(document).ready(function($)
                     <span class="input-group-addon" id="basic-addon1">Composer</span>
                     <input type="text" id="id_composer" autocomplete="off" name="composer" class="form-control" placeholder="e.g. Bach, Johann Sebastian" aria-describedby="basic-addon1">
                 </div>
-                <ul class="list-group" style="position: absolute; z-index:10; cursor: pointer">
-                   <div id="composer-suggestion-menu"></div>
-                </ul>
+                <div id="composer-suggestion-menu"></div>
+                <div id="composer-create-new-menu">
+                    <hr><h5>We don't have that composer in the database. Do you have any additional information to add to this new composer?</h5><br>
+                    <div class="row">
+                        <div class="col-md-4">
+                            <div class="form-group">
+                                <div class="input-group">
+                                    <input type='date' name="composer-birth-date" class="form-control" />
+                                    <span class="input-group-addon">Birth</span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <div class="form-group">
+                                <div class="input-group">
+                                    <input type='date' name="composer-death-date" class="form-control" />
+                                    <span class="input-group-addon">Death</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <hr>
+                </div>
 
                 <br>
                 <span class="help-block">Attach the files for this piece. Acceptable file types are </span>
-                <input name="files" id="id_files" type="file" multiple="multiple"/>
+                <input name="files" class="filestyle" data-input="false" data-buttonText="Attach Files" data-iconName="glyphicon-inbox" id="id_files" type="file" multiple="multiple"/>
                 <br>
 
                 <h4>Optional</h4>
@@ -64,9 +110,8 @@ $(document).ready(function($)
                     <span class="input-group-addon" id="basic-addon1">Collection</span>
                     <input type="text" id="id_collection" name="collection" autocomplete="off" class="form-control" placeholder="e.g. Bach, Johann Sebastian" aria-describedby="basic-addon1">
                 </div>
-                <ul class="list-group" style="position: absolute; z-index:10; cursor: pointer">
-                   <div id="collection-suggestion-menu"></div>
-                </ul>
+                <div id="collection-suggestion-menu"></div>
+
             </div>
 
             <div id="advanced-info" class="tab-pane fade">

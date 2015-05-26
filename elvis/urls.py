@@ -8,7 +8,7 @@ from django.contrib.staticfiles.urls import staticfiles_urlpatterns
 
 # temporary views for these pages
 from elvis.views.main import home, about, queries, temp
-from elvis.views.views import solr_suggest, upload_files
+from elvis.views.views import solr_suggest, upload_files, query_db
 from elvis.views.auth import LoginFormView, logout_view
 from elvis.views.search import SearchView
 from elvis.views.project import ProjectList, ProjectDetail
@@ -70,8 +70,10 @@ urlpatterns += format_suffix_patterns(
         url(r'^temp/', temp, name="temp"),
 
         url(r'^suggest/$', solr_suggest),
+        url(r'^query_db/$', query_db),
 
-        url(r'^upload/$', upload_files),
+
+       url(r'^upload/$', upload_files),
 
         #TEMPORARY
         url(r'^create/piece$', CreatePiece.as_view()),

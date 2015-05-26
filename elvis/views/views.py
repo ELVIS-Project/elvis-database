@@ -1,12 +1,17 @@
 from django.http import HttpResponse
 from django.conf import settings
-from elvis.models import Attachment
 from django.core.files.base import File
-import shutil
+
+from elvis.exceptions import NoFilesError
+from elvis.models import Attachment
+from elvis.models import Composer
+
 import json
+import urllib
 import urllib2
 import os
 import zipfile
+import datetime
 import pdb
 
 
@@ -27,6 +32,19 @@ def solr_suggest(request):
                     results.append({'name': suggestion['term']})
     j_results = json.dumps(results)
     return HttpResponse(j_results, content_type="json")
+
+
+#TODO generalize for other fields?
+def query_db(request):
+    if request.method == "GET" and request.GET.has_key('q'):
+        value = request.GET[u'q']
+        try:
+            composer = Composer.objects.get(name__iexact=value)
+            data = json.dumps({'found': 'true'})
+            return HttpResponse(composer, content_type="json")
+        except:
+            data = json.dumps({'found': 'false'})
+            return HttpResponse(data, content_type="json")
 
 
 # Uploads files to the media/temp directory. Automatically unzips
@@ -116,3 +134,14 @@ def handle_attachments(request, parent):
 
     parent.save()
 
+
+#TODO implement better behaviour for creating composers.
+def handle_composer(composer):
+    try:
+        new_composer = Composer.objects.get(name=composer)
+        return new_composer
+    except:
+        new_composer = Composer(name=composer, created=datetime.datetime.now())
+        new_composer.save()
+        return new_composer
+    pass
