@@ -3,7 +3,7 @@
 {% block wrap %}
 <div class="row">
     <div class="page-header"><h2>{{ content.title }} <small>{{ content.pieces | length }} Pieces, {{ content.movements | length }} Movements</small></h2> </div>
-    <p>Created by {{ content.creator.full_name }} on {{ content.created }} Last updated {{ content.updated }}</p>
+    <p>Created by {{ content.creator.full_name }} on {{ content.created | date:"d F Y, f a" }}<br> Last updated {{ content.updated | date:"d F Y, f a" }}</p>
     <p> {% autoescape off %}{{ content.comment }}{% endautoescape %} </p>
 </div>
 
