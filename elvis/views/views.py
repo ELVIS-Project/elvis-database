@@ -89,15 +89,15 @@ def unzip_file(file_dir, file_name):
     zipped_file.close()
     return files
 
+
 # Takes the request.FILES and uploads them, processes them, then creates attachments and adds them to parents
 # attachment field.
 def handle_attachments(request, parent):
     results = []
 
     files = upload_files(request)
-    # TODO redirect to an error page or throw up a message if nothing is acceptable.
-    if files == []:
-        pass
+    if not files:
+        raise NoFilesError
 
     for f in files:
         att = Attachment(description="TESTING")
@@ -125,7 +125,7 @@ def handle_composer(composer):
     try:
         new_composer = Composer.objects.get(name=composer)
         return new_composer
-    except:
+    except ObjectDoesNotExist:
         new_composer = Composer(name=composer, created=datetime.datetime.now())
         new_composer.save()
         return new_composer
