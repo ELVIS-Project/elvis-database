@@ -179,3 +179,9 @@ html, body {
 .results-intermediate-buttons{
     padding-bottom:10px;
 }
+
+.unstyled::-webkit-inner-spin-button,
+.unstyled::-webkit-calendar-picker-indicator {
+    display: none;
+    -webkit-appearance: none;
+}
