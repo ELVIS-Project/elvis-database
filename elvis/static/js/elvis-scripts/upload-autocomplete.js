@@ -20,6 +20,7 @@ function autocomplete(inputField, suggestionField, dictionary) {
     var selectedSuggestion;
     var $inputField = $("#" + inputField);
     var $suggestionMenu = $("#" + suggestionField);
+    var $suggestionListItems = $suggestionMenu.children().children();
 
     $inputField.on("keydown", function (event)
     {
@@ -29,38 +30,42 @@ function autocomplete(inputField, suggestionField, dictionary) {
         if (key === 40)
         {
             event.preventDefault();
-            $suggestionMenu.children().eq(menuActive).toggleClass("active");
+            $suggestionListItems.eq(menuActive).toggleClass("active");
             menuActive = (menuActive + 1) % menuSize;
-            $suggestionMenu.children().eq(menuActive).toggleClass("active");
-            selectedSuggestion = $suggestionMenu.children().eq(menuActive).text();
+            $suggestionListItems.eq(menuActive).toggleClass("active");
+            selectedSuggestion = $suggestionListItems.eq(menuActive).text();
         }
 
         //Arrow key up moves the active block up the menu
         if (key === 38)
         {
             event.preventDefault();
-            $suggestionMenu.children().eq(menuActive).toggleClass("active");
+            $suggestionListItems.eq(menuActive).toggleClass("active");
             menuActive = (menuActive - 1);
 
             if (menuActive < 0)
                 menuActive = menuSize - 1;
 
-            $suggestionMenu.children().eq(menuActive).toggleClass("active");
-            selectedSuggestion = $suggestionMenu.children().eq(menuActive).text();
+            $suggestionListItems.eq(menuActive).toggleClass("active");
+            selectedSuggestion = $suggestionListItems.eq(menuActive).text();
         }
 
         //Enter key sends the active menu item to the input and deletes suggestions
-        if (key === 13 && menuActive !== -1)
+        if (key === 13 && menuSize > 0)
         {
             event.preventDefault();
             $inputField.val(selectedSuggestion);
             $suggestionMenu.html("");
             menuActive = -1;
             menuSize = 0;
+            $inputField.focusout()
         }
 
         if (key === 13)
-            event.preventDefault()
+        {
+            event.preventDefault();
+            $inputField.focusout()
+        }
     });
 
     $inputField.on("keyup focusin", function (event)
@@ -74,7 +79,8 @@ function autocomplete(inputField, suggestionField, dictionary) {
             if (key === 8 || (query.length - $inputField.val().length) > 1)
                 isInit = true;
 
-            query = $inputField.val();
+            query = encodeURI($inputField.val());
+            var input_width = $("#required").width();
 
             //Sends the query to /suggest/ and prints the results to the suggestion-menu
             if ((gotResults || isInit) && selectedSuggestion !== $inputField.val())
@@ -96,20 +102,22 @@ function autocomplete(inputField, suggestionField, dictionary) {
                         else
                             gotResults = false;
 
+                        var suggestions = "";
                         for (var i = 0; i < data.length; i++)
                         {
                             if (i === menuActive)
                             {
-                                $suggestionMenu.append(
-                                    "<li class='list-group-item active' id='suggestion-item" + i + "'>" + data[i]['name'] + "</li>");
+                                suggestions +="<li class='list-group-item active' id='suggestion-item" + i + "'>" + data[i]['name'] + "</li>";
                             }
                             else
                             {
-                                $suggestionMenu.append(
-                                    "<li class='list-group-item' id='suggestion-item" + i + "'>" + data[i]['name'] + "</li>");
+                                suggestions += "<li class='list-group-item' id='suggestion-item" + i + "'>" + data[i]['name'] + "</li>";
                             }
                         }
-                        selectedSuggestion = $suggestionMenu.children().eq(menuActive).text();
+
+                        $suggestionMenu.html("<ul class='listgroup' style='position: absolute; padding-left: 0px; z-index:10; cursor: pointer; width:"+input_width+"px'>" + suggestions + "</ul>");
+                        $suggestionListItems = $suggestionMenu.children().children();
+                        selectedSuggestion = $suggestionListItems. eq(menuActive).text();
                     },
                     dataType: "json"
                 });
@@ -130,11 +138,11 @@ function autocomplete(inputField, suggestionField, dictionary) {
 
         if ($mouseTarget.hasClass("list-group-item"))
         {
-            $suggestionMenu.children().eq(menuActive).toggleClass("active", false);
+            $suggestionListItems.eq(menuActive).toggleClass("active", false);
             $mouseTarget.toggleClass("active", true);
             var mouseoverTargetID = $mouseTarget.attr('id');
             menuActive = mouseoverTargetID[mouseoverTargetID.length - 1];
-            selectedSuggestion = $suggestionMenu.children().eq(menuActive).text();
+            selectedSuggestion = $suggestionListItems.eq(menuActive).text();
         }
     });
 
