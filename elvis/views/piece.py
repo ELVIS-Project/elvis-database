@@ -72,28 +72,28 @@ class PieceList(generics.ListCreateAPIView):
     def create(self, request, *args, **kwargs):
         if not request.user.is_active:
             return Response(status=status.HTTP_401_UNAUTHORIZED)
-        else:
-            form = PieceForm(request.POST, request.FILES)
 
-        if form.is_valid():
-            clean_form = form.cleaned_data
+        form = PieceForm(request.POST, request.FILES)
 
-            composer = handle_composer(clean_form['composer'])
-            piece = Piece(title=clean_form['title'],
-                          composer=composer,
-                          uploader=request.user,
-                          created=datetime.datetime.now(),
-                          updated=datetime.datetime.now()
-                          )
-            piece.save()
+        if not form.is_valid():
+            return Response(status=status.HTTP_400_BAD_REQUEST)
 
-            try:
-                handle_attachments(request, piece)
-            except NoFilesError:
-                piece.delete()
-                return render(request, "415.html")
+        clean_form = form.cleaned_data
 
-            return HttpResponseRedirect("http://localhost:8000/piece/{0}".format(piece.id))
-        else:
+        composer = handle_composer(clean_form)
+        piece = Piece(title=clean_form['title'],
+                      composer=composer,
+                      uploader=request.user,
+                      created=datetime.datetime.now(),
+                      updated=datetime.datetime.now()
+                      )
+        piece.save()
+
+        try:
+            handle_attachments(request, piece)
+        except NoFilesError:
+            piece.delete()
             return render(request, "415.html")
+
+        return HttpResponseRedirect("http://localhost:8000/piece/{0}".format(piece.id))
 
