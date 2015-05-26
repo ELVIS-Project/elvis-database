@@ -1,13 +1,12 @@
 from django.http import HttpResponse
 from django.conf import settings
 from django.core.files.base import File
-
+from django.db.models import ObjectDoesNotExist
 from elvis.exceptions import NoFilesError
 from elvis.models import Attachment
 from elvis.models import Composer
 
 import json
-import urllib
 import urllib2
 import os
 import zipfile
@@ -18,7 +17,7 @@ import pdb
 def solr_suggest(request):
     results = []
 
-    if request.method == "GET" and request.GET.has_key(u'q') and request.GET.has_key(u'd'):
+    if request.method == "GET" and 'q' in request.GET and 'd' in request.GET:
         value = request.GET['q']
         dictionary = request.GET['d']
         if len(value) > 1:
@@ -31,6 +30,7 @@ def solr_suggest(request):
                     results.append({'name': suggestion['term']})
     j_results = json.dumps(results)
     return HttpResponse(j_results, content_type="json")
+
 
 # Uploads files to the media/temp directory. Automatically unzips
 # any zip archives. Returns a list of uploaded files.
