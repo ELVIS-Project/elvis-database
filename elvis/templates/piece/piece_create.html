@@ -15,7 +15,7 @@ $(document).ready(function($)
     autocomplete("id_collection", "collection_suggestion_menu", "collectionSuggest");
     $("#piece_att_files").filestyle({input:false, iconName: "glyphicon-file", buttonText: "Upload Files"});
     $("#id_comp_pic").filestyle({input:false, iconName: "glyphicon-picture", buttonText: "Composer Picture", disabled: "true"});
-    $("#mov_files1").filestyle({input:false, iconName: "glyphicon-file", buttonText: "Movement files"});
+    $("#mov_files1").filestyle({input:false, iconName: "glyphicon-file", buttonText: "Movement Files"});
 
 
     //The dropdown menu for composer additions.
@@ -82,7 +82,7 @@ $(document).ready(function($)
                          "<td class='text-center' style='padding-top:14px'>" + t_size + "</td>" +
                          "<td><input name='mv_title_" + mov_count + "' class='form-control'> </td>" +
                          "<td><input name='mv_files_" + mov_count + "' id='mov_files" + mov_count + "' type='file' multiple='multiple'></td></tr>");
-        $("#mov_files" + mov_count).filestyle({input:false, iconName: "glyphicon-file", buttonText: "Movement files"});
+        $("#mov_files" + mov_count).filestyle({input:false, iconName: "glyphicon-file", buttonText: "Movement Files"});
         initRow(mov_count);
         mov_count++;
     }
@@ -225,7 +225,7 @@ $(document).ready(function($)
                     <colgroup>
                         <col class="text-center" style="width: 5%;">
                         <col style="width: 5%;">
-                        <col style="width: 60%;">
+                        <col style="width: 65%;">
                         <col style="width: 30%;">
                     </colgroup>
                         <tbody id="movement_table">
@@ -238,7 +238,7 @@ $(document).ready(function($)
                         <tr id='mov1'>
                             <td class="text-center"><button id="del_mov1" type="button" tabindex="-1" class="btn btn-default">-</button></td>
                             <td class="text-center" style="padding-top:14px">1</td>
-                            <td><input name='mv_title_1' class='form-control'></td>
+                            <td><input name='mv_title_1' placeholder="The first - but for the last" class='form-control'></td>
                             <td><input name='mv_files_1' id='mov_files1' type='file' multiple='multiple'></td>
                         </tr>
                         </tbody>
