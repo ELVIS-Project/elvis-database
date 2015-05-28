@@ -4,11 +4,12 @@ import random
 from django.db import models
 from django.contrib.auth.models import User
 from django.conf import settings
-
 from datetime import datetime
+
 
 def upload_path(instance, filename):
     return os.path.join(instance.attachment_path, filename)
+
 
 class Attachment(models.Model):
     """

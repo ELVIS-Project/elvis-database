@@ -21,6 +21,7 @@ class LoginFormView(View):
         else:
             return render(request, self.template_name, {'form': form})
 
+
 def logout_view(request):
     """
     Logs out the current user.
