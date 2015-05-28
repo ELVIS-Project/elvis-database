@@ -74,7 +74,7 @@ def upload_files(request):
 
 # Unzips a zip file, extracting only files with the extensions in settings.ELVIS_EXTENSIONS.
 # The files are placed in the same directory as the archive. Returns a list of extracted filenames.
-def unzip_file(file_dir, file_name):
+def unzip_file(file_dir, file_name, **kwargs):
     files = []
     zipped_file = zipfile.ZipFile(file_dir + file_name, 'r')
     file_contents = zipped_file.namelist()
@@ -87,6 +87,10 @@ def unzip_file(file_dir, file_name):
             files.append(f_name)
 
     zipped_file.close()
+
+    if 'delete_after' in kwargs and kwargs['delete_after']:
+        os.remove(file_dir + file_name)
+
     return files
 
 
@@ -95,9 +99,7 @@ def unzip_file(file_dir, file_name):
 def handle_attachments(request, parent):
     results = []
 
-    files = upload_files(request)
-    if not files:
-        raise NoFilesError
+    files = upload_files(request, file_name='piece_att_files')
 
     for f in files:
         att = Attachment(description="TESTING")
@@ -106,11 +108,11 @@ def handle_attachments(request, parent):
 
         new_name = "{0}_{1}.".format(parent.title.replace(" ", "-"), parent.composer.name.replace(" ", "-")) + f['name'].rsplit('.')[-1]
         os.rename(f['path'] + f['name'], f['path'] + new_name)
-
         with open("{0}/{1}".format(f['path'], new_name), 'r+') as dest:
             file_content = File(dest)
             att.attachment.save("{0}/{1}".format(att.attachment_path, new_name), file_content)
         os.remove(f['path'] + new_name)
+
         att.save()
         results.append(att)
 
@@ -120,13 +122,29 @@ def handle_attachments(request, parent):
     parent.save()
 
 
+def handle_movements(request, parent):
+
+    results = []
+
+    for item in request.POST:
+        if item.startswith("mv_title"):
+            movement_name = request.POST[item]
+            num = item[9:]
+            movement_files = request.FILES.getlist('mv_files_' + num)
+            pdb.set_trace()
+
+
+
 #TODO implement better behaviour for creating composers.
-def handle_composer(composer):
+def handle_composer(form):
     try:
-        new_composer = Composer.objects.get(name=composer)
+        new_composer = Composer.objects.get(name=form['composer'])
         return new_composer
     except ObjectDoesNotExist:
-        new_composer = Composer(name=composer, created=datetime.datetime.now())
+        new_composer = Composer(name=form['composer'],
+                                birth_date=form['composer_birth_date'],
+                                death_date=form['composer_death_date'],
+                                created=datetime.datetime.now())
         new_composer.save()
         return new_composer
     pass
