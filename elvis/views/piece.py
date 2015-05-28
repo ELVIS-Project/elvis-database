@@ -16,7 +16,7 @@ from elvis.serializers.piece import PieceSerializer
 from elvis.models.piece import Piece
 from elvis.forms import PieceForm
 
-from elvis.views.views import handle_attachments, handle_composer
+from elvis.views.views import handle_attachments, handle_composer, handle_movements
 from django.utils.decorators import method_decorator
 from django.http import HttpResponseRedirect
 
@@ -79,8 +79,8 @@ class PieceList(generics.ListCreateAPIView):
             return Response(status=status.HTTP_400_BAD_REQUEST)
 
         clean_form = form.cleaned_data
-
         composer = handle_composer(clean_form)
+
         piece = Piece(title=clean_form['title'],
                       composer=composer,
                       uploader=request.user,
@@ -89,11 +89,8 @@ class PieceList(generics.ListCreateAPIView):
                       )
         piece.save()
 
-        try:
-            handle_attachments(request, piece)
-        except NoFilesError:
-            piece.delete()
-            return render(request, "415.html")
+        handle_attachments(request, piece)
+        handle_movements(request, piece)
 
         return HttpResponseRedirect("http://localhost:8000/piece/{0}".format(piece.id))
 
