@@ -1,23 +1,24 @@
 {% extends "base.html" %}
 
-{% block wrap %}
 
 <!-- The javascript function for the typeahead functionality on the fields. -->
 
 {% block extra_hd %}
         <script type='text/javascript' src="{{ STATIC_URL }}js/elvis-scripts/upload-autocomplete.js"></script>
         <script type='text/javascript' src="{{ STATIC_URL }}js/bs-filestyle.js"></script>
-{% endblock %}
 
 <script>
 $(document).ready(function($)
 {
-    autocomplete("id_title", "title-suggestion-menu", "pieceSuggest");
-    autocomplete("id_composer", "composer-suggestion-menu", "composerSuggest");
-    autocomplete("id_collection", "collection-suggestion-menu", "collectionSuggest");
-    $("#id_att_files").filestyle({input:false, iconName: "glyphicon-file", buttonText: "Upload Files"});
+    autocomplete("id_title", "title_suggestion_menu", "pieceSuggest");
+    autocomplete("id_composer", "composer_suggestion_menu", "composerSuggest");
+    autocomplete("id_collection", "collection_suggestion_menu", "collectionSuggest");
+    $("#piece_att_files").filestyle({input:false, iconName: "glyphicon-file", buttonText: "Upload Files"});
     $("#id_comp_pic").filestyle({input:false, iconName: "glyphicon-picture", buttonText: "Composer Picture", disabled: "true"});
+    $("#mov_files1").filestyle({input:false, iconName: "glyphicon-file", buttonText: "Movement files"});
 
+
+    //The dropdown menu for composer additions.
     var $newComposerMenu = $("#composer-create-new-menu");
     var $composerInput = $("#id_composer");
     $newComposerMenu.hide();
@@ -36,9 +37,9 @@ $(document).ready(function($)
                     if (data['count'] == 0)
                     {
                         $newComposerMenu.children().remove(".top-message");
-                        $newComposerMenu.prepend("<div class='top-message'><hr><h5>We don't have <strong>" + query + "</strong> in our database. " +
+                        $newComposerMenu.prepend("<div class='top-message'><hr>We don't have <strong>" + query + "</strong> in our database. " +
                             "Submitting a piece by an unknown composer will add the composer to the database. <br>" +
-                            "Do you have additional information to add to this new composer?</h5><br></div>");
+                            "Do you have additional information to add to this new composer?<br><br></div>");
                         $newComposerMenu.slideDown("slow");
                     }
                 }
@@ -53,10 +54,71 @@ $(document).ready(function($)
 
     $("#hide-composer-create").on("click", function(event){
         $newComposerMenu.slideUp("slow");
-    })
+    });
+
+
+
+
+    //The movement table javascript.
+
+    var i = 2;
+    var $newMovButton = $("#new_mov");
+    var $movTable = $("#movement_table");
+    initRow(1);
+
+    //Defines movement-row adding behaviour for the plus button
+    $newMovButton.on("click", function()
+    {
+        console.log($movTable);
+        addRow($movTable);
+        $newMovButton.blur();
+    });
+
+    function addRow(table)
+    {
+        var t_size = $movTable.children().length;
+        table.append("<tr id='mov"+ i +"'>" +
+                         "<td><button id='del_mov" + i + "' type='button' tabindex='-1' class='btn btn-default'>-</button></td>" +
+                         "<td>" + t_size + "</td>" +
+                         "<td><input name='mv_title_" + i + "' class='form-control'> </td>" +
+                         "<td><input name='mv_files_" + i + "' id='mov_files" + i + "' type='file' multiple='multiple'></td></tr>");
+        $("#mov_files" + i).filestyle({input:false, iconName: "glyphicon-file", buttonText: "Movement files"});
+        initRow(i);
+        i++;
+    }
+
+    function initRow(row)
+    {
+        $("#del_mov" + row).on("click", function(event)
+        {
+            console.log(event);
+            var row_num = parseInt(event.currentTarget.getAttribute("id").substring(7));
+            $("#mov_files" + row_num).filestyle('destroy');
+            $movTable.children().remove("#mov" + row_num);
+            renameRows();
+        });
+    }
+
+    function renameRows()
+    {
+        for(var j = 0; j < $movTable.children().length; j++)
+            {
+                var temp = $movTable.children()[j];
+                temp.children[1].innerHTML = j;
+            }
+    }
 
 });
+
 </script>
+
+
+
+{% endblock %}
+
+
+{% block wrap %}
+
 <div class="page-header">
     <h2>Upload a Piece</h2>
 </div>
@@ -79,7 +141,7 @@ $(document).ready(function($)
                   <span class="input-group-addon" id="basic-addon1">Title</span>
                   <input type="text" id="id_title" name="title" autocomplete="off" class="form-control" placeholder="e.g. Ach Gott, vom Himmel sieh darein, BWV 2" aria-describedby="basic-addon1">
                 </div>
-                <div id="title-suggestion-menu"></div>
+                <div id="title_suggestion_menu"></div>
 
                 <br>
 
@@ -87,10 +149,10 @@ $(document).ready(function($)
                     <span class="input-group-addon" id="basic-addon1">Composer</span>
                     <input type="text" id="id_composer" autocomplete="off" name="composer" class="form-control" placeholder="e.g. Bach, Johann Sebastian" aria-describedby="basic-addon1">
                 </div>
-                <div id="composer-suggestion-menu"></div>
+                <div id="composer_suggestion_menu"></div>
 
                 <div id="composer-create-new-menu" style="padding-left:50px; padding-right:50px">
-                    <div class="row">
+                    <div class="row" style="padding-left:20px; padding-right:20px">
                         <div class="col-md-4">
                             <div class="form-group">
                                 <div class="input-group">
@@ -138,19 +200,44 @@ $(document).ready(function($)
                         </div>
                     </div>
                 </div>
+                <div class="input-group">
+                    <span class="input-group-addon" id="basic-addon1">Collection</span>
+                    <input type="text" id="id_collection" name="collection" autocomplete="off" class="form-control" placeholder="e.g. Alex's Collection" aria-describedby="basic-addon1">
+                </div>
+                <div id="collection_suggestion_menu"></div>
 
+                <br>
+                <h4>Piece Attachments</h4>
                 <hr>
                 <span class="help-block">Attach the files for this piece. Acceptable file types are .zip, .pdf, and .mtxt</span>
-                <input name="att_files" id="id_att_files" type="file" multiple="multiple"/>
+                <input name="piece_att_files" id="piece_att_files" type="file" multiple="multiple"/>
                 <br>
 
                 <h4>Movements</h4>
-                <hr>
-                <div class="input-group">
-                    <span class="input-group-addon" id="basic-addon1">Collection</span>
-                    <input type="text" id="id_collection" name="collection" autocomplete="off" class="form-control" placeholder="e.g. Bach, Johann Sebastian" aria-describedby="basic-addon1">
-                </div>
-                <div id="collection-suggestion-menu"></div>
+                <table class="table table-hover" >
+                    <colgroup>
+                        <col class="text-center" style="width: 5%;">
+                        <col style="width: 5%;">
+                        <col style="width: 60%;">
+                        <col style="width: 30%;">
+                    </colgroup>
+                        <tbody id="movement_table">
+                        <tr>
+                            <th class="text-center">+/-</th>
+                            <th class="text-center">#</th>
+                            <th>Title</th>
+                            <th>Files</th>
+                        </tr>
+                        <tr id='mov1'>
+                            <td><button id="del_mov1" type="button" tabindex="-1" class="btn btn-default">-</button></td>
+                            <td style="display: table-cell; veritcal-align: middle">1</td>
+                            <td><input name='mv_title_1' class='form-control'></td>
+                            <td><input name='mv_files_1' id='mov_files1' type='file' multiple='multiple'></td>
+                        </tr>
+                        </tbody>
+                </table>
+                <div><button id="new_mov" type="button" class="btn btn-default" >+</button></div>
+
 
             </div>
 
@@ -161,7 +248,7 @@ $(document).ready(function($)
         </div>
         <br>
 
-        <button type="submit" id="piece-submit" name="piece-submit" class="btn btn-success btn-sm pull-right move">Submit <span class="glyphicon glyphicon-chevron-right"></span></button>
+        <button type="submit" id="piece-submit" name="piece-submit" class="btn btn-success pull-right move">Submit <span class="glyphicon glyphicon-chevron-right"></span></button>
     </form>
 </div>
 
