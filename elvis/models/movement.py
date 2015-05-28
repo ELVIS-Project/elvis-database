@@ -5,7 +5,7 @@ import pytz
 
 #django signal handlers
 from django.dispatch import receiver
-from django.db.models.signals import post_save, post_delete
+from django.db.models.signals import post_save, post_delete, pre_delete
 
 class Movement(models.Model):
     class Meta:
@@ -198,6 +198,11 @@ def solr_index(sender, instance, created, **kwargs):
     for attachment in movement.attachments.all():
         attachment.rename(new_filename=attachment_name)
 
+@receiver(pre_delete, sender=Movement)
+def attachment_delete(sender, instance, **kwargs):
+    for a in instance.attachments.all():
+        a.delete()
+
 @receiver(post_delete, sender=Movement)
 def solr_delete(sender, instance, **kwargs):
     from django.conf import settings
@@ -208,4 +213,3 @@ def solr_delete(sender, instance, **kwargs):
         # the record already exists, so we'll remove it.
         solrconn.delete(record.results[0]['id'])
         solrconn.commit()
-        

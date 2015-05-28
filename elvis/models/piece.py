@@ -5,7 +5,8 @@ import pytz
 
 #django signal handlers
 from django.dispatch import receiver
-from django.db.models.signals import post_save, post_delete
+from django.db.models.signals import post_save, post_delete, pre_delete
+
 
 class Piece(models.Model):
     class Meta:
@@ -186,6 +187,11 @@ def solr_index(sender, instance, created, **kwargs):
     #attachment_name = "_".join([composer_last_name, piece_title_short])
     #for attachment in piece.attachments.all():
     #    attachment.rename(new_filename=attachment_name)
+
+@receiver(pre_delete, sender=Piece)
+def attachment_delete(sender, instance, **kwargs):
+    for a in instance.attachments.all():
+        a.delete()
 
 @receiver(post_delete, sender=Piece)
 def solr_delete(sender, instance, **kwargs):
