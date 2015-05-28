@@ -68,6 +68,7 @@ class PieceList(generics.ListCreateAPIView):
     def post(self, request, *args, **kwargs):
         return self.create(request, *args, **kwargs)
 
+# TODO need to implement a check to see if the entire process was succesfull, and then delete everything unlinked if not.
     def create(self, request, *args, **kwargs):
         if not request.user.is_active:
             return Response(status=status.HTTP_401_UNAUTHORIZED)
@@ -77,8 +78,11 @@ class PieceList(generics.ListCreateAPIView):
         if not form.is_valid():
             return Response(status=status.HTTP_400_BAD_REQUEST)
 
+        created = []
         clean_form = form.cleaned_data
+
         composer = handle_composer(clean_form)
+        created.append(composer)
 
         piece = Piece(title=clean_form['title'],
                       composer=composer,
@@ -87,9 +91,11 @@ class PieceList(generics.ListCreateAPIView):
                       updated=datetime.datetime.now()
                       )
         piece.save()
-
-        handle_attachments(request, piece)
-        handle_movements(request, piece)
-
+        created.append(piece)
+        attachments = handle_attachments(request, piece)
+        created.extend(attachments)
+        movements = handle_movements(request, piece)
+        created.extend(movements)
+        
         return HttpResponseRedirect("http://localhost:8000/piece/{0}".format(piece.id))
 
