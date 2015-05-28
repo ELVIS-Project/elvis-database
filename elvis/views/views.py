@@ -34,32 +34,31 @@ def solr_suggest(request):
 
 # Uploads files to the media/temp directory. Automatically unzips
 # any zip archives. Returns a list of uploaded files.
-def upload_files(request):
+def upload_files(request, **kwargs):
     files = []
 
     if not os.path.exists(settings.MEDIA_ROOT + 'temp/'):
         os.makedirs(settings.MEDIA_ROOT + 'temp/')
 
-    file_list = request.FILES.getlist('files')
+    if 'file_name' in kwargs:
+        file_list = request.FILES.getlist(kwargs['file_name'])
+    else:
+        file_list = request.FILES.getlist('piece_att_files')
 
     for f in file_list:
         # If the file has an accepted extension, upload it.
         if any(f.name.endswith(x) for x in settings.ELVIS_EXTENSIONS) and not any(f.name.startswith(x) for x in settings.ELVIS_BAD_PREFIX):
-            with open(settings.MEDIA_ROOT + 'temp/' + f.name, 'wb+') as destination:
-                for chunk in f.chunks():
-                    destination.write(chunk)
-                files.append({'name': f.name,
-                              'uploader': request.user.username,
-                              'path': settings.MEDIA_ROOT + 'temp/'})
+            upload_file(f, settings.MEDIA_ROOT + 'temp/' + f.name)
+            files.append({'name': f.name,
+                          'uploader': request.user.username,
+                          'path': settings.MEDIA_ROOT + 'temp/'})
 
         # Or, if the file is a zip file, upload, extract good files, then delete the archive.
         if f.name.endswith('.zip'):
-            with open(settings.MEDIA_ROOT + 'temp/' + f.name, 'wb+') as destination:
-                for chunk in f.chunks():
-                    destination.write(chunk)
+            upload_file(f, settings.MEDIA_ROOT + 'temp/' + f.name)
 
             try:
-                unzipped_files = unzip_file(settings.MEDIA_ROOT + 'temp/', f.name)
+                unzipped_files = unzip_file(settings.MEDIA_ROOT + 'temp/', f.name, delete_after=True)
                 for file_name in unzipped_files:
                     files.append({'name': file_name,
                                   'uploader': request.user.username,
@@ -67,9 +66,17 @@ def upload_files(request):
             except zipfile.BadZipfile:
                 files.append({'name': f.name, 'error': "Zip file could not be opened."})
 
-            os.remove(settings.MEDIA_ROOT + 'temp/' + f.name)
-
     return files
+
+
+# Uploads the in-memory file to the given path.
+def upload_file(mem_file, local_path):
+    with open(local_path, 'wb+') as destination:
+        for chunk in mem_file.chunks():
+            destination.write(chunk)
+
+
+
 
 
 # Unzips a zip file, extracting only files with the extensions in settings.ELVIS_EXTENSIONS.
