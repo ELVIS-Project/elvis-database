@@ -101,7 +101,7 @@ $(document).ready(function($)
 
     function renameRows()
     {
-        for(var j = 0; j < $movTable.children().length; j++)
+        for(var j = 1; j < $movTable.children().length; j++)
             {
                 var temp = $movTable.children()[j];
                 temp.children[1].innerHTML = j;
@@ -238,7 +238,7 @@ $(document).ready(function($)
                         <tr id='mov1'>
                             <td class="text-center"><button id="del_mov1" type="button" tabindex="-1" class="btn btn-default">-</button></td>
                             <td class="text-center" style="padding-top:14px">1</td>
-                            <td><input name='mv_title_1' placeholder="The first - but for the last" class='form-control'></td>
+                            <td><input name='mv_title_1' placeholder="The first movement" class='form-control'></td>
                             <td><input name='mv_files_1' id='mov_files1' type='file' multiple='multiple'></td>
                         </tr>
                         </tbody>
