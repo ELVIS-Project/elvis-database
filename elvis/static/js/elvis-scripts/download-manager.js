@@ -1,9 +1,3 @@
-
-function executeDownload()
-{
-
-}
-
 function addToDownloads(obj)
 {
     console.log("Adding to downloads");

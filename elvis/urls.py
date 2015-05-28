@@ -71,7 +71,6 @@ urlpatterns += format_suffix_patterns(
 
         url(r'^suggest/$', solr_suggest),
 
-        #TEMPORARY
         url(r'^create/piece$', CreatePiece.as_view()),
 
 
