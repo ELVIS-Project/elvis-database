@@ -41,7 +41,7 @@
         $('#facet-search').keyup(function()
         {
             var searchFacet = $(this).val().toLowerCase();
-            for(var i=0; i<facetLabels.length; i++)
+            for(var i = 0; i < facetLabels.length; i++)
             {
                 if(searchFacet.length > 2 && facetLabels[i].innerHTML.toLowerCase().indexOf(searchFacet) > -1)
                 {
@@ -74,12 +74,12 @@
             {
                 $.each(val, function(num, v) 
                 {
-                    $("input[data-facet-name='" + param + "'][data-facet-value='" + v + "']").attr('checked', true);
+                    $("input[data-facet-name='" + param + "'][id='facet-link-" + escape(val) + "-"+ param + "']").attr('checked', true);
                 });
             } 
             else 
             {
-                $("input[data-facet-name='" + param + "'][data-facet-value='" + val + "']").attr('checked', true);
+                $("input[data-facet-name='" + param + "'][id='facet-link-" + escape(val) + "-"+ param + "']").attr('checked', true);
             }
         });
 
@@ -90,12 +90,12 @@
 
             if ($(this).is(':checked')) 
             {
-                qstr_add = "&" + facetName + "=" + facetValue;
+                qstr_add = "&" + escape(facetName) + "=" + escape(facetValue);
                 window.location.search = qstr + qstr_add;
             } 
             else 
             {
-                qstr_remove = qstr.replace('&' + facetName + "=" + encodeURI(facetValue), "");
+                qstr_remove = qstr.replace('&' + facetName + "=" + escape(facetValue), "");
                 window.location.search = qstr_remove;
             }
             event.preventDefault();
@@ -252,7 +252,7 @@
                                 {% for facet, count in facets %}
                                     <li class="facet-list">
                                         <div id="facet-container-{{facet}}" class="facet-wrapper">
-                                            <input type="checkbox" class="facet-link" data-facet-name="{{ name }}" data-facet-value="{{ facet }}" id="facet-link-{{facet}}-{{name}}">
+                                            <input type="checkbox" class="facet-link" data-facet-name="{{ name }}" data-facet-value="{{ facet }}" id="facet-link-{{facet | urlencode }}-{{name}}">
                                             <label class="facet-label" for="facet-link-{{ facet }}-{{name}}"> {% if name == 'type' %} {{ content.TYPE_NAMES|get_value:facet }} {% else %} {{ facet }} {% endif %}  ({{ count }})
                                             </label>
                                         </div>
