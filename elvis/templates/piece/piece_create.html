@@ -61,7 +61,7 @@ $(document).ready(function($)
 
     //The movement table javascript.
 
-    var i = 2;
+    var mov_count = 2;
     var $newMovButton = $("#new_mov");
     var $movTable = $("#movement_table");
     initRow(1);
@@ -77,14 +77,14 @@ $(document).ready(function($)
     function addRow(table)
     {
         var t_size = $movTable.children().length;
-        table.append("<tr id='mov"+ i +"'>" +
-                         "<td><button id='del_mov" + i + "' type='button' tabindex='-1' class='btn btn-default'>-</button></td>" +
-                         "<td>" + t_size + "</td>" +
-                         "<td><input name='mv_title_" + i + "' class='form-control'> </td>" +
-                         "<td><input name='mv_files_" + i + "' id='mov_files" + i + "' type='file' multiple='multiple'></td></tr>");
-        $("#mov_files" + i).filestyle({input:false, iconName: "glyphicon-file", buttonText: "Movement files"});
-        initRow(i);
-        i++;
+        table.append("<tr id='mov"+ mov_count +"'>" +
+                         "<td class='text-center'><button id='del_mov" + mov_count + "' type='button' tabindex='-1' class='btn btn-default'>-</button></td>" +
+                         "<td class='text-center' style='padding-top:14px'>" + t_size + "</td>" +
+                         "<td><input name='mv_title_" + mov_count + "' class='form-control'> </td>" +
+                         "<td><input name='mv_files_" + mov_count + "' id='mov_files" + mov_count + "' type='file' multiple='multiple'></td></tr>");
+        $("#mov_files" + mov_count).filestyle({input:false, iconName: "glyphicon-file", buttonText: "Movement files"});
+        initRow(mov_count);
+        mov_count++;
     }
 
     function initRow(row)
@@ -209,11 +209,18 @@ $(document).ready(function($)
                 <br>
                 <h4>Piece Attachments</h4>
                 <hr>
-                <span class="help-block">Attach the files for this piece. Acceptable file types are .zip, .pdf, and .mtxt</span>
+                <span class="help-block">
+                    The files for the piece can be attached here. Acceptable file types are .zip, .pdf, and .mtxt. Individual
+                    movements can be defined below.
+                </span>
                 <input name="piece_att_files" id="piece_att_files" type="file" multiple="multiple"/>
                 <br>
 
                 <h4>Movements</h4>
+                <span class="help-block">
+                    The movements of the piece can be defined here. Each movement may also have files
+                    attached to it which represent the movement itself.
+                </span>
                 <table class="table table-hover" >
                     <colgroup>
                         <col class="text-center" style="width: 5%;">
@@ -229,14 +236,14 @@ $(document).ready(function($)
                             <th>Files</th>
                         </tr>
                         <tr id='mov1'>
-                            <td><button id="del_mov1" type="button" tabindex="-1" class="btn btn-default">-</button></td>
-                            <td style="display: table-cell; veritcal-align: middle">1</td>
+                            <td class="text-center"><button id="del_mov1" type="button" tabindex="-1" class="btn btn-default">-</button></td>
+                            <td class="text-center" style="padding-top:14px">1</td>
                             <td><input name='mv_title_1' class='form-control'></td>
                             <td><input name='mv_files_1' id='mov_files1' type='file' multiple='multiple'></td>
                         </tr>
                         </tbody>
                 </table>
-                <div><button id="new_mov" type="button" class="btn btn-default" >+</button></div>
+                <div><button id="new_mov" type="button" class="btn btn-default" >Add Movement</button></div>
 
 
             </div>
