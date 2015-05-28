@@ -2,7 +2,6 @@ from django.http import HttpResponse
 from django.conf import settings
 from django.core.files.base import File
 from django.db.models import ObjectDoesNotExist
-from elvis.exceptions import NoFilesError
 from elvis.models import Attachment
 from elvis.models import Composer
 
@@ -74,9 +73,6 @@ def upload_file(mem_file, local_path):
     with open(local_path, 'wb+') as destination:
         for chunk in mem_file.chunks():
             destination.write(chunk)
-
-
-
 
 
 # Unzips a zip file, extracting only files with the extensions in settings.ELVIS_EXTENSIONS.

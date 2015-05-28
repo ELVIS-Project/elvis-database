@@ -10,7 +10,6 @@ from rest_framework.response import Response
 import pdb
 import shutil
 
-from elvis.exceptions import NoFilesError
 from elvis.renderers.custom_html_renderer import CustomHTMLRenderer
 from elvis.serializers.piece import PieceSerializer
 from elvis.models.piece import Piece
