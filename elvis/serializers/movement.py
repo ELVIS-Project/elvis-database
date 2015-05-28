@@ -59,7 +59,7 @@ class SourceMovementSerializer(serializers.HyperlinkedModelSerializer):
 
 class AttachmentMovementSerializer(serializers.HyperlinkedModelSerializer):
     # LM: Must add this to serializers explicitly, otherwise will raise KeyError
-    file_name = serializers.Field()
+    file_name = serializers.ReadOnlyField()
     attachment = serializers.SerializerMethodField("retrieve_attachment")
 
     class Meta:
