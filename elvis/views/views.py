@@ -154,7 +154,8 @@ def handle_movements(request, parent):
         new_mv.save()
         results.append(new_mv)
 
-    return results.extend(attachments)
+    results.extend(attachments)
+    return results
 
 
 #TODO implement better behaviour for creating composers.
