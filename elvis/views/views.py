@@ -4,6 +4,7 @@ from django.core.files.base import File
 from django.db.models import ObjectDoesNotExist
 from elvis.models import Attachment
 from elvis.models import Composer
+from elvis.models import Movement
 
 import json
 import urllib2
@@ -99,10 +100,14 @@ def unzip_file(file_dir, file_name, **kwargs):
 
 # Takes the request.FILES and uploads them, processes them, then creates attachments and adds them to parents
 # attachment field.
-def handle_attachments(request, parent):
+def handle_attachments(request, parent, **kwargs):
+
     results = []
 
-    files = upload_files(request, file_name='piece_att_files')
+    if 'file_name' in kwargs:
+        files = upload_files(request, file_name=kwargs['file_name'])
+    else:
+        files = upload_files(request, file_name='piece_att_files')
 
     for f in files:
         att = Attachment(description="TESTING")
@@ -124,18 +129,32 @@ def handle_attachments(request, parent):
 
     parent.save()
 
+    return results
 
+
+# Creates the movements in the request and attaches them to their parent.
+# Returns a list of movements and attachments that have been created.
 def handle_movements(request, parent):
-
     results = []
-
+    attachments = []
+    movements = {}
     for item in request.POST:
-        if item.startswith("mv_title"):
-            movement_name = request.POST[item]
-            num = item[9:]
-            movement_files = request.FILES.getlist('mv_files_' + num)
-            pdb.set_trace()
+        if item.startswith("mv_title") and request.POST[item]:
+            mv_name = request.POST[item]
+            mv_num = item[9:]
+            movements[mv_num] = (mv_name, mv_num)
 
+    keys = movements.keys()
+    keys.sort()
+
+    for k in keys:
+        new_mv = Movement(title=movements[k][0], composer=parent.composer, comment="TESTING", piece=parent)
+        new_mv.save()
+        attachments.extend(handle_attachments(request, new_mv, file_name="mv_files_" + movements[k][1]))
+        new_mv.save()
+        results.append(new_mv)
+
+    return results.extend(attachments)
 
 
 #TODO implement better behaviour for creating composers.
