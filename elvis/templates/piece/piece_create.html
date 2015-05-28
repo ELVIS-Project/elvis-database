@@ -10,22 +10,22 @@
 <script>
 $(document).ready(function($)
 {
-    autocomplete("id_title", "title_suggestion_menu", "pieceSuggest");
-    autocomplete("id_composer", "composer_suggestion_menu", "composerSuggest");
-    autocomplete("id_collection", "collection_suggestion_menu", "collectionSuggest");
+    autocomplete("title", "title_suggestion_menu", "pieceSuggest");
+    autocomplete("composer", "composer_suggestion_menu", "composerSuggest");
+    autocomplete("collection", "collection_suggestion_menu", "collectionSuggest");
     $("#piece_att_files").filestyle({input:false, iconName: "glyphicon-file", buttonText: "Upload Files"});
     $("#id_comp_pic").filestyle({input:false, iconName: "glyphicon-picture", buttonText: "Composer Picture", disabled: "true"});
     $("#mov_files1").filestyle({input:false, iconName: "glyphicon-file", buttonText: "Movement Files"});
 
 
-    //The dropdown menu for composer additions.
+    // The dropdown form for additional composer information.
     var $newComposerMenu = $("#composer-create-new-menu");
-    var $composerInput = $("#id_composer");
+    var $composerInput = $("#composer");
     $newComposerMenu.hide();
 
     $composerInput.on("focusout", function(event)
     {
-        var query = $("#id_composer").val();
+        var query = $("#composer").val();
 
         if (query.length > 0)
         {
@@ -80,7 +80,7 @@ $(document).ready(function($)
         table.append("<tr id='mov"+ mov_count +"'>" +
                          "<td class='text-center'><button id='del_mov" + mov_count + "' type='button' tabindex='-1' class='btn btn-default'>-</button></td>" +
                          "<td class='text-center' style='padding-top:14px'>" + t_size + "</td>" +
-                         "<td><input name='mv_title_" + mov_count + "' class='form-control'> </td>" +
+                         "<td><input name='mv_title_" + mov_count + "' id='mov_title" + mov_count + "' class='form-control'> </td>" +
                          "<td><input name='mv_files_" + mov_count + "' id='mov_files" + mov_count + "' type='file' multiple='multiple'></td></tr>");
         $("#mov_files" + mov_count).filestyle({input:false, iconName: "glyphicon-file", buttonText: "Movement Files"});
         initRow(mov_count);
@@ -108,6 +108,8 @@ $(document).ready(function($)
             }
     }
 
+    // Maybe add asynchronous file uploads using ajax?
+
 });
 
 </script>
@@ -128,7 +130,7 @@ $(document).ready(function($)
         <li class="active"><a data-toggle="tab" href="#required">Basics</a></li>
         <li><a data-toggle="tab" href="#advanced-info">Advanced</a></li>
     </ul>
-    <form action="/pieces/" method="post" enctype="multipart/form-data">
+    <form action="/pieces/" id="piece-form" method="post" enctype="multipart/form-data">
     {% csrf_token %}
 
         <div class="tab-content">
@@ -139,7 +141,7 @@ $(document).ready(function($)
 
                 <div class="input-group">
                   <span class="input-group-addon" id="basic-addon1">Title</span>
-                  <input type="text" id="id_title" name="title" autocomplete="off" class="form-control" placeholder="e.g. Ach Gott, vom Himmel sieh darein, BWV 2" aria-describedby="basic-addon1">
+                  <input type="text" id="title" name="title" autocomplete="off" class="form-control" placeholder="e.g. Ach Gott, vom Himmel sieh darein, BWV 2" aria-describedby="basic-addon1">
                 </div>
                 <div id="title_suggestion_menu"></div>
 
@@ -147,7 +149,7 @@ $(document).ready(function($)
 
                 <div class="input-group">
                     <span class="input-group-addon" id="basic-addon1">Composer</span>
-                    <input type="text" id="id_composer" autocomplete="off" name="composer" class="form-control" placeholder="e.g. Bach, Johann Sebastian" aria-describedby="basic-addon1">
+                    <input type="text" id="composer" autocomplete="off" name="composer" class="form-control" placeholder="e.g. Bach, Johann Sebastian" aria-describedby="basic-addon1">
                 </div>
                 <div id="composer_suggestion_menu"></div>
 
@@ -156,7 +158,7 @@ $(document).ready(function($)
                         <div class="col-md-4">
                             <div class="form-group">
                                 <div class="input-group">
-                                    <input type='date' name="composer_birth_date" class="form-control unstyled"/>
+                                    <input type='date' name="composer_birth_date" id="composer_birth_date" max="2000-01-01" class="form-control unstyled"/>
                                     <span class="input-group-addon">Birth</span>
                                 </div>
                             </div>
@@ -164,7 +166,7 @@ $(document).ready(function($)
                         <div class="col-md-4">
                             <div class="form-group">
                                 <div class="input-group">
-                                    <input type='date' name="composer_death_date" class="form-control unstyled"/>
+                                    <input type='date' name="composer_death_date" id="composer_death_date" max="2000-01-01" class="form-control unstyled"/>
                                     <span class="input-group-addon">Death</span>
                                 </div>
                             </div>
@@ -187,7 +189,7 @@ $(document).ready(function($)
                         <div class="form-group">
                             <div class="input-group">
                                 <span class="input-group-addon">Composition Start Date</span>
-                                <input type='date' name="composition_start_date" class="form-control unstyled"/>
+                                <input type='date' name="composition_start_date" id="composition_start_date" max="2000-01-01" class="form-control unstyled"/>
                             </div>
                         </div>
                     </div>
@@ -195,14 +197,14 @@ $(document).ready(function($)
                         <div class="form-group">
                             <div class="input-group">
                                 <span class="input-group-addon">Composition End Date</span>
-                                <input type='date' name="composition_end_date" class="form-control unstyled"/>
+                                <input type='date' name="composition_end_date" id="composition_end_date" max="2000-01-01" class="form-control unstyled"/>
                             </div>
                         </div>
                     </div>
                 </div>
                 <div class="input-group">
                     <span class="input-group-addon" id="basic-addon1">Collection</span>
-                    <input type="text" id="id_collection" name="collection" autocomplete="off" class="form-control" placeholder="e.g. Alex's Collection" aria-describedby="basic-addon1">
+                    <input type="text" id="collection" name="collection" autocomplete="off" class="form-control" placeholder="e.g. Alex's Collection" aria-describedby="basic-addon1">
                 </div>
                 <div id="collection_suggestion_menu"></div>
 
@@ -238,7 +240,7 @@ $(document).ready(function($)
                         <tr id='mov1'>
                             <td class="text-center"><button id="del_mov1" type="button" tabindex="-1" class="btn btn-default">-</button></td>
                             <td class="text-center" style="padding-top:14px">1</td>
-                            <td><input name='mv_title_1' placeholder="The first movement" class='form-control'></td>
+                            <td><input name='mv_title_1' id="mov_title1" placeholder="The first movement" class='form-control'></td>
                             <td><input name='mv_files_1' id='mov_files1' type='file' multiple='multiple'></td>
                         </tr>
                         </tbody>
@@ -260,36 +262,5 @@ $(document).ready(function($)
 </div>
 
 
-
-
-
-<!--
-<input type="text" id="composer_search" class="form-control" placeholder="Composer" aria-describedby="basic-addon1">
--->
-
-<!--
-<form action="/pieces/" method="post">
-    <input type="hidden" name="csrfmiddlewaretoken" value="fxEDKF7Zr49WliezO22MYHdH85iYnvDA">
-    <li><label for="id_title">Title:</label> <input id="id_title" name="title" type="text"></li>
-    <li><div id="composer-list">
-    <label for="id_composer">Composer:</label> <input class="typeahead" id="id_composer" name="composer" type="text">
-    </div></li>
-    <li><label for="id_collection">Collection:</label> <input id="id_collection" name="collection" type="text"></li>
-    <li><label for="id_comp_start">Comp start:</label> <input id="id_comp_start" name="comp_start" type="text"></li>
-    <li><label for="id_comp_end">Comp end:</label> <input id="id_comp_end" name="comp_end" type="text"></li>
-    <li><label for="id_number_of_voices">Number of voices:</label> <input id="id_number_of_voices" name="number_of_voices" type="number"></li>
-    <li><label for="id_genre">Genre:</label> <input id="id_genre" name="genre" type="text"></li>
-    <li><label for="id_voices">Voices:</label> <input id="id_voices" name="voices" type="text"></li>
-    <li><label for="id_composer_country">Composer country:</label> <input id="id_composer_country" name="composer_country" type="text"></li>
-    <li><label for="id_language">Language:</label> <input id="id_language" name="language" type="text"></li>
-    <li><label for="id_source">Source:</label> <input id="id_source" name="source" type="text"></li>
-    <li><label for="id_tags">Tags:</label> <input id="id_tags" name="tags" type="text"></li>
-    <li><label for="id_comment">Comment:</label> <input id="id_comment" name="comment" type="text"></li>
-    <li><label for="id_attachment">Attachment:</label> <input id="id_attachment" name="attachment" type="file"></li>
-    <li><label for="id_movements">Movements:</label> <input id="id_movements" name="movements" type="text"></li>
-    <input type="submit" value="Submit" />
-    </form>
-</form>
--->
 {%  endblock %}
 
