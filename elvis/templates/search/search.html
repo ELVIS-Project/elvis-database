@@ -1,11 +1,11 @@
 {% extends "base.html" %}
 
 
-{% block wrap %}
+{% block extra_hd %}
 
-<head>
     <script type="text/javascript" src="{{STATIC_URL}}js/bootstrap-multiselect.min.js"></script>
     <link rel="stylesheet" href="{{STATIC_URL}}css/bootstrap-multiselect.css" type="text/css"/>
+
     <script type="text/javascript">
 
     $(function()
@@ -76,7 +76,7 @@
             });
             setTimeout(function(){$('#advanced-search-form').submit()}, 300);
         });
-    })
+    });
 
     $(function()
     {
@@ -91,7 +91,7 @@
             });
             setTimeout(function(){$('#general-search-form').submit()}, 300);
         });
-    })
+    });
 
     $(function()
     {
@@ -115,7 +115,10 @@
         }
     })
     </script>
-</head>
+    
+{% endblock %}
+
+{% block wrap %}
 
 <body>
 <div class="page-header">
