@@ -41,6 +41,7 @@ $(document).ready(function($)
                             "Submitting a piece by an unknown composer will add the composer to the database. <br>" +
                             "Do you have additional information to add to this new composer?<br><br></div>");
                         $newComposerMenu.slideDown("slow");
+                        $("#is_new_composer").val("true");
                     }
                 }
             });
@@ -50,10 +51,7 @@ $(document).ready(function($)
     $composerInput.on("keydown", function(event)
     {
         $newComposerMenu.slideUp("slow");
-    });
-
-    $("#hide-composer-create").on("click", function(event){
-        $newComposerMenu.slideUp("slow");
+        $("#is_new_composer").val("false");
     });
 
 
@@ -151,6 +149,7 @@ $(document).ready(function($)
                     <span class="input-group-addon" id="basic-addon1">Composer</span>
                     <input type="text" id="composer" autocomplete="off" name="composer" class="form-control" placeholder="e.g. Bach, Johann Sebastian" aria-describedby="basic-addon1">
                 </div>
+                <input type="text" id="is_new_composer" hidden="hidden">
                 <div id="composer_suggestion_menu"></div>
 
                 <div id="composer-create-new-menu" style="padding-left:50px; padding-right:50px">
