@@ -78,7 +78,6 @@ class PieceList(generics.ListCreateAPIView):
             return Response(status=status.HTTP_401_UNAUTHORIZED)
 
         form = PieceForm(request.POST)
-        pdb.set_trace()
         if not form.is_valid():
             return Response(status=status.HTTP_400_BAD_REQUEST)
 
@@ -93,24 +92,38 @@ class PieceList(generics.ListCreateAPIView):
         if composer_dict['new']:
             created.append(composer)
 
+        # Check if we have collection, if not, create a new one with the given information.
+        collection_dict = abstract_model_handler(clean_form['collection'], "Collection",
+                                                is_public=True,
+                                                creator=request.user)
+        collection = collection_dict['model']
+        if collection_dict['new']:
+            created.append(collection)
 
+        # Check if we have language, if not, create a new one with the given information.
+        language_dict = abstract_model_handler(clean_form['language'], "Language")
+        language = language_dict['model']
+        if language_dict['new']:
+            created.append(language)
 
         piece = Piece(title=clean_form['title'],
                       composer=composer,
                       date_of_composition=clean_form['composition_start_date'],
                       date_of_composition2=clean_form['composition_end_date'],
                       number_of_voices=clean_form['number_of_voices'],
-
                       uploader=request.user,
                       created=datetime.datetime.now(),
                       updated=datetime.datetime.now())
         piece.save()
         created.append(piece)
+        piece.collections.add(collection)
+        piece.languages.add(language)
         attachments = handle_attachments(request, piece)
         created.extend(attachments)
         movements = handle_movements(request, piece)
         created.extend(movements)
-        pdb.set_trace()
+
+
         
         return HttpResponseRedirect("http://localhost:8000/piece/{0}".format(piece.id))
 
