@@ -41,7 +41,6 @@ $(document).ready(function($)
                             "Submitting a piece by an unknown composer will add the composer to the database. <br>" +
                             "Do you have additional information to add to this new composer?<br><br></div>");
                         $newComposerMenu.slideDown("slow");
-                        $("#is_new_composer").val("true");
                     }
                 }
             });
@@ -51,7 +50,6 @@ $(document).ready(function($)
     $composerInput.on("keydown", function(event)
     {
         $newComposerMenu.slideUp("slow");
-        $("#is_new_composer").val("false");
     });
 
 
@@ -128,7 +126,7 @@ $(document).ready(function($)
         <li class="active"><a data-toggle="tab" href="#required">Basics</a></li>
         <li><a data-toggle="tab" href="#advanced-info">Advanced</a></li>
     </ul>
-    <form action="/pieces/" id="piece-form" method="post" enctype="multipart/form-data">
+    <form action="/pieces/" method="post" enctype="multipart/form-data">
     {% csrf_token %}
 
         <div class="tab-content">
@@ -149,7 +147,6 @@ $(document).ready(function($)
                     <span class="input-group-addon" id="basic-addon1">Composer</span>
                     <input type="text" id="composer" autocomplete="off" name="composer" class="form-control" placeholder="e.g. Bach, Johann Sebastian" aria-describedby="basic-addon1">
                 </div>
-                <input type="text" id="is_new_composer" hidden="hidden">
                 <div id="composer_suggestion_menu"></div>
 
                 <div id="composer-create-new-menu" style="padding-left:50px; padding-right:50px">
@@ -183,6 +180,14 @@ $(document).ready(function($)
 
                 <br>
 
+                <div class="input-group">
+                    <span class="input-group-addon" id="basic-addon1">Collection</span>
+                    <input type="text" id="collection" name="collection" autocomplete="off" class="form-control" placeholder="e.g. Alex's Collection" aria-describedby="basic-addon1">
+                </div>
+                <div id="collection_suggestion_menu"></div>
+
+                <br>
+
                 <div class="row">
                     <div class="col-md-4">
                         <div class="form-group">
@@ -201,23 +206,36 @@ $(document).ready(function($)
                         </div>
                     </div>
                 </div>
-                <div class="input-group">
-                    <span class="input-group-addon" id="basic-addon1">Collection</span>
-                    <input type="text" id="collection" name="collection" autocomplete="off" class="form-control" placeholder="e.g. Alex's Collection" aria-describedby="basic-addon1">
-                </div>
-                <div id="collection_suggestion_menu"></div>
 
-                <br>
+                <div class="row">
+                    <div class="col-md-4">
+                        <div class="form-group">
+                            <div class="input-group">
+                                <span class="input-group-addon">Number of Voices</span>
+                                <input type='number' name="number_of_voices" id="number_of_voices" max="100" class="form-control unstyled"/>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <div class="form-group">
+                            <div class="input-group">
+                                <span class="input-group-addon">Language</span>
+                                <input type='text' name="language" id="language" class="form-control unstyled"/>
+                            </div>
+                        </div>
+                    </div>
+                </div>
                 <h4>Piece Attachments</h4>
                 <hr>
                 <span class="help-block">
-                    The files for the piece can be attached here. Acceptable file types are .zip, .pdf, and .mtxt. Individual
-                    movements can be defined below.
+                    The files for the piece can be attached here. These files should represent the entire piece.
+                    Acceptable file types are .zip, .pdf, and .mtxt. Individual movements can be defined below.
                 </span>
                 <input name="piece_att_files" id="piece_att_files" type="file" multiple="multiple"/>
                 <br>
 
                 <h4>Movements</h4>
+                <hr>
                 <span class="help-block">
                     The movements of the piece can be defined here. Each movement may also have files
                     attached to it which represent the movement itself.
