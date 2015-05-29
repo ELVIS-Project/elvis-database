@@ -1,9 +1,7 @@
 from django.http import HttpResponse
 from django.conf import settings
 from django.core.files.base import File
-from django.db.models import ObjectDoesNotExist
 from elvis.models import Attachment
-from elvis.models import Composer
 from elvis.models import Movement
 
 import json
@@ -114,7 +112,14 @@ def handle_attachments(request, parent, **kwargs):
         att.save()  # needed to create hash dir.
         att.uploader = request.user
 
-        new_name = "{0}_{1}.".format(parent.title.replace(" ", "-"), parent.composer.name.replace(" ", "-")) + f['name'].rsplit('.')[-1]
+        if 'parent_type' in kwargs and kwargs['parent_type'] == 'movement':
+            new_name = "{0}_{1}_{3}.".format(parent.piece.title.replace(" ", "-"),
+                                             parent.title.replace(" ", "-"),
+                                             parent.composer.name.replace(" ", "-")) + f['name'].rsplit('.')[-1]
+        else:
+            new_name = "{0}_{1}.".format(parent.title.replace(" ", "-"),
+                                         parent.composer.name.replace(" ", "-")) + f['name'].rsplit('.')[-1]
+
         os.rename(f['path'] + f['name'], f['path'] + new_name)
         with open("{0}/{1}".format(f['path'], new_name), 'r+') as dest:
             file_content = File(dest)
@@ -148,26 +153,14 @@ def handle_movements(request, parent):
     keys.sort()
 
     for k in keys:
-        new_mv = Movement(title=movements[k][0], composer=parent.composer, comment="TESTING", piece=parent)
+        new_mv = Movement(title=movements[k][0],
+                          composer=parent.composer,
+                          piece=parent,
+                          comment="TESTING")
         new_mv.save()
-        attachments.extend(handle_attachments(request, new_mv, file_name="mv_files_" + movements[k][1]))
+        attachments.extend(handle_attachments(request, new_mv, file_name="mv_files_" + movements[k][1], parent_type='movement'))
         new_mv.save()
         results.append(new_mv)
 
     results.extend(attachments)
     return results
-
-
-#TODO implement better behaviour for creating composers.
-def handle_composer(form):
-    try:
-        new_composer = Composer.objects.get(name=form['composer'])
-        return new_composer
-    except ObjectDoesNotExist:
-        new_composer = Composer(name=form['composer'],
-                                birth_date=form['composer_birth_date'],
-                                death_date=form['composer_death_date'],
-                                created=datetime.datetime.now())
-        new_composer.save()
-        return new_composer
-    pass
