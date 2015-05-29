@@ -196,4 +196,16 @@ def abstract_model_handler(model_name, model_type, **kwargs):
                                     creator=kwargs.get('creator'),
                                     created=datetime.datetime.now(),
                                     updated=datetime.datetime.now())
+            collection.save()
             return {'model': collection, 'new': True}
+
+    if model_type == "Language":
+        try:
+            language = Language.objects.get(name=model_name)
+            return {'model': language, 'new': False}
+        except ObjectDoesNotExist:
+            language = Language(name=model_name,
+                                created=datetime.datetime.now(),
+                                updated=datetime.datetime.now())
+            language.save()
+            return {'model': language, 'new': True}
