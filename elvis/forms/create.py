@@ -28,6 +28,3 @@ class PieceForm(forms.Form):
     #tags = forms.CharField(required=False)
     # Comment
     #comment = forms.CharField(required=False)
-
-    # Movements
-    #movements = forms.CharField(required=False)
