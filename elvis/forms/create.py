@@ -7,6 +7,7 @@ class PieceForm(forms.Form):
     composer = forms.CharField()
 
     # New composer fields
+    is_new_composer = forms.CharField()
     composer_birth_date = forms.DateField(required=False)
     composer_death_date = forms.DateField(required=False)
 

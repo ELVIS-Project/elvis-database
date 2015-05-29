@@ -1,5 +1,6 @@
 from django.views.decorators.csrf import ensure_csrf_cookie, csrf_protect
 from django.contrib.auth.models import User
+
 from rest_framework import generics
 from rest_framework import status
 from rest_framework import permissions
@@ -13,9 +14,10 @@ import shutil
 from elvis.renderers.custom_html_renderer import CustomHTMLRenderer
 from elvis.serializers.piece import PieceSerializer
 from elvis.models.piece import Piece
+from elvis.models import Composer
 from elvis.forms import PieceForm
 
-from elvis.views.views import handle_attachments, handle_composer, handle_movements
+from elvis.views.views import handle_attachments, handle_movements
 from django.utils.decorators import method_decorator
 from django.http import HttpResponseRedirect
 
@@ -74,28 +76,35 @@ class PieceList(generics.ListCreateAPIView):
             return Response(status=status.HTTP_401_UNAUTHORIZED)
 
         form = PieceForm(request.POST, request.FILES)
-
         if not form.is_valid():
             return Response(status=status.HTTP_400_BAD_REQUEST)
 
         created = []
         clean_form = form.cleaned_data
 
-        composer = handle_composer(clean_form)
-        created.append(composer)
+        # Check if we have composer, if not, create a new one with the given information.
+        if clean_form['is_new_composer'] == "false":
+            composer = Composer.objects.get(name=clean_form['composer'])
+        else:
+            composer = Composer(name=clean_form['composer'],
+                                birth_date=clean_form['composer_birth_date'],
+                                death_date=clean_form['composer_death_date'],
+                                created=datetime.datetime.now())
+            composer.save()
+            created.append(composer)
 
         piece = Piece(title=clean_form['title'],
                       composer=composer,
                       uploader=request.user,
                       created=datetime.datetime.now(),
-                      updated=datetime.datetime.now()
-                      )
+                      updated=datetime.datetime.now())
         piece.save()
         created.append(piece)
         attachments = handle_attachments(request, piece)
         created.extend(attachments)
         movements = handle_movements(request, piece)
         created.extend(movements)
+        pdb.set_trace()
         
         return HttpResponseRedirect("http://localhost:8000/piece/{0}".format(piece.id))
 
