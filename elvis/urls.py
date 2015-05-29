@@ -14,7 +14,6 @@ from elvis.views.search import SearchView
 from elvis.views.project import ProjectList, ProjectDetail
 from elvis.views.download import DownloadDetail, Downloading
 from elvis.views.piece import PieceList, PieceDetail, PieceCreate
-from elvis.views.create import CreatePiece
 from elvis.views.user import UserList, UserDetail, UserAccount
 from elvis.views.userprofile import UserProfileList, UserProfileDetail
 from elvis.views.movement import MovementList, MovementDetail
@@ -22,7 +21,6 @@ from elvis.views.composer import ComposerList, ComposerDetail
 from elvis.views.collection import CollectionList, CollectionDetail
 from elvis.views.tag import TagList, TagDetail
 from elvis.views.attachment import AttachmentList, AttachmentDetail
-from elvis.views.create import CreatePiece
 
 # Uncomment the next two lines to enable the admin:
 from django.contrib import admin
@@ -70,9 +68,6 @@ urlpatterns += format_suffix_patterns(
         url(r'^temp/', temp, name="temp"),
 
         url(r'^suggest/$', solr_suggest),
-
-        url(r'^create/piece$', CreatePiece.as_view()),
-
 
         (r'^media/(?P<path>.*)$', 'django.views.static.serve', {'document_root': settings.MEDIA_ROOT}),
     )
