@@ -17,7 +17,7 @@ from elvis.models.piece import Piece
 from elvis.models import Composer
 from elvis.forms import PieceForm
 
-from elvis.views.views import handle_attachments, handle_movements
+from elvis.views.views import handle_attachments, handle_movements, abstract_model_handler
 from django.utils.decorators import method_decorator
 from django.http import HttpResponseRedirect
 
@@ -70,12 +70,15 @@ class PieceList(generics.ListCreateAPIView):
     def post(self, request, *args, **kwargs):
         return self.create(request, *args, **kwargs)
 
-# TODO need to implement a check to see if the entire process was succesfull, and then delete everything unlinked if not.
+    #TODO need to implement a check to see if the entire process was succesfull, and then delete everything unlinked if not.
+    #TODO Piece may need to belong to multiple collections.
+
     def create(self, request, *args, **kwargs):
         if not request.user.is_active:
             return Response(status=status.HTTP_401_UNAUTHORIZED)
 
-        form = PieceForm(request.POST, request.FILES)
+        form = PieceForm(request.POST)
+        pdb.set_trace()
         if not form.is_valid():
             return Response(status=status.HTTP_400_BAD_REQUEST)
 
@@ -83,18 +86,21 @@ class PieceList(generics.ListCreateAPIView):
         clean_form = form.cleaned_data
 
         # Check if we have composer, if not, create a new one with the given information.
-        if clean_form['is_new_composer'] == "false":
-            composer = Composer.objects.get(name=clean_form['composer'])
-        else:
-            composer = Composer(name=clean_form['composer'],
-                                birth_date=clean_form['composer_birth_date'],
-                                death_date=clean_form['composer_death_date'],
-                                created=datetime.datetime.now())
-            composer.save()
+        composer_dict = abstract_model_handler(clean_form['composer'], "Composer",
+                                               birth_date=clean_form['composer_birth_date'],
+                                               death_date=clean_form['composer_death_date'])
+        composer = composer_dict['model']
+        if composer_dict['new']:
             created.append(composer)
+
+
 
         piece = Piece(title=clean_form['title'],
                       composer=composer,
+                      date_of_composition=clean_form['composition_start_date'],
+                      date_of_composition2=clean_form['composition_end_date'],
+                      number_of_voices=clean_form['number_of_voices'],
+
                       uploader=request.user,
                       created=datetime.datetime.now(),
                       updated=datetime.datetime.now())

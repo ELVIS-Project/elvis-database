@@ -3,6 +3,9 @@ from django.conf import settings
 from django.core.files.base import File
 from elvis.models import Attachment
 from elvis.models import Movement
+from elvis.models import Composer
+from elvis.models import Collection
+from django.db.models import ObjectDoesNotExist
 
 import json
 import urllib2
@@ -30,8 +33,7 @@ def solr_suggest(request):
     return HttpResponse(j_results, content_type="json")
 
 
-# Uploads files to the media/temp directory. Automatically unzips
-# any zip archives. Returns a list of uploaded files.
+# Uploads files to the media/temp directory. Automatically unzips any zip archives. Returns a list of uploaded files.
 def upload_files(request, **kwargs):
     files = []
 
@@ -45,7 +47,8 @@ def upload_files(request, **kwargs):
 
     for f in file_list:
         # If the file has an accepted extension, upload it.
-        if any(f.name.endswith(x) for x in settings.ELVIS_EXTENSIONS) and not any(f.name.startswith(x) for x in settings.ELVIS_BAD_PREFIX):
+        if not any(f.name.startswith(x) for x in settings.ELVIS_BAD_PREFIX) and any(
+                f.name.endswith(x) for x in settings.ELVIS_EXTENSIONS):
             upload_file(f, settings.MEDIA_ROOT + 'temp/' + f.name)
             files.append({'name': f.name,
                           'uploader': request.user.username,
@@ -82,8 +85,8 @@ def unzip_file(file_dir, file_name, **kwargs):
     file_contents = zipped_file.namelist()
 
     for f_name in file_contents:
-        if (any(f_name.endswith(x) for x in settings.ELVIS_EXTENSIONS) and
-                not any(f_name.startswith(x) for x in settings.ELVIS_BAD_PREFIX) and
+        if (not any(f_name.startswith(x) for x in settings.ELVIS_BAD_PREFIX) and
+                any(f_name.endswith(x) for x in settings.ELVIS_EXTENSIONS) and
                 not any(x in f_name for x in ('/', '\\'))):
             zipped_file.extract(f_name, file_dir)
             files.append(f_name)
@@ -99,7 +102,6 @@ def unzip_file(file_dir, file_name, **kwargs):
 # Takes the request.FILES and uploads them, processes them, then creates attachments and adds them to parents
 # attachment field.
 def handle_attachments(request, parent, **kwargs):
-
     results = []
 
     if 'file_name' in kwargs:
@@ -158,9 +160,39 @@ def handle_movements(request, parent):
                           piece=parent,
                           comment="TESTING")
         new_mv.save()
-        attachments.extend(handle_attachments(request, new_mv, file_name="mv_files_" + movements[k][1], parent_type='movement'))
+        attachments.extend(
+            handle_attachments(request, new_mv, file_name="mv_files_" + movements[k][1], parent_type='movement'))
         new_mv.save()
         results.append(new_mv)
 
     results.extend(attachments)
     return results
+
+
+# Queries the database for the model. If the model does not exist, the method creates
+# a new one with the given name. Returns a dict with the model and a bool.
+def abstract_model_handler(model_name, model_type, **kwargs):
+    if model_type == "Composer":
+        try:
+            composer = Composer.objects.get(name=model_name)
+            return {'model': composer, 'new': False}
+        except ObjectDoesNotExist:
+            composer = Composer(name=model_name,
+                                birth_date=kwargs.get('birth_date'),
+                                death_date=kwargs.get('death_date'),
+                                created=datetime.datetime.now(),
+                                updated=datetime.datetime.now())
+            composer.save()
+            return {'model': composer, 'new': True}
+
+    if model_type == "Collection":
+        try:
+            collection = Collection.objects.get(title=model_name)
+            return {'model': collection, 'new': False}
+        except ObjectDoesNotExist:
+            collection = Collection(title=model_name,
+                                    public=kwargs.get('is_public'),
+                                    creator=kwargs.get('creator'),
+                                    created=datetime.datetime.now(),
+                                    updated=datetime.datetime.now())
+            return {'model': collection, 'new': True}
