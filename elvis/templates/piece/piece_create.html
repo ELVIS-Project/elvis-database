@@ -77,7 +77,7 @@ $(document).ready(function($)
                          "<td class='text-center'><button id='del_mov" + mov_count + "' type='button' tabindex='-1' class='btn btn-default'>-</button></td>" +
                          "<td class='text-center' style='padding-top:14px'>" + t_size + "</td>" +
                          "<td><input name='mv_title_" + mov_count + "' id='mov_title" + mov_count + "' class='form-control'> </td>" +
-                         "<td><input name='mv_files_" + mov_count + "' id='mov_files" + mov_count + "' type='file' multiple='multiple'></td></tr>");
+                         "<td><input name='mv_files_" + mov_count + "' id='mov_files" + mov_count + "' type='file' multiple='multiple' value=''></td></tr>");
         $("#mov_files" + mov_count).filestyle({input:false, iconName: "glyphicon-file", buttonText: "Movement Files"});
         initRow(mov_count);
         mov_count++;
@@ -231,11 +231,10 @@ $(document).ready(function($)
                     The files for the piece can be attached here. These files should represent the entire piece.
                     Acceptable file types are .zip, .pdf, and .mtxt. Individual movements can be defined below.
                 </span>
-                <input name="piece_att_files" id="piece_att_files" type="file" multiple="multiple"/>
+                <input name="piece_att_files" id="piece_att_files" type="file" multiple="multiple" value=""/>
                 <br>
 
                 <h4>Movements</h4>
-                <hr>
                 <span class="help-block">
                     The movements of the piece can be defined here. Each movement may also have files
                     attached to it which represent the movement itself.
@@ -258,7 +257,7 @@ $(document).ready(function($)
                             <td class="text-center"><button id="del_mov1" type="button" tabindex="-1" class="btn btn-default">-</button></td>
                             <td class="text-center" style="padding-top:14px">1</td>
                             <td><input name='mv_title_1' id="mov_title1" placeholder="The first movement" class='form-control'></td>
-                            <td><input name='mv_files_1' id='mov_files1' type='file' multiple='multiple'></td>
+                            <td><input name='mv_files_1' id='mov_files1' type='file' multiple='multiple' value=""></td>
                         </tr>
                         </tbody>
                 </table>
