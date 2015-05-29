@@ -7,15 +7,17 @@ import pytz
 from django.dispatch import receiver
 from django.db.models.signals import post_save, post_delete, pre_delete
 
+
 class Movement(models.Model):
     class Meta:
         app_label = "elvis"
-        ordering = ["title"]
+        ordering = ["position"]
 
     old_id = models.IntegerField(db_index=True, blank=True, null=True)
     title = models.CharField(max_length=255)
     uploader = models.ForeignKey(User, blank=True, null=True, related_name="movements")
     piece = models.ForeignKey("elvis.Piece", blank=True, null=True, related_name="movements")
+    position = models.IntegerField(blank=True, null=True)
     collections = models.ManyToManyField("elvis.Collection", blank=True, null=True, related_name="movements")
     composer = models.ForeignKey("elvis.Composer", blank=True, null=True, related_name="movements")
     date_of_composition = models.DateField(blank=True, null=True)
@@ -185,18 +187,18 @@ def solr_index(sender, instance, created, **kwargs):
     solrconn.commit()
 
     # Rename attachments accordingly
-    try:
-        composer_last_name = movement.composer.name.split(',', 1)[0]
-    except ValueError as v:
-        composer_last_name = movement.composer.name.split(' ', 1)[0]
-    if movement.piece:
-        piece_title_short = ''.join(movement.piece.title.split()[:4])
-    else:
-        piece_title_short = ''
-    movement_title_short = ''.join(movement.title.split()[:1])
-    attachment_name =  "_".join([composer_last_name, piece_title_short, movement_title_short])
-    for attachment in movement.attachments.all():
-        attachment.rename(new_filename=attachment_name)
+    #try:
+    #    composer_last_name = movement.composer.name.split(',', 1)[0]
+    #except ValueError as v:
+    #    composer_last_name = movement.composer.name.split(' ', 1)[0]
+    #if movement.piece:
+    #    piece_title_short = ''.join(movement.piece.title.split()[:4])
+    #else:
+    #    piece_title_short = ''
+    #movement_title_short = ''.join(movement.title.split()[:1])
+    #attachment_name =  "_".join([composer_last_name, piece_title_short, movement_title_short])
+    #for attachment in movement.attachments.all():
+    #    attachment.rename(new_filename=attachment_name)
 
 @receiver(pre_delete, sender=Movement)
 def attachment_delete(sender, instance, **kwargs):

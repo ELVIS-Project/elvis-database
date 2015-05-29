@@ -5,6 +5,7 @@ from elvis.models import Attachment
 from elvis.models import Movement
 from elvis.models import Composer
 from elvis.models import Collection
+from elvis.models import Language
 from django.db.models import ObjectDoesNotExist
 
 import json
@@ -114,14 +115,9 @@ def handle_attachments(request, parent, **kwargs):
         att.save()  # needed to create hash dir.
         att.uploader = request.user
 
-        if 'parent_type' in kwargs and kwargs['parent_type'] == 'movement':
-            new_name = "{0}_{1}_{3}.".format(parent.piece.title.replace(" ", "-"),
-                                             parent.title.replace(" ", "-"),
-                                             parent.composer.name.replace(" ", "-")) + f['name'].rsplit('.')[-1]
-        else:
-            new_name = "{0}_{1}.".format(parent.title.replace(" ", "-"),
-                                         parent.composer.name.replace(" ", "-")) + f['name'].rsplit('.')[-1]
-
+        new_name = "{0}_{1}.{2}".format(parent.title.replace(" ", "-"),
+                                        parent.composer.name.replace(" ", "-"),
+                                        f['name'].rsplit('.')[-1])
         os.rename(f['path'] + f['name'], f['path'] + new_name)
         with open("{0}/{1}".format(f['path'], new_name), 'r+') as dest:
             file_content = File(dest)
@@ -153,17 +149,22 @@ def handle_movements(request, parent):
 
     keys = movements.keys()
     keys.sort()
+    i = 1
+    pdb.set_trace()
 
     for k in keys:
         new_mv = Movement(title=movements[k][0],
+                          position=i,
+                          date_of_composition=parent.date_of_composition,
+                          date_of_composition2=parent.date_of_composition2,
                           composer=parent.composer,
                           piece=parent,
                           comment="TESTING")
         new_mv.save()
-        attachments.extend(
-            handle_attachments(request, new_mv, file_name="mv_files_" + movements[k][1], parent_type='movement'))
+        attachments.extend(handle_attachments(request, new_mv, file_name="mv_files_" + movements[k][1], parent_type='movement'))
         new_mv.save()
         results.append(new_mv)
+        i = i + 1
 
     results.extend(attachments)
     return results
