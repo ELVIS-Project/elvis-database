@@ -1361,6 +1361,30 @@
         <str name="buildOnCommit">true</str>
         <str name="highlight">false</str>
     </lst>
+    <lst name="suggester">
+        <str name="name">languageSuggest</str>
+        <str name="lookupImpl">AnalyzingInfixLookupFactory</str>
+        <str name="indexPath">suggestions/languageSuggest_dict</str>
+        <str name="dictionaryImpl">DocumentDictionaryFactory</str>
+        <str name="field">languages_searchable</str>
+        <str name="weightField">price</str>
+        <str name="suggestAnalyzerFieldType">suggestTypeLc</str>
+        <str name="buildOnStartup">true</str>
+        <str name="buildOnCommit">true</str>
+        <str name="highlight">false</str>
+    </lst>
+    <lst name="suggester">
+        <str name="name">genreSuggest</str>
+        <str name="lookupImpl">AnalyzingInfixLookupFactory</str>
+        <str name="indexPath">suggestions/genreSuggest_dict</str>
+        <str name="dictionaryImpl">DocumentDictionaryFactory</str>
+        <str name="field">genres_searchable</str>
+        <str name="weightField">price</str>
+        <str name="suggestAnalyzerFieldType">suggestTypeLc</str>
+        <str name="buildOnStartup">true</str>
+        <str name="buildOnCommit">true</str>
+        <str name="highlight">false</str>
+    </lst>
  </searchComponent>
 
  <requestHandler name="/suggest" class="solr.SearchHandler" startup="lazy" >
