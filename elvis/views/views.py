@@ -6,6 +6,9 @@ from elvis.models import Movement
 from elvis.models import Composer
 from elvis.models import Collection
 from elvis.models import Language
+from elvis.models import Location
+from elvis.models import Source
+from elvis.models import InstrumentVoice
 from django.db.models import ObjectDoesNotExist
 
 import json
@@ -188,15 +191,16 @@ def abstract_model_handler(model_name, model_type, **kwargs):
                                 updated=datetime.datetime.now())
             composer.save()
             composer_list.append({'model': composer, 'new': True})
-        return composer_list
+            return composer_list
 
-    if model_type == "Collections":
-        tokenized_inputs = map((lambda x: x.strip()), model_name.rsplit(","))
+    if model_type == "Collection":
+        tokenized_inputs = map((lambda x: x.strip()), model_name.rsplit(";"))
         collection_list = []
         for token in tokenized_inputs:
             try:
                 collection = Collection.objects.get(title=token)
                 collection_list.append({'model': collection, 'new': False})
+                return collection_list
             except ObjectDoesNotExist:
                 collection = Collection(title=token,
                                         public=kwargs.get('is_public'),
@@ -205,19 +209,68 @@ def abstract_model_handler(model_name, model_type, **kwargs):
                                         updated=datetime.datetime.now())
                 collection.save()
                 collection_list.append({'model': collection, 'new': True})
-        return collection_list
+                return collection_list
 
-    if model_type == "Languages":
-        tokenized_inputs = map((lambda x: x.strip()), model_name.rsplit(","))
+    if model_type == "Language":
+        tokenized_inputs = map((lambda x: x.strip()), model_name.rsplit(";"))
         language_list = []
         for token in tokenized_inputs:
             try:
                 language = Language.objects.get(name=token)
                 language_list.append({'model': language, 'new': False})
+                return language_list
             except ObjectDoesNotExist:
                 language = Language(name=token,
                                     created=datetime.datetime.now(),
                                     updated=datetime.datetime.now())
                 language.save()
                 language_list.append({'model': language, 'new': True})
-        return language_list
+                return language_list
+
+    if model_type == "Location":
+        tokenized_inputs = map((lambda x: x.strip()), model_name.rsplit(";"))
+        location_list = []
+        for token in tokenized_inputs:
+            try:
+                language = Location.objects.get(name=token)
+                location_list.append({'model': language, 'new': False})
+                return location_list
+            except ObjectDoesNotExist:
+                location = Location(name=token,
+                                    created=datetime.datetime.now(),
+                                    updated=datetime.datetime.now())
+                location.save()
+                location_list.append({'model': location, 'new': True})
+                return location_list
+
+    if model_type == "Source":
+        tokenized_inputs = map((lambda x: x.strip()), model_name.rsplit(";"))
+        source_list = []
+        for token in tokenized_inputs:
+            try:
+                source = Source.objects.get(name=token)
+                source_list.append({'model': source, 'new': False})
+                return source_list
+            except ObjectDoesNotExist:
+                location = source(name=token,
+                                    created=datetime.datetime.now(),
+                                    updated=datetime.datetime.now())
+                source.save()
+                source_list.append({'model': location, 'new': True})
+                return source_list
+
+    if model_type == "InstrumentVoice":
+        tokenized_inputs = map((lambda x: x.strip()), model_name.rsplit(";"))
+        instrument_list = []
+        for token in tokenized_inputs:
+            try:
+                instrument = InstrumentVoice.objects.get(name=token)
+                instrument_list.append({'model': instrument, 'new': False})
+                return instrument_list
+            except ObjectDoesNotExist:
+                instrument = InstrumentVoice(name=token,
+                                            created=datetime.datetime.now(),
+                                            updated=datetime.datetime.now())
+                instrument.save()
+                instrument_list.append({'model': instrument, 'new': True})
+                return instrument_list
