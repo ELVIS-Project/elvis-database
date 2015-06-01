@@ -70,8 +70,6 @@ class PieceList(generics.ListCreateAPIView):
     def post(self, request, *args, **kwargs):
         return self.create(request, *args, **kwargs)
 
-    #TODO need to implement a check to see if the entire process was succesfull, and then delete everything unlinked if not.
-
     def create(self, request, *args, **kwargs):
         if not request.user.is_active:
             return Response(status=status.HTTP_401_UNAUTHORIZED)
@@ -82,59 +80,67 @@ class PieceList(generics.ListCreateAPIView):
 
         created = []
 
-        try:
-            clean_form = form.cleaned_data
+        clean_form = form.cleaned_data
 
-            # Check if we have composer, if not, create a new one with the given information.
-            composer_list = abstract_model_handler(clean_form['composer'], "Composer",
-                                                   birth_date=clean_form['composer_birth_date'],
-                                                   death_date=clean_form['composer_death_date'])
-            composer = composer_list[0]['model']
-            if composer_list[0]['new']:
-                created.append(composer)
-
-
-            piece = Piece(title=clean_form['title'],
-                          composer=composer,
+        new_piece = Piece(title=clean_form['title'],
                           date_of_composition=clean_form['composition_start_date'],
                           date_of_composition2=clean_form['composition_end_date'],
                           number_of_voices=clean_form['number_of_voices'],
                           uploader=request.user,
                           created=datetime.datetime.now(),
                           updated=datetime.datetime.now())
-            piece.save()
-            created.append(piece)
+        new_piece.save()
+        created.append(new_piece)
 
-            # Check if we have collections, if not, create a new one with the given information.
-            if clean_form['collection']:
-                collection_list = abstract_model_handler(clean_form['collection'], "Collections", is_public=True, creator=request.user)
-                for x in collection_list:
-                    piece.collections.add(x['model'])
-                    if x['new']:
-                        created.append(x['model'])
-
-            # Check if we have languages, if not, create a new one with the given information.
-            if clean_form['languages']:
-                language_list = abstract_model_handler(clean_form['languages'], "Languages")
-                for x in language_list:
-                    piece.languages.add(x['model'])
-                    if x['new']:
-                        created.append(x['model'])
-
-            attachments = handle_attachments(request, piece)
-            created.extend(attachments)
-            movements = handle_movements(request, piece)
-            created.extend(movements)
-
-            return HttpResponseRedirect("http://localhost:8000/piece/{0}".format(piece.id))
-        except PieceCreateError, e:
-            for model in e.created:
-                model.delete()
+        try:
+            composer_list = abstract_model_handler(clean_form['composer'], "Composer",
+                                                   birth_date=clean_form['composer_birth_date'],
+                                                   death_date=clean_form['composer_death_date'])
+            composer = composer_list[0]['model']
+            if composer_list[0]['new']:
+                created.append(composer)
+        except:
+            cleanup(created)
             raise
 
+        try:
+            if clean_form['collections']:
+                collection_list = abstract_model_handler(clean_form['collections'], "Collection", is_public=True, creator=request.user)
+                for x in collection_list:
+                    new_piece.collections.add(x['model'])
+                    if x['new']:
+                        created.append(x['model'])
+        except:
+            cleanup(created)
+            raise
 
-# 'created' should be a list of all models that were created during the attempt to make a piece. If for some
-# reason creating the piece fails, the exception handler can loop through the list and delete all the new models.
-class PieceCreateError(Exception):
-    def __init__(self, created):
-        self.created = created
+        try:
+            if clean_form['languages']:
+                language_list = abstract_model_handler(clean_form['languages'], "Language")
+                for x in language_list:
+                    new_piece.languages.add(x['model'])
+                    if x['new']:
+                        created.append(x['model'])
+        except:
+            cleanup(created)
+            raise
+        try:
+            attachments = handle_attachments(request, new_piece)
+            created.extend(attachments)
+        except:
+            cleanup(created)
+            raise
+        try:
+            movements = handle_movements(request, new_piece)
+            created.extend(movements)
+        except:
+            cleanup(created)
+            raise
+
+        return HttpResponseRedirect("http://localhost:8000/new_piece/{0}".format(new_piece.id))
+
+
+def cleanup(createdList):
+    for item in createdList:
+        item.delete()
+
