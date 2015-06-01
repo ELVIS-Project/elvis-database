@@ -190,7 +190,7 @@ def abstract_model_handler(model_name, model_type, **kwargs):
             composer_list.append({'model': composer, 'new': True})
         return composer_list
 
-    if model_type == "Collection":
+    if model_type == "Collections":
         tokenized_inputs = map((lambda x: x.strip()), model_name.rsplit(","))
         collection_list = []
         for token in tokenized_inputs:
@@ -207,7 +207,7 @@ def abstract_model_handler(model_name, model_type, **kwargs):
                 collection_list.append({'model': collection, 'new': True})
         return collection_list
 
-    if model_type == "Language":
+    if model_type == "Languages":
         tokenized_inputs = map((lambda x: x.strip()), model_name.rsplit(","))
         language_list = []
         for token in tokenized_inputs:
