@@ -54,21 +54,7 @@ function autocomplete(inputField, suggestionField, dictionary, multiple) {
         if (key === 13 && menuSize > 0)
         {
             event.preventDefault();
-            if (multiple)
-            {
-                var split_vals = $inputField.val().split(";");
-                split_vals[split_vals.length-1] = selectedSuggestion;
-                var result = split_vals[0] + "; ";
-                for (var i = 1; i < split_vals.length; i++)
-                {
-                    result = result + split_vals[i].trim() + "; ";
-                }
-                $inputField.val(result);
-            }
-            else
-            {
-                $inputField.val(selectedSuggestion);
-            }
+            write_input();
             $suggestionMenu.html("");
             menuActive = -1;
             menuSize = 0;
@@ -101,9 +87,7 @@ function autocomplete(inputField, suggestionField, dictionary, multiple) {
 
             if (key === 8 || (query.length - $inputField.val().length) > 1)
                 isInit = true;
-
-            var input_width = $("#required").width();
-
+            var input_width = $(this).parent().width();
             //Sends the query to /suggest/ and prints the results to the suggestion-menu
             if ((gotResults || isInit) && selectedSuggestion !== $inputField.val())
             {
@@ -173,24 +157,29 @@ function autocomplete(inputField, suggestionField, dictionary, multiple) {
     {
         if (event['target'])
         {
-            if (multiple)
-            {
-                var split_vals = $inputField.val().split(";");
-                split_vals[split_vals.length-1] = selectedSuggestion;
-                var result = split_vals[0] + "; ";
-                for (var i = 1; i < split_vals.length; i++)
-                {
-                    result = result + split_vals[i].trim() + "; ";
-                }
-                $inputField.val(result);
-            }
-            else
-            {
-                $inputField.val(selectedSuggestion);
-            }
+            write_input();
             $suggestionMenu.html("");
             menuActive = -1;
             menuSize = 0;
         }
     });
+
+    function write_input()
+    {
+        if (multiple)
+        {
+            var split_vals = $inputField.val().split(";");
+            split_vals[split_vals.length-1] = selectedSuggestion;
+            var result = split_vals[0] + "; ";
+            for (var i = 1; i < split_vals.length; i++)
+            {
+                result = result + split_vals[i].trim() + "; ";
+            }
+            $inputField.val(result);
+        }
+        else
+        {
+            $inputField.val(selectedSuggestion);
+        }
+    }
 }
