@@ -128,10 +128,8 @@ class PieceList(generics.ListCreateAPIView):
 
             return HttpResponseRedirect("http://localhost:8000/piece/{0}".format(piece.id))
         except PieceCreateError, e:
-            pdb.set_trace()
             for model in e.created:
                 model.delete()
-            pdb.set_trace()
             raise
 
 
