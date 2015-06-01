@@ -66,6 +66,14 @@ function autocomplete(inputField, suggestionField, dictionary, multiple) {
             event.preventDefault();
             $inputField.focusout()
         }
+
+        if (key === 186)
+        {
+            $suggestionMenu.html("");
+            menuActive = -1;
+            menuSize = 0;
+            selectedSuggestion = ""
+        }
     });
 
     $inputField.on("keyup focusin", function (event)
@@ -87,7 +95,7 @@ function autocomplete(inputField, suggestionField, dictionary, multiple) {
 
             if (key === 8 || (query.length - $inputField.val().length) > 1)
                 isInit = true;
-            var input_width = $(this).parent().width();
+            var input_width = $(this).parent().width() - 120;
             //Sends the query to /suggest/ and prints the results to the suggestion-menu
             if ((gotResults || isInit) && selectedSuggestion !== $inputField.val())
             {
