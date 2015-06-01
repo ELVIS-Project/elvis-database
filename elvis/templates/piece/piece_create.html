@@ -12,7 +12,7 @@ $(document).ready(function($)
 {
     autocomplete("title", "title_suggestion_menu", "pieceSuggest");
     autocomplete("composer", "composer_suggestion_menu", "composerSuggest");
-    autocomplete("collection", "collection_suggestion_menu", "collectionSuggest");
+    autocomplete("collection", "collection_suggestion_menu", "collectionSuggest", true);
     $("#piece_att_files").filestyle({input:false, iconName: "glyphicon-file", buttonText: "Upload Files"});
     $("#id_comp_pic").filestyle({input:false, iconName: "glyphicon-picture", buttonText: "Composer Picture", disabled: "true"});
     $("#mov_files1").filestyle({input:false, iconName: "glyphicon-file", buttonText: "Movement Files"});
