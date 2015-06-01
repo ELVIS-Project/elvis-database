@@ -11,7 +11,7 @@
     suggestionField: The id of the HTML list where results will be sent.
     dictionary: The name of the suggestion dictionary to be used.
  */
-function autocomplete(inputField, suggestionField, dictionary) {
+function autocomplete(inputField, suggestionField, dictionary, multiple) {
     var menuActive = -1;
     var menuSize = -1;
     var isInit = true;
@@ -54,7 +54,21 @@ function autocomplete(inputField, suggestionField, dictionary) {
         if (key === 13 && menuSize > 0)
         {
             event.preventDefault();
-            $inputField.val(selectedSuggestion);
+            if (multiple)
+            {
+                var split_vals = $inputField.val().split(";");
+                split_vals[split_vals.length-1] = selectedSuggestion;
+                var result = split_vals[0] + "; ";
+                for (var i = 1; i < split_vals.length; i++)
+                {
+                    result = result + split_vals[i].trim() + "; ";
+                }
+                $inputField.val(result);
+            }
+            else
+            {
+                $inputField.val(selectedSuggestion);
+            }
             $suggestionMenu.html("");
             menuActive = -1;
             menuSize = 0;
@@ -75,11 +89,19 @@ function autocomplete(inputField, suggestionField, dictionary) {
         //Typing a-z, deleteing, or focusing on the input will generate a suggestion list
         if ((key > 63 && key < 91) || key === 8 || event['type'] === "focusin")
         {
+            if (multiple)
+            {
+                var split_vals = $inputField.val().split(";");
+                var query = encodeURI(split_vals[split_vals.length-1].trim());
+            }
+            else
+            {
+                query = encodeURI($inputField.val());
+            }
 
             if (key === 8 || (query.length - $inputField.val().length) > 1)
                 isInit = true;
 
-            query = encodeURI($inputField.val());
             var input_width = $("#required").width();
 
             //Sends the query to /suggest/ and prints the results to the suggestion-menu
@@ -151,7 +173,21 @@ function autocomplete(inputField, suggestionField, dictionary) {
     {
         if (event['target'])
         {
-            $inputField.val(selectedSuggestion);
+            if (multiple)
+            {
+                var split_vals = $inputField.val().split(";");
+                split_vals[split_vals.length-1] = selectedSuggestion;
+                var result = split_vals[0] + "; ";
+                for (var i = 1; i < split_vals.length; i++)
+                {
+                    result = result + split_vals[i].trim() + "; ";
+                }
+                $inputField.val(result);
+            }
+            else
+            {
+                $inputField.val(selectedSuggestion);
+            }
             $suggestionMenu.html("");
             menuActive = -1;
             menuSize = 0;
