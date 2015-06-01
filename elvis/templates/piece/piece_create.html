@@ -13,6 +13,10 @@ $(document).ready(function($)
     autocomplete("title", "title_suggestion_menu", "pieceSuggest");
     autocomplete("composer", "composer_suggestion_menu", "composerSuggest");
     autocomplete("collection", "collection_suggestion_menu", "collectionSuggest", true);
+    autocomplete("languages", "language_suggestion_menu", "languageSuggest", true);
+    autocomplete("genres", "genre_suggestion_menu", "genreSuggest", true);
+
+
     $("#piece_att_files").filestyle({input:false, iconName: "glyphicon-file", buttonText: "Upload Files"});
     $("#id_comp_pic").filestyle({input:false, iconName: "glyphicon-picture", buttonText: "Composer Picture", disabled: "true"});
     $("#mov_files1").filestyle({input:false, iconName: "glyphicon-file", buttonText: "Movement Files"});
@@ -77,7 +81,7 @@ $(document).ready(function($)
         table.append("<tr id='mov"+ mov_count +"'>" +
                          "<td class='text-center'><button id='del_mov" + mov_count + "' type='button' tabindex='-1' class='btn btn-default'>-</button></td>" +
                          "<td class='text-center' style='padding-top:14px'>" + t_size + "</td>" +
-                         "<td><input name='mv_title_" + mov_count + "' id='mov_title" + mov_count + "' class='form-control'> </td>" +
+                         "<td><input name='mv_title_" + mov_count + "' id='mov_title" + mov_count + "' class='form-control' autocomplete='off'> </td>" +
                          "<td><input name='mv_files_" + mov_count + "' id='mov_files" + mov_count + "' type='file' multiple='multiple' value=''></td></tr>");
         $("#mov_files" + mov_count).filestyle({input:false, iconName: "glyphicon-file", buttonText: "Movement Files"});
         initRow(mov_count);
@@ -197,6 +201,35 @@ $(document).ready(function($)
                     <div class="col-md-4">
                         <div class="form-group">
                             <div class="input-group">
+                                <span class="input-group-addon">Languages</span>
+                                <input type='text' name="languages" id="languages" placeholder="e.g. English; German" class="form-control unstyled"/>
+                            </div>
+                            <div id="language_suggestion_menu"></div>
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <div class="form-group">
+                            <div class="input-group">
+                                <span class="input-group-addon">Genres</span>
+                                <input type='text' name="genres" id="genres" placeholder="e.g. Choral" class="form-control unstyled"/>
+                            </div>
+                            <div id="genre_suggestion_menu"></div>
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <div class="form-group">
+                            <div class="input-group">
+                                <span class="input-group-addon">Number of Voices</span>
+                                <input type='number' name="number_of_voices" id="number_of_voices" max="100" class="form-control unstyled"/>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="col-md-4">
+                        <div class="form-group">
+                            <div class="input-group">
                                 <span class="input-group-addon">Composition Start Date</span>
                                 <input type='date' name="composition_start_date" id="composition_start_date" max="2000-01-01" class="form-control unstyled"/>
                             </div>
@@ -212,24 +245,6 @@ $(document).ready(function($)
                     </div>
                 </div>
 
-                <div class="row">
-                    <div class="col-md-4">
-                        <div class="form-group">
-                            <div class="input-group">
-                                <span class="input-group-addon">Number of Voices</span>
-                                <input type='number' name="number_of_voices" id="number_of_voices" max="100" class="form-control unstyled"/>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="col-md-4">
-                        <div class="form-group">
-                            <div class="input-group">
-                                <span class="input-group-addon">Languages</span>
-                                <input type='text' name="language" id="language" placeholder="e.g. English; German" class="form-control unstyled"/>
-                            </div>
-                        </div>
-                    </div>
-                </div>
                 <h4>Piece Attachments</h4>
                 <hr>
                 <span class="help-block">
@@ -249,7 +264,7 @@ $(document).ready(function($)
                         <col class="text-center" style="width: 5%;">
                         <col style="width: 5%;">
                         <col style="width: 70%;">
-                        <col style="width: 30%;">
+                        <col style="width: 20%;">
                     </colgroup>
                         <tbody id="movement_table">
                         <tr>
@@ -261,7 +276,7 @@ $(document).ready(function($)
                         <tr id='mov1'>
                             <td class="text-center"><button id="del_mov1" type="button" tabindex="-1" class="btn btn-default">-</button></td>
                             <td class="text-center" style="padding-top:14px">1</td>
-                            <td><input name='mv_title_1' id="mov_title1" placeholder="The first movement" class='form-control'></td>
+                            <td><input name='mv_title_1' id="mov_title1" placeholder="The First Movement" class='form-control' autocomplete="pff"></td>
                             <td><input name='mv_files_1' id='mov_files1' type='file' multiple='multiple' value=""></td>
                         </tr>
                         </tbody>
