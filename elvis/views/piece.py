@@ -107,15 +107,15 @@ class PieceList(generics.ListCreateAPIView):
 
             # Check if we have collections, if not, create a new one with the given information.
             if clean_form['collection']:
-                collection_list = abstract_model_handler(clean_form['collection'], "Collection", is_public=True, creator=request.user)
+                collection_list = abstract_model_handler(clean_form['collection'], "Collections", is_public=True, creator=request.user)
                 for x in collection_list:
                     piece.collections.add(x['model'])
                     if x['new']:
                         created.append(x['model'])
 
             # Check if we have languages, if not, create a new one with the given information.
-            if clean_form['language']:
-                language_list = abstract_model_handler(clean_form['language'], "Language")
+            if clean_form['languages']:
+                language_list = abstract_model_handler(clean_form['languages'], "Languages")
                 for x in language_list:
                     piece.languages.add(x['model'])
                     if x['new']:
