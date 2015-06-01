@@ -150,7 +150,6 @@ def handle_movements(request, parent):
     keys = movements.keys()
     keys.sort()
     i = 1
-    pdb.set_trace()
 
     for k in keys:
         new_mv = Movement(title=movements[k][0],
@@ -164,19 +163,23 @@ def handle_movements(request, parent):
         attachments.extend(handle_attachments(request, new_mv, file_name="mv_files_" + movements[k][1], parent_type='movement'))
         new_mv.save()
         results.append(new_mv)
-        i = i + 1
+        i += 1
 
     results.extend(attachments)
     return results
 
 
 # Queries the database for the model. If the model does not exist, the method creates
-# a new one with the given name. Returns a dict with the model and a bool.
+# a new one with the given name. Returns a list of dicts with the models and a bool specifying
+# if the model was created or found.
 def abstract_model_handler(model_name, model_type, **kwargs):
+
     if model_type == "Composer":
+        composer_list = []
         try:
             composer = Composer.objects.get(name=model_name)
-            return {'model': composer, 'new': False}
+            composer_list.append({'model': composer, 'new': False})
+            return composer_list
         except ObjectDoesNotExist:
             composer = Composer(name=model_name,
                                 birth_date=kwargs.get('birth_date'),
@@ -184,28 +187,37 @@ def abstract_model_handler(model_name, model_type, **kwargs):
                                 created=datetime.datetime.now(),
                                 updated=datetime.datetime.now())
             composer.save()
-            return {'model': composer, 'new': True}
+            composer_list.append({'model': composer, 'new': True})
+        return composer_list
 
     if model_type == "Collection":
-        try:
-            collection = Collection.objects.get(title=model_name)
-            return {'model': collection, 'new': False}
-        except ObjectDoesNotExist:
-            collection = Collection(title=model_name,
-                                    public=kwargs.get('is_public'),
-                                    creator=kwargs.get('creator'),
-                                    created=datetime.datetime.now(),
-                                    updated=datetime.datetime.now())
-            collection.save()
-            return {'model': collection, 'new': True}
+        tokenized_inputs = map((lambda x: x.strip()), model_name.rsplit(","))
+        collection_list = []
+        for token in tokenized_inputs:
+            try:
+                collection = Collection.objects.get(title=token)
+                collection_list.append({'model': collection, 'new': False})
+            except ObjectDoesNotExist:
+                collection = Collection(title=token,
+                                        public=kwargs.get('is_public'),
+                                        creator=kwargs.get('creator'),
+                                        created=datetime.datetime.now(),
+                                        updated=datetime.datetime.now())
+                collection.save()
+                collection_list.append({'model': collection, 'new': True})
+        return collection_list
 
     if model_type == "Language":
-        try:
-            language = Language.objects.get(name=model_name)
-            return {'model': language, 'new': False}
-        except ObjectDoesNotExist:
-            language = Language(name=model_name,
-                                created=datetime.datetime.now(),
-                                updated=datetime.datetime.now())
-            language.save()
-            return {'model': language, 'new': True}
+        tokenized_inputs = map((lambda x: x.strip()), model_name.rsplit(","))
+        language_list = []
+        for token in tokenized_inputs:
+            try:
+                language = Language.objects.get(name=token)
+                language_list.append({'model': language, 'new': False})
+            except ObjectDoesNotExist:
+                language = Language(name=token,
+                                    created=datetime.datetime.now(),
+                                    updated=datetime.datetime.now())
+                language.save()
+                language_list.append({'model': language, 'new': True})
+        return language_list
