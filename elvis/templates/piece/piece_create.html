@@ -37,9 +37,10 @@ $(document).ready(function($)
                     if (data['count'] == 0)
                     {
                         $newComposerMenu.children().remove(".top-message");
-                        $newComposerMenu.prepend("<div class='top-message'><hr>We don't have <strong>" + query + "</strong> in our database. " +
+                        $newComposerMenu.prepend("<div class='top-message'><span class='help-block'>" +
+                            "<hr>We don't have <strong>" + query + "</strong> in our database. " +
                             "Submitting a piece by an unknown composer will add the composer to the database. <br>" +
-                            "Do you have additional information to add to this new composer?<br><br></div>");
+                            "Do you have additional information to add to this new composer?<br><br></span></div>");
                         $newComposerMenu.slideDown("slow");
                     }
                 }
@@ -134,7 +135,11 @@ $(document).ready(function($)
             <div id="required" class="tab-pane fade in active">
                 <h4>Piece Information</h4>
                 <hr>
-
+                <span class="help-block">
+                <strong>Title</strong> and <strong>Composer</strong> are required fields. All other fields are optional, but you are
+                encouraged to provide as much information as possible. <strong>Collections</strong> and <strong>Languages</strong> can
+                accept multiple values separated by a semi-colon.
+                </span>
                 <div class="input-group">
                   <span class="input-group-addon" id="basic-addon1">Title</span>
                   <input type="text" id="title" name="title" autocomplete="off" class="form-control" placeholder="e.g. Ach Gott, vom Himmel sieh darein, BWV 2" aria-describedby="basic-addon1">
@@ -181,8 +186,8 @@ $(document).ready(function($)
                 <br>
 
                 <div class="input-group">
-                    <span class="input-group-addon" id="basic-addon1">Collection</span>
-                    <input type="text" id="collection" name="collection" autocomplete="off" class="form-control" placeholder="e.g. Alex's Collection" aria-describedby="basic-addon1">
+                    <span class="input-group-addon" id="basic-addon1">Collections</span>
+                    <input type="text" id="collection" name="collection" autocomplete="off" class="form-control" placeholder="e.g. Prof.Fujinaga's Collection; McGill Collection" aria-describedby="basic-addon1">
                 </div>
                 <div id="collection_suggestion_menu"></div>
 
@@ -219,8 +224,8 @@ $(document).ready(function($)
                     <div class="col-md-4">
                         <div class="form-group">
                             <div class="input-group">
-                                <span class="input-group-addon">Language</span>
-                                <input type='text' name="language" id="language" class="form-control unstyled"/>
+                                <span class="input-group-addon">Languages</span>
+                                <input type='text' name="language" id="language" placeholder="e.g. English; German" class="form-control unstyled"/>
                             </div>
                         </div>
                     </div>
@@ -243,7 +248,7 @@ $(document).ready(function($)
                     <colgroup>
                         <col class="text-center" style="width: 5%;">
                         <col style="width: 5%;">
-                        <col style="width: 65%;">
+                        <col style="width: 70%;">
                         <col style="width: 30%;">
                     </colgroup>
                         <tbody id="movement_table">
