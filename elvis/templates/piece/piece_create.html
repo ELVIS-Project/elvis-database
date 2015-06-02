@@ -15,6 +15,8 @@ $(document).ready(function($)
     autocomplete("collection", "collection_suggestion_menu", "collectionSuggest", true);
     autocomplete("languages", "language_suggestion_menu", "languageSuggest", true);
     autocomplete("genres", "genre_suggestion_menu", "genreSuggest", true);
+    autocomplete("locations", "location_suggestion_menu", "locationSuggest", true);
+
 
 
     $("#piece_att_files").filestyle({input:false, iconName: "glyphicon-file", buttonText: "Upload Files"});
@@ -109,32 +111,13 @@ $(document).ready(function($)
             }
     }
 
-    // The ever changing next/submit button underneath the form.
-    var $tabs = $('#upload-tabs');
-    function make_submit()
+
+    //The next buttons on the tabs
+    $("[id^=nexttab]").on("click", function()
     {
-        $('#nexttab').on('click', function() {
-            $tabs.children().filter('.active').next('li').find('a[data-toggle="tab"]').tab('show');
-            if ($("#last-tab").hasClass('active'))
-            {
-                $("#next-submit").html("<button type='submit' id='nexttab' name='piece-submit' class='btn btn-success pull-right move'>Submit<span class='glyphicon glyphicon-chevron-right'></span></button>");
-            }
-        });
-    }
-    $tabs.on("click", function(event)
-    {
-        console.log(event)
-        debugger;
-        if (event['target']['innerHTML'] === "Movements")
-        {
-            $("#next-submit").html("<button type='submit' id='nexttab' name='piece-submit' class='btn btn-success pull-right move'>Submit<span class='glyphicon glyphicon-chevron-right'></span></button>");
-        }
-        else
-        {
-            $("#next-submit").html("<button type='button' id='nexttab' name='piece-submit' class='btn btn-success pull-right move'>Next<span class='glyphicon glyphicon-chevron-right'></span></button>");
-            make_submit();
-        }
-    })
+        $('#upload-tabs').children().filter('.active').next('li').find('a[data-toggle="tab"]').tab('show');
+    });
+
 });
 
 </script>
@@ -229,6 +212,10 @@ $(document).ready(function($)
                         </div>
                     </div>
                 </div>
+                <hr>
+                <div class="text-right">
+                    <button type='button' id='nexttab1' name='piece-submit' class='btn btn-success'>Next<span class='glyphicon glyphicon-chevron-right'></span></button>
+                </div>
             </div>
 
             <div id="advanced" class="tab-pane fade">
@@ -302,11 +289,15 @@ $(document).ready(function($)
                         <div class="form-group">
                             <div class="input-group">
                                 <span class="input-group-addon">Instrumentation</span>
-                                <input type='number' name="instrumentations" autocomplete="off" id="instrumentations" placeholder="e.g. Harpsichord" class="form-control unstyled"/>
+                                <input type='text' name="instrumentations" autocomplete="off" id="instrumentations" placeholder="e.g. Harpsichord" class="form-control unstyled"/>
                             </div>
-                            <div id="instrumentation_suggestion_menu" style="padding-left:120px"ss></div>
+                            <div id="instrumentation_suggestion_menu" style="padding-left:120px"></div>
                         </div>
                     </div>
+                </div>
+                <hr>
+                <div class="text-right">
+                    <button type='button' id='nexttab2' name='piece-submit' class='btn btn-success'>Next<span class='glyphicon glyphicon-chevron-right'></span></button>
                 </div>
             </div>
 
@@ -318,6 +309,10 @@ $(document).ready(function($)
                     Acceptable file types are .zip, .pdf, and .mtxt. Individual movements can be defined below.
                 </span>
                 <input name="piece_att_files" id="piece_att_files" type="file" multiple="multiple" value=""/>
+                <hr>
+                <div class="text-right">
+                    <button type='button' id='nexttab3' name='piece-submit' class='btn btn-success'>Next<span class='glyphicon glyphicon-chevron-right'></span></button>
+                </div>
             </div>
 
             <div id="movements" class="tab-pane fade">
@@ -349,12 +344,13 @@ $(document).ready(function($)
                         </tbody>
                 </table>
                 <div><button id="new_mov" type="button" class="btn btn-default" >Add Movement</button></div>
+                <hr>
+                <div class="text-right">
+                    <button type='submit' id='nexttab' name='piece-submit' class='btn btn-success'>Submit<span class='glyphicon glyphicon-chevron-right'></span></button>
+                </div>
             </div>
         </div>
         <br>
-        <div id="next-submit">
-            <button type="button" id="nexttab" name="piece-submit" class="btn btn-success pull-right move">Next<span class="glyphicon glyphicon-chevron-right"></span></button>
-        </div>
     </form>
 </div>
 
