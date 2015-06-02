@@ -1,4 +1,4 @@
-import os, pytz
+import os,pytz
 from django.db import models
 from datetime import datetime
 from django.contrib.auth.models import User
@@ -80,11 +80,17 @@ def solr_index(sender, instance, created, **kwargs):
             'birth_date': composer_birth_date,
             'death_date': composer_death_date,
             'created': composer.created,
-            'updated': composer.updated,
+            'updated': datetime.now(pytz.utc),
             'composers_searchable': composer_name
     }
-    solrconn.add(**d) 
-    solrconn.commit() # update based on previous dictionary
+    solrconn.add(**d)
+
+    # Only commits the change if the file is more than a minute old. This is to prevent repeated commits and dictionary
+    # rebuilding on the solr server during piece creation.
+    c = datetime.now(pytz.utc) - composer.created
+    c = divmod(c.days * 86400 + c.seconds, 60)
+    if c[0] > 1:
+        solrconn.commit()
 
     #Update solr & attachments for all composed pieces/movements -- by resaving each piece/movement
 

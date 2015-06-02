@@ -66,11 +66,16 @@ def solr_index(sender, instance, created, **kwargs):
             'instruments_voices': instrument_voice_name,
             'instruments_voices_searchable': instrument_voice_name,
             'created': instrument_voice_created,
-            'updated': instrument_voice.updated,
+            'updated': datetime.now(pytz.utc),
             'comment': instrument_voice_comment,
     }
     solrconn.add(**d)
-    solrconn.commit()
+    # Only commits the change if the file is more than a minute old. This is to prevent repeated commits and dictionary
+    # rebuilding on the solr server during piece creation.
+    c = datetime.now(pytz.utc) - instrument_voice.created
+    c = divmod(c.days * 86400 + c.seconds, 60)
+    if c[0] > 1:
+        solrconn.commit()
 
 
 @receiver(post_delete, sender=InstrumentVoice)

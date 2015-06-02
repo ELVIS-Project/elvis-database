@@ -66,11 +66,16 @@ def solr_index(sender, instance, created, **kwargs):
             'languages': language_name,
             'languages_searchable': language_name,
             'created': language_created,
-            'updated': language.updated,
+            'updated': datetime.now(pytz.utc),
             'comment': language_comment,
     }
     solrconn.add(**d)
-    solrconn.commit()
+    # Only commits the change if the file is more than a minute old. This is to prevent repeated commits and dictionary
+    # rebuilding on the solr server during piece creation.
+    c = datetime.now(pytz.utc) - language.created
+    c = divmod(c.days * 86400 + c.seconds, 60)
+    if c[0] > 1:
+        solrconn.commit()
 
 
 @receiver(post_delete, sender=Language)

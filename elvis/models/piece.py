@@ -163,7 +163,7 @@ def solr_index(sender, instance, created, **kwargs):
          'number_of_voices': piece.number_of_voices,
          'comment': piece_comment,
          'created': piece_created,
-         'updated': piece.updated,
+         'updated': datetime.now(pytz.utc),
          'parent_collection_names': collections,
          'composer_name': composer_name,
          'uploader_name': uploader_name,
@@ -175,7 +175,12 @@ def solr_index(sender, instance, created, **kwargs):
          'sources': sources,
          'pieces_searchable': piece_title}
     solrconn.add(**d)
-    solrconn.commit()
+    # Only commits the change if the file is more than a minute old. This is to prevent repeated commits and dictionary
+    # rebuilding on the solr server during piece creation.
+    c = datetime.now(pytz.utc) - piece.created
+    c = divmod(c.days * 86400 + c.seconds, 60)
+    if c[0] > 1:
+        solrconn.commit()
 
 
 @receiver(pre_delete, sender=Piece)
