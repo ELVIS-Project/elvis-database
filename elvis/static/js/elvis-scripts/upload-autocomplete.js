@@ -16,7 +16,6 @@ function autocomplete(inputField, suggestionField, dictionary, multiple) {
     var menuSize = -1;
     var isInit = true;
     var gotResults = true;
-    var query = "";
     var selectedSuggestion;
     var $inputField = $("#" + inputField);
     var $suggestionMenu = $("#" + suggestionField);
