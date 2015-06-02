@@ -4,8 +4,10 @@
 <!-- The javascript function for the typeahead functionality on the fields. -->
 
 {% block extra_hd %}
-        <script type='text/javascript' src="{{ STATIC_URL }}js/elvis-scripts/upload-autocomplete.js"></script>
-        <script type='text/javascript' src="{{ STATIC_URL }}bootstrap/plugins/bootstrap-filestyle.js"></script>
+    <title>Create Piece</title>
+
+    <script type='text/javascript' src="{{ STATIC_URL }}js/elvis-scripts/upload-autocomplete.js"></script>
+    <script type='text/javascript' src="{{ STATIC_URL }}bootstrap/plugins/bootstrap-filestyle.js"></script>
 
 <script>
 $(document).ready(function($)
@@ -16,6 +18,8 @@ $(document).ready(function($)
     autocomplete("languages", "language_suggestion_menu", "languageSuggest", true);
     autocomplete("genres", "genre_suggestion_menu", "genreSuggest", true);
     autocomplete("locations", "location_suggestion_menu", "locationSuggest", true);
+    autocomplete("sources", "source_suggestion_menu", "sourceSuggest", true);
+    autocomplete("instrumentations", "instrumentation_suggestion_menu", "instrumentSuggest", true);
 
 
 
@@ -153,16 +157,15 @@ $(document).ready(function($)
                 which already exist in the database, and selecting one of these suggestions will add the piece
                 to the existing composers oeuvre.
                 </span>
-                <hr>
                 <div class="input-group">
-                  <span class="input-group-addon" id="basic-addon1">Title</span>
-                  <input type="text" id="title" name="title" autocomplete="off" class="form-control" placeholder="e.g. Ach Gott, vom Himmel sieh darein, BWV 2" aria-describedby="basic-addon1">
+                  <span class="input-group-addon">Title</span>
+                  <input type="text" id="title" name="title" autocomplete="off" class="form-control" placeholder="e.g. Ach Gott, vom Himmel sieh darein, BWV 2">
                 </div>
                 <div id="title_suggestion_menu" style="padding-left:120px"></div>
                 <br>
                 <div class="input-group">
-                    <span class="input-group-addon" id="basic-addon1">Composer</span>
-                    <input type="text" id="composer" autocomplete="off" name="composer" class="form-control" placeholder="e.g. Bach, Johann Sebastian" aria-describedby="basic-addon1">
+                    <span class="input-group-addon">Composer</span>
+                    <input type="text" id="composer" autocomplete="off" name="composer" class="form-control" placeholder="e.g. Bach, Johann Sebastian">
                 </div>
                 <div id="composer_suggestion_menu" style="padding-left:120px"></div>
                 <div id="composer-create-new-menu" style="padding-left:50px; padding-right:50px">
@@ -214,7 +217,7 @@ $(document).ready(function($)
                 </div>
                 <hr>
                 <div class="text-right">
-                    <button type='button' id='nexttab1' name='piece-submit' class='btn btn-success'>Next<span class='glyphicon glyphicon-chevron-right'></span></button>
+                    <button type='button' id='nexttab1'  class='btn btn-success'>Next<span class='glyphicon glyphicon-chevron-right'></span></button>
                 </div>
             </div>
 
@@ -229,8 +232,8 @@ $(document).ready(function($)
                     <div class="col-md-12">
                         <div class="form-group">
                             <div class="input-group">
-                                <span class="input-group-addon" id="basic-addon1">Collections</span>
-                                <input type="text" id="collection" name="collection" autocomplete="off" class="form-control" placeholder="e.g. Prof.Fujinaga's Collection; McGill Collection" aria-describedby="basic-addon1">
+                                <span class="input-group-addon">Collections</span>
+                                <input type="text" id="collection" name="collection" autocomplete="off" class="form-control" placeholder="e.g. Prof.Fujinaga's Collection; McGill Collection">
                             </div>
                             <div id="collection_suggestion_menu" style="padding-left:120px"></div>
                         </div>
@@ -297,7 +300,7 @@ $(document).ready(function($)
                 </div>
                 <hr>
                 <div class="text-right">
-                    <button type='button' id='nexttab2' name='piece-submit' class='btn btn-success'>Next<span class='glyphicon glyphicon-chevron-right'></span></button>
+                    <button type='button' id='nexttab2' class='btn btn-success'>Next<span class='glyphicon glyphicon-chevron-right'></span></button>
                 </div>
             </div>
 
@@ -311,7 +314,7 @@ $(document).ready(function($)
                 <input name="piece_att_files" id="piece_att_files" type="file" multiple="multiple" value=""/>
                 <hr>
                 <div class="text-right">
-                    <button type='button' id='nexttab3' name='piece-submit' class='btn btn-success'>Next<span class='glyphicon glyphicon-chevron-right'></span></button>
+                    <button type='button' id='nexttab3'class='btn btn-success'>Next<span class='glyphicon glyphicon-chevron-right'></span></button>
                 </div>
             </div>
 
@@ -338,7 +341,7 @@ $(document).ready(function($)
                         <tr id='mov1'>
                             <td class="text-center"><button id="del_mov1" type="button" tabindex="-1" class="btn btn-default">-</button></td>
                             <td class="text-center" style="padding-top:14px">1</td>
-                            <td><input name='mv_title_1' id="mov_title1" placeholder="The First Movement" class='form-control' autocomplete="off"></td>
+                            <td><input name='mv_title_1' id="mov_title1" class='form-control' autocomplete="off"></td>
                             <td><input name='mv_files_1' id='mov_files1' type='file' multiple='multiple' value=""></td>
                         </tr>
                         </tbody>
