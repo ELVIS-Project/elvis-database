@@ -186,19 +186,6 @@ def solr_index(sender, instance, created, **kwargs):
     solrconn.add(**d)
     solrconn.commit()
 
-    # Rename attachments accordingly
-    #try:
-    #    composer_last_name = movement.composer.name.split(',', 1)[0]
-    #except ValueError as v:
-    #    composer_last_name = movement.composer.name.split(' ', 1)[0]
-    #if movement.piece:
-    #    piece_title_short = ''.join(movement.piece.title.split()[:4])
-    #else:
-    #    piece_title_short = ''
-    #movement_title_short = ''.join(movement.title.split()[:1])
-    #attachment_name =  "_".join([composer_last_name, piece_title_short, movement_title_short])
-    #for attachment in movement.attachments.all():
-    #    attachment.rename(new_filename=attachment_name)
 
 @receiver(pre_delete, sender=Movement)
 def attachment_delete(sender, instance, **kwargs):

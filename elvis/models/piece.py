@@ -154,40 +154,29 @@ def solr_index(sender, instance, created, **kwargs):
             except UnicodeDecodeError:
                 collections.append(collection.title.decode('utf-8'))
 
-    d = {
-            'type': 'elvis_piece',
-            'id': str(uuid.uuid4()),
-            'item_id': int(piece.id),
-            'title': piece_title,
-            'date_of_composition': piece.date_of_composition,
-            'date_of_composition2': piece.date_of_composition2,
-            'number_of_voices': piece.number_of_voices,
-            'comment': piece_comment,
-            'created': piece_created,
-            'updated': piece.updated,
-            'parent_collection_names': collections,
-            'composer_name': composer_name,
-            'uploader_name': uploader_name,
-            'tags': tags,
-            'genres': genres,
-            'instruments_voices': instruments_voices,
-            'languages': languages,
-            'locations': locations,
-            'sources': sources,
-            'pieces_searchable': piece_title
-            }
+    d = {'type': 'elvis_piece',
+         'id': str(uuid.uuid4()),
+         'item_id': int(piece.id),
+         'title': piece_title,
+         'date_of_composition': piece.date_of_composition,
+         'date_of_composition2': piece.date_of_composition2,
+         'number_of_voices': piece.number_of_voices,
+         'comment': piece_comment,
+         'created': piece_created,
+         'updated': piece.updated,
+         'parent_collection_names': collections,
+         'composer_name': composer_name,
+         'uploader_name': uploader_name,
+         'tags': tags,
+         'genres': genres,
+         'instruments_voices': instruments_voices,
+         'languages': languages,
+         'locations': locations,
+         'sources': sources,
+         'pieces_searchable': piece_title}
     solrconn.add(**d)
     solrconn.commit()
 
-    # Rename attachments accordingly
-    #try:
-    #    composer_last_name = piece.composer.name.split(',', 1)[0]
-    #except ValueError as v:
-    #    composer_last_name = piece.composer.name.split(' ', 1)[0]
-    #piece_title_short = ''.join(piece.title.split()[:6])
-    #attachment_name = "_".join([composer_last_name, piece_title_short])
-    #for attachment in piece.attachments.all():
-    #    attachment.rename(new_filename=attachment_name)
 
 @receiver(pre_delete, sender=Piece)
 def attachment_delete(sender, instance, **kwargs):
