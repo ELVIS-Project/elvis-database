@@ -14,7 +14,6 @@ import shutil
 from elvis.renderers.custom_html_renderer import CustomHTMLRenderer
 from elvis.serializers.piece import PieceSerializer
 from elvis.models.piece import Piece
-from elvis.models import Composer
 from elvis.forms import PieceForm
 
 from elvis.views.views import handle_attachments, handle_movements, abstract_model_handler
@@ -78,10 +77,8 @@ class PieceList(generics.ListCreateAPIView):
         if not form.is_valid():
             return Response(status=status.HTTP_400_BAD_REQUEST)
 
-        created = []
-
+        clean = Cleanup()
         clean_form = form.cleaned_data
-
         new_piece = Piece(title=clean_form['title'],
                           date_of_composition=clean_form['composition_start_date'],
                           date_of_composition2=clean_form['composition_end_date'],
@@ -90,57 +87,56 @@ class PieceList(generics.ListCreateAPIView):
                           created=datetime.datetime.now(),
                           updated=datetime.datetime.now())
         new_piece.save()
-        created.append(new_piece)
+        clean.list.append(new_piece)
 
         try:
-            composer_list = abstract_model_handler(clean_form['composer'], "Composer",
+            composer_list = abstract_model_handler(clean_form['composer'], "Composer", clean,
                                                    birth_date=clean_form['composer_birth_date'],
                                                    death_date=clean_form['composer_death_date'])
-            composer = composer_list[0]['model']
-            if composer_list[0]['new']:
-                created.append(composer)
+            composer = composer_list[0]
+            new_piece.composer = composer
         except:
-            cleanup(created)
+            clean.cleanup()
             raise
 
         try:
             if clean_form['collections']:
-                collection_list = abstract_model_handler(clean_form['collections'], "Collection", is_public=True, creator=request.user)
+                collection_list = abstract_model_handler(clean_form['collections'], "Collection", clean, is_public=True, creator=request.user)
                 for x in collection_list:
-                    new_piece.collections.add(x['model'])
-                    if x['new']:
-                        created.append(x['model'])
+                    new_piece.collections.add(x)
         except:
-            cleanup(created)
+            clean.cleanup()
             raise
 
         try:
             if clean_form['languages']:
-                language_list = abstract_model_handler(clean_form['languages'], "Language")
+                language_list = abstract_model_handler(clean_form['languages'], "Language", clean)
                 for x in language_list:
-                    new_piece.languages.add(x['model'])
-                    if x['new']:
-                        created.append(x['model'])
+                    new_piece.languages.add(x)
         except:
-            cleanup(created)
+            clean.cleanup()
             raise
+
         try:
-            attachments = handle_attachments(request, new_piece)
-            created.extend(attachments)
+            handle_attachments(request, new_piece, clean)
         except:
-            cleanup(created)
+            clean.cleanup()
             raise
+
         try:
-            movements = handle_movements(request, new_piece)
-            created.extend(movements)
+            handle_movements(request, new_piece, clean)
         except:
-            cleanup(created)
+            clean.cleanup()
             raise
 
-        return HttpResponseRedirect("http://localhost:8000/new_piece/{0}".format(new_piece.id))
+        pdb.set_trace()
+        return HttpResponseRedirect("http://localhost:8000/piece/{0}".format(new_piece.id))
 
 
-def cleanup(createdList):
-    for item in createdList:
-        item.delete()
+class Cleanup:
+    def __init__(self):
+        self.list = []
 
+    def cleanup(self):
+        for x in self.list:
+            x.delete()

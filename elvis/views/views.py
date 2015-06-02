@@ -106,7 +106,7 @@ def unzip_file(file_dir, file_name, **kwargs):
 
 # Takes the request.FILES and uploads them, processes them, then creates attachments and adds them to parents
 # attachment field.
-def handle_attachments(request, parent, **kwargs):
+def handle_attachments(request, parent, cleanup, **kwargs):
     results = []
 
     if 'file_name' in kwargs:
@@ -117,6 +117,7 @@ def handle_attachments(request, parent, **kwargs):
     for f in files:
         att = Attachment(description="TESTING")
         att.save()  # needed to create hash dir.
+        cleanup.list.append(att)
         att.uploader = request.user
 
         new_name = "{0}_{1}.{2}".format(parent.title.replace(" ", "-"),
@@ -141,7 +142,7 @@ def handle_attachments(request, parent, **kwargs):
 
 # Creates the movements in the request and attaches them to their parent.
 # Returns a list of movements and attachments that have been created.
-def handle_movements(request, parent):
+def handle_movements(request, parent, cleanup):
     results = []
     attachments = []
     movements = {}
@@ -164,7 +165,8 @@ def handle_movements(request, parent):
                           piece=parent,
                           comment="TESTING")
         new_mv.save()
-        attachments.extend(handle_attachments(request, new_mv, file_name="mv_files_" + movements[k][1], parent_type='movement'))
+        cleanup.list.append(new_mv)
+        attachments.extend(handle_attachments(request, new_mv, cleanup, file_name="mv_files_" + movements[k][1], parent_type='movement'))
         new_mv.save()
         results.append(new_mv)
         i += 1
@@ -277,12 +279,3 @@ def abstract_model_handler(model_name, model_type, cleanup, **kwargs):
                     cleanup.list.append(instrument)
             instrument_list.append(instrument)
         return instrument_list
-
-
-class Cleanup:
-    def __init__(self):
-        self.list = []
-
-    def cleanup(self):
-        for x in self.list:
-            x.delete()
