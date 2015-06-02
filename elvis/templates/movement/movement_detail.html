@@ -1,5 +1,9 @@
 {% extends "base.html" %}
 
+{% block extra_hd %}
+<title>{{ content.title }}</title>
+{% endblock %}
+
 {% block wrap %}
 <div class="row">
     <h2>{{ content.title }}</h2>

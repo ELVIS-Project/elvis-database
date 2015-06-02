@@ -1,5 +1,9 @@
 {% extends "base.html" %}
 
+{% block extra_hd %}
+<title>{{ content.title }}</title>
+{% endblock %}
+
 {% block wrap %}
 <div class="row">
     <div class="page-header"><h2>{{ content.title }} <small>{{ content.pieces | length }} Pieces, {{ content.movements | length }} Movements</small></h2> </div>
