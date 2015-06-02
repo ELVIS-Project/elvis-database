@@ -79,7 +79,7 @@
     <field name="name_general" type="text_general" indexed="true" stored="true" multiValued="true"/>
     <field name="name_sort" type="string" indexed="true" stored="true"/>
 
-    <!-- Field-fields -->
+    <!-- Tag/Model fields and searchable fields -->
     <field name="genres" type="string" indexed="true" stored="true" multiValued="true"/>
     <field name="genres_searchable" type="text_general" indexed="true" stored="true" multiValued="true"/>
     <field name="instruments_voices" type="string" indexed="true" stored="true" multiValued="true" />
@@ -90,7 +90,10 @@
     <field name="locations_searchable" type="text_general" indexed="true" stored="true" multiValued="true"/>
     <field name="sources" type="string" indexed="true" stored="true" multiValued="true"/>
     <field name="sources_searchable" type="text_general" indexed="true" stored="true" multiValued="true"/>
-     
+    <field name="pieces_searchable" type="string" indexed="true" stored="true"/>
+    <field name="composers_searchable" type="string" indexed="true" stored="true"/>
+    <field name="collections_searchable" type="string" indexed="true" stored="true"/>
+
     <!-- LM Date fields -->
     <field name="created" type="date" indexed="true" stored="true" />
     <field name="updated" type="date" indexed="true" stored="true" />

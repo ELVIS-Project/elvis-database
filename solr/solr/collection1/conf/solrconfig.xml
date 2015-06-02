@@ -1330,11 +1330,11 @@
         <str name="lookupImpl">AnalyzingInfixLookupFactory</str>
         <str name="indexPath">suggestions/composerSuggest_dict</str>
         <str name="dictionaryImpl">DocumentDictionaryFactory</str>
-        <str name="field">composer_suggestions</str>
+        <str name="field">composers_searchable</str>
         <str name="weightField">price</str>
         <str name="suggestAnalyzerFieldType">suggestTypeLc</str>
         <str name="buildOnStartup">true</str>
-        <str name="buildOnCommit">true</str>
+        <str name="buildOnCommit">false</str>
         <str name="highlight">false</str>
     </lst>
     <lst name="suggester">
@@ -1342,11 +1342,11 @@
         <str name="lookupImpl">AnalyzingInfixLookupFactory</str>
         <str name="indexPath">suggestions/pieceSuggest_dict</str>
         <str name="dictionaryImpl">DocumentDictionaryFactory</str>
-        <str name="field">piece_suggestions</str>
+        <str name="field">pieces_searchable</str>
         <str name="weightField">price</str>
         <str name="suggestAnalyzerFieldType">suggestTypeLc</str>
         <str name="buildOnStartup">true</str>
-        <str name="buildOnCommit">true</str>
+        <str name="buildOnCommit">false</str>
         <str name="highlight">false</str>
     </lst>
     <lst name="suggester">
@@ -1354,11 +1354,11 @@
         <str name="lookupImpl">AnalyzingInfixLookupFactory</str>
         <str name="indexPath">suggestions/collectionSuggest_dict</str>
         <str name="dictionaryImpl">DocumentDictionaryFactory</str>
-        <str name="field">collection_suggestions</str>
+        <str name="field">collections_searchable</str>
         <str name="weightField">price</str>
         <str name="suggestAnalyzerFieldType">suggestTypeLc</str>
         <str name="buildOnStartup">true</str>
-        <str name="buildOnCommit">true</str>
+        <str name="buildOnCommit">false</str>
         <str name="highlight">false</str>
     </lst>
     <lst name="suggester">
@@ -1370,7 +1370,7 @@
         <str name="weightField">price</str>
         <str name="suggestAnalyzerFieldType">suggestTypeLc</str>
         <str name="buildOnStartup">true</str>
-        <str name="buildOnCommit">true</str>
+        <str name="buildOnCommit">false</str>
         <str name="highlight">false</str>
     </lst>
     <lst name="suggester">
@@ -1382,7 +1382,43 @@
         <str name="weightField">price</str>
         <str name="suggestAnalyzerFieldType">suggestTypeLc</str>
         <str name="buildOnStartup">true</str>
-        <str name="buildOnCommit">true</str>
+        <str name="buildOnCommit">false</str>
+        <str name="highlight">false</str>
+    </lst>
+    <lst name="suggester">
+        <str name="name">locationSuggest</str>
+        <str name="lookupImpl">AnalyzingInfixLookupFactory</str>
+        <str name="indexPath">suggestions/locationSuggest_dict</str>
+        <str name="dictionaryImpl">DocumentDictionaryFactory</str>
+        <str name="field">locations_searchable</str>
+        <str name="weightField">price</str>
+        <str name="suggestAnalyzerFieldType">suggestTypeLc</str>
+        <str name="buildOnStartup">true</str>
+        <str name="buildOnCommit">false</str>
+        <str name="highlight">false</str>
+    </lst>
+    <lst name="suggester">
+        <str name="name">sourceSuggest</str>
+        <str name="lookupImpl">AnalyzingInfixLookupFactory</str>
+        <str name="indexPath">suggestions/sourceSuggest_dict</str>
+        <str name="dictionaryImpl">DocumentDictionaryFactory</str>
+        <str name="field">sources_searchable</str>
+        <str name="weightField">price</str>
+        <str name="suggestAnalyzerFieldType">suggestTypeLc</str>
+        <str name="buildOnStartup">true</str>
+        <str name="buildOnCommit">false</str>
+        <str name="highlight">false</str>
+    </lst>
+    <lst name="suggester">
+        <str name="name">instrumentSuggest</str>
+        <str name="lookupImpl">AnalyzingInfixLookupFactory</str>
+        <str name="indexPath">suggestions/instrumentSuggest_dict</str>
+        <str name="dictionaryImpl">DocumentDictionaryFactory</str>
+        <str name="field">instruments_voices_searchable</str>
+        <str name="weightField">price</str>
+        <str name="suggestAnalyzerFieldType">suggestTypeLc</str>
+        <str name="buildOnStartup">true</str>
+        <str name="buildOnCommit">false</str>
         <str name="highlight">false</str>
     </lst>
  </searchComponent>
