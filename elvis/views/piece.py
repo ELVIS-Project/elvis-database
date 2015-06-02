@@ -4,7 +4,7 @@ from django.contrib.auth.models import User
 from rest_framework import generics
 from rest_framework import status
 from rest_framework import permissions
-import datetime
+import datetime, pytz
 from django.shortcuts import render
 from rest_framework.renderers import JSONRenderer
 from rest_framework.response import Response
@@ -17,6 +17,7 @@ from elvis.models.piece import Piece
 from elvis.forms import PieceForm
 
 from elvis.views.views import handle_attachments, handle_movements, abstract_model_handler
+from elvis import settings
 from django.utils.decorators import method_decorator
 from django.http import HttpResponseRedirect
 
@@ -70,12 +71,16 @@ class PieceList(generics.ListCreateAPIView):
         return self.create(request, *args, **kwargs)
 
     def create(self, request, *args, **kwargs):
+
         if not request.user.is_active:
             return Response(status=status.HTTP_401_UNAUTHORIZED)
 
         form = PieceForm(request.POST)
         if not form.is_valid():
             return Response(status=status.HTTP_400_BAD_REQUEST)
+
+        import solr
+        solrconn = solr.SolrConnection(settings.SOLR_SERVER)
 
         clean = Cleanup()
         clean_form = form.cleaned_data
@@ -84,8 +89,8 @@ class PieceList(generics.ListCreateAPIView):
                           date_of_composition2=clean_form['composition_end_date'],
                           number_of_voices=clean_form['number_of_voices'],
                           uploader=request.user,
-                          created=datetime.datetime.now(),
-                          updated=datetime.datetime.now())
+                          created=datetime.datetime.now(pytz.utc),
+                          updated=datetime.datetime.now(pytz.utc))
         new_piece.save()
         clean.list.append(new_piece)
 
@@ -130,6 +135,7 @@ class PieceList(generics.ListCreateAPIView):
             raise
 
         pdb.set_trace()
+        solrconn.commit()
         return HttpResponseRedirect("http://localhost:8000/piece/{0}".format(new_piece.id))
 
 
