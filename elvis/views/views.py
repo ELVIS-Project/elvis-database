@@ -174,16 +174,15 @@ def handle_movements(request, parent):
 
 
 # Queries the database for the model. If the model does not exist, the method creates
-# a new one with the given name. Returns a list of dicts with the models and a bool specifying
-# if the model was created or found.
-def abstract_model_handler(model_name, model_type, **kwargs):
+# a new one with the given name. Also works for semicolon seperated lists. If given a Cleanup object, it will append
+# all newly created models to the objects list so they can be deleted if there is a problem later in the process.
+# Returns a list of the models which were found/created.
+def abstract_model_handler(model_name, model_type, cleanup, **kwargs):
 
     if model_type == "Composer":
         composer_list = []
         try:
             composer = Composer.objects.get(name=model_name)
-            composer_list.append({'model': composer, 'new': False})
-            return composer_list
         except ObjectDoesNotExist:
             composer = Composer(name=model_name,
                                 birth_date=kwargs.get('birth_date'),
@@ -191,8 +190,11 @@ def abstract_model_handler(model_name, model_type, **kwargs):
                                 created=datetime.datetime.now(),
                                 updated=datetime.datetime.now())
             composer.save()
-            composer_list.append({'model': composer, 'new': True})
-            return composer_list
+            if cleanup is not None:
+                cleanup.list.append(composer)
+
+        composer_list.append(composer)
+        return composer_list
 
     if model_type == "Collection":
         tokenized_inputs = map((lambda x: x.strip()), model_name.rsplit(";"))
@@ -200,7 +202,6 @@ def abstract_model_handler(model_name, model_type, **kwargs):
         for token in tokenized_inputs:
             try:
                 collection = Collection.objects.get(title=token)
-                collection_list.append({'model': collection, 'new': False})
             except ObjectDoesNotExist:
                 collection = Collection(title=token,
                                         public=kwargs.get('is_public'),
@@ -208,7 +209,9 @@ def abstract_model_handler(model_name, model_type, **kwargs):
                                         created=datetime.datetime.now(),
                                         updated=datetime.datetime.now())
                 collection.save()
-                collection_list.append({'model': collection, 'new': True})
+                if cleanup is not None:
+                    cleanup.list.append(collection)
+            collection_list.append(collection)
         return collection_list
 
     if model_type == "Language":
@@ -217,13 +220,14 @@ def abstract_model_handler(model_name, model_type, **kwargs):
         for token in tokenized_inputs:
             try:
                 language = Language.objects.get(name=token)
-                language_list.append({'model': language, 'new': False})
             except ObjectDoesNotExist:
                 language = Language(name=token,
                                     created=datetime.datetime.now(),
                                     updated=datetime.datetime.now())
                 language.save()
-                language_list.append({'model': language, 'new': True})
+                if cleanup is not None:
+                    cleanup.list.append(language)
+            language_list.append(language)
         return language_list
 
     if model_type == "Location":
@@ -232,13 +236,14 @@ def abstract_model_handler(model_name, model_type, **kwargs):
         for token in tokenized_inputs:
             try:
                 location = Location.objects.get(name=token)
-                location_list.append({'model': location, 'new': False})
             except ObjectDoesNotExist:
                 location = Location(name=token,
                                     created=datetime.datetime.now(),
                                     updated=datetime.datetime.now())
                 location.save()
-                location_list.append({'model': location, 'new': True})
+                if cleanup is not None:
+                    cleanup.list.append(location)
+            location_list.append(location)
         return location_list
 
     if model_type == "Source":
@@ -247,13 +252,14 @@ def abstract_model_handler(model_name, model_type, **kwargs):
         for token in tokenized_inputs:
             try:
                 source = Source.objects.get(name=token)
-                source_list.append({'model': source, 'new': False})
             except ObjectDoesNotExist:
-                location = source(name=token,
+                source = Source(name=token,
                                   created=datetime.datetime.now(),
                                   updated=datetime.datetime.now())
                 source.save()
-                source_list.append({'model': source, 'new': True})
+                if cleanup is not None:
+                    cleanup.list.append(source)
+            source_list.append(source)
         return source_list
 
     if model_type == "InstrumentVoice":
@@ -262,11 +268,21 @@ def abstract_model_handler(model_name, model_type, **kwargs):
         for token in tokenized_inputs:
             try:
                 instrument = InstrumentVoice.objects.get(name=token)
-                instrument_list.append({'model': instrument, 'new': False})
             except ObjectDoesNotExist:
                 instrument = InstrumentVoice(name=token,
                                              created=datetime.datetime.now(),
                                              updated=datetime.datetime.now())
                 instrument.save()
-                instrument_list.append({'model': instrument, 'new': True})
+                if cleanup is not None:
+                    cleanup.list.append(instrument)
+            instrument_list.append(instrument)
         return instrument_list
+
+
+class Cleanup:
+    def __init__(self):
+        self.list = []
+
+    def cleanup(self):
+        for x in self.list:
+            x.delete()
