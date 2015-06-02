@@ -60,7 +60,10 @@ $(document).ready(function($)
 
     $composerInput.on("keydown", function(event)
     {
-        $newComposerMenu.slideUp("slow");
+        if (event['keyCode'] !== 13)
+        {
+            $newComposerMenu.slideUp("slow");
+        }
     });
 
 
@@ -119,6 +122,7 @@ $(document).ready(function($)
     //The next buttons on the tabs
     $("[id^=nexttab]").on("click", function()
     {
+        event.preventDefault();
         $('#upload-tabs').children().filter('.active').next('li').find('a[data-toggle="tab"]').tab('show');
     });
 
