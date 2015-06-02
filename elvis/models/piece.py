@@ -2,6 +2,7 @@ from django.db import models
 from django.contrib.auth.models import User
 from datetime import datetime
 import pytz
+import pdb
 
 #django signal handlers
 from django.dispatch import receiver
@@ -74,7 +75,7 @@ def solr_index(sender, instance, created, **kwargs):
     import solr
 
     solrconn = solr.SolrConnection(settings.SOLR_SERVER)
-    record = solrconn.query("type:elvis_piece item_id:{0}".format(instance.id))
+    record = solrconn.query("item_id:{0}".format(instance.id))
     if record:
         solrconn.delete(record.results[0]['id'])
 
@@ -173,7 +174,7 @@ def solr_index(sender, instance, created, **kwargs):
             'languages': languages,
             'locations': locations,
             'sources': sources,
-            'piece_suggestions': piece_title
+            'pieces_searchable': piece_title
             }
     solrconn.add(**d)
     solrconn.commit()
@@ -198,7 +199,7 @@ def solr_delete(sender, instance, **kwargs):
     from django.conf import settings
     import solr
     solrconn = solr.SolrConnection(settings.SOLR_SERVER)
-    record = solrconn.query("type:elvis_piece item_id:{0}".format(instance.id))
+    record = solrconn.query("item_id:{0}".format(instance.id))
     if record:
         # the record already exists, so we'll remove it.
         solrconn.delete(record.results[0]['id'])

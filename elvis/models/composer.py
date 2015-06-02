@@ -38,7 +38,7 @@ def solr_index(sender, instance, created, **kwargs):
     import solr
 
     solrconn = solr.SolrConnection(settings.SOLR_SERVER)   # connect to solr server
-    record = solrconn.query("type:elvis_composer item_id:{0}".format(instance.id)) # search for any previous entries of instance
+    record = solrconn.query("item_id:{0}".format(instance.id)) # search for any previous entries of instance
     if record:
         # the record already exists, so we'll remove it first.
         solrconn.delete(record.results[0]['id'])
@@ -81,7 +81,7 @@ def solr_index(sender, instance, created, **kwargs):
             'death_date': composer_death_date,
             'created': composer.created,
             'updated': composer.updated,
-            'composer_suggestions': composer_name
+            'composers_searchable': composer_name
     }
     solrconn.add(**d) 
     solrconn.commit() # update based on previous dictionary
@@ -94,7 +94,7 @@ def solr_delete(sender, instance, **kwargs):
     from django.conf import settings
     import solr
     solrconn = solr.SolrConnection(settings.SOLR_SERVER)
-    record = solrconn.query("type:elvis_composer item_id:{0}".format(instance.id))
+    record = solrconn.query("item_id:{0}".format(instance.id))
     if record:
         # the record already exists, so we'll remove it.
         solrconn.delete(record.results[0]['id'])

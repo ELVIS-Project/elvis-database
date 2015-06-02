@@ -30,7 +30,7 @@ def solr_index(sender, instance, created, **kwargs):
     import solr
 
     solrconn = solr.SolrConnection(settings.SOLR_SERVER)
-    record = solrconn.query("type:elvis_genre item_id:{0}".format(instance.id))
+    record = solrconn.query("item_id:{0}".format(instance.id))
     if record:
         # the record already exists, so we'll remove it first.
         solrconn.delete(record.results[0]['id'])
@@ -63,6 +63,7 @@ def solr_index(sender, instance, created, **kwargs):
             'id': str(uuid.uuid4()),
             'item_id': int(genre.id),
             'name': genre_name,
+            'genres_searchable': genre_name,
             'genres': genre_name,
             'created': genre_created,
             'updated': genre.updated,
@@ -77,7 +78,7 @@ def solr_delete(sender, instance, **kwargs):
     from django.conf import settings
     import solr
     solrconn = solr.SolrConnection(settings.SOLR_SERVER)
-    record = solrconn.query("type:elvis_genre item_id:{0}".format(instance.id))
+    record = solrconn.query("item_id:{0}".format(instance.id))
     if record:
         # the record already exists, so we'll remove it.
         solrconn.delete(record.results[0]['id'])
