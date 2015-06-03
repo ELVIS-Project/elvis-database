@@ -8,12 +8,14 @@ from elvis.models import Collection
 from elvis.models import Language
 from elvis.models import Location
 from elvis.models import Source
+from elvis.models import Genre
 from elvis.models import InstrumentVoice
 from django.db.models import ObjectDoesNotExist
 from django.core.exceptions import MultipleObjectsReturned
 
 import json
 import urllib2
+import pytz
 import os
 import zipfile
 import datetime
@@ -117,7 +119,7 @@ def handle_attachments(request, parent, cleanup, **kwargs):
     for f in files:
         att = Attachment(description="TESTING")
         att.save()  # needed to create hash dir.
-        cleanup.list.append(att)
+        cleanup.list.append({"model": att, "new": True})
         att.uploader = request.user
 
         new_name = "{0}_{1}.{2}".format(parent.title.replace(" ", "-"),
@@ -135,7 +137,7 @@ def handle_attachments(request, parent, cleanup, **kwargs):
     for att in results:
         parent.attachments.add(att)
 
-    parent.save()
+    parent.save(commit=False)
 
     return results
 
@@ -164,10 +166,10 @@ def handle_movements(request, parent, cleanup):
                           composer=parent.composer,
                           piece=parent,
                           comment="TESTING")
-        new_mv.save()
-        cleanup.list.append(new_mv)
+        new_mv.save(commit=False)
+        cleanup.list.append({"model": new_mv, "new": True})
         attachments.extend(handle_attachments(request, new_mv, cleanup, file_name="mv_files_" + movements[k][1], parent_type='movement'))
-        new_mv.save()
+        new_mv.save(commit=False)
         results.append(new_mv)
         i += 1
 
@@ -185,15 +187,15 @@ def abstract_model_handler(model_name, model_type, cleanup, **kwargs):
         composer_list = []
         try:
             composer = Composer.objects.get(name=model_name)
+            cleanup.list.append({"model": composer, "new": False})
         except ObjectDoesNotExist:
             composer = Composer(name=model_name,
                                 birth_date=kwargs.get('birth_date'),
                                 death_date=kwargs.get('death_date'),
-                                created=datetime.datetime.now(),
-                                updated=datetime.datetime.now())
-            composer.save()
-            if cleanup is not None:
-                cleanup.list.append(composer)
+                                created=datetime.datetime.now(pytz.utc),
+                                updated=datetime.datetime.now(pytz.utc))
+            composer.save(commit=False)
+            cleanup.list.append({"model": composer, "new": True})
 
         composer_list.append(composer)
         return composer_list
@@ -202,80 +204,102 @@ def abstract_model_handler(model_name, model_type, cleanup, **kwargs):
         tokenized_inputs = map((lambda x: x.strip()), model_name.rsplit(";"))
         collection_list = []
         for token in tokenized_inputs:
-            try:
-                collection = Collection.objects.get(title=token)
-            except ObjectDoesNotExist:
-                collection = Collection(title=token,
-                                        public=kwargs.get('is_public'),
-                                        creator=kwargs.get('creator'),
-                                        created=datetime.datetime.now(),
-                                        updated=datetime.datetime.now())
-                collection.save()
-                if cleanup is not None:
-                    cleanup.list.append(collection)
-            collection_list.append(collection)
+            if token != "":
+                try:
+                    collection = Collection.objects.get(title=token)
+                    cleanup.list.append({"model": collection, "new": False})
+                except ObjectDoesNotExist:
+                    collection = Collection(title=token,
+                                            public=kwargs.get('is_public'),
+                                            creator=kwargs.get('creator'),
+                                            created=datetime.datetime.now(pytz.utc),
+                                            updated=datetime.datetime.now(pytz.utc))
+                    collection.save(commit=False)
+                    cleanup.list.append({"model": collection, "new": True})
+                collection_list.append(collection)
         return collection_list
 
     if model_type == "Language":
         tokenized_inputs = map((lambda x: x.strip()), model_name.rsplit(";"))
         language_list = []
         for token in tokenized_inputs:
-            try:
-                language = Language.objects.get(name=token)
-            except ObjectDoesNotExist:
-                language = Language(name=token,
-                                    created=datetime.datetime.now(),
-                                    updated=datetime.datetime.now())
-                language.save()
-                if cleanup is not None:
-                    cleanup.list.append(language)
-            language_list.append(language)
+            if token != "":
+                try:
+                    language = Language.objects.get(name=token)
+                    cleanup.list.append({"model": language, "new": False})
+                except ObjectDoesNotExist:
+                    language = Language(name=token,
+                                        created=datetime.datetime.now(pytz.utc),
+                                        updated=datetime.datetime.now(pytz.utc))
+                    language.save(commit=False)
+                    cleanup.list.append({"model": language, "new": True})
+                language_list.append(language)
         return language_list
+
+    if model_type == "Genre":
+        tokenized_inputs = map((lambda x: x.strip()), model_name.rsplit(";"))
+        genre_list = []
+        for token in tokenized_inputs:
+            if token != "":
+                try:
+                    genre = Genre.objects.get(name=token)
+                    cleanup.list.append({"model": genre, "new": False})
+                except ObjectDoesNotExist:
+                    genre = Genre(name=token,
+                                        created=datetime.datetime.now(pytz.utc),
+                                        updated=datetime.datetime.now(pytz.utc))
+                    genre.save(commit=False)
+                    cleanup.list.append({"model": genre, "new": True})
+                genre_list.append(genre)
+        return genre_list
 
     if model_type == "Location":
         tokenized_inputs = map((lambda x: x.strip()), model_name.rsplit(";"))
         location_list = []
         for token in tokenized_inputs:
-            try:
-                location = Location.objects.get(name=token)
-            except ObjectDoesNotExist:
-                location = Location(name=token,
-                                    created=datetime.datetime.now(),
-                                    updated=datetime.datetime.now())
-                location.save()
-                if cleanup is not None:
-                    cleanup.list.append(location)
-            location_list.append(location)
+            if token != "":
+                try:
+                    location = Location.objects.get(name=token)
+                    cleanup.list.append({"model": location, "new": False})
+                except ObjectDoesNotExist:
+                    location = Location(name=token,
+                                        created=datetime.datetime.now(pytz.utc),
+                                        updated=datetime.datetime.now(pytz.utc))
+                    location.save(commit=False)
+                    cleanup.list.append({"model": location, "new": True})
+                location_list.append(location)
         return location_list
 
     if model_type == "Source":
         tokenized_inputs = map((lambda x: x.strip()), model_name.rsplit(";"))
         source_list = []
         for token in tokenized_inputs:
-            try:
-                source = Source.objects.get(name=token)
-            except ObjectDoesNotExist:
-                source = Source(name=token,
-                                  created=datetime.datetime.now(),
-                                  updated=datetime.datetime.now())
-                source.save()
-                if cleanup is not None:
-                    cleanup.list.append(source)
-            source_list.append(source)
+            if token != "":
+                try:
+                    source = Source.objects.get(name=token)
+                    cleanup.list.append({"model": source, "new": False})
+                except ObjectDoesNotExist:
+                    source = Source(name=token,
+                                    created=datetime.datetime.now(pytz.utc),
+                                    updated=datetime.datetime.now(pytz.utc))
+                    source.save(commit=False)
+                    cleanup.list.append({"model": source, "new": True})
+                source_list.append(source)
         return source_list
 
     if model_type == "InstrumentVoice":
         tokenized_inputs = map((lambda x: x.strip()), model_name.rsplit(";"))
         instrument_list = []
         for token in tokenized_inputs:
-            try:
-                instrument = InstrumentVoice.objects.get(name=token)
-            except ObjectDoesNotExist:
-                instrument = InstrumentVoice(name=token,
-                                             created=datetime.datetime.now(),
-                                             updated=datetime.datetime.now())
-                instrument.save()
-                if cleanup is not None:
-                    cleanup.list.append(instrument)
-            instrument_list.append(instrument)
+            if token != "":
+                try:
+                    instrument = InstrumentVoice.objects.get(name=token)
+                    cleanup.list.append({"model": instrument, "new": False})
+                except ObjectDoesNotExist:
+                    instrument = InstrumentVoice(name=token,
+                                                 created=datetime.datetime.now(pytz.utc),
+                                                 updated=datetime.datetime.now(pytz.utc))
+                    instrument.save(commit=False)
+                    cleanup.list.append({"model": instrument, "new": True})
+                instrument_list.append(instrument)
         return instrument_list
