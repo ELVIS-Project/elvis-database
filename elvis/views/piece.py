@@ -79,20 +79,22 @@ class PieceList(generics.ListCreateAPIView):
         if not form.is_valid():
             return Response(status=status.HTTP_400_BAD_REQUEST)
 
-        import solr
-        solrconn = solr.SolrConnection(settings.SOLR_SERVER)
-
         clean = Cleanup()
         clean_form = form.cleaned_data
         new_piece = Piece(title=clean_form['title'],
                           date_of_composition=clean_form['composition_start_date'],
                           date_of_composition2=clean_form['composition_end_date'],
-                          number_of_voices=clean_form['number_of_voices'],
                           uploader=request.user,
                           created=datetime.datetime.now(pytz.utc),
                           updated=datetime.datetime.now(pytz.utc))
         new_piece.save()
         clean.list.append(new_piece)
+
+        if clean_form['number_of_voices']:
+            new_piece.number_of_voices = int(clean_form['number_of_voices'])
+
+        if clean_form['comment']:
+            new_piece.comment = clean_form['comment']
 
         try:
             composer_list = abstract_model_handler(clean_form['composer'], "Composer", clean,
@@ -134,7 +136,6 @@ class PieceList(generics.ListCreateAPIView):
             clean.cleanup()
             raise
 
-        pdb.set_trace()
         rebuild_suggester_dicts()
         return HttpResponseRedirect("http://localhost:8000/piece/{0}".format(new_piece.id))
 
