@@ -16,7 +16,7 @@ from elvis.serializers.piece import PieceSerializer
 from elvis.models.piece import Piece
 from elvis.forms import PieceForm
 
-from elvis.views.views import handle_attachments, handle_movements, abstract_model_handler
+from elvis.views.views import handle_attachments, handle_movements, abstract_model_handler, rebuild_suggester_dicts
 from elvis import settings
 from django.utils.decorators import method_decorator
 from django.http import HttpResponseRedirect
@@ -135,7 +135,7 @@ class PieceList(generics.ListCreateAPIView):
             raise
 
         pdb.set_trace()
-        solrconn.commit()
+        rebuild_suggester_dicts()
         return HttpResponseRedirect("http://localhost:8000/piece/{0}".format(new_piece.id))
 
 

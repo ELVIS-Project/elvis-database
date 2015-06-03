@@ -303,3 +303,8 @@ def abstract_model_handler(model_name, model_type, cleanup, **kwargs):
                     cleanup.list.append({"model": instrument, "new": True})
                 instrument_list.append(instrument)
         return instrument_list
+
+
+def rebuild_suggester_dicts():
+    for d in settings.SUGGEST_DICTS:
+        urllib2.urlopen(settings.SOLR_SERVER + "/suggest/?suggest.dictionary={0}&suggest.reload=true".format(d))
