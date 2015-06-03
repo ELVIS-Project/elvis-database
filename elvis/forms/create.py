@@ -19,6 +19,7 @@ class PieceForm(forms.Form):
     locations = forms.CharField(required=False)
     sources = forms.CharField(required=False)
     instrument_voices = forms.CharField(required=False)
+    comment = forms.CharField(required=False)
 
 
 
