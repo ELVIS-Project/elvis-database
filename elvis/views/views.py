@@ -137,7 +137,7 @@ def handle_attachments(request, parent, cleanup, **kwargs):
     for att in results:
         parent.attachments.add(att)
 
-    parent.save(commit=False)
+    parent.save()
 
     return results
 
@@ -166,10 +166,10 @@ def handle_movements(request, parent, cleanup):
                           composer=parent.composer,
                           piece=parent,
                           comment="TESTING")
-        new_mv.save(commit=False)
+        new_mv.save()
         cleanup.list.append({"model": new_mv, "new": True})
         attachments.extend(handle_attachments(request, new_mv, cleanup, file_name="mv_files_" + movements[k][1], parent_type='movement'))
-        new_mv.save(commit=False)
+        new_mv.save()
         results.append(new_mv)
         i += 1
 
@@ -194,7 +194,7 @@ def abstract_model_handler(model_name, model_type, cleanup, **kwargs):
                                 death_date=kwargs.get('death_date'),
                                 created=datetime.datetime.now(pytz.utc),
                                 updated=datetime.datetime.now(pytz.utc))
-            composer.save(commit=False)
+            composer.save()
             cleanup.list.append({"model": composer, "new": True})
 
         composer_list.append(composer)
@@ -214,7 +214,7 @@ def abstract_model_handler(model_name, model_type, cleanup, **kwargs):
                                             creator=kwargs.get('creator'),
                                             created=datetime.datetime.now(pytz.utc),
                                             updated=datetime.datetime.now(pytz.utc))
-                    collection.save(commit=False)
+                    collection.save()
                     cleanup.list.append({"model": collection, "new": True})
                 collection_list.append(collection)
         return collection_list
@@ -231,7 +231,7 @@ def abstract_model_handler(model_name, model_type, cleanup, **kwargs):
                     language = Language(name=token,
                                         created=datetime.datetime.now(pytz.utc),
                                         updated=datetime.datetime.now(pytz.utc))
-                    language.save(commit=False)
+                    language.save()
                     cleanup.list.append({"model": language, "new": True})
                 language_list.append(language)
         return language_list
@@ -248,7 +248,7 @@ def abstract_model_handler(model_name, model_type, cleanup, **kwargs):
                     genre = Genre(name=token,
                                         created=datetime.datetime.now(pytz.utc),
                                         updated=datetime.datetime.now(pytz.utc))
-                    genre.save(commit=False)
+                    genre.save()
                     cleanup.list.append({"model": genre, "new": True})
                 genre_list.append(genre)
         return genre_list
@@ -265,7 +265,7 @@ def abstract_model_handler(model_name, model_type, cleanup, **kwargs):
                     location = Location(name=token,
                                         created=datetime.datetime.now(pytz.utc),
                                         updated=datetime.datetime.now(pytz.utc))
-                    location.save(commit=False)
+                    location.save()
                     cleanup.list.append({"model": location, "new": True})
                 location_list.append(location)
         return location_list
@@ -282,7 +282,7 @@ def abstract_model_handler(model_name, model_type, cleanup, **kwargs):
                     source = Source(name=token,
                                     created=datetime.datetime.now(pytz.utc),
                                     updated=datetime.datetime.now(pytz.utc))
-                    source.save(commit=False)
+                    source.save()
                     cleanup.list.append({"model": source, "new": True})
                 source_list.append(source)
         return source_list
@@ -299,7 +299,7 @@ def abstract_model_handler(model_name, model_type, cleanup, **kwargs):
                     instrument = InstrumentVoice(name=token,
                                                  created=datetime.datetime.now(pytz.utc),
                                                  updated=datetime.datetime.now(pytz.utc))
-                    instrument.save(commit=False)
+                    instrument.save()
                     cleanup.list.append({"model": instrument, "new": True})
                 instrument_list.append(instrument)
         return instrument_list
