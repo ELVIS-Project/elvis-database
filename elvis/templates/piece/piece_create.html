@@ -14,7 +14,7 @@ $(document).ready(function($)
 {
     autocomplete("title", "title_suggestion_menu", "pieceSuggest");
     autocomplete("composer", "composer_suggestion_menu", "composerSuggest");
-    autocomplete("collection", "collection_suggestion_menu", "collectionSuggest", true);
+    autocomplete("collections", "collection_suggestion_menu", "collectionSuggest", true);
     autocomplete("languages", "language_suggestion_menu", "languageSuggest", true);
     autocomplete("genres", "genre_suggestion_menu", "genreSuggest", true);
     autocomplete("locations", "location_suggestion_menu", "locationSuggest", true);
@@ -145,8 +145,7 @@ $(document).ready(function($)
     <ul class="nav nav-tabs" id="upload-tabs">
         <li class="active"><a data-toggle="tab" href="#required">Basics</a></li>
         <li><a data-toggle="tab" href="#advanced">Advanced</a></li>
-        <li><a data-toggle="tab" href="#attachments">Attachments</a></li>
-        <li id="last-tab"><a data-toggle="tab" href="#movements">Movements</a></li>
+        <li><a data-toggle="tab" href="#attachments">Files</a></li>
     </ul>
     <form action="/pieces/" method="post" enctype="multipart/form-data">
     {% csrf_token %}
@@ -237,7 +236,7 @@ $(document).ready(function($)
                         <div class="form-group">
                             <div class="input-group">
                                 <span class="input-group-addon">Collections</span>
-                                <input type="text" id="collection" name="collection" autocomplete="off" class="form-control" placeholder="e.g. Prof.Fujinaga's Collection; McGill Collection">
+                                <input type="text" id="collections" name="collections" autocomplete="off" class="form-control" placeholder="e.g. Prof.Fujinaga's Collection; McGill Collection">
                             </div>
                             <div id="collection_suggestion_menu" style="padding-left:120px"></div>
                         </div>
@@ -257,7 +256,7 @@ $(document).ready(function($)
                         <div class="form-group">
                             <div class="input-group">
                                 <span class="input-group-addon">Genres</span>
-                                <input type='text' name="genres" id="genres" autocomplete="off" placeholder="e.g. Choral" class="form-control unstyled"/>
+                                <input type='text' name="genres" id="genres" autocomplete="off" placeholder="e.g. Mass" class="form-control unstyled"/>
                             </div>
                             <div id="genre_suggestion_menu" style="padding-left:120px"></div>
                         </div>
@@ -275,7 +274,7 @@ $(document).ready(function($)
                     <div class="col-md-6">
                         <div class="form-group">
                             <div class="input-group">
-                                <span class="input-group-addon">Locations</span>
+                                <span class="input-group-addon">Place of Origin</span>
                                 <input type='text' name="locations" id=locations autocomplete="off" placeholder="e.g. France" class="form-control unstyled"/>
                             </div>
                             <div id="location_suggestion_menu" style="padding-left:120px"></div>
@@ -309,49 +308,47 @@ $(document).ready(function($)
             </div>
 
             <div id="attachments" class="tab-pane fade">
-                <h4>Piece Attachments</h4>
+                <h4>Upload Files</h4>
                 <hr>
                 <span class="help-block">
-                    The files for the piece can be attached here. These files should represent the entire piece.
-                    Acceptable file types are .zip, .pdf, and .mtxt. Individual movements can be defined below.
+                    Depending on whether the piece is split into movements or not, you may upload files to attach
+                    to the piece itself or create movements and attach pieces to them individually.
                 </span>
-                <input name="piece_att_files" id="piece_att_files" type="file" multiple="multiple" value=""/>
-                <hr>
-                <div class="text-right">
-                    <button type='button' id='nexttab3'class='btn btn-success'>Next<span class='glyphicon glyphicon-chevron-right'></span></button>
+                <div class="well">
+                    <h4>Piece Files</h4>
+                    <span class="help-block">
+                        You can upload files to attach to the piece, or you can define movements and attach files
+                        to each movement.
+                    </span>
+                    <input name="piece_att_files" id="piece_att_files" type="file" multiple="multiple" value=""/>
                 </div>
-            </div>
-
-            <div id="movements" class="tab-pane fade">
-                <h4>Movements</h4>
-                <span class="help-block">
-                    The movements of the piece can be defined here. Each movement may also have files
-                    attached to it which represent the movement itself. Movements are not required to upload a piece.
-                </span>
-                <table class="table table-hover" >
-                    <colgroup>
-                        <col class="text-center" style="width: 5%;">
-                        <col style="width: 5%;">
-                        <col style="width: 70%;">
-                        <col style="width: 20%;">
-                    </colgroup>
-                        <tbody id="movement_table">
-                        <tr>
-                            <th class="text-center">+/-</th>
-                            <th class="text-center">#</th>
-                            <th>Title</th>
-                            <th>Files</th>
-                        </tr>
-                        <tr id='mov1'>
-                            <td class="text-center"><button id="del_mov1" type="button" tabindex="-1" class="btn btn-default">-</button></td>
-                            <td class="text-center" style="padding-top:14px">1</td>
-                            <td><input name='mv_title_1' id="mov_title1" class='form-control' autocomplete="off"></td>
-                            <td><input name='mv_files_1' id='mov_files1' type='file' multiple='multiple' value=""></td>
-                        </tr>
-                        </tbody>
-                </table>
-                <div><button id="new_mov" type="button" class="btn btn-default" >Add Movement</button></div>
-                <hr>
+                <br>
+                <div class="well">
+                    <h4>Movements</h4>
+                    <table class="table table-hover" >
+                        <colgroup>
+                            <col class="text-center" style="width: 5%;">
+                            <col style="width: 5%;">
+                            <col style="width: 70%;">
+                            <col style="width: 20%;">
+                        </colgroup>
+                            <tbody id="movement_table">
+                            <tr>
+                                <th class="text-center">+/-</th>
+                                <th class="text-center">#</th>
+                                <th>Title</th>
+                                <th>Files</th>
+                            </tr>
+                            <tr id='mov1'>
+                                <td class="text-center"><button id="del_mov1" type="button" tabindex="-1" class="btn btn-default">-</button></td>
+                                <td class="text-center" style="padding-top:14px">1</td>
+                                <td><input name='mv_title_1' id="mov_title1" class='form-control' autocomplete="off"></td>
+                                <td><input name='mv_files_1' id='mov_files1' type='file' multiple='multiple' value=""></td>
+                            </tr>
+                            </tbody>
+                    </table>
+                    <div><button id="new_mov" type="button" class="btn btn-default" >Add Movement</button></div>
+                </div>
                 <div class="text-right">
                     <button type='submit' name='piece-submit' class='btn btn-success'>Submit<span class='glyphicon glyphicon-chevron-right'></span></button>
                 </div>
