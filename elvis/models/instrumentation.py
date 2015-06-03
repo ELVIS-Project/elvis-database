@@ -80,7 +80,6 @@ def solr_delete(sender, instance, **kwargs):
     solrconn = solr.SolrConnection(settings.SOLR_SERVER)
     record = solrconn.query("item_id:{0} AND type:elvis_instrument_voice".format(instance.id))
     if record:
-        # the record already exists, so we'll remove it.
         solrconn.delete(record.results[0]['id'])
         solrconn.commit()
         
