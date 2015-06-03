@@ -8,8 +8,6 @@
 <div class="row">
     <h2>{{ content.title }}</h2>
     <p><span class="label label-primary">Piece</span> Created by {{ content.uploader.username }} on {{ content.created | date:"d F Y" }}. Last updated on {{ content.updated | date:"d F Y" }}.</p>
-    <p>Comments: {% autoescape off %}{{ content.comment }}{% endautoescape %}</p>
-
 </div>
 
 <div class="row">
@@ -27,7 +25,7 @@
         {% for collection in content.collections %}
             <dd><a href="{{collection.url}}">{{ collection.title }}</a></dd>
         {% endfor %}
-        <dt>Number of voices:</dt>
+        <dt>Number of voices</dt>
         <dd>{{content.number_of_voices}}</dd>
         {% if content.piece %}
         <dt>Piece</dt>
@@ -40,6 +38,11 @@
             {% endfor %}
         </dd>
     </dl>
+    {% if content.comment != "" %}
+        <div class="form-group">
+          <textarea class="form-control" rows="5" disabled="disabled" style="resize:none">{{ content.comment }}</textarea>
+        </div>
+    {% endif %}
         
         {% if content.attachments and user.is_authenticated %}
         <h3>Available Attachments</h3>

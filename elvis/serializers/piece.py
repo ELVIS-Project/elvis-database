@@ -108,6 +108,7 @@ class PieceSerializer(serializers.HyperlinkedModelSerializer):
     sources = SourcePieceSerializer(many=True)
     attachments = AttachmentPieceSerializer(many=True)
     collections = CollectionPieceSerializer(many=True)
+    comment = serializers.CharField()
     uploader = UserPieceSerializer()
     movements = MovementPieceSerializer(many=True)
     created = serializers.DateTimeField(format=None)
