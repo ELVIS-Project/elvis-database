@@ -192,14 +192,6 @@
     <copyField source="title" dest="name_sort" />
     <copyField source="title" dest="title_searchable"/>
     <copyField source="name" dest="name_sort"/>
-    <copyField source="tags" dest="tags_searchable" />
-    <copyField source="genres" dest="genres_searchable" />
-    <copyField source="instruments_voices" dest="instruments_voices_searchable" />
-    <copyField source="languages" dest="languages_searchable" />
-    <copyField source="locations" dest="locations_searchable" />
-    <copyField source="sources" dest="sources_searchable" />
-
-    <!-- Suggestions -->
 
 
 
