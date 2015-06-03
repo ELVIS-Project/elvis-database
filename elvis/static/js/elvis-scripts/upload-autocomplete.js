@@ -114,7 +114,6 @@ function autocomplete(inputField, suggestionField, dictionary, multiple) {
                             gotResults = true;
                         else
                             gotResults = false;
-
                         var suggestions = "";
                         for (var i = 0; i < data.length; i++)
                         {
