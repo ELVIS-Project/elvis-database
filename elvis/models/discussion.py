@@ -5,6 +5,7 @@ from django.contrib.auth.models import User
 from django.dispatch import receiver
 from django.db.models.signals import post_save, post_delete
 
+
 class Discussion(models.Model):
     name = models.CharField(max_length=255)
     project = models.ForeignKey("elvis.Project")

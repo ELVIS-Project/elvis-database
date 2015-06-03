@@ -3,9 +3,9 @@ from django.db import models
 #django signal handlers
 from django.dispatch import receiver
 from django.db.models.signals import post_save, post_delete
-
 from datetime import datetime
 import pytz
+
 
 class Location(models.Model):
     class Meta:
