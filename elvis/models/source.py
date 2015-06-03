@@ -30,7 +30,7 @@ def solr_index(sender, instance, created, **kwargs):
     import solr
 
     solrconn = solr.SolrConnection(settings.SOLR_SERVER)
-    record = solrconn.query("item_id:{0}".format(instance.id))
+    record = solrconn.query("item_id:{0} AND type:elvis_source".format(instance.id))
     if record:
         # the record already exists, so we'll remove it first.
         solrconn.delete(record.results[0]['id'])
@@ -70,12 +70,7 @@ def solr_index(sender, instance, created, **kwargs):
             'comment': source_comment,
     }
     solrconn.add(**d)
-    # Only commits the change if the file is more than a minute old. This is to prevent repeated commits and dictionary
-    # rebuilding on the solr server during piece creation.
-    c = datetime.now(pytz.utc) - source.created
-    c = divmod(c.days * 86400 + c.seconds, 60)
-    if c[0] > 1:
-        solrconn.commit()
+    solrconn.commit()
 
 
 @receiver(post_delete, sender=Source)
@@ -83,7 +78,7 @@ def solr_delete(sender, instance, **kwargs):
     from django.conf import settings
     import solr
     solrconn = solr.SolrConnection(settings.SOLR_SERVER)
-    record = solrconn.query("item_id:{0}".format(instance.id))
+    record = solrconn.query("item_id:{0} AND type:elvis_source".format(instance.id))
     if record:
         # the record already exists, so we'll remove it.
         solrconn.delete(record.results[0]['id'])

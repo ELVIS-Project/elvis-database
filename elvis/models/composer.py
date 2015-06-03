@@ -38,7 +38,7 @@ def solr_index(sender, instance, created, **kwargs):
     import solr
 
     solrconn = solr.SolrConnection(settings.SOLR_SERVER)   # connect to solr server
-    record = solrconn.query("item_id:{0}".format(instance.id)) # search for any previous entries of instance
+    record = solrconn.query("item_id:{0} AND type:elvis_composer".format(instance.id)) # search for any previous entries of instance
     if record:
         # the record already exists, so we'll remove it first.
         solrconn.delete(record.results[0]['id'])
@@ -84,13 +84,7 @@ def solr_index(sender, instance, created, **kwargs):
             'composers_searchable': composer_name
     }
     solrconn.add(**d)
-
-    # Only commits the change if the file is more than a minute old. This is to prevent repeated commits and dictionary
-    # rebuilding on the solr server during piece creation.
-    c = datetime.now(pytz.utc) - composer.created
-    c = divmod(c.days * 86400 + c.seconds, 60)
-    if c[0] > 1:
-        solrconn.commit()
+    solrconn.commit()
 
     #Update solr & attachments for all composed pieces/movements -- by resaving each piece/movement
 
@@ -100,7 +94,7 @@ def solr_delete(sender, instance, **kwargs):
     from django.conf import settings
     import solr
     solrconn = solr.SolrConnection(settings.SOLR_SERVER)
-    record = solrconn.query("item_id:{0}".format(instance.id))
+    record = solrconn.query("item_id:{0} AND type:elvis_composer".format(instance.id))
     if record:
         # the record already exists, so we'll remove it.
         solrconn.delete(record.results[0]['id'])
