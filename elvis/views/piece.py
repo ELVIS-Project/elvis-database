@@ -16,7 +16,7 @@ from elvis.serializers.piece import PieceSerializer
 from elvis.models.piece import Piece
 from elvis.forms import PieceForm
 
-from elvis.views.views import handle_attachments, handle_movements, abstract_model_handler, rebuild_suggester_dicts
+from elvis.views.views import handle_attachments, handle_movements, abstract_model_factory, rebuild_suggester_dicts
 from elvis import settings
 from django.utils.decorators import method_decorator
 from django.http import HttpResponseRedirect
@@ -97,7 +97,7 @@ class PieceList(generics.ListCreateAPIView):
             new_piece.comment = clean_form['comment']
 
         try:
-            composer_list = abstract_model_handler(clean_form['composer'], "Composer", clean,
+            composer_list = abstract_model_factory(clean_form['composer'], "Composer", clean,
                                                    birth_date=clean_form['composer_birth_date'],
                                                    death_date=clean_form['composer_death_date'])
             composer = composer_list[0]
@@ -108,7 +108,7 @@ class PieceList(generics.ListCreateAPIView):
 
         try:
             if clean_form['collections']:
-                collection_list = abstract_model_handler(clean_form['collections'], "Collection", clean, is_public=True, creator=request.user)
+                collection_list = abstract_model_factory(clean_form['collections'], "Collection", clean, is_public=True, creator=request.user)
                 for x in collection_list:
                     new_piece.collections.add(x)
         except:
@@ -117,7 +117,7 @@ class PieceList(generics.ListCreateAPIView):
 
         try:
             if clean_form['languages']:
-                language_list = abstract_model_handler(clean_form['languages'], "Language", clean)
+                language_list = abstract_model_factory(clean_form['languages'], "Language", clean)
                 for x in language_list:
                     new_piece.languages.add(x)
         except:
