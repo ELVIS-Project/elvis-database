@@ -146,4 +146,5 @@ class Cleanup:
 
     def cleanup(self):
         for x in self.list:
-            x.delete()
+            if x['new']:
+                x.delete()
