@@ -149,28 +149,28 @@ def handle_movements(request, parent, cleanup):
     attachments = []
     movements = {}
     for item in request.POST:
-        if item.startswith("mv_title") and request.POST[item]:
-            mv_name = request.POST[item]
-            mv_num = item[9:]
-            movements[mv_num] = (mv_name, mv_num)
+        if item.startswith("mov_title") and request.POST[item]:
+            mov_name = request.POST[item]
+            mov_num = item[10:]
+            movements[mov_num] = (mov_name, mov_num)
 
     keys = movements.keys()
     keys.sort()
     i = 1
 
     for k in keys:
-        new_mv = Movement(title=movements[k][0],
-                          position=i,
-                          date_of_composition=parent.date_of_composition,
-                          date_of_composition2=parent.date_of_composition2,
-                          composer=parent.composer,
-                          piece=parent,
-                          comment="TESTING")
-        new_mv.save()
-        cleanup.list.append({"model": new_mv, "new": True})
-        attachments.extend(handle_attachments(request, new_mv, cleanup, file_name="mv_files_" + movements[k][1], parent_type='movement'))
-        new_mv.save()
-        results.append(new_mv)
+        new_mov = Movement(title=movements[k][0],
+                           position=i,
+                           date_of_composition=parent.date_of_composition,
+                           date_of_composition2=parent.date_of_composition2,
+                           composer=parent.composer,
+                           piece=parent,
+                           comment="TESTING")
+        new_mov.save()
+        cleanup.list.append({"model": new_mov, "new": True})
+        attachments.extend(handle_attachments(request, new_mov, cleanup, file_name="mv_files_" + movements[k][1], parent_type='movement'))
+        new_mov.save()
+        results.append(new_mov)
         i += 1
 
     results.extend(attachments)
