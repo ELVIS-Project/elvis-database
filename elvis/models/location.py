@@ -1,10 +1,10 @@
 from django.db import models
+import pytz
 
 #django signal handlers
 from django.dispatch import receiver
 from django.db.models.signals import post_save, post_delete
-from datetime import datetime
-import pytz
+
 
 
 class Location(models.Model):
@@ -15,7 +15,7 @@ class Location(models.Model):
     name = models.CharField(max_length=255, blank=True, null=True)
     comment = models.TextField(blank=True, null=True)
 
-    created = models.DateTimeField(default=datetime.now)
+    created = models.DateTimeField(auto_now_add=True)
     updated = models.DateTimeField(auto_now=True)
 
     def __unicode__(self):
@@ -70,7 +70,7 @@ def solr_index(sender, instance, created, **kwargs):
             'locations': location_name,
             'locations_searchable': location_name,
             'created': location_created,
-            'updated': datetime.now(pytz.utc),
+            'updated': location.updated,
             'comment': location_comment,
     }
     solrconn.add(**d)

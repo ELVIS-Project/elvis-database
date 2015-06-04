@@ -1,10 +1,9 @@
 import os
 import shutil
-import random
+
 from django.db import models
 from django.contrib.auth.models import User
 from django.conf import settings
-from datetime import datetime
 
 
 def upload_path(instance, filename):
@@ -46,7 +45,7 @@ class Attachment(models.Model):
     uploader = models.ForeignKey(User, blank=True, null=True, related_name="attachments")
     description = models.CharField(max_length=255, blank=True, null=True)
 
-    created = models.DateTimeField(default=datetime.now)
+    created = models.DateTimeField(auto_now_add=True)
     updated = models.DateTimeField(auto_now=True)
 
     @property

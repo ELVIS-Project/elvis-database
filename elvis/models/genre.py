@@ -3,9 +3,8 @@ from django.db import models
 #django signal handlers
 from django.dispatch import receiver
 from django.db.models.signals import post_save, post_delete
-
-from datetime import datetime
 import pytz
+
 
 class Genre(models.Model):
     class Meta:
@@ -15,7 +14,7 @@ class Genre(models.Model):
     name = models.CharField(max_length=255, blank=True, null=True)
     comment = models.TextField(blank=True, null=True)
 
-    created = models.DateTimeField(default=datetime.now)
+    created = models.DateTimeField(auto_now_add=True)
     updated = models.DateTimeField(auto_now=True)
 
     def __unicode__(self):
@@ -66,7 +65,7 @@ def solr_index(sender, instance, created, **kwargs):
             'genres_searchable': genre_name,
             'genres': genre_name,
             'created': genre_created,
-            'updated': datetime.now(pytz.utc),
+            'updated': genre.updated,
             'comment': genre_comment,
     }
     solrconn.add(**d)

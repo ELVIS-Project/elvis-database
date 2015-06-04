@@ -1,17 +1,16 @@
-import os,pytz
+import os
+import pytz
 from django.db import models
 from datetime import datetime
-from django.contrib.auth.models import User
 
 #django signal handlers
 from django.dispatch import receiver
 from django.db.models.signals import post_save, post_delete
-
 from django.conf import settings
+
 
 def picture_path(instance, filename):
     return os.path.join(settings.MEDIA_ROOT, "pictures", "composers", filename)
-
 
 class Composer(models.Model):
     class Meta:
@@ -80,7 +79,7 @@ def solr_index(sender, instance, created, **kwargs):
             'birth_date': composer_birth_date,
             'death_date': composer_death_date,
             'created': composer.created,
-            'updated': datetime.now(pytz.utc),
+            'updated': composer.updated,
             'composers_searchable': composer_name
     }
     solrconn.add(**d)

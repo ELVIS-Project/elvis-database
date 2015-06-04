@@ -1,6 +1,5 @@
 from django.db import models
 from django.contrib.auth.models import User
-from datetime import datetime
 import pytz
 
 #django signal handlers
@@ -31,9 +30,8 @@ class Movement(models.Model):
     sources = models.ManyToManyField("elvis.Source", blank=True, null=True, related_name="movements")
     attachments = models.ManyToManyField("elvis.Attachment", blank=True, null=True, related_name="movements")
     comment = models.TextField(blank=True, null=True)
-    
 
-    created = models.DateTimeField(default=datetime.now)
+    created = models.DateTimeField(auto_now_add=True)
     updated = models.DateTimeField(auto_now=True)
 
     @property
@@ -171,7 +169,7 @@ def solr_index(sender, instance, created, **kwargs):
             'number_of_voices': movement.number_of_voices,
             'comment': movement_comment,
             'created': movement_created,
-            'updated': datetime.now(pytz.utc),
+            'updated': movement.updated,
             'parent_piece_name': parent_piece_name,  
             'parent_collection_names': collections,
             'composer_name': composer_name,

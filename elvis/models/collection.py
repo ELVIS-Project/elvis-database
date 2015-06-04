@@ -5,8 +5,8 @@ from django.contrib.auth.models import User
 from django.dispatch import receiver
 from django.db.models.signals import post_save, post_delete
 
-from datetime import datetime
 import pytz
+
 
 class Collection(models.Model):
     class Meta:
@@ -21,7 +21,7 @@ class Collection(models.Model):
     title = models.CharField(max_length=255, blank=True, null=True)
     comment = models.TextField(blank=True, null=True)
     
-    created = models.DateTimeField(default=datetime.now)
+    created = models.DateTimeField(auto_now_add=True)
     updated = models.DateTimeField(auto_now=True)
 
     def __unicode__(self):
@@ -78,7 +78,7 @@ def solr_index(sender, instance, created, **kwargs):
             'title': collection_title,
             'parent_collection_names': collection_title,
             'created': collection_created,
-            'updated': datetime.now(pytz.utc),
+            'updated': collection.updated,
             'comment': collection_comment,
             'creator_name': creator_name,
             'collections_searchable': collection_title

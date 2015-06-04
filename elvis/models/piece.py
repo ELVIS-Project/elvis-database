@@ -1,8 +1,6 @@
 from django.db import models
 from django.contrib.auth.models import User
-from datetime import datetime
 import pytz
-import pdb
 
 #django signal handlers
 from django.dispatch import receiver
@@ -31,7 +29,7 @@ class Piece(models.Model):
     attachments = models.ManyToManyField("elvis.Attachment", blank=True, null=True, related_name="pieces")
     comment = models.TextField(blank=True, null=True)
 
-    created = models.DateTimeField(default=datetime.now)
+    created = models.DateTimeField(auto_now_add=True)
     updated = models.DateTimeField(auto_now=True)
 
     def __unicode__(self):
@@ -163,7 +161,7 @@ def solr_index(sender, instance, created, **kwargs):
          'number_of_voices': piece.number_of_voices,
          'comment': piece_comment,
          'created': piece_created,
-         'updated': datetime.now(pytz.utc),
+         'updated': piece.updated,
          'parent_collection_names': collections,
          'composer_name': composer_name,
          'uploader_name': uploader_name,

@@ -1,5 +1,4 @@
 from django.db import models
-from datetime import datetime
 from django.contrib.auth.models import User
 
 #django signal handlers
@@ -13,7 +12,7 @@ class Comment(models.Model):
     user = models.ForeignKey(User)
     discussion = models.ForeignKey("elvis.Discussion")
 
-    created = models.DateTimeField(default=datetime.now, blank=True)
+    created = models.DateTimeField(auto_now_add=True)
 
     def __unicode__(self):
         return u"{0}".format(self.text)

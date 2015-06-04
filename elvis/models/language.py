@@ -1,11 +1,11 @@
 from django.db import models
+import pytz
 
 #django signal handlers
 from django.dispatch import receiver
 from django.db.models.signals import post_save, post_delete
 
-from datetime import datetime
-import pytz
+
 
 class Language(models.Model):
     class Meta:
@@ -15,12 +15,11 @@ class Language(models.Model):
     name = models.CharField(max_length=255, blank=True, null=True)
     comment = models.TextField(blank=True, null=True)
 
-    created = models.DateTimeField(default=datetime.now)
+    created = models.DateTimeField(auto_now_add=True)
     updated = models.DateTimeField(auto_now=True)
 
     def __unicode__(self):
         return u"{0}".format(self.name)
-
 
 
 @receiver(post_save, sender=Language)
@@ -66,7 +65,7 @@ def solr_index(sender, instance, created, **kwargs):
             'languages': language_name,
             'languages_searchable': language_name,
             'created': language_created,
-            'updated': datetime.now(pytz.utc),
+            'updated': language.updated,
             'comment': language_comment,
     }
     solrconn.add(**d)
@@ -83,4 +82,3 @@ def solr_delete(sender, instance, **kwargs):
         # the record already exists, so we'll remove it.
         solrconn.delete(record.results[0]['id'])
         solrconn.commit()
-

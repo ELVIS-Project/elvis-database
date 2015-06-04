@@ -1,11 +1,10 @@
 from django.db import models
+import pytz
 
 #django signal handlers
 from django.dispatch import receiver
 from django.db.models.signals import post_save, post_delete
 
-from datetime import datetime
-import pytz
 
 class InstrumentVoice(models.Model):
     class Meta:
@@ -15,12 +14,11 @@ class InstrumentVoice(models.Model):
     name = models.CharField(max_length=255, blank=True, null=True)
     comment = models.TextField(blank=True, null=True)
 
-    created = models.DateTimeField(default=datetime.now)
+    created = models.DateTimeField(auto_now_add=True)
     updated = models.DateTimeField(auto_now=True)
 
     def __unicode__(self):
         return u"{0}".format(self.name)
-
 
 
 @receiver(post_save, sender=InstrumentVoice)
@@ -43,10 +41,7 @@ def solr_index(sender, instance, created, **kwargs):
     except UnicodeDecodeError:
         instrument_voice_name = instrument_voice.name.decode('utf-8')
 
-
-    if instrument_voice.comment is None:
-        instrument_voice_comment = None
-    else:
+    if instrument_voice.comment is not None:
         try:
             instrument_voice_comment = unicode(instrument_voice.comment)
         except UnicodeDecodeError:
@@ -66,7 +61,7 @@ def solr_index(sender, instance, created, **kwargs):
             'instruments_voices': instrument_voice_name,
             'instruments_voices_searchable': instrument_voice_name,
             'created': instrument_voice_created,
-            'updated': datetime.now(pytz.utc),
+            'updated': instrument_voice.updated,
             'comment': instrument_voice_comment,
     }
     solrconn.add(**d)
@@ -82,4 +77,3 @@ def solr_delete(sender, instance, **kwargs):
     if record:
         solrconn.delete(record.results[0]['id'])
         solrconn.commit()
-        
