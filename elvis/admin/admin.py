@@ -1,18 +1,24 @@
 from django.contrib import admin
-import shutil, os
+import shutil
+import os
 
 from elvis import settings
-
-from elvis.models.project import Project
-from elvis.models.piece import Piece
-from elvis.models.composer import Composer
-from elvis.models.tag import Tag
-from elvis.models.tag_hierarchy import TagHierarchy
-from elvis.models.attachment import Attachment
-from elvis.models.movement import Movement
-from elvis.models.userprofile import UserProfile
-from elvis.models.download import Download
-from elvis.models.collection import Collection
+from elvis.views import rebuild_suggester_dicts
+from elvis.models import Project
+from elvis.models import Piece
+from elvis.models import Composer
+from elvis.models import Tag
+from elvis.models import TagHierarchy
+from elvis.models import Attachment
+from elvis.models import Movement
+from elvis.models import UserProfile
+from elvis.models import Download
+from elvis.models import Collection
+from elvis.models import Genre
+from elvis.models import InstrumentVoice
+from elvis.models import Language
+from elvis.models import Place
+from elvis.models import Source
 
 # summary of available actions: actions = [reindex_in_solr, delete_in_solr]
 
@@ -31,6 +37,7 @@ reindex_in_solr.short_description = "Reindex selected in Solr"
 def delete_in_solr(modeladmin, request, queryset):
     for item in queryset:
         item.delete()
+    rebuild_suggester_dicts()
 
 delete_in_solr.short_description = "Permanently delete selected"
 
@@ -136,7 +143,12 @@ class AttachmentAdmin(admin.ModelAdmin):
 
     delete_attachments_filesys.short_description = "Delete attachments from File System"
 
-    
+
+class GenericAdmin(admin.ModelAdmin):
+    list_display = ('name', 'created', 'updated')
+    actions = [delete_in_solr]
+    list_per_page = listperpage
+    list_max_show_all = listmaxshowall
 
 
 admin.site.register(Download, DownloadAdmin)
@@ -149,3 +161,8 @@ admin.site.register(Collection, CollectionAdmin)
 admin.site.register(Composer, ComposerAdmin)
 admin.site.register(Attachment, AttachmentAdmin)
 admin.site.register(Movement, MovementAdmin)
+admin.site.register(Place, GenericAdmin)
+admin.site.register(Genre, GenericAdmin)
+admin.site.register(InstrumentVoice, GenericAdmin)
+admin.site.register(Language, GenericAdmin)
+admin.site.register(Source, GenericAdmin)
