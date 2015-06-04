@@ -6,7 +6,8 @@
 {% block extra_hd %}
     <title>Create Piece</title>
 
-    <script type='text/javascript' src="{{ STATIC_URL }}js/elvis-scripts/upload-autocomplete.js"></script>
+    <script type='text/javascript' src="{{ STATIC_URL }}js/elvis-scripts/autocomplete.js"></script>
+    <script type='text/javascript' src="{{ STATIC_URL }}js/elvis-scripts/dynamicFileTable.js"></script>
     <script type='text/javascript' src="{{ STATIC_URL }}bootstrap/plugins/bootstrap-filestyle.js"></script>
 
 <script>
@@ -20,12 +21,10 @@ $(document).ready(function($)
     autocomplete("locations", "location_suggestion_menu", "locationSuggest", true);
     autocomplete("sources", "source_suggestion_menu", "sourceSuggest", true);
     autocomplete("instrument_voices", "instrumentation_suggestion_menu", "instrumentSuggest", true);
+    dynamicFileTable("new_mov", "movement_table", "mov", "Movement Files");
+    dynamicFileTable("new_piece_file", "piece_file_table", "piece", "Piece Files");
 
-
-
-    $("#piece_att_files").filestyle({input:false, iconName: "glyphicon-file", buttonText: "Upload Files"});
     $("#id_comp_pic").filestyle({input:false, iconName: "glyphicon-picture", buttonText: "Composer Picture", disabled: "true"});
-    $("#mov_files1").filestyle({input:false, iconName: "glyphicon-file", buttonText: "Movement Files"});
 
 
     // The dropdown form for additional composer information.
@@ -67,58 +66,6 @@ $(document).ready(function($)
     });
 
 
-
-
-    //The movement table javascript.
-
-    var mov_count = 2;
-    var $newMovButton = $("#new_mov");
-    var $movTable = $("#movement_table");
-    initRow(1);
-
-    //Defines movement-row adding behaviour for the plus button
-    $newMovButton.on("click", function()
-    {
-        console.log($movTable);
-        addRow($movTable);
-        $newMovButton.blur();
-    });
-
-    function addRow(table)
-    {
-        var t_size = $movTable.children().length;
-        table.append("<tr id='mov"+ mov_count +"'>" +
-                         "<td class='text-center'><button id='del_mov" + mov_count + "' type='button' tabindex='-1' class='btn btn-default'>-</button></td>" +
-                         "<td class='text-center' style='padding-top:14px'>" + t_size + "</td>" +
-                         "<td><input name='mv_title_" + mov_count + "' id='mov_title" + mov_count + "' class='form-control' autocomplete='off'> </td>" +
-                         "<td><input name='mv_files_" + mov_count + "' id='mov_files" + mov_count + "' type='file' multiple='multiple' value=''></td></tr>");
-        $("#mov_files" + mov_count).filestyle({input:false, iconName: "glyphicon-file", buttonText: "Movement Files"});
-        initRow(mov_count);
-        mov_count++;
-    }
-
-    function initRow(row)
-    {
-        $("#del_mov" + row).on("click", function(event)
-        {
-            console.log(event);
-            var row_num = parseInt(event.currentTarget.getAttribute("id").substring(7));
-            $("#mov_files" + row_num).filestyle('destroy');
-            $movTable.children().remove("#mov" + row_num);
-            renameRows();
-        });
-    }
-
-    function renameRows()
-    {
-        for(var j = 1; j < $movTable.children().length; j++)
-            {
-                var temp = $movTable.children()[j];
-                temp.children[1].innerHTML = j;
-            }
-    }
-
-
     //The next buttons on the tabs
     $("[id^=nexttab]").on("click", function()
     {
@@ -126,7 +73,15 @@ $(document).ready(function($)
         $('#upload-tabs').children().filter('.active').next('li').find('a[data-toggle="tab"]').tab('show');
     });
 
-});
+
+    $('input:not(#comment)').on("keydown", function(event){
+        if (event.keyCode === 13)
+        {
+            event.preventDefault()
+        }
+    })
+
+    })
 
 </script>
 
@@ -147,7 +102,7 @@ $(document).ready(function($)
         <li><a data-toggle="tab" href="#advanced">Advanced</a></li>
         <li><a data-toggle="tab" href="#attachments">Files</a></li>
     </ul>
-    <form action="/pieces/" method="post" enctype="multipart/form-data">
+    <form action="/pieces/" method="post" id="new-piece-form" enctype="multipart/form-data">
     {% csrf_token %}
 
         <div class="tab-content" style="padding-left:50px; padding-right:50px">
@@ -321,11 +276,24 @@ $(document).ready(function($)
                 </span>
                 <div class="well">
                     <h4>Piece Files</h4>
-                    <span class="help-block">
-                        You can upload files to attach to the piece, or you can define movements and attach files
-                        to each movement.
-                    </span>
-                    <input name="piece_att_files" id="piece_att_files" type="file" multiple="multiple" value=""/>
+                    <table class="table table-hover" >
+                        <colgroup>
+                            <col class="text-center" style="width: 5%;">
+                            <col style="width: 5%;">
+                            <col style="width: 70%;">
+                            <col style="width: 20%;">
+                        </colgroup>
+                            <tbody id="piece_file_table">
+                            <tr>
+                                <th class="text-center">+/-</th>
+                                <th class="text-center">#</th>
+                                <th>File Source</th>
+                                <th>Files</th>
+                            </tr>
+                            <!-- User can add rows for files here -->
+                            </tbody>
+                    </table>
+                    <div><button id="new_piece_file" type="button" class="btn btn-default" >Add File</button></div>
                 </div>
                 <br>
                 <div class="well">
@@ -341,21 +309,16 @@ $(document).ready(function($)
                             <tr>
                                 <th class="text-center">+/-</th>
                                 <th class="text-center">#</th>
-                                <th>Title</th>
+                                <th>Movement Title</th>
                                 <th>Files</th>
                             </tr>
-                            <tr id='mov1'>
-                                <td class="text-center"><button id="del_mov1" type="button" tabindex="-1" class="btn btn-default">-</button></td>
-                                <td class="text-center" style="padding-top:14px">1</td>
-                                <td><input name='mv_title_1' id="mov_title1" class='form-control' autocomplete="off"></td>
-                                <td><input name='mv_files_1' id='mov_files1' type='file' multiple='multiple' value=""></td>
-                            </tr>
+                            <!-- User can add rows for files here -->
                             </tbody>
                     </table>
                     <div><button id="new_mov" type="button" class="btn btn-default" >Add Movement</button></div>
                 </div>
                 <div class="text-right">
-                    <button type='submit' name='piece-submit' class='btn btn-success'>Submit<span class='glyphicon glyphicon-chevron-right'></span></button>
+                    <button type='button' id='piece-submit' class='btn btn-success'>Submit<span class='glyphicon glyphicon-chevron-right'></span></button>
                 </div>
             </div>
         </div>
