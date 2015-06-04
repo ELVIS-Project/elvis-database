@@ -22,6 +22,10 @@ class Location(models.Model):
         return u"{0}".format(self.name)
 
 
+class Place(Location):
+    class Meta:
+        proxy = True
+
 
 @receiver(post_save, sender=Location)
 def solr_index(sender, instance, created, **kwargs):

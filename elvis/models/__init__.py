@@ -17,6 +17,6 @@ from elvis.models.genre import Genre
 from elvis.models.instrumentation import InstrumentVoice
 from elvis.models.language import Language
 from elvis.models.location import Location
+from elvis.models.location import Place
 from elvis.models.source import Source
 
-#from elvis.models.search_indexes import CorpusIndex
