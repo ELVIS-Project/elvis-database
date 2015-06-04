@@ -114,7 +114,7 @@ def handle_attachments(request, parent, cleanup, **kwargs):
     if 'file_name' in kwargs:
         files = upload_files(request, file_name=kwargs['file_name'])
     else:
-        files = upload_files(request, file_name='piece_att_files')
+        raise IOError("No file_name provided for handle_attachments")
 
     for f in files:
         att = Attachment(description="TESTING")
@@ -142,36 +142,45 @@ def handle_attachments(request, parent, cleanup, **kwargs):
     return results
 
 
-# Creates the movements in the request and attaches them to their parent.
-# Returns a list of movements and attachments that have been created.
-def handle_movements(request, parent, cleanup):
+# Given the request, the parent model and the table name, will collect all files from the dynamic file table
+# and attach them to the parent. Returns a list of objects that were created.
+def handle_dynamic_file_table(request, parent, table_name, cleanup):
     results = []
     attachments = []
-    movements = {}
+    files = {}
     for item in request.POST:
-        if item.startswith("mov_title") and request.POST[item]:
-            mov_name = request.POST[item]
-            mov_num = item[10:]
-            movements[mov_num] = (mov_name, mov_num)
+        if item.startswith(table_name + "_title_") and request.POST[item]:
+            file_name = request.POST[item]
+            file_num = item[(len(table_name)+7):]
+            files[file_num] = file_name
 
-    keys = movements.keys()
+    keys = files.keys()
     keys.sort()
     i = 1
 
     for k in keys:
-        new_mov = Movement(title=movements[k][0],
-                           position=i,
-                           date_of_composition=parent.date_of_composition,
-                           date_of_composition2=parent.date_of_composition2,
-                           composer=parent.composer,
-                           piece=parent,
-                           comment="TESTING")
-        new_mov.save()
-        cleanup.list.append({"model": new_mov, "new": True})
-        attachments.extend(handle_attachments(request, new_mov, cleanup, file_name="mv_files_" + movements[k][1], parent_type='movement'))
-        new_mov.save()
-        results.append(new_mov)
-        i += 1
+        if table_name == "mov":
+            new_mov = Movement(title=files[k],
+                               position=i,
+                               date_of_composition=parent.date_of_composition,
+                               date_of_composition2=parent.date_of_composition2,
+                               composer=parent.composer,
+                               piece=parent,
+                               comment="TESTING")
+            new_mov.save()
+            attachments.extend(handle_attachments(request, new_mov, cleanup, file_name=table_name + "_files_" + k))
+            cleanup.list.append({"model": new_mov, "new": True})
+            new_mov.save()
+            results.append(new_mov)
+            i += 1
+        elif table_name == "piece":
+            piece_attachments = handle_attachments(request, parent, cleanup, file_name=table_name + "_files_" + k)
+            for att in piece_attachments:
+                att.source = files[k]
+                att.save()
+            attachments.extend(piece_attachments)
+        else:
+            return results
 
     results.extend(attachments)
     return results
@@ -246,8 +255,8 @@ def abstract_model_factory(model_name, model_type, cleanup, **kwargs):
                     cleanup.list.append({"model": genre, "new": False})
                 except ObjectDoesNotExist:
                     genre = Genre(name=token,
-                                        created=datetime.datetime.now(pytz.utc),
-                                        updated=datetime.datetime.now(pytz.utc))
+                                  created=datetime.datetime.now(pytz.utc),
+                                  updated=datetime.datetime.now(pytz.utc))
                     genre.save()
                     cleanup.list.append({"model": genre, "new": True})
                 genre_list.append(genre)

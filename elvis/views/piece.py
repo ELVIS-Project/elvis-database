@@ -16,7 +16,7 @@ from elvis.serializers.piece import PieceSerializer
 from elvis.models.piece import Piece
 from elvis.forms import PieceForm
 
-from elvis.views.views import handle_attachments, handle_movements, abstract_model_factory, rebuild_suggester_dicts
+from elvis.views.views import abstract_model_factory, rebuild_suggester_dicts, handle_dynamic_file_table
 from elvis import settings
 from django.utils.decorators import method_decorator
 from django.http import HttpResponseRedirect
@@ -92,7 +92,6 @@ class PieceList(generics.ListCreateAPIView):
 
         if clean_form['number_of_voices']:
             new_piece.number_of_voices = int(clean_form['number_of_voices'])
-
         if clean_form['comment']:
             new_piece.comment = clean_form['comment']
 
@@ -125,13 +124,13 @@ class PieceList(generics.ListCreateAPIView):
             raise
 
         try:
-            handle_attachments(request, new_piece, clean)
+            handle_dynamic_file_table(request, new_piece, "piece", clean)
         except:
             clean.cleanup()
             raise
 
         try:
-            handle_movements(request, new_piece, clean)
+            handle_dynamic_file_table(request, new_piece, "mov", clean)
         except:
             clean.cleanup()
             raise
