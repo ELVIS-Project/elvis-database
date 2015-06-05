@@ -1,15 +1,14 @@
-from django.views.decorators.csrf import ensure_csrf_cookie, csrf_protect
+from django.views.decorators.csrf import csrf_protect
 from django.contrib.auth.models import User
-
 from rest_framework import generics
 from rest_framework import status
 from rest_framework import permissions
-import datetime, pytz
-from django.shortcuts import render
+import datetime
+import pytz
+import json
+import pdb
 from rest_framework.renderers import JSONRenderer
 from rest_framework.response import Response
-import pdb
-import shutil
 
 from elvis.renderers.custom_html_renderer import CustomHTMLRenderer
 from elvis.serializers.piece import PieceSerializer
@@ -17,9 +16,8 @@ from elvis.models.piece import Piece
 from elvis.forms import PieceForm
 
 from elvis.views.views import abstract_model_factory, rebuild_suggester_dicts, handle_dynamic_file_table
-from elvis import settings
 from django.utils.decorators import method_decorator
-from django.http import HttpResponseRedirect
+from django.http import HttpResponseRedirect, HttpResponse
 
 
 class PieceListHTMLRenderer(CustomHTMLRenderer):
@@ -77,7 +75,8 @@ class PieceList(generics.ListCreateAPIView):
 
         form = PieceForm(request.POST)
         if not form.is_valid():
-            return Response(status=status.HTTP_400_BAD_REQUEST)
+            data = json.dumps({'errors': form.errors})
+            return HttpResponse(data, content_type="json")
 
         clean = Cleanup()
         clean_form = form.cleaned_data
@@ -135,6 +134,7 @@ class PieceList(generics.ListCreateAPIView):
             clean.cleanup()
             raise
 
+        new_piece.save()
         rebuild_suggester_dicts()
         return HttpResponseRedirect("http://localhost:8000/piece/{0}".format(new_piece.id))
 
