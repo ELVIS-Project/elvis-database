@@ -79,9 +79,63 @@ $(document).ready(function($)
         {
             event.preventDefault()
         }
+    });
+
+    var upload_modal_clone = $('#upload_modal').clone();
+
+    $("#new-piece-form").submit(function(event)
+    {
+        event.preventDefault();
+        $('#upload_modal').replaceWith(upload_modal_clone.clone());
+        $('#upload_modal').modal('show');
+        debugger;
+
+        $.ajax({
+            type: "post",
+            url: "/pieces/",
+            data: new FormData(this),
+            processData: false,
+            contentType: false,
+            success: function (data) {
+                if(data['errors'] === undefined)
+                {
+                    var $upload_modal = $('#upload_modal');
+                    $upload_modal.find('.modal-title').html("Done!");
+                    $upload_modal.find('.modal-footer').html("<a href='/pieces/create/'><button class='btn btn-default pull-left'>Upload Another Piece</button></a>" +
+                                                             "<a href='"+data['url']+"'><button class='btn btn-default'>Go to Piece</button></a>");
+                    $upload_modal.find('.progress-bar').removeClass("progress-bar-striped active");
+                }
+                else
+                {
+                    var errors = "";
+                    for (var key in data['errors'])
+                    {
+                        $("#" + key).parent().addClass("has-error");
+                        $("#" + key + "_label").attr("title", data['errors'][key][0]);
+                        //$("#" + key + "_label").tooltip('show');
+                        errors = errors + "<strong>"+ key.charAt(0).toUpperCase() + key.slice(1) + "</strong>: " + data['errors'][key][0] + "<br>"
+                    }
+
+                    var first_error_tab_id = $("#"+Object.keys(data['errors'])[0]).parents('.tab-pane').attr('id');
+
+                    var $upload_modal = $('#upload_modal');
+                    $upload_modal.find('.modal-title').html("Flagrant Error");
+                    $upload_modal.find('.progress').hide();
+                    $upload_modal.find('.modal-body').prepend("Your submission has the following errors: <br>" + errors);
+                    $upload_modal.find('.modal-footer').html("<button class='btn btn-default' id='close_modal'>Close</button>");
+
+                    $('#close_modal').click(function(){
+                        $upload_modal.modal('hide');
+                        $('#upload-tabs').find("#tab_" + first_error_tab_id).find('a[data-toggle="tab"]').tab('show');
+                        $("#title_label").tooltip('show');
+                        debugger;
+                    });
+                }
+            }
+        });
     })
 
-    })
+})
 
 </script>
 
@@ -92,22 +146,43 @@ $(document).ready(function($)
 
 {% block wrap %}
 
+<!-- Modal -->
+<div class="modal fade" id="upload_modal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title">Creating Piece</h4>
+            </div>
+            <div class="modal-body">
+                <div class="progress">
+                    <div class="progress-bar progress-bar-striped active" role="progressbar" aria-valuenow="100" aria-valuemin="0" aria-valuemax="100" style="width: 100%">
+                        <span class="sr-only">100% Complete</span>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+
+            </div>
+        </div>
+    </div>
+</div>
+
 <div class="page-header">
     <h2>Upload a Piece</h2>
 </div>
 
 <div class="upload-form">
     <ul class="nav nav-tabs" id="upload-tabs">
-        <li class="active"><a data-toggle="tab" href="#required">Basics</a></li>
-        <li><a data-toggle="tab" href="#advanced">Advanced</a></li>
-        <li><a data-toggle="tab" href="#attachments">Files</a></li>
+        <li class="active" id="tab_basics"><a data-toggle="tab"href="#basics">Basics</a></li>
+        <li id="tab_advanced"><a data-toggle="tab" href="#advanced">Advanced</a></li>
+        <li id="tab_attachments"><a data-toggle="tab" href="#attachments">Files</a></li>
     </ul>
     <form action="/pieces/" method="post" id="new-piece-form" enctype="multipart/form-data">
     {% csrf_token %}
 
         <div class="tab-content" style="padding-left:50px; padding-right:50px">
 
-            <div id="required" class="tab-pane fade in active">
+            <div id="basics" class="tab-pane fade in active">
                 <h4>Basic Piece Information</h4>
                 <hr>
                 <span class="help-block">
@@ -116,7 +191,7 @@ $(document).ready(function($)
                 to the existing composers oeuvre.
                 </span>
                 <div class="input-group">
-                  <span class="input-group-addon">Title</span>
+                  <span class="input-group-addon" id="title_label" data-toggle="tooltip" data-placement="top" title="">Title</span>
                   <input type="text" id="title" name="title" autocomplete="off" class="form-control" placeholder="e.g. Ach Gott, vom Himmel sieh darein, BWV 2">
                 </div>
                 <div id="title_suggestion_menu" style="padding-left:120px"></div>
