@@ -81,6 +81,8 @@ $(document).ready(function($)
         }
     });
 
+
+    // Logic for form validation and submission, as well as the modal which appears on submission.,
     var upload_modal_clone = $('#upload_modal').clone();
 
     $("#new-piece-form").submit(function(event)
@@ -88,7 +90,6 @@ $(document).ready(function($)
         event.preventDefault();
         $('#upload_modal').replaceWith(upload_modal_clone.clone());
         $('#upload_modal').modal('show');
-        debugger;
 
         $.ajax({
             type: "post",
@@ -111,8 +112,7 @@ $(document).ready(function($)
                     for (var key in data['errors'])
                     {
                         $("#" + key).parent().addClass("has-error");
-                        $("#" + key + "_label").attr("title", data['errors'][key][0]);
-                        //$("#" + key + "_label").tooltip('show');
+                        $("#" + key + "_error").html("<b>" + data['errors'][key][0] + "</b>");
                         errors = errors + "<strong>"+ key.charAt(0).toUpperCase() + key.slice(1) + "</strong>: " + data['errors'][key][0] + "<br>"
                     }
 
@@ -127,8 +127,6 @@ $(document).ready(function($)
                     $('#close_modal').click(function(){
                         $upload_modal.modal('hide');
                         $('#upload-tabs').find("#tab_" + first_error_tab_id).find('a[data-toggle="tab"]').tab('show');
-                        $("#title_label").tooltip('show');
-                        debugger;
                     });
                 }
             }
@@ -191,16 +189,18 @@ $(document).ready(function($)
                 to the existing composers oeuvre.
                 </span>
                 <div class="input-group">
-                  <span class="input-group-addon" id="title_label" data-toggle="tooltip" data-placement="top" title="">Title</span>
+                  <span class="input-group-addon">Title</span>
                   <input type="text" id="title" name="title" autocomplete="off" class="form-control" placeholder="e.g. Ach Gott, vom Himmel sieh darein, BWV 2">
                 </div>
                 <div id="title_suggestion_menu" style="padding-left:120px"></div>
+                <div id="title_error"></div>
                 <br>
                 <div class="input-group">
                     <span class="input-group-addon">Composer</span>
                     <input type="text" id="composer" autocomplete="off" name="composer" class="form-control" placeholder="e.g. Bach, Johann Sebastian">
                 </div>
                 <div id="composer_suggestion_menu" style="padding-left:120px"></div>
+                <div id="composer_error"></div>
                 <div id="composer-create-new-menu" style="padding-left:50px; padding-right:50px">
                     <div class="row" style="padding-left:20px; padding-right:20px">
                         <div class="col-md-4">
@@ -209,6 +209,7 @@ $(document).ready(function($)
                                     <input type='date' name="composer_birth_date" id="composer_birth_date" max="2000-01-01" class="form-control unstyled"/>
                                     <span class="input-group-addon">Birth</span>
                                 </div>
+                                <div id="composer_birth_date_error"></div>
                             </div>
                         </div>
                         <div class="col-md-4">
@@ -217,6 +218,7 @@ $(document).ready(function($)
                                     <input type='date' name="composer_death_date" id="composer_death_date" max="2000-01-01" class="form-control unstyled"/>
                                     <span class="input-group-addon">Death</span>
                                 </div>
+                                <div id="composer_death_date_error"></div>
                             </div>
                         </div>
                         <div class="col-md-2">
@@ -231,20 +233,22 @@ $(document).ready(function($)
                 </div>
                 <br>
                 <div class="row">
-                    <div class="col-md-4">
+                    <div class="col-md-6">
                         <div class="form-group">
                             <div class="input-group">
                                 <span class="input-group-addon">Composition Start Date</span>
                                 <input type='date' name="composition_start_date" id="composition_start_date" max="2000-01-01" class="form-control unstyled"/>
                             </div>
+                            <div id="composition_start_date_error"></div>
                         </div>
                     </div>
-                    <div class="col-md-4">
+                    <div class="col-md-6">
                         <div class="form-group">
                             <div class="input-group">
                                 <span class="input-group-addon">Composition End Date</span>
                                 <input type='date' name="composition_end_date" id="composition_end_date" max="2000-01-01" class="form-control unstyled"/>
                             </div>
+                            <div id="composition_end_date_error"></div>
                         </div>
                     </div>
                 </div>
@@ -269,6 +273,7 @@ $(document).ready(function($)
                                 <input type="text" id="collections" name="collections" autocomplete="off" class="form-control" placeholder="e.g. Prof.Fujinaga's Collection; McGill Collection">
                             </div>
                             <div id="collection_suggestion_menu" style="padding-left:120px"></div>
+                            <div id="collections_error"></div>
                         </div>
                     </div>
                 </div>
@@ -280,6 +285,7 @@ $(document).ready(function($)
                                 <input type='text' name="languages" id="languages" autocomplete="off" placeholder="e.g. English; German" class="form-control unstyled"/>
                             </div>
                             <div id="language_suggestion_menu" style="padding-left:120px"></div>
+                            <div id="languages_error"></div>
                         </div>
                     </div>
                     <div class="col-md-6">
@@ -289,6 +295,7 @@ $(document).ready(function($)
                                 <input type='text' name="genres" id="genres" autocomplete="off" placeholder="e.g. Mass" class="form-control unstyled"/>
                             </div>
                             <div id="genre_suggestion_menu" style="padding-left:120px"></div>
+                            <div id="genres_error"></div>
                         </div>
                     </div>
                 </div>
@@ -299,6 +306,7 @@ $(document).ready(function($)
                                 <span class="input-group-addon">Num. of Voices</span>
                                 <input type='number' name="number_of_voices" autocomplete="off" placeholder="e.g. 2" id="number_of_voices" max="100" class="form-control unstyled"/>
                             </div>
+                            <div id="number_of_voices_error"></div>
                         </div>
                     </div>
                     <div class="col-md-6">
@@ -308,6 +316,7 @@ $(document).ready(function($)
                                 <input type='text' name="locations" id=locations autocomplete="off" placeholder="e.g. France" class="form-control unstyled"/>
                             </div>
                             <div id="location_suggestion_menu" style="padding-left:120px"></div>
+                            <div id="locations_error"></div>
                         </div>
                     </div>
                 </div>
@@ -319,6 +328,7 @@ $(document).ready(function($)
                                 <input type='text' name="sources" id="sources" autocomplete="off" placeholder="e.g. McGill" class="form-control unstyled"/>
                             </div>
                             <div id="source_suggestion_menu" style="padding-left:120px"></div>
+                            <div id="sources_error"></div>
                         </div>
                     </div>
                     <div class="col-md-6">
@@ -328,6 +338,7 @@ $(document).ready(function($)
                                 <input type='text' name="instrument_voices" autocomplete="off" id="instrument_voices" placeholder="e.g. Harpsichord" class="form-control unstyled"/>
                             </div>
                             <div id="instrumentation_suggestion_menu" style="padding-left:120px"></div>
+                            <div id="instrument_voices_error"></div>
                         </div>
                     </div>
                 </div>
