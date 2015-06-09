@@ -28,6 +28,7 @@ from elvis.models.collection import Collection
 from elvis.models.tag import Tag
 from elvis.models.composer import Composer
 
+
 class DownloadListHTMLRenderer(CustomHTMLRenderer):
     template_name = "download/download_list.html"
 
@@ -83,7 +84,7 @@ class DownloadDetail(generics.RetrieveUpdateAPIView):
             return Response({'message': "The item with id {0} was not found".format(item_id)}, status=status.HTTP_404_NOT_FOUND)
        
         dlobj = self.get_object()
-        
+
         for attachment in obj.attachments.all():
             dlobj.attachments.add(attachment)
 
@@ -107,16 +108,29 @@ class DownloadDetail(generics.RetrieveUpdateAPIView):
 
     # Method to help recursive-alteration of user's download object
     def _download_helper(self, item, user_download):
-        if hasattr(item, 'attachments') and not item.attachments.count() == 0:
-            for a_object in item.attachments.all():
-                user_download.attachments.add(a_object)
-            user_download.save()
-        if hasattr(item, 'pieces') and not item.pieces.count() == 0:
-            for piece in item.pieces.all():
-                self._download_helper(piece, user_download)
-        if hasattr(item, 'movements') and not item.movements.count() == 0:
+        if item.__class__.__name__ == "Piece":
+            user_download.collection_pieces.add(item)
+            for att in item.attachments.all():
+                user_download.attachments.add(att)
             for movement in item.movements.all():
                 self._download_helper(movement, user_download)
+        if item.__class__.__name__ == "Movement":
+            user_download.collection_movements.add(item)
+            for att in item.attachments.all():
+                user_download.attachments.add(att)
+        if item.__class__.__name__ == "Attachment":
+            user_download.attachments.add(att)
+        #
+        # if hasattr(item, 'attachments') and not item.attachments.count() == 0:
+        #     for a_object in item.attachments.all():
+        #         user_download.attachments.add(a_object)
+        #     user_download.save()
+        # if hasattr(item, 'pieces') and not item.pieces.count() == 0:
+        #     for piece in item.pieces.all():
+        #         self._download_helper(piece, user_download)
+        # if hasattr(item, 'movements') and not item.movements.count() == 0:
+        #     for movement in item.movements.all():
+        #         self._download_helper(movement, user_download)
 
     # Choose the right model based on request, again to help recursive-patching
     def _type_selector(self, item_type, item_id, user_download):
@@ -134,6 +148,7 @@ class DownloadDetail(generics.RetrieveUpdateAPIView):
             raise TypeError("Item type '"+ item_type +"' passed not found in database.")
 
         self._download_helper(item, user_download)
+        user_download.save()
 
     # Recursive version of the flat-downloads
     def _recursive_patch_downloads(self, request):

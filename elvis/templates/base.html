@@ -60,7 +60,7 @@
                         <li>
                             {% with download_num=user.downloads.all.first.attachments.all %}
                             <a href="/downloads">
-                                <span class="glyphicon glyphicon-circle-arrow-down"></span> Downloads
+                                <span class="glyphicon glyphicon-circle-arrow-down"></span> Collection
                             ({{ download_num | length }})
                             </a>
                             {% endwith %}
