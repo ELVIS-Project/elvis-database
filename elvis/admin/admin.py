@@ -2,6 +2,7 @@ from django.contrib import admin
 import shutil
 import os
 
+from simple_history.admin import SimpleHistoryAdmin
 from elvis import settings
 from elvis.views import rebuild_suggester_dicts
 from elvis.models import Project
@@ -92,7 +93,8 @@ class CollectionAdmin(admin.ModelAdmin):
     list_per_page = listperpage
     list_max_show_all = listmaxshowall
 
-class ComposerAdmin(admin.ModelAdmin):
+
+class ComposerAdmin(SimpleHistoryAdmin):
     list_display = ("name", "birth_date", "death_date")
     actions = [reindex_in_solr, delete_in_solr]
     list_per_page = listperpage

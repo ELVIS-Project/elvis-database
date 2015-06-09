@@ -1,16 +1,15 @@
 import os
 import pytz
 from django.db import models
-from datetime import datetime
-
+from simple_history.models import HistoricalRecords
 #django signal handlers
 from django.dispatch import receiver
 from django.db.models.signals import post_save, post_delete
 from django.conf import settings
 
-
 def picture_path(instance, filename):
     return os.path.join(settings.MEDIA_ROOT, "pictures", "composers", filename)
+
 
 class Composer(models.Model):
     class Meta:
@@ -23,6 +22,7 @@ class Composer(models.Model):
     death_date = models.DateField(blank=True, null=True)
     # LM: I suspect this is because of the new django beta, but image fields require blank=True to be optional; else it is required in admin
     picture = models.ImageField(upload_to=picture_path, null=True, blank=True)
+    history = HistoricalRecords()
 
     created = models.DateTimeField(auto_now_add=True)
     updated = models.DateTimeField(auto_now=True)

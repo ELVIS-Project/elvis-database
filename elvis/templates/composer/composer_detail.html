@@ -50,5 +50,9 @@
     </table>
     </div>
 </div>
+History: <br>
+{% for hist in content.history %}
+    {{ hist }}
+{% endfor %}
 
 {% endblock %}

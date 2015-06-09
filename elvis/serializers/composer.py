@@ -24,6 +24,15 @@ class ComposerPieceSerializer(serializers.HyperlinkedModelSerializer):
         fields = ('url', 'item_id', 'title', 'movements', "date_of_composition")
 
 
+class ComposerHistorySerializer(serializers.HyperlinkedModelSerializer):
+    history_user_id = serializers.ReadOnlyField()
+    updated = serializers.DateTimeField()
+
+    class Meta:
+        model = Composer
+        fields = ('history_user_id', 'updated')
+
+
 class ComposerSerializer(serializers.HyperlinkedModelSerializer):
     pieces = ComposerPieceSerializer(many=True)
     movements = ComposerMovementSerializer(many=True)
@@ -33,6 +42,7 @@ class ComposerSerializer(serializers.HyperlinkedModelSerializer):
     death_date = serializers.DateField(format=None)
     created = serializers.DateTimeField(format=None)
     updated = serializers.DateTimeField(format=None)
+    history = ComposerHistorySerializer(many=True)
 
     class Meta:
         model = Composer
@@ -47,7 +57,8 @@ class ComposerSerializer(serializers.HyperlinkedModelSerializer):
                   "movements",
                   "image",
                   "created",
-                  "updated")
+                  "updated",
+                  "history")
 
     def retrieve_image(self, obj):
         if not obj.picture:
