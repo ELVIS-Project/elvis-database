@@ -50,22 +50,26 @@ class UserAttachmentSerializer(serializers.HyperlinkedModelSerializer):
         fields = ('url', 'pieces', 'movements', 'attachment', 'attachment_path', 'file_name', 'id')
 
 
-class DownloadPieceSerializer(serializers.HyperlinkedModelSerializer):
-    class Meta:
-        model = Piece
-        fields = ('title', 'url')
-
-
 class DownloadMovementSerializer(serializers.HyperlinkedModelSerializer):
     class Meta:
         model = Movement
         fields = ('title', 'url',)
 
 
+class DownloadPieceSerializer(serializers.HyperlinkedModelSerializer):
+    movements = DownloadMovementSerializer(many=True)
+    composer = AttachmentComposerSerializer()
+    date_of_composition = serializers.DateField(format=None)
+    date_of_composition2 = serializers.DateField(format=None)
+    class Meta:
+        model = Piece
+        fields = ('title', 'composer', 'url', 'movements', 'date_of_composition', 'date_of_composition2',)
+
+
 class DownloadSerializer(serializers.ModelSerializer):
     user = UserDownloadSerializer()
     collection_pieces = DownloadPieceSerializer(many=True)
-    collection_movements = DownloadMovementSerializer(many=True)
+    collection_movements = AttachmentMovementSerializer(many=True)
     attachments = UserAttachmentSerializer(many=True)
     created = serializers.DateField(format=None)
 

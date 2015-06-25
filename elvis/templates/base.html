@@ -58,12 +58,10 @@
                     <ul class="nav navbar-nav navbar-right">
                     {% if user.is_authenticated %}
                         <li>
-                            {% with download_num=user.downloads.all.first.attachments.all %}
-                            <a href="/downloads">
+                            <a href="/collections/current/">
                                 <span class="glyphicon glyphicon-circle-arrow-down"></span> Collection
-                            ({{ download_num | length }})
+                            <span id="collection-count">({{ user.downloads.all.first.cart_size }})</span>
                             </a>
-                            {% endwith %}
                         </li>
                     {% endif %}
                         <li class="dropdown">

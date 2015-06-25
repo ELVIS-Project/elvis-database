@@ -1,7 +1,7 @@
 {% if user.is_authenticated %}
-<form class="recursive-patch-download-form" action="/downloads/" method="post"/>
+    <form class="recursive-patch-download-form" action="/downloads/" method="post"/>
         {% csrf_token %}
-    <button type="submit" class="btn btn-mini btn-success" data-container="body" data-toggle="tooltip" data-placement="top" title="Add all files associated with this item to your downloads cart." ><span class="glyphicon glyphicon-plus"> </span> </button>
+    <button type="button" class="btn btn-mini btn-success" data-container="body" data-toggle="tooltip" data-placement="top" title="Add to collection." ><span class="glyphicon glyphicon-plus"> </span> </button>
 
    	<input type="hidden" name="item_type"  value="{{ download_type }}" />
    	<input type="hidden" name="item_id"  value="{{ download_item_id }}" />
@@ -23,6 +23,27 @@
     {
         $('.btn-mini').tooltip();
             
+    });
+
+
+    $('.btn.btn-mini.btn-success').on("click", function(event)
+    {
+        event.preventDefault();
+        event.stopImmediatePropagation();
+        $.ajax({
+            type: "post",
+            url: "/downloads/",
+            data: $(event.target.parentElement.parentElement).serialize(),
+            success: function(data)
+            {
+                var $collection_count = $("#collection-count");
+                $collection_count.fadeOut(100, function()
+                {
+                    $collection_count.text("(" + data.count + ")");
+                });
+                $collection_count.fadeIn(100);
+            }
+        })
     });
 
 </script>

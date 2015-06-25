@@ -36,8 +36,10 @@ class DownloadListHTMLRenderer(CustomHTMLRenderer):
 class DownloadDetailHTMLRenderer(CustomHTMLRenderer):
     template_name = "download/download.html"
 
+
 class DownloadingHTMLRenderer(CustomHTMLRenderer):
     template_name = "download/downloading.html"
+
 
 class DownloadList(generics.ListCreateAPIView):
     model = Download
@@ -108,29 +110,19 @@ class DownloadDetail(generics.RetrieveUpdateAPIView):
 
     # Method to help recursive-alteration of user's download object
     def _download_helper(self, item, user_download):
+        if item.__class__.__name__ == "Collection":
+            for piece in item.pieces.all():
+                self._download_helper(piece, user_download)
+        if item.__class__.__name__ == "Composer":
+            for piece in item.pieces.all():
+                self._download_helper(piece, user_download)
         if item.__class__.__name__ == "Piece":
             user_download.collection_pieces.add(item)
-            for att in item.attachments.all():
-                user_download.attachments.add(att)
-            for movement in item.movements.all():
-                self._download_helper(movement, user_download)
         if item.__class__.__name__ == "Movement":
             user_download.collection_movements.add(item)
-            for att in item.attachments.all():
-                user_download.attachments.add(att)
         if item.__class__.__name__ == "Attachment":
-            user_download.attachments.add(att)
-        #
-        # if hasattr(item, 'attachments') and not item.attachments.count() == 0:
-        #     for a_object in item.attachments.all():
-        #         user_download.attachments.add(a_object)
-        #     user_download.save()
-        # if hasattr(item, 'pieces') and not item.pieces.count() == 0:
-        #     for piece in item.pieces.all():
-        #         self._download_helper(piece, user_download)
-        # if hasattr(item, 'movements') and not item.movements.count() == 0:
-        #     for movement in item.movements.all():
-        #         self._download_helper(movement, user_download)
+            user_download.attachments.add(item.attachment)
+
 
     # Choose the right model based on request, again to help recursive-patching
     def _type_selector(self, item_type, item_id, user_download):
@@ -149,6 +141,8 @@ class DownloadDetail(generics.RetrieveUpdateAPIView):
 
         self._download_helper(item, user_download)
         user_download.save()
+        jresults = json.dumps({'count': user_download.collection_pieces.count()})
+        return HttpResponse(content=jresults, content_type="json")
 
     # Recursive version of the flat-downloads
     def _recursive_patch_downloads(self, request):
@@ -171,16 +165,36 @@ class DownloadDetail(generics.RetrieveUpdateAPIView):
             item_id = request.POST.getlist('item_id')
             for i in range(len(item_type)):
                 self._type_selector(item_type[i], item_id[i], user_download)
-            
-        return HttpResponseRedirect(this_url)
+
+        jresults = json.dumps({'count': user_download.cart_size})
+        return HttpResponse(content=jresults, content_type="json")
 
     @method_decorator(csrf_protect)
     def post(self, request, *args, **kwargs):
-        # If attachment ids are sent in via request, then add attachments to downloads
-        # Else recursively add all children attachments to downloads
         if 'a_ids' in request.POST:
             return self._patch_downloads(request)
-        return self._recursive_patch_downloads(request)
+
+        elif 'clear-collection' in request.POST:
+            user_download = request.user.downloads.all()[0]
+            user_download.attachments.clear()
+            user_download.collection_movements.clear()
+            user_download.collection_pieces.clear()
+            user_download.save()
+            jresults = json.dumps({'count': user_download.cart_size})
+            return HttpResponse(content=jresults, content_type="json")
+
+        elif 'remove' in request.POST:
+            user_download = request.user.downloads.all()[0]
+            type = request.POST.get('type')
+            id = int(request.POST.get('id'))
+            rem = Piece.objects.get(id=id)
+            user_download.collection_pieces.remove(rem)
+            user_download.save()
+            jresults = json.dumps({'count': user_download.cart_size})
+            return HttpResponse(content=jresults, content_type="json")
+        else:
+            return self._recursive_patch_downloads(request)
+
 
 # LM: New view 2, was original view but updated with post-only view below
 class Downloading(APIView):
@@ -272,7 +286,7 @@ class Downloading(APIView):
             return HttpResponseRedirect('?task=' + zip_task.id)
 
         # Remove selected
-        elif 'remove-all' in request.POST:
+        elif 'remove-selected' in request.POST:
             # get ids
             a_ids = request.POST.getlist('a_ids')
             # get user
@@ -320,7 +334,6 @@ class Downloading(APIView):
             return HttpResponseRedirect('/downloads/')
 
 
-            
 def ranked_remover(parent, user_download):
     # Create a ranking for the attachments based on ELVIS_EXTENSIONS
     # Find the best sibling attachment to keep

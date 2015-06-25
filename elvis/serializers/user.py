@@ -15,7 +15,7 @@ class UserMovementSerializer(serializers.HyperlinkedModelSerializer):
         fields = ('url', 'title')
 
 class UserSerializer(serializers.HyperlinkedModelSerializer):
-    full_name = serializers.SerializerMethodField('get_full_name')
+    full_name = serializers.SerializerMethodField()
     pieces = UserPieceSerializer(many=True)
     movements = UserMovementSerializer(many=True)
 

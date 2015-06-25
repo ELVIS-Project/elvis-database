@@ -15,6 +15,10 @@ class Download(models.Model):
     def __unicode__(self):
         return u"{0}".format(self.attachments.all())
 
+    @property
+    def cart_size(self):
+        return self.collection_pieces.all().count() + self.collection_movements.all().count()
+
 def create_user_download(sender, instance, created, **kwargs):
     if created:
         Download.objects.create(user=instance)
