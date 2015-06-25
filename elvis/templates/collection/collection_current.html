@@ -26,7 +26,9 @@ th.header:hover{
 <script type="text/javascript">
 $(document).ready(function()
 {
-    $("#collection-table").tablesorter({headers: { 0: { sorter: false}, 1: {sorter: false} }});
+
+    $("#collection-table").tablesorter({headers: { 0: { sorter: false}, 1: {sorter: false} }, textExtraction: "complex"});
+
 
     $(".remove-row").click(function(event)
     {
@@ -67,6 +69,8 @@ $(document).ready(function()
             }
         })
     });
+
+
 });
 </script>
 
@@ -92,6 +96,7 @@ $(document).ready(function()
     </colgroup>
     <thead id="table-head">
         <th class="text-center">Remove</th>
+        <th style="display:none">Remove</th>
         <th>Expand</th>
         <th>Title</th>
         <th>Composer</th>
@@ -113,8 +118,8 @@ $(document).ready(function()
         {% for movement in content.collection_movements %}
             <tr>
                 <td class="text-center"><button type="button" class="btn btn-sm remove-row" name="remove-item">-</button></td>
-                <td style="display: none;">{{ movement.id }}</td>
-                <td></td>
+                <td style="display: none;">{{ piece.id }}</td>
+                <td> </td>
                 <td><a href="{{ movement.url }}">{{ movement.title }}</a></td>
                 <td><a href="{{ movement.composer.url }}">{{ movement.composer.name }}</a></td>
                 <td>{% if movement.date_of_composition  == movement.date_of_composition2 %}{{ movement.date_of_composition | date:"Y" }}{% else %}{{ movement.date_of_composition | date:"Y" }}-{{ movement.date_of_composition2 | date:"Y" }}{% endif %}</td>

@@ -119,7 +119,8 @@ class DownloadDetail(generics.RetrieveUpdateAPIView):
         if item.__class__.__name__ == "Piece":
             user_download.collection_pieces.add(item)
         if item.__class__.__name__ == "Movement":
-            user_download.collection_movements.add(item)
+            if item.piece not in user_download.collection_pieces.all():
+                user_download.collection_movements.add(item)
         if item.__class__.__name__ == "Attachment":
             user_download.attachments.add(item.attachment)
 
