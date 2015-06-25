@@ -6,7 +6,6 @@ from django.dispatch import receiver
 from django.db.models.signals import post_save, post_delete
 
 
-
 class Language(models.Model):
     class Meta:
         ordering = ["name"]

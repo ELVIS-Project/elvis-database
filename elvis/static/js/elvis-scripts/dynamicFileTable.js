@@ -38,7 +38,6 @@ function dynamicFileTable(add_row_button_id, table_body_id, table_name, file_but
         {
             console.log(event);
             var row_num = parseInt(event.currentTarget.getAttribute("id").substring(table_name.length + 4));
-            debugger;
             $("#" + table_name + "_files" + row_num).filestyle('destroy');
             $table.children().remove("#" + table_name + row_num);
             renumberRows();
@@ -52,7 +51,6 @@ function dynamicFileTable(add_row_button_id, table_body_id, table_name, file_but
             }
         })
     }
-
 
 
     function renumberRows()

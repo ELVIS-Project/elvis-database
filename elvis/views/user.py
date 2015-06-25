@@ -40,6 +40,7 @@ class UserDetail(generics.RetrieveUpdateDestroyAPIView):
     permission_classes = (permissions.IsAuthenticatedOrReadOnly,)
     serializer_class = UserSerializer
     renderer_classes = (JSONRenderer, UserDetailHTMLRenderer)
+    queryset = User.objects.all()
 
 
 class UserAccount(generics.CreateAPIView):

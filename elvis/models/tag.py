@@ -4,6 +4,7 @@ from django.db import models
 from django.dispatch import receiver
 from django.db.models.signals import post_save, post_delete
 
+
 class Tag(models.Model):
     old_id = models.IntegerField(db_index=True, blank=True, null=True)
     name = models.CharField(max_length=255)
@@ -72,4 +73,3 @@ def solr_delete(sender, instance, **kwargs):
         # the record already exists, so we'll remove it.
         solrconn.delete(record.results[0]['id'])
         solrconn.commit()
-        

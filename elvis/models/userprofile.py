@@ -8,12 +8,13 @@ from django.db.models.signals import post_save
 def picture_path(instance, filename):
     return os.path.join('user_photos', filename)
 
+
 class UserProfile(models.Model):
 
     #user = models.ForeignKey(User, unique=True)
     user = models.OneToOneField(User)
     picture = models.ImageField(upload_to=picture_path, null=True, blank=True)
-    #location = models.CharField(max_length=140) 
+    #location = models.CharField(max_length=140)
     #affiliation = models.CharField(max_length=300)
     #TODO: Queries, Contributions, Collections
 

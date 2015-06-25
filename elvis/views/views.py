@@ -11,7 +11,6 @@ from elvis.models import Source
 from elvis.models import Genre
 from elvis.models import InstrumentVoice
 from django.db.models import ObjectDoesNotExist
-from django.core.exceptions import MultipleObjectsReturned
 
 import json
 import urllib2
