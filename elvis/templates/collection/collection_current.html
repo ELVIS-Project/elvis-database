@@ -1,0 +1,131 @@
+{% extends "base.html" %}
+
+{% block extra_hd %}
+<style>
+th.headerSortUp {
+    background: url({{ STATIC_URL }}img/small_asc.gif);
+}
+th.headerSortDown {
+    background: url({{ STATIC_URL }}img/small_desc.gif);
+}
+th.header {
+    cursor: pointer;
+    font-weight: bold;
+    background-repeat: no-repeat;
+    background-position: center right;
+    padding-left: 20px;
+    margin-left: -1px;
+
+}
+th.header:hover{
+    background-color: #EEEEEE;
+}
+</style>
+
+<script type='text/javascript' src="{{ STATIC_URL }}js/jquery.tablesorter.js"></script> <!-- Okay this plugin is the boss -->
+<script type="text/javascript">
+$(document).ready(function()
+{
+    $("#collection-table").tablesorter({headers: { 0: { sorter: false}, 1: {sorter: false} }});
+
+    $(".remove-row").click(function(event)
+    {
+        var id = event.target.parentElement.nextElementSibling.textContent;
+        var type = event.target.parentElement.parentElement.children[6].textContent;
+        event.target.parentElement.parentElement.remove();
+
+        $.ajax({
+            type: "post",
+            url: "/downloads/",
+            data: {'remove': true, 'id': id, 'type': type},
+            success: function(data)
+            {
+                var $collection_count = $("#collection-count");
+                $collection_count.fadeOut(100, function()
+                {
+                    $collection_count.text("(" + data.count + ")");
+                });
+                $collection_count.fadeIn(100);
+            }
+        })
+    });
+    $("#clear-collection").click(function(event)
+    {
+        $("#collection-table").find("tbody").empty();
+        $.ajax({
+            type: "post",
+            url: "/downloads/",
+            data: {'clear-collection': true},
+            success: function(data)
+            {
+                var $collection_count = $("#collection-count");
+                $collection_count.fadeOut(100, function()
+                {
+                    $collection_count.text("(0)");
+                });
+                $collection_count.fadeIn(100);
+            }
+        })
+    });
+});
+</script>
+
+
+
+{% endblock %}
+
+{% block wrap %}
+
+<div class="page-header">
+    <h2>Your Collection </h2>
+</div>
+
+<span class="help-block">Select items for downloading. Unwanted files may also be removed from your downloads.</span>
+<table class="table" id="collection-table">
+    <colgroup>
+        <col class="text-center" style="width: 7%;">
+        <col style="width: 7%;">
+        <col style="width: 30%;">
+        <col style="width: 30%;">
+        <col style="width: 16%;">
+        <col style="width: 10%;">
+    </colgroup>
+    <thead id="table-head">
+        <th class="text-center">Remove</th>
+        <th>Expand</th>
+        <th>Title</th>
+        <th>Composer</th>
+        <th>Date</th>
+        <th>Type</th>
+    </thead>
+    <tbody>
+        {% for piece in content.collection_pieces %}
+            <tr>
+                <td class="text-center"><button type="button" class="btn btn-sm remove-row" name="remove-item">-</button></td>
+                <td style="display: none;">{{ piece.id }}</td>
+                <td>{% if piece.movements %} exbut {% endif %}</td>
+                <td><a href="{{ piece.url }}">{{ piece.title }}</a></td>
+                <td><a href="{{ piece.composer.url }}">{{ piece.composer.name }}</a></td>
+                <td>{% if piece.date_of_composition  == piece.date_of_composition2 %}{{ piece.date_of_composition | date:"Y" }}{% else %}{{ piece.date_of_composition | date:"Y" }}-{{ piece.date_of_composition2 | date:"Y" }}{% endif %}</td>
+                <td><span class="label label-success">Piece</span></td>
+            </tr>
+        {% endfor %}
+        {% for movement in content.collection_movements %}
+            <tr>
+                <td class="text-center"><button type="button" class="btn btn-sm remove-row" name="remove-item">-</button></td>
+                <td style="display: none;">{{ movement.id }}</td>
+                <td></td>
+                <td><a href="{{ movement.url }}">{{ movement.title }}</a></td>
+                <td><a href="{{ movement.composer.url }}">{{ movement.composer.name }}</a></td>
+                <td>{% if movement.date_of_composition  == movement.date_of_composition2 %}{{ movement.date_of_composition | date:"Y" }}{% else %}{{ movement.date_of_composition | date:"Y" }}-{{ movement.date_of_composition2 | date:"Y" }}{% endif %}</td>
+                <td><span class="label label-warning">Movement</span></td>
+            </tr>
+        {% endfor %}
+
+    </tbody>
+</table>
+<br>
+
+    <button id="clear-collection" name="clear-collection" type="submit" class="btn btn-danger" onClick="return confirm('Are you sure you want to remove these items?')"><span class="glyphicon glyphicon-remove"></span>Clear Collection</button>
+
+{%  endblock %}
