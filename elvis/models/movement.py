@@ -10,7 +10,7 @@ from django.db.models.signals import post_save, post_delete, pre_delete
 class Movement(models.Model):
     class Meta:
         app_label = "elvis"
-        ordering = ["position"]
+        ordering = ["position", "title"]
 
     old_id = models.IntegerField(db_index=True, blank=True, null=True)
     title = models.CharField(max_length=255)
