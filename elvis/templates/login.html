@@ -22,28 +22,36 @@
 </script>
 
 {% if form.errors %}
-<p>Your username and password didn't match. Please try again.</p>
+<p class="text-center">Your username and password didn't match. Please try again.</p>
 {% endif %}
 
 <form role="form" method="post" action="/login">
 {% csrf_token %}
-    <div class="form-group">
-        <label class="control-label" for="id_username">
-            {{ form.username.label_tag }}
-        </label>
-        <div class="controls">
-            {{ form.username }}
+<div class="row">
+    <div class="col-sm-4 col-sm-offset-4">
+        <div class="panel panel-default text-center" style="padding-top:60px; padding-bottom:60px">
+            <div class="form-group">
+                <label class="control-label" for="id_username">
+                    {{ form.username.label_tag }}
+                </label>
+                <div class="controls">
+                    {{ form.username }}
+                </div>
+            </div>
+            <div class="form-group">
+                <label for="id_password">
+                    {{ form.password.label_tag }}
+                </label>
+                <div class="controls">
+                    {{ form.password }}
+                </div>
+            </div>
+            <div class="text-center">
+            <button type="submit" class="btn btn-default" id="login-submit" data-toggle="tooltip" data-container="body" data-placement="right" data-html='true' title="You haven't enabled cookies... this site requires cookies.">Login</button>
+            <input type="hidden" name="next" value="{{ next }}" />
+            </div>
         </div>
     </div>
-    <div class="form-group">
-        <label for="id_password">
-            {{ form.password.label_tag }}
-        </label>
-        <div class="controls">
-            {{ form.password }}
-        </div>
-    </div>
-    <button type="submit" class="btn btn-default" id="login-submit" data-toggle="tooltip" data-container="body" data-placement="right" data-html='true' title="You haven't enabled cookies... this site requires cookies.">Login</button>
-    <input type="hidden" name="next" value="{{ next }}" />
+</div>
 </form>
 {% endblock %}
