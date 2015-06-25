@@ -64,3 +64,16 @@ class CollectionSerializer(serializers.HyperlinkedModelSerializer):
 
     class Meta:
         model = Collection
+
+
+class CollectionListSerializer(serializers.HyperlinkedModelSerializer):
+    creator = UserCollectionSerializer()
+    item_id = serializers.ReadOnlyField(source='pk')
+    created = serializers.DateTimeField(format=None)
+    updated = serializers.DateTimeField(format=None)
+    piece_count = serializers.IntegerField(source='pieces.count')
+    movement_count = serializers.IntegerField(source='movements.count')
+
+
+    class Meta:
+        model = Collection

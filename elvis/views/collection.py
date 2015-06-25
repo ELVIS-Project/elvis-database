@@ -9,7 +9,7 @@ from elvis.serializers.download import DownloadSerializer
 from django.core.exceptions import ObjectDoesNotExist
 
 from elvis.renderers.custom_html_renderer import CustomHTMLRenderer
-from elvis.serializers.collection import CollectionSerializer
+from elvis.serializers.collection import CollectionSerializer, CollectionListSerializer
 from elvis.models.collection import Collection
 
 
@@ -28,7 +28,7 @@ class CollectionCurrentHTMLRenderer(CustomHTMLRenderer):
 class CollectionList(generics.ListCreateAPIView):
     model = Collection
     permission_classes = (permissions.IsAuthenticatedOrReadOnly,)
-    serializer_class = CollectionSerializer
+    serializer_class = CollectionListSerializer
     renderer_classes = (JSONRenderer, CollectionListHTMLRenderer)
     paginate_by = 10
     paginate_by_param = 'page_size'

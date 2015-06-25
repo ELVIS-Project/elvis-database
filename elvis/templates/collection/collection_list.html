@@ -14,7 +14,7 @@
     <div class="list-group">
     {% for collection in content.results %}
         <a class="list-group-item" href="{{ collection.url }}">
-            <span class="badge alert-info">{{ collection.pieces | length }} Pieces, {{ collection.movements | length }} Movements</span>
+            <span class="badge alert-info">{{ collection.piece_count}} Pieces, {{ collection.movement_count}} Movements</span>
             <h4 class="list-group-item-header">{% include "includes/download-badge-inc.html" with download_type="elvis_collection" download_item_id=collection.item_id %}{{ collection.title }} </h4> 
             <p class="list-group-item-text">
                 <small>Created by {{ collection.creator.full_name }} on {{ collection.created }}</small><br />

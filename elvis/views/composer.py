@@ -3,7 +3,7 @@ from rest_framework import permissions
 from rest_framework.renderers import JSONRenderer
 
 from elvis.renderers.custom_html_renderer import CustomHTMLRenderer
-from elvis.serializers.composer import ComposerSerializer
+from elvis.serializers.composer import ComposerSerializer, ComposerListSerializer
 from elvis.models.composer import Composer
 
 
@@ -18,7 +18,7 @@ class ComposerDetailHTMLRenderer(CustomHTMLRenderer):
 class ComposerList(generics.ListCreateAPIView):
     model = Composer
     permission_classes = (permissions.IsAuthenticatedOrReadOnly,)
-    serializer_class = ComposerSerializer
+    serializer_class = ComposerListSerializer
     renderer_classes = (JSONRenderer, ComposerListHTMLRenderer)
     paginate_by = 20
     paginate_by_param = 'page_size'

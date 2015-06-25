@@ -67,3 +67,16 @@ class ComposerSerializer(serializers.HyperlinkedModelSerializer):
         path = os.path.relpath(obj.picture.path, settings.MEDIA_ROOT)
         url = request.build_absolute_uri(os.path.join(settings.MEDIA_URL, path))
         return url
+
+
+class ComposerListSerializer(serializers.HyperlinkedModelSerializer):
+    #image = serializers.SerializerMethodField("retrieve_image")
+    item_id = serializers.ReadOnlyField(source='pk')
+    birth_date = serializers.DateField(format=None)
+    death_date = serializers.DateField(format=None)
+    created = serializers.DateTimeField(format=None)
+    updated = serializers.DateTimeField(format=None)
+    piece_count = serializers.IntegerField(source="pieces.count")
+
+    class Meta:
+        model = Composer

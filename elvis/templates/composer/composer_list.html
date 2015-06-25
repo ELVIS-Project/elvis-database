@@ -20,7 +20,7 @@
             </div>
             <div class="media-body">
                 <h4 class="media-heading"><a href="{{ composer.url }}">{{ composer.name }}</a> <small>({{ composer.birth_date | date:"Y" }}&ndash;{{ composer.death_date | date:"Y" }})</small></h4>
-                <span class="badge alert-info">{{ composer.pieces | length }} Pieces</span>
+                <span class="badge alert-info">{{ composer.piece_count }} Pieces</span>
                 <p>
                 </p>
                 {% include "includes/download-badge-inc.html" with download_type="elvis_composer" download_item_id=composer.id %}
