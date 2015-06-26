@@ -15,7 +15,7 @@ from elvis.serializers.piece import PieceSerializer
 from elvis.models.piece import Piece
 from elvis.forms import PieceForm
 
-from elvis.views.views import abstract_model_factory, rebuild_suggester_dicts, handle_dynamic_file_table
+from elvis.views.views import abstract_model_factory, rebuild_suggester_dicts, handle_dynamic_file_table, Cleanup
 from django.utils.decorators import method_decorator
 from django.http import HttpResponseRedirect, HttpResponse
 
@@ -138,12 +138,3 @@ class PieceList(generics.ListCreateAPIView):
         rebuild_suggester_dicts()
         return HttpResponseRedirect("http://localhost:8000/piece/{0}".format(new_piece.id))
 
-
-class Cleanup:
-    def __init__(self):
-        self.list = []
-
-    def cleanup(self):
-        for x in self.list:
-            if x['new']:
-                x.delete()

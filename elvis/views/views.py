@@ -11,7 +11,6 @@ from elvis.models import Source
 from elvis.models import Genre
 from elvis.models import InstrumentVoice
 from django.db.models import ObjectDoesNotExist
-
 import json
 import urllib2
 import pytz
@@ -19,6 +18,16 @@ import os
 import zipfile
 import datetime
 import pdb
+
+
+class Cleanup:
+    def __init__(self):
+        self.list = []
+
+    def cleanup(self):
+        for x in self.list:
+            if x['new']:
+                x.delete()
 
 
 def solr_suggest(request):
@@ -189,7 +198,7 @@ def handle_dynamic_file_table(request, parent, table_name, cleanup):
 # a new one with the given name. Also works for semicolon seperated lists. If given a Cleanup object, it will append
 # all newly created models to the objects list so they can be deleted if there is a problem later in the process.
 # Returns a list of the models which were found/created.
-def abstract_model_factory(model_name, model_type, cleanup, **kwargs):
+def abstract_model_factory(model_name, model_type, cleanup=Cleanup(), **kwargs):
 
     if model_type == "Composer":
         composer_list = []
@@ -316,3 +325,4 @@ def abstract_model_factory(model_name, model_type, cleanup, **kwargs):
 def rebuild_suggester_dicts():
     for d in settings.SUGGEST_DICTS:
         urllib2.urlopen(settings.SOLR_SERVER + "/suggest/?suggest.dictionary={0}&suggest.reload=true".format(d))
+
