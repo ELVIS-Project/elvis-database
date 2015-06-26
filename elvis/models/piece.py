@@ -27,6 +27,7 @@ class Piece(models.Model):
     locations = models.ManyToManyField("elvis.Location", blank=True, null=True, related_name="pieces")
     sources = models.ManyToManyField("elvis.Source", blank=True, null=True, related_name="pieces")
     attachments = models.ManyToManyField("elvis.Attachment", blank=True, null=True, related_name="pieces")
+    religiosity = models.CharField(max_length=255, default="Unknown")
     comment = models.TextField(blank=True, null=True)
 
     created = models.DateTimeField(auto_now_add=True)
