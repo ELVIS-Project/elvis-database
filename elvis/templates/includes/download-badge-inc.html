@@ -12,7 +12,7 @@
 <script type="text/javascript">
     var inputs = document.getElementsByClassName('this_url');
 
-    for(i = 0; i < inputs.length; i++)
+    for(var i = 0; i < inputs.length; i++)
     {
       inputs[i].value = window.location.href;
     }
@@ -33,7 +33,7 @@
         $.ajax({
             type: "post",
             url: "/downloads/",
-            data: $(event.target.parentElement.parentElement).serialize(),
+            data: $(event.target).parents(".recursive-patch-download-form").serialize(),
             success: function(data)
             {
                 var $collection_count = $("#collection-count");
