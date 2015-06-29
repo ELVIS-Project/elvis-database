@@ -70,6 +70,11 @@ $(document).ready(function()
         })
     });
 
+    $("#save-collection").click(function(event)
+    {
+        $('#save_modal').modal('show');
+    })
+
 
 });
 </script>
@@ -79,6 +84,43 @@ $(document).ready(function()
 {% endblock %}
 
 {% block wrap %}
+
+<!-- Modal -->
+<div class="modal fade" id="save_modal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+        <form action="/collections/" method="post" id="new-collection-form" enctype="multipart/form-data">
+            {% csrf_token %}
+            <div class="modal-header">
+                <h4 class="modal-title">Save Collection</h4>
+            </div>
+            <div class="modal-body">
+                <div class="input-group">
+                  <span class="input-group-addon">Collection Title</span>
+                  <input type="text" id="title" name="title" autocomplete="off" class="form-control" placeholder="My Great Collection">
+                </div>
+                <div class="btn-group btn-group-justified form-inline radio" id="permission" data-toggle="buttons">
+                    <label class="btn btn-default">
+                        <input type="radio" name="permission" value="Public"> Public
+                    </label>
+                    <label class="btn btn-default active">
+                        <input type="radio" name="permission" value="Private"> Private
+                    </label>
+                </div>
+            </div>
+            <div class="form-group" style="padding-left:18px; padding-right: 18px">
+                Comments:
+                <textarea class="form-control" rows="7" name="comment" id="comment" style="resize:vertical"></textarea>
+            </div>
+            <div class="modal-footer">
+                <div class="text-right">
+                    <button type='submit' id='collection-submit' class='btn btn-success'>Submit<span class='glyphicon glyphicon-chevron-right'></span></button>
+                </div>
+            </div>
+        </form>
+        </div>
+    </div>
+</div>
 
 <div class="page-header">
     <h2>Your Collection </h2>
@@ -131,6 +173,8 @@ $(document).ready(function()
 </table>
 <br>
 
-    <button id="clear-collection" name="clear-collection" type="submit" class="btn btn-danger" onClick="return confirm('Are you sure you want to remove these items?')"><span class="glyphicon glyphicon-remove"></span>Clear Collection</button>
-
+    <button id="clear-collection" name="clear-collection" type="button" class="btn btn-danger" onClick="return confirm('Are you sure you want to remove these items?')"><span class="glyphicon glyphicon-remove"></span> Clear Collection</button>
+    <button id="save-collection" name="save-collection" type="button" class="btn btn-primary pull-right"><span class="glyphicon glyphicon-floppy-disk"></span> Save Collection</button>
+    <p></p>
+    <button id="download-collection" name="download-collection" type="button" class="btn btn-info pull-right"><span class="glyphicon glyphicon-download"></span> Download Collection</button>
 {%  endblock %}

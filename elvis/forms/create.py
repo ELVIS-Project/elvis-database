@@ -25,3 +25,9 @@ class PieceForm(forms.Form):
 
     # Tags - will probably be complicated.
     #tags = forms.CharField(required=False)
+
+
+class CollectionForm(forms.Form):
+    title = forms.CharField()
+    permission = forms.CharField(required=False)
+    comment = forms.CharField(required=False)
