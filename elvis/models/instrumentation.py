@@ -62,7 +62,7 @@ def solr_index(sender, instance, created, **kwargs):
             'instruments_voices_searchable': instrument_voice_name,
             'created': instrument_voice_created,
             'updated': instrument_voice.updated,
-            'comment': instrument_voice_comment,
+            'comment': instrument_voice.comment,
     }
     solrconn.add(**d)
     solrconn.commit()
