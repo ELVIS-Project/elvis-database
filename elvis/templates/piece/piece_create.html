@@ -111,7 +111,7 @@ $(document).ready(function($)
                     var errors = "";
                     for (var key in data['errors'])
                     {
-                        if (key == "religiosity")
+                        if (key === "religiosity")
                         {
                             $("input[name='religiosity']").parent().removeClass("btn-default").addClass("btn-danger")
                         }
