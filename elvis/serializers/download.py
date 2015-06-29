@@ -63,7 +63,7 @@ class DownloadPieceSerializer(serializers.HyperlinkedModelSerializer):
     date_of_composition2 = serializers.DateField(format=None)
     class Meta:
         model = Piece
-        fields = ('title', 'composer', 'url', 'movements', 'date_of_composition', 'date_of_composition2',)
+        fields = ('title', 'id', 'composer', 'url', 'movements', 'date_of_composition', 'date_of_composition2',)
 
 
 class DownloadSerializer(serializers.ModelSerializer):
