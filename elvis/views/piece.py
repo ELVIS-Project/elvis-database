@@ -69,10 +69,8 @@ class PieceList(generics.ListCreateAPIView):
         return self.create(request, *args, **kwargs)
 
     def create(self, request, *args, **kwargs):
-
         if not request.user.is_active:
             return Response(status=status.HTTP_401_UNAUTHORIZED)
-
         form = PieceForm(request.POST)
         if not form.is_valid():
             data = json.dumps({'errors': form.errors})
@@ -83,6 +81,7 @@ class PieceList(generics.ListCreateAPIView):
         new_piece = Piece(title=clean_form['title'],
                           date_of_composition=clean_form['composition_start_date'],
                           date_of_composition2=clean_form['composition_end_date'],
+                          religiosity=clean_form['religiosity'],
                           uploader=request.user,
                           created=datetime.datetime.now(pytz.utc),
                           updated=datetime.datetime.now(pytz.utc))
@@ -103,7 +102,6 @@ class PieceList(generics.ListCreateAPIView):
         except:
             clean.cleanup()
             raise
-
         try:
             if clean_form['collections']:
                 collection_list = abstract_model_factory(clean_form['collections'], "Collection", clean, is_public=True, creator=request.user)
@@ -112,7 +110,6 @@ class PieceList(generics.ListCreateAPIView):
         except:
             clean.cleanup()
             raise
-
         try:
             if clean_form['languages']:
                 language_list = abstract_model_factory(clean_form['languages'], "Language", clean)
@@ -121,13 +118,11 @@ class PieceList(generics.ListCreateAPIView):
         except:
             clean.cleanup()
             raise
-
         try:
             handle_dynamic_file_table(request, new_piece, "piece", clean)
         except:
             clean.cleanup()
             raise
-
         try:
             handle_dynamic_file_table(request, new_piece, "mov", clean)
         except:
@@ -137,4 +132,3 @@ class PieceList(generics.ListCreateAPIView):
         new_piece.save()
         rebuild_suggester_dicts()
         return HttpResponseRedirect("http://localhost:8000/piece/{0}".format(new_piece.id))
-

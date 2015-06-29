@@ -111,8 +111,16 @@ $(document).ready(function($)
                     var errors = "";
                     for (var key in data['errors'])
                     {
+                        if (key == "religiosity")
+                        {
+                            $("input[name='religiosity']").parent().removeClass("btn-default").addClass("btn-danger")
+                        }
+                        else
+                        {
+                             $("#" + key).parent().addClass("has-error");
+                        }
                         $("#" + key).parent().addClass("has-error");
-                        $("#" + key + "_error").html("<b>" + data['errors'][key][0] + "</b>");
+                        $("#" + key + "_error").html("<b style='color:red'>" + data['errors'][key][0] + "</b>");
                         errors = errors + "<strong>"+ key.charAt(0).toUpperCase() + key.slice(1) + "</strong>: " + data['errors'][key][0] + "<br>"
                     }
 
@@ -340,6 +348,22 @@ $(document).ready(function($)
                             <div id="instrumentation_suggestion_menu" style="padding-left:120px"></div>
                             <div id="instrument_voices_error"></div>
                         </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="btn-group btn-group-justified form-inline radio" id="religiosity" data-toggle="buttons">
+                            <label class="btn btn-default">
+                                <input type="radio" name="religiosity" value="Sacred"> Sacred
+                            </label>
+                            <label class="btn btn-default">
+                                <input type="radio" name="religiosity" value="Secular"> Secular
+                            </label>
+                            <label class="btn btn-default">
+                                <input type="radio" name="religiosity" value="Ambiguous"> Ambiguous
+                            </label>
+                        </div>
+                        <div id="religiosity_error"></div>
                     </div>
                 </div>
                 <br>

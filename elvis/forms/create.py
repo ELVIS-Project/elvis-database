@@ -1,4 +1,5 @@
 from django import forms
+from django.core.exceptions import ValidationError
 
 
 class PieceForm(forms.Form):
@@ -20,12 +21,7 @@ class PieceForm(forms.Form):
     sources = forms.CharField(required=False)
     instrument_voices = forms.CharField(required=False)
     comment = forms.CharField(required=False)
-
-
-
-
+    religiosity = forms.CharField(required=True)
 
     # Tags - will probably be complicated.
     #tags = forms.CharField(required=False)
-    # Comment
-    #comment = forms.CharField(required=False)
