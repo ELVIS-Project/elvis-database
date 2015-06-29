@@ -192,8 +192,12 @@ class DownloadDetail(generics.RetrieveUpdateAPIView):
             user_download = request.user.downloads.all()[0]
             type = request.POST.get('type')
             id = int(request.POST.get('id'))
-            rem = Piece.objects.get(id=id)
-            user_download.collection_pieces.remove(rem)
+            if type == "Piece":
+                rem = Piece.objects.get(id=id)
+                user_download.collection_pieces.remove(rem)
+            else:
+                rem = Movement.objects.get(id=id)
+                user_download.collection_movements.remove(rem)
             user_download.save()
             jresults = json.dumps({'count': user_download.cart_size})
             return HttpResponse(content=jresults, content_type="json")
