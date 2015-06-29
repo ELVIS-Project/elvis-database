@@ -27,15 +27,14 @@ th.header:hover{
 $(document).ready(function()
 {
 
-    $("#collection-table").tablesorter({headers: { 0: { sorter: false}, 1: {sorter: false} }, textExtraction: "complex"});
+    $("#collection-table").tablesorter({headers: { 0: { sorter: false}, 1: {sorter: false}, 2: {sorter: false} }, textExtraction: "complex"});
 
 
     $(".remove-row").click(function(event)
     {
-        var id = event.target.parentElement.nextElementSibling.textContent;
+        var id = event.target.parentElement.parentElement.children[1].textContent;
         var type = event.target.parentElement.parentElement.children[6].textContent;
         event.target.parentElement.parentElement.remove();
-
         $.ajax({
             type: "post",
             url: "/downloads/",
@@ -51,6 +50,7 @@ $(document).ready(function()
             }
         })
     });
+
     $("#clear-collection").click(function(event)
     {
         $("#collection-table").find("tbody").empty();
@@ -88,7 +88,7 @@ $(document).ready(function()
 <table class="table" id="collection-table">
     <colgroup>
         <col class="text-center" style="width: 7%;">
-        <col style="width: 7%;">
+        <col class="text-center" style="width: 7%;">
         <col style="width: 30%;">
         <col style="width: 30%;">
         <col style="width: 16%;">
@@ -96,8 +96,8 @@ $(document).ready(function()
     </colgroup>
     <thead id="table-head">
         <th class="text-center">Remove</th>
-        <th style="display:none">Remove</th>
-        <th>Expand</th>
+        <th hidden="hidden">ID</th>
+        <th>Movements</th>
         <th>Title</th>
         <th>Composer</th>
         <th>Date</th>
@@ -106,9 +106,9 @@ $(document).ready(function()
     <tbody>
         {% for piece in content.collection_pieces %}
             <tr>
-                <td class="text-center"><button type="button" class="btn btn-sm remove-row" name="remove-item">-</button></td>
+                <td class="text-center"><button type="button" class="btn btn-sm remove-row" name="remove-item">x</button></td>
                 <td style="display: none;">{{ piece.id }}</td>
-                <td>{% if piece.movements %} exbut {% endif %}</td>
+                <td class="text-center">{% if piece.movements %} <span class="label label-primary">{{ piece.movements | length }} included</span> {% endif %}</td>
                 <td><a href="{{ piece.url }}">{{ piece.title }}</a></td>
                 <td><a href="{{ piece.composer.url }}">{{ piece.composer.name }}</a></td>
                 <td>{% if piece.date_of_composition  == piece.date_of_composition2 %}{{ piece.date_of_composition | date:"Y" }}{% else %}{{ piece.date_of_composition | date:"Y" }}-{{ piece.date_of_composition2 | date:"Y" }}{% endif %}</td>
@@ -117,13 +117,13 @@ $(document).ready(function()
         {% endfor %}
         {% for movement in content.collection_movements %}
             <tr>
-                <td class="text-center"><button type="button" class="btn btn-sm remove-row" name="remove-item">-</button></td>
-                <td style="display: none;">{{ piece.id }}</td>
+                <td class="text-center"><button type="button" class="btn btn-sm remove-row" name="remove-item">x</button></td>
+                <td style="display: none;">{{ movement.id }}</td>
                 <td> </td>
                 <td><a href="{{ movement.url }}">{{ movement.title }}</a></td>
                 <td><a href="{{ movement.composer.url }}">{{ movement.composer.name }}</a></td>
                 <td>{% if movement.date_of_composition  == movement.date_of_composition2 %}{{ movement.date_of_composition | date:"Y" }}{% else %}{{ movement.date_of_composition | date:"Y" }}-{{ movement.date_of_composition2 | date:"Y" }}{% endif %}</td>
-                <td><span class="label label-warning">Movement</span></td>
+                <td><span class="label label-primary">Movement</span></td>
             </tr>
         {% endfor %}
 
