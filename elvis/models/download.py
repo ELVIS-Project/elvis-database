@@ -2,6 +2,7 @@ from django.db import models
 from django.contrib.auth.models import User
 from django.db.models.signals import post_save
 
+
 class Download(models.Model):
     class Meta:
         app_label = "elvis"
@@ -17,7 +18,11 @@ class Download(models.Model):
 
     @property
     def cart_size(self):
-        return self.collection_pieces.all().count() + self.collection_movements.all().count()
+        count = self.collection_pieces.all().count() + self.collection_movements.all().count()
+        for piece in self.collection_pieces.all():
+            count += piece.movements.all().count()
+        return count
+
 
 def create_user_download(sender, instance, created, **kwargs):
     if created:

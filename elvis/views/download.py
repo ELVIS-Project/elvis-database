@@ -113,9 +113,13 @@ class DownloadDetail(generics.RetrieveUpdateAPIView):
         if item.__class__.__name__ == "Collection":
             for piece in item.pieces.all():
                 self._download_helper(piece, user_download)
+            for movement in item.movements.all():
+                self._download_helper(movement, user_download)
         if item.__class__.__name__ == "Composer":
             for piece in item.pieces.all():
                 self._download_helper(piece, user_download)
+            for movement in item.movements.all():
+                self._download_helper(movement, user_download)
         if item.__class__.__name__ == "Piece":
             user_download.collection_pieces.add(item)
         if item.__class__.__name__ == "Movement":
@@ -142,7 +146,7 @@ class DownloadDetail(generics.RetrieveUpdateAPIView):
 
         self._download_helper(item, user_download)
         user_download.save()
-        jresults = json.dumps({'count': user_download.collection_pieces.count()})
+        jresults = json.dumps({'count': user_download.cart_size})
         return HttpResponse(content=jresults, content_type="json")
 
     # Recursive version of the flat-downloads
