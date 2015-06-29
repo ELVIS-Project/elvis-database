@@ -1,5 +1,6 @@
-from elvis.models.piece import Piece
-from elvis.models.movement import Movement
+import csv
+import codecs
+
 from elvis.models.tag import Tag
 from elvis.models.composer import Composer
 from elvis.models.genre import Genre
@@ -7,11 +8,16 @@ from elvis.models.instrumentation import InstrumentVoice
 from elvis.models.language import Language
 from elvis.models.source import Source
 from elvis.views import abstract_model_factory
-import csv
-import pdb
 
 
 def migrate_tags(csv_file):
+    """Migrate tags to fields and write any missing tags to file.
+
+    This function should NOT be called from the os, but rather, its methods should be imported and executed
+    from the Django shell for the elvis-db project.
+
+    :param csv_file: string. Path to the UTF-8 CSV file with the tag to field migrations.
+    """
     missing_tags = []
 
     with open(csv_file, 'rU') as open_file:
@@ -26,34 +32,47 @@ def migrate_tags(csv_file):
             if 'tags' in row['mod']:
                 continue
             print("Handling tag " + row['tag'] + " on pieces")
-            handle_pieces(row)
+            _handle_pieces(row)
             print("Handling tag " + row['tag'] + " on movements")
-            handle_movements(row)
+            _handle_movements(row)
 
-    with open("missing_tags.txt", "w+") as output:
+    with codecs.open("elvis/missing_tags.txt", "w+", "utf-8") as output:
         for item in missing_tags:
             output.write(item + "\n")
 
 
-def handle_pieces(csv_row):
+def delete_unused_tags():
+    """Delete any tags which are no longer attached to a model. Write deleted tags to a file."""
+    deleted_tags = []
+    for tag in Tag.objects.all():
+        if not tag.pieces.all() and not tag.movements.all():
+            print("Removing tag " + tag.name)
+            deleted_tags.append(tag.name)
+            tag.delete()
+    with codecs.open("elvis/deleted_tags.txt", "w+", "utf-8") as output:
+        for item in deleted_tags:
+            output.write(item + "\n")
+
+
+def _handle_pieces(csv_row):
     tag_query = Tag.objects.filter(name=csv_row['tag'])
     if not tag_query:
         raise Exception("No tag named " + csv_row['tag'])
     for tag_object in tag_query:
         for piece in tag_object.pieces.all():
-            handle_tag(csv_row, tag_object, piece)
+            _handle_tag(csv_row, tag_object, piece)
 
 
-def handle_movements(csv_row):
+def _handle_movements(csv_row):
     tag_query = Tag.objects.filter(name=csv_row['tag'])
     if not tag_query:
         raise Exception("No tag named " + csv_row['tag'])
     for tag_object in tag_query:
         for movement in tag_object.movements.all():
-            handle_tag(csv_row, tag_object, movement)
+            _handle_tag(csv_row, tag_object, movement)
 
 
-def handle_tag(csv_row, tag_object, model):
+def _handle_tag(csv_row, tag_object, model):
 
     if csv_row['field'] == "Composer":
         if csv_row['mod']:
@@ -153,9 +172,3 @@ def handle_tag(csv_row, tag_object, model):
     if csv_row['field'] == "x":
         model.tags.remove(tag_object)
         model.save()
-
-
-def delete_unused_tags():
-    for tag in Tag.objects.all():
-        if not tag.pieces.all() and not tag.movements.all():
-            tag.delete()
