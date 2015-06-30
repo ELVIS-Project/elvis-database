@@ -74,6 +74,5 @@ class CollectionListSerializer(serializers.HyperlinkedModelSerializer):
     piece_count = serializers.IntegerField(source='pieces.count')
     movement_count = serializers.IntegerField(source='movements.count')
 
-
     class Meta:
         model = Collection

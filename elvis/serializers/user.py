@@ -3,6 +3,7 @@ from django.contrib.auth.models import User
 from elvis.models.piece import Piece
 from elvis.models.movement import Movement
 
+
 class UserPieceSerializer(serializers.HyperlinkedModelSerializer):
     class Meta:
         model = Piece
@@ -13,6 +14,7 @@ class UserMovementSerializer(serializers.HyperlinkedModelSerializer):
     class Meta:
         model = Movement
         fields = ('url', 'title')
+
 
 class UserSerializer(serializers.HyperlinkedModelSerializer):
     full_name = serializers.SerializerMethodField()
