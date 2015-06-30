@@ -10,6 +10,7 @@ from elvis.models import Location
 from elvis.models import Source
 from elvis.models import Genre
 from elvis.models import InstrumentVoice
+from elvis.models import Tag
 from django.db.models import ObjectDoesNotExist
 import json
 import urllib2
@@ -320,6 +321,23 @@ def abstract_model_factory(model_name, model_type, cleanup=Cleanup(), **kwargs):
                     cleanup.list.append({"model": instrument, "new": True})
                 instrument_list.append(instrument)
         return instrument_list
+
+    if model_type == "Tag":
+        tokenized_inputs = map((lambda x: x.strip()), model_name.rsplit(";"))
+        tag_list = []
+        for token in tokenized_inputs:
+            if token != "":
+                try:
+                    tag = Tag.objects.get(name=token)
+                    cleanup.list.append({"model": tag, "new": False})
+                except ObjectDoesNotExist:
+                    tag = Tag(name=token,
+                              created=datetime.datetime.now(pytz.utc),
+                              updated=datetime.datetime.now(pytz.utc))
+                    tag.save()
+                    cleanup.list.append({"model": tag, "new": True})
+                tag_list.append(tag)
+        return tag_list
 
 
 def rebuild_suggester_dicts():

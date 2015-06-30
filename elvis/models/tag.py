@@ -58,6 +58,7 @@ def solr_index(sender, instance, created, **kwargs):
             'tags': tag_name,
             'description': tag_description,
             'approved': tag.approved,
+            'tag_suggestions': tag_name
     }
     solrconn.add(**d)
     solrconn.commit()

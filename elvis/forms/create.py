@@ -22,9 +22,7 @@ class PieceForm(forms.Form):
     instrument_voices = forms.CharField(required=False)
     comment = forms.CharField(required=False)
     religiosity = forms.CharField(required=True)
-
-    # Tags - will probably be complicated.
-    #tags = forms.CharField(required=False)
+    tags = forms.CharField(required=False)
 
 
 class CollectionForm(forms.Form):

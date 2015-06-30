@@ -21,6 +21,7 @@ $(document).ready(function($)
     autocomplete("locations", "location_suggestion_menu", "locationSuggest", true);
     autocomplete("sources", "source_suggestion_menu", "sourceSuggest", true);
     autocomplete("instrument_voices", "instrumentation_suggestion_menu", "instrumentSuggest", true);
+    autocomplete("tags", "tags_suggestion_menu", "tagSuggest", true);
     dynamicFileTable("new_mov", "movement_table", "mov", "Movement Files");
     dynamicFileTable("new_piece_file", "piece_file_table", "piece", "Piece Files");
 
@@ -229,13 +230,6 @@ $(document).ready(function($)
                                 <div id="composer_death_date_error"></div>
                             </div>
                         </div>
-                        <div class="col-md-2">
-                            <div class="form-group">
-                                <div class="input-group">
-                                    <input name="comp_pic" id="id_comp_pic" type="file" multiple="multiple"/>
-                                </div>
-                            </div>
-                        </div>
                     </div>
                     <hr>
                 </div>
@@ -370,6 +364,17 @@ $(document).ready(function($)
                 <h4>Piece Comment</h4>
                 <div class="form-group">
                   <textarea class="form-control" rows="7" name="comment" id="comment" style="resize:vertical"></textarea>
+                </div>
+                <br>
+                <h4>Tags</h4>
+                <div class="form-group">
+                    Here will be important text on how not to abuse tags.
+                    <div class="input-group">
+                        <span class="input-group-addon">Tags</span>
+                        <input type='text' name="tags" id="tags" autocomplete="off" class="form-control unstyled"/>
+                    </div>
+                    <div id="tags_suggestion_menu" style="padding-left:120px"></div>
+                    <div id="tags_error"></div>
                 </div>
                 <hr>
                 <div class="text-right">

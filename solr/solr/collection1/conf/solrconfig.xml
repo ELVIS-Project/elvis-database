@@ -1421,6 +1421,18 @@
         <str name="buildOnCommit">false</str>
         <str name="highlight">false</str>
     </lst>
+    <lst name="suggester">
+        <str name="name">tagSuggest</str>
+        <str name="lookupImpl">AnalyzingInfixLookupFactory</str>
+        <str name="indexPath">suggestions/tagSuggest_dict</str>
+        <str name="dictionaryImpl">DocumentDictionaryFactory</str>
+        <str name="field">tag_suggestions</str>
+        <str name="weightField">price</str>
+        <str name="suggestAnalyzerFieldType">suggestTypeLc</str>
+        <str name="buildOnStartup">true</str>
+        <str name="buildOnCommit">false</str>
+        <str name="highlight">false</str>
+    </lst>
  </searchComponent>
 
  <requestHandler name="/suggest" class="solr.SearchHandler" startup="lazy" >
