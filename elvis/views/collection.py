@@ -2,6 +2,7 @@ import pdb
 import json
 import datetime
 import pytz
+from django.db.models import Q
 
 from rest_framework import generics
 from rest_framework import permissions
@@ -42,7 +43,21 @@ class CollectionList(generics.ListCreateAPIView):
     paginate_by = 10
     paginate_by_param = 'page_size'
     max_paginate_by = 100
-    queryset = Collection.objects.all()
+    queryset = Collection.objects.filter(public=True)
+
+    def get_queryset(self):
+        query = self.request.GET.get('creator', None)
+        user = self.request.user
+        if user.is_anonymous():
+            if query:
+                return self.queryset.filter(creator__username=query)
+            else:
+                return self.queryset
+        else:
+            if query:
+                return Collection.objects.filter(Q(creator__username=query) & (Q(public=True) | Q(creator=user)))
+            else:
+                return Collection.objects.filter(Q(public=True) | Q(creator=user))
 
     @method_decorator(csrf_protect)
     def post(self, request, *args, **kwargs):
@@ -85,7 +100,14 @@ class CollectionDetail(generics.RetrieveUpdateDestroyAPIView):
     permission_classes = (permissions.IsAuthenticatedOrReadOnly,)
     serializer_class = CollectionSerializer
     renderer_classes = (JSONRenderer, CollectionDetailHTMLRenderer)
-    queryset = Collection.objects.all()
+    queryset = Collection.objects.filter(public=True)
+
+    def get_queryset(self):
+        user = self.request.user
+        if user.is_anonymous():
+            return self.queryset
+        else:
+            return Collection.objects.filter(Q(public=True) | Q(creator=user))
 
 
 class CollectionCurrent(generics.RetrieveUpdateDestroyAPIView):
