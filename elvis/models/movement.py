@@ -29,7 +29,8 @@ class Movement(models.Model):
     locations = models.ManyToManyField("elvis.Location", blank=True, null=True, related_name="movements")
     sources = models.ManyToManyField("elvis.Source", blank=True, null=True, related_name="movements")
     attachments = models.ManyToManyField("elvis.Attachment", blank=True, null=True, related_name="movements")
-    religiosity = models.CharField(max_length=255, default="Unknown")
+    religiosity = models.CharField(max_length=50, default="Unknown")
+    vocalization = models.CharField(max_length=50, default="Unknown")
     comment = models.TextField(blank=True, null=True)
 
     created = models.DateTimeField(auto_now_add=True)

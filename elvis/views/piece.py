@@ -5,6 +5,7 @@ from rest_framework import status
 from rest_framework import permissions
 import datetime
 import pytz
+import pdb
 import json
 from rest_framework.renderers import JSONRenderer
 from rest_framework.response import Response
@@ -71,6 +72,7 @@ class PieceList(generics.ListCreateAPIView):
         if not request.user.is_active:
             return Response(status=status.HTTP_401_UNAUTHORIZED)
         form = PieceForm(request.POST)
+        pdb.set_trace()
         if not form.is_valid():
             data = json.dumps({'errors': form.errors})
             return HttpResponse(data, content_type="json")
@@ -81,6 +83,7 @@ class PieceList(generics.ListCreateAPIView):
                           date_of_composition=clean_form['composition_start_date'],
                           date_of_composition2=clean_form['composition_end_date'],
                           religiosity=clean_form['religiosity'],
+                          vocalization=clean_form['vocalization'],
                           uploader=request.user,
                           created=datetime.datetime.now(pytz.utc),
                           updated=datetime.datetime.now(pytz.utc))
