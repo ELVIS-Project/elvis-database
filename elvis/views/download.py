@@ -125,22 +125,22 @@ class DownloadDetail(generics.RetrieveUpdateAPIView):
         if item.__class__.__name__ == "Movement":
             if item.piece not in user_download.collection_pieces.all():
                 user_download.collection_movements.add(item)
-        if item.__class__.__name__ == "Attachment":
-            user_download.attachments.add(item.attachment)
+
+
 
 
     # Choose the right model based on request, again to help recursive-patching
     def _type_selector(self, item_type, item_id, user_download):
         if item_type == "elvis_movement":
-            item = Movement.objects.filter(pk=item_id).all()[0]
+            item = Movement.objects.filter(pk=item_id)[0]
         elif item_type == "elvis_piece":
-            item = Piece.objects.filter(pk=item_id).all()[0]
+            item = Piece.objects.filter(pk=item_id)[0]
         elif item_type == "elvis_composer":
-            item = Composer.objects.filter(pk=item_id).all()[0]
+            item = Composer.objects.filter(pk=item_id)[0]
         elif item_type == "elvis_collection":
-            item = Collection.objects.filter(pk=item_id).all()[0]
+            item = Collection.objects.filter(pk=item_id)[0]
         elif item_type == "elvis_tag":
-            item = Tag.objects.filter(pk=item_id).all()[0]
+            item = Tag.objects.filter(pk=item_id)[0]
         else:
             raise TypeError("Item type '"+ item_type +"' passed not found in database.")
 
@@ -176,11 +176,12 @@ class DownloadDetail(generics.RetrieveUpdateAPIView):
 
     @method_decorator(csrf_protect)
     def post(self, request, *args, **kwargs):
+        user_download = request.user.downloads.all()[0]
+
         if 'a_ids' in request.POST:
             return self._patch_downloads(request)
 
         elif 'clear-collection' in request.POST:
-            user_download = request.user.downloads.all()[0]
             user_download.attachments.clear()
             user_download.collection_movements.clear()
             user_download.collection_pieces.clear()
@@ -188,8 +189,27 @@ class DownloadDetail(generics.RetrieveUpdateAPIView):
             jresults = json.dumps({'count': user_download.cart_size})
             return HttpResponse(content=jresults, content_type="json")
 
+        elif 'clear-attachments' in request.POST:
+            user_download.attachments.clear()
+            user_download.save()
+            jresults = json.dumps({'count': user_download.cart_size})
+            return HttpResponse(content=jresults, content_type="json")
+
+        elif 'prepare-cart' in request.POST:
+            user_download.attachments.clear()
+            user_download.save()
+            for piece in user_download.collection_pieces.all():
+                for att in piece.attachments.all():
+                    user_download.attachments.add(att)
+                for mov in piece.movements.all():
+                    for att in mov.attachments.all():
+                        user_download.attachments.add(att)
+            for mov in user_download.collection_movements.all():
+                user_download.attachments.add(mov)
+            user_download.save()
+            return HttpResponse(status=status.HTTP_200_OK)
+
         elif 'remove' in request.POST:
-            user_download = request.user.downloads.all()[0]
             type = request.POST.get('type')
             id = int(request.POST.get('id'))
             if type == "Piece":
