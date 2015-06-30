@@ -29,6 +29,12 @@ class Composer(models.Model):
 
     def __unicode__(self):
         return u"{0}".format(self.name)
+    @property
+    def piece_count(self):
+        return self.pieces.all().count()
+    @property
+    def movement_count(self):
+        return self.movements.all().count()
 
 @receiver(post_save, sender=Composer)
 def solr_index(sender, instance, created, **kwargs):
