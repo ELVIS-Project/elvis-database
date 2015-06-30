@@ -31,12 +31,14 @@
                         Uploaded by {{ piece.uploader.username }} on {{ piece.created | date:"d F Y"}} <em>  
                         {%  if piece.attachments|length == 0 %}  {% elif piece.attachments|length == 1 %} with 1 File  {% else %} with {{ piece.attachments | length }} Files {% endif %}. </em>
                     </li>
+                    {% if piece.tags %}
                     <li>
                         Tags: 
                         {% for tag in piece.tags %}
                             <span class="label label-primary rounded"> {{tag.name}} </span> &nbsp;
                         {% endfor %}
                     </li>
+                    {% endif %}
                     {% if not piece.comment == "" %}
                      <li> {{ piece.comment }} </li>
                     {% endif %}
@@ -48,22 +50,22 @@
                     <button class="btn btn-xs dropdown-toggle" data-toggle="collapse" data-target="#movements-piece-{{ forloop.counter }}" style="width:100%;">Movements ({{ piece.movements | length }}) <span class="caret"></span></button>
                 </div>
                 <div id="movements-piece-{{ forloop.counter }}" class="collapse collapsed">
+                <div class="well">
                     <table class="table table-condensed table-hover">
-                        <thead>
-                            <tr>
-                                <th></th>
-                                <th>Movement Name</th>
-                            </tr>
-                        </thead>
+                        <colgroup>
+                            <col class="text-center" style="width: 5%;">
+                            <col style="width: 95%;">
+                        </colgroup>
                         <tbody>
                             {% for movement in piece.movements %}
-                                <tr>
-                                    <td class="small-column">{% include "includes/download-badge-inc.html" with download_type="elvis_movement" download_item_id=movement.item_id %}</td>
-                                    <td><a href="{{ movement.url }}">{{ movement.title }}</a></td>
-                                </tr>
+                            <tr>
+                                <td class="small-column">{% include "includes/download-badge-inc.html" with download_type="elvis_movement" download_item_id=movement.item_id %}</td>
+                                <td><a href="{{ movement.url }}">{{ movement.title }}</a></td>
+                            </tr>
                             {% endfor %}
                         </tbody>
                     </table>
+                </div>
                 </div>
             {% endif %}
     </li>
