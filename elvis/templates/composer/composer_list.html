@@ -14,7 +14,7 @@
     {% for composer in content.results %}
         <a class="list-group-item" href="{{ composer.url }}">
             <span class="badge alert-info">{{ composer.piece_count }} Pieces, {{ composer.movement_count }} Movements</span>
-            <h4 class="list-group-item-header">{% include "includes/download-badge-inc.html" with download_type="elvis_collection" download_item_id=composer.item_id %}{{ composer.name }} </h4>
+            <h4 class="list-group-item-header">{% include "includes/download-badge-inc.html" with download_type="elvis_composer" download_item_id=composer.item_id %}{{ composer.name }} </h4>
             <p class="list-group-item-text">
             <small>{% if not composer.birth_date %} (Unknown) {% else %} ({{ composer.birth_date | date:"Y" }}&ndash;{{ composer.death_date | date:"Y" }}) {% endif %}</small>
             </p>
