@@ -28,7 +28,7 @@ class Cleanup:
     def cleanup(self):
         for x in self.list:
             if x['new']:
-                x.delete()
+                x['model'].delete()
 
 
 def solr_suggest(request):

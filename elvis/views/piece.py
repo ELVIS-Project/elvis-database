@@ -6,7 +6,6 @@ from rest_framework import permissions
 import datetime
 import pytz
 import json
-import pdb
 from rest_framework.renderers import JSONRenderer
 from rest_framework.response import Response
 
@@ -86,7 +85,7 @@ class PieceList(generics.ListCreateAPIView):
                           created=datetime.datetime.now(pytz.utc),
                           updated=datetime.datetime.now(pytz.utc))
         new_piece.save()
-        clean.list.append(new_piece)
+        clean.list.append({"model": new_piece, "new": True})
 
         if clean_form['number_of_voices']:
             new_piece.number_of_voices = int(clean_form['number_of_voices'])
@@ -115,6 +114,14 @@ class PieceList(generics.ListCreateAPIView):
                 language_list = abstract_model_factory(clean_form['languages'], "Language", clean)
                 for x in language_list:
                     new_piece.languages.add(x)
+        except:
+            clean.cleanup()
+            raise
+        try:
+            if clean_form['tags']:
+                tag_list = abstract_model_factory(clean_form['tags'], "Tag", clean)
+                for x in tag_list:
+                    new_piece.tags.add(x)
         except:
             clean.cleanup()
             raise
