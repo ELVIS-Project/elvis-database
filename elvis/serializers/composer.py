@@ -76,7 +76,8 @@ class ComposerListSerializer(serializers.HyperlinkedModelSerializer):
     death_date = serializers.DateField(format=None)
     created = serializers.DateTimeField(format=None)
     updated = serializers.DateTimeField(format=None)
-    piece_count = serializers.IntegerField(source="pieces.count")
+    piece_count = serializers.IntegerField()
+    movement_count = serializers.IntegerField()
 
     class Meta:
         model = Composer

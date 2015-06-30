@@ -10,25 +10,18 @@
     </div>
     {% include "paginate.html" with content=content %}
 
-    <ul class="media-list">
+    <div class="list-group">
     {% for composer in content.results %}
-        <li class="media">
-            <div class="col-md-2">
-                <div class="img-wrapper">
-                    <img src="{% if content.image %} {{ content.image }}  {% else %} holder.js/180x180/text:No Picture {% endif %}" class="img-responsive" style="position:absolute;"/>
-                </div>
-            </div>
-            <div class="media-body">
-                <h4 class="media-heading"><a href="{{ composer.url }}">{{ composer.name }}</a> <small>({{ composer.birth_date | date:"Y" }}&ndash;{{ composer.death_date | date:"Y" }})</small></h4>
-                <span class="badge alert-info">{{ composer.piece_count }} Pieces</span>
-                <p>
-                </p>
-                {% include "includes/download-badge-inc.html" with download_type="elvis_composer" download_item_id=composer.id %}
-            </div>
-        </li>
+        <a class="list-group-item" href="{{ composer.url }}">
+            <span class="badge alert-info">{{ composer.piece_count }} Pieces, {{ composer.movement_count }} Movements</span>
+            <h4 class="list-group-item-header">{% include "includes/download-badge-inc.html" with download_type="elvis_collection" download_item_id=composer.item_id %}{{ composer.name }} </h4>
+            <p class="list-group-item-text">
+            <small>{% if not composer.birth_date %} (Unknown) {% else %} ({{ composer.birth_date | date:"Y" }}&ndash;{{ composer.death_date | date:"Y" }}) {% endif %}</small>
+            </p>
+        </a>
     {% endfor %}
-    </ul>
+    </div>
+        {% include "paginate.html" with content=content %}
 
-    {% include "paginate.html" with content=content %}
 
 {% endblock %}
