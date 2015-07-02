@@ -32,9 +32,10 @@ $(document).ready(function()
 
     $(".remove-row").click(function(event)
     {
-        var id = event.target.parentElement.parentElement.children[1].textContent;
-        var type = event.target.parentElement.parentElement.children[6].textContent;
-        event.target.parentElement.parentElement.remove();
+        debugger;
+        var id = $(event.target).parents('tr').children()[1].textContent;
+        var type = $(event.target).parents('tr').children()[6].textContent;
+        $(event.target).parents('tr').remove();
         $.ajax({
             type: "post",
             url: "/downloads/",
@@ -77,7 +78,15 @@ $(document).ready(function()
 
     $("#download-collection").click(function(event)
     {
-        window.location.replace("/downloads/")
+    $.ajax({
+            type: "post",
+            url: "/downloads/",
+            data: {'prepare-cart': true},
+            success: function(data)
+            {
+                window.location.replace("/downloads/")
+            }
+        })
     });
 
 
@@ -154,7 +163,7 @@ $(document).ready(function()
         <tbody>
             {% for piece in content.collection_pieces %}
                 <tr>
-                    <td class="text-center"><button type="button" class="btn btn-sm remove-row" name="remove-item">x</button></td>
+                    <td class="text-center"><button type="button" class="btn btn-sm remove-row" name="remove-item"><span class="glyphicon glyphicon-remove"></span></button></td>
                     <td style="display: none;">{{ piece.id }}</td>
                     <td class="text-center">{% if piece.movements %} <span class="label label-primary">{{ piece.movements | length }} included</span> {% endif %}</td>
                     <td><a href="{{ piece.url }}">{{ piece.title }}</a></td>
@@ -165,7 +174,7 @@ $(document).ready(function()
             {% endfor %}
             {% for movement in content.collection_movements %}
                 <tr>
-                    <td class="text-center"><button type="button" class="btn btn-sm remove-row" name="remove-item">x</button></td>
+                    <td class="text-center"><button type="button" class="btn btn-sm remove-row" name="remove-item"><span class="glyphicon glyphicon-remove"></button></td>
                     <td style="display: none;">{{ movement.id }}</td>
                     <td> </td>
                     <td><a href="{{ movement.url }}">{{ movement.title }}</a></td>
@@ -179,7 +188,7 @@ $(document).ready(function()
     <br>
     <button id="clear-collection" name="clear-collection" type="button" class="btn btn-danger" onClick="return confirm('Are you sure you want to remove these items?')"><span class="glyphicon glyphicon-remove"></span> Clear Collection</button>
     <button id="save-collection" name="save-collection" type="button" class="btn btn-primary pull-right"><span class="glyphicon glyphicon-floppy-disk"></span> Save Collection</button>
-    <p></p>
+    <br><br>
     <button id="download-collection" name="download-collection" type="button" class="btn btn-info pull-right"><span class="glyphicon glyphicon-download"></span> Download Collection</button>
 {% else %}
     <div class="text-center">Nothing added yet to your collection!</div>
