@@ -2,6 +2,25 @@
 
 {% block extra_hd %}
 <title>{{ content.title }}</title>
+
+<script>
+$(document).ready(function($)
+{
+    $("#show-more").click(function(event){
+        var $extra_info = $("#extra-info");
+        if ($extra_info.is(":visible"))
+        {
+            $(this).html("Show more <span class='glyphicon glyphicon-triangle-right' aria-hidden='true'>");
+            $extra_info.slideUp("slow");
+        }
+        else
+        {
+            $(this).html("Show less <span class='glyphicon glyphicon-triangle-bottom' aria-hidden='true'>");
+            $extra_info.slideDown("slow");
+        }
+    })
+})
+</script>
 {% endblock %}
 
 {% block wrap %}
@@ -19,26 +38,26 @@
         <dd>{{ content.date_of_composition | date:"Y"}}</dd> 
         {% else %}
         <dt>Dates of Composition</dt>
-        <dd>{{ content.date_of_composition | date:"Y"}}-{{ content.date_of_composition2 | date:"Y" }} </dd> 
+        <dd>{{ content.date_of_composition | date:"Y"}}-{{ content.date_of_composition2 | date:"Y" }} </dd>
         {% endif %}
-        <dt>Collections</dt>
-        {% for collection in content.collections %}
-            <dd><a href="{{collection.url}}">{{ collection.title }}</a></dd>
-        {% endfor %}
+        <dt><span style="cursor:pointer" id="show-more">Show more <span class="glyphicon glyphicon-triangle-right" aria-hidden="true"></span></span></dt>
+        <dd></dd>
+    </dl>
+    <dl class='dl-horizontal' hidden="hidden" id="extra-info">
         <dt>Number of voices</dt>
         <dd>{{content.number_of_voices}}</dd>
-        {% if content.piece %}
-        <dt>Piece</dt>
-        <dd><a href="{{content.piece.url}}">{{content.piece.name}}</a></dd>
-        {% endif %}
         <dt>Tags</dt>
         <dd>
             {% for tag in content.tags %}
                 <a href="{{ tag.url }}" class="label label-primary rounded">{{tag.name}} </a> &nbsp;
             {% endfor %}
         </dd>
+        <dt>Religiosity</dt>
+        <dd>{{ content.religiosity }}</dd>
+        <dt>Voice Type</dt>
+        <dd>{{ content.vocalization }}</dd>
     </dl>
-    {% if content.comment != null %}
+    {% if content.comment %}
         <div class="form-group">
           <textarea class="form-control" rows="5" disabled="disabled" style="resize:none">{{ content.comment }}</textarea>
         </div>
