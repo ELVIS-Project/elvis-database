@@ -35,6 +35,12 @@ class Composer(models.Model):
     @property
     def movement_count(self):
         return self.movements.all().count()
+    @property
+    def free_movements(self):
+        return self.movements.filter(piece=None)
+    @property
+    def free_movements_count(self):
+        return self.movements.filter(piece=None).count()
 
 @receiver(post_save, sender=Composer)
 def solr_index(sender, instance, created, **kwargs):

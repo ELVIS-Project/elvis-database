@@ -15,13 +15,13 @@ class ComposerMovementSerializer(serializers.HyperlinkedModelSerializer):
 
 
 class ComposerPieceSerializer(serializers.HyperlinkedModelSerializer):
-    movements = ComposerMovementSerializer(many=True)
+    movement_count = serializers.ReadOnlyField(source='movements.count')
     item_id = serializers.ReadOnlyField(source='pk')
     date_of_composition = serializers.DateField(format=None)
 
     class Meta:
         model = Piece
-        fields = ('url', 'item_id', 'title', 'movements', "date_of_composition")
+        fields = ('url', 'item_id', 'title', 'movement_count', "date_of_composition")
 
 
 class ComposerHistorySerializer(serializers.HyperlinkedModelSerializer):
@@ -35,7 +35,8 @@ class ComposerHistorySerializer(serializers.HyperlinkedModelSerializer):
 
 class ComposerSerializer(serializers.HyperlinkedModelSerializer):
     pieces = ComposerPieceSerializer(many=True)
-    movements = ComposerMovementSerializer(many=True)
+    free_movements = ComposerMovementSerializer(many=True)
+    free_movements_count = serializers.ReadOnlyField()
     image = serializers.SerializerMethodField("retrieve_image")
     item_id = serializers.ReadOnlyField(source='pk')
     birth_date = serializers.DateField(format=None)
@@ -54,7 +55,8 @@ class ComposerSerializer(serializers.HyperlinkedModelSerializer):
                   "birth_date",
                   "death_date",
                   "pieces",
-                  "movements",
+                  "free_movements",
+                  "free_movements_count",
                   "image",
                   "created",
                   "updated",
