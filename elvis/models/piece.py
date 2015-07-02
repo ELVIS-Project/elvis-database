@@ -41,6 +41,9 @@ class Piece(models.Model):
         return len(self.movements.all())
 
     @property
+    def movement_count(self):
+        return self.movements.all().count()
+    @property
     def attached_files(self):
         if not self.attachments.all():
             return 'none'

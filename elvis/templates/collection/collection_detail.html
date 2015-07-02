@@ -6,79 +6,66 @@
 
 {% block wrap %}
 <div class="row">
-    <div class="page-header"><h2>{{ content.title }} <small>{{ content.pieces | length }} Pieces, {{ content.movements | length }} Movements</small></h2> </div>
+    <div class="page-header"><h2>{{ content.title }} <small>{{ content.pieces | length }} Pieces, {{ content.movements | length }} Movements</small>
+    {% if user.username == content.creator.username %}
+                        <span class="pull-right">
+                        {% if content.public %}
+                        <button type="button" class="btn btn-default" id="private-button">Make Private</button>
+                        {% else %}
+                        <button type="button" class="btn btn-default" id="public-button">Make Public</button>
+                        {% endif %}
+                        <button type="button" class="btn btn-warning" id="delete-button">Delete</button>
+                        </span>
+    {% endif %}</h2> </div>
     <p>Created by {{ content.creator.full_name }} on {{ content.created | date:"d F Y, f a" }}<br> Last updated {{ content.updated | date:"d F Y, f a" }}</p>
     <p> {% autoescape off %}{{ content.comment }}{% endautoescape %} </p>
 </div>
 
-<div class="row">
-    <h3>Pieces ({{ content.pieces | length }})</h3>
-</div> 
 
-<div class="row">
-    <table class="table table-condensed table-hover">
-        <thead>
+{% if content.pieces %}
+<h3>Pieces ({{ content.pieces | length }})</h3>
+<table class="table">
+    <thead>
+        <tr>
+            <th width="5%">Add</th>
+            <th width="70%">Title</th>
+            <th width="10%">Movements</th>
+            <th width="10%">Date</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for piece in content.pieces %}
             <tr>
-                <th width="67%">Title</th>
-                <th width="23%">Composer</th>
-                <th width="10%">Date</th>
+                <td width="5%">{% include "includes/download-badge-inc.html" with download_type="elvis_piece" download_item_id=piece.item_id title="Add to Downloads" %}</td>
+                <td width="70%"><a href="{{ piece.url }}">{{ piece.title }}</a></td>
+                <td width="10%"><span class="label label-info">{% if piece.movement_count %}{{ piece.movement_count }} included {% endif %}</span></td>
+                <td width="10%">{{ piece.date_of_composition | date:"Y"}}</td>
             </tr>
-        </thead>
-    </table>
-    <div class="detail-table-wrapper collection">
-    <table class="table table-condensed table-hover detail-table">
-        <tbody>
-            {% for piece in content.pieces %}
-                <tr>
-                    <td width="68%">{% include "includes/download-badge-inc.html" with download_type="elvis_piece" download_item_id=piece.item_id title="Add to Downloads" %}<a href="{{ piece.url }}">{{ piece.title }}</a></td>
-                    <td width="23%"><a href="{{ piece.composer.url }}">{{ piece.composer.name }}</a></td>
-                    <td width="9%">{{ piece.date_of_composition | date:"Y"}}-{{ piece.date_of_composition2 | date:"Y"}}</td>
-                </tr>
-                {% if piece.movements %}
-                <tr>
-                    <td width="100%" colspan="2" style="border: 0;">
-                    {% include "includes/movement-dropdown.html" with piece=piece %}
-                    </td>
-                </tr>
-                {% endif %} 
-            {% endfor %}
-        </tbody>
-    </table>
-    </div>
-</div>
+        {% endfor %}
+    </tbody>
+</table>
+{% endif %}
 
-<div class="row">
-    <h3>Movements ({{ content.movements | length }})</h3> 
-</div> 
-
-<div class="row">
-    <table class="table table-condensed table-hover">
-        <thead>
-            <tr>
-                <th width="33%">Title</th>
-                <th width="34%">Parent Piece</th>
-                <th width="23%">Composer</th>
-                <th width="10%">Date</th>
-                
+{% if content.free_movements %}
+<h3>Movements ({{ content.free_movements_count }})</h3>
+<table class="table">
+    <thead>
+        <tr>
+            <th width="5%">Add</th>
+            <th width="70%">Title</th>
+            <th width="10%">Date</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for mov in content.free_movements %}
+            <tr >
+                <td width="5%">{% include "includes/download-badge-inc.html" with download_type="elvis_movement" download_item_id=piece.item_id title="Add to Downloads" %}</td>
+                <td width="70%"><a href="{{ mov.url }}">{{ mov.title }}</a></td>
+                <td width="10%">{{ mov.date_of_composition | date:"Y"}}</td>
             </tr>
-        </thead>
-    </table>
-    <div class="detail-table-wrapper collection">
-    <table class="table table-condensed table-hover detail-table">
-        <tbody>
-            {% for movement in content.movements %}
-                {% if not movement.piece.title in content.pieces %} 
-                <tr>
-                    <td width="33.5%">{% include "includes/download-badge-inc.html" with download_type="elvis_movement" download_item_id=movement.item_id title="Add to Downloads" %} <a href="{{ movement.url }}">{{ movement.title }}</a></td>
-                    <td width="34.5%"><a href="{{ movement.piece.url }}"> {{movement.piece.title}} </a></td>
-                    <td width="23%"><a href="{{ movement.composer.url }}">{{ movement.composer.name }}</a></td>
-                    <td width="9%">{{ movement.date_of_composition | date:"Y"}}</td>
-                </tr>
-                {% endif %} 
-            {% endfor %}
-        </tbody>
-    </table>
-    </div>  
-</div>
+        {% endfor %}
+    </tbody>
+</table>
+{% endif %}
 
 {% endblock %}

@@ -24,7 +24,18 @@ class Collection(models.Model):
 
     def __unicode__(self):
         return u"{0}".format(self.title)
-
+    @property
+    def piece_count(self):
+        return self.pieces.all().count()
+    @property
+    def movement_count(self):
+        return self.movements.all().count()
+    @property
+    def free_movements(self):
+        return self.movements.filter(piece=None)
+    @property
+    def free_movements_count(self):
+        return self.movements.filter(piece=None).count()
 
 
 @receiver(post_save, sender=Collection)

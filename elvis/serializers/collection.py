@@ -15,12 +15,11 @@ class ComposerCollectionSerializer(serializers.HyperlinkedModelSerializer):
 class PieceCollectionSerializer(serializers.HyperlinkedModelSerializer):
     composer = ComposerCollectionSerializer()
     item_id = serializers.ReadOnlyField(source='pk')
-    number_of_movements = serializers.ReadOnlyField()
     date_of_composition = serializers.DateField(format=None)
 
     class Meta:
         model = Piece
-        fields = ("url", "item_id", "title", "composer", "number_of_movements", "date_of_composition")
+        fields = ("url", "item_id", "title", "composer", "movement_count", "date_of_composition")
 
 
 class PieceMovementCollectionSerializer(serializers.HyperlinkedModelSerializer):
@@ -45,7 +44,7 @@ class UserCollectionSerializer(serializers.HyperlinkedModelSerializer):
 
     class Meta:
         model = User
-        fields = ("url", "full_name")
+        fields = ("url", "full_name", "username")
 
     def get_full_name(self, obj):
         if not obj.last_name:
@@ -57,10 +56,11 @@ class UserCollectionSerializer(serializers.HyperlinkedModelSerializer):
 class CollectionSerializer(serializers.HyperlinkedModelSerializer):
     creator = UserCollectionSerializer()
     pieces = PieceCollectionSerializer(many=True)
-    movements = MovementCollectionSerializer(many=True)
     item_id = serializers.ReadOnlyField(source='pk')
     created = serializers.DateTimeField(format=None)
     updated = serializers.DateTimeField(format=None)
+    free_movements = MovementCollectionSerializer(many=True)
+    free_movements_count = serializers.IntegerField()
 
     class Meta:
         model = Collection
@@ -71,8 +71,8 @@ class CollectionListSerializer(serializers.HyperlinkedModelSerializer):
     item_id = serializers.ReadOnlyField(source='pk')
     created = serializers.DateTimeField(format=None)
     updated = serializers.DateTimeField(format=None)
-    piece_count = serializers.IntegerField(source='pieces.count')
-    movement_count = serializers.IntegerField(source='movements.count')
+    piece_count = serializers.IntegerField()
+    movement_count = serializers.IntegerField()
 
     class Meta:
         model = Collection

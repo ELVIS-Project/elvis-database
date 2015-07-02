@@ -77,12 +77,6 @@ class AttachmentPieceSerializer(serializers.HyperlinkedModelSerializer):
         return url
 
 
-class CollectionPieceSerializer(serializers.HyperlinkedModelSerializer):
-    class Meta:
-        model = Collection
-        fields = ("url", "title")
-
-
 class UserPieceSerializer(serializers.HyperlinkedModelSerializer):
     class Meta:
         model = User
@@ -108,7 +102,6 @@ class PieceSerializer(serializers.HyperlinkedModelSerializer):
     locations = LocationPieceSerializer(many=True)
     sources = SourcePieceSerializer(many=True)
     attachments = AttachmentPieceSerializer(many=True)
-    collections = CollectionPieceSerializer(many=True)
     comment = serializers.CharField()
     uploader = UserPieceSerializer()
     movements = MovementPieceSerializer(many=True)
