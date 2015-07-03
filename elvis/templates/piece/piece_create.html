@@ -116,33 +116,33 @@ $(document).ready(function($)
                         {
                             $("input[name='religiosity']").parent().removeClass("btn-default").addClass("btn-danger")
                         }
+
                         else
                         {
                              $("#" + key).parent().addClass("has-error");
                         }
-                        $("#" + key).parent().addClass("has-error");
-                        $("#" + key + "_error").html("<b style='color:red'>" + data['errors'][key][0] + "</b>");
-                        errors = errors + "<strong>"+ key.charAt(0).toUpperCase() + key.slice(1) + "</strong>: " + data['errors'][key][0] + "<br>"
+
+                            $("#" + key).parent().addClass("has-error");
+                            $("#" + key + "_error").html("<b style='color:red'>" + data['errors'][key][0] + "</b>");
+                            errors = errors + "<strong>"+ key.charAt(0).toUpperCase() + key.slice(1) + "</strong>: " + data['errors'][key][0] + "<br>"
                     }
-
-                    var first_error_tab_id = $("#"+Object.keys(data['errors'])[0]).parents('.tab-pane').attr('id');
-
                     var $upload_modal = $('#upload_modal');
-                    $upload_modal.find('.modal-title').html("Flagrant Error");
+                    $upload_modal.find('.modal-title').html("Form Error");
                     $upload_modal.find('.progress').hide();
                     $upload_modal.find('.modal-body').prepend("Your submission has the following errors: <br>" + errors);
                     $upload_modal.find('.modal-footer').html("<button class='btn btn-default' id='close_modal'>Close</button>");
-
-                    $('#close_modal').click(function(){
-                        $upload_modal.modal('hide');
-                        $('#upload-tabs').find("#tab_" + first_error_tab_id).find('a[data-toggle="tab"]').tab('show');
-                    });
                 }
-            }
+
+
+
+                $('#close_modal').click(function(){
+                    $upload_modal.modal('hide');
+                    $('#upload-tabs').find("#tab_basics").find('a[data-toggle="tab"]').tab('show');
+                });
+                }
+            })
         });
     })
-
-})
 
 </script>
 
@@ -265,7 +265,7 @@ $(document).ready(function($)
                 <hr>
                 <span class="help-block">
                 These fields make it easier to find the piece using the database search engine. Each field can accept multiple inputs seperated by semicolons.
-                For example, if the piece has a harpsichord, violin and cello, you can input "harpsichord; violin; chello" in the instrumentation field.
+                For example, if the piece has a harpsichord, violin and cello, you can input "harpsichord; violin; cello" in the instrumentation field.
                 </span>
                 <div class="row">
                     <div class="col-md-12">
@@ -315,7 +315,7 @@ $(document).ready(function($)
                         <div class="form-group">
                             <div class="input-group">
                                 <span class="input-group-addon">Place of Origin</span>
-                                <input type='text' name="locations" id=locations autocomplete="off" placeholder="e.g. France" class="form-control unstyled"/>
+                                <input type='text' name="locations" id='locations' autocomplete="off" placeholder="e.g. France" class="form-control unstyled"/>
                             </div>
                             <div id="location_suggestion_menu" style="padding-left:120px"></div>
                             <div id="locations_error"></div>
@@ -382,7 +382,11 @@ $(document).ready(function($)
                 <br>
                 <h4>Tags</h4>
                 <div class="form-group">
-                    Here will be important text on how not to abuse tags.
+                <hr>
+                <span class="help-block">
+                You may add any other tags you believe would help organize and define this piece here. Try not to
+                duplicate information from the previous fields.
+                </span>
                     <div class="input-group">
                         <span class="input-group-addon">Tags</span>
                         <input type='text' name="tags" id="tags" autocomplete="off" class="form-control unstyled"/>
@@ -431,8 +435,9 @@ $(document).ready(function($)
                         <colgroup>
                             <col class="text-center" style="width: 5%;">
                             <col style="width: 5%;">
-                            <col style="width: 70%;">
-                            <col style="width: 20%;">
+                            <col style="width: 50%;">
+                            <col style="width: 15%;">
+                            <col style="width: 5%;">
                         </colgroup>
                             <tbody id="movement_table">
                             <tr>
@@ -440,10 +445,12 @@ $(document).ready(function($)
                                 <th class="text-center">#</th>
                                 <th>Movement Title</th>
                                 <th>Files</th>
+                                <th>Advanced</th>
                             </tr>
                             <!-- User can add rows for files here -->
                             </tbody>
                     </table>
+                    <hr>
                     <div><button id="new_mov" type="button" class="btn btn-default" >Add Movement</button></div>
                 </div>
                 <div class="text-right">
