@@ -25,6 +25,14 @@ class PieceForm(forms.Form):
     vocalization = forms.CharField(required=False)
     tags = forms.CharField(required=False)
 
+    def clean(self):
+        cleaned_data = super(PieceForm, self).clean()
+        if cleaned_data['composition_start_date'] and not cleaned_data['composition_end_date']:
+            cleaned_data['composition_end_date'] = cleaned_data['composition_start_date']
+            return cleaned_data
+        if not cleaned_data['composition_start_date'] and not cleaned_data['composition_end_date']:
+            self.add_error("composition_end_date", forms.ValidationError("At least one date required."))
+
 
 class CollectionForm(forms.Form):
     title = forms.CharField()
