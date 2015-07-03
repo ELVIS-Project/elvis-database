@@ -22,8 +22,8 @@ $(document).ready(function($)
     autocomplete("sources", "source_suggestion_menu", "sourceSuggest", true);
     autocomplete("instrument_voices", "instrumentation_suggestion_menu", "instrumentSuggest", true);
     autocomplete("tags", "tags_suggestion_menu", "tagSuggest", true);
-    dynamicFileTable("new_mov", "movement_table", "mov", "Movement Files");
-    dynamicFileTable("new_piece_file", "piece_file_table", "piece", "Piece Files");
+    dynamicFileTable("new_mov", "movement_table", "mov", "Movement Files", true);
+    dynamicFileTable("new_piece_file", "piece_file_table", "piece", "Piece Files", false);
 
     $("#id_comp_pic").filestyle({input:false, iconName: "glyphicon-picture", buttonText: "Composer Picture", disabled: "true"});
 
