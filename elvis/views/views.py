@@ -169,14 +169,44 @@ def handle_dynamic_file_table(request, parent, table_name, cleanup):
 
     for k in keys:
         if table_name == "mov":
+            mov_instrumentation_string = request.POST.get('mov' + k + "_instrumentation")
+            mov_number_of_voices_string = request.POST.get('mov' + k + "_number_of_voices")
+            mov_free_tags_string = request.POST.get('mov' + k + "_free_tags")
+            mov_comment = request.POST.get('mov' + k + "_comment")
+            pdb.set_trace()
+
             new_mov = Movement(title=files[k],
                                position=i,
                                date_of_composition=parent.date_of_composition,
                                date_of_composition2=parent.date_of_composition2,
                                composer=parent.composer,
-                               piece=parent,
-                               comment="TESTING")
+                               piece=parent)
             new_mov.save()
+
+            if mov_instrumentation_string:
+                mov_instrumentation = abstract_model_factory(mov_instrumentation_string, "InstrumentVoice", cleanup)
+                for x in mov_instrumentation:
+                    new_mov.instruments_voices.add(x)
+            else:
+                for x in parent.instruments_voices.all():
+                    new_mov.add.instruments_voices.add(x)
+
+            if mov_free_tags_string:
+                mov_free_tags = abstract_model_factory(mov_free_tags_string, "Tag", cleanup)
+                for x in mov_free_tags:
+                    new_mov.tags.add(x)
+            else:
+                for x in parent.tags.all():
+                    new_mov.tags.add(x)
+
+            if mov_number_of_voices_string:
+                new_mov.number_of_voices = mov_number_of_voices_string
+            else:
+                new_mov.number_of_voices = parent.number_of_voices
+
+            if mov_comment:
+                new_mov.comment = mov_comment
+
             attachments.extend(handle_attachments(request, new_mov, cleanup, file_name=table_name + "_files_" + k))
             cleanup.list.append({"model": new_mov, "new": True})
             new_mov.save()
