@@ -205,7 +205,8 @@ class DownloadDetail(generics.RetrieveUpdateAPIView):
                     for att in mov.attachments.all():
                         user_download.attachments.add(att)
             for mov in user_download.collection_movements.all():
-                user_download.attachments.add(mov)
+                for att in mov.attachments.all():
+                    user_download.attachments.add(att)
             user_download.save()
             return HttpResponse(status=status.HTTP_200_OK)
 
