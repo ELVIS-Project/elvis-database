@@ -72,7 +72,6 @@ class PieceList(generics.ListCreateAPIView):
         if not request.user.is_active:
             return Response(status=status.HTTP_401_UNAUTHORIZED)
         form = PieceForm(request.POST)
-        pdb.set_trace()
         if not form.is_valid():
             data = json.dumps({'errors': form.errors})
             return HttpResponse(data, content_type="json")
@@ -121,6 +120,30 @@ class PieceList(generics.ListCreateAPIView):
             clean.cleanup()
             raise
         try:
+            if clean_form['genres']:
+                genre_list = abstract_model_factory(clean_form['genres'], "Genre", clean)
+                for x in genre_list:
+                    new_piece.genres.add(x)
+        except:
+            clean.cleanup()
+            raise
+        try:
+            if clean_form['locations']:
+                location_list = abstract_model_factory(clean_form['locations'], "Location", clean)
+                for x in location_list:
+                    new_piece.locations.add(x)
+        except:
+            clean.cleanup()
+            raise
+        try:
+            if clean_form['sources']:
+                source_list = abstract_model_factory(clean_form['sources'], "Source", clean)
+                for x in source_list:
+                    new_piece.sources.add(x)
+        except:
+            clean.cleanup()
+            raise
+        try:
             if clean_form['tags']:
                 tag_list = abstract_model_factory(clean_form['tags'], "Tag", clean)
                 for x in tag_list:
@@ -128,6 +151,16 @@ class PieceList(generics.ListCreateAPIView):
         except:
             clean.cleanup()
             raise
+        try:
+            if clean_form['instrument_voices']:
+                instrument_list = abstract_model_factory(clean_form['instrument_voices'], "InstrumentVoice", clean)
+                for x in instrument_list:
+                    new_piece.instruments_voices.add(x)
+        except:
+            clean.cleanup()
+            raise
+
+        new_piece.save()
         try:
             handle_dynamic_file_table(request, new_piece, "piece", clean)
         except:
