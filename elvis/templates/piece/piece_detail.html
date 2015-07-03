@@ -63,42 +63,30 @@ $(document).ready(function($)
         </div>
     {% endif %}
         
-        {% if content.attachments and user.is_authenticated %}
-        <h3>Available Attachments</h3>
-        <table class="table table-hover">
-        <!-- Attachments & Form -->
-        <form id="patch-download-form" action="/downloads/" method="post">
-        {% csrf_token %}
-        <dd>
-                <tr>
-                    <th>Add to Downloads</th>
-                    <th>Filename and Format</th>
-                    <th>Source</th>
-                </tr>
-                {% for attachment in content.attachments %}
-                <tr>
-                    <td>
-                    <input type="checkbox" name="a_ids" value="{{ attachment.id }}" checked="true">
-                    </td>
-                    <td>
-                    <li><a href="{{ attachment.attachment }}">{{ attachment.file_name | default:"Download" }}</a></li>
-                    </td>
-                    <td>
-                    <li>{{ attachment.source }}</li>
-                    </td>
-                </tr>
-                {% endfor %}
+    {% if content.attachments and user.is_authenticated %}
+    <h3>Available Attachments</h3>
+    <table class="table table-hover">
+    <!-- Attachments & Form -->
+    <dd>
+        <tr>
+            <th>Filename and Format</th>
+            <th>Source</th>
+        </tr>
+        {% for attachment in content.attachments %}
+        <tr>
+            <td>
+            <a href="{{ attachment.attachment }}">{{ attachment.file_name | default:"Download" }}</a>
+            </td>
+            <td>
+            {{ attachment.source }}
+            </td>
+        </tr>
+        {% endfor %}
 
-        </dd>
-        </table>
-        <input type="hidden" name="this_url" value="{{ content.url }}" />
-        <button type="submit" class="btn btn-default btn-sm">
-         Add Selected to Downloads
-            <span class="glyphicon glyphicon-plus"></span> 
-        </button>
-        </form> 
-        
-        {% endif %}
+    </dd>
+    </table>
+
+    {% endif %}
 
 </div>
 
