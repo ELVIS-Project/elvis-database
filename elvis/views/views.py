@@ -22,16 +22,24 @@ import pdb
 
 
 class Cleanup:
+    """Keep track of created objects during an attempt to create a new piece. """
     def __init__(self):
         self.list = []
 
     def cleanup(self):
+        """Delete all models created to support piece-creation."""
         for x in self.list:
             if x['new']:
                 x['model'].delete()
 
 
 def solr_suggest(request):
+    """Query solr suggester for typeahead suggestions based on the contents of the database.
+
+    :param request: Django request object with a 'q' parameter (the query) and a 'd' parameter (the name of the
+        suggestion dictionary to query).
+    :return: json-formatted list of the suggestions.
+    """
     results = []
 
     if request.method == "GET" and 'q' in request.GET and 'd' in request.GET:
@@ -49,17 +57,19 @@ def solr_suggest(request):
     return HttpResponse(j_results, content_type="json")
 
 
-# Uploads files to the media/temp directory. Automatically unzips any zip archives. Returns a list of uploaded files.
-def upload_files(request, **kwargs):
+def upload_files(request, file_name):
+    """Upload files to a temporary directory, unzip any .zip files along the way.
+
+    :param request: Django request object.
+    :param file_name: Name of the multi-file input field in request.FILES to upload from.
+    :return: List of dicts describing uploaded files.
+    """
     files = []
 
     if not os.path.exists(settings.MEDIA_ROOT + 'temp/'):
         os.makedirs(settings.MEDIA_ROOT + 'temp/')
 
-    if 'file_name' in kwargs:
-        file_list = request.FILES.getlist(kwargs['file_name'])
-    else:
-        file_list = request.FILES.getlist('piece_att_files')
+    file_list = request.FILES.getlist(file_name)
 
     for f in file_list:
         # If the file has an accepted extension, upload it.
@@ -75,7 +85,7 @@ def upload_files(request, **kwargs):
             upload_file(f, settings.MEDIA_ROOT + 'temp/' + f.name)
 
             try:
-                unzipped_files = unzip_file(settings.MEDIA_ROOT + 'temp/', f.name, delete_after=True)
+                unzipped_files = unzip_file(settings.MEDIA_ROOT + 'temp/', f.name, delete=True)
                 for file_name in unzipped_files:
                     files.append({'name': file_name,
                                   'uploader': request.user.username,
@@ -86,16 +96,25 @@ def upload_files(request, **kwargs):
     return files
 
 
-# Uploads the in-memory file to the given path.
 def upload_file(mem_file, local_path):
+    """Upload file in chunks.
+
+    :param mem_file: In-memory file from request.FILES.
+    :param local_path: Path to upload file to.
+    """
     with open(local_path, 'wb+') as destination:
         for chunk in mem_file.chunks():
             destination.write(chunk)
 
 
-# Unzips a zip file, extracting only files with the extensions in settings.ELVIS_EXTENSIONS.
-# The files are placed in the same directory as the archive. Returns a list of extracted filenames.
 def unzip_file(file_dir, file_name, **kwargs):
+    """Unzip files with acceptable extensions to the archives directory.
+
+    :param file_dir: Directory of the zip archive.
+    :param file_name: Name of the zip archive.
+    :param kwargs: -delete: Deletes the archive after extraction.
+    :return:
+    """
     files = []
     zipped_file = zipfile.ZipFile(file_dir + file_name, 'r')
     file_contents = zipped_file.namelist()
@@ -109,24 +128,27 @@ def unzip_file(file_dir, file_name, **kwargs):
 
     zipped_file.close()
 
-    if 'delete_after' in kwargs and kwargs['delete_after']:
+    if 'delete_after' in kwargs and kwargs['delete']:
         os.remove(file_dir + file_name)
 
     return files
 
 
-# Takes the request.FILES and uploads them, processes them, then creates attachments and adds them to parents
-# attachment field.
-def handle_attachments(request, parent, cleanup, **kwargs):
+def handle_attachments(request, parent, cleanup, file_name):
+    """Creates attachment objects for all files and links them with their parent
+
+    :param request: Django request object.
+    :param parent: The parent object to link attachments to.
+    :param cleanup: Cleanup object.
+    :param file_name: Name of the multi-file input field in request.FILES to upload from.
+    :return: List of attachment objects that are created.
+    """
     results = []
 
-    if 'file_name' in kwargs:
-        files = upload_files(request, file_name=kwargs['file_name'])
-    else:
-        raise IOError("No file_name provided for handle_attachments")
+    files = upload_files(request, file_name)
 
     for f in files:
-        att = Attachment(description="TESTING")
+        att = Attachment()
         att.save()  # needed to create hash dir.
         cleanup.list.append({"model": att, "new": True})
         att.uploader = request.user
@@ -151,9 +173,15 @@ def handle_attachments(request, parent, cleanup, **kwargs):
     return results
 
 
-# Given the request, the parent model and the table name, will collect all files from the dynamic file table
-# and attach them to the parent. Returns a list of objects that were created.
-def handle_dynamic_file_table(request, parent, table_name, cleanup):
+def handle_dynamic_file_table(request, parent, table_name, cleanup=Cleanup()):
+    """Upload all files and create all objects and relationships in a dynamic file table.
+
+    :param request: Django request object.
+    :param parent: The parent object to link movements/files to.
+    :param table_name: The name of the dynamic table in the page template.
+    :param cleanup: Cleanup object.
+    :return: List of all objects created.
+    """
     results = []
     attachments = []
     files = {}
@@ -207,13 +235,13 @@ def handle_dynamic_file_table(request, parent, table_name, cleanup):
             if mov_comment:
                 new_mov.comment = mov_comment
 
-            attachments.extend(handle_attachments(request, new_mov, cleanup, file_name=table_name + "_files_" + k))
+            attachments.extend(handle_attachments(request, new_mov, cleanup, table_name + "_files_" + k))
             cleanup.list.append({"model": new_mov, "new": True})
             new_mov.save()
             results.append(new_mov)
             i += 1
         elif table_name == "piece":
-            piece_attachments = handle_attachments(request, parent, cleanup, file_name=table_name + "_files_" + k)
+            piece_attachments = handle_attachments(request, parent, cleanup, table_name + "_files_" + k)
             for att in piece_attachments:
                 att.source = files[k]
                 att.save()
@@ -225,12 +253,18 @@ def handle_dynamic_file_table(request, parent, table_name, cleanup):
     return results
 
 
-# Queries the database for the model. If the model does not exist, the method creates
-# a new one with the given name. Also works for semicolon seperated lists. If given a Cleanup object, it will append
-# all newly created models to the objects list so they can be deleted if there is a problem later in the process.
-# Returns a list of the models which were found/created.
 def abstract_model_factory(model_name, model_type, cleanup=Cleanup(), **kwargs):
+    """Find or create models from user-inputted text.
 
+    :param model_name: Name or list of names of models to be found/created.
+    :param model_type: Type of model(s) to find/create.
+    :param cleanup: Cleanup object.
+    :param kwargs:  -birth_date: Birth date for composer objects.
+                    -death_date: Death date for composer objects.
+                    -is_public: Boolean for collections.
+                    -creator: Django user for objects that require a creator.
+    :return:
+    """
     if model_type == "Composer":
         composer_list = []
         try:
@@ -371,6 +405,7 @@ def abstract_model_factory(model_name, model_type, cleanup=Cleanup(), **kwargs):
 
 
 def rebuild_suggester_dicts():
+    """Rebuild all suggester dictionaries in Solr"""
     for d in settings.SUGGEST_DICTS:
         urllib2.urlopen(settings.SOLR_SERVER + "/suggest/?suggest.dictionary={0}&suggest.reload=true".format(d))
 
