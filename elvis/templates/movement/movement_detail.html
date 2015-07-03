@@ -26,10 +26,6 @@
         <dt>Dates of Composition</dt>
         <dd>{{ content.date_of_composition | date:"Y"}}-{{ content.date_of_composition2 | date:"Y" }} </dd> 
         {% endif %}
-        <dt>Collections</dt>
-        {% for collection in content.collections %}
-            <dd><a href="{{collection.url}}">{{ collection.title }}</a></dd>
-        {% endfor %}
         <dt>Number of voices:</dt>
         <dd>{{content.number_of_voices}}</dd>
         <dt>Tags</dt>
