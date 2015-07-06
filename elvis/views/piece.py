@@ -152,8 +152,8 @@ class PieceList(generics.ListCreateAPIView):
             clean.cleanup()
             raise
         try:
-            if clean_form['instrument_voices']:
-                instrument_list = abstract_model_factory(clean_form['instrument_voices'], "InstrumentVoice", clean)
+            if clean_form['instruments_voices']:
+                instrument_list = abstract_model_factory(clean_form['instruments_voices'], "InstrumentVoice", clean)
                 for x in instrument_list:
                     new_piece.instruments_voices.add(x)
         except:

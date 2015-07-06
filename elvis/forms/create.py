@@ -19,7 +19,7 @@ class PieceForm(forms.Form):
     genres = forms.CharField(required=False)
     locations = forms.CharField(required=False)
     sources = forms.CharField(required=False)
-    instrument_voices = forms.CharField(required=False)
+    instruments_voices = forms.CharField(required=False)
     comment = forms.CharField(required=False)
     religiosity = forms.CharField(required=True)
     vocalization = forms.CharField(required=False)
