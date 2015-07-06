@@ -200,13 +200,20 @@ def handle_dynamic_file_table(request, parent, table_name, cleanup=Cleanup()):
             mov_instrumentation_string = request.POST.get('mov' + k + "_instrumentation")
             mov_number_of_voices_string = request.POST.get('mov' + k + "_number_of_voices")
             mov_free_tags_string = request.POST.get('mov' + k + "_free_tags")
+            mov_vocalization = request.POST.get('mov' + k + "_vocalization")
             mov_comment = request.POST.get('mov' + k + "_comment")
-            pdb.set_trace()
 
             new_mov = Movement(title=files[k],
                                position=i,
                                date_of_composition=parent.date_of_composition,
                                date_of_composition2=parent.date_of_composition2,
+                               languages=parent.languages,
+                               genres=parent.languages,
+                               locations=parent.locations,
+                               source=parent.sources,
+                               uploader=parent.uploader,
+                               collections=parent.collections,
+                               religiosity=parent.religiosity,
                                composer=parent.composer,
                                piece=parent)
             new_mov.save()
@@ -217,7 +224,7 @@ def handle_dynamic_file_table(request, parent, table_name, cleanup=Cleanup()):
                     new_mov.instruments_voices.add(x)
             else:
                 for x in parent.instruments_voices.all():
-                    new_mov.add.instruments_voices.add(x)
+                    new_mov.instruments_voices.add(x)
 
             if mov_free_tags_string:
                 mov_free_tags = abstract_model_factory(mov_free_tags_string, "Tag", cleanup)
@@ -231,6 +238,11 @@ def handle_dynamic_file_table(request, parent, table_name, cleanup=Cleanup()):
                 new_mov.number_of_voices = mov_number_of_voices_string
             else:
                 new_mov.number_of_voices = parent.number_of_voices
+
+            if mov_vocalization:
+                new_mov.vocalization = mov_vocalization
+            else:
+                new_mov.vocalization = parent.vocalization
 
             if mov_comment:
                 new_mov.comment = mov_comment
