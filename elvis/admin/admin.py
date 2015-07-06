@@ -3,7 +3,7 @@ import shutil
 import os
 
 from simple_history.admin import SimpleHistoryAdmin
-from elvis import settings
+from elvis.elvis import settings
 from elvis.views import rebuild_suggester_dicts
 from elvis.models import Project
 from elvis.models import Piece

@@ -1,5 +1,5 @@
 # LM: TODO lots of cleaning up; make modular methods
-import os, json
+import os,json
 import pdb
 import datetime
 from rest_framework import generics
@@ -19,7 +19,7 @@ from elvis import tasks
 from elvis.renderers.custom_html_renderer import CustomHTMLRenderer
 from elvis.serializers.download import DownloadSerializer, DownloadingSerializer
 from elvis.helpers.solrsearch import SolrSearch
-from elvis.settings import ELVIS_EXTENSIONS
+from elvis.elvis.settings import ELVIS_EXTENSIONS
 from elvis.models.download import Download
 from elvis.models.piece import Piece
 from elvis.models.movement import Movement
