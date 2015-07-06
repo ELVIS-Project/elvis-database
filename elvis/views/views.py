@@ -146,16 +146,17 @@ def handle_attachments(request, parent, cleanup, file_name):
     results = []
 
     files = upload_files(request, file_name)
-
+    i = 1
     for f in files:
         att = Attachment()
         att.save()  # needed to create hash dir.
         cleanup.list.append({"model": att, "new": True})
         att.uploader = request.user
 
-        new_name = "{0}_{1}.{2}".format(parent.title.replace(" ", "-"),
-                                        parent.composer.name.replace(" ", "-"),
-                                        f['name'].rsplit('.')[-1])
+        new_name = "{0}_{1}_{2}.{3}".format(parent.title.replace(" ", "-"),
+                                            parent.composer.name.replace(" ", "-"),
+                                            "file" + str(i),
+                                            f['name'].rsplit('.')[-1])
         os.rename(f['path'] + f['name'], f['path'] + new_name)
         with open("{0}/{1}".format(f['path'], new_name), 'r+') as dest:
             file_content = File(dest)
@@ -164,6 +165,7 @@ def handle_attachments(request, parent, cleanup, file_name):
 
         att.save()
         results.append(att)
+        i += 1
 
     for att in results:
         parent.attachments.add(att)
