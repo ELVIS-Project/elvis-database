@@ -1,11 +1,12 @@
+import datetime
+import pytz
+import json
 from django.views.decorators.csrf import csrf_protect
 from django.contrib.auth.models import User
 from rest_framework import generics
 from rest_framework import status
 from rest_framework import permissions
-import datetime
-import pytz
-import json
+
 from rest_framework.renderers import JSONRenderer
 from rest_framework.response import Response
 
@@ -13,6 +14,7 @@ from elvis.renderers.custom_html_renderer import CustomHTMLRenderer
 from elvis.serializers.piece import PieceSerializer
 from elvis.models.piece import Piece
 from elvis.forms import PieceForm
+from elvis.elvis.tasks import rebuild_suggester_dicts
 
 from elvis.views.views import abstract_model_factory, handle_dynamic_file_table, Cleanup
 from django.utils.decorators import method_decorator
@@ -174,5 +176,6 @@ class PieceList(generics.ListCreateAPIView):
             raise
 
         new_piece.save()
+        rebuild_suggester_dicts.delay()
         data = json.dumps({'success': True, 'id': new_piece.id, 'url': "http://localhost:8000/piece/{0}".format(new_piece.id)})
         return HttpResponse(data, content_type="json")
