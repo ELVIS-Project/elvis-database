@@ -97,7 +97,7 @@ class PieceSerializer(serializers.HyperlinkedModelSerializer):
     genres = GenrePieceSerializer(many=True)
     date_of_composition = serializers.DateField(format=None)
     date_of_composition2 = serializers.DateField(format=None)
-    instruments_voices = InstrumentVoicePieceSerializer()
+    instruments_voices = InstrumentVoicePieceSerializer(many=True)
     languages = LanguagePieceSerializer(many=True)
     locations = LocationPieceSerializer(many=True)
     sources = SourcePieceSerializer(many=True)
