@@ -8,9 +8,9 @@ class Download(models.Model):
         app_label = "elvis"
 
     user = models.ForeignKey(User, blank=True, null=True, related_name="downloads")
-    collection_pieces = models.ManyToManyField("elvis.Piece", blank=True, null=True)
-    collection_movements = models.ManyToManyField("elvis.Movement", blank=True, null=True)
-    attachments = models.ManyToManyField("elvis.Attachment", blank=True, null=True, related_name="downloads")
+    collection_pieces = models.ManyToManyField("elvis.Piece", blank=True)
+    collection_movements = models.ManyToManyField("elvis.Movement", blank=True)
+    attachments = models.ManyToManyField("elvis.Attachment", blank=True, related_name="downloads")
     created = models.DateTimeField(auto_now_add=True)
 
     def __unicode__(self):

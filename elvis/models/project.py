@@ -8,7 +8,7 @@ from django.db.models.signals import post_save, post_delete
 class Project(models.Model):
     name = models.CharField(max_length=255)
     description = models.TextField(blank=True, null=True)
-    users = models.ManyToManyField("elvis.UserProfile", blank=True, null=True)
+    users = models.ManyToManyField("elvis.UserProfile", blank=True)
 
     created = models.DateTimeField(auto_now_add=True)
     updated = models.DateTimeField(auto_now=True)
