@@ -5,7 +5,6 @@ from rest_framework import status
 from rest_framework import permissions
 import datetime
 import pytz
-import pdb
 import json
 from rest_framework.renderers import JSONRenderer
 from rest_framework.response import Response
@@ -15,7 +14,7 @@ from elvis.serializers.piece import PieceSerializer
 from elvis.models.piece import Piece
 from elvis.forms import PieceForm
 
-from elvis.views.views import abstract_model_factory, rebuild_suggester_dicts, handle_dynamic_file_table, Cleanup
+from elvis.views.views import abstract_model_factory, handle_dynamic_file_table, Cleanup
 from django.utils.decorators import method_decorator
 from django.http import HttpResponseRedirect, HttpResponse
 
@@ -71,6 +70,8 @@ class PieceList(generics.ListCreateAPIView):
     def create(self, request, *args, **kwargs):
         if not request.user.is_active:
             return Response(status=status.HTTP_401_UNAUTHORIZED)
+
+
         form = PieceForm(request.POST)
         if not form.is_valid():
             data = json.dumps({'errors': form.errors})
@@ -173,5 +174,5 @@ class PieceList(generics.ListCreateAPIView):
             raise
 
         new_piece.save()
-        rebuild_suggester_dicts()
-        return HttpResponseRedirect("http://localhost:8000/piece/{0}".format(new_piece.id))
+        data = json.dumps({'success': True, 'id': new_piece.id, 'url': "http://localhost:8000/piece/{0}".format(new_piece.id)})
+        return HttpResponse(data, content_type="json")
