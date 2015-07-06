@@ -71,6 +71,7 @@ function autocomplete(inputField, suggestionField, dictionary, multiple) {
             $suggestionMenu.html("");
             menuActive = -1;
             menuSize = 0;
+            isInit = true;
             selectedSuggestion = ""
         }
     });
