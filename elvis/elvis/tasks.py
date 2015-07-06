@@ -11,18 +11,6 @@ import zipfile
 from django.conf import settings
 from elvis.celery import app
 
-@app.task(name='elvis.elvis.tasks.add')
-def add(x, y):
-    return x + y
-
-@app.task(name='elvis.elvis.tasks.mul')
-def mul(x, y):
-    return x * y
-
-@app.task(name='elvis.elvis.tasks.xsum')
-def xsum(numbers):
-    return sum(numbers)
-
 @app.task(name='elvis.elvis.tasks.rebuild_suggesters')
 def rebuild_suggester_dicts():
     """Rebuild all suggester dictionaries in Solr"""
