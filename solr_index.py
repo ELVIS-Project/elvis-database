@@ -1,7 +1,10 @@
-import os, sys, django
+import os
+import sys
+import django
 import solr
 import uuid
-from elvis.settings import SOLR_SERVER
+
+from elvis.elvis.settings.base import SOLR_SERVER
 
 #from django.conf import settings
 
