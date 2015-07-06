@@ -29,6 +29,10 @@ class SearchView(APIView):
     renderer_classes = (JSONRenderer, SearchViewHTMLRenderer)
 
     def get(self, request, *args, **kwargs):
+        if 'q' not in request.GET:
+            response = Response(status=status.HTTP_200_OK)
+            return response
+
         querydict = request.GET
 
         # LM: Some explanations as to what is going on here
