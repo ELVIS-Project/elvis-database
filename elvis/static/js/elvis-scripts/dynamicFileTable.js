@@ -33,7 +33,7 @@ function dynamicFileTable(add_row_button_id, table_body_id, table_name, file_but
             "<tr id='"+ table_name + row_count + "_tags' hidden='hidden'> " +
             "<td colspan='5'>" +
             "<span class='help-block' style='padding:10px'>" +
-                "You my override these fields on a per-movement basis. Just as before, you may define lists using the semicolon as an item separator." +
+                "You may override these fields on a per-movement basis. You may define lists using the semicolon as an item separator." +
                 "If these fields are left blank, they will default to the values you defined on the previous page." +
             "</span>" +
             "<div class='row' style='padding-left:20px; padding-right:20px'>" +
