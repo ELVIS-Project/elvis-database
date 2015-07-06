@@ -31,7 +31,7 @@ execfile(activate_this, dict(__file__=activate_this))
 # if running multiple sites in the same mod_wsgi process. To fix this, use
 # mod_wsgi daemon mode with each site in its own daemon process, or use
 # os.environ["DJANGO_SETTINGS_MODULE"] = "elvis.settings"
-os.environ.setdefault("DJANGO_SETTINGS_MODULE", "elvis.settings")
+os.environ.setdefault("DJANGO_SETTINGS_MODULE", "elvis.elvis.settings.base")
 
 # This application object is used by any WSGI server configured to use this
 # file. This includes Django's development server, if the WSGI_APPLICATION
