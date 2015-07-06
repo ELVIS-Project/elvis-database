@@ -4,7 +4,7 @@ import os
 
 from simple_history.admin import SimpleHistoryAdmin
 from elvis.elvis import settings
-from elvis.views import rebuild_suggester_dicts
+from elvis.elvis.tasks import rebuild_suggester_dicts
 from elvis.models import Project
 from elvis.models import Piece
 from elvis.models import Composer
@@ -38,7 +38,7 @@ reindex_in_solr.short_description = "Reindex selected in Solr"
 def delete_in_solr(modeladmin, request, queryset):
     for item in queryset:
         item.delete()
-    rebuild_suggester_dicts()
+    rebuild_suggester_dicts.delay()
 
 delete_in_solr.short_description = "Permanently delete selected"
 

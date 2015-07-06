@@ -15,7 +15,7 @@ from django.core.exceptions import ObjectDoesNotExist
 from django.core.servers.basehttp import FileWrapper
 from django.http import HttpResponse, HttpResponseRedirect, JsonResponse
 from celery.result import AsyncResult
-from elvis import tasks
+from elvis.elvis import tasks
 from elvis.renderers.custom_html_renderer import CustomHTMLRenderer
 from elvis.serializers.download import DownloadSerializer, DownloadingSerializer
 from elvis.helpers.solrsearch import SolrSearch

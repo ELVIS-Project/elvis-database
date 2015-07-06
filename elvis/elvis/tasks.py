@@ -1,40 +1,43 @@
 from __future__ import absolute_import
 
-from elvis.celery import app
+import urllib2
+import os
+import time
+import shutil
+import uuid
+import datetime
+import zipfile
 
 from django.conf import settings
+from elvis.celery import app
 
-# For tracking progress
-import time
-from celery.result import AsyncResult
-from celery import task, current_task
+@app.task(name='elvis.elvis.tasks.add')
+def add(x, y):
+    return x + y
 
-from django.http import HttpResponse, HttpResponseRedirect
-from django.core.urlresolvers import reverse
-import json
-from django.conf.urls import patterns, url
-import os
-import shutil
+@app.task(name='elvis.elvis.tasks.mul')
+def mul(x, y):
+    return x * y
 
-def int_round(num):
-    if (num > 0):
-        return int(num+.5)
-    else:
-        return int(num-.5)
+@app.task(name='elvis.elvis.tasks.xsum')
+def xsum(numbers):
+    return sum(numbers)
 
-# LM: 
-# Check this out: http://massivescale.blogspot.ca/2011/09/celery-task-queue-with-php.html
-# TODO: Cleanup
-@app.task(name='elvis.celery.zip_files')
+@app.task(name='elvis.elvis.tasks.rebuild_suggesters')
+def rebuild_suggester_dicts():
+    """Rebuild all suggester dictionaries in Solr"""
+    for d in settings.SUGGEST_DICTS:
+        urllib2.urlopen(settings.SOLR_SERVER + "/suggest/?suggest.dictionary={0}&suggest.reload=true".format(d))
+
+@app.task(name='elvis.elvis.clean_zip_files')
 def zip_files(paths, username):
     # Start with status at 0 - so jQuery has something to do
     i = 0
     total = len(paths)
-    percent = int_round(float(i) / float(total))  * 100
-    zip_files.update_state(state='PROGRESS', meta={'curr': i, 'total': total, 'percent': percent })
+    percent = int_round(float(i) / float(total)) * 100
+    zip_files.update_state(state='PROGRESS', meta={'curr': i, 'total': total, 'percent': percent})
 
     # Now do imports after that (again so jQuery has something to do)
-    import uuid, subprocess, string, os, shutil, datetime, zipfile
 
     # Create unique dummy folder in user_downloads using uuid
     dummy_folder = str(uuid.uuid4())
@@ -47,14 +50,14 @@ def zip_files(paths, username):
         os.makedirs(dummy_path)
 
     # create name of zipped file
-    zip_name = "{0}-{1}.zip".format(username, datetime.datetime.utcnow().date().isoformat())
+    zip_name = "{0}-{1}.zip".format(datetime.datetime.utcnow().strftime("(%H:%M)-%w-%b-%y"), username)
 
     # Create zip archive iteratively by copying first, then adding to archive file
     # Change dir to the path
     os.chdir(dummy_path)
     # Zip the file to that directory
     archive_file = zipfile.ZipFile(zip_name, 'a')
-    
+
     for item in paths:
         # tokenise to remove the actual file name from path name
         file_name = os.path.basename(item)
@@ -71,7 +74,7 @@ def zip_files(paths, username):
 
     return {"path": zip_path, "percent" : 100}
 
-@app.task(name='elvis.celery.clean_zip_files')
+@app.task(name='elvis.elvis.clean_zip_files')
 def clean_zip_files():
     print "clean_zip_files beating."
     downloads_dir_path = os.path.join(settings.MEDIA_ROOT, 'user_downloads')
@@ -94,4 +97,8 @@ def clean_zip_files():
     return True
 
 
-
+def int_round(num):
+    if (num > 0):
+        return int(num+.5)
+    else:
+        return int(num-.5)
