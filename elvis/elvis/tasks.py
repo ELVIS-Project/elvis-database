@@ -9,7 +9,7 @@ import datetime
 import zipfile
 
 from django.conf import settings
-from elvis.celery import app
+from .celery import app
 
 @app.task(name='elvis.elvis.tasks.rebuild_suggesters')
 def rebuild_suggester_dicts():
