@@ -33,7 +33,8 @@ function dynamicFileTable(add_row_button_id, table_body_id, table_name, file_but
             "<tr id='"+ table_name + row_count + "_tags' hidden='hidden'> " +
             "<td colspan='5'>" +
             "<span class='help-block' style='padding:10px'>" +
-                "You my override these fields on a per-movement basis. If these fields are left blank, they will default to the values you defined on the previous page." +
+                "You my override these fields on a per-movement basis. Just as before, you may define lists using the semicolon as an item separator." +
+                "If these fields are left blank, they will default to the values you defined on the previous page." +
             "</span>" +
             "<div class='row' style='padding-left:20px; padding-right:20px'>" +
                 "<div class='col-md-6'>" +
@@ -43,6 +44,27 @@ function dynamicFileTable(add_row_button_id, table_body_id, table_name, file_but
                     "</div>" +
                 "</div>" +
                 "<div class='col-md-6'>" +
+                    "<div class='btn-group btn-group-justified form-inline radio' style='margin-top: 0px' data-toggle='buttons'>" +
+                        "<label class='btn btn-default'>" +
+                            "<input type='radio' name='" + table_name + row_count + "_vocalization' value='Vocal'> Vocal" +
+                        "</label>" +
+                        "<label class='btn btn-default'>" +
+                            "<input type='radio' name='" + table_name + row_count + "_vocalization' value='Instrumental'> Instrumental" +
+                        "</label>" +
+                        "<label class='btn btn-default'>" +
+                            "<input type='radio' name='" + table_name + row_count + "_vocalization' value='Mixed'> Mixed" +
+                        "</label>" +
+                    "</div>" +
+                "</div>" +
+            "</div>" +
+            "<div class='row' style='padding-left:20px; padding-right:20px'>" +
+                "<div class='col-md-8'>" +
+                    "<div class='form-group'>" +
+                    "<div class='input-group'><span class='input-group-addon'>Tags</span><input name='"+ table_name + row_count + "_free_tags' id='"+ table_name + row_count + "_free_tags' type='text' class='form-control unstyled'></div>" +
+                    "<div id='"+ table_name + row_count + "_free_tags_suggestions' style='padding-left:120px'></div>" +
+                    "</div>" +
+                "</div>" +
+                "<div class='col-md-4'>" +
                     "<div class='form-group'>" +
                     "<div class='input-group'><span class='input-group-addon'>Number of Voices</span><input name='"+ table_name + row_count + "_number_of_voices' id='"+ table_name + row_count + "_number_of_voices' type='number' class='form-control unstyled'></div>" +
                     "</div>" +
@@ -50,15 +72,7 @@ function dynamicFileTable(add_row_button_id, table_body_id, table_name, file_but
             "</div>" +
             "<div class='row' style='padding-left:20px; padding-right:20px'>" +
                 "<div class='col-md-12'>" +
-                    "<div class='form-group'>" +
-                    "<div class='input-group'><span class='input-group-addon'>Tags</span><input name='"+ table_name + row_count + "_free_tags' id='"+ table_name + row_count + "_free_tags' type='text' class='form-control unstyled'></div>" +
-                    "<div id='"+ table_name + row_count + "_free_tags_suggestions' style='padding-left:120px'></div>" +
-                    "</div>" +
-                "</div>" +
-            "</div>" +
-            "<div class='row' style='padding-left:20px; padding-right:20px'>" +
-                "<div class='col-md-12'>" +
-                    "Comments: <div class='form-group'><textarea rows='7' class='form-control' name='"+ table_name + row_count + "_comment' id='"+ table_name + row_count + "_comment' style='resize:vertical'></textarea>"+
+                    "<strong>Comments:</strong> <div class='form-group'><textarea rows='7' class='form-control' name='"+ table_name + row_count + "_comment' id='"+ table_name + row_count + "_comment' style='resize:vertical'></textarea>"+
                 "</div>" +
             "</div>" +
             "</td></tr>");
