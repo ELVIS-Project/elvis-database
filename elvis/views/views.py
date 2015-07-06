@@ -207,16 +207,21 @@ def handle_dynamic_file_table(request, parent, table_name, cleanup=Cleanup()):
                                position=i,
                                date_of_composition=parent.date_of_composition,
                                date_of_composition2=parent.date_of_composition2,
-                               languages=parent.languages,
-                               genres=parent.languages,
-                               locations=parent.locations,
-                               source=parent.sources,
                                uploader=parent.uploader,
-                               collections=parent.collections,
                                religiosity=parent.religiosity,
                                composer=parent.composer,
                                piece=parent)
             new_mov.save()
+            for language in parent.languages.all():
+                new_mov.languages.add(language)
+            for genre in parent.genres.all():
+                new_mov.genres.add(genre)
+            for location in parent.locations.all():
+                new_mov.locations.add(location)
+            for source in parent.sources.all():
+                new_mov.sources.add(source)
+            for collection in parent.collections.all():
+                new_mov.collections.add(collection)
 
             if mov_instrumentation_string:
                 mov_instrumentation = abstract_model_factory(mov_instrumentation_string, "InstrumentVoice", cleanup)
