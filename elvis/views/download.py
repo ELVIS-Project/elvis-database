@@ -19,7 +19,6 @@ from elvis import tasks
 from elvis.renderers.custom_html_renderer import CustomHTMLRenderer
 from elvis.serializers.download import DownloadSerializer, DownloadingSerializer
 from elvis.helpers.solrsearch import SolrSearch
-from elvis.elvis.settings import ELVIS_EXTENSIONS
 from elvis.models.download import Download
 from elvis.models.piece import Piece
 from elvis.models.movement import Movement
@@ -369,15 +368,15 @@ def ranked_remover(parent, user_download):
     # Find the best sibling attachment to keep
     # Remove the sibling if its file type isn't supported
     # Else, add it to the ranking list in the right location 
-    ranking_list = [None] * len(ELVIS_EXTENSIONS)
+    ranking_list = [None] * len(settings.ELVIS_EXTENSIONS)
     for sibling_a in parent.attachments.all():
         fileName, fileExt = os.path.splitext(sibling_a.file_name)
-        if not fileExt in ELVIS_EXTENSIONS:
+        if not fileExt in settings.ELVIS_EXTENSIONS:
             user_download.attachments.remove(sibling_a)
         else:
             # To handle repeat file types... which there shouldnt be
             try:
-                ranking_list.insert(ELVIS_EXTENSIONS.index(fileExt), sibling_a)
+                ranking_list.insert(settings.ELVIS_EXTENSIONS.index(fileExt), sibling_a)
             except Exception:
                 ranking_list.append(sibling_a)
     # Now, go through the ranking list and insert the first sibling attachment into the user's downloads.
