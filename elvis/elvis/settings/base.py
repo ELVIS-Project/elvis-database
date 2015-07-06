@@ -8,7 +8,6 @@ For the full list of settings and their values, see
 https://docs.djangoproject.com/en/1.6/ref/settings/
 """
 from __future__ import absolute_import
-
 # for dynamic SECRET_KEY generation
 from random import SystemRandom
 
@@ -17,26 +16,23 @@ from celery import schedules
 
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 import os
-BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+BASE_DIR = os.path.dirname('/Users/AlexPar/Documents/DDMAL/elvis-database/elvis/')
 
 # Automatically adjust settings to be suitable or insuitable for proudction environments
 # CRA: I used this to help...
 #      https://docs.djangoproject.com/en/1.6/howto/deployment/checklist/
 # SECURITY WARNING: keep the secret key used in production secret!
 # SECURITY WARNING: don't run with debug turned on in production!
-# CRA: Set "LILLIO" to True if you're Lillio.
-PRODUCTION = False
-RUN_LOCAL = True #if PRODUCTION else True  # we'll be Lillio by default...
+
+DEBUG = True
 
 
 # Simple Settings
 # ===============
-DEBUG = True #if PRODUCTION else True
-TEMPLATE_DEBUG = DEBUG
 
 #ALLOWED_HOSTS = ['database.elvisproject.ca', 'db-devel.elvisproject.ca']# if PRODUCTION else []
 
-if PRODUCTION:
+if not DEBUG:
     # TODO: Try loading from a temp file; if not present, automatically generate SECRET_KEY then
     #       save it to the temp file. This would mean changing the SECRET_KEY on every reboot,
     #       which isn't particularly detrimental to anyone.
@@ -50,6 +46,7 @@ else:
 ROOT_URLCONF = 'elvis.elvis.urls'
 WSGI_APPLICATION = 'elvis.elvis.wsgi.application'
 SITE_ID = 1
+
 PREREQ_APPS = [
     'django.contrib.admin',
     'django.contrib.auth',
@@ -64,7 +61,8 @@ PREREQ_APPS = [
     'rest_framework.authtoken',
     'django_extensions',
 ]
-INSTALLED_APPS = PREREQ_APPS.append('elvis')
+PROJECT_APPS = ['elvis']
+INSTALLED_APPS = PREREQ_APPS + PROJECT_APPS
 MIDDLEWARE_CLASSES = (
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
@@ -81,7 +79,7 @@ MIDDLEWARE_CLASSES = (
 # ======================
 BROKER_URL = 'django://'
 
-if RUN_LOCAL:
+if DEBUG:
     DATABASES = {
         'default': {
             'ENGINE': 'django.db.backends.postgresql_psycopg2',
@@ -104,7 +102,6 @@ else:
         }
     }
 
-
 # Internationalization
 # ====================
 LANGUAGE_CODE = 'en-us'
@@ -120,19 +117,16 @@ USE_TZ = True
 #      them back, check commit dc8f8afe75b7137440c6488483566b8e2c366379
 MEDIA_URL = '/media/'
 
-if DEBUG and RUN_LOCAL:
+if DEBUG:
     MEDIA_ROOT = "/Users/AlexPar/Documents/DDMAL/elvis-database/elvis/media/"
-#elif DEBUG:
-#    MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 else:
     MEDIA_ROOT = os.path.join(BASE_DIR, '..', '..', '..', 'media_root')
-# httpd will serve static files from this directory
+
 STATIC_URL = '/static/'
-if DEBUG and RUN_LOCAL:
+
+if DEBUG:
     STATIC_ROOT = os.path.join(BASE_DIR, 'static')
     STATIC_URL = '/Users/AlexPar/Documents/DDMAL/elvis-database/elvis/static/'
-elif DEBUG:
-    STATIC_ROOT = os.path.join(BASE_DIR, '..', '..', 'static_root')
 else:
     STATIC_ROOT = os.path.join(BASE_DIR, '..', '..', '..', 'static_root')
 
