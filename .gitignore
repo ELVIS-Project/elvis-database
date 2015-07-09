@@ -7,15 +7,5 @@ solr/suggestions*
 elvis_env/*
 .DS_Store
 dumps
-elvis/settings.py
-elvis/wsgi.py
-**/media/*
-**/attachments/*
-**/elvis-files/*
-**/user_downloads/*
-elvis-files.tgz
-ddmal_elvis.sql
-ddmal_drupal.sql
 elvis/media/
-!elvis/media/.gitignore
 pom.xml
