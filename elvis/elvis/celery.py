@@ -5,6 +5,9 @@ import os
 from celery import Celery
 from django.conf import settings
 
+# Celery can be started by running `celery -A elvis worker -l info` from the elvis-database/elvis dir while sourced
+# from the virtualenv used to run the django project.
+
 # set the default Django settings module for the 'celery' program.
 os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'elvis.settings.base')
 
