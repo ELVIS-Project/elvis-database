@@ -1,7 +1,6 @@
 import os
 from django.db import models
 from django.contrib.auth.models import User
-from django.conf import settings
 from django.db.models.signals import post_save
 
 
@@ -13,7 +12,6 @@ class UserProfile(models.Model):
 
     #user = models.ForeignKey(User, unique=True)
     user = models.OneToOneField(User)
-    picture = models.ImageField(upload_to=picture_path, null=True, blank=True)
     #location = models.CharField(max_length=140)
     #affiliation = models.CharField(max_length=300)
     #TODO: Queries, Contributions, Collections

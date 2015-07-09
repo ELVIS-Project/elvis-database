@@ -1,8 +1,5 @@
 from django.db import models
 from django.contrib.auth.models import User
-import pytz
-
-#django signal handlers
 from django.dispatch import receiver
 from django.db.models.signals import post_save, post_delete, pre_delete
 
@@ -32,7 +29,6 @@ class Movement(models.Model):
     religiosity = models.CharField(max_length=50, default="Unknown")
     vocalization = models.CharField(max_length=50, default="Unknown")
     comment = models.TextField(blank=True, null=True)
-
     created = models.DateTimeField(auto_now_add=True)
     updated = models.DateTimeField(auto_now=True)
 
@@ -72,63 +68,15 @@ def solr_index(sender, instance, created, **kwargs):
     if kwargs.get('raw', False):
         return False
     import uuid
-    from django.conf import settings
     import solr
+    from django.conf import settings
 
     solrconn = solr.SolrConnection(settings.SOLR_SERVER)
-    record = solrconn.query("item_id:{0} AND type:elvis_movement".format(instance.id), q_op="AND")
+    record = solrconn.query("item_id:{0} AND type:elvis_movement".format(instance.id))
     if record:
         solrconn.delete(record.results[0]['id'])
 
     movement = instance
-
-    # LM: Ugly bit of code to migrate the discrepancies in drupal database encoding. Remove when:
-    # 1. Upload UI and backend restrics encoding
-    # 2. Finished with importing old files
-    try:
-        movement_title = unicode(movement.title)
-    except UnicodeDecodeError:
-        movement_title = movement.title.decode('utf-8')
-
-    if movement.piece is None:
-        parent_piece_name = None
-    else:
-        try:
-            parent_piece_name = unicode(movement.piece.title)
-        except UnicodeDecodeError:
-            parent_piece_name = movement.piece.title.decode('utf-8')
-
-    
-    if movement.composer is None:
-        composer_name = None
-    else:
-        try:
-            composer_name = unicode(movement.composer.name)
-        except UnicodeDecodeError:
-            composer_name = movement.composer.name.decode('utf-8')
-
-    if movement.comment is None:
-        movement_comment = None
-    else:
-        try:
-            movement_comment = unicode(movement.comment)
-        except UnicodeDecodeError:
-            movement_comment = movement.comment.decode('utf-8')
-
-    if movement.uploader is None:
-        uploader_name = None
-    else:
-        try:
-            uploader_name = unicode(movement.uploader.username)
-        except UnicodeDecodeError:
-            uploader_name = movement.uploader.name.decode('utf-8')
-
-    try:
-        movement_created = pytz.utc.localize(movement.created)
-    except ValueError:
-        movement_created = movement.created
-
-    # Index all the M2M relationships between mvts & tags, and mvts & other fields 
 
     tags = []
     for tag in movement.tags.all():
@@ -155,36 +103,34 @@ def solr_index(sender, instance, created, **kwargs):
         sources.append(source.name)
 
     collections = []
-    if not movement.collections is None:
+    if movement.collections.all():
         collections = []
         for collection in movement.collections.all():
-            try:
-                collections.append(unicode(collection.title))
-            except UnicodeDecodeError:
-                collections.append(collection.title.decode('utf-8'))
+            collections.append(collection.title)
+    if movement.piece:
+        parent_piece = movement.piece.title
+    else:
+        parent_piece = None
 
-    d = {
-            'type': 'elvis_movement',
-            'id': str(uuid.uuid4()),
-            'item_id': int(movement.id),
-            'title': movement_title,
-            'date_of_composition': movement.date_of_composition,
-            'date_of_composition2': movement.date_of_composition2,
-            'number_of_voices': movement.number_of_voices,
-            'comment': movement_comment,
-            'created': movement_created,
-            'updated': movement.updated,
-            'parent_piece_name': parent_piece_name,  
-            'parent_collection_names': collections,
-            'composer_name': composer_name,
-            'uploader_name': uploader_name,
-            'tags': tags,
-            'genres': genres,
-            'instruments_voices': instruments_voices,
-            'languages': languages,
-            'locations': locations,
-            'sources': sources,
-    }
+    d = {'type': 'elvis_movement',
+         'id': str(uuid.uuid4()),
+         'item_id': int(movement.id),
+         'title': movement.title,
+         'date_of_composition': movement.date_of_composition,
+         'date_of_composition2': movement.date_of_composition2,
+         'number_of_voices': movement.number_of_voices,
+         'created': movement.created,
+         'updated': movement.updated,
+         'parent_piece_name': parent_piece,
+         'parent_collection_names': collections,
+         'composer_name': movement.composer.name,
+         'uploader_name': movement.uploader,
+         'tags': tags,
+         'genres': genres,
+         'instruments_voices': instruments_voices,
+         'languages': languages,
+         'locations': locations,
+         'sources': sources}
     solrconn.add(**d)
     solrconn.commit()
 
@@ -196,11 +142,10 @@ def attachment_delete(sender, instance, **kwargs):
 
 @receiver(post_delete, sender=Movement)
 def solr_delete(sender, instance, **kwargs):
-    from django.conf import settings
     import solr
+    from django.conf import settings
     solrconn = solr.SolrConnection(settings.SOLR_SERVER)
     record = solrconn.query("item_id:{0} AND type:elvis_movement".format(instance.id))
     if record:
-        # the record already exists, so we'll remove it.
         solrconn.delete(record.results[0]['id'])
         solrconn.commit()

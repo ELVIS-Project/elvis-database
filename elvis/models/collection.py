@@ -1,12 +1,7 @@
 from django.db import models
 from django.contrib.auth.models import User
-
-#django signal handlers
 from django.dispatch import receiver
 from django.db.models.signals import post_save, post_delete
-
-import pytz
-
 
 class Collection(models.Model):
     class Meta:
@@ -24,15 +19,19 @@ class Collection(models.Model):
 
     def __unicode__(self):
         return u"{0}".format(self.title)
+
     @property
     def piece_count(self):
         return self.pieces.all().count()
+
     @property
     def movement_count(self):
         return self.movements.all().count()
+
     @property
     def free_movements(self):
         return self.movements.filter(piece=None)
+
     @property
     def free_movements_count(self):
         return self.movements.filter(piece=None).count()
@@ -42,68 +41,36 @@ class Collection(models.Model):
 def solr_index(sender, instance, created, **kwargs):
     if kwargs.get('raw', False):
         return False
+
     import uuid
-    from django.conf import settings
     import solr
+    from django.conf import settings
 
     solrconn = solr.SolrConnection(settings.SOLR_SERVER)
     record = solrconn.query("item_id:{0} AND type:elvis_collection".format(instance.id))
     if record:
-        # the record already exists, so we'll remove it first.
         solrconn.delete(record.results[0]['id'])
 
     collection = instance
-
-    #LM: Same ugly bit of code as in movement model, but edited for piece model. Again, remove this when encoding issues are fixed. 
-    try:
-        collection_title = unicode(collection.title)
-    except UnicodeDecodeError:
-        collection_title = collection.title.decode('utf-8')
-
-    if collection.creator is None:
-        creator_name = None
-    else:
-        try:
-            creator_name = unicode(collection.creator.username)
-        except UnicodeDecodeError:
-            creator_name = collection.creator.username.decode('utf-8')
-
-    if collection.comment is None:
-        collection_comment = None
-    else:
-        try:
-            collection_comment = unicode(collection.comment)
-        except UnicodeDecodeError:
-            collection_comment = collection.comment.decode('utf-8')
-            
-    try:
-        collection_created = pytz.utc.localize(collection.created)
-    except ValueError:
-        collection_created = collection.created
-
-
-    d = {
-            'type': 'elvis_collection',
-            'id': str(uuid.uuid4()),
-            'item_id': int(collection.id),
-            'title': collection_title,
-            'parent_collection_names': collection_title,
-            'created': collection_created,
-            'updated': collection.updated,
-            'comment': collection_comment,
-            'creator_name': creator_name,
-            'collections_searchable': collection_title
-    }
+    d = {'type': 'elvis_collection',
+         'id': str(uuid.uuid4()),
+         'item_id': int(collection.id),
+         'title': collection.title,
+         'created': collection.created,
+         'updated': collection.updated,
+         'comment': collection.comment,
+         'creator_name': collection.creator,
+         'collections_searchable': collection.title}
     solrconn.add(**d)
     solrconn.commit()
 
 @receiver(post_delete, sender=Collection)
 def solr_delete(sender, instance, **kwargs):
-    from django.conf import settings
     import solr
+    from django.conf import settings
+
     solrconn = solr.SolrConnection(settings.SOLR_SERVER)
     record = solrconn.query("item_id:{0} AND type:elvis_collection".format(instance.id))
     if record:
-        # the record already exists, so we'll remove it.
         solrconn.delete(record.results[0]['id'])
         solrconn.commit()

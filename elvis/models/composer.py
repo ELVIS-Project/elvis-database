@@ -1,15 +1,12 @@
 import os
-import pytz
+from django.conf import settings
 from django.db import models
 from simple_history.models import HistoricalRecords
-#django signal handlers
 from django.dispatch import receiver
 from django.db.models.signals import post_save, post_delete
-from django.conf import settings
 
 def picture_path(instance, filename):
     return os.path.join(settings.MEDIA_ROOT, "pictures", "composers", filename)
-
 
 class Composer(models.Model):
     class Meta:
@@ -20,24 +17,25 @@ class Composer(models.Model):
     name = models.CharField(max_length=255)
     birth_date = models.DateField(blank=True, null=True)
     death_date = models.DateField(blank=True, null=True)
-    # LM: I suspect this is because of the new django beta, but image fields require blank=True to be optional; else it is required in admin
-    picture = models.ImageField(upload_to=picture_path, null=True, blank=True)
     history = HistoricalRecords()
-
     created = models.DateTimeField(auto_now_add=True)
     updated = models.DateTimeField(auto_now=True)
 
     def __unicode__(self):
         return u"{0}".format(self.name)
+
     @property
     def piece_count(self):
         return self.pieces.all().count()
+
     @property
     def movement_count(self):
         return self.movements.all().count()
+
     @property
     def free_movements(self):
         return self.movements.filter(piece=None)
+
     @property
     def free_movements_count(self):
         return self.movements.filter(piece=None).count()
@@ -46,69 +44,36 @@ class Composer(models.Model):
 def solr_index(sender, instance, created, **kwargs):
     if kwargs.get('raw', False):
         return False
-    import uuid  #unique id
+
+    import uuid
+    import solr
     from django.conf import settings 
-    import solr
 
-    solrconn = solr.SolrConnection(settings.SOLR_SERVER)   # connect to solr server
-    record = solrconn.query("item_id:{0} AND type:elvis_composer".format(instance.id)) # search for any previous entries of instance
-    if record:
-        # the record already exists, so we'll remove it first.
-        solrconn.delete(record.results[0]['id'])
-
-    # take instance, build dictionary around instance && use shorthand ** to add to solr
-    composer = instance
-
-    # Remove between here...
-    try:
-        composer_name = unicode(composer.name)
-    except UnicodeDecodeError:
-        composer_name = composer.name.decode('utf-8')
-
-    if composer.birth_date is None:
-        composer_birth_date = None
-    else:
-        try:
-        # IMPORTANT: For drupal dumping purposes, insert pytz.utc.localize(composer.birth_date) in RHS of assignment
-        # ELSE, stick with just composer.birth_date
-            composer_birth_date = pytz.utc.localize(composer.birth_date)
-        except AttributeError:
-           composer_birth_date = composer.birth_date
-
-    if composer.death_date is None:
-        composer_death_date = None
-    else:
-        try:
-        # IMPORTANT, see composer_birth_date assignment.
-            composer_death_date = pytz.utc.localize(composer.death_date)
-        except AttributeError:
-           composer_death_date = composer.death_date
-    # ... and here after encoding issues are fixed
-
-    d = {
-            'type': 'elvis_composer',
-            'id': str(uuid.uuid4()),
-            'item_id': int(composer.id), # called composer_id in elvis/solr_index.py 
-            'composer_name': composer_name,
-            'birth_date': composer_birth_date,
-            'death_date': composer_death_date,
-            'created': composer.created,
-            'updated': composer.updated,
-            'composers_searchable': composer_name
-    }
-    solrconn.add(**d)
-    solrconn.commit()
-
-    #Update solr & attachments for all composed pieces/movements -- by resaving each piece/movement
-
-
-@receiver(post_delete, sender=Composer)
-def solr_delete(sender, instance, **kwargs):
-    from django.conf import settings
-    import solr
     solrconn = solr.SolrConnection(settings.SOLR_SERVER)
     record = solrconn.query("item_id:{0} AND type:elvis_composer".format(instance.id))
     if record:
-        # the record already exists, so we'll remove it.
+        solrconn.delete(record.results[0]['id'])
+
+    composer = instance
+    d = {'type': 'elvis_composer',
+         'id': str(uuid.uuid4()),
+         'item_id': int(composer.id),
+         'name': composer.name,
+         'birth_date': composer.birth_date,
+         'death_date': composer.death_date,
+         'created': composer.created,
+         'updated': composer.updated,
+         'composers_searchable': composer.name}
+    solrconn.add(**d)
+    solrconn.commit()
+
+@receiver(post_delete, sender=Composer)
+def solr_delete(sender, instance, **kwargs):
+    import solr
+    from django.conf import settings
+
+    solrconn = solr.SolrConnection(settings.SOLR_SERVER)
+    record = solrconn.query("item_id:{0} AND type:elvis_composer".format(instance.id))
+    if record:
         solrconn.delete(record.results[0]['id'])
         solrconn.commit()

@@ -25,6 +25,8 @@ class Download(models.Model):
 
 
 def create_user_download(sender, instance, created, **kwargs):
+    if kwargs.get('raw', False):
+        return False
     if created:
         Download.objects.create(user=instance)
 

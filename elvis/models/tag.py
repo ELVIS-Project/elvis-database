@@ -1,23 +1,19 @@
 from django.db import models
-
-#django signal handlers
 from django.dispatch import receiver
 from django.db.models.signals import post_save, post_delete
 
 
 class Tag(models.Model):
+    class Meta:
+        app_label = "elvis"
+
     old_id = models.IntegerField(db_index=True, blank=True, null=True)
     name = models.CharField(max_length=255)
     description = models.TextField(blank=True, null=True)
     approved = models.NullBooleanField()
 
-    # number_of_queries = models.IntegerField(blank=True, null=True)
-
     def __unicode__(self):
         return u"{0}".format(self.name)
-
-    class Meta:
-        app_label = "elvis"
 
 
 @receiver(post_save, sender=Tag)

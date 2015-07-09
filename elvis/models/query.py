@@ -1,5 +1,4 @@
 from django.db import models
-from datetime import datetime
 
 class Query(models.Model):
     '''
@@ -7,7 +6,7 @@ class Query(models.Model):
     '''
     query = models.CharField(max_length=255)
     #user = models.ForeignKey(UserProfile)
-    created = models.DateTimeField(default=datetime.now, blank=True)
+    created = models.DateTimeField(auto_now_add=True, blank=True)
 
     def __unicode__(self):
         return u"{0}".format(self.query)

@@ -1,7 +1,4 @@
 from django.db import models
-import pytz
-
-#django signal handlers
 from django.dispatch import receiver
 from django.db.models.signals import post_save, post_delete
 
@@ -13,7 +10,6 @@ class Location(models.Model):
 
     name = models.CharField(max_length=255, blank=True, null=True)
     comment = models.TextField(blank=True, null=True)
-
     created = models.DateTimeField(auto_now_add=True)
     updated = models.DateTimeField(auto_now=True)
 
@@ -30,62 +26,36 @@ class Place(Location):
 def solr_index(sender, instance, created, **kwargs):
     if kwargs.get('raw', False):
         return False
+
     import uuid
-    from django.conf import settings
     import solr
+    from django.conf import settings
 
     solrconn = solr.SolrConnection(settings.SOLR_SERVER)
     record = solrconn.query("item_id:{0} AND type:elvis_location".format(instance.id))
     if record:
-        # the record already exists, so we'll remove it first.
         solrconn.delete(record.results[0]['id'])
 
     location = instance
 
-    #LM: Same ugly bit of code as in all the models, remove when encoding issues are fixed.
-    try:
-        location_name = unicode(location.name)
-    except UnicodeDecodeError:
-        location_name = location.name.decode('utf-8')
-
-
-    if location.comment is None:
-        location_comment = None
-    else:
-        try:
-            location_comment = unicode(location.comment)
-        except UnicodeDecodeError:
-            location_comment = location.comment.decode('utf-8')
-            
-    try:
-        location_created = pytz.utc.localize(location.created)
-    except ValueError:
-        location_created = location.created
-
-
-    d = {
-            'type': 'elvis_location',
-            'id': str(uuid.uuid4()),
-            'item_id': int(location.id),
-            'name': location_name,
-            'locations': location_name,
-            'locations_searchable': location_name,
-            'created': location_created,
-            'updated': location.updated,
-            'comment': location_comment,
-    }
+    d = {'type': 'elvis_location',
+         'id': str(uuid.uuid4()),
+         'item_id': int(location.id),
+         'name': location.name,
+         'locations_searchable': location.name,
+         'created': location.created,
+         'updated': location.updated,
+         'comment': location.comment}
     solrconn.add(**d)
     solrconn.commit()
 
 
 @receiver(post_delete, sender=Location)
 def solr_delete(sender, instance, **kwargs):
-    from django.conf import settings
     import solr
+    from django.conf import settings
     solrconn = solr.SolrConnection(settings.SOLR_SERVER)
     record = solrconn.query("item_id:{0} AND type:elvis_location".format(instance.id))
     if record:
-        # the record already exists, so we'll remove it.
         solrconn.delete(record.results[0]['id'])
         solrconn.commit()
-        

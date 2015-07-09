@@ -1,8 +1,5 @@
 from django.db import models
 from django.contrib.auth.models import User
-import pytz
-
-#django signal handlers
 from django.dispatch import receiver
 from django.db.models.signals import post_save, post_delete, pre_delete
 
@@ -30,7 +27,6 @@ class Piece(models.Model):
     religiosity = models.CharField(max_length=50, default="Unknown")
     vocalization = models.CharField(max_length=50, default="Unknown")
     comment = models.TextField(blank=True, null=True)
-
     created = models.DateTimeField(auto_now_add=True)
     updated = models.DateTimeField(auto_now=True)
 
@@ -43,6 +39,7 @@ class Piece(models.Model):
     @property
     def movement_count(self):
         return self.movements.all().count()
+
     @property
     def attached_files(self):
         if not self.attachments.all():
@@ -75,9 +72,10 @@ class Piece(models.Model):
 def solr_index(sender, instance, created, **kwargs):
     if kwargs.get('raw', False):
         return False
+
     import uuid
-    from django.conf import settings
     import solr
+    from django.conf import settings
 
     solrconn = solr.SolrConnection(settings.SOLR_SERVER)
     record = solrconn.query("item_id:{0} AND type:elvis_piece".format(instance.id))
@@ -85,46 +83,6 @@ def solr_index(sender, instance, created, **kwargs):
         solrconn.delete(record.results[0]['id'])
 
     piece = instance
-
-    #LM: Same ugly bit of code as in movement model, but edited for piece model. Remove when:
-    # 1. Upload UI and backend restrics encoding
-    # 2. Finished with importing old files
-
-    try:
-        piece_title = unicode(piece.title)
-    except UnicodeDecodeError:
-        piece_title = piece.title.decode('utf-8')
-
-    if piece.comment is None:
-        piece_comment = None
-    else:
-        try:
-            piece_comment = unicode(piece.comment)
-        except UnicodeDecodeError:
-            piece_comment = piece.comment.decode('utf-8')
-
-    if piece.composer is None:
-        composer_name = None
-    else:
-        try:
-            composer_name = unicode(piece.composer.name)
-        except UnicodeDecodeError:
-            composer_name = piece.composer.name.decode('utf-8')
-
-    if piece.uploader is None:
-        uploader_name = None
-    else:
-        try:
-            uploader_name = unicode(piece.uploader.username)
-        except UnicodeDecodeError:
-            uploader_name = piece.uploader.name.decode('utf-8')
-
-    try:
-        piece_created = pytz.utc.localize(piece.created)
-    except ValueError:
-        piece_created = piece.created
-
-    # Index all the M2M relationships between pieces & tags, and pieces & other fields 
 
     tags = []
     for tag in piece.tags.all():
@@ -154,31 +112,27 @@ def solr_index(sender, instance, created, **kwargs):
     if not piece.collections is None:
         collections = []
         for collection in piece.collections.all():
-            try:
-                collections.append(unicode(collection.title))
-            except UnicodeDecodeError:
-                collections.append(collection.title.decode('utf-8'))
+            collections.append(collection.title)
 
     d = {'type': 'elvis_piece',
          'id': str(uuid.uuid4()),
          'item_id': int(piece.id),
-         'title': piece_title,
+         'title': piece.title,
          'date_of_composition': piece.date_of_composition,
          'date_of_composition2': piece.date_of_composition2,
          'number_of_voices': piece.number_of_voices,
-         'comment': piece_comment,
-         'created': piece_created,
+         'created': piece.created,
          'updated': piece.updated,
          'parent_collection_names': collections,
-         'composer_name': composer_name,
-         'uploader_name': uploader_name,
+         'composer_name': piece.composer.name,
+         'uploader_name': piece.uploader.name,
          'tags': tags,
          'genres': genres,
          'instruments_voices': instruments_voices,
          'languages': languages,
          'locations': locations,
          'sources': sources,
-         'pieces_searchable': piece_title}
+         'pieces_searchable': piece.title}
     solrconn.add(**d)
     solrconn.commit()
 
@@ -189,8 +143,8 @@ def attachment_delete(sender, instance, **kwargs):
 
 @receiver(post_delete, sender=Piece)
 def solr_delete(sender, instance, **kwargs):
-    from django.conf import settings
     import solr
+    from django.conf import settings
     solrconn = solr.SolrConnection(settings.SOLR_SERVER)
     record = solrconn.query("item_id:{0} AND type:elvis_piece".format(instance.id))
     if record:

@@ -1,25 +1,22 @@
 from django.db import models
 from django.contrib.auth.models import User
-
-#django signal handlers
 from django.dispatch import receiver
 from django.db.models.signals import post_save, post_delete
 
 
 class Discussion(models.Model):
+    class Meta:
+        app_label = "elvis"
+
     name = models.CharField(max_length=255)
     project = models.ForeignKey("elvis.Project")
     first_comment = models.TextField()
     first_user = models.ForeignKey(User)
-
     created = models.DateTimeField(auto_now_add=True)
     updated = models.DateTimeField(auto_now=True)
 
     def __unicode__(self):
         return u"{0}".format(self.name)
-
-    class Meta:
-        app_label = "elvis"
 
 
 @receiver(post_save, sender=Discussion)
@@ -52,10 +49,9 @@ def solr_index(sender, instance, created, **kwargs):
 def solr_delete(sender, instance, **kwargs):
     from django.conf import settings
     import solr
+
     solrconn = solr.SolrConnection(settings.SOLR_SERVER)
     record = solrconn.query("item_id:{0} AND type:elvis_discussion".format(instance.id))
     if record:
-        # the record already exists, so we'll remove it.
         solrconn.delete(record.results[0]['id'])
         solrconn.commit()
-        
