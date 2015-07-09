@@ -22,6 +22,8 @@ class Project(models.Model):
 
 @receiver(post_save, sender=Project)
 def solr_index(sender, instance, created, **kwargs):
+    if kwargs.get('raw', False):
+        return False
     import uuid
     from django.conf import settings
     import solr
