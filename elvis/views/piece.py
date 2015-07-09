@@ -18,7 +18,7 @@ from elvis.elvis.tasks import rebuild_suggester_dicts
 
 from elvis.views.views import abstract_model_factory, handle_dynamic_file_table, Cleanup
 from django.utils.decorators import method_decorator
-from django.http import HttpResponseRedirect, HttpResponse
+from django.http import  HttpResponse
 
 
 class PieceListHTMLRenderer(CustomHTMLRenderer):
@@ -72,7 +72,6 @@ class PieceList(generics.ListCreateAPIView):
     def create(self, request, *args, **kwargs):
         if not request.user.is_active:
             return Response(status=status.HTTP_401_UNAUTHORIZED)
-
 
         form = PieceForm(request.POST)
         if not form.is_valid():
