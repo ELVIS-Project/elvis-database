@@ -24,7 +24,7 @@ import os
 #    sys.path.append('/usr/local/elvis_database/elvis-site/elvis/')
 
 # Uncomment these lines if your deployment server uses virtualenv.
-activate_this = '/Users/AlexPar/Documents/DDMAL/elvis-database/elvis_env/bin/activate_this.py'
+activate_this = '/home/lexpar/Documents/DDMAL/elvis-database/elvis_env/bin/activate_this.py'
 execfile(activate_this, dict(__file__=activate_this))
 
 # We defer to a DJANGO_SETTINGS_MODULE already in the environment. This breaks

@@ -16,7 +16,7 @@ from celery import schedules
 
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 import os
-BASE_DIR = os.path.dirname('/Users/AlexPar/Documents/DDMAL/elvis-database/elvis/')
+BASE_DIR = os.path.dirname('/home/lexpar/Documents/DDMAL/elvis-database/elvis/')
 
 # Automatically adjust settings to be suitable or insuitable for proudction environments
 # CRA: I used this to help...
@@ -31,6 +31,8 @@ DEBUG = True
 # ===============
 
 #ALLOWED_HOSTS = ['database.elvisproject.ca', 'db-devel.elvisproject.ca']# if PRODUCTION else []
+
+#TODO Write email settings for password recover feature after depoloyment.
 
 if not DEBUG:
     # TODO: Try loading from a temp file; if not present, automatically generate SECRET_KEY then
@@ -83,7 +85,7 @@ if DEBUG:
     DATABASES = {
         'default': {
             'ENGINE': 'django.db.backends.postgresql_psycopg2',
-            'NAME': 'elvis',
+            'NAME': 'elvis-database',
             'USER': '',
             'PASSWORD': '',
             'HOST': 'localhost',
@@ -118,7 +120,7 @@ USE_TZ = True
 MEDIA_URL = '/media/'
 
 if DEBUG:
-    MEDIA_ROOT = "/Users/AlexPar/Documents/DDMAL/elvis-database/elvis/media/"
+    MEDIA_ROOT = "/home/lexpar/Documents/DDMAL/elvis-database/elvis/media/"
 else:
     MEDIA_ROOT = os.path.join(BASE_DIR, '..', '..', '..', 'media_root')
 
@@ -126,7 +128,7 @@ STATIC_URL = '/static/'
 
 if DEBUG:
     STATIC_ROOT = os.path.join(BASE_DIR, 'static')
-    STATIC_URL = '/Users/AlexPar/Documents/DDMAL/elvis-database/elvis/static/'
+    STATIC_URL = '/home/lexpar/Documents/DDMAL/elvis-database/elvis/static/'
 else:
     STATIC_ROOT = os.path.join(BASE_DIR, '..', '..', '..', 'static_root')
 

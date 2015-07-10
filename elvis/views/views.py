@@ -12,14 +12,15 @@ from elvis.models import Genre
 from elvis.models import InstrumentVoice
 from elvis.models import Tag
 from django.db.models import ObjectDoesNotExist
+import datetime
 import json
 import urllib2
 import pytz
 import os
 import zipfile
-import datetime
-import pdb
 
+import pdb
+from django.contrib.auth import views as auth_views
 
 class Cleanup:
     """Keep track of created objects during an attempt to create a new piece. """
@@ -427,4 +428,3 @@ def rebuild_suggester_dicts():
     """Rebuild all suggester dictionaries in Solr"""
     for d in settings.SUGGEST_DICTS:
         urllib2.urlopen(settings.SOLR_SERVER + "/suggest/?suggest.dictionary={0}&suggest.reload=true".format(d))
-

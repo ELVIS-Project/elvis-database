@@ -49,7 +49,10 @@ class UserAccount(generics.CreateAPIView):
     renderer_classes = (JSONRenderer, UserAccountHTMLRenderer)
     
     def get(self, request, *args, **kwargs):
-        return render(request, "user/user_account.html")
+        if request.user.is_anonymous():
+            return render(request, "register.html")
+        else:
+            return render(request, "user/user_account.html")
             
     @method_decorator(csrf_protect)
     def post(self, request, *args, **kwargs):
@@ -61,11 +64,34 @@ class UserAccount(generics.CreateAPIView):
                 user = authenticate(username=request.POST['username'], password=request.POST['password1'])
                 login(request, user)
                 return HttpResponseRedirect("/")
+            else:
+                return render(request, "register.html", {'form': form})
         else:
             form = UserUpdateForm(data=request.POST, instance=request.user)
-            if form.is_valid():
-                user = form.save()
-            print form
-        return render(request, "user/user_account.html", {'form': form})
+            if not form.is_valid():
+                return render(request, "user/user_update.html", {'form': form})
 
+            clean_form = form.cleaned_data
+            if clean_form['username']:
+                request.user.username = clean_form['username']
+            if clean_form['email']:
+                request.user.email = clean_form['email']
+            if clean_form['first_name']:
+                request.user.first_name = clean_form['first_name']
+            if clean_form['last_name']:
+                request.user.last_name = clean_form['last_name']
+            user.save()
+            return render(request, "user/user_account.html", {'form': form})
+
+
+class UserUpdate(generics.CreateAPIView):
+    model = User
+    serializer_class = UserSerializer
+    renderer_classes = (JSONRenderer, UserAccountHTMLRenderer)
+
+    def get(self, request, *args, **kwargs):
+        if request.user.is_anonymous():
+            return render(request, "register.html")
+        else:
+            return render(request, "user/user_update.html")
 

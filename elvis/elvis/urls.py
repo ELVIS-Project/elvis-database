@@ -11,23 +11,22 @@ from elvis.views.main import home, about, queries, temp
 from elvis.views.views import solr_suggest
 from elvis.views.auth import LoginFormView, logout_view
 from elvis.views.search import SearchView
-from elvis.views.project import ProjectList, ProjectDetail
 from elvis.views.download import DownloadDetail, Downloading
 from elvis.views.piece import PieceList, PieceDetail, PieceCreate
-from elvis.views.user import UserList, UserDetail, UserAccount
+from elvis.views.user import UserList, UserDetail, UserAccount, UserUpdate
 from elvis.views.userprofile import UserProfileList, UserProfileDetail
 from elvis.views.movement import MovementList, MovementDetail
 from elvis.views.composer import ComposerList, ComposerDetail
 from elvis.views.collection import CollectionList, CollectionDetail, CollectionCurrent
 from elvis.views.tag import TagList, TagDetail
 from elvis.views.attachment import AttachmentList, AttachmentDetail
+from django.contrib.auth import views as auth_views
 
 # Uncomment the next two lines to enable the admin:
 from django.contrib import admin
 admin.autodiscover()
 
 media_path = os.path.realpath('media/attachments/')
-
 urlpatterns = []
 
 urlpatterns += format_suffix_patterns(
@@ -38,9 +37,20 @@ urlpatterns += format_suffix_patterns(
 
         #url(r'^users/$', UserList.as_view(), name="user-list"),
         url(r'^user/(?P<pk>[0-9]+)/$', UserDetail.as_view(), name="user-detail"),
-        url(r'^account/', UserAccount.as_view(), name = "user-account"),
+        url(r'^account/$', UserAccount.as_view(), name="user-account"),
+        url(r'^account/update/$', UserUpdate.as_view(), name="user-update"),
+        url(r'^account/password_change/$', auth_views.password_change, {'template_name': 'user/password_change.html'}, name='password_change'),
+        url(r'^account/password_change_done/$', auth_views.password_change_done, {'template_name': 'user/password_done.html'}, name='password_change_done'),
         url(r'^login/?', LoginFormView.as_view(), name="login-form"),
         url(r'^logout/?', logout_view),
+        url(r'^register/?', UserAccount.as_view(), name='register-form'),
+
+
+        #Password resettting won't work until server emails are up.
+        url(r'^password/reset/$', auth_views.password_reset, name='password_reset'),
+        url(r'^password/reset/done/$', auth_views.password_reset_done, name='password_reset_done'),
+        url(r'^reset/(?P<uidb64>[0-9A-Za-z_\-]+)/(?P<token>[0-9A-Za-z]{1,13}-[0-9A-Za-z]{1,20})/$', auth_views.password_reset_confirm, name='password_reset_confirm'),
+        url(r'^password/reset/complete/$', auth_views.password_reset_complete, name='password_reset_complete'),
 
         url(r'^downloads/$', DownloadDetail.as_view(), name="download-detail"),
         url(r'^downloading/$', Downloading.as_view(), name="downloading"),
@@ -84,6 +94,7 @@ urlpatterns += patterns('',
 urlpatterns += static.static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)
 
 urlpatterns += staticfiles_urlpatterns()
+
 
 # Only add admin if it's enabled
 if 'django.contrib.admin' in settings.INSTALLED_APPS:
