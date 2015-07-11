@@ -24,21 +24,19 @@
 <div class="container">
     <div class="row">
         <div class="col-sm-6 col-md-4 col-md-offset-4">
-            <h1 class="text-center login-title">Login</h1>
+            <h1 class="text-center">Login</h1>
             <div class="account-wall">
                 {% if form.errors.items %}
-                <table>
                     {% for field, errors in form.errors.items %}
-                    <tr>
-                        <td style="padding: 10px;"><span class="glyphicon glyphicon-exclamation-sign" aria-hidden="true" style="color:#be1931; font-size: xx-large"></span></td>
-                        <td>
-                            {% for error in errors %}
-                            <span class="help-block">{{error}}</span>
-                            {% endfor %}
-                        </td>
-                    </tr>
+                        <div class="row">
+                            <div class="col-sm-1 col-sm-offset-1"><span class="glyphicon glyphicon-exclamation-sign" aria-hidden="true" style="color:#be1931; font-size: x-large"></span></div>
+                            <div class="col-sm-10">
+                                {% for error in errors %}
+                                    <span class="help-block">{{error}}</span>
+                                {% endfor %}
+                            </div>
+                        </div>
                     {% endfor %}
-                </table>
                 {% endif %}
                 <form class="form-signin" method="post" action="/login"> {% csrf_token %}
                     <input name='username' type="text" class="form-control top" placeholder="Username" required autofocus>

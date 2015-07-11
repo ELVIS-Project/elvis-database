@@ -7,18 +7,16 @@
                 <h1 class="text-center">Update Account</h1>
                 <div class="account-wall">
                     {% if form.errors.items %}
-                        <table>
-                            {% for field, errors in form.errors.items %}
-                                <tr>
-                                    <td style="padding: 10px;"><span class="glyphicon glyphicon-exclamation-sign" aria-hidden="true" style="color:#be1931; font-size: xx-large"></span></td>
-                                    <td>
-                                        {% for error in errors %}
-                                            <span class="help-block">{{error}}</span>
-                                        {% endfor %}
-                                    </td>
-                                </tr>
-                            {% endfor %}
-                        </table>
+                        {% for field, errors in form.errors.items %}
+                            <div class="row">
+                                <div class="col-sm-1 col-sm-offset-1"><span class="glyphicon glyphicon-exclamation-sign" aria-hidden="true" style="color:#be1931; font-size: x-large"></span></div>
+                                <div class="col-sm-10">
+                                    {% for error in errors %}
+                                        <span class="help-block">{{error}}</span>
+                                    {% endfor %}
+                                </div>
+                            </div>
+                        {% endfor %}
                     {% endif %}
                     <form class="form-signin" method="post" action="/account/"> {% csrf_token %}
                         <input name='username' id=username type="text" class="form-control top" placeholder="Username" autofocus>
