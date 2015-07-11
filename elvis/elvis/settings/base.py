@@ -16,7 +16,7 @@ from celery import schedules
 
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 import os
-BASE_DIR = os.path.dirname('/home/lexpar/Documents/DDMAL/elvis-database/elvis/')
+BASE_DIR = os.path.abspath('./elvis')
 
 # Automatically adjust settings to be suitable or insuitable for proudction environments
 # CRA: I used this to help...
@@ -86,10 +86,6 @@ if DEBUG:
         'default': {
             'ENGINE': 'django.db.backends.postgresql_psycopg2',
             'NAME': 'elvis-database',
-            'USER': '',
-            'PASSWORD': '',
-            'HOST': 'localhost',
-            'PORT': '5432',
             }
     }
 else:
@@ -118,19 +114,11 @@ USE_TZ = True
 # CRA: we used to have composer images and user profile images; if we need
 #      them back, check commit dc8f8afe75b7137440c6488483566b8e2c366379
 MEDIA_URL = '/media/'
+MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 
-if DEBUG:
-    MEDIA_ROOT = "/home/lexpar/Documents/DDMAL/elvis-database/elvis/media/"
-else:
-    MEDIA_ROOT = os.path.join(BASE_DIR, '..', '..', '..', 'media_root')
 
 STATIC_URL = '/static/'
-
-if DEBUG:
-    STATIC_ROOT = os.path.join(BASE_DIR, 'static')
-    STATIC_URL = '/home/lexpar/Documents/DDMAL/elvis-database/elvis/static/'
-else:
-    STATIC_ROOT = os.path.join(BASE_DIR, '..', '..', '..', 'static_root')
+STATIC_ROOT = os.path.join(BASE_DIR, 'static')
 
 
 # Solr Settings
