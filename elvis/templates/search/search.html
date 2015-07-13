@@ -3,120 +3,62 @@
 
 {% block extra_hd %}
 
-    <title>Search</title>
+<title>Search</title>
 
-    <script type="text/javascript" src="{{STATIC_URL}}bootstrap/plugins/bootstrap-multiselect.js"></script>
-    <link rel="stylesheet" href="{{STATIC_URL}}bootstrap/plugins/bootstrap-multiselect.css" type="text/css"/>
+<script type="text/javascript" src="{{STATIC_URL}}bootstrap/plugins/bootstrap-multiselect.js"></script>
+<link rel="stylesheet" href="{{STATIC_URL}}bootstrap/plugins/bootstrap-multiselect.css" type="text/css"/>
 
-    <script type="text/javascript">
+<script type="text/javascript">
+$(document).ready(function($)
+{
+    $('.input-group-addon').tooltip();
+    $('#typefilt').multiselect();
+    $('#sortby').multiselect();
 
-    $(function()
+    var qstr = window.location.search.replace("?", "");
+    var qstr_params = $.parseParams(qstr);
+    for (var key in qstr_params)
     {
-        $('.input-group-addon').tooltip();
-            
-    });
-
-    $(function() 
-    {   
-        $('#typefilt').multiselect(
+        if(key === 'typefilt' || key === 'type')
         {
-            buttonWidth: '100%',
-            numberDisplayed: 6,
-            checkboxName: 'typefilt',
-            nonSelectedText: 'Any Type',
-            nSelectedText: 'Selected Types',
-            templates: 
-            {
-                button: '<button type="button" class="btn btn-lg multiselect-button" data-toggle="dropdown"></button>',
-            },
-            buttonText: function(options, select) 
-            {
-                if (options.length == 0 || options.length == 6) 
-                {
-                  return this.nonSelectedText + ' <b class="caret"></b>';
-                }
-                else 
-                {
-                    if (options.length > this.numberDisplayed) 
-                    {
-                        return options.length + ' ' + this.nSelectedText + ' <b class="caret"></b>';
-                    }
-                    else 
-                    {
-                        var selected = '';
-                        options.each(function() 
-                        {
-                            var label = ($(this).attr('label') !== undefined) ? $(this).attr('label') : $(this).html();
-             
-                            selected += label + ', ';
-                        });
-                        return selected.substr(0, selected.length - 2) + ' <b class="caret"></b>';
-                    }
-                }
-            },
-        });
-        $('#sortby').multiselect(
-        {
-            buttonWidth: '100%',
-            checkboxName: 'sortby',
-            templates: 
-            {
-                button: '<button type="button" class="btn btn-lg multiselect-button" data-toggle="dropdown"></button>',
-            },
-        });
-    });
-
-    $(function()
-    {
-        $('#asearch-submit').click(function()
-        {
-            $(':input').each(function(){
-                if($(this).val() === "" && $(this).attr('name') !== "q")
-                {
-                    $(this).attr('disabled', true);
-                }    
-            });
-            setTimeout(function(){$('#advanced-search-form').submit()}, 300);
-        });
-    });
-
-    $(function()
-    {
-        $('#gsearch-submit').click(function()
-        {
-            $(':input').each(function()
-            {
-                if($(this).val() === "" && $(this).attr('name') !== "q")
-                {
-                    $(this).attr('disabled', true);
-                }    
-            });
-            setTimeout(function(){$('#general-search-form').submit()}, 300);
-        });
-    });
-
-    $(function()
-    {
-        var qstr = window.location.search.replace("?", "");
-        var qstr_params = $.parseParams(qstr);
-        for (var key in qstr_params)
-        {
-            if(key === 'typefilt' || key === 'type')
-            {
-                $('#typefilt').multiselect('select', qstr_params[key]);
-            }
-            else if (key === 'sortby' && qstr_params[key] !== "")
-            {
-                $('#sortby').multiselect('deselect', "");
-                $('#sortby').multiselect('select', qstr_params[key]);
-            }
-            else
-            {
-                $('[name='+key+']').val(qstr_params[key]);
-            }
+            $('#typefilt').multiselect('select', qstr_params[key]);
         }
-    })
-    </script>
+        else if (key === 'sortby' && qstr_params[key] !== "")
+        {
+            $('#sortby').multiselect('deselect', "");
+            $('#sortby').multiselect('select', qstr_params[key]);
+        }
+        else
+        {
+            $('[name='+key+']').val(qstr_params[key]);
+        }
+    }
+
+    $('#asearch-submit').click(function()
+    {
+        $(':input').each(function(){
+            if($(this).val() === "" && $(this).attr('name') !== "q")
+            {
+                $(this).attr('disabled', true);
+            }
+        });
+        setTimeout(function(){$('#advanced-search-form').submit()}, 300);
+    });
+
+    $('#gsearch-submit').click(function()
+    {
+        $(':input').each(function()
+        {
+            if($(this).val() === "" && $(this).attr('name') !== "q")
+            {
+                $(this).attr('disabled', true);
+            }
+        });
+        setTimeout(function(){$('#general-search-form').submit()}, 300);
+    });
+
+});
+</script>
     
 {% endblock %}
 
@@ -153,7 +95,7 @@
                     <!-- Query Entry -->
                     <div class="row">
 
-                        <div class="input-group input-group-lg col-md-8 col-md-offset-2">
+                        <div class="input-group col-md-8 col-md-offset-2">
                                 <input type="text" class="form-control gsearch" name="q"  >
                                 <span class="input-group-btn">
                                     <button class="btn btn-default submit" type="button" id="gsearch-submit"> Search <span class="glyphicon glyphicon-search"></span> </button>
@@ -177,8 +119,8 @@
                   
                 <h3> General Search Query: </h3> 
                 <div class="form-group search-form-group">
-                    <div class="input-group input-group-lg search-input-group" >
-                        <span class="input-group-addon lg">Search Query</span>
+                    <div class="input-group search-input-group" >
+                        <span class="input-group-addon">Search Query</span>
                         <input type="text" class="form-control" name="q" placeholder="Byrd Hornpipe" >
                         <span class="input-group-addon" data-toggle="tooltip" data-container="body" data-placement="right" data-html='true' title="This searches across the <em>textual content and metadata of all entities </em> in the database for matches with the queried terms. The default operator is AND." >
                             <span class="glyphicon glyphicon-info-sign"></span>
@@ -193,8 +135,8 @@
                 <div class="form-group search-form-group">
                     <!-- Name Filter -->
 
-                    <div class="input-group input-group-lg search-input-group">
-                        <span class="input-group-addon lg">Title</span>
+                    <div class="input-group search-input-group">
+                        <span class="input-group-addon">Title</span>
                         <input type="text" class="form-control" name="titlefilt" placeholder="Agnus Dei">
                         <span class="input-group-addon" data-toggle="tooltip" data-container="body" data-placement="right" data-html='true' title="Terms entered here will be searched for in the <em> titles of pieces and movements</em>.">
                             <span class="glyphicon glyphicon-info-sign"></span>
@@ -203,8 +145,8 @@
 
                 <!-- Name Filter -->
 
-                    <div class="input-group input-group-lg search-input-group">
-                        <span class="input-group-addon lg">Composer's Name</span>
+                    <div class="input-group search-input-group">
+                        <span class="input-group-addon">Composer's Name</span>
                         <input type="text" class="form-control" name="namefilt" placeholder="Jacob Obrecht">
                         <span class="input-group-addon" data-toggle="tooltip" data-container="body" data-placement="right" data-html='true' title="Terms entered here will be searched for in the <em> names of composers </em>, and in the <em> composer-names of pieces and movements</em>. For example, a search for 'Handel' should return Handel the composer, as well as the pieces and movements he composed.">
                             <span class="glyphicon glyphicon-info-sign"></span>
@@ -213,8 +155,8 @@
 
 
                 <!-- Tag Filter -->
-                    <div class="input-group input-group-lg search-input-group">
-                        <span class="input-group-addon lg">Tags</span>
+                    <div class="input-group search-input-group">
+                        <span class="input-group-addon">Tags</span>
                         <input type="text" class="form-control" name="tagfilt" placeholder="Tag1 Tag2">
                         <span class="input-group-addon" data-toggle="tooltip" data-container="body" data-placement="right" data-html='true' title="Terms entered here will be searched for in the <em> tags of pieces and movements</em>.">
                             <span class="glyphicon glyphicon-info-sign"></span>
@@ -225,14 +167,14 @@
                 <!-- Date Filter -->
                     <div class="row">
                         <div class="col-lg-6">
-                            <div class="input-group input-group-lg search-input-group">
-                            <span class="input-group-addon lg">Date Range</span>
+                            <div class="input-group search-input-group">
+                            <span class="input-group-addon">Date Range</span>
                                 <input type="text" class="form-control" name="datefiltf" placeholder="From: (YYYY)" >
                             </div>
                         </div>
 
                         <div class="col-lg-6">
-                            <div class="input-group input-group-lg search-input-group">
+                            <div class="input-group search-input-group">
                                 <input type="text" class="form-control" name="datefiltt" placeholder="To: (YYYY)" >
                                 <span class="input-group-addon" data-toggle="tooltip" data-container="body" data-placement="right" data-html='true' title="The date range entered here will be searched for overlaps with the <em> composition range of pieces and movements</em>, and the <em>lifetime of composers</em>.">
                                     <span class="glyphicon glyphicon-info-sign"></span>
@@ -246,8 +188,8 @@
 
                         <!-- Voice Filter -->
                         <div class="col-lg-12">
-                            <div class="input-group input-group-lg search-input-group">
-                                <span class="input-group-addon lg">Number of Voices</span>
+                            <div class="input-group search-input-group">
+                                <span class="input-group-addon">Number of Voices</span>
                                 <input type="text" class="form-control" name="voicefilt" placeholder="3 OR 4 OR 5">
                                 <span class="input-group-addon" data-toggle="tooltip" data-container="body" data-placement="right" data-html='true' title="Numbers entered here will be searched for in the <em> number-of-voices field of pieces and movements</em>.">
                                     <span class="glyphicon glyphicon-info-sign" ></span>
@@ -260,8 +202,7 @@
 
 
                     <!-- Type Filters -->
-                    <div class="input-group input-group-lg search-input-group">
-                        <span class="input-group-addon lg">Result Type</span>
+                        Filter by type:
                         <select id="typefilt" multiple="multiple">
                             <option id="elvis_composer" value="elvis_composer">Composers</option>
                             <option id="elvis_piece" value="elvis_piece">Pieces</option>
@@ -270,32 +211,18 @@
                             <option id="elvis_tag" value="elvis_tag">Tags</option>
                             <option id="elvis_user" value="elvis_user">Users</option>
                         </select>
-                        <span class="input-group-addon" data-toggle="tooltip" data-container="body" data-placement="right" data-html='true' title="Results will be limited to the types chosen here.">
-                            <span class="glyphicon glyphicon-info-sign"></span>
-                        </span> 
-                    </div> 
-                </div>
 
-                <!-- Sorting --> 
-                <hr></hr>
-                <h3> Sort Results By... </h3>
+                    <!-- Sorting -->
+                        <hr></hr>
+                        <h3> Sort Results By... </h3>
+                            <select id="sortby">
+                                <option value=""> Default (By Type)</option>
+                                <option value="name_sort asc"> Alphabetical &#9660; </option>
+                                <option value="name_sort desc"> Reverse Alphabetical &#9650; </option>
+                                <option value="date_general asc"> Chronological &#9660;</option>
+                                <option value="date_general desc"> Reverse Chronological &#9650; </option>
+                            </select>
 
-                <div class="form-group search-form-group">
-
-                    <div class="input-group input-group-lg search-input-group">
-                        <span class="input-group-addon lg">Ordering Scheme</span>
-                        <select id="sortby">
-                            <option value=""> Default (By Type)</option>
-                            <option value="name_sort asc"> Alphabetical &#9660; </option>
-                            <option value="name_sort desc"> Reverse Alphabetical &#9650; </option>
-                            <option value="date_general asc"> Chronological &#9660;</option>
-                            <option value="date_general desc"> Reverse Chronological &#9650; </option>
-                        </select>
-                        <span class="input-group-addon" data-toggle="tooltip" data-container="body" data-placement="right" title="The 'Default' ordering scheme orders by relevance; tied results are ordered by result type." >
-                            <span class="glyphicon glyphicon-info-sign"></span>
-                        </span> 
-                    </div> 
-                </div>
 
 
                 <!-- Submit -->
