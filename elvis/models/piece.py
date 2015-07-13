@@ -114,6 +114,11 @@ def solr_index(sender, instance, created, **kwargs):
         for collection in piece.collections.all():
             collections.append(collection.title)
 
+    if piece.composer:
+        composer_name = piece.composer.name
+    else:
+        composer_name = None
+
     d = {'type': 'elvis_piece',
          'id': str(uuid.uuid4()),
          'item_id': int(piece.id),
@@ -124,8 +129,8 @@ def solr_index(sender, instance, created, **kwargs):
          'created': piece.created,
          'updated': piece.updated,
          'parent_collection_names': collections,
-         'composer_name': piece.composer.name,
-         'uploader_name': piece.uploader.name,
+         'composer_name': composer_name,
+         'uploader_name': piece.uploader.username,
          'tags': tags,
          'genres': genres,
          'instruments_voices': instruments_voices,
