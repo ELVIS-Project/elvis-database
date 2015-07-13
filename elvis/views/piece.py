@@ -176,5 +176,5 @@ class PieceList(generics.ListCreateAPIView):
 
         new_piece.save()
         rebuild_suggester_dicts.delay()
-        data = json.dumps({'success': True, 'id': new_piece.id, 'url': "http://localhost:8000/piece/{0}".format(new_piece.id)})
+        data = json.dumps({'success': True, 'id': new_piece.id, 'url': "/piece/{0}".format(new_piece.id)})
         return HttpResponse(data, content_type="json")
