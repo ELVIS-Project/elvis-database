@@ -2,6 +2,49 @@
 
 {% block extra_hd %}
 <title>{{ content.title }}</title>
+<script>
+    $(document).ready(function($)
+    {
+        $("#private-button").click(function(event){
+            $.ajax({
+                type: "post",
+                url: "/collections/",
+                data: {'make-private': {{ content.item_id }} },
+                success: function(data)
+                {
+                    console.log("Made {{ content.title }} private.");
+                    location.reload();
+                }
+            })
+        });
+
+        $("#public-button").click(function(event){
+            $.ajax({
+                type: "post",
+                url: "/collections/",
+                data: {'make-public': {{ content.item_id }} },
+                success: function(data)
+                {
+                    console.log("Made {{ content.title }} public.");
+                    location.reload();
+                }
+            })
+        });
+
+        $("#delete-button").click(function(event){
+            $.ajax({
+                type: "post",
+                url: "/collections/",
+                data: {'delete': {{ content.item_id }} },
+                success: function(data)
+                {
+                    console.log("Deleted {{ content.title }}");
+                    document.location.href = '/collections/';
+                }
+            })
+        });
+    });
+</script>
 {% endblock %}
 
 {% block wrap %}

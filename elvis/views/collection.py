@@ -61,7 +61,22 @@ class CollectionList(generics.ListCreateAPIView):
 
     @method_decorator(csrf_protect)
     def post(self, request, *args, **kwargs):
-        return self.create(request, *args, **kwargs)
+        if 'make-private' in request.POST:
+            collection = Collection.objects.get(id=request.POST['make-private'])
+            collection.public = False
+            collection.save()
+            return HttpResponse(json.dumps({'url': "/collection/{0}".format(collection.id)}), content_type="json")
+        elif 'make-public' in request.POST:
+            collection = Collection.objects.get(id=request.POST['make-public'])
+            collection.public = True
+            collection.save()
+            return HttpResponse(json.dumps({'url': "/collection/{0}".format(collection.id)}), content_type="json")
+        elif 'delete' in request.POST:
+            collection = Collection.objects.get(id=request.POST['delete'])
+            collection.delete()
+            return HttpResponse(json.dumps({'url': "/collections/"}), content_type="json")
+        else:
+            return self.create(request, *args, **kwargs)
 
     def create(self, request, *args, **kwargs):
         if not request.user.is_active:
@@ -92,7 +107,7 @@ class CollectionList(generics.ListCreateAPIView):
             movement.save()
 
         new_collection.save()
-        return HttpResponseRedirect("http://localhost:8000/collection/{0}".format(new_collection.id))
+        return HttpResponseRedirect("/collection/{0}".format(new_collection.id))
 
 
 class CollectionDetail(generics.RetrieveUpdateDestroyAPIView):
