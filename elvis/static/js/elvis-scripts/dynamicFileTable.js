@@ -32,18 +32,14 @@ function dynamicFileTable(add_row_button_id, table_body_id, table_name, file_but
             "<td><button id='show_advanced_"+ table_name + row_count + "' type='button' tabindex='-1'class='btn btn-default'>Show</button></td></tr>"+
             "<tr id='"+ table_name + row_count + "_tags' hidden='hidden'> " +
             "<td colspan='5'>" +
-            "<span class='help-block' style='padding:10px'>" +
-                "You may override these fields on a per-movement basis. You may define lists using the semicolon as an item separator." +
-                "If these fields are left blank, they will default to the values you defined on the previous page." +
-            "</span>" +
-            "<div class='row' style='padding-left:20px; padding-right:20px'>" +
-                "<div class='col-md-6'>" +
+            "<div class='row' style='padding-left:115px; padding-right:15px'>" +
+                "<div class='col-md-7'>" +
                     "<div class='form-group'>" +
                     "<div class='input-group'><span class='input-group-addon'>Instrumentation</span><input name='"+ table_name + row_count + "_instrumentation' id='"+ table_name + row_count + "_instrumentation' type='text' class='form-control unstyled'></div>" +
                     "<div id='"+ table_name + row_count + "_instrumentation_suggestions' style='padding-left:120px'></div>" +
                     "</div>" +
                 "</div>" +
-                "<div class='col-md-6'>" +
+                "<div class='col-md-5'>" +
                     "<div class='btn-group btn-group-justified form-inline radio' style='margin-top: 0px' data-toggle='buttons'>" +
                         "<label class='btn btn-default'>" +
                             "<input type='radio' name='" + table_name + row_count + "_vocalization' value='Vocal'> Vocal" +
@@ -57,7 +53,7 @@ function dynamicFileTable(add_row_button_id, table_body_id, table_name, file_but
                     "</div>" +
                 "</div>" +
             "</div>" +
-            "<div class='row' style='padding-left:20px; padding-right:20px'>" +
+            "<div class='row' style='padding-left:115px; padding-right:15px'>" +
                 "<div class='col-md-8'>" +
                     "<div class='form-group'>" +
                     "<div class='input-group'><span class='input-group-addon'>Tags</span><input name='"+ table_name + row_count + "_free_tags' id='"+ table_name + row_count + "_free_tags' type='text' class='form-control unstyled'></div>" +
@@ -70,7 +66,7 @@ function dynamicFileTable(add_row_button_id, table_body_id, table_name, file_but
                     "</div>" +
                 "</div>" +
             "</div>" +
-            "<div class='row' style='padding-left:20px; padding-right:20px'>" +
+            "<div class='row' style='padding-left:115px; padding-right:15px'>" +
                 "<div class='col-md-12'>" +
                     "<strong>Comments:</strong> <div class='form-group'><textarea rows='7' class='form-control' name='"+ table_name + row_count + "_comment' id='"+ table_name + row_count + "_comment' style='resize:vertical'></textarea>"+
                 "</div>" +
