@@ -37,7 +37,6 @@ class ComposerSerializer(serializers.HyperlinkedModelSerializer):
     pieces = ComposerPieceSerializer(many=True)
     free_movements = ComposerMovementSerializer(many=True)
     free_movements_count = serializers.ReadOnlyField()
-    image = serializers.SerializerMethodField("retrieve_image")
     item_id = serializers.ReadOnlyField(source='pk')
     birth_date = serializers.DateField(format=None)
     death_date = serializers.DateField(format=None)
@@ -57,22 +56,13 @@ class ComposerSerializer(serializers.HyperlinkedModelSerializer):
                   "pieces",
                   "free_movements",
                   "free_movements_count",
-                  "image",
                   "created",
                   "updated",
                   "history")
 
-    def retrieve_image(self, obj):
-        if not obj.picture:
-          return None
-        request = self.context.get('request', None)
-        path = os.path.relpath(obj.picture.path, settings.MEDIA_ROOT)
-        url = request.build_absolute_uri(os.path.join(settings.MEDIA_URL, path))
-        return url
 
 
 class ComposerListSerializer(serializers.HyperlinkedModelSerializer):
-    #image = serializers.SerializerMethodField("retrieve_image")
     item_id = serializers.ReadOnlyField(source='pk')
     birth_date = serializers.DateField(format=None)
     death_date = serializers.DateField(format=None)

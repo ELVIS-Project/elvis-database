@@ -6,17 +6,14 @@
 
 {% block wrap %}
 <div class="row">
-    <div class="col-lg-2">
-        <div class="img-wrapper">
-            <img src="{% if content.image %} {{ content.image }}  {% else %} /holder.js/180x180/text:No Picture {% endif %}" class="img-responsive" style="position:absolute;"/>
-        </div>
-    </div>
     <div class="col-lg-10">
         <h2>{{ content.name }} <small>({{ content.birth_date | date:"Y" }}&ndash;{{ content.death_date | date:"Y" }})</small></h2>
     </div>
 </div>
+<hr>
 
-{% if content.pieces %}
+
+    {% if content.pieces %}
 <h3>Pieces ({{ content.pieces | length }})</h3>
 <table class="table">
     <thead>
