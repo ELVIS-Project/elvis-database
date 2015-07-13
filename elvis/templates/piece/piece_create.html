@@ -26,7 +26,7 @@ $(document).ready(function($)
     dynamicFileTable("new_piece_file", "piece_file_table", "piece", "Piece Files", false);
 
     $("#id_comp_pic").filestyle({input:false, iconName: "glyphicon-picture", buttonText: "Composer Picture", disabled: "true"});
-
+    $('[data-toggle="popover"]').popover();
 
     // The dropdown form for additional composer information.
     var $newComposerMenu = $("#composer-create-new-menu");
@@ -98,7 +98,8 @@ $(document).ready(function($)
             data: new FormData(this),
             processData: false,
             contentType: false,
-            success: function (data) {
+            success: function (data)
+            {
                 if(data['errors'] === undefined)
                 {
                     var $upload_modal = $('#upload_modal');
@@ -180,7 +181,7 @@ $(document).ready(function($)
 
 <div class="upload-form">
     <ul class="nav nav-tabs" id="upload-tabs">
-        <li class="active" id="tab_basics"><a data-toggle="tab"href="#basics">Basics</a></li>
+        <li class="active" id="tab_basics"><a data-toggle="tab" href="#basics">Basics</a></li>
         <li id="tab_advanced"><a data-toggle="tab" href="#advanced">Advanced</a></li>
         <li id="tab_attachments"><a data-toggle="tab" href="#attachments">Files</a></li>
     </ul>
@@ -193,9 +194,10 @@ $(document).ready(function($)
                 <h4>Basic Piece Information</h4>
                 <hr>
                 <span class="help-block">
-                A title and composer are required fields to create a piece. Suggestions are offered for composers
-                which already exist in the database, and selecting one of these suggestions will add the piece
-                to the existing composers oeuvre. At the least, an 'end-date' for the composition is required.
+                    A title and composer are required fields to create a piece. Suggestions are offered for composers
+                    which already exist in the database, and selecting one of these suggestions will add the piece
+                    to the existing composers oeuvre. While you are encouraged to provide beginning and ending dates
+                    for the composition, you are only required to provide one date.
                 </span>
                 <div class="input-group">
                   <span class="input-group-addon">Title</span>
@@ -205,8 +207,10 @@ $(document).ready(function($)
                 <div id="title_error"></div>
                 <br>
                 <div class="input-group">
-                    <span class="input-group-addon">Composer</span>
-                    <input type="text" id="composer" autocomplete="off" name="composer" class="form-control" placeholder="e.g. Bach, Johann Sebastian">
+                    <span class="input-group-addon" >Composer</span>
+                    <input type="text" id="composer" autocomplete="off" name="composer" class="form-control" placeholder="e.g. Bach, Johann Sebastian"
+                           data-toggle="popover" data-placement="top" data-trigger="focus" title="Composer"
+                           data-content="If present, choose the composer's name from the drop-down suggestion menu in order to avoid duplicates in the database.">
                 </div>
                 <div id="composer_suggestion_menu" style="padding-left:120px"></div>
                 <div id="composer_error"></div>
@@ -239,7 +243,9 @@ $(document).ready(function($)
                         <div class="form-group">
                             <div class="input-group">
                                 <span class="input-group-addon">Composition Start Date</span>
-                                <input type='date' name="composition_start_date" id="composition_start_date" max="2000-01-01" class="form-control unstyled"/>
+                                <input type='date' name="composition_start_date" id="composition_start_date" max="2000-01-01" class="form-control unstyled"
+                                       data-toggle="popover" data-placement="left" data-trigger="focus" title="Dates"
+                                       data-content="If an exact date is not know, you may simply specify the year of composition by inputing 01/01/YEAR"/>
                             </div>
                             <div id="composition_start_date_error"></div>
                         </div>
@@ -264,8 +270,9 @@ $(document).ready(function($)
                 <h4>Additional Information</h4>
                 <hr>
                 <span class="help-block">
-                These fields make it easier to find the piece using the database search engine. Most fields can accept a list of inputs separated by semicolons.
-                For example, if the piece has a harpsichord, violin and cello, you can input "harpsichord; violin; cello" in the instrumentation field.
+                    These fields make it easier to find the piece using the database search engine. Most fields can accept a list of inputs separated by semicolons.
+                    For example, if the piece has a harpsichord, violin and cello, you can input "harpsichord; violin; cello" in the instrumentation field. If
+                    this piece has movements, which you can define on the next tab, a number of these fields can be overridden on a per-movement basis.
                 </span>
                 <br>
                 <div class="row">
@@ -403,14 +410,13 @@ $(document).ready(function($)
 
             <div id="attachments" class="tab-pane fade">
                 <h4>Upload Files</h4>
-                <span class="help-block">
-                    This page allows you to attach files to your piece in various ways.
-                </span>
+
                 <hr>
                 <span class="help-block">
-                This table allows you to attach files to the piece itself. The source field is for information
-                regarding the source of the file itself, for instance "Choral wiki" or "Transcribed by Uploader",
-                or the name of the repository it comes from. You may add as many file groups as you like.
+                    This table allows you to attach files to the piece itself. The source field is for information
+                    regarding the source of the file itself, for instance "Choral wiki" or "Transcribed by Uploader",
+                    or the name of the repository it comes from. You may add as many file groups as you like.
+                    <strong>If you do not provide a source for your file, it will be ignored and not uploaded.</strong>
                 </span>
                 <div class="well">
                     <h4>Piece Files</h4>
@@ -418,8 +424,8 @@ $(document).ready(function($)
                         <colgroup>
                             <col class="text-center" style="width: 5%;">
                             <col style="width: 5%;">
-                            <col style="width: 70%;">
-                            <col style="width: 20%;">
+                            <col style="width: 50%;">
+                            <col style="width: 24%;">
                         </colgroup>
                             <tbody id="piece_file_table">
                             <tr>
@@ -435,8 +441,10 @@ $(document).ready(function($)
                 </div>
                 <br>
                 <span class="help-block">
-                The second table allows you to define movements for the piece. Multiple fields from the previous
-                page may be overridden on a movement by movement basis by clicking the 'show advanced' button.
+                    This table allows you to define movements for the piece. Multiple fields from the previous
+                    page may be overridden on a movement by movement basis by clicking the 'show advanced' button.
+                    <strong>If you do not provide a name for a movement, it will be ignored and its files
+                    not uploaded.</strong>
                 </span>
                 <div class="well">
                     <h4>Movements</h4>
