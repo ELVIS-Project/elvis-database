@@ -15,6 +15,7 @@ class PieceForm(forms.Form):
     number_of_voices = forms.IntegerField(required=True)
     genres = forms.CharField(required=True)
     locations = forms.CharField(required=False)
+    languages = forms.CharField(required=False)
     sources = forms.CharField(required=False)
     instruments_voices = forms.CharField(required=True)
     comment = forms.CharField(required=False)
