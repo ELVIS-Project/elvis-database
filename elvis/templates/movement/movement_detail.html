@@ -8,7 +8,6 @@
 <div class="row">
     <h2>{{ content.title }}</h2>
     <p><span class="label label-primary">Movement</span> Uploaded by {{ content.uploader.username }} on {{ content.created | date:"d F Y"}}. Last updated on {{ content.updated | date:"d F Y"}}.</p>
-    <p>Comments: {% autoescape off %}{{ content.comment }}{% endautoescape %}</p>
 </div>
 
 <div class="row">
@@ -35,6 +34,10 @@
             {% endfor %}
         </dd>
     </dl>
+
+    {% if content.comment %}
+        <pre>{{ content.comment }}</pre>
+    {% endif %}
 
     {% if content.attachments and user.is_authenticated %}
     <h3>Available Attachments</h3>

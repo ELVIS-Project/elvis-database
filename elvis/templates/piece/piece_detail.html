@@ -58,9 +58,7 @@ $(document).ready(function($)
         <dd>{{ content.vocalization }}</dd>
     </dl>
     {% if content.comment %}
-        <div class="form-group">
-          <textarea class="form-control" rows="5" disabled="disabled" style="resize:none">{{ content.comment }}</textarea>
-        </div>
+          <pre>{{ content.comment }}</pre>
     {% endif %}
         
     {% if content.attachments and user.is_authenticated %}
