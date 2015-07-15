@@ -28,7 +28,7 @@ class SolrSearch(object):
         self.request = request
         self.parsed_request = {}
         self.prepared_query = u""
-        self.solr_params = {}
+        self.solr_params = {'wt': 'json'}
         self._parse_request()
         self._prepare_query()
 

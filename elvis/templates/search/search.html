@@ -1,6 +1,4 @@
 {% extends "base.html" %}
-
-
 {% block extra_hd %}
 
     <title>Search</title>
@@ -17,16 +15,20 @@
             $('#sortby').multiselect({checkboxName: 'sortby'});
             queryQString();
 
+            //Do an ajax search based on the url when the back button is hit.
             $(window).on('popstate', function ()
             {
                 queryQString();
             });
 
-            $('#asearch-submit').click(function ()
+            //Submit the form and unfocus the asearch button when clicked.
+            $("#asearch-submit").click(function ()
             {
+                $(this).blur();
                 $('#advanced-search-form').submit();
             });
 
+            //Process advanced search form, and do a query or clear the page.
             $('#advanced-search-form').submit(function (event)
             {
                 event.preventDefault();
@@ -38,52 +40,35 @@
                         delete data[key]
                     }
                 }
-                if (data)
-                {
-                    doQuery(data);
-                }
-                else
-                {
-                    writeResults("");
-                }
+                doQuery(data);
             });
 
-            $('#gsearch-submit').click(function ()
+            //Submit the form and unfocus the gsearch button when clicked.
+            $("#gsearch-submit").click(function ()
             {
+                $(this).blur();
                 $('#general-search-form').submit();
             });
 
+            //Do a query or clear page based on general-search input.
             $('#general-search-form').submit(function (event)
             {
                 event.preventDefault();
                 var input = $("#gsearch-input").val();
-                if (input)
-                {
-                    doQuery({'q': input});
-                }
-                else
-                {
-                    writeResults("");
-                }
+                doQuery({'q': input});
             });
 
+            //Search for the query parameters in the url via ajax.
             function queryQString()
             {
                 var qstr = window.location.search.replace("?", "");
                 var qstr_params = $.parseParams(qstr);
                 if (qstr)
                 {
-                    $.ajax({
-                        type: "get",
-                        url: "search",
-                        data: qstr_params,
-                        success: function (data)
-                        {
-                            writeResults(data);
-                        }
-                    });
+                    doQuery(qstr_params, false)
                 }
 
+                //Fill out the advanced forms based on the qstring.
                 for (var key in qstr_params)
                 {
                     if (key === 'typefilt' || key === 'type')
@@ -102,39 +87,68 @@
                 }
             }
 
-            function doQuery(data)
+            function pushToHistory(data)
             {
+                var query = "?";
+                var keys = Object.keys(data);
+                for (var i in keys)
+                {
+                    query += keys[i] + "=" + data[keys[i]] + "&"
+                }
+                query = query.slice(0, -1);
+                window.history.pushState(results, "Search", "/search/" + query);
+            }
+
+            //Send an ajax request for the given data. Write the returned data to the page
+            //and push the query parameters to the browser history.
+            function doQuery(data, push_to_history, fadewindow)
+            {
+                push_to_history = typeof push_to_history !== 'undefined' ? push_to_history : true;
+                fadewindow = typeof fadewindow !== 'undefined' ? fadewindow : "result-page";
                 $.ajax({
                     type: "get",
                     url: "search",
                     data: data,
                     success: function (results)
                     {
-                        writeResults(results);
-                        var query = "?";
-                        var keys = Object.keys(data);
-                        for (var i in keys)
+                        if (push_to_history)
                         {
-                            query += keys[i] + "=" + data[keys[i]] + "&"
+                            var query = "?";
+                            var keys = Object.keys(data);
+                            for (var i in keys)
+                            {
+                                query += keys[i] + "=" + data[keys[i]] + "&"
+                            }
+                            query = query.slice(0, -1);
+                            window.history.pushState(results, "Search", "/search/" + query);
                         }
-                        query = query.slice(0, -1);
-                        window.history.pushState(results, "Search", "/search/" + query);
+
+                        $("#" + fadewindow).fadeOut(300, function ()
+                        {
+                            writeResults(results)
+                        }).fadeIn();
                     }
                 })
             }
 
+            //Write the results of a query to the page (including drawing paginators and facets)
             function writeResults(results)
             {
                 $("#result-header").html("Results: ");
                 var $results = $("#search-results-list");
                 $results.html("");
                 $("#page-links").html("");
-                debugger;
+                $("#accordion-facets").html("");
 
-                if (results['object_list'] === undefined)
+                if (results['object_list'].length === 0)
                 {
-                    $results.html("No results found.");
+                    $("#result-heading").html("<div class='col-sm-12 text-center' style='padding-left:0px'><h3>Nothing Found!</h3></div>");
                     return false;
+                }
+                else
+                {
+                    $("#result-heading").html("<div class='col-sm-8' style='padding-left:0px'><h3>Results:</h3></div>" +
+                            "<div class='col-sm-4' style='padding-left:0px'><h3>Filter Your Search</h3></div>");
                 }
                 for (var key in results['object_list'])
                 {
@@ -142,19 +156,15 @@
                     if (entry['type'] === "elvis_composer")
                     {
                         if (entry['birth_date'])
-                        {
                             var birthday = entry['birth_date'].slice(0, 4);
-                        } else
-                        {
+                        else
                             birthday = "Unknown";
-                        }
+
                         if (entry['death_date'])
-                        {
                             var death = entry['death_date'].slice(0, 4);
-                        } else
-                        {
+                        else
                             death = "Unknown";
-                        }
+
                         $results.append("<a href='/composer/" + entry['item_id'] + "' class='list-group-item search-result-item'>" +
                                 "<span class='label label-default pull-right'>Composer</span><h4><span id='add" + key + "'></span> " + entry['name'] + "</h4>" +
                                 "<p class='list-group-item-text'>" + birthday + "-" + death + "</p></a>");
@@ -189,8 +199,20 @@
                         create_download_badge("elvis_piece", entry['item_id'], "add" + key)
                     }
                 }
+                drawPageLinks(results);
+                drawFacets(results);
+            }
+
+            //Draw the paginators at the bottom of the page.
+            function drawPageLinks(results)
+            {
                 var $page_links = $("#page-links");
                 var links = "<ul class='pagination'>";
+                if (results['object_list'] === undefined)
+                {
+                    $page_links.html("");
+                    return false
+                }
                 if (results['number'] == 1)
                 {
                     links += "<li class='disabled'><a href='first' onClick='return false;' id='first-button'>First</a></li>";
@@ -243,6 +265,101 @@
                         doQuery({'q': results['paginator']['params']['q'], 'page': results['paginator']['total_pages']})
                     }
                 });
+            }
+
+            //Draw the facets.
+            function drawFacets(results)
+            {
+                var $facet_DOM = $("#accordion-facets");
+                var keys = Object.keys(results['facet_names']);
+                var facets = results['facets']['facet_fields'];
+                var facet_containers = "";
+                for (var i in keys)
+                {
+                    if (Object.keys(facets[keys[i]]).length === 0)
+                        continue;
+
+                    var name = keys[i];
+                    var facet_head = "<div class='panel panel-default'>" +
+                            "<div class='panel-heading facets'>" +
+                            "<h1 class='panel-title facets' data-toggle='collapse' data-target='#collapse-" + name + "'>" +
+                            results['facet_names'][keys[i]] +
+                            "</h1>" +
+                            "</div>";
+                    var facet_body = "<div id='collapse-" + name + "' class='panel-collapse collapse facets in'>" +
+                            "<div class='panel-body facets' id='facet-panel-" + name + "'>";
+                    var facet_keys = facets[keys[i]];
+                    for (var j in facet_keys)
+                    {
+                        var facet_list = facets[keys[i]];
+
+                        if (keys[i] === "type")
+                            var facet_name = j.slice(6)[0].toUpperCase() + j.slice(7);
+                        else
+                            var facet_name = j;
+
+                        facet_body += "<li class='facet-list'>" +
+                                "<div id='facet-container-" + encodeName(j) + "' class='facet-wrapper'>" +
+                                "<input type='checkbox' class='facet-link' style='margin: 4px 4px 0' data-facet-name='" + keys[i] +
+                                "' data-facet-value='" + encodeName(j) + "' id='facet-link-" + encodeName(j) + "-" + keys[i] + "'>" +
+                                "<label class='facet-label' for='facet-link-" + encodeName(j) + "-" + keys[i] + "'>" +
+                                facet_name + "  (" + facet_list[j] + ")" +
+                                "</label>" +
+                                "</div>" +
+                                "</li>";
+                    }
+                    facet_body += "</div></div></div>";
+                    facet_containers += facet_head + facet_body;
+                }
+                $facet_DOM.html(facet_containers);
+
+                var qstr = window.location.search.replace("?", "");
+                var qstr_params = $.parseParams(qstr);
+
+                $.each(qstr_params, function (param, val)
+                {
+                    if (typeof val == "object")
+                    {
+                        $.each(val, function (num, v)
+                        {
+                            $("input[data-facet-name='" + param + "'][id='facet-link-" + encodeName(val) + "-" + param + "']").attr('checked', true);
+                        });
+                    }
+                    else
+                    {
+                        $("input[data-facet-name='" + param + "'][id='facet-link-" + encodeName(val) + "-" + param + "']").attr('checked', true);
+                    }
+                });
+
+                $(".facet-link").on('click', function (event)
+                {
+
+                    var facetName = $(this).data('facet-name');
+                    var facetValue = $(this).data('facet-value');
+
+                    if ($(this).is(':checked'))
+                    {
+                        qstr = window.location.search.replace("?", "");
+                        qstr += "&" + (facetName) + "=" + (facetValue);
+                        qstr_params = $.parseParams(qstr);
+                        doQuery(qstr_params, true, "search-results-list")
+                    }
+                    else
+                    {
+                        qstr = window.location.search.replace("?", "");
+                        qstr_params = $.parseParams(qstr);
+                        delete qstr_params[facetName];
+                        doQuery(qstr_params, true, "search-results-list")
+                    }
+                });
+            }
+
+            // A slightly more robust version of the encodeURIComponent function.
+            function encodeName(name)
+            {
+                var result = encodeURIComponent(name);
+                result = name.replace("'", "%27");
+                return result
             }
         });
     </script>
@@ -352,14 +469,14 @@
 
                             <!-- Date Filter -->
                             <div class="row">
-                                <div class="col-lg-6">
+                                <div class="col-sm-6">
                                     <div class="input-group search-input-group">
                                         <span class="input-group-addon">Date Range</span>
                                         <input type="text" class="form-control" name="datefiltf"
                                                placeholder="From: (YYYY)">
                                     </div>
                                 </div>
-                                <div class="col-lg-6">
+                                <div class="col-sm-6">
                                     <div class="input-group search-input-group">
                                         <input type="text" class="form-control" name="datefiltt"
                                                placeholder="To: (YYYY)">
@@ -410,7 +527,7 @@
                             <!-- Submit -->
                             <hr>
                             <div>
-                                <button type="button" class="btn btn-default btn-lg" id="asearch-submit"> Search
+                                <button type="button" class="btn btn-default" id="asearch-submit"> Search
                                     <span class="glyphicon glyphicon-search"></span>
                                 </button>
                             </div>
@@ -456,52 +573,31 @@
             </div>
         </div>
     </div>
-    <div class="row">
-        <h3 id="result-header"></h3>
-    </div>
-    <div class="row" id="search-results">
-        <div class="col-md-9" style="padding-left:0px">
-            <div class="list-group" id="search-results-list"></div>
-            <div class="row">
-                <div class="col-md-12 text-center">
-                    <nav id="page-links"></nav>
-                </div>
+
+    <div id="result-page" hidden="hidden">
+        <div class="row" id="result-heading">
+            <div class="col-sm-8" style="padding-left:0px">
+                <h3 id="result-header">Results</h3>
+            </div>
+            <div class="col-sm-4" style="padding-left:0px">
+                <h3 id="result-header">Filter You Search</h3>
             </div>
         </div>
-        <div class="col-md-3">
-            <div class="row results-intermediate-buttons">
-                <button id="facet-collapse-init" class="btn btn-primary btn-sm">
-                    Hide Facets
-                </button>
-            </div>
-
-            <div class="row panel-group" id="accordion-facets">
-                <div class="panel panel-default">
-                    <div class="panel-heading facets">
-                        <h1 class="panel-title facets" data-toggle="collapse"
-                            data-target="#collapse-facet">
-                            First Facet
-                        </h1>
-                    </div>
-                    <div id="collapse-facet" class="panel-collapse collapse facets in">
-                        <div class="panel-body facets" id="facet-panel-facet">
-                            <li class="facet-list">
-                                <div id="facet-container-facet" class="facet-wrapper">
-                                    <input type="checkbox" class="facet-link" data-facet-name="facet"
-                                           data-facet-value="facet"
-                                           id="facet-link-facet-link">
-                                    <label class="facet-label" for="facet-link-facet-name">
-                                    </label>
-                                </div>
-                            </li>
-                        </div>
+        <div class="row" id="search-results">
+            <div class="col-sm-8" style="padding-left:0px">
+                <div class="list-group" id="search-results-list"></div>
+                <div class="row">
+                    <div class="col-md-12 text-center">
+                        <nav id="page-links"></nav>
                     </div>
                 </div>
             </div>
-
+            <div class="col-sm-4">
+                <div class="row panel-group" id="accordion-facets">
+                </div>
+            </div>
         </div>
     </div>
-</body>
-
+    </body>
 
 {% endblock %}

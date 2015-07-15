@@ -3,6 +3,7 @@ from rest_framework.response import Response
 from django.http import HttpResponse, QueryDict
 from rest_framework import status
 from rest_framework.renderers import JSONRenderer
+from django.conf import settings
 
 
 from elvis.serializers.search import SearchSerializer
@@ -39,11 +40,11 @@ class SearchView(APIView):
         facets = s.facets(facet_fields=['type', 'composer_name', 'tags',  'parent_collection_names', 'number_of_voices'])  # LM TODO add here when facets are decided
 
         facet_fields = facets.facet_counts['facet_fields']        
-        facet_type = sorted(facet_fields['type'].iteritems(), key=lambda (k,v): (v,k), reverse=True)
-        facet_composer_name = sorted(facet_fields['composer_name'].iteritems(), key=lambda (k,v): (v,k), reverse=True)
-        facet_tags = sorted(facet_fields['tags'].iteritems(), key=lambda (k,v): (v,k), reverse=True)
-        facet_number_of_voices = sorted(facet_fields['number_of_voices'].iteritems(), key=lambda (k,v): (v,k), reverse=True)
-        facet_parent_collection_names = sorted(facet_fields['parent_collection_names'].iteritems(), key=lambda (k,v):(v, k), reverse=True)
+        facet_type = {t:s for (t,s) in facet_fields['type'].iteritems()}
+        facet_composer_name = {t:s for (t,s) in facet_fields['composer_name'].iteritems()}
+        facet_tags = {t:s for (t,s) in facet_fields['tags'].iteritems()}
+        facet_number_of_voices = {t:s for (t,s) in facet_fields['number_of_voices'].iteritems()}
+        facet_parent_collection_names = {t:s for (t,s) in facet_fields['parent_collection_names'].iteritems()}
 
         facet_fields = {
             'type': facet_type,
@@ -108,7 +109,9 @@ class SearchView(APIView):
         result['paginator']['params'].update({'q': request.GET.get('q')})
         result['paginator'].update({'total_pages': paginator.num_pages})
         result['facets'] = facets.facet_counts
+        result['facet_names'] = settings.FACET_NAMES
         del result['result']
+        del result['paginator']['result']
 
         response = Response(result, status=status.HTTP_200_OK)
         return response
