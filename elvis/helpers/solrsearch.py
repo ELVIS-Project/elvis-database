@@ -119,7 +119,7 @@ class SolrSearch(object):
 
             # LM: elif for Tag filtration
             elif k == 'tagfilt':
-                tag_filt_query = "tags_searchable: (" + string.join(v) + ") "
+                tag_filt_query = "tags: (" + string.join(v) + ") "
 
 
             # LM: elif for Voice filtration
