@@ -3,8 +3,7 @@ from rest_framework.response import Response
 from django.http import HttpResponse, QueryDict
 from rest_framework import status
 from rest_framework.renderers import JSONRenderer
-import json
-import datetime
+
 
 from elvis.serializers.search import SearchSerializer
 from django.core.serializers.json import DjangoJSONEncoder
@@ -12,12 +11,7 @@ from elvis.renderers.custom_html_renderer import CustomHTMLRenderer
 from elvis.helpers.solrsearch import SolrSearch
 
 from elvis.helpers import paginate
-
-from django.conf import settings
-
-import operator
-
-import types
+import json
 
 
 class SearchViewHTMLRenderer(CustomHTMLRenderer):
@@ -29,9 +23,10 @@ class SearchView(APIView):
     renderer_classes = (JSONRenderer, SearchViewHTMLRenderer)
 
     def get(self, request, *args, **kwargs):
-        if 'q' not in request.GET:
-            response = Response(status=status.HTTP_200_OK)
-            return response
+
+        #if 'q' not in request.GET:
+        #    response = Response(status=status.HTTP_200_OK)
+        #    return response
 
         querydict = request.GET
 
@@ -102,17 +97,18 @@ class SearchView(APIView):
         except KeyError:
             pass
 
-        query_minus_page = query_minus_page.urlencode(['*'])     
-
-        if request.GET.get('format') == 'json' or 'json' in request.META.get('HTTP_ACCEPT'):
+        query_minus_page = query_minus_page.urlencode(['*'])
+        try:
             result = paged_results.__dict__
-            result['object_list'] = [item.__dict__ for item in result['object_list']]
-            result['paginator'] = result['paginator'].__dict__
-            result['paginator'].pop('result', None)
-            result['paginator'].pop('query', None)
-            response = HttpResponse(json.dumps(result, cls=DjangoJSONEncoder), content_type='application/json')
-            return response
+        except AttributeError:
+            return Response({'object_list': []}, status=status.HTTP_200_OK)
+        result['object_list'] = [item.__dict__ for item in result['object_list']]
+        result['paginator'] = result['paginator'].__dict__
+        result['paginator'].pop('query', None)
+        result['paginator']['params'].update({'q': request.GET.get('q')})
+        result['paginator'].update({'total_pages': paginator.num_pages})
+        result['facets'] = facets.facet_counts
+        del result['result']
 
-        result = {'results': paged_results, 'facets': facets.facet_counts, 'current_query': query_minus_page, 'FACET_NAMES': settings.FACET_NAMES, 'TYPE_NAMES': settings.TYPE_NAMES}
         response = Response(result, status=status.HTTP_200_OK)
         return response

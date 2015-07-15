@@ -3,219 +3,402 @@
 
 {% block extra_hd %}
 
-<title>Search</title>
+    <title>Search</title>
 
-<script type="text/javascript" src="{{STATIC_URL}}bootstrap/plugins/bootstrap-multiselect.js"></script>
-<script type="text/javascript" src="{{STATIC_URL}}js/elvis-scripts/downloadBadge.js"></script>
-<link rel="stylesheet" href="{{STATIC_URL}}bootstrap/plugins/bootstrap-multiselect.css" type="text/css"/>
+    <script type="text/javascript" src="{{ STATIC_URL }}bootstrap/plugins/bootstrap-multiselect.js"></script>
+    <script type="text/javascript" src="{{ STATIC_URL }}js/elvis-scripts/downloadBadge.js"></script>
+    <link rel="stylesheet" href="{{ STATIC_URL }}bootstrap/plugins/bootstrap-multiselect.css" type="text/css"/>
 
-<script type="text/javascript">
-$(document).ready(function($)
-{
-    $('.input-group-addon').tooltip();
-    $('#typefilt').multiselect();
-    $('#sortby').multiselect();
-
-    var qstr = window.location.search.replace("?", "");
-    var qstr_params = $.parseParams(qstr);
-    for (var key in qstr_params)
-    {
-        if(key === 'typefilt' || key === 'type')
+    <script type="text/javascript">
+        $(document).ready(function ($)
         {
-            $('#typefilt').multiselect('select', qstr_params[key]);
-        }
-        else if (key === 'sortby' && qstr_params[key] !== "")
-        {
-            $('#sortby').multiselect('deselect', "");
-            $('#sortby').multiselect('select', qstr_params[key]);
-        }
-        else
-        {
-            $('[name='+key+']').val(qstr_params[key]);
-        }
-    }
+            $('.input-group-addon').tooltip();
+            $('#typefilt').multiselect({checkboxName: 'typefilt'});
+            $('#sortby').multiselect({checkboxName: 'sortby'});
+            queryQString();
 
-    $('#asearch-submit').click(function()
-    {
-        $(':input').each(function(){
-            if($(this).val() === "" && $(this).attr('name') !== "q")
+            $(window).on('popstate', function ()
             {
-                $(this).attr('disabled', true);
+                queryQString();
+            });
+
+            $('#asearch-submit').click(function ()
+            {
+                $('#advanced-search-form').submit();
+            });
+
+            $('#advanced-search-form').submit(function (event)
+            {
+                event.preventDefault();
+                var data = $.parseParams($(this).serialize());
+                for (var key in data)
+                {
+                    if (data[key] === "")
+                    {
+                        delete data[key]
+                    }
+                }
+                if (data)
+                {
+                    doQuery(data);
+                }
+                else
+                {
+                    writeResults("");
+                }
+            });
+
+            $('#gsearch-submit').click(function ()
+            {
+                $('#general-search-form').submit();
+            });
+
+            $('#general-search-form').submit(function (event)
+            {
+                event.preventDefault();
+                var input = $("#gsearch-input").val();
+                if (input)
+                {
+                    doQuery({'q': input});
+                }
+                else
+                {
+                    writeResults("");
+                }
+            });
+
+            function queryQString()
+            {
+                var qstr = window.location.search.replace("?", "");
+                var qstr_params = $.parseParams(qstr);
+                if (qstr)
+                {
+                    $.ajax({
+                        type: "get",
+                        url: "search",
+                        data: qstr_params,
+                        success: function (data)
+                        {
+                            writeResults(data);
+                        }
+                    });
+                }
+
+                for (var key in qstr_params)
+                {
+                    if (key === 'typefilt' || key === 'type')
+                    {
+                        $('#typefilt').multiselect('select', qstr_params[key]);
+                    }
+                    else if (key === 'sortby' && qstr_params[key] !== "")
+                    {
+                        $('#sortby').multiselect('deselect', "");
+                        $('#sortby').multiselect('select', qstr_params[key]);
+                    }
+                    else
+                    {
+                        $('[name=' + key + ']').val(qstr_params[key]);
+                    }
+                }
+            }
+
+            function doQuery(data)
+            {
+                $.ajax({
+                    type: "get",
+                    url: "search",
+                    data: data,
+                    success: function (results)
+                    {
+                        writeResults(results);
+                        var query = "?";
+                        var keys = Object.keys(data);
+                        for (var i in keys)
+                        {
+                            query += keys[i] + "=" + data[keys[i]] + "&"
+                        }
+                        query = query.slice(0, -1);
+                        window.history.pushState(results, "Search", "/search/" + query);
+                    }
+                })
+            }
+
+            function writeResults(results)
+            {
+                $("#result-header").html("Results: ");
+                var $results = $("#search-results-list");
+                $results.html("");
+                $("#page-links").html("");
+                debugger;
+
+                if (results['object_list'] === undefined)
+                {
+                    $results.html("No results found.");
+                    return false;
+                }
+                for (var key in results['object_list'])
+                {
+                    var entry = results['object_list'][key];
+                    if (entry['type'] === "elvis_composer")
+                    {
+                        if (entry['birth_date'])
+                        {
+                            var birthday = entry['birth_date'].slice(0, 4);
+                        } else
+                        {
+                            birthday = "Unknown";
+                        }
+                        if (entry['death_date'])
+                        {
+                            var death = entry['death_date'].slice(0, 4);
+                        } else
+                        {
+                            death = "Unknown";
+                        }
+                        $results.append("<a href='/composer/" + entry['item_id'] + "' class='list-group-item search-result-item'>" +
+                                "<span class='label label-default pull-right'>Composer</span><h4><span id='add" + key + "'></span> " + entry['name'] + "</h4>" +
+                                "<p class='list-group-item-text'>" + birthday + "-" + death + "</p></a>");
+                        create_download_badge("elvis_composer", entry['item_id'], "add" + key)
+                    }
+                    if (entry['type'] === "elvis_collection")
+                    {
+                        $results.append("<a href='/collection/" + entry['item_id'] + "' class='list-group-item search-result-item'>" +
+                                "<span class='label label-info pull-right'>Collection</span><h4><span id='add" + key + "'></span> " + entry['title'] + "</h4>" +
+                                "<p class='list-group-item-text'> Created by: " + entry['creator_name'] + " on " + entry['created'].slice(0, 4) + "</p></a>");
+                        create_download_badge("elvis_collection", entry['item_id'], "add" + key)
+                    }
+                    if (entry['type'] === "elvis_movement")
+                    {
+                        $results.append("<a href='/movement/" + entry['item_id'] + "' class='list-group-item search-result-item'>" +
+                                "<span class='label label-primary pull-right'>Movment</span><h4><span id='add" + key + "'></span> " + entry['title'] + "</h4>" +
+                                "<p class='list-group-item-text'> Piece: " + entry['parent_piece_name'] + "</p>" +
+                                "<p class='list-group-item-text'> Composer: " + entry['composer_name'] + "</p>" +
+                                "<p class='list-group-item-text'> Date: " + entry['date_of_composition2'].slice(0, 4) + "</p>" +
+                                "<p class='list-group-item-text'> Tags: " + entry['tags'] + "</p>" +
+                                "</a>");
+                        create_download_badge("elvis_movement", entry['item_id'], "add" + key)
+                    }
+                    if (entry['type'] === "elvis_piece")
+                    {
+                        $results.append("<a href='/piece/" + entry['item_id'] + "' class='list-group-item search-result-item'>" +
+                                "<span class='label label-success pull-right'>Piece</span><h4><span id='add" + key + "'></span> " + entry['title'] + "</h4>" +
+                                "<p class='list-group-item-text'> Composer: " + entry['composer_name'] + "</p>" +
+                                "<p class='list-group-item-text'> Date: " + entry['date_of_composition2'].slice(0, 4) + "</p>" +
+                                "<p class='list-group-item-text'> Tags: " + entry['tags'] + "</p>" +
+                                "</a>");
+                        create_download_badge("elvis_piece", entry['item_id'], "add" + key)
+                    }
+                }
+                var $page_links = $("#page-links");
+                var links = "<ul class='pagination'>";
+                if (results['number'] == 1)
+                {
+                    links += "<li class='disabled'><a href='first' onClick='return false;' id='first-button'>First</a></li>";
+                    links += "<li class='disabled'><a href='previous' onClick='return false;' id='previous-button'>Previous</a></li>";
+                }
+                else
+                {
+                    links += "<li><a href='first' onClick='return false;' id='first-button'>First</a></li>";
+                    links += "<li><a href='previous' onClick='return false;' id='previous-button'>Previous</a></li>";
+                }
+                links += "<li class='disabled'><a href='#' onClick='return false;'>Page " + results['number'] + " of " + results['paginator']['total_pages'] + "</a></li>";
+                if (results['number'] == results['paginator']['total_pages'])
+                {
+                    links += "<li class='disabled'><a href='next' onClick='return false;' id='next-button'>Next</a></li>";
+                    links += "<li class='disabled'><a href='last' onClick='return false;' id='  last-button'> Last </a></li>";
+                }
+                else
+                {
+                    links += "<li><a href='next' onClick='return false;' id='next-button'>Next</a></li>";
+                    links += "<li><a href='last' onClick='return false;' id='last-button'> Last </a></li>";
+                }
+                links += "</ul>";
+                $page_links.html(links);
+
+                $("#first-button").click(function (event)
+                {
+                    if (!$(this.parentElement).hasClass("disabled"))
+                    {
+                        doQuery({'q': results['paginator']['params']['q']})
+                    }
+                });
+                $("#previous-button").click(function (event)
+                {
+                    if (!$(this.parentElement).hasClass("disabled"))
+                    {
+                        doQuery({'q': results['paginator']['params']['q'], 'page': results['number'] - 1})
+                    }
+                });
+                $("#next-button").click(function (event)
+                {
+                    if (!$(this.parentElement).hasClass("disabled"))
+                    {
+                        doQuery({'q': results['paginator']['params']['q'], 'page': results['number'] + 1})
+                    }
+                });
+                $("#last-button").click(function (event)
+                {
+                    if (!$(this.parentElement).hasClass("disabled"))
+                    {
+                        doQuery({'q': results['paginator']['params']['q'], 'page': results['paginator']['total_pages']})
+                    }
+                });
             }
         });
-        setTimeout(function(){$('#advanced-search-form').submit()}, 300);
-    });
+    </script>
 
-    $('#gsearch-submit').click(function()
-    {
-        $(':input').each(function()
-        {
-            if($(this).val() === "" && $(this).attr('name') !== "q")
-            {
-                $(this).attr('disabled', true);
-            }
-        });
-        setTimeout(function(){$('#general-search-form').submit()}, 300);
-    });
-
-});
-</script>
-    
 {% endblock %}
 
 {% block wrap %}
 
-<body>
-<div class="page-header">
-    <h2>Search the Database</h2>
-</div>
+    <body>
+    <div class="page-header">
+        <h2>Search the Database</h2>
+    </div>
 
-<div class="row">
-    <!-- Tabs bar -->
+    <div class="row">
+        <!-- Tabs bar -->
 
-    <ul class="nav nav-tabs nav-justified">
+        <ul class="nav nav-tabs nav-justified">
 
-        <li class="active"><a href="#gsearch" data-toggle="tab"><h4>General Search</h4></a></li>
+            <li class="active"><a href="#gsearch" data-toggle="tab"><h4>General Search</h4></a></li>
 
-        <li class=""><a href="#asearch" data-toggle="tab"><h4>Advanced Search</h4></a></li>
+            <li class=""><a href="#asearch" data-toggle="tab"><h4>Advanced Search</h4></a></li>
 
-        <li class=""><a href="#help" data-toggle="tab"><h4>Information & Help</h4></a></li>
+            <li class=""><a href="#help" data-toggle="tab"><h4>Information & Help</h4></a></li>
 
-    </ul>
+        </ul>
 
-    <!-- Content -->
+        <!-- Content -->
 
-    <div class="tab-content">
+        <div class="tab-content">
 
-        <!-- General Search -->
-        <div class="tab-pane fade in active" id="gsearch">
-        
-            <!-- Accordion -->
-            <div class="panel-body gsearch">
-                <form id="general-search-form" action="/search" method="get">
-                    <!-- Query Entry -->
-                    <div class="row">
+            <!-- General Search -->
+            <div class="tab-pane fade in active" id="gsearch">
 
-                        <div class="input-group col-md-8 col-md-offset-2">
-                                <input type="text" class="form-control gsearch" name="q"  >
+                <!-- Accordion -->
+                <div class="panel-body gsearch">
+                    <form id="general-search-form" action="/search/" method="get">
+                        <div class="row">
+                            <div class="input-group col-md-8 col-md-offset-2">
+                                <input type="text" class="form-control gsearch" name="q" id="gsearch-input">
                                 <span class="input-group-btn">
-                                    <button class="btn btn-default submit" type="button" id="gsearch-submit"> Search <span class="glyphicon glyphicon-search"></span> </button>
+                                    <button class="btn btn-default" type="button" id="gsearch-submit"> Search
+                                        <span class="glyphicon glyphicon-search"></span></button>
                                 </span>
+                            </div>
                         </div>
-               
-                    </div>
-                </form>
+                    </form>
+                </div>
             </div>
 
-        </div>
+            <!-- Advanced Search -->
+            <div class="tab-pane fade" id="asearch">
+                <div class="panel-body">
+                    <form id="advanced-search-form" action="/search" method="get">
+                        <h3> General Search Query: </h3>
 
-        <!-- Advanced Search -->
-        <div class="tab-pane fade" id="asearch">
-        
-            <!-- Accordion -->
-            <div class="panel-body">
-
-            <form id="advanced-search-form" action="/search" method="get">
-
-                  
-                <h3> General Search Query: </h3> 
-                <div class="form-group search-form-group">
-                    <div class="input-group search-input-group" >
-                        <span class="input-group-addon">Search Query</span>
-                        <input type="text" class="form-control" name="q" placeholder="Byrd Hornpipe" >
-                        <span class="input-group-addon" data-toggle="tooltip" data-container="body" data-placement="right" data-html='true' title="This searches across the <em>textual content and metadata of all entities </em> in the database for matches with the queried terms. The default operator is AND." >
-                            <span class="glyphicon glyphicon-info-sign"></span>
-                        </span> 
-                    </div>
-                </div>
-
-
-                <hr></hr>
-                <h3> Limit Results by... </h3>
-                    
-                <div class="form-group search-form-group">
-                    <!-- Name Filter -->
-
-                    <div class="input-group search-input-group">
-                        <span class="input-group-addon">Title</span>
-                        <input type="text" class="form-control" name="titlefilt" placeholder="Agnus Dei">
-                        <span class="input-group-addon" data-toggle="tooltip" data-container="body" data-placement="right" data-html='true' title="Terms entered here will be searched for in the <em> titles of pieces and movements</em>.">
-                            <span class="glyphicon glyphicon-info-sign"></span>
-                        </span> 
-                    </div>
-
-                <!-- Name Filter -->
-
-                    <div class="input-group search-input-group">
-                        <span class="input-group-addon">Composer's Name</span>
-                        <input type="text" class="form-control" name="namefilt" placeholder="Jacob Obrecht">
-                        <span class="input-group-addon" data-toggle="tooltip" data-container="body" data-placement="right" data-html='true' title="Terms entered here will be searched for in the <em> names of composers </em>, and in the <em> composer-names of pieces and movements</em>. For example, a search for 'Handel' should return Handel the composer, as well as the pieces and movements he composed.">
-                            <span class="glyphicon glyphicon-info-sign"></span>
-                        </span> 
-                    </div>
-
-
-                <!-- Tag Filter -->
-                    <div class="input-group search-input-group">
-                        <span class="input-group-addon">Tags</span>
-                        <input type="text" class="form-control" name="tagfilt" placeholder="Tag1 Tag2">
-                        <span class="input-group-addon" data-toggle="tooltip" data-container="body" data-placement="right" data-html='true' title="Terms entered here will be searched for in the <em> tags of pieces and movements</em>.">
-                            <span class="glyphicon glyphicon-info-sign"></span>
-                        </span> 
-                    </div>
-
-
-                <!-- Date Filter -->
-                    <div class="row">
-                        <div class="col-lg-6">
+                        <div class="form-group search-form-group">
                             <div class="input-group search-input-group">
-                            <span class="input-group-addon">Date Range</span>
-                                <input type="text" class="form-control" name="datefiltf" placeholder="From: (YYYY)" >
+                                <span class="input-group-addon">Search Query</span>
+                                <input type="text" class="form-control" name="q" placeholder="Byrd Hornpipe">
+                        <span class="input-group-addon" data-toggle="tooltip" data-container="body"
+                              data-placement="right" data-html='true'
+                              title="This searches across the <em>textual content and metadata of all entities </em> in the database for matches with the queried terms. The default operator is AND.">
+                            <span class="glyphicon glyphicon-info-sign"></span>
+                        </span>
                             </div>
                         </div>
+                        <hr>
+                        <h3> Limit Results by... </h3>
 
-                        <div class="col-lg-6">
+                        <div class="form-group search-form-group">
+                            <!-- Name Filter -->
+
                             <div class="input-group search-input-group">
-                                <input type="text" class="form-control" name="datefiltt" placeholder="To: (YYYY)" >
-                                <span class="input-group-addon" data-toggle="tooltip" data-container="body" data-placement="right" data-html='true' title="The date range entered here will be searched for overlaps with the <em> composition range of pieces and movements</em>, and the <em>lifetime of composers</em>.">
+                                <span class="input-group-addon">Title</span>
+                                <input type="text" class="form-control" name="titlefilt" placeholder="Agnus Dei">
+                        <span class="input-group-addon" data-toggle="tooltip" data-container="body"
+                              data-placement="right" data-html='true'
+                              title="Terms entered here will be searched for in the <em> titles of pieces and movements</em>.">
+                            <span class="glyphicon glyphicon-info-sign"></span>
+                        </span>
+                            </div>
+
+                            <!-- Name Filter -->
+
+                            <div class="input-group search-input-group">
+                                <span class="input-group-addon">Composer's Name</span>
+                                <input type="text" class="form-control" name="namefilt" placeholder="Jacob Obrecht">
+                        <span class="input-group-addon" data-toggle="tooltip" data-container="body"
+                              data-placement="right" data-html='true'
+                              title="Terms entered here will be searched for in the <em> names of composers </em>, and in the <em> composer-names of pieces and movements</em>. For example, a search for 'Handel' should return Handel the composer, as well as the pieces and movements he composed.">
+                            <span class="glyphicon glyphicon-info-sign"></span>
+                        </span>
+                            </div>
+
+
+                            <!-- Tag Filter -->
+                            <div class="input-group search-input-group">
+                                <span class="input-group-addon">Tags</span>
+                                <input type="text" class="form-control" name="tagfilt" placeholder="Tag1 Tag2">
+                        <span class="input-group-addon" data-toggle="tooltip" data-container="body"
+                              data-placement="right" data-html='true'
+                              title="Terms entered here will be searched for in the <em> tags of pieces and movements</em>.">
+                            <span class="glyphicon glyphicon-info-sign"></span>
+                        </span>
+                            </div>
+
+
+                            <!-- Date Filter -->
+                            <div class="row">
+                                <div class="col-lg-6">
+                                    <div class="input-group search-input-group">
+                                        <span class="input-group-addon">Date Range</span>
+                                        <input type="text" class="form-control" name="datefiltf"
+                                               placeholder="From: (YYYY)">
+                                    </div>
+                                </div>
+                                <div class="col-lg-6">
+                                    <div class="input-group search-input-group">
+                                        <input type="text" class="form-control" name="datefiltt"
+                                               placeholder="To: (YYYY)">
+                                <span class="input-group-addon" data-toggle="tooltip" data-container="body"
+                                      data-placement="right" data-html='true'
+                                      title="The date range entered here will be searched for overlaps with the <em> composition range of pieces and movements</em>, and the <em>lifetime of composers</em>.">
                                     <span class="glyphicon glyphicon-info-sign"></span>
                                 </span>
+                                    </div>
+                                </div>
                             </div>
-                        </div>
-                    </div>
-
- 
-                    <div class="row">
-
-                        <!-- Voice Filter -->
-                        <div class="col-lg-12">
-                            <div class="input-group search-input-group">
-                                <span class="input-group-addon">Number of Voices</span>
-                                <input type="text" class="form-control" name="voicefilt" placeholder="3 OR 4 OR 5">
-                                <span class="input-group-addon" data-toggle="tooltip" data-container="body" data-placement="right" data-html='true' title="Numbers entered here will be searched for in the <em> number-of-voices field of pieces and movements</em>.">
-                                    <span class="glyphicon glyphicon-info-sign" ></span>
-                                </span> 
-                            </div> 
-                        </div>
-
-                    </div>
-
-
-
-                    <!-- Type Filters -->
-                        Filter by type:
-                        <select id="typefilt" multiple="multiple">
-                            <option id="elvis_composer" value="elvis_composer">Composers</option>
-                            <option id="elvis_piece" value="elvis_piece">Pieces</option>
-                            <option id="elvis_movement" value="elvis_movement">Movements</option>
-                            <option id="elvis_collection" value="elvis_collection">Collections</option>
-                            <option id="elvis_tag" value="elvis_tag">Tags</option>
-                            <option id="elvis_user" value="elvis_user">Users</option>
-                        </select>
-
-                    <!-- Sorting -->
-                        <hr></hr>
-                        <h3> Sort Results By... </h3>
+                            <div class="row">
+                                <!-- Voice Filter -->
+                                <div class="col-lg-12">
+                                    <div class="input-group search-input-group">
+                                        <span class="input-group-addon">Number of Voices</span>
+                                        <input type="text" class="form-control" name="voicefilt"
+                                               placeholder="3 OR 4 OR 5">
+                                <span class="input-group-addon" data-toggle="tooltip" data-container="body"
+                                      data-placement="right" data-html='true'
+                                      title="Numbers entered here will be searched for in the <em> number-of-voices field of pieces and movements</em>.">
+                                    <span class="glyphicon glyphicon-info-sign"></span>
+                                </span>
+                                    </div>
+                                </div>
+                            </div>
+                            <!-- Type Filters -->
+                            Filter by type:
+                            <select id="typefilt" multiple="multiple">
+                                <option id="elvis_composer" value="elvis_composer">Composers</option>
+                                <option id="elvis_piece" value="elvis_piece">Pieces</option>
+                                <option id="elvis_movement" value="elvis_movement">Movements</option>
+                                <option id="elvis_collection" value="elvis_collection">Collections</option>
+                                <option id="elvis_tag" value="elvis_tag">Tags</option>
+                                <option id="elvis_user" value="elvis_user">Users</option>
+                            </select>
+                            <hr>
+                            <!-- Sorting -->
+                            <h3> Sort Results By... </h3>
                             <select id="sortby">
                                 <option value=""> Default (By Type)</option>
                                 <option value="name_sort asc"> Alphabetical &#9660; </option>
@@ -224,49 +407,100 @@ $(document).ready(function($)
                                 <option value="date_general desc"> Reverse Chronological &#9650; </option>
                             </select>
 
-
-
-                <!-- Submit -->
-                <hr></hr>
-                <div>
-                    <button type="button" class="btn btn-default btn-lg submit" id="asearch-submit">  Search
-                        <span class="glyphicon glyphicon-search"></span>
-                    </button>
-                     &nbsp;  <a id="asearch-reset">Reset Your Search </a>                              
+                            <!-- Submit -->
+                            <hr>
+                            <div>
+                                <button type="button" class="btn btn-default btn-lg" id="asearch-submit"> Search
+                                    <span class="glyphicon glyphicon-search"></span>
+                                </button>
+                            </div>
+                        </div>
+                    </form>
                 </div>
 
-                
-            </form>
-            </div>                    
-  
-        </div>
-
-           <!-- Help  -->
-        <div class="tab-pane fade" id="help">
-
-            <div class="panel-body">
-                <h4> General Searching </h4>
-                <p> A basic, Google-esque search. Results are based on occurrences of the search terms in the title/name, composer, parent piece, and tag fields of an item. Items returned may be any type (e.g. a composer, a piece, or a corpus). Use this if you want to quickly look for the most relevant items - the database will order results based on relevancy. </p>
-                <h4> Advanced Searching </h4>
-                <p> A customisable search. Results are based on the search terms for specific, user-chosen fields of an item. Items returned may be restricted to specific types, and may be sorted on specific fields. Use this if you have a concrete idea of the items, and their attributes, that you are looking for. </p>
-                <h4> Downloading Results </h4>
-                <p> Each <button class="btn btn-mini btn-success"><span class="glyphicon glyphicon-plus"></span></button> recursively sends its object's attachments to your downloads. For example, clicking this in a piece-typed result will send all of its attachments, and the attachments of its movements, to your downloads cart. The <button class="btn btn-success btn-sm">Add Results on Current Page to Downloads <span class="glyphicon glyphicon-plus"></span></button> will recursively send all the attachments of the current page's results to your downloads. In other words, it's like clicking all of the small green buttons at once. The <button class="btn btn-danger btn-sm"> Add All Query Results to Downloads <span class="glyphicon glyphicon-plus"></span></button> will do the same for every page of results in your query.</p>
             </div>
-      
+
+            <!-- Help  -->
+            <div class="tab-pane fade" id="help">
+
+                <div class="panel-body">
+                    <h4> General Searching </h4>
+
+                    <p> A basic, Google-esque search. Results are based on occurrences of the search terms in the
+                        title/name, composer, parent piece, and tag fields of an item. Items returned may be any type
+                        (e.g. a composer, a piece, or a corpus). Use this if you want to quickly look for the most
+                        relevant items - the database will order results based on relevancy. </p>
+                    <h4> Advanced Searching </h4>
+
+                    <p> A customisable search. Results are based on the search terms for specific, user-chosen fields of
+                        an item. Items returned may be restricted to specific types, and may be sorted on specific
+                        fields. Use this if you have a concrete idea of the items, and their attributes, that you are
+                        looking for. </p>
+                    <h4> Downloading Results </h4>
+
+                    <p> Each
+                        <button class="btn btn-mini btn-success"><span class="glyphicon glyphicon-plus"></span></button>
+                        recursively sends its object's attachments to your downloads. For example, clicking this in a
+                        piece-typed result will send all of its attachments, and the attachments of its movements, to
+                        your downloads cart. The
+                        <button class="btn btn-success btn-sm">Add Results on Current Page to Downloads <span
+                                class="glyphicon glyphicon-plus"></span></button>
+                        will recursively send all the attachments of the current page's results to your downloads. In
+                        other words, it's like clicking all of the small green buttons at once. The
+                        <button class="btn btn-danger btn-sm"> Add All Query Results to Downloads <span
+                                class="glyphicon glyphicon-plus"></span></button>
+                        will do the same for every page of results in your query.
+                    </p>
+                </div>
+
+            </div>
         </div>
-
     </div>
+    <div class="row">
+        <h3 id="result-header"></h3>
+    </div>
+    <div class="row" id="search-results">
+        <div class="col-md-9" style="padding-left:0px">
+            <div class="list-group" id="search-results-list"></div>
+            <div class="row">
+                <div class="col-md-12 text-center">
+                    <nav id="page-links"></nav>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="row results-intermediate-buttons">
+                <button id="facet-collapse-init" class="btn btn-primary btn-sm">
+                    Hide Facets
+                </button>
+            </div>
 
+            <div class="row panel-group" id="accordion-facets">
+                <div class="panel panel-default">
+                    <div class="panel-heading facets">
+                        <h1 class="panel-title facets" data-toggle="collapse"
+                            data-target="#collapse-facet">
+                            First Facet
+                        </h1>
+                    </div>
+                    <div id="collapse-facet" class="panel-collapse collapse facets in">
+                        <div class="panel-body facets" id="facet-panel-facet">
+                            <li class="facet-list">
+                                <div id="facet-container-facet" class="facet-wrapper">
+                                    <input type="checkbox" class="facet-link" data-facet-name="facet"
+                                           data-facet-value="facet"
+                                           id="facet-link-facet-link">
+                                    <label class="facet-label" for="facet-link-facet-name">
+                                    </label>
+                                </div>
+                            </li>
+                        </div>
+                    </div>
+                </div>
+            </div>
 
-
-{% if content.current_query %}
-
-    {% include "search/search_results.html" %}
-
-{% endif %}
-
-</div>
-
+        </div>
+    </div>
 </body>
 
 
