@@ -39,7 +39,7 @@ class Collection(models.Model):
 
 @receiver(post_save, sender=Collection)
 def solr_index(sender, instance, created, **kwargs):
-    if kwargs.get('raw', False):
+    if kwargs.get('raw', False) or not instance.public:
         return False
 
     import uuid
