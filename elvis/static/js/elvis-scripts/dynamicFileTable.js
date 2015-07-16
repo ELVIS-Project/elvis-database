@@ -32,7 +32,7 @@ function dynamicFileTable(add_row_button_id, table_body_id, table_name, file_but
             "<td><button id='show_advanced_"+ table_name + row_count + "' type='button' tabindex='-1'class='btn btn-default'>Show</button></td></tr>"+
             "<tr id='"+ table_name + row_count + "_tags' hidden='hidden'> " +
             "<td colspan='5'>" +
-            "<div class='row' style='padding-left:115px; padding-right:15px'>" +
+            "<div class='row' style='padding-left:12%; padding-right:15px'>" +
                 "<div class='col-md-7'>" +
                     "<div class='form-group'>" +
                     "<div class='input-group'><span class='input-group-addon'>Instrumentation</span><input name='"+ table_name + row_count + "_instrumentation' id='"+ table_name + row_count + "_instrumentation' type='text' class='form-control unstyled'></div>" +
@@ -42,18 +42,18 @@ function dynamicFileTable(add_row_button_id, table_body_id, table_name, file_but
                 "<div class='col-md-5'>" +
                     "<div class='btn-group btn-group-justified form-inline radio' style='margin-top: 0px' data-toggle='buttons'>" +
                         "<label class='btn btn-default'>" +
-                            "<input type='radio' name='" + table_name + row_count + "_vocalization' value='Vocal'> Vocal" +
+                            "<input type='radio' name='" + table_name + row_count + "_vocalization' value='Vocal'>Vocal" +
                         "</label>" +
                         "<label class='btn btn-default'>" +
-                            "<input type='radio' name='" + table_name + row_count + "_vocalization' value='Instrumental'> Instrumental" +
+                            "<input type='radio' name='" + table_name + row_count + "_vocalization' value='Instrumental'>Instrumental" +
                         "</label>" +
                         "<label class='btn btn-default'>" +
-                            "<input type='radio' name='" + table_name + row_count + "_vocalization' value='Mixed'> Mixed" +
+                            "<input type='radio' name='" + table_name + row_count + "_vocalization' value='Mixed'>Mixed" +
                         "</label>" +
                     "</div>" +
                 "</div>" +
             "</div>" +
-            "<div class='row' style='padding-left:115px; padding-right:15px'>" +
+            "<div class='row' style='padding-left:12%; padding-right:15px'>" +
                 "<div class='col-md-8'>" +
                     "<div class='form-group'>" +
                     "<div class='input-group'><span class='input-group-addon'>Tags</span><input name='"+ table_name + row_count + "_free_tags' id='"+ table_name + row_count + "_free_tags' type='text' class='form-control unstyled'></div>" +
@@ -62,11 +62,11 @@ function dynamicFileTable(add_row_button_id, table_body_id, table_name, file_but
                 "</div>" +
                 "<div class='col-md-4'>" +
                     "<div class='form-group'>" +
-                    "<div class='input-group'><span class='input-group-addon'>Number of Voices</span><input name='"+ table_name + row_count + "_number_of_voices' id='"+ table_name + row_count + "_number_of_voices' type='number' class='form-control unstyled'></div>" +
+                    "<div class='input-group'><span class='input-group-addon'>Number of Voices</span><input name='"+ table_name + row_count + "_number_of_voices' id='"+ table_name + row_count + "_number_of_voices' type='number' onkeypress='return event.charCode >= 48 && event.charCode <= 57' class='form-control unstyled'></div>" +
                     "</div>" +
                 "</div>" +
             "</div>" +
-            "<div class='row' style='padding-left:115px; padding-right:15px'>" +
+            "<div class='row' style='padding-left:12%; padding-right:15px'>" +
                 "<div class='col-md-12'>" +
                     "<strong>Comments:</strong> <div class='form-group'><textarea rows='7' class='form-control' name='"+ table_name + row_count + "_comment' id='"+ table_name + row_count + "_comment' style='resize:vertical'></textarea>"+
                 "</div>" +
