@@ -89,8 +89,8 @@
 </table>
 {% endif %}
 
-{% if content.free_movements %}
-<h3>Movements ({{ content.free_movements_count }})</h3>
+{% if content.movements %}
+<h3>Movements ({{ content.movement_count }})</h3>
 <table class="table">
     <thead>
         <tr>
@@ -100,7 +100,7 @@
         </tr>
     </thead>
     <tbody>
-        {% for mov in content.free_movements %}
+        {% for mov in content.movements %}
             <tr >
                 <td width="5%">{% include "includes/download-badge-inc.html" with download_type="elvis_movement" download_item_id=piece.item_id title="Add to Downloads" %}</td>
                 <td width="70%"><a href="{{ mov.url }}">{{ mov.title }}</a></td>
