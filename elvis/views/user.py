@@ -6,7 +6,7 @@ from rest_framework.renderers import JSONRenderer
 
 from elvis.serializers.user import UserSerializer
 from elvis.renderers.custom_html_renderer import CustomHTMLRenderer
-from elvis.forms import UserForm, UserUpdateForm
+from elvis.forms import UserForm, UserChangeForm
 from django.http import HttpResponse, HttpResponseRedirect
 
 from django.utils.decorators import method_decorator
@@ -67,21 +67,20 @@ class UserAccount(generics.CreateAPIView):
             else:
                 return render(request, "register.html", {'form': form})
         else:
-            form = UserUpdateForm(data=request.POST, instance=request.user)
+            form = UserChangeForm(data=request.POST, instance=request.user)
             if not form.is_valid():
                 return render(request, "user/user_update.html", {'form': form})
 
             clean_form = form.cleaned_data
-            if clean_form['username']:
-                request.user.username = clean_form['username']
             if clean_form['email']:
-                request.user.email = clean_form['email']
+                user.email = clean_form['email']
             if clean_form['first_name']:
-                request.user.first_name = clean_form['first_name']
+                user.first_name = clean_form['first_name']
             if clean_form['last_name']:
-                request.user.last_name = clean_form['last_name']
+                user.last_name = clean_form['last_name']
             user.save()
-            return render(request, "user/user_account.html", {'form': form})
+
+            return HttpResponseRedirect("/account")
 
 
 class UserUpdate(generics.CreateAPIView):
