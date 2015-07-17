@@ -166,6 +166,6 @@ CELERYBEAT_SCHEDULE = {
 
 # Elvis Web App Settings
 # ======================
-ELVIS_EXTENSIONS = ['.xml', '.mxl', '.krn', '.md', '.nwc', '.tntxt', '.capx', '.abc', '.mid', '.midi', '.pdf']
+ELVIS_EXTENSIONS = ['.xml', '.mxl', '.krn', '.md', '.nwc', '.tntxt', '.capx', '.abc', '.mid', '.midi', '.pdf', '.mei']
 ELVIS_BAD_PREFIX = ['.', '..', '_', '__']
 SUGGEST_DICTS = ['composerSuggest', 'pieceSuggest', 'collectionSuggest', 'languageSuggest', 'genreSuggest', 'locationSuggest', 'sourceSuggest', 'instrumentSuggest']
