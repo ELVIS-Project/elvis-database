@@ -126,28 +126,15 @@ html, body {
 .search-result-item {
     min-height: 100px;
 }
-.form-control.gsearch {
+.form-control.search {
     text-align: center; 
     height: 70px;
 }
-.panel-body.gsearch {
+.panel-body.search {
     margin-bottom: 15px;
     margin-top: 25px;
 }
-#gsearch-submit {
-    height: 70px; 
-    width: 160px;
-}
-#asearch-submit {
-    height: 70px; 
-    width: 150px; 
-    font-size: 24px;
-    vertical-align: bottom;
-}
-#asearch-reset{
-    line-height: 0px;
-    font-size: 18px;
-}
+
 /* Result template */
 .panel-body.facets {
    overflow-y: scroll;
@@ -244,4 +231,24 @@ html, body {
 {
     display: block;
     margin-top: 10px;
+}
+.vertical-align {
+    display: flex;
+    align-items: center;
+}
+.asearch-row
+{
+    padding-bottom: 20px;
+    padding-right: 20px;
+    padding-left: 20px;
+}
+.asearch-label
+{
+    font-family: inherit;
+    font-size: 18px;
+    font-weight: 500;
+    line-height: 1.1;
+    color: inherit;
+    margin-bottom:5px;
+    margin-left: 3px;
 }

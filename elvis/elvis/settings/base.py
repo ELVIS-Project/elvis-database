@@ -8,8 +8,6 @@ For the full list of settings and their values, see
 https://docs.djangoproject.com/en/1.6/ref/settings/
 """
 from __future__ import absolute_import
-# for dynamic SECRET_KEY generation
-from random import SystemRandom
 
 # for scheduling file removal using celery
 from celery import schedules
@@ -34,13 +32,8 @@ DEBUG = True
 
 #TODO Write email settings for password recover feature after depoloyment.
 
-if not DEBUG:
-    # TODO: Try loading from a temp file; if not present, automatically generate SECRET_KEY then
-    #       save it to the temp file. This would mean changing the SECRET_KEY on every reboot,
-    #       which isn't particularly detrimental to anyone.
-    SECRET_KEY = ''
-else:
-    SECRET_KEY = '85k%wv*)+qz$(iwcd(!v9=nn@&gb5+_%if)(fxbgzz&4g2+l%t'
+with open('/etc/secretkey.txt') as f:
+    SECRET_KEY = f.read().strip()
 
 
 # Application Definition
@@ -81,24 +74,12 @@ MIDDLEWARE_CLASSES = (
 # ======================
 BROKER_URL = 'django://'
 
-if DEBUG:
-    DATABASES = {
-        'default': {
-            'ENGINE': 'django.db.backends.postgresql_psycopg2',
-            'NAME': 'elvis-database',
-            }
-    }
-else:
-    DATABASES = {
-        'default': {
-            'ENGINE': 'django.db.backends.postgresql_psycopg2',
-            'NAME': 'elvisdatabase',
-            'USER': 'elvisdatabase',
-            'PASSWORD': '5115C67O2v3GN31T49Md',
-            'HOST': '',  # empty means localhost through domain sockets
-            'PORT': '',  # empty means 5432
+DATABASES = {
+    'default': {
+        'ENGINE': 'django.db.backends.postgresql_psycopg2',
+        'NAME': 'elvis-database',
         }
-    }
+}
 
 # Internationalization
 # ====================
@@ -166,6 +147,6 @@ CELERYBEAT_SCHEDULE = {
 
 # Elvis Web App Settings
 # ======================
-ELVIS_EXTENSIONS = ['.xml', '.mxl', '.krn', '.md', '.nwc', '.tntxt', '.capx', '.abc', '.mid', '.midi', '.pdf']
+ELVIS_EXTENSIONS = ['.xml', '.mxl', '.krn', '.md', '.nwc', '.tntxt', '.capx', '.abc', '.mid', '.midi', '.pdf', '.mei']
 ELVIS_BAD_PREFIX = ['.', '..', '_', '__']
 SUGGEST_DICTS = ['composerSuggest', 'pieceSuggest', 'collectionSuggest', 'languageSuggest', 'genreSuggest', 'locationSuggest', 'sourceSuggest', 'instrumentSuggest']

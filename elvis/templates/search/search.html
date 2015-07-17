@@ -179,23 +179,35 @@
                     }
                     if (entry['type'] === "elvis_movement")
                     {
-                        $results.append("<a href='/movement/" + entry['item_id'] + "' class='list-group-item search-result-item'>" +
-                                "<span class='label label-primary pull-right'>Movment</span><h4><span id='add" + key + "'></span> " + entry['title'] + "</h4>" +
-                                "<p class='list-group-item-text'> Piece: " + entry['parent_piece_name'] + "</p>" +
-                                "<p class='list-group-item-text'> Composer: " + entry['composer_name'] + "</p>" +
-                                "<p class='list-group-item-text'> Date: " + entry['date_of_composition2'].slice(0, 4) + "</p>" +
-                                "<p class='list-group-item-text'> Tags: " + entry['tags'] + "</p>" +
-                                "</a>");
+
+                        var result = "<a href='/movement/" + entry['item_id'] + "' class='list-group-item search-result-item'>" +
+                                        "<span class='label label-primary pull-right'>Movment</span><h4><span id='add" + key + "'></span> " + entry['title'] + "</h4>";
+                        if (entry['parent_piece_name'] !== undefined)
+                        {
+                            result += "<p class='list-group-item-text'> Piece: " + entry['parent_piece_name'] + "</p>";
+                        }
+                        result += "<p class='list-group-item-text'> Composer: " + entry['composer_name'] + "</p>" +
+                                  "<p class='list-group-item-text'> Date: " + entry['date_of_composition2'].slice(0, 4) + "</p>";
+                        if (entry['tags'] !== undefined)
+                        {
+                            result += "<p class='list-group-item-text'> Tags: " + entry['tags'] + "</p>";
+                        }
+                        result += "</a>"
+                        $results.append(result);
                         create_download_badge("elvis_movement", entry['item_id'], "add" + key)
                     }
                     if (entry['type'] === "elvis_piece")
                     {
-                        $results.append("<a href='/piece/" + entry['item_id'] + "' class='list-group-item search-result-item'>" +
-                                "<span class='label label-success pull-right'>Piece</span><h4><span id='add" + key + "'></span> " + entry['title'] + "</h4>" +
-                                "<p class='list-group-item-text'> Composer: " + entry['composer_name'] + "</p>" +
-                                "<p class='list-group-item-text'> Date: " + entry['date_of_composition2'].slice(0, 4) + "</p>" +
-                                "<p class='list-group-item-text'> Tags: " + entry['tags'] + "</p>" +
-                                "</a>");
+                        var result = "<a href='/piece/" + entry['item_id'] + "' class='list-group-item search-result-item'>" +
+                                     "<span class='label label-success pull-right'>Piece</span><h4><span id='add" + key + "'></span> " + entry['title'] + "</h4>" +
+                                     "<p class='list-group-item-text'> Composer: " + entry['composer_name'] + "</p>" +
+                                     "<p class='list-group-item-text'> Date: " + entry['date_of_composition2'].slice(0, 4) + "</p>";
+                        if (entry['tags'] !== undefined)
+                        {
+                            result += "<p class='list-group-item-text'> Tags: " + entry['tags'] + "</p>";
+                        }
+                        result += "</a>";
+                        $results.append(result);
                         create_download_badge("elvis_piece", entry['item_id'], "add" + key)
                     }
                 }
@@ -394,22 +406,97 @@
             <div class="tab-pane fade in active" id="gsearch">
 
                 <!-- Accordion -->
-                <div class="panel-body gsearch">
+                <div class="panel-body search">
                     <form id="general-search-form" action="/search/" method="get">
                         <div class="row">
+                            <div class="input-group col-sm-8 col-sm-offset-2">
+                                <input type="text" class="form-control input-lg" id='gsearch-input' name='q'/>
+                                <span class="input-group-btn">
+                                    <button class="btn btn-default btn-lg" type="button" id="gsearch-submit">
+                                        <i class="glyphicon glyphicon-search"></i>
+                                    </button>
+                                </span>
+                            </div>
+                            <!--
                             <div class="input-group col-md-8 col-md-offset-2">
                                 <input type="text" class="form-control gsearch" name="q" id="gsearch-input">
                                 <span class="input-group-btn">
                                     <button class="btn btn-default" type="button" id="gsearch-submit"> Search
                                         <span class="glyphicon glyphicon-search"></span></button>
                                 </span>
+                            </div> -->
+                        </div>
+                    </form>
+                </div>
+            </div>
+
+            <div class="tab-pane fade" id="asearch">
+                <div class="panel-body search">
+                    <form id="advanced-search-form" action="/search" method="get">
+                        <div class="row">
+                            <div class="input-group col-sm-8 col-sm-offset-2">
+                                <input type="text" class="form-control input-lg" id='gsearch-input' name='q'/>
+                                <span class="input-group-btn">
+                                    <button class="btn btn-default btn-lg" type="button" id="asearch-submit">
+                                        <i class="glyphicon glyphicon-search"></i>
+                                    </button>
+                                </span>
+                            </div>
+                        </div>
+                        <br><br>
+                        <div class="row asearch-row">
+                            <div class="col-sm-6">
+                                <label class="asearch-label">Title</label>
+                                <input type="text" class="form-control" name="titlefilt" placeholder="Agnus Dei">
+                            </div>
+                            <div class="col-sm-6">
+                                <label class="asearch-label">Composer Name</label>
+                                <input type="text" class="form-control" name="namefilt" placeholder="Jacob Obrecht">
+                            </div>
+                        </div>
+
+                        <div class="row asearch-row">
+                            <div class="col-sm-3">
+                                <label class="asearch-label">Min Date</label>
+                                <input type="number" class="form-control" name="datefiltf" max="2000" placeholder="YYYY" onkeypress='return event.charCode >= 48 && event.charCode <= 57'>
+                            </div>
+                            <div class="col-sm-3" style="padding-left: 0px">
+                                <label class="asearch-label">Max Date</label>
+                                <input type="number" class="form-control" name="datefiltt" max="2000" placeholder="YYYY" onkeypress='return event.charCode >= 48 && event.charCode <= 57'>
+                            </div>
+                            <div class="col-sm-6">
+                                <label class="asearch-label">Tags</label>
+                                <input type="text" class="form-control" name="tagfilt" placeholder="Tag1 Tag2">
+                            </div>
+                        </div>
+                        <div class="row asearch-row">
+                            <div class="col-sm-3">
+                                <label class="asearch-label">Filter</label><br>
+                                <select id="typefilt" multiple="multiple">
+                                    <option id="elvis_composer" value="elvis_composer">Composers</option>
+                                    <option id="elvis_piece" value="elvis_piece">Pieces</option>
+                                    <option id="elvis_movement" value="elvis_movement">Movements</option>
+                                    <option id="elvis_collection" value="elvis_collection">Collections</option>
+                                    <option id="elvis_tag" value="elvis_tag">Tags</option>
+                                    <option id="elvis_user" value="elvis_user">Users</option>
+                                </select>
+                            </div>
+                            <div class="col-sm-3" style="padding-left: 0px">
+                                <label class="asearch-label">Sorting</label><br>
+                                <select id="sortby">
+                                    <option value=""> Default (By Type)</option>
+                                    <option value="name_sort asc"> Alphabetical &#9660; </option>
+                                    <option value="name_sort desc"> Reverse Alphabetical &#9650; </option>
+                                    <option value="date_general asc"> Chronological &#9660;</option>
+                                    <option value="date_general desc"> Reverse Chronological &#9650; </option>
+                                </select>
                             </div>
                         </div>
                     </form>
                 </div>
             </div>
 
-            <!-- Advanced Search -->
+            <!-- Advanced Search
             <div class="tab-pane fade" id="asearch">
                 <div class="panel-body">
                     <form id="advanced-search-form" action="/search" method="get">
@@ -430,7 +517,6 @@
                         <h3> Limit Results by... </h3>
 
                         <div class="form-group search-form-group">
-                            <!-- Name Filter -->
 
                             <div class="input-group search-input-group">
                                 <span class="input-group-addon">Title</span>
@@ -442,7 +528,6 @@
                         </span>
                             </div>
 
-                            <!-- Name Filter -->
 
                             <div class="input-group search-input-group">
                                 <span class="input-group-addon">Composer's Name</span>
@@ -455,7 +540,6 @@
                             </div>
 
 
-                            <!-- Tag Filter -->
                             <div class="input-group search-input-group">
                                 <span class="input-group-addon">Tags</span>
                                 <input type="text" class="form-control" name="tagfilt" placeholder="Tag1 Tag2">
@@ -467,7 +551,6 @@
                             </div>
 
 
-                            <!-- Date Filter -->
                             <div class="row">
                                 <div class="col-sm-6">
                                     <div class="input-group search-input-group">
@@ -488,8 +571,8 @@
                                     </div>
                                 </div>
                             </div>
+
                             <div class="row">
-                                <!-- Voice Filter -->
                                 <div class="col-lg-12">
                                     <div class="input-group search-input-group">
                                         <span class="input-group-addon">Number of Voices</span>
@@ -503,7 +586,7 @@
                                     </div>
                                 </div>
                             </div>
-                            <!-- Type Filters -->
+
                             Filter by type:
                             <select id="typefilt" multiple="multiple">
                                 <option id="elvis_composer" value="elvis_composer">Composers</option>
@@ -514,7 +597,7 @@
                                 <option id="elvis_user" value="elvis_user">Users</option>
                             </select>
                             <hr>
-                            <!-- Sorting -->
+
                             <h3> Sort Results By... </h3>
                             <select id="sortby">
                                 <option value=""> Default (By Type)</option>
@@ -524,7 +607,6 @@
                                 <option value="date_general desc"> Reverse Chronological &#9650; </option>
                             </select>
 
-                            <!-- Submit -->
                             <hr>
                             <div>
                                 <button type="button" class="btn btn-default" id="asearch-submit"> Search
@@ -535,7 +617,7 @@
                     </form>
                 </div>
 
-            </div>
+            </div> -->
 
             <!-- Help  -->
             <div class="tab-pane fade" id="help">
