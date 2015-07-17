@@ -2,7 +2,7 @@ from django.db import models
 from django.contrib.auth.models import User
 from django.dispatch import receiver
 from django.db.models.signals import post_save, post_delete
-
+from elvis.models.piece import Piece
 class Collection(models.Model):
     class Meta:
         ordering = ["title"]
@@ -68,6 +68,10 @@ def solr_index(sender, instance, created, **kwargs):
 def solr_delete(sender, instance, **kwargs):
     import solr
     from django.conf import settings
+    for piece in instance.pieces.all():
+        piece.save()
+    for mov in instance.movements.all():
+        mov.save()
 
     solrconn = solr.SolrConnection(settings.SOLR_SERVER)
     record = solrconn.query("item_id:{0} AND type:elvis_collection".format(instance.id))
