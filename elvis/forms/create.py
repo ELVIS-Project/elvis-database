@@ -25,14 +25,14 @@ class PieceForm(forms.Form):
 
     def clean(self):
         cleaned_data = super(PieceForm, self).clean()
-        if cleaned_data['composition_start_date'] and not cleaned_data['composition_end_date']:
+        if cleaned_data.get('composition_start_date') and not cleaned_data.get('composition_end_date'):
             cleaned_data['composition_end_date'] = cleaned_data['composition_start_date']
             return cleaned_data
 
-        if not cleaned_data['composition_start_date'] and not cleaned_data['composition_end_date']:
+        if not cleaned_data.get('composition_start_date') and not cleaned_data.get('composition_end_date'):
             self.add_error("composition_end_date", forms.ValidationError("At least one date required."))
 
-        if (cleaned_data['vocalization'] == "Vocal" or cleaned_data['vocalization'] == "Mixed") and not cleaned_data['languages']:
+        if (cleaned_data.get('vocalization') == "Vocal" or cleaned_data.get('vocalization') == "Mixed") and not cleaned_data.get('languages'):
             self.add_error("languages", forms.ValidationError("Language is required for vocal/mixed pieces."))
 
 
