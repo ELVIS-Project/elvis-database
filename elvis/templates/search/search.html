@@ -28,6 +28,14 @@
                 $('#advanced-search-form').submit();
             });
 
+            $("#asearch-input").on('keydown', function(event)
+            {
+                if (event['keyCode'] === 13)
+                {
+                    $('#advanced-search-form').submit();
+                }
+            });
+
             //Process advanced search form, and do a query or clear the page.
             $('#advanced-search-form').submit(function (event)
             {
@@ -140,7 +148,7 @@
                 $("#page-links").html("");
                 $("#accordion-facets").html("");
 
-                if (results['object_list'].length === 0)
+                if (results['object_list'] === undefined || results['object_list'].length === 0)
                 {
                     $("#result-heading").html("<div class='col-sm-12 text-center' style='padding-left:0px'><h3>Nothing Found!</h3></div>");
                     return false;
@@ -404,8 +412,6 @@
 
             <!-- General Search -->
             <div class="tab-pane fade in active" id="gsearch">
-
-                <!-- Accordion -->
                 <div class="panel-body search">
                     <form id="general-search-form" action="/search/" method="get">
                         <div class="row">
@@ -417,14 +423,6 @@
                                     </button>
                                 </span>
                             </div>
-                            <!--
-                            <div class="input-group col-md-8 col-md-offset-2">
-                                <input type="text" class="form-control gsearch" name="q" id="gsearch-input">
-                                <span class="input-group-btn">
-                                    <button class="btn btn-default" type="button" id="gsearch-submit"> Search
-                                        <span class="glyphicon glyphicon-search"></span></button>
-                                </span>
-                            </div> -->
                         </div>
                     </form>
                 </div>
@@ -432,10 +430,10 @@
 
             <div class="tab-pane fade" id="asearch">
                 <div class="panel-body search">
-                    <form id="advanced-search-form" action="/search" method="get">
+                    <form id="advanced-search-form" action="/search/" method="get">
                         <div class="row">
-                            <div class="input-group col-sm-8 col-sm-offset-2">
-                                <input type="text" class="form-control input-lg" id='gsearch-input' name='q'/>
+                            <div class="input-group col-md-8 col-md-offset-2">
+                                <input type="text" class="form-control input-lg" id='asearch-input' name='q'/>
                                 <span class="input-group-btn">
                                     <button class="btn btn-default btn-lg" type="button" id="asearch-submit">
                                         <i class="glyphicon glyphicon-search"></i>
@@ -445,11 +443,11 @@
                         </div>
                         <br><br>
                         <div class="row asearch-row">
-                            <div class="col-sm-6">
+                            <div class="col-md-6">
                                 <label class="asearch-label">Title</label>
                                 <input type="text" class="form-control" name="titlefilt" placeholder="Agnus Dei">
                             </div>
-                            <div class="col-sm-6">
+                            <div class="col-md-6">
                                 <label class="asearch-label">Composer Name</label>
                                 <input type="text" class="form-control" name="namefilt" placeholder="Jacob Obrecht">
                             </div>
@@ -470,6 +468,10 @@
                             </div>
                         </div>
                         <div class="row asearch-row">
+                            <div class="col-sm-6">
+                                <label class="asearch-label">Voice Count</label><br>
+                                <input type="text" class="form-control" name="voicefilt" placeholder="1 OR 2">
+                            </div>
                             <div class="col-sm-3">
                                 <label class="asearch-label">Filter</label><br>
                                 <select id="typefilt" multiple="multiple">
@@ -495,129 +497,6 @@
                     </form>
                 </div>
             </div>
-
-            <!-- Advanced Search
-            <div class="tab-pane fade" id="asearch">
-                <div class="panel-body">
-                    <form id="advanced-search-form" action="/search" method="get">
-                        <h3> General Search Query: </h3>
-
-                        <div class="form-group search-form-group">
-                            <div class="input-group search-input-group">
-                                <span class="input-group-addon">Search Query</span>
-                                <input type="text" class="form-control" name="q" placeholder="Byrd Hornpipe">
-                        <span class="input-group-addon" data-toggle="tooltip" data-container="body"
-                              data-placement="right" data-html='true'
-                              title="This searches across the <em>textual content and metadata of all entities </em> in the database for matches with the queried terms. The default operator is AND.">
-                            <span class="glyphicon glyphicon-info-sign"></span>
-                        </span>
-                            </div>
-                        </div>
-                        <hr>
-                        <h3> Limit Results by... </h3>
-
-                        <div class="form-group search-form-group">
-
-                            <div class="input-group search-input-group">
-                                <span class="input-group-addon">Title</span>
-                                <input type="text" class="form-control" name="titlefilt" placeholder="Agnus Dei">
-                        <span class="input-group-addon" data-toggle="tooltip" data-container="body"
-                              data-placement="right" data-html='true'
-                              title="Terms entered here will be searched for in the <em> titles of pieces and movements</em>.">
-                            <span class="glyphicon glyphicon-info-sign"></span>
-                        </span>
-                            </div>
-
-
-                            <div class="input-group search-input-group">
-                                <span class="input-group-addon">Composer's Name</span>
-                                <input type="text" class="form-control" name="namefilt" placeholder="Jacob Obrecht">
-                        <span class="input-group-addon" data-toggle="tooltip" data-container="body"
-                              data-placement="right" data-html='true'
-                              title="Terms entered here will be searched for in the <em> names of composers </em>, and in the <em> composer-names of pieces and movements</em>. For example, a search for 'Handel' should return Handel the composer, as well as the pieces and movements he composed.">
-                            <span class="glyphicon glyphicon-info-sign"></span>
-                        </span>
-                            </div>
-
-
-                            <div class="input-group search-input-group">
-                                <span class="input-group-addon">Tags</span>
-                                <input type="text" class="form-control" name="tagfilt" placeholder="Tag1 Tag2">
-                        <span class="input-group-addon" data-toggle="tooltip" data-container="body"
-                              data-placement="right" data-html='true'
-                              title="Terms entered here will be searched for in the <em> tags of pieces and movements</em>.">
-                            <span class="glyphicon glyphicon-info-sign"></span>
-                        </span>
-                            </div>
-
-
-                            <div class="row">
-                                <div class="col-sm-6">
-                                    <div class="input-group search-input-group">
-                                        <span class="input-group-addon">Date Range</span>
-                                        <input type="text" class="form-control" name="datefiltf"
-                                               placeholder="From: (YYYY)">
-                                    </div>
-                                </div>
-                                <div class="col-sm-6">
-                                    <div class="input-group search-input-group">
-                                        <input type="text" class="form-control" name="datefiltt"
-                                               placeholder="To: (YYYY)">
-                                <span class="input-group-addon" data-toggle="tooltip" data-container="body"
-                                      data-placement="right" data-html='true'
-                                      title="The date range entered here will be searched for overlaps with the <em> composition range of pieces and movements</em>, and the <em>lifetime of composers</em>.">
-                                    <span class="glyphicon glyphicon-info-sign"></span>
-                                </span>
-                                    </div>
-                                </div>
-                            </div>
-
-                            <div class="row">
-                                <div class="col-lg-12">
-                                    <div class="input-group search-input-group">
-                                        <span class="input-group-addon">Number of Voices</span>
-                                        <input type="text" class="form-control" name="voicefilt"
-                                               placeholder="3 OR 4 OR 5">
-                                <span class="input-group-addon" data-toggle="tooltip" data-container="body"
-                                      data-placement="right" data-html='true'
-                                      title="Numbers entered here will be searched for in the <em> number-of-voices field of pieces and movements</em>.">
-                                    <span class="glyphicon glyphicon-info-sign"></span>
-                                </span>
-                                    </div>
-                                </div>
-                            </div>
-
-                            Filter by type:
-                            <select id="typefilt" multiple="multiple">
-                                <option id="elvis_composer" value="elvis_composer">Composers</option>
-                                <option id="elvis_piece" value="elvis_piece">Pieces</option>
-                                <option id="elvis_movement" value="elvis_movement">Movements</option>
-                                <option id="elvis_collection" value="elvis_collection">Collections</option>
-                                <option id="elvis_tag" value="elvis_tag">Tags</option>
-                                <option id="elvis_user" value="elvis_user">Users</option>
-                            </select>
-                            <hr>
-
-                            <h3> Sort Results By... </h3>
-                            <select id="sortby">
-                                <option value=""> Default (By Type)</option>
-                                <option value="name_sort asc"> Alphabetical &#9660; </option>
-                                <option value="name_sort desc"> Reverse Alphabetical &#9650; </option>
-                                <option value="date_general asc"> Chronological &#9660;</option>
-                                <option value="date_general desc"> Reverse Chronological &#9650; </option>
-                            </select>
-
-                            <hr>
-                            <div>
-                                <button type="button" class="btn btn-default" id="asearch-submit"> Search
-                                    <span class="glyphicon glyphicon-search"></span>
-                                </button>
-                            </div>
-                        </div>
-                    </form>
-                </div>
-
-            </div> -->
 
             <!-- Help  -->
             <div class="tab-pane fade" id="help">
