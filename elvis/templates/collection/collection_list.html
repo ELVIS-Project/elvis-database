@@ -23,6 +23,9 @@
             </p>
         </a>
     {% endfor %}
+    {% if not content.results %}
+        <div class="text-center"><h4>There's nothing here!</h4></div>
+    {% endif %}
     </div>
 
     {% include "paginate.html" with content=content %}
