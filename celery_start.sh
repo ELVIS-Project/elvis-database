@@ -1,8 +1,8 @@
 #!/bin/bash
 
 # Virtual env path
-VIRTUAL_ENV=/usr/local/elvis_database/edda_virtualenv
-PROJECT_PATH=/usr/local/elvis_database/elvis-site/elvis
+VIRTUAL_ENV=/usr/local/elvis-database/elvis_virtualenv
+PROJECT_PATH=/usr/local/elvis-database/elvis
 # Activate
 source ${VIRTUAL_ENV}/bin/activate
 # Move to project directory

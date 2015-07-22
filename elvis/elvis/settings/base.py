@@ -22,17 +22,17 @@ BASE_DIR = os.path.abspath('./elvis')
 # SECURITY WARNING: keep the secret key used in production secret!
 # SECURITY WARNING: don't run with debug turned on in production!
 
-DEBUG = True
+DEBUG = False
 
 
 # Simple Settings
 # ===============
 
-#ALLOWED_HOSTS = ['database.elvisproject.ca', 'db-devel.elvisproject.ca']# if PRODUCTION else []
+ALLOWED_HOSTS = ['database.elvisproject.ca', 'db-devel.elvisproject.ca']
 
 #TODO Write email settings for password recover feature after depoloyment.
 
-with open('/etc/secretkey.txt') as f:
+with open('/etc/elvis_secretkey.txt') as f:
     SECRET_KEY = f.read().strip()
 
 
@@ -77,7 +77,9 @@ BROKER_URL = 'django://'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql_psycopg2',
-        'NAME': 'elvis-database',
+        'NAME': 'elvis2',
+        'USER': 'elvisdatabase',
+        'PASSWORD': '5115C67O2v3GN31T49Md'
         }
 }
 
@@ -95,17 +97,17 @@ USE_TZ = True
 # CRA: we used to have composer images and user profile images; if we need
 #      them back, check commit dc8f8afe75b7137440c6488483566b8e2c366379
 MEDIA_URL = '/media/'
-MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
+MEDIA_ROOT = '/usr/local/elvis-database/media_root'
 
 
 STATIC_URL = '/static/'
-STATIC_ROOT = os.path.join(BASE_DIR, 'static')
+STATIC_ROOT = '/usr/local/elvis-database/static_root'
 
 
 # Solr Settings
 # =============
 
-SOLR_SERVER = "http://localhost:8080"
+SOLR_SERVER = "http://localhost:8080/elvis-solr"
 
 SEARCH_FILTERS_DICT = {
     'fcp': 'elvis_composer',
