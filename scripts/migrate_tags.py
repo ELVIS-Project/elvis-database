@@ -1,13 +1,13 @@
 import csv
 import codecs
 
-from elvis.models.tag import Tag
-from elvis.models.composer import Composer
-from elvis.models.genre import Genre
-from elvis.models.instrumentation import InstrumentVoice
-from elvis.models.language import Language
-from elvis.models.source import Source
-from elvis.views import abstract_model_factory
+from models.tag import Tag
+from models.composer import Composer
+from models.genre import Genre
+from models.instrumentation import InstrumentVoice
+from models.language import Language
+from models.source import Source
+from views import abstract_model_factory
 
 
 def migrate_tags(csv_file):

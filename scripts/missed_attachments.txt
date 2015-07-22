@@ -1,0 +1,32 @@
+Missing file /usr/local/elvis_database/elvis-site/elvis/elvis/../../../media_root/attachments/77/77/000000000000077/VictoriaL8-Aleph_Quomodo_Obscuratum.pdf
+Bad path 
+Bad path 
+Bad path 
+Bad path 
+Missing file /usr/local/elvis_database/elvis-site/elvis/elvis/../../../media_root/attachments/77/70/000000000000770/71v-73r, Donnes lassault.pdf
+Missing file /usr/local/elvis_database/elvis-site/elvis/elvis/../../../media_root/attachments/77/71/000000000000771/71v-73r, Donnes lassault.xml
+Missing file /usr/local/elvis_database/elvis-site/elvis/elvis/../../../media_root/attachments/77/72/000000000000772/Jos2904-Douleur_me_bat.xml
+Missing file /usr/local/elvis_database/elvis-site/elvis/elvis/../../../media_root/attachments/77/73/000000000000773/Jos2904-Douleur_me_bat.md
+Missing file /usr/local/elvis_database/elvis-site/elvis/elvis/../../../media_root/attachments/77/74/000000000000774/Jos2904-Douleur_me_bat.krn
+Missing file /usr/local/elvis_database/elvis-site/elvis/elvis/../../../media_root/attachments/77/75/000000000000775/Jos2904-Douleur_me_bat.mei
+Missing file /usr/local/elvis_database/elvis-site/elvis/elvis/../../../media_root/attachments/77/76/000000000000776/Jos2904-Douleur_me_bat.midi
+Missing file /usr/local/elvis_database/elvis-site/elvis/elvis/../../../media_root/attachments/77/77/000000000000777/Jos2904-Douleur_me_bat.pdf
+Bad path 
+Missing file /usr/local/elvis_database/elvis-site/elvis/elvis/../../../media_root/attachments/77/79/000000000000779/Du bist die Ruh D776 Eb Major.mid
+Bad path 
+Missing file /usr/local/elvis_database/elvis-site/elvis/elvis/../../../media_root/attachments/91/12/000000000000912/Etude 10 12 C Minor.mid
+Missing file /usr/local/elvis_database/elvis-site/elvis/elvis/../../../media_root/attachments/91/13/000000000000913/Etude 25 1 Ab Major.mid
+Missing file /usr/local/elvis_database/elvis-site/elvis/elvis/../../../media_root/attachments/91/14/000000000000914/Etude 25 2 F Minor.mid
+Missing file /usr/local/elvis_database/elvis-site/elvis/elvis/../../../media_root/attachments/92/22/000000000000922/Etude X 2 Ab Major.mid
+Missing file /usr/local/elvis_database/elvis-site/elvis/elvis/../../../media_root/attachments/92/23/000000000000923/Etude 10 2 A Minor.mid
+Missing file /usr/local/elvis_database/elvis-site/elvis/elvis/../../../media_root/attachments/92/24/000000000000924/Etude X 3 Db Major.mid
+Bad path 
+Bad path 
+Bad path 
+Bad path 
+Bad path 
+Bad path 
+Bad path 
+Missing file /usr/local/elvis_database/elvis-site/elvis/elvis/../../../media_root/attachments/77/81/000000000007781/String Quartet Op64 No5 Hob3-63 i D major.mid
+Missing file /usr/local/elvis_database/elvis-site/elvis/elvis/../../../media_root/attachments/77/85/000000000007785/String Quartet Op76 No4 (Arrangement) i Bb major.mid
+Bad path 
