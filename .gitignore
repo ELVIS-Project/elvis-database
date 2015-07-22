@@ -5,7 +5,10 @@ solr/target/*
 solr/logs/*
 solr/suggestions*
 elvis_env/*
+elvis_virtualenv
 .DS_Store
 dumps
 elvis/media/
+media_root/*
+static_root/*
 pom.xml
