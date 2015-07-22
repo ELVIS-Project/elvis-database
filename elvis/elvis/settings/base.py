@@ -83,6 +83,15 @@ DATABASES = {
         }
 }
 
+# Email Settings
+# ==============
+EMAIL_USE_TLS = True
+EMAIL_HOST = 'smtp.gmail.com'
+EMAIL_PORT = 587
+EMAIL_HOST_USER = 'elvisdatabase@gmail.com'
+with open('/etc/elvis_emailpass.txt') as f:
+    EMAIL_HOST_PASSWORD = f.read().strip()
+
 # Internationalization
 # ====================
 LANGUAGE_CODE = 'en-us'
