@@ -12,10 +12,10 @@ def about(request):
 
 # LM Render the query page
 def queries(request):
-    return render(request, "query.html", {})    
+    return render(request, "query.html", {})
 
-def temp(request):
-    return render(request, "temp/temp.html", {})
+def contact(request):
+    return render(request, "contact.html", {})
 
 '''
 LM: Unsure of what the below code is used for, above are temporary views

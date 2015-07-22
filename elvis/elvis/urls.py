@@ -7,18 +7,17 @@ from rest_framework.urlpatterns import format_suffix_patterns
 from django.contrib.staticfiles.urls import staticfiles_urlpatterns
 
 # temporary views for these pages
-from elvis.views.main import home, about, queries, temp
+from elvis.views.main import home, about, contact
 from elvis.views.views import solr_suggest
 from elvis.views.auth import LoginFormView, logout_view
 from elvis.views.search import SearchView
 from elvis.views.download import DownloadDetail, Downloading
 from elvis.views.piece import PieceList, PieceDetail, PieceCreate
-from elvis.views.user import UserList, UserDetail, UserAccount, UserUpdate
-from elvis.views.userprofile import UserProfileList, UserProfileDetail
+from elvis.views.user import  UserDetail, UserAccount, UserUpdate
 from elvis.views.movement import MovementList, MovementDetail
 from elvis.views.composer import ComposerList, ComposerDetail
 from elvis.views.collection import CollectionList, CollectionDetail, CollectionCurrent
-from elvis.views.tag import TagList, TagDetail
+from elvis.views.tag import TagDetail
 from elvis.views.attachment import AttachmentList, AttachmentDetail
 from django.contrib.auth import views as auth_views
 
@@ -47,8 +46,8 @@ urlpatterns += format_suffix_patterns(
 
 
         #Password resettting won't work until server emails are up.
-        url(r'^password/reset/$', auth_views.password_reset, name='password_reset'),
-        url(r'^password/reset/done/$', auth_views.password_reset_done, name='password_reset_done'),
+        url(r'^password/reset/$', auth_views.password_reset, {'template_name': 'user/password_reset.html'}, name='password_reset'),
+        url(r'^password/reset/done/$', auth_views.password_reset_done, {'template_name': 'user/password_reset_done.html'}, name='password_reset_done'),
         url(r'^reset/(?P<uidb64>[0-9A-Za-z_\-]+)/(?P<token>[0-9A-Za-z]{1,13}-[0-9A-Za-z]{1,20})/$', auth_views.password_reset_confirm, name='password_reset_confirm'),
         url(r'^password/reset/complete/$', auth_views.password_reset_complete, name='password_reset_complete'),
 
@@ -76,7 +75,7 @@ urlpatterns += format_suffix_patterns(
 
         url(r'^about/', about, name='about'),
 
-        url(r'^temp/', temp, name="temp"),
+        url(r'^contact/', contact, name="contact"),
 
         url(r'^suggest/$', solr_suggest),
 
