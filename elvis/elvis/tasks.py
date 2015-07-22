@@ -16,7 +16,7 @@ def rebuild_suggester_dicts():
     for d in settings.SUGGEST_DICTS:
         urllib2.urlopen(settings.SOLR_SERVER + "/suggest/?suggest.dictionary={0}&suggest.reload=true".format(d))
 
-@app.task(name='elvis.elvis.clean_zip_files')
+@app.task(name='elvis.elvis.zip_files')
 def zip_files(paths, username):
     # Start with status at 0 - so jQuery has something to do
     i = 0
