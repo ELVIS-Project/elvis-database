@@ -1,135 +1,129 @@
-
 <!DOCTYPE html>
 <!--[if lt IE 7]>      <html class="no-js lt-ie9 lt-ie8 lt-ie7"> <![endif]-->
 <!--[if IE 7]>         <html class="no-js lt-ie9 lt-ie8"> <![endif]-->
 <!--[if IE 8]>         <html class="no-js lt-ie9"> <![endif]-->
-<!--[if gt IE 8]><!--> <html class="no-js"> <!--<![endif]-->
-    <head>
-        <meta charset="utf-8">
-        <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
-        <meta name="description" content="">
-        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+<!--[if gt IE 8]><!-->
+<html class="no-js" lang="en"> <!--<![endif]-->
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="description" content="">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-        <link href="{{ STATIC_URL }}bootstrap/css/bootstrap.css" rel="stylesheet" media="screen">
-        <link href="{{ STATIC_URL }}css/elvis-style.css" rel="stylesheet" media="screen" />
+    <link href="{{ STATIC_URL }}bootstrap/css/bootstrap.css" rel="stylesheet" media="screen">
+    <link href="{{ STATIC_URL }}css/elvis-style.css" rel="stylesheet" media="screen"/>
 
-        <script type='text/javascript' src="{{ STATIC_URL }}js/jquery-1.11.3.js"></script>
-        <script type='text/javascript' src="{{ STATIC_URL }}js/modernizr-2.83.js"></script>
-        <script type='text/javascript' src="{{ STATIC_URL }}js/holder.js"></script>
-        <script type='text/javascript' src="{{ STATIC_URL }}js/plugins.js"></script>
-        <script type='text/javascript' src="{{ STATIC_URL }}bootstrap/js/bootstrap.js"></script>
-        <script type='text/javascript' src="{{ STATIC_URL }}js/elvis-scripts/download-manager.js"></script>
+    <script type='text/javascript' src="{{ STATIC_URL }}js/jquery-1.11.3.js"></script>
+    <script type='text/javascript' src="{{ STATIC_URL }}js/modernizr-2.83.js"></script>
+    <script type='text/javascript' src="{{ STATIC_URL }}js/holder.js"></script>
+    <script type='text/javascript' src="{{ STATIC_URL }}js/plugins.js"></script>
+    <script type='text/javascript' src="{{ STATIC_URL }}bootstrap/js/bootstrap.js"></script>
+    <script type='text/javascript' src="{{ STATIC_URL }}js/elvis-scripts/download-manager.js"></script>
 
-        {% block extra_hd %} {% endblock %}
+    {% block extra_hd %} {% endblock %}
 
-        <script type="text/javascript">
-            $(document).ready(function ($) 
-            {
-                // initialize the download manager script
-                initializeDownloadBadges();
-            });
-            
-        </script>
-    </head>
-    <body>
-        <div class="wrapper">
-            <nav class="navbar navbar-default" role="navigation"> 
-                <div class="navbar-header">
-                    <a class="navbar-brand" href="/">ELVIS</a>
-                </div>
+    <script type="text/javascript">
+        $(document).ready(function ($)
+        {
+            // initialize the download manager script
+            initializeDownloadBadges();
+        });
 
-                <div class="navbar-collapse collapse">
-                    <ul class="nav navbar-nav">
-                        <li><a href="/about">About</a></li>
-                        <li><a href="/search">Search</a></li>
-                        <li class="dropdown">
-                            <a href="#" class="dropdown-toggle" data-toggle="dropdown"> Browse <b class="caret"></b></a>
-                            <ul class="dropdown-menu">
-                                <li><a href="/composers">Composers</a></li>
-                                <li><a href="/collections">Collections</a></li>
-                                <li><a href="/pieces">Pieces</a></li>
-                                <li><a href="/movements">Movements</a></li>
-                            </ul>
-                        </li>
+    </script>
+</head>
+
+
+<body>
+<div class="wrapper">
+    <nav class="navbar navbar-default">
+        <div class="navbar-header">
+            <a class="navbar-brand" href="/">ELVIS</a>
+        </div>
+
+        <div class="navbar-collapse collapse">
+            <ul class="nav navbar-nav">
+                <li><a href="/about">About</a></li>
+                <li><a href="/search">Search</a></li>
+                <li class="dropdown">
+                    <a href="#" class="dropdown-toggle" data-toggle="dropdown"> Browse <span class="caret"></span></a>
+                    <ul class="dropdown-menu">
+                        <li><a href="/composers">Composers</a></li>
+                        <li><a href="/collections">Collections</a></li>
+                        <li><a href="/pieces">Pieces</a></li>
+                        <li><a href="/movements">Movements</a></li>
+                    </ul>
+                </li>
+                {% if user.is_authenticated %}
+                    <li><a href="/pieces/create">Upload</a></li>
+                {% endif %}
+            </ul>
+            <ul class="nav navbar-nav navbar-right">
+                {% if user.is_authenticated %}
+                    <li>
+                        <a href="/collections/current/">
+                            <span class="glyphicon glyphicon-circle-arrow-down"></span> Collection
+                            <span id="collection-count">({{ user.downloads.all.first.cart_size }})</span>
+                        </a>
+                    </li>
+                {% endif %}
+                <li class="dropdown">
+                    <a href="#" class="dropdown-toggle" data-toggle="dropdown">{% if user.is_authenticated %} Welcome
+                        {{ user.username }} {% else %} Enter {% endif %}  <span class="caret"></span></a>
+                    <ul class="dropdown-menu">
                         {% if user.is_authenticated %}
-                        <li><a href="/pieces/create">Upload</a></li>
+                            <li><a href="/account">Account</a></li>
+                            <li class="divider"></li>
+                            <li><a href="/collections/?creator={{ user.username }}">My Collections</a></li>
+                            <li class="divider"></li>
+                            <li><a href="/logout/">Logout</a></li>
+                        {% else %}
+                            <li><a href="/login/" id="login-button">Login</a></li>
+                            <li class="divider"></li>
+                            <li><a href="/account"> Register </a></li>
                         {% endif %}
                     </ul>
-                    <ul class="nav navbar-nav navbar-right">
-                    {% if user.is_authenticated %}
-                        <li>
-                            <a href="/collections/current/">
-                                <span class="glyphicon glyphicon-circle-arrow-down"></span> Collection
-                            <span id="collection-count">({{ user.downloads.all.first.cart_size }})</span>
-                            </a>
-                        </li>
-                    {% endif %}
-                        <li class="dropdown">
-                            <a href="#" class="dropdown-toggle" data-toggle="dropdown">{% if user.is_authenticated %} Welcome {{ user.username }} {% else %} Enter {% endif %}  <b class="caret"></b></a>
-                            <ul class="dropdown-menu">
-                                {% if user.is_authenticated %}
-                                <li><a href="/account">Account</a> </li>
-                                <li class="divider"></li>
-                                <li><a href="/collections/?creator={{ user.username }}">My Collections</a></li>
-                                <li class="divider"></li>
-                                <li><a href="/logout/">Logout</a></li>
-                                {% else %}
-                                <li><a href="/login/" id="login-button">Login</a></li>
-                                <li class="divider"></li>
-                                <li><a href="/account"> Register </a> </li>
-                                {% endif %}
-                            </ul>
-                        </li>                     
-                    </ul>
-                </div>
-            </nav>
+                </li>
+            </ul>
+        </div>
+    </nav>
 
-            <div class="container">
-                {% if not user.is_authenticated %}
-                <div class="row text-center" >
-                    <div class="alert alert-info">
-                        <a href="#" class="close" data-dismiss="alert">&times;</a>
-                        <strong>Note!</strong> &nbsp; &nbsp; &nbsp; You aren't logged in... download functionality has been disabled.
-                    </div>
-                </div>  
-               {% endif %}    
-                <noscript>
-                    <div class="row text-center" >
-                    <div class="alert alert-info">
-                        <a href="#" class="close" data-dismiss="alert">&times;</a>
-                        <strong>Note!</strong> &nbsp; &nbsp; &nbsp; Your browser doesn't support JavaScript... many features will be unavailable.
-                    </div>
-                </div>  
-                </noscript>    
-                
-                <div class="row">
-                    <div class="col-12" style="padding-left:20px; padding-right:20px">
-
-
-                            {% block wrap %}
-
-                            {% endblock %}
-                    </div>
+    <div class="container">
+        {% if not user.is_authenticated %}
+            <div class="row text-center">
+                <div class="alert alert-info">
+                    <a href="#" class="close" data-dismiss="alert">&times;</a>
+                    <strong>Note!</strong> &nbsp; &nbsp; &nbsp; You aren't logged in... download functionality has been
+                    disabled.
                 </div>
             </div>
-
-            <div class="push"></div>
-
-        </div>
-        
-        <div class="footer">
-            <hr id="footer-hr"/>
-            <div class="container">
-                <div class="row text-muted text-center">
-                ELVIS Project -- SIMSSA -- McGill University -- <a href="/contact">Contact</a>
+        {% endif %}
+        <noscript>
+            <div class="row text-center">
+                <div class="alert alert-info">
+                    <a href="#" class="close" data-dismiss="alert">&times;</a>
+                    <strong>Note!</strong> &nbsp; &nbsp; &nbsp; Your browser doesn't support JavaScript... many features
+                    will be unavailable.
                 </div>
             </div>
+        </noscript>
+        <div class="row">
+            <div class="col-12" style="padding-left:20px; padding-right:20px">
+                {% block wrap %}
+                {% endblock %}
+            </div>
         </div>
-        
+    </div>
+</div>
 
-    </body>
-
-
+<footer>
+    <hr id="footer-hr"/>
+    <div class="container">
+        <div class="row text-muted text-center">
+            ELVIS Project -- SIMSSA -- McGill University -- <a href="/contact">Contact</a>
+        </div>
+    </div>
+</footer>
+</body>
 </html>
 
 

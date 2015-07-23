@@ -1,60 +1,63 @@
 {% extends "base.html" %}
 
 {% block extra_hd %}
-<title>Elvis Database</title>
+    <title>Elvis Database</title>
 {% endblock %}
 
 {% block wrap %}
+    <div id="home-jumbotron">
+        <div class="jumbotron">
+            <h1 id="home-title"> ELVIS Database</h1>
 
-<div id="home-jumbotron">
-    <div class="jumbotron" >
-        <h1 id="home-title"> ELVIS Database</h1>
-        <p class="lead"> Polyphonic music in symbolic notation to search and download.</p>
+            <p class="lead"> Polyphonic music in symbolic notation to search and download.</p>
+        </div>
     </div>
-</div>
 
+    <div class="row" id="home-nav">
+        <div class="col-md-4">
+            <a href="/pieces/create/">
+                <div class="media ">
+                    <div class="pull-left">
+                        <img class="media-object img-responsive" src="{{ STATIC_URL }}/img/glyphicons_up.svg"
+                             alt="Upload Icon">
+                    </div>
+                    <div class="media-body">
+                        <h4 class="media-heading">Upload</h4>
 
-<div class="row" id="home-nav">
-    <div class="col-md-4">
-        <a href="/pieces/create/">
-            <div class="media ">
-                <div class="pull-left">
-                    <img class="media-object"  src="{{STATIC_URL}}/img/glyphicons_up.svg" class="img-responsive">
+                        <p> ... your symbolic music encoded in MusicXML to the database.
+                    </div>
                 </div>
-                <div class="media-body">
-                    <h4 class="media-heading">Upload</h4>
-                    <p> ... your symbolic music encoded in MusicXML to the database.
+            </a>
+        </div>
+        <div class="col-md-4">
+            <a href='/search/'>
+                <div class="media">
+                    <div class="pull-left">
+                        <img class="media-object img-responsive" src="{{ STATIC_URL }}/img/glyphicons_search.svg"
+                             alt="Search Icon">
+                    </div>
+                    <div class="media-body">
+                        <h4 class="media-heading">Search</h4>
+
+                        <p> ... for other symbolic music files, metadata, and collections and test-sets.
+                    </div>
                 </div>
-            </div>
-        </a>
+            </a>
+        </div>
+        <div class="col-md-4">
+            <a href='/collections/current/'>
+                <div class="media">
+                    <div class="pull-left">
+                        <img class="media-object img-responsive" src="{{ STATIC_URL }}/img/glyphicons_down.svg"
+                             alt="Download Icon">
+                    </div>
+                    <div class="media-body">
+                        <h4 class="media-heading">Download</h4>
+
+                        <p> ... files for use in the ELVIS Counterpoint Web Application or your own apps.
+                    </div>
+                </div>
+            </a>
+        </div>
     </div>
-    <div class="col-md-4">
-        <a href='/search/'>
-            <div class="media">
-                <div class="pull-left">
-                    <img class="media-object"  src="{{STATIC_URL}}/img/glyphicons_search.svg" class="img-responsive">
-                </div>
-                <div class="media-body">
-                    <h4 class="media-heading">Search</h4>
-                    <p> ... for other symbolic music files, metadata, and collections and test-sets.
-                </div>
-            </div>
-        </a>
-    </div>
-    <div class="col-md-4">
-        <a href='/collections/current/'>
-            <div class="media">
-                <div class="pull-left">
-                    <img class="media-object"  src="{{STATIC_URL}}/img/glyphicons_down.svg" class="img-responsive">
-                </div>
-                <div class="media-body">
-                    <h4 class="media-heading">Download</h4>
-                    <p> ... files for use in the ELVIS Counterpoint Web Application or your own apps.
-                </div>
-            </div>
-        </a>
-    </div>
-</div>
-
-
 {% endblock %}
