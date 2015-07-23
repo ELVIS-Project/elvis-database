@@ -1,12 +1,9 @@
 {% extends "base.html" %}
 {% block extra_hd %}
-
     <title>Search</title>
-
     <script type="text/javascript" src="{{ STATIC_URL }}bootstrap/plugins/bootstrap-multiselect.js"></script>
     <script type="text/javascript" src="{{ STATIC_URL }}js/elvis-scripts/downloadBadge.js"></script>
     <link rel="stylesheet" href="{{ STATIC_URL }}bootstrap/plugins/bootstrap-multiselect.css" type="text/css"/>
-
     <script type="text/javascript">
         $(document).ready(function ($)
         {
@@ -28,7 +25,7 @@
                 $('#advanced-search-form').submit();
             });
 
-            $("#asearch-input").on('keydown', function(event)
+            $("#asearch-input").on('keydown', function (event)
             {
                 if (event['keyCode'] === 13)
                 {
@@ -189,13 +186,13 @@
                     {
 
                         var result = "<a href='/movement/" + entry['item_id'] + "' class='list-group-item search-result-item'>" +
-                                        "<span class='label label-primary pull-right'>Movment</span><h4><span id='add" + key + "'></span> " + entry['title'] + "</h4>";
+                                "<span class='label label-primary pull-right'>Movment</span><h4><span id='add" + key + "'></span> " + entry['title'] + "</h4>";
                         if (entry['parent_piece_name'] !== undefined)
                         {
                             result += "<p class='list-group-item-text'> Piece: " + entry['parent_piece_name'] + "</p>";
                         }
                         result += "<p class='list-group-item-text'> Composer: " + entry['composer_name'] + "</p>" +
-                                  "<p class='list-group-item-text'> Date: " + entry['date_of_composition2'].slice(0, 4) + "</p>";
+                                "<p class='list-group-item-text'> Date: " + entry['date_of_composition2'].slice(0, 4) + "</p>";
                         if (entry['tags'] !== undefined)
                         {
                             result += "<p class='list-group-item-text'> Tags: " + entry['tags'] + "</p>";
@@ -207,9 +204,9 @@
                     if (entry['type'] === "elvis_piece")
                     {
                         var result = "<a href='/piece/" + entry['item_id'] + "' class='list-group-item search-result-item'>" +
-                                     "<span class='label label-success pull-right'>Piece</span><h4><span id='add" + key + "'></span> " + entry['title'] + "</h4>" +
-                                     "<p class='list-group-item-text'> Composer: " + entry['composer_name'] + "</p>" +
-                                     "<p class='list-group-item-text'> Date: " + entry['date_of_composition2'].slice(0, 4) + "</p>";
+                                "<span class='label label-success pull-right'>Piece</span><h4><span id='add" + key + "'></span> " + entry['title'] + "</h4>" +
+                                "<p class='list-group-item-text'> Composer: " + entry['composer_name'] + "</p>" +
+                                "<p class='list-group-item-text'> Date: " + entry['date_of_composition2'].slice(0, 4) + "</p>";
                         if (entry['tags'] !== undefined)
                         {
                             result += "<p class='list-group-item-text'> Tags: " + entry['tags'] + "</p>";
@@ -302,9 +299,9 @@
                     var name = keys[i];
                     var facet_head = "<div class='panel panel-default'>" +
                             "<div class='panel-heading facets'>" +
-                            "<h1 class='panel-title facets' data-toggle='collapse' data-target='#collapse-" + name + "'>" +
+                            "<h3 class='panel-title facets' data-toggle='collapse' data-target='#collapse-" + name + "'>" +
                             results['facet_names'][keys[i]] +
-                            "</h1>" +
+                            "</h3>" +
                             "</div>";
                     var facet_body = "<div id='collapse-" + name + "' class='panel-collapse collapse facets in'>" +
                             "<div class='panel-body facets' id='facet-panel-" + name + "'>";
@@ -387,39 +384,29 @@
 {% endblock %}
 
 {% block wrap %}
-
-    <body>
     <div class="page-header">
         <h2>Search the Database</h2>
     </div>
 
     <div class="row">
-        <!-- Tabs bar -->
-
         <ul class="nav nav-tabs nav-justified">
-
             <li class="active"><a href="#gsearch" data-toggle="tab"><h4>General Search</h4></a></li>
-
             <li class=""><a href="#asearch" data-toggle="tab"><h4>Advanced Search</h4></a></li>
-
             <li class=""><a href="#help" data-toggle="tab"><h4>Information & Help</h4></a></li>
-
         </ul>
 
-        <!-- Content -->
-
         <div class="tab-content">
-
-            <!-- General Search -->
             <div class="tab-pane fade in active" id="gsearch">
                 <div class="panel-body search">
                     <form id="general-search-form" action="/search/" method="get">
                         <div class="row">
+                            <label for="gsearch-input" hidden="hidden">General Search Keyword</label>
+
                             <div class="input-group col-sm-8 col-sm-offset-2">
                                 <input type="text" class="form-control input-lg" id='gsearch-input' name='q'/>
                                 <span class="input-group-btn">
                                     <button class="btn btn-default btn-lg" type="button" id="gsearch-submit">
-                                        <i class="glyphicon glyphicon-search"></i>
+                                        <span class="glyphicon glyphicon-search"></span>
                                     </button>
                                 </span>
                             </div>
@@ -432,48 +419,59 @@
                 <div class="panel-body search">
                     <form id="advanced-search-form" action="/search/" method="get">
                         <div class="row">
+                            <label for="asearch-input" hidden="hidden">Avanced Search Keyword</label>
+
                             <div class="input-group col-md-8 col-md-offset-2">
                                 <input type="text" class="form-control input-lg" id='asearch-input' name='q'/>
                                 <span class="input-group-btn">
                                     <button class="btn btn-default btn-lg" type="button" id="asearch-submit">
-                                        <i class="glyphicon glyphicon-search"></i>
+                                        <span class="glyphicon glyphicon-search"></span>
                                     </button>
                                 </span>
                             </div>
                         </div>
                         <br><br>
+
                         <div class="row asearch-row">
                             <div class="col-md-6">
-                                <label class="asearch-label">Title</label>
-                                <input type="text" class="form-control" name="titlefilt" placeholder="Agnus Dei">
+                                <label class="asearch-label" for="titlefilt">Title</label>
+                                <input type="text" class="form-control" id="titlefilt" name="titlefilt"
+                                       placeholder="Agnus Dei">
                             </div>
                             <div class="col-md-6">
-                                <label class="asearch-label">Composer Name</label>
-                                <input type="text" class="form-control" name="namefilt" placeholder="Jacob Obrecht">
+                                <label class="asearch-label" for="namefilt">Composer Name</label>
+                                <input type="text" class="form-control" id="namefilt" name="namefilt"
+                                       placeholder="Jacob Obrecht">
                             </div>
                         </div>
 
                         <div class="row asearch-row">
                             <div class="col-sm-3">
-                                <label class="asearch-label">Min Date</label>
-                                <input type="number" class="form-control" name="datefiltf" max="2000" placeholder="YYYY" onkeypress='return event.charCode >= 48 && event.charCode <= 57'>
+                                <label class="asearch-label" for="datefiltf">Min Date</label>
+                                <input type="number" class="form-control" name="datefiltf" id="datefiltf" max="2000"
+                                       placeholder="YYYY"
+                                       onkeypress='return event.charCode >= 48 && event.charCode <= 57'>
                             </div>
                             <div class="col-sm-3" style="padding-left: 0px">
-                                <label class="asearch-label">Max Date</label>
-                                <input type="number" class="form-control" name="datefiltt" max="2000" placeholder="YYYY" onkeypress='return event.charCode >= 48 && event.charCode <= 57'>
+                                <label class="asearch-label" for="datefiltt">Max Date</label>
+                                <input type="number" class="form-control" name="datefiltt" id="datefiltt" max="2000"
+                                       placeholder="YYYY"
+                                       onkeypress='return event.charCode >= 48 && event.charCode <= 57'>
                             </div>
                             <div class="col-sm-6">
-                                <label class="asearch-label">Tags</label>
-                                <input type="text" class="form-control" name="tagfilt" placeholder="Tag1 Tag2">
+                                <label class="asearch-label" for="tagfilt">Tags</label>
+                                <input type="text" class="form-control" id="tagfilt" name="tagfilt"
+                                       placeholder="Tag1 Tag2">
                             </div>
                         </div>
                         <div class="row asearch-row">
                             <div class="col-sm-6">
-                                <label class="asearch-label">Voice Count</label><br>
-                                <input type="text" class="form-control" name="voicefilt" placeholder="1 OR 2">
+                                <label class="asearch-label" for="voicefilt">Voice Count</label><br>
+                                <input type="text" class="form-control" id="voicefilt" name="voicefilt"
+                                       placeholder="1 OR 2">
                             </div>
                             <div class="col-sm-3">
-                                <label class="asearch-label">Filter</label><br>
+                                <label class="asearch-label" for="typefilt">Filter</label><br>
                                 <select id="typefilt" multiple="multiple">
                                     <option id="elvis_composer" value="elvis_composer">Composers</option>
                                     <option id="elvis_piece" value="elvis_piece">Pieces</option>
@@ -484,7 +482,7 @@
                                 </select>
                             </div>
                             <div class="col-sm-3" style="padding-left: 0px">
-                                <label class="asearch-label">Sorting</label><br>
+                                <label class="asearch-label" for="sortby">Sorting</label><br>
                                 <select id="sortby">
                                     <option value=""> Default (By Type)</option>
                                     <option value="name_sort asc"> Alphabetical &#9660; </option>
@@ -538,10 +536,10 @@
     <div id="result-page" hidden="hidden">
         <div class="row" id="result-heading">
             <div class="col-sm-8" style="padding-left:0px">
-                <h3 id="result-header">Results</h3>
+                <h3>Results</h3>
             </div>
             <div class="col-sm-4" style="padding-left:0px">
-                <h3 id="result-header">Filter You Search</h3>
+                <h3>Filter You Search</h3>
             </div>
         </div>
         <div class="row" id="search-results">
@@ -559,6 +557,4 @@
             </div>
         </div>
     </div>
-    </body>
-
 {% endblock %}
