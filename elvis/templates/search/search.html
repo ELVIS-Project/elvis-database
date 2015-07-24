@@ -155,7 +155,7 @@
                     $("#result-heading").html("<div class='col-sm-8' style='padding-left:0px'><h3>Results:</h3></div>" +
                             "<div class='col-sm-4' style='padding-left:0px'><h3>Filter Your Search</h3></div>");
                 }
-                for (var key in results['object_list'])
+                for (var key = 0; key < results['object_list'].length; key++)
                 {
                     var entry = results['object_list'][key];
                     if (entry['type'] === "elvis_composer")
@@ -173,14 +173,16 @@
                         $results.append("<a href='/composer/" + entry['item_id'] + "' class='list-group-item search-result-item'>" +
                                 "<span class='label label-default pull-right'>Composer</span><h4><span id='add" + key + "'></span> " + entry['name'] + "</h4>" +
                                 "<p class='list-group-item-text'>" + birthday + "-" + death + "</p></a>");
-                        create_download_badge("elvis_composer", entry['item_id'], "add" + key)
+                        create_download_badge("elvis_composer", entry['item_id'], "add" + key);
+                        continue;
                     }
                     if (entry['type'] === "elvis_collection")
                     {
                         $results.append("<a href='/collection/" + entry['item_id'] + "' class='list-group-item search-result-item'>" +
                                 "<span class='label label-info pull-right'>Collection</span><h4><span id='add" + key + "'></span> " + entry['title'] + "</h4>" +
                                 "<p class='list-group-item-text'> Created by: " + entry['creator_name'] + " on " + entry['created'].slice(0, 4) + "</p></a>");
-                        create_download_badge("elvis_collection", entry['item_id'], "add" + key)
+                        create_download_badge("elvis_collection", entry['item_id'], "add" + key);
+                        continue;
                     }
                     if (entry['type'] === "elvis_movement")
                     {
@@ -197,9 +199,10 @@
                         {
                             result += "<p class='list-group-item-text'> Tags: " + entry['tags'] + "</p>";
                         }
-                        result += "</a>"
+                        result += "</a>";
                         $results.append(result);
-                        create_download_badge("elvis_movement", entry['item_id'], "add" + key)
+                        create_download_badge("elvis_movement", entry['item_id'], "add" + key);
+                        continue;
                     }
                     if (entry['type'] === "elvis_piece")
                     {
@@ -213,7 +216,8 @@
                         }
                         result += "</a>";
                         $results.append(result);
-                        create_download_badge("elvis_piece", entry['item_id'], "add" + key)
+                        create_download_badge("elvis_piece", entry['item_id'], "add" + key);
+                        continue;
                     }
                 }
                 drawPageLinks(results);
@@ -230,7 +234,7 @@
                     $page_links.html("");
                     return false
                 }
-                if (results['number'] == 1)
+                if (results['number'] === 1)
                 {
                     links += "<li class='disabled'><a href='first' onClick='return false;' id='first-button'>First</a></li>";
                     links += "<li class='disabled'><a href='previous' onClick='return false;' id='previous-button'>Previous</a></li>";
@@ -241,7 +245,7 @@
                     links += "<li><a href='previous' onClick='return false;' id='previous-button'>Previous</a></li>";
                 }
                 links += "<li class='disabled'><a href='#' onClick='return false;'>Page " + results['number'] + " of " + results['paginator']['total_pages'] + "</a></li>";
-                if (results['number'] == results['paginator']['total_pages'])
+                if (results['number'] === results['paginator']['total_pages'])
                 {
                     links += "<li class='disabled'><a href='next' onClick='return false;' id='next-button'>Next</a></li>";
                     links += "<li class='disabled'><a href='last' onClick='return false;' id='  last-button'> Last </a></li>";
