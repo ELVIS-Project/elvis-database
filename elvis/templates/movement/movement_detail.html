@@ -1,68 +1,161 @@
 {% extends "base.html" %}
 
 {% block extra_hd %}
-<title>{{ content.title }}</title>
+    <title>{{ content.title }}</title>
+    <script>
+        $(document).ready(function ($)
+        {
+            var $add_movement = $('#add-movement');
+            $add_movement.on("click", function (event)
+            {
+                event.preventDefault();
+                event.stopImmediatePropagation();
+                $.ajax({
+                    type: "post",
+                    url: "/downloads/",
+                    data: $(event.target).parents(".recursive-patch-download-form").serialize(),
+                    success: function (data)
+                    {
+                        var $collection_count = $("#collection-count");
+                        $collection_count.fadeOut(100, function ()
+                        {
+                            $collection_count.text("(" + data.count + ")");
+                        });
+                        $collection_count.fadeIn(100);
+                    }
+                })
+            });
+            $add_movement.val(window.location.href);
+        })
+    </script>
 {% endblock %}
 
 {% block wrap %}
-<div class="row">
-    <h2>{{ content.title }}</h2>
-    <p><span class="label label-primary">Movement</span> Uploaded by {{ content.uploader.username }} on {{ content.created | date:"d F Y"}}. Last updated on {{ content.updated | date:"d F Y"}}.</p>
-</div>
-
-<div class="row">
-    <dl class="dl-horizontal">
-        {% if content.piece %}
-        <dt>Piece</dt>
-        <dd><a href="{{content.piece.url}}">{{content.piece.title}}</a></dd>
+    <div class="row">
+        <h2> {{ content.title }} <span class="pull-right">
+        {% if user.is_authenticated %}
+            <form class="recursive-patch-download-form" action="/downloads/" method="post"/>
+            {% csrf_token %}
+            <button type="button" id='add-movement' class="btn btn-default" data-container="body" data-toggle="tooltip"
+                    data-placement="top" title="Add to collection.">Add to Collection
+            </button>
+            <input type="hidden" name="item_type" value="elvis_movement"/>
+            <input type="hidden" name="item_id" value="{{ content.item_id }}"/>
+            <input type="hidden" class="this_url" name="this_url" value=""/>
+            </form>
         {% endif %}
-        <dt>Composer</dt>
-        <dd><a href="{{ content.composer.url }}">{{ content.composer.name }}</a></dd>
-        {% if content.date_of_composition  == content.date_of_composition2 %} 
-        <dt>Date of Composition</dt>
-        <dd>{{ content.date_of_composition | date:"Y"}}</dd> 
-        {% else %}
-        <dt>Dates of Composition</dt>
-        <dd>{{ content.date_of_composition | date:"Y"}}-{{ content.date_of_composition2 | date:"Y" }} </dd> 
-        {% endif %}
-        <dt>Number of voices:</dt>
-        <dd>{{content.number_of_voices}}</dd>
-        <dt>Tags</dt>
-        <dd>
-            {% for tag in content.tags %}
-                <a href="{{ tag.url }}" class="label label-primary .rounded" >{{tag.name}} </a> &nbsp;
-            {% endfor %}
-        </dd>
-    </dl>
+        </span></h2>
+        <p>
+            <span class="label label-primary">Movement</span> - Created by {{ content.uploader.username }}
+            on {{ content.created | date:"d F Y" }}. Last updated on {{ content.updated | date:"d F Y" }}.
+            {% if content.piece %}
+                <br>Part of <a href="{{ content.piece.url }}">{{ content.piece.title }}</a>
+            {% endif %}
+        </p>
+        <hr>
+    </div>
 
+    <div class="row">
+        <div class="col-sm-6">
+            <dl class="dl-horizontal">
+                <dt>Composer</dt>
+                <dd><a href="{{ content.composer.url }}">{{ content.composer.name }}</a></dd>
+                <dt>Date of Composition</dt>
+                {% if content.date_of_composition  == content.date_of_composition2 %}
+                    <dd>{{ content.date_of_composition | date:"Y" }}</dd>
+                {% else %}
+                    <dd>{{ content.date_of_composition | date:"Y" }}-{{ content.date_of_composition2 | date:"Y" }} </dd>
+                {% endif %}
+                <dt>Number of voices</dt>
+                <dd>
+                    {{ content.number_of_voices }}
+                </dd>
+                <dt>Genre{{ content.genres|length|pluralize }}</dt>
+                <dd>
+                    {% for genre in content.genres %}
+                        {{ genre.name }}{% if not forloop.last %},&nbsp;{% endif %}
+                    {% empty %}
+                        Unknown
+                    {% endfor %}
+                </dd>
+                <dt>Instrument Voice{{ content.instruments_voices|length|pluralize }}</dt>
+                <dd>
+                    {% for instrument in content.instruments_voices %}
+                        {{ instrument.name }}{% if not forloop.last %},&nbsp;{% endif %}
+                    {% empty %}
+                        Unknown
+                    {% endfor %}
+                </dd>
+                {% if content.tags %}
+                    <dt>Tag{{ content.tags.count|length|pluralize }}</dt>
+                    <dd>
+                        {% for tag in content.tags %}
+                            <a href="{{ tag.url }}" class="label label-default rounded">{{ tag.name }} </a> &nbsp;
+                        {% endfor %}
+                    </dd>
+                {% endif %}
+            </dl>
+        </div>
+        <div class="col-sm-6">
+            <dl class='dl-horizontal'>
+                <dt>Place of Origin</dt>
+                <dd>
+                    {% for place in content.locations %}
+                        {{ place.name }}{% if not forloop.last %},&nbsp;{% endif %}
+                    {% empty %}
+                        Unknown
+                    {% endfor %}
+                </dd>
+                <dt>Language{{ content.languages|length|pluralize }}</dt>
+                <dd>
+                    {% for language in content.languages %}
+                        {{ language.name }}{% if not forloop.last %},&nbsp;{% endif %}
+                    {% empty %}
+                        Unknown
+                    {% endfor %}
+                </dd>
+                <dt>Source{{ content.languages|length|pluralize }}</dt>
+                <dd>
+                    {% for source in content.sources %}
+                        {{ source.name }}{% if not forloop.last %},&nbsp;{% endif %}
+                    {% empty %}
+                        Unknown
+                    {% endfor %}
+                </dd>
+                <dt>Religiosity</dt>
+                <dd>{{ content.religiosity }}</dd>
+                <dt>Voice Type</dt>
+                <dd>{{ content.vocalization }}</dd>
+            </dl>
+        </div>
     {% if content.comment %}
         <pre>{{ content.comment }}</pre>
     {% endif %}
+    </div>
 
     {% if content.attachments and user.is_authenticated %}
-    <h3>Available Attachments</h3>
-    <table class="table table-hover">
-    <!-- Attachments & Form -->
-    <dd>
-        <tr>
-            <th>Filename and Format</th>
-            <th>Source</th>
-        </tr>
-        {% for attachment in content.attachments %}
-        <tr>
-            <td>
-            <a href="{{ attachment.attachment }}">{{ attachment.file_name | default:"Download" }}</a>
-            </td>
-            <td>
-            {{ attachment.source }}
-            </td>
-        </tr>
-        {% endfor %}
-
-    </dd>
-    </table>
-
+        <div class="row">
+            <h3>Available Attachments</h3>
+            <table class="table table-condensed">
+                <thead>
+                <tr>
+                    <th width="5%" style="text-align:center">Add</th>
+                    <th width="60%">Title</th>
+                    <th>Source</th>
+                </tr>
+                </thead>
+                <tbody>
+                {% for attachment in content.attachments %}
+                    <tr>
+                        <td></td>
+                        <td><a href="{{ attachment.attachment }}">{{ attachment.file_name | default:"Download" }}</a>
+                        </td>
+                        <td>{{ attachment.source }}</td>
+                    </tr>
+                {% endfor %}
+                </tbody>
+            </table>
+        </div>
     {% endif %}
-    
-</div>
+
 {% endblock %}
