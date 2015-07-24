@@ -101,10 +101,8 @@ class CollectionList(generics.ListCreateAPIView):
         user_download = request.user.downloads.all()[0]
         for piece in user_download.collection_pieces.all():
             piece.collections.add(new_collection)
-            piece.save()
         for movement in user_download.collection_movements.all():
             movement.collections.add(new_collection)
-            movement.save()
 
         new_collection.save()
         return HttpResponseRedirect("/collection/{0}".format(new_collection.id))

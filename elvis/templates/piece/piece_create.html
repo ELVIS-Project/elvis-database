@@ -9,7 +9,12 @@
     <script type='text/javascript' src="{{ STATIC_URL }}js/elvis-scripts/autocomplete.js"></script>
     <script type='text/javascript' src="{{ STATIC_URL }}js/elvis-scripts/dynamicFileTable.js"></script>
     <script type='text/javascript' src="{{ STATIC_URL }}bootstrap/plugins/bootstrap-filestyle.js"></script>
-
+    <style>
+        .popover {
+            max-width: 500px;
+            width: auto;
+        }
+    </style>
 <script>
 $(document).ready(function($)
 {
@@ -43,7 +48,7 @@ $(document).ready(function($)
                 url: "/composers/",
                 data: {q: query},
                 success: function (data)
-                {
+                    {
                     if (data['count'] == 0)
                     {
                         $newComposerMenu.children().remove(".top-message");
@@ -66,15 +71,29 @@ $(document).ready(function($)
         }
     });
 
+    $(window).on('beforeunload', function(event)
+    {
+        if (event['target']['activeElement']['id'] === 'goto-piece'){
+            return;
+        }
+        else{
+            return 'Leaving this page will clear your form.'
+        }
+    });
 
     //The next buttons on the tabs
-    $("[id^=nexttab]").on("click", function()
+    $(".next-tab").on("click", function()
     {
         event.preventDefault();
         $('#upload-tabs').children().filter('.active').next('li').find('a[data-toggle="tab"]').tab('show');
     });
+    $(".back-tab").on("click", function()
+    {
+        event.preventDefault();
+        $('#upload-tabs').children().filter('.active').prev('li').find('a[data-toggle="tab"]').tab('show');
+    });
 
-
+    //Disable default behaviour for hitting 'enter' for all inputs except the comment.
     $('input:not(#comment)').on("keydown", function(event){
         if (event.keyCode === 13)
         {
@@ -105,7 +124,7 @@ $(document).ready(function($)
                     var $upload_modal = $('#upload_modal');
                     $upload_modal.find('.modal-title').html("Done!");
                     $upload_modal.find('.modal-footer').html("<a href='/pieces/create/'><button class='btn btn-default pull-left'>Upload Another Piece</button></a>" +
-                                                             "<a href='"+data['url']+"'><button class='btn btn-default'>Go to Piece</button></a>");
+                                                             "<a href='"+data['url']+"'><button class='btn btn-default' id='goto-piece'>Go to Piece</button></a>");
                     $upload_modal.find('.progress-bar').removeClass("progress-bar-striped active");
                 }
                 else
@@ -117,15 +136,18 @@ $(document).ready(function($)
                         {
                             $("input[name='religiosity']").parent().removeClass("btn-default").addClass("btn-danger")
                         }
+                        if (key === "vocalization")
+                        {
+                            $("input[name='vocalization']").parent().removeClass("btn-default").addClass("btn-danger")
+                        }
 
                         else
                         {
                              $("#" + key).parent().addClass("has-error");
                         }
 
-                            $("#" + key).parent().addClass("has-error");
                             $("#" + key + "_error").html("<b style='color:red'>" + data['errors'][key][0] + "</b>");
-                            errors = errors + "<strong>"+ key.charAt(0).toUpperCase() + key.slice(1) + "</strong>: " + data['errors'][key][0] + "<br>"
+                            errors = errors + "<strong>"+ (key.charAt(0).toUpperCase() + key.slice(1)).replace(/_/g, ' ' ) + "</strong>: " + data['errors'][key][0] + "<br>"
                     }
                     var $upload_modal = $('#upload_modal');
                     $upload_modal.find('.modal-title').html("Form Error");
@@ -143,6 +165,14 @@ $(document).ready(function($)
                 }
             })
         });
+
+        var $upload_fields = $(".upload-input-field");
+        $upload_fields.focus(function(event){
+            $(event.target.parentElement.children[0]).popover('toggle');
+        });
+        $upload_fields.focusout(function(event){
+            $(event.target.parentElement.children[0]).popover('hide');
+        })
     })
 
 </script>
@@ -188,7 +218,7 @@ $(document).ready(function($)
     <form action="/pieces/" method="post" id="new-piece-form" enctype="multipart/form-data">
     {% csrf_token %}
 
-        <div class="tab-content" style="padding-left:50px; padding-right:50px">
+        <div class="tab-content" style="padding-left:50px; padding-right:50px" id="upload-box">
 
             <div id="basics" class="tab-pane fade in active">
                 <h4>Basic Piece Information</h4>
@@ -199,18 +229,21 @@ $(document).ready(function($)
                     to the existing composers oeuvre. While you are encouraged to provide beginning and ending dates
                     for the composition, you are only required to provide one date.
                 </span>
+                <br>
                 <div class="input-group">
-                  <span class="input-group-addon">Title</span>
-                  <input type="text" id="title" name="title" autocomplete="off" class="form-control" placeholder="e.g. Ach Gott, vom Himmel sieh darein, BWV 2">
+                  <span class="input-group-addon" data-toggle="popover" data-placement="top" data-trigger="focus" data-html='true' title="<b>Title</b><span class='label label-primary pull-right'>Required</span>"
+                        data-viewport="#new-piece-form" data-content="Note: Duplicate titles will produce duplicate pieces in the database: this is to allow for
+                        composers who may have more than one piece with the same name.">Title</span>
+                  <input type="text" id="title" name="title" autocomplete="off" class="form-control upload-input-field" placeholder="e.g. Ach Gott, vom Himmel sieh darein, BWV 2">
                 </div>
                 <div id="title_suggestion_menu" style="padding-left:120px"></div>
                 <div id="title_error"></div>
                 <br>
                 <div class="input-group">
-                    <span class="input-group-addon" >Composer</span>
-                    <input type="text" id="composer" autocomplete="off" name="composer" class="form-control" placeholder="e.g. Bach, Johann Sebastian"
-                           data-toggle="popover" data-placement="top" data-trigger="focus" title="Composer"
-                           data-content="If present, choose the composer's name from the drop-down suggestion menu in order to avoid duplicates in the database.">
+                    <span class="input-group-addon" data-toggle="popover" data-placement="top" data-trigger="focus" data-html='true' title="<b>Composer Name</b><span class='label label-primary pull-right'>Required</span>"
+                          data-viewport="#new-piece-form" data-content="<ul><li>If present, select your composer from the dropdown suggestion menu in order to minimize duplicates.</li>
+                          <li>If you add a new composer, use the spelling from Grove.</li><li>If you don’t know the composer, input Anonymous.</li></ul>">Composer</span>
+                    <input type="text" id="composer" name="composer" autocomplete='off' class="form-control upload-input-field" placeholder="e.g. Bach, Johann Sebastian">
                 </div>
                 <div id="composer_suggestion_menu" style="padding-left:120px"></div>
                 <div id="composer_error"></div>
@@ -242,10 +275,12 @@ $(document).ready(function($)
                     <div class="col-md-6">
                         <div class="form-group">
                             <div class="input-group">
-                                <span class="input-group-addon">Composition Start Date</span>
-                                <input type='date' name="composition_start_date" id="composition_start_date" max="2000-01-01" class="form-control unstyled"
-                                       data-toggle="popover" data-placement="left" data-trigger="focus" title="Dates"
-                                       data-content="If an exact date is not know, you may simply specify the year of composition by inputing 01/01/YEAR"/>
+                                <span class="input-group-addon" data-toggle="popover" data-placement="top" data-trigger="focus" data-html='true' title="<b>Composition Start Date</b> <span class='label label-warning pull-right'>Optional</span>"
+                                      data-viewport="#new-piece-form" data-content="The date work began on the piece.<br>
+                                      <ul><li>If only one date is known, submit it as the 'Composition End Date'.</li>
+                                        <li>If you don’t know the date(s) of the piece, input a reasonable date range (e.g. adult years of composer’s life, or date range of sources in which it
+                                      is found; you can also use dates from Grove).</li><li>If only the year is known, input 01/01/YYYY.</li></ul>">Composition Start Date</span>
+                                <input type='date' name="composition_start_date" id="composition_start_date" autocomplete='off' max="2000-01-01" class="form-control unstyled upload-input-field"/>
                             </div>
                             <div id="composition_start_date_error"></div>
                         </div>
@@ -253,8 +288,10 @@ $(document).ready(function($)
                     <div class="col-md-6">
                         <div class="form-group">
                             <div class="input-group">
-                                <span class="input-group-addon">Composition End Date</span>
-                                <input type='date' name="composition_end_date" id="composition_end_date" max="2000-01-01" class="form-control unstyled"/>
+                                <span class="input-group-addon" data-toggle="popover" data-placement="top" data-trigger="focus" data-html='true' title="<b>Composition End Date</b><span class='label label-primary pull-right'>Required</span>"
+                                      data-content="The date the piece was completed, or the first date of publication.<br><ul><li>If you don’t know the date(s) of the piece, input a reasonable date range (e.g. adult years of composer’s life,
+                                      or date range of sources in which it is found; you can also use dates from Grove).</li><li>If only the year is known, input 01/01/YYYY.</li></ul>">Composition End Date</span>
+                                <input type='date' name="composition_end_date" id="composition_end_date" autocomplete='off' max="2000-01-01" class="form-control unstyled upload-input-field"/>
                             </div>
                             <div id="composition_end_date_error"></div>
                         </div>
@@ -262,7 +299,7 @@ $(document).ready(function($)
                 </div>
                 <hr>
                 <div class="text-right">
-                    <button type='button' id='nexttab1'  class='btn btn-success'>Next<span class='glyphicon glyphicon-chevron-right'></span></button>
+                    <button type='button' class='btn btn-success next-tab'>Next <span class='glyphicon glyphicon-chevron-right'></span></button>
                 </div>
             </div>
 
@@ -279,8 +316,11 @@ $(document).ready(function($)
                     <div class="col-md-12">
                         <div class="form-group">
                             <div class="input-group">
-                                <span class="input-group-addon">Collections</span>
-                                <input type="text" id="collections" name="collections" autocomplete="off" class="form-control" placeholder="e.g. Prof.Fujinaga's Collection; McGill Collection">
+                                <span class="input-group-addon" data-toggle="popover" data-placement="top" data-trigger="focus" data-html='true' title="<b>Collections</b><span class='label label-warning pull-right'>Optional</span>"
+                                      data-viewport="#upload-box" data-content="A collection is user-defined grouping of pieces. The collection can be based on date, uploader,
+                                       composer - or any other parameter. If you input a collection name which is not already in the database, this new
+                                       collection will be created and visible to the public. You can make the collection private on the <a href='/collections/?creator={{ user.username }}' target='_blank'>My Collections</a> page">Collections</span>
+                                <input type="text" id="collections" name="collections" autocomplete="off" class="form-control upload-input-field" placeholder="e.g. Prof.Fujinaga's Collection; McGill Collection">
                             </div>
                             <div id="collection_suggestion_menu" style="padding-left:120px"></div>
                             <div id="collections_error"></div>
@@ -291,8 +331,9 @@ $(document).ready(function($)
                     <div class="col-md-6">
                         <div class="form-group">
                             <div class="input-group">
-                                <span class="input-group-addon">Languages</span>
-                                <input type='text' name="languages" id="languages" autocomplete="off" placeholder="e.g. English; German" class="form-control unstyled"/>
+                                <span class="input-group-addon" data-toggle="popover" data-placement="top" data-trigger="focus" data-html='true' title="<b>Languages</b><span class='label label-warning pull-right'>Contextual</span>"
+                                      data-viewport="#new-piece-form" data-content="Languages are required if the piece is <b>Vocal</b> or <b>Mixed</b>, but <i>should be left blank for</i> <b>Instrumental</b> pieces.">Text Language</span>
+                                <input type='text' name="languages" id="languages" autocomplete="off" placeholder="e.g. English; German" class="form-control unstyled upload-input-field"/>
                             </div>
                             <div id="language_suggestion_menu" style="padding-left:120px"></div>
                             <div id="languages_error"></div>
@@ -301,8 +342,9 @@ $(document).ready(function($)
                     <div class="col-md-6">
                         <div class="form-group">
                             <div class="input-group">
-                                <span class="input-group-addon">Genres</span>
-                                <input type='text' name="genres" id="genres" autocomplete="off" placeholder="e.g. Mass" class="form-control unstyled"/>
+                                <span class="input-group-addon" data-toggle="popover" data-placement="top" data-trigger="focus" data-html='true' title="<b>Genres</b> <span class='label label-primary pull-right'>Required</span>"
+                                       data-content="If present, select a genres from the drop-down list.">Genres</span>
+                                <input type='text' name="genres" id="genres" autocomplete="off" placeholder="e.g. Mass" class="form-control unstyled upload-input-field"/>
                             </div>
                             <div id="genre_suggestion_menu" style="padding-left:120px"></div>
                             <div id="genres_error"></div>
@@ -313,8 +355,15 @@ $(document).ready(function($)
                     <div class="col-md-6">
                         <div class="form-group">
                             <div class="input-group">
-                                <span class="input-group-addon">Num. of Voices</span>
-                                <input type='number' name="number_of_voices" autocomplete="off" placeholder="e.g. 2" id="number_of_voices" max="100" class="form-control unstyled"/>
+                                <span class="input-group-addon" data-toggle="popover" data-placement="top" data-trigger="focus" data-html='true' title="<b>Number of Voices</b> <span class='label label-primary pull-right'>Required</span>"
+                                       data-viewport="#upload-box" data-content="Follow these rules for polyphonic instruments (keyboard, lute, guitar):<br><br>
+                                      <ul>
+                                       <li>If the piece has clearly defined independent voices for the whole piece (e.g. 2-part invention) list the number of voices</li>
+                                       <li>If the individual voices are not clearly defined, or the voice leading is free, input 0.</li>
+                                       <li>List the basso continuo as one voice.</li>
+                                      </ul>">
+                                    Num. of Voices</span>
+                                <input type='number' name="number_of_voices" autocomplete="off" placeholder="e.g. 2" id="number_of_voices" max="100" class="form-control unstyled upload-input-field" onkeypress='return event.charCode >= 48 && event.charCode <= 57'/>
                             </div>
                             <div id="number_of_voices_error"></div>
                         </div>
@@ -322,11 +371,12 @@ $(document).ready(function($)
                     <div class="col-md-6">
                         <div class="form-group">
                             <div class="input-group">
-                                <span class="input-group-addon">Place of Origin</span>
-                                <input type='text' name="locations" id='locations' autocomplete="off" placeholder="e.g. France" class="form-control unstyled"/>
+                                <span class="input-group-addon" data-toggle="popover" data-placement="top" data-trigger="focus" data-html='true' title="<b>Instrumentation</b> <span class='label label-primary pull-right'>Required</span>"
+                                      data-content="Use semicolons as a separator for the list of instruments in the piece.">Instrumentation</span>
+                                <input type='text' name="instruments_voices" autocomplete="off" id="instruments_voices" placeholder="e.g. Harpsichord" class="form-control unstyled upload-input-field"/>
                             </div>
-                            <div id="location_suggestion_menu" style="padding-left:120px"></div>
-                            <div id="locations_error"></div>
+                            <div id="instrumentation_suggestion_menu" style="padding-left:120px"></div>
+                            <div id="instruments_voices_error"></div>
                         </div>
                     </div>
                 </div>
@@ -334,8 +384,9 @@ $(document).ready(function($)
                     <div class="col-md-6">
                         <div class="form-group">
                             <div class="input-group">
-                                <span class="input-group-addon">Sources</span>
-                                <input type='text' name="sources" id="sources" autocomplete="off" placeholder="e.g. McGill" class="form-control unstyled"/>
+                                <span class="input-group-addon" data-toggle="popover" data-placement="top" data-trigger="focus" data-html='true' title="<b>Sources</b> <span class='label label-warning pull-right'>Optional</span>"
+                                      data-content="Use this field to specify the source(s) of the piece (e.g. manuscript or print), not the source of the files you are uploading.">Sources</span>
+                                <input type='text' name="sources" id="sources" autocomplete="off" placeholder="Manuscript" class="form-control unstyled upload-input-field"/>
                             </div>
                             <div id="source_suggestion_menu" style="padding-left:120px"></div>
                             <div id="sources_error"></div>
@@ -344,11 +395,12 @@ $(document).ready(function($)
                     <div class="col-md-6">
                         <div class="form-group">
                             <div class="input-group">
-                                <span class="input-group-addon">Instrumentation</span>
-                                <input type='text' name="instruments_voices" autocomplete="off" id="instruments_voices" placeholder="e.g. Harpsichord" class="form-control unstyled"/>
+                                    <span class="input-group-addon" data-toggle="popover" data-placement="top" data-trigger="focus" data-html='true' title="<b>Place of Origin</b> <span class='label label-warning pull-right'>Optional</span>"
+                                          data-content="Indicate the region where the piece might have been composed. General terms are preferred (e.g. Low Countries; Austria, not Vienna; Italy, not Rome)">Place of Origin</span>
+                                <input type='text' name="locations" id='locations' autocomplete="off" placeholder="e.g. France" class="form-control unstyled upload-input-field"/>
                             </div>
-                            <div id="instrumentation_suggestion_menu" style="padding-left:120px"></div>
-                            <div id="instrument_voices_error"></div>
+                            <div id="location_suggestion_menu" style="padding-left:120px"></div>
+                            <div id="locations_error"></div>
                         </div>
                     </div>
                 </div>
@@ -379,11 +431,11 @@ $(document).ready(function($)
                                 <input type="radio" name="vocalization" value="Mixed"> Mixed
                             </label>
                         </div>
-                        <div id="religiosity_error"></div>
+                        <div id="vocalization_error"></div>
                     </div>
                 </div>
                 <br>
-                <h4>Piece Comment</h4>
+                <h4>Comments</h4>
                 <div class="form-group">
                   <textarea class="form-control" rows="7" name="comment" id="comment" style="resize:vertical"></textarea>
                 </div>
@@ -403,8 +455,10 @@ $(document).ready(function($)
                     <div id="tags_error"></div>
                 </div>
                 <hr>
+
                 <div class="text-right">
-                    <button type='button' id='nexttab2' class='btn btn-success'>Next<span class='glyphicon glyphicon-chevron-right'></span></button>
+                    <button type='button' class='btn btn-primary back-tab'><span class='glyphicon glyphicon-chevron-left'></span> Back</button>
+                    <button type='button' class='btn btn-success next-tab'>Next <span class='glyphicon glyphicon-chevron-right'></span></button>
                 </div>
             </div>
 
@@ -470,8 +524,10 @@ $(document).ready(function($)
                     <hr>
                     <div><button id="new_mov" type="button" class="btn btn-default" >Add Movement</button></div>
                 </div>
+                <hr>
                 <div class="text-right">
-                    <button type='submit' id='piece-submit' class='btn btn-success'>Submit<span class='glyphicon glyphicon-chevron-right'></span></button>
+                    <button type='button' class='btn btn-primary back-tab'><span class='glyphicon glyphicon-chevron-left'></span> Back</button>
+                    <button type='submit' id='piece-submit' class='btn btn-success'>Submit</button>
                 </div>
             </div>
         </div>

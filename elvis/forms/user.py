@@ -30,16 +30,16 @@ class UserForm(UserCreationForm):
 
         return user
 
-class UserUpdateForm(forms.ModelForm):
+class UserChangeForm(forms.ModelForm):
     class Meta:
         model = User
-        fields = ['username', 'email', 'first_name', 'last_name']
+        fields = ['email', 'first_name', 'last_name']
 
-    username = forms.CharField(required=False)
-    first_name = forms.CharField(max_length=255, required=False)
-    last_name = forms.CharField(max_length=255, required=False)
-    email = forms.EmailField(required=False)
-
+    def __init__(self, *args, **kwargs):
+        super(UserChangeForm, self).__init__(*args, **kwargs)
+        f = self.fields.get('user_permissions', None)
+        if f is not None:
+            f.queryset = f.queryset.select_related('content_type')
 
 
 class InviteUserForm(forms.Form):

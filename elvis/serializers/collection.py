@@ -59,8 +59,8 @@ class CollectionSerializer(serializers.HyperlinkedModelSerializer):
     item_id = serializers.ReadOnlyField(source='pk')
     created = serializers.DateTimeField(format=None)
     updated = serializers.DateTimeField(format=None)
-    free_movements = MovementCollectionSerializer(many=True)
-    free_movements_count = serializers.IntegerField()
+    movements = MovementCollectionSerializer(many=True)
+    movement_count = serializers.IntegerField()
 
     class Meta:
         model = Collection

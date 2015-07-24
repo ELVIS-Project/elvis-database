@@ -3,8 +3,8 @@ from rest_framework.response import Response
 from django.http import HttpResponse, QueryDict
 from rest_framework import status
 from rest_framework.renderers import JSONRenderer
-import json
-import datetime
+from django.conf import settings
+
 
 from elvis.serializers.search import SearchSerializer
 from django.core.serializers.json import DjangoJSONEncoder
@@ -12,12 +12,7 @@ from elvis.renderers.custom_html_renderer import CustomHTMLRenderer
 from elvis.helpers.solrsearch import SolrSearch
 
 from elvis.helpers import paginate
-
-from django.conf import settings
-
-import operator
-
-import types
+import json
 
 
 class SearchViewHTMLRenderer(CustomHTMLRenderer):
@@ -29,9 +24,10 @@ class SearchView(APIView):
     renderer_classes = (JSONRenderer, SearchViewHTMLRenderer)
 
     def get(self, request, *args, **kwargs):
-        if 'q' not in request.GET:
-            response = Response(status=status.HTTP_200_OK)
-            return response
+
+        #if 'q' not in request.GET:
+        #    response = Response(status=status.HTTP_200_OK)
+        #    return response
 
         querydict = request.GET
 
@@ -44,11 +40,11 @@ class SearchView(APIView):
         facets = s.facets(facet_fields=['type', 'composer_name', 'tags',  'parent_collection_names', 'number_of_voices'])  # LM TODO add here when facets are decided
 
         facet_fields = facets.facet_counts['facet_fields']        
-        facet_type = sorted(facet_fields['type'].iteritems(), key=lambda (k,v): (v,k), reverse=True)
-        facet_composer_name = sorted(facet_fields['composer_name'].iteritems(), key=lambda (k,v): (v,k), reverse=True)
-        facet_tags = sorted(facet_fields['tags'].iteritems(), key=lambda (k,v): (v,k), reverse=True)
-        facet_number_of_voices = sorted(facet_fields['number_of_voices'].iteritems(), key=lambda (k,v): (v,k), reverse=True)
-        facet_parent_collection_names = sorted(facet_fields['parent_collection_names'].iteritems(), key=lambda (k,v):(v, k), reverse=True)
+        facet_type = {t:s for (t,s) in facet_fields['type'].iteritems()}
+        facet_composer_name = {t:s for (t,s) in facet_fields['composer_name'].iteritems()}
+        facet_tags = {t:s for (t,s) in facet_fields['tags'].iteritems()}
+        facet_number_of_voices = {t:s for (t,s) in facet_fields['number_of_voices'].iteritems()}
+        facet_parent_collection_names = {t:s for (t,s) in facet_fields['parent_collection_names'].iteritems()}
 
         facet_fields = {
             'type': facet_type,
@@ -102,17 +98,20 @@ class SearchView(APIView):
         except KeyError:
             pass
 
-        query_minus_page = query_minus_page.urlencode(['*'])     
-
-        if request.GET.get('format') == 'json' or 'json' in request.META.get('HTTP_ACCEPT'):
+        query_minus_page = query_minus_page.urlencode(['*'])
+        try:
             result = paged_results.__dict__
-            result['object_list'] = [item.__dict__ for item in result['object_list']]
-            result['paginator'] = result['paginator'].__dict__
-            result['paginator'].pop('result', None)
-            result['paginator'].pop('query', None)
-            response = HttpResponse(json.dumps(result, cls=DjangoJSONEncoder), content_type='application/json')
-            return response
+        except AttributeError:
+            return Response({'object_list': []}, status=status.HTTP_200_OK)
+        result['object_list'] = [item.__dict__ for item in result['object_list']]
+        result['paginator'] = result['paginator'].__dict__
+        result['paginator'].pop('query', None)
+        result['paginator']['params'].update({'q': request.GET.get('q')})
+        result['paginator'].update({'total_pages': paginator.num_pages})
+        result['facets'] = facets.facet_counts
+        result['facet_names'] = settings.FACET_NAMES
+        del result['result']
+        del result['paginator']['result']
 
-        result = {'results': paged_results, 'facets': facets.facet_counts, 'current_query': query_minus_page, 'FACET_NAMES': settings.FACET_NAMES, 'TYPE_NAMES': settings.TYPE_NAMES}
         response = Response(result, status=status.HTTP_200_OK)
         return response

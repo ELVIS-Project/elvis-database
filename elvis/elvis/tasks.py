@@ -1,4 +1,3 @@
-from __future__ import absolute_import
 
 import urllib2
 import os
@@ -11,13 +10,13 @@ import zipfile
 from django.conf import settings
 from .celery import app
 
-@app.task(name='elvis.elvis.tasks.rebuild_suggesters')
+@app.task(name='elvis.elvis.rebuild_suggesters')
 def rebuild_suggester_dicts():
     """Rebuild all suggester dictionaries in Solr"""
     for d in settings.SUGGEST_DICTS:
         urllib2.urlopen(settings.SOLR_SERVER + "/suggest/?suggest.dictionary={0}&suggest.reload=true".format(d))
 
-@app.task(name='elvis.elvis.clean_zip_files')
+@app.task(name='elvis.elvis.zip_files')
 def zip_files(paths, username):
     # Start with status at 0 - so jQuery has something to do
     i = 0
@@ -83,7 +82,6 @@ def clean_zip_files():
                 print "Deleting " + str(task_dir_path)
                 shutil.rmtree(task_dir_path)
     return True
-
 
 def int_round(num):
     if (num > 0):

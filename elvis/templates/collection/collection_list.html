@@ -1,28 +1,55 @@
 {% extends "base.html" %}
 
 {% block extra_hd %}
-<title>Collections</title>
+    <title>Collections</title>
+
+    <script>
+        $(document).ready(function ($)
+        {
+            creatorQuery();
+
+            function creatorQuery()
+            {
+                var qstr = window.location.search.replace("?", "");
+                var qstr_params = $.parseParams(qstr);
+                if (qstr)
+                {
+                    $("#page-header").text(qstr_params['creator'] + "'s Collections")
+                }
+                else
+                {
+                    $("#page-header").text("Collections")
+                }
+            }
+        })
+    </script>
 {% endblock %}
 
 {% block wrap %}
     <div class="page-header">
-        <h2>Collections</h2>
+        <h2 id="page-header"></h2>
     </div>
 
     {% include "paginate.html" with content=content %}
 
     <div class="list-group">
-    {% for collection in content.results %}
-        <a class="list-group-item" href="{{ collection.url }}">
-            <span class="badge alert-info">{{ collection.piece_count}} Pieces, {{ collection.movement_count }} Movements</span>{% if not collection.public %} <span class="badge alert-danger">PRIVATE </span>{% endif %}
-            <h4 class="list-group-item-header">{% include "includes/download-badge-inc.html" with download_type="elvis_collection" download_item_id=collection.item_id %}{{ collection.title }}</h4>
+        {% for collection in content.results %}
+            <a class="list-group-item" href="{{ collection.url }}">
+                <span class="badge alert-info">{{ collection.piece_count }} Pieces, {{ collection.movement_count }} Movements</span>
+                {% if not collection.public %} <span class="badge alert-danger">PRIVATE </span>{% endif %}
+                <h4 class="list-group-item-header">
+                    {% include "includes/download-badge-inc.html" with download_type="elvis_collection" download_item_id=collection.item_id %}{{ collection.title }}</h4>
 
-            <p class="list-group-item-text">
-                <small>Created by {{ collection.creator.full_name }} on {{ collection.created }}</small><br />
-                {{ collection.comment | default_if_none:"No Comment" | truncatechars:100 }}
-            </p>
-        </a>
-    {% endfor %}
+                <p class="list-group-item-text">
+                    <small>Created by {{ collection.creator.full_name }} on {{ collection.created }}</small>
+                    <br/>
+                    {{ collection.comment | default_if_none:"No Comment" | truncatechars:100 }}
+                </p>
+            </a>
+        {% endfor %}
+        {% if not content.results %}
+            <div class="text-center"><h4>There's nothing here!</h4></div>
+        {% endif %}
     </div>
 
     {% include "paginate.html" with content=content %}

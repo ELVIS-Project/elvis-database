@@ -3,10 +3,7 @@ from __future__ import unicode_literals
 
 from django.db import models, migrations
 import django.db.models.deletion
-import datetime
-import elvis.models.composer
 from django.conf import settings
-import elvis.models.userprofile
 import elvis.models.attachment
 
 
@@ -64,7 +61,6 @@ class Migration(migrations.Migration):
                 ('name', models.CharField(max_length=255)),
                 ('birth_date', models.DateField(null=True, blank=True)),
                 ('death_date', models.DateField(null=True, blank=True)),
-                ('picture', models.ImageField(null=True, upload_to=elvis.models.composer.picture_path, blank=True)),
                 ('created', models.DateTimeField(auto_now_add=True)),
                 ('updated', models.DateTimeField(auto_now=True)),
             ],
@@ -112,7 +108,6 @@ class Migration(migrations.Migration):
                 ('name', models.CharField(max_length=255)),
                 ('birth_date', models.DateField(null=True, blank=True)),
                 ('death_date', models.DateField(null=True, blank=True)),
-                ('picture', models.TextField(max_length=100, null=True, blank=True)),
                 ('created', models.DateTimeField(editable=False, blank=True)),
                 ('updated', models.DateTimeField(editable=False, blank=True)),
                 ('history_id', models.AutoField(serialize=False, primary_key=True)),
@@ -233,7 +228,7 @@ class Migration(migrations.Migration):
             fields=[
                 ('id', models.AutoField(verbose_name='ID', serialize=False, auto_created=True, primary_key=True)),
                 ('query', models.CharField(max_length=255)),
-                ('created', models.DateTimeField(default=datetime.datetime.now, blank=True)),
+                ('created', models.DateTimeField(auto_now_add=True)),
             ],
         ),
         migrations.CreateModel(
@@ -287,7 +282,6 @@ class Migration(migrations.Migration):
             name='UserProfile',
             fields=[
                 ('id', models.AutoField(verbose_name='ID', serialize=False, auto_created=True, primary_key=True)),
-                ('picture', models.ImageField(null=True, upload_to=elvis.models.userprofile.picture_path, blank=True)),
                 ('user', models.OneToOneField(to=settings.AUTH_USER_MODEL)),
             ],
         ),

@@ -46,7 +46,7 @@ class Movement(models.Model):
         return u"{0}".format(self.title)
 
     def movement_collections(self):
-        return " ".join([collection.title for collection in self.collections.all()])
+        return " ".join([collection.title if collection.public else "" for collection in self.collections.all()])
 
     def movement_genres(self):
         return " ".join([genre.name for genre in self.genres.all()])
@@ -102,11 +102,6 @@ def solr_index(sender, instance, created, **kwargs):
     for source in movement.sources.all():
         sources.append(source.name)
 
-    collections = []
-    if movement.collections.all():
-        collections = []
-        for collection in movement.collections.all():
-            collections.append(collection.title)
     if movement.piece:
         parent_piece = movement.piece.title
     else:
@@ -122,7 +117,6 @@ def solr_index(sender, instance, created, **kwargs):
          'created': movement.created,
          'updated': movement.updated,
          'parent_piece_name': parent_piece,
-         'parent_collection_names': collections,
          'composer_name': movement.composer.name,
          'uploader_name': movement.uploader,
          'tags': tags,

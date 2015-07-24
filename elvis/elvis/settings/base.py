@@ -8,8 +8,6 @@ For the full list of settings and their values, see
 https://docs.djangoproject.com/en/1.6/ref/settings/
 """
 from __future__ import absolute_import
-# for dynamic SECRET_KEY generation
-from random import SystemRandom
 
 # for scheduling file removal using celery
 from celery import schedules
@@ -24,23 +22,18 @@ BASE_DIR = os.path.abspath('./elvis')
 # SECURITY WARNING: keep the secret key used in production secret!
 # SECURITY WARNING: don't run with debug turned on in production!
 
-DEBUG = True
+DEBUG = False
 
 
 # Simple Settings
 # ===============
 
-#ALLOWED_HOSTS = ['database.elvisproject.ca', 'db-devel.elvisproject.ca']# if PRODUCTION else []
+ALLOWED_HOSTS = ['database.elvisproject.ca', 'db-devel.elvisproject.ca']
 
 #TODO Write email settings for password recover feature after depoloyment.
 
-if not DEBUG:
-    # TODO: Try loading from a temp file; if not present, automatically generate SECRET_KEY then
-    #       save it to the temp file. This would mean changing the SECRET_KEY on every reboot,
-    #       which isn't particularly detrimental to anyone.
-    SECRET_KEY = ''
-else:
-    SECRET_KEY = '85k%wv*)+qz$(iwcd(!v9=nn@&gb5+_%if)(fxbgzz&4g2+l%t'
+with open('/etc/elvis_secretkey.txt') as f:
+    SECRET_KEY = f.read().strip()
 
 
 # Application Definition
@@ -81,24 +74,23 @@ MIDDLEWARE_CLASSES = (
 # ======================
 BROKER_URL = 'django://'
 
-if DEBUG:
-    DATABASES = {
-        'default': {
-            'ENGINE': 'django.db.backends.postgresql_psycopg2',
-            'NAME': 'elvis-database',
-            }
-    }
-else:
-    DATABASES = {
-        'default': {
-            'ENGINE': 'django.db.backends.postgresql_psycopg2',
-            'NAME': 'elvisdatabase',
-            'USER': 'elvisdatabase',
-            'PASSWORD': '5115C67O2v3GN31T49Md',
-            'HOST': '',  # empty means localhost through domain sockets
-            'PORT': '',  # empty means 5432
+DATABASES = {
+    'default': {
+        'ENGINE': 'django.db.backends.postgresql_psycopg2',
+        'NAME': 'elvis2',
+        'USER': 'elvisdatabase',
+        'PASSWORD': '5115C67O2v3GN31T49Md'
         }
-    }
+}
+
+# Email Settings
+# ==============
+EMAIL_USE_TLS = True
+EMAIL_HOST = 'smtp.gmail.com'
+EMAIL_PORT = 587
+EMAIL_HOST_USER = 'elvisdatabase@gmail.com'
+with open('/etc/elvis_emailpass.txt') as f:
+    EMAIL_HOST_PASSWORD = f.read().strip()
 
 # Internationalization
 # ====================
@@ -114,17 +106,17 @@ USE_TZ = True
 # CRA: we used to have composer images and user profile images; if we need
 #      them back, check commit dc8f8afe75b7137440c6488483566b8e2c366379
 MEDIA_URL = '/media/'
-MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
+MEDIA_ROOT = '/usr/local/elvis-database/media_root'
 
 
 STATIC_URL = '/static/'
-STATIC_ROOT = os.path.join(BASE_DIR, 'static')
+STATIC_ROOT = '/usr/local/elvis-database/static_root'
 
 
 # Solr Settings
 # =============
 
-SOLR_SERVER = "http://localhost:8080"
+SOLR_SERVER = "http://localhost:8080/elvis-solr"
 
 SEARCH_FILTERS_DICT = {
     'fcp': 'elvis_composer',
@@ -166,6 +158,6 @@ CELERYBEAT_SCHEDULE = {
 
 # Elvis Web App Settings
 # ======================
-ELVIS_EXTENSIONS = ['.xml', '.mxl', '.krn', '.md', '.nwc', '.tntxt', '.capx', '.abc', '.mid', '.midi', '.pdf']
+ELVIS_EXTENSIONS = ['.xml', '.mxl', '.krn', '.md', '.nwc', '.tntxt', '.capx', '.abc', '.mid', '.midi', '.pdf', '.mei']
 ELVIS_BAD_PREFIX = ['.', '..', '_', '__']
 SUGGEST_DICTS = ['composerSuggest', 'pieceSuggest', 'collectionSuggest', 'languageSuggest', 'genreSuggest', 'locationSuggest', 'sourceSuggest', 'instrumentSuggest']

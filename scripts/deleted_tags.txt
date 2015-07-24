@@ -1,0 +1,422 @@
+INSTRUMENTS
+sacred
+secular
+Palestrina, Giovanni Pierluigi da
+Josquin Des Prez
+Lassus, Orlande de
+Latin
+Lied
+piano
+German
+Grieg, Edvard
+Isaac, Henricus
+rondeau
+check ficta
+Machaut, Guillaume de
+Milan
+Italy
+madrigal
+spiritual madrigal
+Caracciolo, Paolo
+Diniset
+obbligato
+soprano
+trombone
+bc
+Fux, Johann Joseph
+hymn
+Meeting Minutes
+Active Topics
+Lotti, Antonio
+Deiss, Michael
+Martini, Johannes
+Weerbeke, Gaspar van
+Willaert, Adrian
+Mouton, Jean
+Anonymous
+Coppini, Alessandro
+parody mass
+paraphrase mass
+tenor mass
+Rome
+Final Pitches
+free mass
+Rore, Cipriano de
+Monte, Philippe de
+La Rue, Pierre de
+Rebelo, João Lourenço
+greghesca
+Grisonio, Daniel
+Wert, Giaches de
+polyphonic instrument
+lute
+opera
+Italian
+aria
+da capo aria
+Handel, George Frideric
+opera seria
+song
+Ockeghem, Jean de
+Greek
+la spagna
+cantata
+Bach, Johann Sebastian
+SATB
+cornetto
+bach-cantatas.com
+dance
+ballade
+French
+LilyPond
+Maistre Jhan
+Agricola, Alexander
+Archived Topics
+check final
+choralwiki
+chanson
+violin
+viola
+check continuo figures
+Obrecht, Jacob
+check date
+check number of voices
+Busnoys, Antoine
+organ
+WIMA
+SOURCE INFORMATION
+PRINTER
+web source(s)
+Check
+Du Fay, Guillaume
+isorhythmic motet
+cantilena motet
+Touront, Johannes
+Ghiselin, Johannes
+check to be deleted
+virelai
+Brumel, Antoine
+motto mass
+Plummer, John
+de Lisle, Simon
+Barbingant
+Wegman
+chant paraphrase
+Pipelare, Matthaeus
+Heyns, Cornelius
+sine nomine mass
+Prioris, Johannes
+Hayne van Ghizeghem
+Power, Leonel
+Aulen
+Févin, Antoine de
+PRE-EXISTING MATERIAL
+Caron, Firminus
+cantus firmus mass
+Carlir, Nicole
+Divitis, Antonius
+waltz
+Schubert, Franz
+Austria
+theme and variations
+character piece
+march
+fantasy
+solo dances
+Major and Minor Keys
+requiem
+Du Sart, Jean
+impromptu
+Ländler
+sonata
+orchestra
+polonaise
+solo with orchestra
+piano quintet
+string quartet
+choral
+string quintet
+bassoon
+clarinet
+horn
+chamber music
+monophonic instruments
+chorale
+solo sonata
+minuet
+scherzo
+MOVEMENT TYPE/ORDER
+Richafort, Jean
+rondo
+duo sonata
+symphony
+Basiron, Philippe
+introit
+requiem aeternam
+communion
+tenor
+song cycle
+VOICE NAMES
+HISTORICAL PERIOD
+Mass Types
+Haydn, Joseph
+dance movement
+Dutch
+divertimento
+Dunstaple, John
+AUTHORSHIP ISSUES
+baryton
+cello
+flute
+trio
+piano trio
+spurious arrangement
+concerto
+oboe
+strings
+Palestrina Mass Books
+solo dance
+keyboard
+trumpet
+timpani
+double bass
+check index number
+oratorio
+double bassoon
+Major Keys
+Minor Keys
+english horn
+check delete movement
+check split files
+Faugues, Guillaume
+check composer
+Yacten
+Eleganzer
+Benet, John
+Hassler, Hans Leo
+Orto, Marbianus de
+Févin, Robert de
+harpsichord
+chaconne
+passacalia
+ground
+England
+Yale
+Byrd, William
+check key
+prelude
+fugue
+variation
+allemande
+other dance
+galliard
+pavane
+courante
+gigue
+hornpipe
+check title
+solo
+suite
+partita
+Germany
+sarabande
+bouree
+gavotte
+air
+prelude and fugue
+fantasy and fugue
+toccata and fugue
+toccata
+canzona
+pastorale
+etude
+chorale prelude
+invention
+sinfonia
+capriccio
+burlesca
+passapied
+concerto and fugue
+Scarlatti, Domenico
+Bedyngham, Johannes
+Biber, Heinrich Ignaz Franz von
+concerto da chiesa
+sonata da chiesa
+mazurka
+Poland
+Chopin, Fryderyk Franciszek
+nocturne
+barcarole
+contralto
+duet
+Polish
+anthem
+English
+ode
+recitative
+recorder
+bass
+France
+Casadesus, Henri
+musette
+siciliana
+alto
+Severdonck, Henricus
+Thérache, Pierrequin de
+throw out?
+Grossin, Estienne
+FEAST
+GENRE
+TEMPO DESIGNATION
+instrumental
+ambiguous (instrumental or vocal)
+explain
+Poet or Librettist
+KEYS AND FINALS
+STYLE DESCRIPTORS
+ambiguous (sacred or secular)
+contributor collection
+JRP
+SATTB
+SSATB
+SSAATB
+SSAATBB
+SAATBB
+SSATBB
+Bauldeweyn, Noel
+AATB
+AATBB
+Moulu, Pierre
+Senfl, Ludwig
+Carpentras
+DDATB
+SATBB
+DDCTB
+DATB
+Caen, Arnold
+SATTBB
+SAATTB
+SAATVB
+Pesenti, Michele
+SSA
+Gregoire
+DATBB
+DATSBB
+Brunet, Johannes
+SAATB
+SATQB
+quintus
+sextus
+Verdelot, Philippe
+Peñalosa, Francisco
+discantus
+contratenor
+Stoltzer, Thomas
+check catalogue number
+superius
+vagans
+baryphonus
+Regis, Johannes
+Forestier, Mathurin
+Champion, Nicolas
+ATB
+Lannoy, Colinet de
+Japart, Jean
+STBB
+Appenzeller, Benedictus
+Parncutt
+Jacopo da Bologna
+ballata
+Landini, Francesco
+Solage
+Vitry, Philippe de
+vagrans
+Le Brung, Jean
+Wolff, Martin
+Craen, Nicolaus
+cantus
+De Silva, Andreas
+Ninot le Petit
+Tadinghen, Ja
+Domarto, Petrus de
+Mozart, Wolfgang Amadeus
+Other Middle Movement
+Choir Parts
+Beethoven, Ludwig van
+Duchemin
+COMPOSER (alternate, if conflicting attr.)
+MISCELLANIOUS
+TODO
+FILE TYPES (N.B. Usually not tagged)
+INCOMPLETE
+COUNTRY
+Language
+TEXT (lyrics)
+Regnes, Nicole
+Maillard, Jean
+Le Gendre, Jean
+Pagnier, Nicolas
+Certon, Pierre
+Goudimel, Claude
+Marle, Nicolas de
+James, Jo.
+Clément
+Janequin, Clément
+Du Tertre, Estienne
+Gervaise, Claude
+Bastard, Jean
+basse danse
+Cadéac, Pierre
+altus
+bassus
+Manchicourt, Pierre de
+Guilliaud, Maximilian
+imploded midi
+Frougy
+Decapella
+Martin, Claude
+lamentation
+Victoria, Tomás Luis de
+SSATTB
+SSAATTBB
+SSAT
+Mantua
+ST
+Tchaikovsky, Peter
+bicinia
+bicinium
+Godard
+Olivier
+Guyon, Jean
+CPDL
+HarfeSoft
+Binchois, Gilles de Bins dit
+Guerrero, Francisco
+instrumental battaglia
+Gabrieli, Andrea
+instrumental sonata italy
+Gabrieli, Giovanni
+sacred JRP
+contrabassus
+contratenor bassus
+cancion
+Spanish
+Tasso, Torquato
+superious
+baritone
+Mahu, Stephan
+continuo
+Vic
+reqiuem
+magnificat
+psalm
+passion
+Goldberg
+Vincenet
+Joye, Gilles
+Morton, Robert
+Frye, Walter
+Tinctoris, Johannes
+Basin, Adrien
+Le Rouge, Guillaume
+De Latre, Petit Jean

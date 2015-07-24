@@ -41,6 +41,9 @@ class Collection(models.Model):
 def solr_index(sender, instance, created, **kwargs):
     if kwargs.get('raw', False):
         return False
+    if not instance.public:
+        solr_delete(sender, instance)
+        return False
 
     import uuid
     import solr
@@ -63,6 +66,7 @@ def solr_index(sender, instance, created, **kwargs):
          'collections_searchable': collection.title}
     solrconn.add(**d)
     solrconn.commit()
+
 
 @receiver(post_delete, sender=Collection)
 def solr_delete(sender, instance, **kwargs):

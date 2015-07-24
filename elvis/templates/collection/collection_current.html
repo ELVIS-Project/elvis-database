@@ -1,157 +1,195 @@
 {% extends "base.html" %}
 
 {% block extra_hd %}
-<style>
-th.headerSortUp {
-    background: url({{ STATIC_URL }}img/small_asc.gif);
-}
-th.headerSortDown {
-    background: url({{ STATIC_URL }}img/small_desc.gif);
-}
-th.header {
-    cursor: pointer;
-    font-weight: bold;
-    background-repeat: no-repeat;
-    background-position: center right;
-    padding-left: 20px;
-    margin-left: -1px;
+    <style>
+        th.headerSortUp {
+            background: url({{ STATIC_URL }}img/small_asc.gif);
+        }
 
-}
-th.header:hover{
-    background-color: #EEEEEE;
-}
-</style>
+        th.headerSortDown {
+            background: url({{ STATIC_URL }}img/small_desc.gif);
+        }
 
-<script type='text/javascript' src="{{ STATIC_URL }}js/jquery.tablesorter.js"></script> <!-- Okay this plugin is the boss -->
-<script type="text/javascript">
-$(document).ready(function()
-{
+        th.header {
+            cursor: pointer;
+            font-weight: bold;
+            background-repeat: no-repeat;
+            background-position: center right;
+            padding-left: 20px;
+            margin-left: -1px;
 
-    $("#collection-table").tablesorter({headers: { 0: { sorter: false}, 1: {sorter: false}, 2: {sorter: false} }, textExtraction: "complex"});
+        }
+
+        th.header:hover {
+            background-color: #EEEEEE;
+        }
+    </style>
+
+    <script type='text/javascript' src="{{ STATIC_URL }}js/jquery.tablesorter.js"></script>
+    <!-- Okay this plugin is the boss -->
+    <script type="text/javascript">
+        $(document).ready(function ()
+        {
+
+            $("#collection-table").tablesorter({
+                headers: {0: {sorter: false}, 1: {sorter: false}, 2: {sorter: false}},
+                textExtraction: "complex"
+            });
 
 
-    $(".remove-row").click(function(event)
-    {
-        debugger;
-        var id = $(event.target).parents('tr').children()[1].textContent;
-        var type = $(event.target).parents('tr').children()[6].textContent;
-        $(event.target).parents('tr').remove();
-        $.ajax({
-            type: "post",
-            url: "/downloads/",
-            data: {'remove': true, 'id': id, 'type': type},
-            success: function(data)
+            $(".remove-row").click(function (event)
             {
-                var $collection_count = $("#collection-count");
-                $collection_count.fadeOut(100, function()
-                {
-                    $collection_count.text("(" + data.count + ")");
-                });
-                $collection_count.fadeIn(100);
-            }
-        })
-    });
+                debugger;
+                var id = $(event.target).parents('tr').children()[1].textContent;
+                var type = $(event.target).parents('tr').children()[6].textContent;
+                $(event.target).parents('tr').remove();
+                $.ajax({
+                    type: "post",
+                    url: "/downloads/",
+                    data: {'remove': true, 'id': id, 'type': type},
+                    success: function (data)
+                    {
+                        var $collection_count = $("#collection-count");
+                        $collection_count.fadeOut(100, function ()
+                        {
+                            $collection_count.text("(" + data.count + ")");
+                        });
+                        $collection_count.fadeIn(100);
+                    }
+                })
+            });
 
-    $("#clear-collection").click(function(event)
-    {
-        $("#collection-table").find("tbody").empty();
-        $.ajax({
-            type: "post",
-            url: "/downloads/",
-            data: {'clear-collection': true},
-            success: function(data)
+            $("#open-clear-modal").click(function()
             {
-                var $collection_count = $("#collection-count");
-                $collection_count.fadeOut(100, function()
-                {
-                    $collection_count.text("(0)");
-                });
-                $collection_count.fadeIn(100);
-            }
-        })
-    });
+                $("#clear-modal").modal("show");
+            });
 
-    $("#save-collection").click(function(event)
-    {
-        $('#save_modal').modal('show');
-    });
-
-    $("#download-collection").click(function(event)
-    {
-    $.ajax({
-            type: "post",
-            url: "/downloads/",
-            data: {'prepare-cart': true},
-            success: function(data)
+            $("#clear-collection").click(function ()
             {
-                window.location.replace("/downloads/")
-            }
-        })
-    });
+                $("#collection-table").find("tbody").empty();
+                $.ajax({
+                    type: "post",
+                    url: "/downloads/",
+                    data: {'clear-collection': true},
+                    success: function (data)
+                    {
+                        var $collection_count = $("#collection-count");
+                        $collection_count.fadeOut(100, function ()
+                        {
+                            $collection_count.text("(0)");
+                        });
+                        $collection_count.fadeIn(100);
+                    }
+                })
+            });
+
+            $("#save-collection").click(function ()
+            {
+                $('#save_modal').modal('show');
+            });
+
+            $("#download-collection").click(function ()
+            {
+                $.ajax({
+                    type: "post",
+                    url: "/downloads/",
+                    data: {'prepare-cart': true},
+                    success: function (data)
+                    {
+                        window.location.replace("/downloads/")
+                    }
+                })
+            });
 
 
-});
-</script>
+        });
+    </script>
 
 
 
 {% endblock %}
 
 {% block wrap %}
-
-<!-- Modal -->
-<div class="modal fade" id="save_modal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
-    <div class="modal-dialog">
-        <div class="modal-content">
-        <form action="/collections/" method="post" id="new-collection-form" enctype="multipart/form-data">
-            {% csrf_token %}
-            <div class="modal-header">
-                <h4 class="modal-title">Save Collection</h4>
+    <!-- Save Modal -->
+    <div class="modal fade" id="save_modal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel"
+         aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <form action="/collections/" method="post" id="new-collection-form" enctype="multipart/form-data">
+                    {% csrf_token %}
+                    <div class="modal-header">
+                        <h4 class="modal-title">Save Collection</h4>
+                    </div>
+                    <div class="modal-body">
+                        <div class="input-group">
+                            <span class="input-group-addon">Collection Title</span>
+                            <input type="text" id="title" name="title" autocomplete="off" class="form-control"
+                                   placeholder="My Great Collection">
+                        </div>
+                        <div class="btn-group btn-group-justified form-inline radio" id="permission"
+                             data-toggle="buttons">
+                            <label class="btn btn-default">
+                                <input type="radio" name="permission" value="Public"> Public
+                            </label>
+                            <label class="btn btn-default active">
+                                <input type="radio" name="permission" value="Private"> Private
+                            </label>
+                        </div>
+                    </div>
+                    <div class="form-group" style="padding-left:18px; padding-right: 18px">
+                        Comments:
+                        <textarea class="form-control" rows="7" name="comment" id="comment"
+                                  style="resize:vertical"></textarea>
+                    </div>
+                    <div class="modal-footer">
+                        <div class="text-right">
+                            <button type='submit' id='collection-submit' class='btn btn-success'>Submit<span
+                                    class='glyphicon glyphicon-chevron-right'></span></button>
+                        </div>
+                    </div>
+                </form>
             </div>
-            <div class="modal-body">
-                <div class="input-group">
-                  <span class="input-group-addon">Collection Title</span>
-                  <input type="text" id="title" name="title" autocomplete="off" class="form-control" placeholder="My Great Collection">
-                </div>
-                <div class="btn-group btn-group-justified form-inline radio" id="permission" data-toggle="buttons">
-                    <label class="btn btn-default">
-                        <input type="radio" name="permission" value="Public"> Public
-                    </label>
-                    <label class="btn btn-default active">
-                        <input type="radio" name="permission" value="Private"> Private
-                    </label>
-                </div>
-            </div>
-            <div class="form-group" style="padding-left:18px; padding-right: 18px">
-                Comments:
-                <textarea class="form-control" rows="7" name="comment" id="comment" style="resize:vertical"></textarea>
-            </div>
-            <div class="modal-footer">
-                <div class="text-right">
-                    <button type='submit' id='collection-submit' class='btn btn-success'>Submit<span class='glyphicon glyphicon-chevron-right'></span></button>
-                </div>
-            </div>
-        </form>
         </div>
     </div>
-</div>
 
-<div class="page-header">
-    <h2>Your Collection </h2>
-</div>
+    <div id="clear-modal" class="modal fade" role="dialog">
+        <div class="modal-dialog">
+            <!-- Modal content-->
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal">&times;</button>
+                    <h3 class="modal-title">Confirm clear</h3>
+                </div>
+                <div class="modal-body">
+                    <p>Are you sure you want to clear your current collection?</p>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default" data-dismiss="modal">No </button>
+                    <button id="clear-collection" type="button" class="btn btn-danger" data-dismiss="modal">
+                        <span class="glyphicon glyphicon-remove"></span> Yes
+                    </button>
+                </div>
+            </div>
 
-{% if content.collection_pieces or content.collection_movements %}
-<span class="help-block">Select items for downloading. Unwanted files may also be removed from your downloads.</span>
-    <table class="table" id="collection-table">
-        <colgroup>
-            <col class="text-center" style="width: 7%;">
-            <col class="text-center" style="width: 7%;">
-            <col style="width: 30%;">
-            <col style="width: 30%;">
-            <col style="width: 16%;">
-            <col style="width: 10%;">
-        </colgroup>
-        <thead id="table-head">
+        </div>
+    </div>
+
+    <div class="page-header">
+        <h2>Your Collection </h2>
+    </div>
+
+    {% if content.collection_pieces or content.collection_movements %}
+        <span class="help-block">Select items for downloading. Unwanted files may also be removed from your downloads.</span>
+        <table class="table" id="collection-table">
+            <colgroup>
+                <col class="text-center" style="width: 7%;">
+                <col class="text-center" style="width: 7%;">
+                <col style="width: 30%;">
+                <col style="width: 30%;">
+                <col style="width: 16%;">
+                <col style="width: 10%;">
+            </colgroup>
+            <thead id="table-head">
             <th class="text-center">Remove</th>
             <th hidden="hidden">ID</th>
             <th>Movements</th>
@@ -159,38 +197,56 @@ $(document).ready(function()
             <th>Composer</th>
             <th>Date</th>
             <th>Type</th>
-        </thead>
-        <tbody>
+            </thead>
+            <tbody>
             {% for piece in content.collection_pieces %}
                 <tr>
-                    <td class="text-center"><button type="button" class="btn btn-sm remove-row" name="remove-item"><span class="glyphicon glyphicon-remove"></span></button></td>
+                    <td class="text-center">
+                        <button type="button" class="btn btn-sm remove-row" name="remove-item"><span
+                                class="glyphicon glyphicon-remove"></span></button>
+                    </td>
                     <td style="display: none;">{{ piece.id }}</td>
-                    <td class="text-center">{% if piece.movements %} <span class="label label-primary">{{ piece.movements | length }} included</span> {% endif %}</td>
+                    <td class="text-center">{% if piece.movements %}
+                        <span class="label label-primary">{{ piece.movements | length }} included</span> {% endif %}
+                    </td>
                     <td><a href="{{ piece.url }}">{{ piece.title }}</a></td>
                     <td><a href="{{ piece.composer.url }}">{{ piece.composer.name }}</a></td>
-                    <td>{% if piece.date_of_composition  == piece.date_of_composition2 %}{{ piece.date_of_composition | date:"Y" }}{% else %}{{ piece.date_of_composition | date:"Y" }}-{{ piece.date_of_composition2 | date:"Y" }}{% endif %}</td>
+                    <td>{% if piece.date_of_composition  == piece.date_of_composition2 %}
+                        {{ piece.date_of_composition | date:"Y" }}{% else %}{{ piece.date_of_composition | date:"Y" }}-
+                        {{ piece.date_of_composition2 | date:"Y" }}{% endif %}</td>
                     <td><span class="label label-success">Piece</span></td>
                 </tr>
             {% endfor %}
             {% for movement in content.collection_movements %}
                 <tr>
-                    <td class="text-center"><button type="button" class="btn btn-sm remove-row" name="remove-item"><span class="glyphicon glyphicon-remove"></button></td>
+                    <td class="text-center">
+                        <button type="button" class="btn btn-sm remove-row" name="remove-item"><span
+                                class="glyphicon glyphicon-remove"></button>
+                    </td>
                     <td style="display: none;">{{ movement.id }}</td>
-                    <td> </td>
+                    <td></td>
                     <td><a href="{{ movement.url }}">{{ movement.title }}</a></td>
                     <td><a href="{{ movement.composer.url }}">{{ movement.composer.name }}</a></td>
-                    <td>{% if movement.date_of_composition  == movement.date_of_composition2 %}{{ movement.date_of_composition | date:"Y" }}{% else %}{{ movement.date_of_composition | date:"Y" }}-{{ movement.date_of_composition2 | date:"Y" }}{% endif %}</td>
+                    <td>{% if movement.date_of_composition  == movement.date_of_composition2 %}
+                        {{ movement.date_of_composition | date:"Y" }}{% else %}{{ movement.date_of_composition | date:"Y" }}
+                        -{{ movement.date_of_composition2 | date:"Y" }}{% endif %}</td>
                     <td><span class="label label-primary">Movement</span></td>
                 </tr>
             {% endfor %}
-        </tbody>
-    </table>
-    <br>
-    <button id="clear-collection" name="clear-collection" type="button" class="btn btn-danger" onClick="return confirm('Are you sure you want to remove these items?')"><span class="glyphicon glyphicon-remove"></span> Clear Collection</button>
-    <button id="save-collection" name="save-collection" type="button" class="btn btn-primary pull-right"><span class="glyphicon glyphicon-floppy-disk"></span> Save Collection</button>
-    <br><br>
-    <button id="download-collection" name="download-collection" type="button" class="btn btn-info pull-right"><span class="glyphicon glyphicon-download"></span> Download Collection</button>
-{% else %}
-    <div class="text-center">Nothing added yet to your collection!</div>
-{% endif %}
-{%  endblock %}
+            </tbody>
+        </table>
+        <br>
+        <button id="open-clear-modal" type="button" class="btn btn-danger">
+            <span class="glyphicon glyphicon-remove"></span> Clear Collection
+        </button>
+        <button id="save-collection" name="save-collection" type="button" class="btn btn-primary pull-right"><span
+                class="glyphicon glyphicon-floppy-disk"></span> Save Collection
+        </button>
+        <br><br>
+        <button id="download-collection" name="download-collection" type="button" class="btn btn-info pull-right"><span
+                class="glyphicon glyphicon-download"></span> Download Collection
+        </button>
+    {% else %}
+        <div class="text-center">Nothing added yet to your collection!</div>
+    {% endif %}
+{% endblock %}

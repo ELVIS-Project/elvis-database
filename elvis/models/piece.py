@@ -51,7 +51,7 @@ class Piece(models.Model):
         return " ".join([t.name for t in self.tags.all()])
 
     def piece_collections(self):
-        return " ".join([collection.title for collection in self.collections.all()])
+        return " ".join([collection.title if collection.public else "" for collection in self.collections.all()])
 
     def piece_genres(self):
         return " ".join([genre.name for genre in self.genres.all()])
@@ -108,12 +108,6 @@ def solr_index(sender, instance, created, **kwargs):
     for source in piece.sources.all():
         sources.append(source.name)
 
-    collections = []
-    if not piece.collections is None:
-        collections = []
-        for collection in piece.collections.all():
-            collections.append(collection.title)
-
     if piece.composer:
         composer_name = piece.composer.name
     else:
@@ -128,7 +122,6 @@ def solr_index(sender, instance, created, **kwargs):
          'number_of_voices': piece.number_of_voices,
          'created': piece.created,
          'updated': piece.updated,
-         'parent_collection_names': collections,
          'composer_name': composer_name,
          'uploader_name': piece.uploader.username,
          'tags': tags,
