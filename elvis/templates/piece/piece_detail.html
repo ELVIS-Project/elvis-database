@@ -125,10 +125,10 @@
                 <dd>{{ content.vocalization }}</dd>
             </dl>
         </div>
+    </div>
         {% if content.comment %}
             <pre>{{ content.comment }}</pre>
         {% endif %}
-    </div>
     {% if content.attachments and user.is_authenticated %}
         <div class="row">
             <h3>Available Attachments</h3>
