@@ -2,25 +2,6 @@
 
 {% block extra_hd %}
 <title>{{ content.title }}</title>
-
-<script>
-$(document).ready(function($)
-{
-    $("#show-more").click(function(event){
-        var $extra_info = $("#extra-info");
-        if ($extra_info.is(":visible"))
-        {
-            $(this).html("Show more <span class='glyphicon glyphicon-triangle-right' aria-hidden='true'>");
-            $extra_info.slideUp("slow");
-        }
-        else
-        {
-            $(this).html("Show less <span class='glyphicon glyphicon-triangle-bottom' aria-hidden='true'>");
-            $extra_info.slideDown("slow");
-        }
-    })
-})
-</script>
 {% endblock %}
 
 {% block wrap %}
@@ -30,33 +11,67 @@ $(document).ready(function($)
 </div>
 
 <div class="row">
-    <dl class="dl-horizontal">
-        <dt>Composer</dt>
-        <dd><a href="{{ content.composer.url }}">{{ content.composer.name }}</a></dd>
-        {% if content.date_of_composition  == content.date_of_composition2 %} 
-        <dt>Date of Composition</dt>
-        <dd>{{ content.date_of_composition | date:"Y"}}</dd> 
-        {% else %}
-        <dt>Dates of Composition</dt>
-        <dd>{{ content.date_of_composition | date:"Y"}}-{{ content.date_of_composition2 | date:"Y" }} </dd>
-        {% endif %}
-        <dt><span style="cursor:pointer" id="show-more">Show more <span class="glyphicon glyphicon-triangle-right" aria-hidden="true"></span></span></dt>
-        <dd></dd>
-    </dl>
-    <dl class='dl-horizontal' hidden="hidden" id="extra-info">
-        <dt>Number of voices</dt>
-        <dd>{{content.number_of_voices}}</dd>
-        <dt>Tags</dt>
-        <dd>
-            {% for tag in content.tags %}
-                <a href="{{ tag.url }}" class="label label-primary rounded">{{tag.name}} </a> &nbsp;
-            {% endfor %}
-        </dd>
-        <dt>Religiosity</dt>
-        <dd>{{ content.religiosity }}</dd>
-        <dt>Voice Type</dt>
-        <dd>{{ content.vocalization }}</dd>
-    </dl>
+    <div class="col-sm-6">
+        <dl class="dl-horizontal">
+            <dt>Composer</dt>
+            <dd><a href="{{ content.composer.url }}">{{ content.composer.name }}</a></dd>
+            {% if content.date_of_composition  == content.date_of_composition2 %}
+            <dt>Date of Composition</dt>
+            <dd>{{ content.date_of_composition | date:"Y"}}</dd>
+            {% else %}
+            <dt>Dates of Composition</dt>
+            <dd>{{ content.date_of_composition | date:"Y"}}-{{ content.date_of_composition2 | date:"Y" }} </dd>
+            {% endif %}
+            <dt>Number of voices</dt>
+            <dd>{{content.number_of_voices}}</dd>
+            <dt>Tag(s)</dt>
+            <dd>
+                {% for tag in content.tags %}
+                    <a href="{{ tag.url }}" class="label label-primary rounded">{{tag.name}} </a> &nbsp;
+                {% endfor %}
+            </dd>
+            <dt>Genre(s)</dt>
+            <dd>
+                {% for genre in content.genres %}
+                    {{ genre.name }},&nbsp;
+                {% endfor %}
+            </dd>
+            <dt>Instrument Voice(s)</dt>
+            <dd>
+                {% for instrument in content.instruments_voices %}
+                    {{ instrument.name }},&nbsp;
+                {% endfor %}
+            </dd>
+        </dl>
+    </div>
+    <div class="col-sm-6">
+        <dl class='dl-horizontal'>
+
+            <dt>Place of Origin</dt>
+            <dd>
+                {% for place in content.locations %}
+                    {{ place.name }}
+                {% endfor %}
+            </dd>
+            <dt>Language(s)</dt>
+            <dd>
+                {% for language in content.languages %}
+                    {{ language.name }}
+                {% endfor %}
+            </dd>
+            <dt>Source(s)</dt>
+            <dd>
+                {% for source in content.sources %}
+                    {{ source.name }}
+                {% endfor %}
+            </dd>
+            <dt>Religiosity</dt>
+            <dd>{{ content.religiosity }}</dd>
+            <dt>Voice Type</dt>
+            <dd>{{ content.vocalization }}</dd>
+        </dl>
+    </div>
+</div>
     {% if content.comment %}
           <pre>{{ content.comment }}</pre>
     {% endif %}
