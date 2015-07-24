@@ -4,7 +4,7 @@ Here are a few notes on the deployment of the website on July 24, 2015.
 
 ##Django configuration
 
-The Django webapp is located in /usr/local/elvis-database.
+The Django webapp is located in /srv/webapps/elvis-database.
 
 Secret key and email password for the webapp are being stored in /etc/elvis_secretkey.txt and /etc/elvis_emailpass.txt.
 
@@ -13,6 +13,9 @@ A db named `elvisdatabase` exists which contains the unmigrated contents of the 
 
 
 ##Solr configuration
+
+The tomcat solr config file in `/etc/tomcat/Catlina/localhost/elvis-solr.xml` can be used to configure the docBase and
+solrHome variables.
 
 The solr Collection is in `/usr/local/elvis-database/solr/`
 The solr DataDir is `/var/db/elvis-solr2`.
