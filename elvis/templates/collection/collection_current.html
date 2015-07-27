@@ -1,7 +1,7 @@
 {% extends "base.html" %}
 
 {% block extra_hd %}
-    <title>Current Collection</title>
+    <title>Download Cart</title>
     <style>
         th.headerSortUp {
             background: url({{ STATIC_URL }}img/small_asc.gif);
@@ -177,15 +177,16 @@
     </div>
 
     <div class="page-header">
-        <h2>Your Collection </h2>
+        <h2>Your Cart</h2>
     </div>
 
     {% if content.collection_pieces or content.collection_movements %}
-        <span class="help-block">Select items for downloading. Unwanted files may also be removed from your downloads.</span>
+        <span class="help-block">These are the pieces and movements in your cart. You may save this cart as a collection,
+        modify it, or proceed to the download screen.</span>
         <table class="table" id="collection-table">
             <colgroup>
                 <col class="text-center" style="width: 7%;">
-                <col class="text-center" style="width: 7%;">
+                <col class="text-center" style="width: 10%;">
                 <col hidden="hidden">
                 <col style="width: 30%;">
                 <col style="width: 30%;">
@@ -196,7 +197,7 @@
             <tr>
                 <th class="text-center">Remove</th>
                 <th hidden="hidden">ID</th>
-                <th>Movements</th>
+                <th class="text-center">Movements</th>
                 <th>Title</th>
                 <th>Composer</th>
                 <th>Date</th>
@@ -212,7 +213,7 @@
                     </td>
                     <td style="display: none;">{{ piece.id }}</td>
                     <td class="text-center">{% if piece.movements %}
-                        <span class="label label-primary">{{ piece.movements | length }} included</span> {% endif %}
+                        <span class="label label-primary">{{ piece.movements | length }} movement{{ piece.movements|length|pluralize }}</span> {% endif %}
                     </td>
                     <td><a href="{{ piece.url }}">{{ piece.title }}</a></td>
                     <td><a href="{{ piece.composer.url }}">{{ piece.composer.name }}</a></td>
@@ -243,10 +244,10 @@
         <div class="row">
             <div class="col-sm-12">
                 <button id="open-clear-modal" type="button" class="btn btn-danger">
-                    <span class="glyphicon glyphicon-remove"></span> Clear Collection
+                    <span class="glyphicon glyphicon-remove"></span> Clear Cart
                 </button>
                 <button id="save-collection" name="save-collection" type="button" class="btn btn-primary pull-right"><span
-                        class="glyphicon glyphicon-floppy-disk"></span> Save Collection
+                        class="glyphicon glyphicon-floppy-disk"></span> Save as Collection
                 </button>
             </div>
         </div>
@@ -254,7 +255,7 @@
         <div class="row">
             <div class="col-sm-12">
             <button id="download-collection" name="download-collection" type="button" class="btn btn-info pull-right"><span
-                    class="glyphicon glyphicon-download"></span> Download Collection
+                    class="glyphicon glyphicon-download"></span> Download
             </button>
         </div>
         </div>
