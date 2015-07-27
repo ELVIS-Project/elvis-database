@@ -93,7 +93,7 @@
     <field name="pieces_searchable" type="string" indexed="true" stored="true"/>
     <field name="composers_searchable" type="string" indexed="true" stored="true"/>
     <field name="collections_searchable" type="string" indexed="true" stored="true"/>
-    <field name="file_formats" type="string" indexed="true" stored="true"/>
+    <field name="file_formats" type="string" indexed="true" stored="true" multiValued="True"/>
 
 
      <!-- LM Date fields -->
