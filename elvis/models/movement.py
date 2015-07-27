@@ -2,6 +2,7 @@ from django.db import models
 from django.contrib.auth.models import User
 from django.dispatch import receiver
 from django.db.models.signals import post_save, post_delete, pre_delete
+from os import path
 
 
 class Movement(models.Model):
@@ -41,6 +42,15 @@ class Movement(models.Model):
     @property
     def tagged_as(self):
         return " ".join([t.name for t in self.tags.all()])
+
+    @property
+    def file_formats(self):
+        format_list = []
+        for att in self.attachments.all():
+            ext = path.splitext(att.file_name)[1]
+            if ext not in format_list:
+                format_list.append(ext)
+        return format_list
 
     def __unicode__(self):
         return u"{0}".format(self.title)

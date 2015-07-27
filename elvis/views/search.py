@@ -1,18 +1,15 @@
 from rest_framework.views import APIView
 from rest_framework.response import Response
-from django.http import HttpResponse, QueryDict
 from rest_framework import status
 from rest_framework.renderers import JSONRenderer
 from django.conf import settings
 
 
 from elvis.serializers.search import SearchSerializer
-from django.core.serializers.json import DjangoJSONEncoder
 from elvis.renderers.custom_html_renderer import CustomHTMLRenderer
 from elvis.helpers.solrsearch import SolrSearch
 
 from elvis.helpers import paginate
-import json
 
 
 class SearchViewHTMLRenderer(CustomHTMLRenderer):
@@ -24,10 +21,6 @@ class SearchView(APIView):
     renderer_classes = (JSONRenderer, SearchViewHTMLRenderer)
 
     def get(self, request, *args, **kwargs):
-
-        #if 'q' not in request.GET:
-        #    response = Response(status=status.HTTP_200_OK)
-        #    return response
 
         querydict = request.GET
 

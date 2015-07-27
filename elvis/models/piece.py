@@ -2,6 +2,7 @@ from django.db import models
 from django.contrib.auth.models import User
 from django.dispatch import receiver
 from django.db.models.signals import post_save, post_delete, pre_delete
+from os import path
 
 
 class Piece(models.Model):
@@ -49,6 +50,20 @@ class Piece(models.Model):
     @property
     def tagged_as(self):
         return " ".join([t.name for t in self.tags.all()])
+
+    @property
+    def file_formats(self):
+        format_list = []
+        for att in self.attachments.all():
+            ext = path.splitext(att.file_name)[1]
+            if ext not in format_list:
+                format_list.append(ext)
+        for mov in self.movements.all():
+            for att in mov.attachments.all():
+                ext = path.splitext(att.file_name)[1]
+                if ext not in format_list:
+                    format_list.append(ext)
+        return format_list
 
     def piece_collections(self):
         return " ".join([collection.title if collection.public else "" for collection in self.collections.all()])
@@ -130,6 +145,7 @@ def solr_index(sender, instance, created, **kwargs):
          'languages': languages,
          'locations': locations,
          'sources': sources,
+         'file_formats': piece.file_formats,
          'pieces_searchable': piece.title}
     solrconn.add(**d)
     solrconn.commit()
