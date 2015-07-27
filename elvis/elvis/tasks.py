@@ -19,7 +19,7 @@ def rebuild_suggester_dicts():
 @app.task(name='elvis.elvis.zip_files')
 def zip_files(paths, username):
     # Start with status at 0 - so jQuery has something to do
-    i = 0
+    i = 5
     total = len(paths)
     percent = int_round(float(i) / float(total)) * 100
     zip_files.update_state(state='PROGRESS', meta={'curr': i, 'total': total, 'percent': percent})
