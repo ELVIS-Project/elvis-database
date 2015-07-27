@@ -5,15 +5,7 @@
 html, body {
     height: 100%;
 }
-.wrapper {
-    min-height: 100%;
-    height: auto !important; /* have to figure out a way of doing this without !important */
-    height: 100%;
-    margin: 0 auto -4em;
-}
-.footer, .push {
-    height: 4em;
-}
+
 .btn-mini {
     vertical-align: 11%;
     padding: 1px 6px;
@@ -251,4 +243,23 @@ html, body {
     color: inherit;
     margin-bottom:5px;
     margin-left: 3px;
+}
+body {
+    margin:0;
+    padding:0;
+    height:100%;
+}
+#wrapper {
+    min-height:100%;
+    position:relative;
+}
+#content {
+    padding-bottom:100px; /* Height of the footer element */
+}
+#footer {
+    width:100%;
+    height:80px;
+    position:absolute;
+    bottom:0;
+    left:0;
 }
