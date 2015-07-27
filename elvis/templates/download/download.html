@@ -14,13 +14,14 @@
 
 
 <div class="page-header">
-    <h2>Your Downloads </h2>
+    <h2>Select Files</h2>
 </div>
 <div class="col-md-12">
     <form id="download-form" action="/downloading/" method="post" > {% csrf_token %}
     
         <div class="row">
-            <span class="help-block">Select items for downloading. Unwanted files may also be removed from your downloads.</span>
+            <span class="help-block">Below are all files associated with your download cart. You may uncheck individual items to not download them, or use the boxes
+            at the bottom of the page to include/exclude all of a specific file type.</span>
             <table class="table table-hover">
                 <thead>
                     <tr>
@@ -54,7 +55,7 @@
                                 <td width="22.5%"> {{ attachment.file_name }} </td>
                                 <td width="20.5%"><a href="{{ mvmt.composer.url }}">{{ mvmt.composer.name }}</a></td>
                                 <td width="11.5%">{% if mvmt.date_of_composition  == mvmt.date_of_composition2 %}{{ mvmt.date_of_composition | date:"Y" }}{% else %}{{ mvmt.date_of_composition | date:"Y" }}-{{ mvmt.date_of_composition2 | date:"Y" }}{% endif %}</td>
-                                <td width="7%"><span class="label label-info">Movement</span></td>
+                                <td width="7%"><span class="label label-primary">Movement</span></td>
                             {% endfor %}
                         </tr>
                     {% empty %}
