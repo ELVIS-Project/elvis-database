@@ -12,7 +12,7 @@
             {
                 var qstr = window.location.search.replace("?", "");
                 var qstr_params = $.parseParams(qstr);
-                if (qstr)
+                if (qstr['creator'])
                 {
                     $("#page-header").text(qstr_params['creator'] + "'s Collections")
                 }

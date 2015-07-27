@@ -1,6 +1,7 @@
 {% extends "base.html" %}
 
 {% block extra_hd %}
+    <title>Current Collection</title>
     <style>
         th.headerSortUp {
             background: url({{ STATIC_URL }}img/small_asc.gif);
@@ -113,6 +114,7 @@
     <!-- Save Modal -->
     <div class="modal fade" id="save_modal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel"
          aria-hidden="true">
+    <label id="myModalLabel">Are you sure you want to clear collection?</label>
         <div class="modal-dialog">
             <div class="modal-content">
                 <form action="/collections/" method="post" id="new-collection-form" enctype="multipart/form-data">
@@ -184,19 +186,22 @@
             <colgroup>
                 <col class="text-center" style="width: 7%;">
                 <col class="text-center" style="width: 7%;">
+                <col hidden="hidden">
                 <col style="width: 30%;">
                 <col style="width: 30%;">
                 <col style="width: 16%;">
                 <col style="width: 10%;">
             </colgroup>
             <thead id="table-head">
-            <th class="text-center">Remove</th>
-            <th hidden="hidden">ID</th>
-            <th>Movements</th>
-            <th>Title</th>
-            <th>Composer</th>
-            <th>Date</th>
-            <th>Type</th>
+            <tr>
+                <th class="text-center">Remove</th>
+                <th hidden="hidden">ID</th>
+                <th>Movements</th>
+                <th>Title</th>
+                <th>Composer</th>
+                <th>Date</th>
+                <th>Type</th>
+            </tr>
             </thead>
             <tbody>
             {% for piece in content.collection_pieces %}
@@ -221,7 +226,7 @@
                 <tr>
                     <td class="text-center">
                         <button type="button" class="btn btn-sm remove-row" name="remove-item"><span
-                                class="glyphicon glyphicon-remove"></button>
+                                class="glyphicon glyphicon-remove"></span></button>
                     </td>
                     <td style="display: none;">{{ movement.id }}</td>
                     <td></td>
@@ -235,17 +240,24 @@
             {% endfor %}
             </tbody>
         </table>
+        <div class="row">
+            <div class="col-sm-12">
+                <button id="open-clear-modal" type="button" class="btn btn-danger">
+                    <span class="glyphicon glyphicon-remove"></span> Clear Collection
+                </button>
+                <button id="save-collection" name="save-collection" type="button" class="btn btn-primary pull-right"><span
+                        class="glyphicon glyphicon-floppy-disk"></span> Save Collection
+                </button>
+            </div>
+        </div>
         <br>
-        <button id="open-clear-modal" type="button" class="btn btn-danger">
-            <span class="glyphicon glyphicon-remove"></span> Clear Collection
-        </button>
-        <button id="save-collection" name="save-collection" type="button" class="btn btn-primary pull-right"><span
-                class="glyphicon glyphicon-floppy-disk"></span> Save Collection
-        </button>
-        <br><br>
-        <button id="download-collection" name="download-collection" type="button" class="btn btn-info pull-right"><span
-                class="glyphicon glyphicon-download"></span> Download Collection
-        </button>
+        <div class="row">
+            <div class="col-sm-12">
+            <button id="download-collection" name="download-collection" type="button" class="btn btn-info pull-right"><span
+                    class="glyphicon glyphicon-download"></span> Download Collection
+            </button>
+        </div>
+        </div>
     {% else %}
         <div class="text-center">Nothing added yet to your collection!</div>
     {% endif %}
