@@ -1,7 +1,6 @@
 from django.conf import settings
 import solr
-import datetime
-import string
+import re
 
 class SolrSearch(object):
     """ 
@@ -10,8 +9,8 @@ class SolrSearch(object):
 
         It has three main methods: search, facets, and group_search.
 
-        The search method performs a search. The `parse_request` and `prepare_query` methods
-        are automatically called with the request object when the class is initialized. This
+        The search method performs a search. The `parse_request` method
+        is automatically called with the request object when the class is initialized. This
         filters all the query keys and translates them to Solr. 
 
         The facets method requests facets from the Solr search server.
@@ -30,7 +29,6 @@ class SolrSearch(object):
         self.prepared_query = u""
         self.solr_params = {'wt': 'json'}
         self._parse_request()
-        self._prepare_query()
 
     def search(self, **kwargs):
         self.solr_params.update(kwargs)
@@ -66,135 +64,108 @@ class SolrSearch(object):
     def _do_query(self):
         return self.server.select(self.prepared_query, **self.solr_params)
 
-
     def _parse_request(self):
         qdict = self.request.GET
-        filter_query = ""
-        sort_query = ""
-        tag_filt_query = ""
-        date_filt_query = ""
-        name_filt_query = ""
-        title_filt_query = ""
-        voice_filt_query = ""
-        from_date = "" 
-        to_date = ""
-        #print qdict.lists()
-        for k, v in qdict.lists():
+        filter_query = []
+        general_query = []
 
-            # LM: modified from just self.parsed_request[k] = v to cut out nonsensical page/format requests to solr
-            if k == 'page' or k == 'format':
+        for k in qdict.keys():
+
+            # Filter Parameters
+            if k == 'titlefilt':
+                title_filt = "title_searchable:({0})".format(self.parse_bool(qdict[k]))
+                filter_query.append(title_filt)
                 continue
-            # LM: Elif for Type filtration
-            elif k == 'typefilt':
-                filter_query = "type: ("  + string.join(v, ' OR ') + ") "
 
-            # LM: elif for sorting
-            elif k == 'sortby':
-               sort_query = qdict.get(k)
+            if k =='namefilt':
+                name_filt = "name_general:({0})".format(self.parse_bool(qdict[k]))
+                filter_query.append(name_filt)
+                continue
 
-            # LM: elif for Name filtration
-            elif k == 'namefilt':
-                name_filt_query = "name_general: (" + string.join(v) +") "
+            if k =='voicefilt':
+                voice_filt = "number_of_voices:({0})".format(self.parse_bool(qdict[k]))
+                filter_query.append(voice_filt)
+                continue
 
-            elif k == 'titlefilt':
-                title_filt_query = "title_searchable: (" + string.join(v) +") "
+            if k =='tagfilt':
+                tag_filt = "tags:({0})".format(self.parse_bool(qdict['tagfilt']))
+                filter_query.append(tag_filt)
+                continue
 
-            # LM: elif for Date filtration
-            # Logic: We want start date to be any time before 2nd search date, and end date to be any time after 1st search date
-            # However, we want things that have start and end dates between the two search dates to be ordered first -- thus the 
-            # ^2 weighting.
-            elif k == 'datefiltf' or k == 'datefiltt' or k == 'strictdates':
-                if qdict.get('datefiltf') is None or qdict.get('datefiltf').replace(" ", "") in ["", "*"]:
-                    from_date = " * "
+            if k =='typefilt[]':
+                type_filt = "type:"
+                type_filt += ' OR type:'.join(qdict.getlist('typefilt[]'))
+                filter_query.append("(" + type_filt + ")")
+                continue
+
+            if k =='filefilt[]':
+                file_filt = "file_formats:"
+                file_filt += ' OR file_formats:'.join(qdict.getlist('filefilt[]'))
+                filter_query.append("(" + file_filt + ")")
+                continue
+
+            if k == 'datefiltf':
+                from_date = u" {0}-00-00T00:00:00Z ".format(str(int(qdict.get('datefiltf')) + 1))
+                if qdict.get('datefiltt'):
+                    to_date = u" {0}-00-00T00:00:00Z ".format(str(int(qdict.get('datefiltt')) + 1))
+                    date_filt = "(date_general:[{0} TO {1}] OR date_general2:[{0} TO {1}])".format(from_date, to_date)
                 else:
-                    from_date = u" {0}-00-00T00:00:00Z ".format(qdict.get('datefiltf'))
-                if qdict.get('datefiltt') is None or qdict.get('datefiltt').replace(" ", "") in ["", "*"]:
-                    to_date = " * "
-                else:
-                    to_date = u" {0}-12-31T23:59:59Z ".format(qdict.get('datefiltt'))
-                if not qdict.get('strictdates') is None:
-                    date_filt_query = "(date_general: [{0} TO {1}] AND date_general2: [{2} TO {3}])".format(from_date, to_date, from_date, to_date)
-                else:
-                    date_filt_query = "(date_general: [{0} TO {1}] AND date_general2: [{2} TO {3}])^2 OR (date_general: [ * TO {4}] AND date_general2:[{5} TO * ])".format(from_date, to_date, from_date, to_date, to_date, from_date)
+                    date_filt = "(date_general:[{0} TO *] OR date_general2:[{0} TO *])".format(from_date)
+                filter_query.append(date_filt)
+                continue
+            elif k == 'datefiltt':
+                to_date = u" {0}-00-00T00:00:00Z ".format(str(int(qdict.get('datefiltt')) + 1))
+                date_filt = "(date_general:[* TO {0}] OR date_general2:[* TO {0}])".format(to_date)
+                filter_query.append(date_filt)
+                continue
 
-            # LM: elif for Tag filtration
-            elif k == 'tagfilt':
-                tag_filt_query = "tags: (" + string.join(v) + ") "
+            # Query Parameters
+            if k == 'composer_name':
+                general_query.append('(composer_name:"{0}")'.format(qdict[k]))
+                continue
+            if k == 'type':
+                general_query.append('(type:"{0}")'.format(qdict[k]))
+                continue
+            if k == 'number_of_voices':
+                general_query.append('(number_of_voices:{0})'.format(qdict[k]))
+                continue
+            if k == 'tags':
+                tag_query = '(tags:"{0}")'.format(qdict[k])
+                general_query.append(tag_query)
+                continue
+            if k == 'tags[]':
+                tags = qdict.getlist('tags[]')
+                tags = '" AND "'.join(x for x in tags)
+                tag_query = '(tags:"{0}")'.format(tags)
+                general_query.append(tag_query)
+                continue
 
+            # Sorting
+            if k == 'sortby':
+                self.solr_params.update({'sort': qdict.get(k)})
 
-            # LM: elif for Voice filtration
-            elif k == 'voicefilt':
-                voice_filt_query = "number_of_voices: (" + string.join(v) + ") "
+        if qdict.get('q'):
+            keywords = "({0})".format(self.parse_bool(qdict['q']))
+            general_query.append(keywords)
+        else:
+            general_query.append("(*:*)")
+        if not qdict.get('typefilt[]'):
+            filter_query.append("type:(elvis_piece OR elvis_movement OR elvis_collection OR elvis_composer)")
 
-                
-            elif k == 'rows':
-                self.solr_params.update({'rows': v})  
+        # AND together the prepared filters and query.
+        self.solr_params['fq'] = " AND ".join(filter_query)
+        self.prepared_query = " AND ".join(general_query)
 
-            # Otherwise, add to query
-            elif k == 'q' :
-                if qdict.get(k) == "":
-                    v = "*:*"
-                self.parsed_request[k] = "( " + v[0] + " )"
-            
+    def parse_bool(self, bool_string):
+        bools = ['AND', 'OR', 'NOT', '(', ')']
+        args = re.split('( AND| OR| NOT|[(]|[)])', bool_string)
+        formatted_bool = []
+        for a in args:
+            a = a.strip()
+            if not a or a == "":
+                continue
+            if a not in bools:
+                formatted_bool.append('"{0}"'.format(a))
             else:
-                self.parsed_request[k] = v
-        
-        if sort_query:
-            self.solr_params.update({'sort': sort_query})
-
-        # Use filtered queries for advanced searches
-        if filter_query != "":
-            self.solr_params['fq'] = "( " + filter_query + " )"
-
-        if tag_filt_query == "":
-            pass
-        elif not 'fq' in self.solr_params:
-            self.solr_params['fq'] = "( " + tag_filt_query + " )"
-        else:
-            self.solr_params['fq'] += " AND ( " + tag_filt_query + " )"
-
-        if name_filt_query == "":
-            pass
-        elif not 'fq' in self.solr_params:
-            self.solr_params['fq'] = "( " + name_filt_query + " )"
-        else:
-            self.solr_params['fq'] += " AND (" + name_filt_query + " )"
-
-        if title_filt_query == "":
-            pass
-        elif not 'fq' in self.solr_params:
-            self.solr_params['fq'] = "( " + title_filt_query + " )"
-        else:
-            self.solr_params['fq'] += " AND (" + title_filt_query + " )"
-
-        if voice_filt_query == "":
-            pass
-        elif not 'fq' in self.solr_params:
-            self.solr_params['fq'] = "( " + voice_filt_query + " )"
-        else:
-            self.solr_params['fq'] += " AND (" + voice_filt_query + " )"
-
-        # ... with the exception of dates, for which the default select solr method is used to preserve ranking by date
-        if date_filt_query == "":
-            pass
-        elif not 'q' in self.parsed_request:
-            self.parsed_request['q'] = "( " + date_filt_query + " )"
-        else:
-            self.parsed_request['q'] += " AND ( " + date_filt_query + " )"
-
-
-    def _prepare_query(self):
-        if self.parsed_request:
-            arr = []
-            for k, v in self.parsed_request.iteritems():
-                if not v:
-                    continue
-                if k == 'q':
-                    if v[0] != u"":
-                        arr.insert(0, u"{0}".format(v))
-                else:
-                    # was OR by default
-                    arr.append(u"{0}:({1})".format(k, " AND ".join([u"\"{0}\"".format(s) for s in v if v is not None])))
-            self.prepared_query = u" AND ".join(arr)            
-        else:
-            self.prepared_query = u"*:*"
+                formatted_bool.append('{0}'.format(a))
+        return " ".join(x for x in formatted_bool)

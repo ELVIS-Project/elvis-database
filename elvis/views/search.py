@@ -51,9 +51,9 @@ class SearchView(APIView):
         # if we don't have a query parameter, send empty search results
         # back to the template, but still send along the facets.
         # It will then present the search page to the user with the facets
-        if not querydict:
-            result = {'results': [], 'facets': facets.facet_counts}
-            return Response(result, status=status.HTTP_200_OK)
+        # if not querydict:
+        #     result = {'results': [], 'facets': facets.facet_counts}
+        #     return Response(result, status=status.HTTP_200_OK)
 
         # LM: Continuing from above, the search() function belongs to SolrSearch, and simply returns the response for
         # the aforementioned parsed and prepared query
@@ -91,7 +91,6 @@ class SearchView(APIView):
         except KeyError:
             pass
 
-        query_minus_page = query_minus_page.urlencode(['*'])
         try:
             result = paged_results.__dict__
         except AttributeError:

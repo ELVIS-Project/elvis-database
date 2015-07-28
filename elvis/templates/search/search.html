@@ -12,8 +12,8 @@
             $('#sortby').multiselect({checkboxName: 'sortby'});
             queryQString();
 
-            //Do an ajax search based on the url when the back button is hit.
-            $(window).on('popstate', function ()
+            //Do a search for the query string when the page back button is hit.
+            $(window).bind('popstate', function ()
             {
                 queryQString();
             });
@@ -25,7 +25,7 @@
                 $('#advanced-search-form').submit();
             });
 
-            $("#asearch-input").on('keydown', function (event)
+            $(".asearch-input").on('keydown', function (event)
             {
                 if (event['keyCode'] === 13)
                 {
@@ -33,7 +33,7 @@
                 }
             });
 
-            //Process advanced search form, and do a query or clear the page.
+            //Process advanced search form, and do a query based on it's contents.
             $('#advanced-search-form').submit(function (event)
             {
                 event.preventDefault();
@@ -63,14 +63,41 @@
                 doQuery({'q': input});
             });
 
-            //Search for the query parameters in the url via ajax.
-            function queryQString()
+            //Search for the query parameters in the url via ajax and fill in the input fields to match the search.
+            function queryQString(fadewindow)
             {
+                fadewindow = typeof fadewindow !== 'undefined' ? fadewindow : "result-page";
+
                 var qstr = window.location.search.replace("?", "");
                 var qstr_params = $.parseParams(qstr);
+                var keys = Object.keys(qstr_params);
                 if (qstr)
                 {
-                    doQuery(qstr_params, false)
+                    for (var i = 0; i < keys.length; i++)
+                    {
+                        if (keys[i] === 'typefilt[]')
+                        {
+                            $('#typefilt').multiselect('select', qstr_params[keys[i]]);
+                            continue;
+                        }
+                        if (keys[i] === 'filefilt[]')
+                        {
+                            $('#filefilt').multiselect('select', qstr_params[keys[i]]);
+                            continue;
+                        }
+                        if (keys[i] === 'sortby')
+                        {
+                            $('#sortby').multiselect('select', qstr_params[keys[i]]);
+                            continue;
+                        }
+
+                        $("[name=" + keys[i] + "]").val(qstr_params[keys[i]]);
+                    }
+                    doQuery(qstr_params, false, fadewindow)
+                }
+                else
+                {
+                    $("#result-page").fadeOut(300)
                 }
 
                 //Fill out the advanced forms based on the qstring.
@@ -92,13 +119,24 @@
                 }
             }
 
-            function pushToHistory(data)
+            //Push a string of the ajax search to the browser history so back and forward buttons work.
+            function pushToHistory(data, results)
             {
                 var query = "?";
                 var keys = Object.keys(data);
                 for (var i in keys)
                 {
-                    query += keys[i] + "=" + data[keys[i]] + "&"
+                    if (typeof data[keys[i]] !== 'string' && keys[i] !== "page")
+                    {
+                        for (var j = 0; j < data[keys[i]].length; j++)
+                        {
+                            query += keys[i] + "=" + data[keys[i]][j] + "&"
+                        }
+                    }
+                    else
+                    {
+                        query += keys[i] + "=" + data[keys[i]] + "&"
+                    }
                 }
                 query = query.slice(0, -1);
                 window.history.pushState(results, "Search", "/search/" + query);
@@ -110,6 +148,7 @@
             {
                 push_to_history = typeof push_to_history !== 'undefined' ? push_to_history : true;
                 fadewindow = typeof fadewindow !== 'undefined' ? fadewindow : "result-page";
+
                 $.ajax({
                     type: "get",
                     url: "search",
@@ -118,14 +157,7 @@
                     {
                         if (push_to_history)
                         {
-                            var query = "?";
-                            var keys = Object.keys(data);
-                            for (var i in keys)
-                            {
-                                query += keys[i] + "=" + data[keys[i]] + "&"
-                            }
-                            query = query.slice(0, -1);
-                            window.history.pushState(results, "Search", "/search/" + query);
+                            pushToHistory(data, results)
                         }
 
                         $("#" + fadewindow).fadeOut(300, function ()
@@ -222,6 +254,7 @@
                 }
                 drawPageLinks(results);
                 drawFacets(results);
+
             }
 
             //Draw the paginators at the bottom of the page.
@@ -262,28 +295,36 @@
                 {
                     if (!$(this.parentElement).hasClass("disabled"))
                     {
-                        doQuery({'q': results['paginator']['params']['q']})
+                        var qstr_params = $.parseParams(window.location.search.replace("?", ""));
+                        delete qstr_params['page'];
+                        doQuery(qstr_params, true)
                     }
                 });
                 $("#previous-button").click(function (event)
                 {
                     if (!$(this.parentElement).hasClass("disabled"))
                     {
-                        doQuery({'q': results['paginator']['params']['q'], 'page': results['number'] - 1})
+                        var qstr_params = $.parseParams(window.location.search.replace("?", ""));
+                        qstr_params['page'] = results['number'] - 1;
+                        doQuery(qstr_params, true);
                     }
                 });
                 $("#next-button").click(function (event)
                 {
                     if (!$(this.parentElement).hasClass("disabled"))
                     {
-                        doQuery({'q': results['paginator']['params']['q'], 'page': results['number'] + 1})
+                        var qstr_params = $.parseParams(window.location.search.replace("?", ""));
+                        qstr_params['page'] = results['number'] + 1;
+                        doQuery(qstr_params, true);
                     }
                 });
                 $("#last-button").click(function (event)
                 {
                     if (!$(this.parentElement).hasClass("disabled"))
                     {
-                        doQuery({'q': results['paginator']['params']['q'], 'page': results['paginator']['total_pages']})
+                        var qstr_params = $.parseParams(window.location.search.replace("?", ""));
+                        qstr_params['page'] = results['paginator']['total_pages'];
+                        doQuery(qstr_params, true);
                     }
                 });
             }
@@ -321,11 +362,11 @@
 
                         facet_body += "<li class='facet-list'>" +
                                 "<div id='facet-container-" + encodeName(j) + "' class='facet-wrapper'>" +
-                                    "<label class='facet-label' for='facet-link-" + encodeName(j) + "-" + keys[i] + "'>" +
-                                        "<input type='checkbox' class='facet-link' style='margin: 4px 4px 0' data-facet-name='" + keys[i] +
-                                        "' data-facet-value='" + encodeName(j) + "' id='facet-link-" + encodeName(j) + "-" + keys[i] + "'>" +
-                                        facet_name + "  (" + facet_list[j] + ")" +
-                                    "</label>" +
+                                "<label class='facet-label' for='facet-link-" + encodeName(j) + "-" + keys[i] + "'>" +
+                                "<input type='checkbox' class='facet-link' style='margin: 4px 4px 0' data-facet-name='" + keys[i] +
+                                "' data-facet-value='" + encodeName(j) + "' id='facet-link-" + encodeName(j) + "-" + keys[i] + "'>" +
+                                facet_name + "  (" + facet_list[j] + ")" +
+                                "</label>" +
                                 "</div>" +
                                 "</li>";
                     }
@@ -336,21 +377,23 @@
 
                 var qstr = window.location.search.replace("?", "");
                 var qstr_params = $.parseParams(qstr);
+                var keys = Object.keys(qstr_params);
 
-                $.each(qstr_params, function (param, val)
+                for (var j = 0; j < keys.length; j++)
                 {
-                    if (typeof val == "object")
+                    if (typeof qstr_params[keys[j]] === 'object')
                     {
-                        $.each(val, function (num, v)
+                        $.each(qstr_params[keys[j]], function (val)
                         {
-                            $("input[data-facet-name='" + param + "'][id='facet-link-" + encodeName(val) + "-" + param + "']").attr('checked', true);
+                            $("input[data-facet-name='" + keys[j] + "'][id='facet-link-" + encodeName(qstr_params[keys[j]][val]) + "-" + keys[j] + "']").attr('checked', true);
                         });
                     }
                     else
                     {
-                        $("input[data-facet-name='" + param + "'][id='facet-link-" + encodeName(val) + "-" + param + "']").attr('checked', true);
+                        $("input[data-facet-name='" + keys[j] + "'][id='facet-link-" + encodeName(qstr_params[keys[j]]) + "-" + keys[j] + "']").attr('checked', true);
                     }
-                });
+                }
+
 
                 $(".facet-link").on('click', function (event)
                 {
@@ -362,15 +405,15 @@
                     {
                         qstr = window.location.search.replace("?", "");
                         qstr += "&" + (facetName) + "=" + (facetValue);
-                        qstr_params = $.parseParams(qstr);
-                        doQuery(qstr_params, true, "search-results-list")
+                        window.history.pushState(results, "Search", "/search/?" + qstr);
+                        queryQString("search-results-list");
                     }
                     else
                     {
                         qstr = window.location.search.replace("?", "");
-                        qstr_params = $.parseParams(qstr);
-                        delete qstr_params[facetName];
-                        doQuery(qstr_params, true, "search-results-list")
+                        qstr = qstr.replace("&" + facetName + "=" + facetValue, "");
+                        window.history.pushState(results, "Search", "/search/?" + qstr);
+                        queryQString("search-results-list");
                     }
                 });
             }
@@ -378,8 +421,8 @@
             // A slightly more robust version of the encodeURIComponent function.
             function encodeName(name)
             {
-                var result = encodeURIComponent(name);
-                result = name.replace("'", "%27");
+                var result = encodeURI(name);
+                result = result.replace("'", "%27");
                 return result
             }
         });
@@ -405,9 +448,8 @@
                     <form id="general-search-form" action="/search/" method="get">
                         <div class="row">
                             <label for="gsearch-input" hidden="hidden">General Search Keyword</label>
-
-                            <div class="input-group col-sm-8 col-sm-offset-2">
-                                <input type="text" class="form-control input-lg" id='gsearch-input' name='q'/>
+                            <div class="input-group col-sm-10 col-sm-offset-1 col-md-8 col-md-offset-2">
+                                <input type="text" class="form-control input-lg" id='gsearch-input' style="text-align:center;"  name='q'/>
                                 <span class="input-group-btn">
                                     <button class="btn btn-default btn-lg" type="button" id="gsearch-submit">
                                         <span class="glyphicon glyphicon-search"></span>
@@ -439,12 +481,12 @@
                         <div class="row asearch-row">
                             <div class="col-md-6">
                                 <label class="asearch-label" for="titlefilt">Title</label>
-                                <input type="text" class="form-control" id="titlefilt" name="titlefilt"
+                                <input type="text" class="form-control asearch-input" id="titlefilt" name="titlefilt"
                                        placeholder="Agnus Dei">
                             </div>
                             <div class="col-md-6">
                                 <label class="asearch-label" for="namefilt">Composer Name</label>
-                                <input type="text" class="form-control" id="namefilt" name="namefilt"
+                                <input type="text" class="form-control asearch-input" id="namefilt" name="namefilt"
                                        placeholder="Jacob Obrecht">
                             </div>
                         </div>
@@ -452,26 +494,28 @@
                         <div class="row asearch-row">
                             <div class="col-sm-3">
                                 <label class="asearch-label" for="datefiltf">Min Date</label>
-                                <input type="number" class="form-control" name="datefiltf" id="datefiltf" max="2000"
+                                <input type="number" class="form-control asearch-input" name="datefiltf" id="datefiltf"
+                                       max="2000"
                                        placeholder="YYYY"
                                        onkeypress='return event.charCode >= 48 && event.charCode <= 57'>
                             </div>
                             <div class="col-sm-3" style="padding-left: 0px">
                                 <label class="asearch-label" for="datefiltt">Max Date</label>
-                                <input type="number" class="form-control" name="datefiltt" id="datefiltt" max="2000"
+                                <input type="number" class="form-control asearch-input" name="datefiltt" id="datefiltt"
+                                       max="2000"
                                        placeholder="YYYY"
                                        onkeypress='return event.charCode >= 48 && event.charCode <= 57'>
                             </div>
                             <div class="col-sm-6">
                                 <label class="asearch-label" for="tagfilt">Tags</label>
-                                <input type="text" class="form-control" id="tagfilt" name="tagfilt"
-                                       placeholder="Tag1 Tag2">
+                                <input type="text" class="form-control asearch-input" id="tagfilt" name="tagfilt"
+                                       placeholder="Tag1 AND Tag2">
                             </div>
                         </div>
                         <div class="row asearch-row">
                             <div class="col-sm-6">
                                 <label class="asearch-label" for="voicefilt">Voice Count</label><br>
-                                <input type="text" class="form-control" id="voicefilt" name="voicefilt"
+                                <input type="text" class="form-control asearch-input" id="voicefilt" name="voicefilt"
                                        placeholder="1 OR 2">
                             </div>
                             <div class="col-sm-3">
@@ -481,8 +525,6 @@
                                     <option id="elvis_piece" value="elvis_piece">Pieces</option>
                                     <option id="elvis_movement" value="elvis_movement">Movements</option>
                                     <option id="elvis_collection" value="elvis_collection">Collections</option>
-                                    <option id="elvis_tag" value="elvis_tag">Tags</option>
-                                    <option id="elvis_user" value="elvis_user">Users</option>
                                 </select>
                             </div>
                             <div class="col-sm-3" style="padding-left: 0px">
