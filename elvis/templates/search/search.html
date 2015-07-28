@@ -8,8 +8,9 @@
         $(document).ready(function ($)
         {
             $('.input-group-addon').tooltip();
-            $('#typefilt').multiselect({checkboxName: 'typefilt'});
+            $('#typefilt').multiselect({checkboxName: 'typefilt[]'});
             $('#sortby').multiselect({checkboxName: 'sortby'});
+            $('#filefilt').multiselect({checkboxName: 'filefilt[]'});
             queryQString();
 
             //Do a search for the query string when the page back button is hit.
@@ -98,24 +99,6 @@
                 else
                 {
                     $("#result-page").fadeOut(300)
-                }
-
-                //Fill out the advanced forms based on the qstring.
-                for (var key in qstr_params)
-                {
-                    if (key === 'typefilt' || key === 'type')
-                    {
-                        $('#typefilt').multiselect('select', qstr_params[key]);
-                    }
-                    else if (key === 'sortby' && qstr_params[key] !== "")
-                    {
-                        $('#sortby').multiselect('deselect', "");
-                        $('#sortby').multiselect('select', qstr_params[key]);
-                    }
-                    else
-                    {
-                        $('[name=' + key + ']').val(qstr_params[key]);
-                    }
                 }
             }
 
@@ -465,10 +448,9 @@
                 <div class="panel-body search">
                     <form id="advanced-search-form" action="/search/" method="get">
                         <div class="row">
-                            <label for="asearch-input" hidden="hidden">Avanced Search Keyword</label>
-
-                            <div class="input-group col-md-8 col-md-offset-2">
-                                <input type="text" class="form-control input-lg" id='asearch-input' name='q'/>
+                            <label for="asearch-input" hidden="hidden">Advanced Search Keyword</label>
+                            <div class="input-group col-sm-10 col-sm-offset-1 col-md-8 col-md-offset-2">
+                                <input type="text" class="form-control input-lg asearch-input" style="text-align:center;" name='q'/>
                                 <span class="input-group-btn">
                                     <button class="btn btn-default btn-lg" type="button" id="asearch-submit">
                                         <span class="glyphicon glyphicon-search"></span>
@@ -506,7 +488,7 @@
                                        placeholder="YYYY"
                                        onkeypress='return event.charCode >= 48 && event.charCode <= 57'>
                             </div>
-                            <div class="col-sm-6">
+                            <div class="col-md-6 col-sm-12">
                                 <label class="asearch-label" for="tagfilt">Tags</label>
                                 <input type="text" class="form-control asearch-input" id="tagfilt" name="tagfilt"
                                        placeholder="Tag1 AND Tag2">
@@ -518,8 +500,11 @@
                                 <input type="text" class="form-control asearch-input" id="voicefilt" name="voicefilt"
                                        placeholder="1 OR 2">
                             </div>
-                            <div class="col-sm-3">
-                                <label class="asearch-label" for="typefilt">Filter</label><br>
+                        </div>
+                        <br>
+                        <div class="row asearch-row">
+                            <div class="col-md-4">
+                                <label class="asearch-label" for="typefilt">Only results of this type</label><br>
                                 <select id="typefilt" multiple="multiple">
                                     <option id="elvis_composer" value="elvis_composer">Composers</option>
                                     <option id="elvis_piece" value="elvis_piece">Pieces</option>
@@ -527,8 +512,25 @@
                                     <option id="elvis_collection" value="elvis_collection">Collections</option>
                                 </select>
                             </div>
-                            <div class="col-sm-3" style="padding-left: 0px">
-                                <label class="asearch-label" for="sortby">Sorting</label><br>
+                            <div class="col-md-4">
+                                <label class="asearch-label" for="filefilt">Only results with these files</label><br>
+                                <select id="filefilt" multiple="multiple">
+                                    <option value=".mei"> .mei</option>
+                                    <option value=".xml"> .xml</option>
+                                    <option value=".midi"> .midi</option>
+                                    <option value=".mid"> .mid</option>
+                                    <option value=".pdf"> .pdf</option>
+                                    <option value=".mxl"> .mxl</option>
+                                    <option value=".krn"> .krn</option>
+                                    <option value=".md"> .md</option>
+                                    <option value=".nwc"> .nwc</option>
+                                    <option value=".tntxt"> .tntxt</option>
+                                    <option value=".capx"> .capx</option>
+                                    <option value=".abc"> .abc</option>
+                                </select>
+                            </div>
+                            <div class="col-md-4">
+                                <label class="asearch-label" for="sortby">Sort results by</label><br>
                                 <select id="sortby">
                                     <option value=""> Default (By Type)</option>
                                     <option value="name_sort asc"> Alphabetical &#9660; </option>
