@@ -20,13 +20,13 @@ $(document).ready(function($)
 {
     autocomplete("title", "title_suggestion_menu", "pieceSuggest");
     autocomplete("composer", "composer_suggestion_menu", "composerSuggest");
-    autocomplete("collections", "collection_suggestion_menu", "collectionSuggest", true);
-    autocomplete("languages", "language_suggestion_menu", "languageSuggest", true);
-    autocomplete("genres", "genre_suggestion_menu", "genreSuggest", true);
-    autocomplete("locations", "location_suggestion_menu", "locationSuggest", true);
-    autocomplete("sources", "source_suggestion_menu", "sourceSuggest", true);
-    autocomplete("instruments_voices", "instrumentation_suggestion_menu", "instrumentSuggest", true);
-    autocomplete("tags", "tags_suggestion_menu", "tagSuggest", true);
+    autocomplete("collections", "collection_suggestion_menu", "collectionSuggest", 'list');
+    autocomplete("languages", "language_suggestion_menu", "languageSuggest", 'list');
+    autocomplete("genres", "genre_suggestion_menu", "genreSuggest", 'list');
+    autocomplete("locations", "location_suggestion_menu", "locationSuggest", 'list');
+    autocomplete("sources", "source_suggestion_menu", "sourceSuggest", 'list');
+    autocomplete("instruments_voices", "instrumentation_suggestion_menu", "instrumentSuggest", 'list');
+    autocomplete("tags", "tags_suggestion_menu", "tagSuggest", 'list');
     dynamicFileTable("new_mov", "movement_table", "mov", "Movement Files", true);
     dynamicFileTable("new_piece_file", "piece_file_table", "piece", "Piece Files", false);
 

@@ -83,9 +83,14 @@ function autocomplete(inputField, suggestionField, dictionary, multiple) {
         //Typing a-z, deleteing, or focusing on the input will generate a suggestion list
         if ((key > 63 && key < 91) || key === 8 || event['type'] === "focusin")
         {
-            if (multiple)
+            if (multiple === 'list')
             {
                 var split_vals = $inputField.val().split(";");
+                var query = encodeURI(split_vals[split_vals.length-1].trim());
+            }
+            if (multiple === 'bool')
+            {
+                var split_vals = $inputField.val().split(/( AND| OR| NOT )/);
                 var query = encodeURI(split_vals[split_vals.length-1].trim());
             }
             else
@@ -93,9 +98,12 @@ function autocomplete(inputField, suggestionField, dictionary, multiple) {
                 query = encodeURI($inputField.val());
             }
 
-            if (key === 8 || (query.length - $inputField.val().length) > 1)
+            if (key === 8 || (query.length) < 2)
                 isInit = true;
-            var input_width = $(this).parent().width() - 120;
+            if (multiple === 'bool')
+                var input_width = $(this).parent().width();
+            else
+                var input_width = $(this).parent().width() - 120;
             //Sends the query to /suggest/ and prints the results to the suggestion-menu
             if ((gotResults || isInit) && selectedSuggestion !== $inputField.val())
             {
@@ -173,7 +181,7 @@ function autocomplete(inputField, suggestionField, dictionary, multiple) {
 
     function write_input()
     {
-        if (multiple)
+        if (multiple == 'list')
         {
             var split_vals = $inputField.val().split(";");
             split_vals[split_vals.length-1] = selectedSuggestion;
@@ -183,6 +191,17 @@ function autocomplete(inputField, suggestionField, dictionary, multiple) {
                 result = result + split_vals[i].trim() + "; ";
             }
             $inputField.val(result);
+        }
+        if (multiple == 'bool')
+        {
+            var split_vals = $inputField.val().split(/( AND | OR | NOT )/);
+            debugger;
+            split_vals[split_vals.length-1] = selectedSuggestion;
+            for (var i = 0; i < split_vals.length; i++)
+            {
+                split_vals[i] = $.trim(split_vals[i])
+            }
+            $inputField.val(split_vals.join(' '))
         }
         else
         {
