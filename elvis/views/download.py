@@ -249,8 +249,12 @@ class Downloading(APIView):
         except Exception:
             return Response({"None" : "None"}, status=status.HTTP_400_BAD_REQUEST)
 
+        ready = task.ready()
+        while not ready:
+            ready = task.ready()
+
         # Path is given in task.result only if it's ready.
-        if task.result and "path" in task.result and'service' in request.GET:
+        if task.result and "path" in task.result and 'service' in request.GET:
             path = task.result["path"]
             file_name = os.path.basename(path)
             response = HttpResponse(FileWrapper(file(path, "r")), content_type='application/zip')

@@ -67,6 +67,24 @@
                 doQuery({'q': input});
             });
 
+            //Button to add entire query to cart
+            $("#all-download").click(function(){
+                document.getElementById("search_query").value = window.location.href;
+                $.ajax(
+                        {
+                            type: 'post',
+                            url: '/downloads/',
+                            data: $("#all-patch-download-form").serialize(),
+                            success: function (data) {
+                                var $collection_count = $('#collection-count');
+                                $collection_count.fadeOut(100, function () {
+                                    $collection_count.text('(' + data.count + ')');
+                                });
+                                $collection_count.fadeIn(100);
+                            }
+                        })
+            });
+
             //Search for the query parameters in the url via ajax and fill in the input fields to match the search.
             function queryQString(fadewindow)
             {
@@ -157,7 +175,6 @@
             //Write the results of a query to the page (including drawing paginators and facets)
             function writeResults(results)
             {
-                $("#result-header").html("Results: ");
                 var $results = $("#search-results-list");
                 $results.html("");
                 $("#page-links").html("");
@@ -165,13 +182,14 @@
 
                 if (results['object_list'] === undefined || results['object_list'].length === 0)
                 {
-                    $("#result-heading").html("<div class='col-sm-12 text-center' style='padding-left:0px'><h3>Nothing Found!</h3></div>");
+                    $("#result-heading").hide();
+                    $("#no-result-heading").show();
                     return false;
                 }
                 else
                 {
-                    $("#result-heading").html("<div class='col-sm-8' style='padding-left:0px'><h3>Results:</h3></div>" +
-                            "<div class='col-sm-4' style='padding-left:0px'><h3>Filter Your Search</h3></div>");
+                    $("#no-result-heading").hide();
+                    $("#result-heading").show();
                 }
                 for (var key = 0; key < results['object_list'].length; key++)
                 {
@@ -411,6 +429,8 @@
                 result = result.replace("'", "%27");
                 return result
             }
+
+
         });
     </script>
 
@@ -579,16 +599,21 @@
     </div>
 
     <div id="result-page" hidden="hidden">
-        <div class="row" id="result-heading">
-            <div class="col-sm-8" style="padding-left:0px">
+        <div class="row" id="result-heading" hidden="hidden">
+            <div class="col-sm-9" style="padding-left:0px">
                 <h3>Results</h3>
             </div>
-            <div class="col-sm-4" style="padding-left:0px">
+        </div>
+            <div class="col-sm-3" style="padding-left:0px">
                 <h3>Filter You Search</h3>
             </div>
         </div>
+        <div class="row" id="no-result-heading" hidden="hidden">
+            <div class='col-sm-12 text-center' style='padding-left:0px'><h3>Nothing Found!</h3></div>
+        </div>
+
         <div class="row" id="search-results">
-            <div class="col-sm-8" style="padding-left:0px">
+            <div class="col-sm-9" style="padding-left:0px">
                 <div class="list-group" id="search-results-list"></div>
                 <div class="row">
                     <div class="col-md-12 text-center">
@@ -596,8 +621,17 @@
                     </div>
                 </div>
             </div>
-            <div class="col-sm-4">
-                <div class="row panel-group" id="accordion-facets">
+            <div class="col-sm-3">
+                <div class="row panel-group" id="accordion-facets"></div>
+                <div class="text-center">
+                    <form id="all-patch-download-form" action="/downloads/" method="post">
+                        {% csrf_token %}
+                        <input type="hidden" class="this_url" name="this_url"  value="" />
+                        <input type="hidden" class="search_query" name="search_query" id="search_query" value="" />
+                        <button type="button" id="all-download" onClick="return confirm('Are you sure you want to add all results in this query to your cart?\nUse with caution: this may add undesired items if you haven\'t checked all the results!')" class="btn btn-success btn-sm" >
+                            Add All Query Results to Cart <span class="glyphicon glyphicon-plus"></span>
+                        </button>
+                    </form>
                 </div>
             </div>
         </div>

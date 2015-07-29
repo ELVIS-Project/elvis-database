@@ -144,12 +144,15 @@ class SolrSearch(object):
             if k == 'sortby':
                 self.solr_params.update({'sort': qdict.get(k)})
 
+            if k =='rows':
+                self.solr_params.update({'rows': qdict.get(k)})
+
         if qdict.get('q'):
             keywords = "({0})".format(self.parse_bool(qdict['q']))
             general_query.append(keywords)
         else:
             general_query.append("(*:*)")
-        if not qdict.get('typefilt[]'):
+        if not qdict.get('typefilt[]') and not qdict.get('type'):
             filter_query.append("type:(elvis_piece OR elvis_movement OR elvis_collection OR elvis_composer)")
 
         # AND together the prepared filters and query.
