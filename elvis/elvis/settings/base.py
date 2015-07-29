@@ -106,11 +106,11 @@ USE_TZ = True
 # CRA: we used to have composer images and user profile images; if we need
 #      them back, check commit dc8f8afe75b7137440c6488483566b8e2c366379
 MEDIA_URL = '/media/'
-MEDIA_ROOT = '/usr/local/elvis-database/media_root'
+MEDIA_ROOT = '/usr/local/elvis-database/media_root/'
 
 
 STATIC_URL = '/static/'
-STATIC_ROOT = '/usr/local/elvis-database/static_root'
+STATIC_ROOT = '/usr/local/elvis-database/static_root/'
 
 
 # Solr Settings
