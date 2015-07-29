@@ -31,12 +31,13 @@ class AttachmentPieceSerializer(serializers.HyperlinkedModelSerializer):
 
 class AttachmentMovementSerializer(serializers.HyperlinkedModelSerializer):
     composer = AttachmentComposerSerializer()
+    piece = AttachmentPieceSerializer()
     date_of_composition = serializers.DateField(format=None)
     date_of_composition2 = serializers.DateField(format=None)
 
     class Meta:
         model = Movement
-        fields = ('url', 'title', 'date_of_composition', 'date_of_composition2', 'composer', 'id')
+        fields = ('url', 'title', 'date_of_composition', 'date_of_composition2', 'composer', 'id', 'piece')
 
 
 class UserAttachmentSerializer(serializers.HyperlinkedModelSerializer):
@@ -71,6 +72,15 @@ class DownloadSerializer(serializers.ModelSerializer):
     collection_pieces = DownloadPieceSerializer(many=True)
     collection_movements = AttachmentMovementSerializer(many=True)
     attachments = UserAttachmentSerializer(many=True)
+    created = serializers.DateField(format=None)
+
+    class Meta:
+        model = Download
+
+class CartSerializer(serializers.ModelSerializer):
+    user = UserDownloadSerializer()
+    collection_pieces = DownloadPieceSerializer(many=True)
+    collection_movements = AttachmentMovementSerializer(many=True)
     created = serializers.DateField(format=None)
 
     class Meta:

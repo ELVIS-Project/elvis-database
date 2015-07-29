@@ -33,7 +33,7 @@
         {
 
             $("#collection-table").tablesorter({
-                headers: {0: {sorter: false}, 1: {sorter: false}, 2: {sorter: false}},
+                headers: {0: {sorter: false}, 1: {sorter: false}},
                 textExtraction: "complex"
             });
 
@@ -176,8 +176,23 @@
         </div>
     </div>
 
-    <div class="page-header">
-        <h2>Your Cart</h2>
+    <div class="row">
+        <h2>
+            Your Cart
+            <span class="pull-right">
+                <button id="open-clear-modal" type="button" class="btn btn-danger">
+                    <span class="glyphicon glyphicon-remove"></span> Clear Cart
+                </button>
+                <button id="save-collection" name="save-collection" type="button" class="btn btn-primary">
+                    <span class="glyphicon glyphicon-floppy-disk"></span> Save as Collection
+                </button>
+                <button id="download-collection" name="download-collection" type="button" class="btn btn-info">
+                    <span class="glyphicon glyphicon-download"></span> Download
+                </button>
+            </span>
+        </h2>
+        <hr>
+
     </div>
 
     {% if content.collection_pieces or content.collection_movements %}
@@ -185,19 +200,17 @@
         modify it, or proceed to the download screen.</span>
         <table class="table" id="collection-table">
             <colgroup>
-                <col class="text-center" style="width: 7%;">
                 <col class="text-center" style="width: 10%;">
                 <col hidden="hidden">
                 <col style="width: 30%;">
-                <col style="width: 30%;">
+                <col style="width: 20%;">
                 <col style="width: 16%;">
-                <col style="width: 10%;">
+                <col style="width: 20%;">
             </colgroup>
             <thead id="table-head">
             <tr>
                 <th class="text-center">Remove</th>
                 <th hidden="hidden">ID</th>
-                <th class="text-center">Movements</th>
                 <th>Title</th>
                 <th>Composer</th>
                 <th>Date</th>
@@ -208,57 +221,47 @@
             {% for piece in content.collection_pieces %}
                 <tr>
                     <td class="text-center">
+                        <div style="min-height:36px">
                         <button type="button" class="btn btn-sm remove-row" name="remove-item"><span
                                 class="glyphicon glyphicon-remove"></span></button>
+                        </div>
                     </td>
                     <td style="display: none;">{{ piece.id }}</td>
-                    <td class="text-center">{% if piece.movements %}
-                        <span class="label label-primary">{{ piece.movements | length }} movement{{ piece.movements|length|pluralize }}</span> {% endif %}
-                    </td>
                     <td><a href="{{ piece.url }}">{{ piece.title }}</a></td>
                     <td><a href="{{ piece.composer.url }}">{{ piece.composer.name }}</a></td>
                     <td>{% if piece.date_of_composition  == piece.date_of_composition2 %}
                         {{ piece.date_of_composition | date:"Y" }}{% else %}{{ piece.date_of_composition | date:"Y" }}-
                         {{ piece.date_of_composition2 | date:"Y" }}{% endif %}</td>
-                    <td><span class="label label-success">Piece</span></td>
+                    <td><span class="label label-success">Piece</span>{% if piece.movements %}<br>
+                        <span class="label label-default">+ {{ piece.movements | length }} movement{{ piece.movements|length|pluralize }}</span> {% endif %}</td>
+
                 </tr>
             {% endfor %}
             {% for movement in content.collection_movements %}
                 <tr>
                     <td class="text-center">
+                        <div style="min-height:36px">
                         <button type="button" class="btn btn-sm remove-row" name="remove-item"><span
                                 class="glyphicon glyphicon-remove"></span></button>
+                        </div>
                     </td>
                     <td style="display: none;">{{ movement.id }}</td>
-                    <td></td>
                     <td><a href="{{ movement.url }}">{{ movement.title }}</a></td>
                     <td><a href="{{ movement.composer.url }}">{{ movement.composer.name }}</a></td>
                     <td>{% if movement.date_of_composition  == movement.date_of_composition2 %}
                         {{ movement.date_of_composition | date:"Y" }}{% else %}{{ movement.date_of_composition | date:"Y" }}
                         -{{ movement.date_of_composition2 | date:"Y" }}{% endif %}</td>
-                    <td><span class="label label-primary">Movement</span></td>
+                    <td><span class="label label-primary">Movement</span><br><span class="label label-default">{{ movement.piece.title }}</span></td>
                 </tr>
             {% endfor %}
             </tbody>
         </table>
         <div class="row">
             <div class="col-sm-12">
-                <button id="open-clear-modal" type="button" class="btn btn-danger">
-                    <span class="glyphicon glyphicon-remove"></span> Clear Cart
-                </button>
-                <button id="save-collection" name="save-collection" type="button" class="btn btn-primary pull-right"><span
-                        class="glyphicon glyphicon-floppy-disk"></span> Save as Collection
-                </button>
+
             </div>
         </div>
         <br>
-        <div class="row">
-            <div class="col-sm-12">
-            <button id="download-collection" name="download-collection" type="button" class="btn btn-info pull-right"><span
-                    class="glyphicon glyphicon-download"></span> Download
-            </button>
-        </div>
-        </div>
     {% else %}
         <div class="text-center">Nothing added yet to your collection!</div>
     {% endif %}

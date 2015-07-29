@@ -14,7 +14,7 @@ from elvis.models import Download
 from elvis.forms.create import CollectionForm
 from django.views.decorators.csrf import csrf_protect
 from django.utils.decorators import method_decorator
-from elvis.serializers.download import DownloadSerializer
+from elvis.serializers.download import CartSerializer
 from django.core.exceptions import ObjectDoesNotExist
 from django.http import HttpResponseRedirect, HttpResponse
 
@@ -126,7 +126,7 @@ class CollectionDetail(generics.RetrieveUpdateDestroyAPIView):
 class CollectionCurrent(generics.RetrieveUpdateDestroyAPIView):
     model = Download
     permission_classes = (permissions.IsAuthenticated,)
-    serializer_class = DownloadSerializer
+    serializer_class = CartSerializer
     renderer_classes = (JSONRenderer, CollectionCurrentHTMLRenderer)
     queryset = Download.objects.all()
 
