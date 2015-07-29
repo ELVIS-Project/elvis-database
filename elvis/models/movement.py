@@ -134,7 +134,9 @@ def solr_index(sender, instance, created, **kwargs):
          'instruments_voices': instruments_voices,
          'languages': languages,
          'locations': locations,
-         'sources': sources}
+         'sources': sources,
+         'file_formats': movement.file_formats,
+         }
     solrconn.add(**d)
     solrconn.commit()
 
