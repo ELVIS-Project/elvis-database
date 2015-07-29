@@ -1,7 +1,7 @@
 {% if user.is_authenticated %}
     <form class="recursive-patch-download-form" action="/downloads/" method="post"/>
         {% csrf_token %}
-    <button type="button" class="btn btn-mini btn-success" data-container="body" data-toggle="tooltip" data-placement="top" title="Add to collection." ><span class="glyphicon glyphicon-plus"> </span> </button>
+    <button type="button" class="btn btn-mini btn-success" data-container="body" data-toggle="tooltip" data-placement="top" title="Add to Cart." ><span class="glyphicon glyphicon-plus"> </span> </button>
 
    	<input type="hidden" name="item_type"  value="{{ download_type }}" />
    	<input type="hidden" name="item_id"  value="{{ download_item_id }}" />
