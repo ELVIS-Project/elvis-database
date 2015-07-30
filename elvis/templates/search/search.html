@@ -68,16 +68,19 @@
             });
 
             //Button to add entire query to cart
-            $("#all-download").click(function(){
+            $("#all-download").click(function ()
+            {
                 document.getElementById("search_query").value = window.location.href;
                 $.ajax(
                         {
                             type: 'post',
                             url: '/downloads/',
                             data: $("#all-patch-download-form").serialize(),
-                            success: function (data) {
+                            success: function (data)
+                            {
                                 var $collection_count = $('#collection-count');
-                                $collection_count.fadeOut(100, function () {
+                                $collection_count.fadeOut(100, function ()
+                                {
                                     $collection_count.text('(' + data.count + ')');
                                 });
                                 $collection_count.fadeIn(100);
@@ -166,14 +169,14 @@
 
                         $("#" + fadewindow).fadeOut(300, function ()
                         {
-                            writeResults(results)
+                            drawResults(results)
                         }).fadeIn();
                     }
                 })
             }
 
             //Write the results of a query to the page (including drawing paginators and facets)
-            function writeResults(results)
+            function drawResults(results)
             {
                 var $results = $("#search-results-list");
                 $results.html("");
@@ -206,25 +209,32 @@
                         else
                             death = "Unknown";
 
-                        $results.append("<a href='/composer/" + entry['item_id'] + "' class='list-group-item search-result-item'>" +
-                                "<span class='label label-default pull-right'>Composer</span><h4><span id='add" + key + "'></span> " + entry['name'] + "</h4>" +
-                                "<p class='list-group-item-text'>" + birthday + "-" + death + "</p></a>");
+                        $results.append("<div class='row search-result-row row-eq-height'>" +
+                                "<div class='col-xs-1 search-result-add' id='result-list-add" + key + "'><div id='add" + key + "'></div></div>" +
+                                "<a href='/composer/" + entry['item_id'] + "' id='result-list-item" + key + "' class='search-result-item col-xs-11'>" +
+                                "<span class='label label-default right-label'>Composer</span><h4>" + entry['name'] + "</h4>" +
+                                "<p class='list-group-item-text'>" + birthday + "-" + death + "</p>" +
+                                "</a></div>");
                         create_download_badge("elvis_composer", entry['item_id'], "add" + key);
                         continue;
                     }
                     if (entry['type'] === "elvis_collection")
                     {
-                        $results.append("<a href='/collection/" + entry['item_id'] + "' class='list-group-item search-result-item'>" +
-                                "<span class='label label-info pull-right'>Collection</span><h4><span id='add" + key + "'></span> " + entry['title'] + "</h4>" +
-                                "<p class='list-group-item-text'> Created by: " + entry['creator_name'] + " on " + entry['created'].slice(0, 4) + "</p></a>");
+                        $results.append("<div class='row search-result-row row-eq-height'>" +
+                                "<div class='col-xs-1 search-result-add' id='result-list-add" + key + "'><div id='add" + key + "'></div></div>" +
+                                "<a href='/composer/" + entry['item_id'] + "' id='result-list-item" + key + "' class='search-result-item col-xs-11'>" +
+                                "<span class='label label-info pull-right' style='margin-top:10px'>Collection</span><h4>" + entry['title'] + "</h4>" +
+                                "<p class='list-group-item-text'>Created By: " + entry['creator_name'] + " on " + entry['created'].substring(0,10)  + "</p>" +
+                                "</a></div>");
                         create_download_badge("elvis_collection", entry['item_id'], "add" + key);
                         continue;
                     }
                     if (entry['type'] === "elvis_movement")
                     {
-
-                        var result = "<a href='/movement/" + entry['item_id'] + "' class='list-group-item search-result-item'>" +
-                                "<span class='label label-primary pull-right'>Movment</span><h4><span id='add" + key + "'></span> " + entry['title'] + "</h4>";
+                        var result = "<div class='row search-result-row row-eq-height'>" +
+                                "<div class='col-xs-1 search-result-add' id='result-list-add" + key + "'><div id='add" + key + "'></div></div>" +
+                                "<a href='/composer/" + entry['item_id'] + "' id='result-list-item" + key + "' class='search-result-item col-xs-11'>" +
+                                "<span class='label label-primary right-label'>Movement</span><h4>" + entry['title'] + "</h4>";
                         if (entry['parent_piece_name'] !== undefined)
                         {
                             result += "<p class='list-group-item-text'> Piece: " + entry['parent_piece_name'] + "</p>";
@@ -235,22 +245,24 @@
                         {
                             result += "<p class='list-group-item-text'> Tags: " + entry['tags'] + "</p>";
                         }
-                        result += "</a>";
+                        result += "</a></div>";
                         $results.append(result);
                         create_download_badge("elvis_movement", entry['item_id'], "add" + key);
                         continue;
                     }
                     if (entry['type'] === "elvis_piece")
                     {
-                        var result = "<a href='/piece/" + entry['item_id'] + "' class='list-group-item search-result-item'>" +
-                                "<span class='label label-success pull-right'>Piece</span><h4><span id='add" + key + "'></span> " + entry['title'] + "</h4>" +
+                        var result = "<div class='row search-result-row row-eq-height'>" +
+                                "<div class='col-xs-1 search-result-add' id='result-list-add" + key + "'><div id='add" + key + "'></div></div>" +
+                                "<a href='/composer/" + entry['item_id'] + "' id='result-list-item" + key + "' class='search-result-item col-xs-11'>" +
+                                "<span class='label label-success right-label'>Piece</span><h4> " + entry['title'] + "</h4>"+
                                 "<p class='list-group-item-text'> Composer: " + entry['composer_name'] + "</p>" +
                                 "<p class='list-group-item-text'> Date: " + entry['date_of_composition2'].slice(0, 4) + "</p>";
                         if (entry['tags'] !== undefined)
                         {
                             result += "<p class='list-group-item-text'> Tags: " + entry['tags'] + "</p>";
                         }
-                        result += "</a>";
+                        result += "</a></div>";
                         $results.append(result);
                         create_download_badge("elvis_piece", entry['item_id'], "add" + key);
                         continue;
@@ -258,7 +270,6 @@
                 }
                 drawPageLinks(results);
                 drawFacets(results);
-
             }
 
             //Draw the paginators at the bottom of the page.
@@ -363,16 +374,15 @@
                             var facet_name = j.slice(6)[0].toUpperCase() + j.slice(7);
                         else
                             var facet_name = j;
-
-                        facet_body += "<li class='facet-list'>" +
-                                "<div id='facet-container-" + encodeName(j) + "' class='facet-wrapper'>" +
+                        facet_body += "<div class='facet-list'>" +
+                                "<div id='facet-"+keys[i]+"-" + encodeName(j) + "' class='facet-wrapper'>" +
                                 "<label class='facet-label' for='facet-link-" + encodeName(j) + "-" + keys[i] + "'>" +
                                 "<input type='checkbox' class='facet-link' style='margin: 4px 4px 0' data-facet-name='" + keys[i] +
                                 "' data-facet-value='" + encodeName(j) + "' id='facet-link-" + encodeName(j) + "-" + keys[i] + "'>" +
                                 facet_name + "  (" + facet_list[j] + ")" +
                                 "</label>" +
                                 "</div>" +
-                                "</li>";
+                                "</div>";
                     }
                     facet_body += "</div></div></div>";
                     facet_containers += facet_head + facet_body;
@@ -429,8 +439,6 @@
                 result = result.replace("'", "%27");
                 return result
             }
-
-
         });
     </script>
 
@@ -454,8 +462,10 @@
                     <form id="general-search-form" action="/search/" method="get">
                         <div class="row">
                             <label for="gsearch-input" hidden="hidden">General Search Keyword</label>
+
                             <div class="input-group col-sm-10 col-sm-offset-1 col-md-8 col-md-offset-2">
-                                <input type="text" class="form-control input-lg" id='gsearch-input' style="text-align:center;"  autocomplete="off" name='q'/>
+                                <input type="text" class="form-control input-lg" id='gsearch-input'
+                                       style="text-align:center;" autocomplete="off" name='q'/>
                                 <span class="input-group-btn">
                                     <button class="btn btn-default btn-lg" type="button" id="gsearch-submit">
                                         <span class="glyphicon glyphicon-search"></span>
@@ -472,8 +482,10 @@
                     <form id="advanced-search-form" action="/search/" method="get">
                         <div class="row">
                             <label for="asearch-input" hidden="hidden">Advanced Search Keyword</label>
+
                             <div class="input-group col-sm-10 col-sm-offset-1 col-md-8 col-md-offset-2">
-                                <input type="text" id="asearch-input" class="form-control input-lg asearch-input" style="text-align:center;" name='q'/>
+                                <input type="text" id="asearch-input" class="form-control input-lg asearch-input"
+                                       style="text-align:center;" name='q'/>
                                 <span class="input-group-btn">
                                     <button class="btn btn-default btn-lg" type="button" id="asearch-submit">
                                         <span class="glyphicon glyphicon-search"></span>
@@ -493,6 +505,7 @@
                                 <label class="asearch-label" for="namefilt">Composer Name</label>
                                 <input type="text" class="form-control asearch-input" id="namefilt" name="namefilt"
                                        placeholder="Obrecht OR Bach">
+
                                 <div id="namefilt-suggestions"></div>
                             </div>
                         </div>
@@ -516,6 +529,7 @@
                                 <label class="asearch-label" for="tagfilt">Tags</label>
                                 <input type="text" class="form-control asearch-input" id="tagfilt" name="tagfilt"
                                        placeholder="Tag1 AND Tag2">
+
                                 <div id="tagfilt-suggestions"></div>
 
                             </div>
@@ -528,6 +542,7 @@
                             </div>
                         </div>
                         <br>
+
                         <div class="row asearch-row">
                             <div class="col-md-4">
                                 <label class="asearch-label" for="typefilt">Only results of this type</label><br>
@@ -577,7 +592,7 @@
                     <h4> Searching </h4>
 
                     <p> You may use the words AND, OR, NOT and surround statements in brackets on any field in order
-                    to better define your search parameters</p>
+                        to better define your search parameters</p>
 
                     <p> Each
                         <button class="btn btn-mini btn-success"><span class="glyphicon glyphicon-plus"></span></button>
@@ -604,16 +619,16 @@
                 <h3>Results</h3>
             </div>
             <div class="col-sm-3" style="padding-left:0px">
-                <h3>Filter You Search</h3>
+                <h3>Filter Your Search</h3>
             </div>
         </div>
         <div class="row" id="no-result-heading" hidden="hidden">
-            <div class='col-sm-12 text-center' style='padding-left:0px'><h3>Nothing Found!</h3></div>
+            <div class='col-sm-12 text-center'><h3>Nothing Found!</h3></div>
         </div>
 
         <div class="row" id="search-results">
-            <div class="col-sm-9" style="padding-left:0px">
-                <div class="list-group" id="search-results-list"></div>
+            <div class="col-sm-9">
+                <div class="row" id="search-results-list"></div>
                 <div class="row">
                     <div class="col-md-12 text-center">
                         <nav id="page-links"></nav>
@@ -625,10 +640,12 @@
                 <div class="text-center">
                     <form id="all-patch-download-form" action="/downloads/" method="post">
                         {% csrf_token %}
-                        <input type="hidden" class="this_url" name="this_url"  value="" />
-                        <input type="hidden" class="search_query" name="search_query" id="search_query" value="" />
-                        <button type="button" id="all-download" onClick="return confirm('Are you sure you want to add all results in this query to your cart?\nUse with caution: this may add undesired items if you haven\'t checked all the results!')" class="btn btn-success btn-sm" >
-                            Add All Query Results to Cart <span class="glyphicon glyphicon-plus"></span>
+                        <input type="hidden" class="this_url" name="this_url" value=""/>
+                        <input type="hidden" class="search_query" name="search_query" id="search_query" value=""/>
+                        <button type="button" id="all-download"
+                                onClick="return confirm('Are you sure you want to add all results in this query to your cart?\nUse with caution: this may add undesired items if you haven\'t checked all the results!')"
+                                class="btn btn-success btn-sm">
+                            Add All Query Results Downloads <span class="glyphicon glyphicon-plus"></span>
                         </button>
                     </form>
                 </div>

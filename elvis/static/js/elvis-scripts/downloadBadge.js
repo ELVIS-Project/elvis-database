@@ -3,12 +3,12 @@ function create_download_badge(item_type, item_id, DOM_id)
 {
     var $DOM = $("#" + DOM_id);
     $DOM.append("<form class='recursive-patch-download-form' action='/downloads/' method='post'>" +
-        "<button type='button' class='btn btn-mini btn-success' data-container='body' data-toggle='tooltip' data-placement='top' title='Add to Downloads' ><span class='glyphicon glyphicon-plus'> </span> </button>" +
+        "<a class='button btn btn-mini btn-success' data-container='body' data-toggle='tooltip' data-placement='top' title='Add to Downloads' ><span class='glyphicon glyphicon-plus'></span></a>" +
         "<input type='hidden' name='item_type'  value='" + item_type + "'/>" +
         "<input type='hidden' name='item_id'  value='"+ item_id + "'/>" +
         "</form>");
 
-    $('.btn.btn-mini.btn-success').on('click', function(event)
+    $('.button.btn.btn-mini.btn-success').on('click', function(event)
     {
         event.preventDefault();
         event.stopImmediatePropagation();
