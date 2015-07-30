@@ -123,6 +123,7 @@ function autocomplete(inputField, suggestionField, dictionary, multiple) {
                             gotResults = true;
                         else
                             gotResults = false;
+
                         var suggestions = "";
                         for (var i = 0; i < data.length; i++)
                         {
@@ -181,7 +182,7 @@ function autocomplete(inputField, suggestionField, dictionary, multiple) {
 
     function write_input()
     {
-        if (multiple == 'list')
+        if (multiple === 'list')
         {
             var split_vals = $inputField.val().split(";");
             split_vals[split_vals.length-1] = selectedSuggestion;
@@ -192,7 +193,7 @@ function autocomplete(inputField, suggestionField, dictionary, multiple) {
             }
             $inputField.val(result);
         }
-        if (multiple == 'bool')
+        if (multiple === 'bool')
         {
             var split_vals = $inputField.val().split(/( AND | OR | NOT )/);
             debugger;
