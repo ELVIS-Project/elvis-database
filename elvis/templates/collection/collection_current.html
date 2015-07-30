@@ -41,9 +41,8 @@
 
             $(".remove-row").click(function (event)
             {
-                debugger;
                 var id = $(event.target).parents('tr').children()[1].textContent;
-                var type = $(event.target).parents('tr').children()[6].textContent;
+                var type = $(event.target).parents('tr').children()[5].textContent.split(/\n/)[0];
                 $(event.target).parents('tr').remove();
                 $.ajax({
                     type: "post",
