@@ -14,12 +14,13 @@ from .celery import app
 def rebuild_suggester_dicts():
     """Rebuild all suggester dictionaries in Solr"""
     for d in settings.SUGGEST_DICTS:
-        urllib2.urlopen(settings.SOLR_SERVER + "/suggest/?suggest.dictionary={0}&suggest.reload=true".format(d))
+        url = settings.SOLR_SERVER + "/suggest/?suggest.dictionary={0}&suggest.reload=true".format(d)
+        urllib2.urlopen(url)
 
 @app.task(name='elvis.elvis.zip_files')
 def zip_files(paths, username):
     # Start with status at 0 - so jQuery has something to do
-    i = 5
+    i = 0
     total = len(paths)
     percent = int_round(float(i) / float(total)) * 100
     zip_files.update_state(state='PROGRESS', meta={'curr': i, 'total': total, 'percent': percent})
@@ -37,7 +38,7 @@ def zip_files(paths, username):
         os.makedirs(dummy_path)
 
     # create name of zipped file
-    zip_name = "{0}-{1}.zip".format(datetime.datetime.utcnow().strftime("(%H:%M)-%w-%b-%y"), username)
+    zip_name = "{0}-{1}.zip".format(datetime.datetime.utcnow().strftime("(%H$p-%M-%S)-%w-%b-%y"), username)
 
     # Create zip archive iteratively by copying first, then adding to archive file
     # Change dir to the path
