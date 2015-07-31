@@ -13,4 +13,3 @@ media_root/*
 static_root/*
 pom.xml
 *.iml
-/.gitattributes

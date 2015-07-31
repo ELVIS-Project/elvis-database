@@ -1,0 +1,5 @@
+elvis/elvis/celery.py  merge=ours
+elvis/elvis/settings merge=ours
+manage.py merge=ours
+solr/solr/collection1/conf merge=ours
+elvis/elvis/wsgi.py merge=ours
