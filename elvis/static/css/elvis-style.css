@@ -121,6 +121,7 @@ html, body {
     padding-right:25px;
     padding-left: 15px;
 }
+
 .search-result-row
 {
     border-style: solid;
@@ -129,33 +130,54 @@ html, body {
     margin-bottom: -1px;
     min-height: 100px;
 }
-.search-result-row:first-child
+.list-row
+{
+    border-style: solid;
+    border-width: 1px;
+    border-color: #ddd;
+    margin-bottom: -1px;
+    min-height: 80px;
+}
+.search-result-row:first-child, .list-row:first-child
 {
     border-top-left-radius:4px;
     border-top-right-radius:4px;
 }
-.search-result-row:last-child
+.search-result-row:last-child, .list-row:last-child
 {
     border-bottom-left-radius:4px;
     border-bottom-right-radius:4px;
 }
-.search-result-row:hover {
+.search-result-row:hover, .list-row:hover
+{
     background-color:#f5f5f5;
 }
-.search-result-item {
+.search-result-item, .list-item
+{
     color: #555;
     text-decoration: none;
     padding: 10px 10px 10px 0px;
 }
-.search-result-item:hover {
+
+.search-result-item:hover,
+.search-result-item:active,
+.search-result-item:visited,
+.search-result-item:link,
+.list-item:hover,
+.list-item:active,
+.list-item:visited,
+.list-item:link
+{
     color: #555;
     text-decoration: none;
 }
-.search-result-add{
+
+.search-result-add, .list-add{
     text-align: center;
-    padding-top: 22px;
+    padding-top: 20px;
     border-right: 0px;
 }
+
 .form-control.search {
     text-align: center; 
     height: 70px;
@@ -316,7 +338,7 @@ body {
     display:         flex;
 }
 
-.right-label {
+.right-label, .right-badge {
     float: right !important;
     margin-top:10px;
 }
