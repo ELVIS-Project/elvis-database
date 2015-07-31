@@ -243,30 +243,18 @@ class Downloading(APIView):
 
     def get(self, request, *args, **kwargs):
         """ A view to report the progress to the user """
-        try:
-            task_id = request.GET['task']
-            task = AsyncResult(task_id)
-        except Exception:
-            return Response({"None" : "None"}, status=status.HTTP_400_BAD_REQUEST)
+        if request.GET.get('format') == 'json' and request.GET.get('task'):
+            try:
+                task_id = request.GET['task']
+                task = AsyncResult(task_id)
+                if task.ready():
+                    return Response({'ready': task.ready(), 'state': task.status, 'path': task.result['path'], 'info': task.info})
+                else:
+                    return Response({'ready': task.ready(), 'state': task.status, 'info': task.info})
+            except Exception:
+                return Response({'state': "FAILED"}, status=status.HTTP_400_BAD_REQUEST)
 
-        # Path is given in task.result only if it's ready.
-        if task.result and "path" in task.result and 'service' in request.GET:
-            path = task.result["path"]
-            file_name = os.path.basename(path)
-            response = HttpResponse(FileWrapper(file(path, "r")), content_type='application/zip')
-            # Required for download responses 
-            response["Content-Length"] = os.path.getsize(path)
-            response["Content-Disposition"] = 'attachment; filename=%s' % file_name
-            return response
-        elif task.result and "path" in task.result:
-            # to detect the download, set a cookie for an hour
-            response = Response({"None" : "None"}, status=status.HTTP_200_OK)
-            cookie_age = datetime.datetime.strftime(datetime.datetime.utcnow() + datetime.timedelta(seconds=3600), "%a, %d-%b-%Y %H:%M:%S GMT")
-            response.set_cookie(task_id, "downloading", max_age=600, expires=cookie_age, domain=settings.SESSION_COOKIE_DOMAIN, secure=settings.SESSION_COOKIE_SECURE or None)  
-            return response
-        
-        data = task.info
-        return Response(data, status=status.HTTP_200_OK)
+        return Response(status=status.HTTP_200_OK)
 
     @method_decorator(csrf_protect)
     def post(self, request, *args, **kwargs):

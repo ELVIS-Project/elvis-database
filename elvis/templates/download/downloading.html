@@ -9,75 +9,57 @@
 
 $(document).ready(function()
 {
-    
-    // To get the query string from current url
-    function getUrlVars()
-    {
-        var vars = [], hash;
-        var hashes = window.location.href.slice(window.location.href.indexOf('?') + 1).split('&');
-        for(var i = 0; i < hashes.length; i++)
-        {
-            hash = hashes[i].split('=');
-            vars.push(hash[0]);
-            vars[hash[0]] = hash[1];
-        }
-        return vars;
-    }
+    var $progress = $("#progress");
+    var $downloadLink = $("#download-link");
+    var checkInterval = setInterval(checkState, 250);
 
-    // To check for the download cookie
-    function getCookie(name) 
+    function checkState()
     {
-        var value = "; " + document.cookie;
-        var parts = value.split("; " + name + "=");
-        if (parts.length == 2) return parts.pop().split(";").shift();
-    }
-
-
-    // To update the progress bars, modified from http://elfga.com/blog/2012/10/03/bootstrap-progress-bar-update-jqueryajax/
-    var statePoll = setInterval(function()
-    {
-        // query the completion percentage from the server
-        // Get current task_id
-        var task_id = getUrlVars()["task"];
-        // Make it the next query and do the query
-        var download_cookie = getCookie(task_id);
-        $.get("").done(function(data)
-        {
-          // Old checks: "Content-Length" in data || !("percent" in data) || data["percent"] >= 100 || 
-            if(download_cookie)
+        var task_id = $.parseParams(window.location.search.replace("?", ""))['task'];
+        $.ajax({
+            type: "get",
+            url: "/downloading/?format=json&task=" + task_id,
+            success: function (data)
             {
-                // Stop interval from repeating
-                clearInterval(statePoll);
-                // Enable download button   
-                $("#progress").css('width',100+'%');
-                $("#progress").html("Files Ready");
-                $('#download_now').show();
-                $('#download_now').attr("href", "?task=" + task_id +"&service");
+                if (data['state'] === "PROGRESS")
+                {
+                    $progress.css("width", data['info']['percent'] + "%");
+                    $progress.text(data['info']['curr'] + "/" + data['info']['total'])
+                }
+                else if (data['ready'] === true && data['state'] === "SUCCESS")
+                {
+                    clearInterval(checkInterval);
+                    var link = '/media/' + data['path'];
+                    $($progress.parent()).removeClass('progress-striped');
+                    $progress.removeClass('active').css("width", "100%").text('Done!');
+                    $downloadLink.html("<a href='" + link + "' class='button btn btn-success'>Download Files</a>");
+                    window.location.replace(link);
+                }
+                else if (data['state'] === "FAILURE")
+                {
+                    $($progress.parent()).removeClass('progress-striped');
+                    $progress.removeClass("progress-bar-info active").addClass("progress-bar-danger").css("width", "100%").text("Failed!");
+                }
             }
-            // TODO: Handle bad requests
-            $("#progress").css('width', data["percent"]+'%');
-            if(data["percent"]) $("#progress").html(data["percent"]+'% of Files Zipped');
-        }
-        ); 
-    }, 500);
-}); 
-
+        })
+    }
+});
 </script> 
 
 <div class="col-md-12">
 
     <div class="page-header">
-        <h2>Downloading...</h2>
+        <h2>Zipping...</h2>
     </div>
-
-    <h4> Zip progress: </h4>
-
-    <div class="progress progress-striped active" id="progressouter" style="">
-      <div class="progress-bar progress-bar-info" id="progress" style="width:10%"></div>
-    </div> 
-    <iframe id="downloadFrame" style="display:none"></iframe>
-
-    <a href="" id="download_now" class="button" style="display: none">Download your files...</a>
+    <div class="row">
+        <div class="col-xs-12">
+            <div class="progress progress-striped">
+              <div class="progress-bar progress-bar-info active" id="progress" style="width:5%"></div>
+            </div>
+        </div>
+        <div class="col-xs-12 text-center" id="download-link">
+        </div>
+    </div>
 
 </div>
 
