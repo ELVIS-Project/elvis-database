@@ -223,7 +223,7 @@
                         $results.append("<div class='row search-result-row row-eq-height'>" +
                                 "<div class='col-xs-1 search-result-add' id='result-list-add" + key + "'><div id='add" + key + "'></div></div>" +
                                 "<a href='/collection/" + entry['item_id'] + "' id='result-list-item" + key + "' class='search-result-item col-xs-11'>" +
-                                "<span class='label label-info pull-right' style='margin-top:10px'>Collection</span><h4>" + entry['title'] + "</h4>" +
+                                "<span class='label label-info right-label' style='margin-top:10px'>Collection</span><h4>" + entry['title'] + "</h4>" +
                                 "<p class='list-group-item-text'>Created By: " + entry['creator_name'] + " on " + entry['created'].substring(0,10)  + "</p>" +
                                 "</a></div>");
                         create_download_badge("elvis_collection", entry['item_id'], "add" + key);
