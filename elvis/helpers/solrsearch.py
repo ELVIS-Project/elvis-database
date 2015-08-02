@@ -160,14 +160,21 @@ class SolrSearch(object):
         self.prepared_query = " AND ".join(general_query)
 
     def parse_bool(self, bool_string):
+        bools = ['AND', 'OR', 'NOT']
+        if not any(x in bool_string for x in bools):
+            return bool_string
+
+        if bool_string.startswith('NOT'):
+            bool_string = "* AND " + bool_string
+            
         bools = ['AND', 'OR', 'NOT', '(', ')']
-        args = re.split('( AND| OR| NOT|[(]|[)])', bool_string)
+        args = re.split('(AND|OR|NOT|[(]|[)])', bool_string)
         formatted_bool = []
         for a in args:
             a = a.strip()
             if not a or a == "":
                 continue
-            if a not in bools:
+            if a not in bools and a != '*':
                 formatted_bool.append('"{0}"'.format(a))
             else:
                 formatted_bool.append('{0}'.format(a))
