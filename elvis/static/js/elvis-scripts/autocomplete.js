@@ -182,10 +182,8 @@ function autocomplete(inputField, suggestionField, dictionary, multiple) {
 
     function write_input()
     {
-        debugger;
         if (multiple === 'list')
         {
-            debugger;
             var split_vals = $inputField.val().split(";");
             split_vals[split_vals.length-1] = selectedSuggestion;
             var result = split_vals[0] + "; ";
@@ -198,7 +196,6 @@ function autocomplete(inputField, suggestionField, dictionary, multiple) {
         else if (multiple === 'bool')
         {
             var split_vals = $inputField.val().split(/( AND | OR | NOT )/);
-            debugger;
             split_vals[split_vals.length-1] = selectedSuggestion;
             for (var i = 0; i < split_vals.length; i++)
             {
