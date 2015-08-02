@@ -88,7 +88,7 @@ function autocomplete(inputField, suggestionField, dictionary, multiple) {
                 var split_vals = $inputField.val().split(";");
                 var query = encodeURI(split_vals[split_vals.length-1].trim());
             }
-            if (multiple === 'bool')
+            else if (multiple === 'bool')
             {
                 var split_vals = $inputField.val().split(/( AND| OR| NOT )/);
                 var query = encodeURI(split_vals[split_vals.length-1].trim());
@@ -182,8 +182,10 @@ function autocomplete(inputField, suggestionField, dictionary, multiple) {
 
     function write_input()
     {
+        debugger;
         if (multiple === 'list')
         {
+            debugger;
             var split_vals = $inputField.val().split(";");
             split_vals[split_vals.length-1] = selectedSuggestion;
             var result = split_vals[0] + "; ";
@@ -193,7 +195,7 @@ function autocomplete(inputField, suggestionField, dictionary, multiple) {
             }
             $inputField.val(result);
         }
-        if (multiple === 'bool')
+        else if (multiple === 'bool')
         {
             var split_vals = $inputField.val().split(/( AND | OR | NOT )/);
             debugger;
