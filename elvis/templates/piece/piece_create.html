@@ -172,6 +172,13 @@ $(document).ready(function($)
         });
         $upload_fields.focusout(function(event){
             $(event.target.parentElement.children[0]).popover('hide');
+        });
+
+        //Limit date inputs to 4 characters.
+        $("[id$='date']").keypress(function (event) {
+            if (this.value.length > 3) {
+                return false
+            }
         })
     })
 
@@ -252,7 +259,7 @@ $(document).ready(function($)
                         <div class="col-md-6">
                             <div class="form-group">
                                 <div class="input-group">
-                                    <input type='date' name="composer_birth_date" id="composer_birth_date" max="2000-01-01" class="form-control unstyled"/>
+                                    <input type='number' name="composer_birth_date" id="composer_birth_date" max="2000" class="form-control unstyled" onkeypress='return event.charCode >= 48 && event.charCode <= 57'/>
                                     <span class="input-group-addon">Birth</span>
                                 </div>
                                 <div id="composer_birth_date_error"></div>
@@ -261,7 +268,7 @@ $(document).ready(function($)
                         <div class="col-md-6">
                             <div class="form-group">
                                 <div class="input-group">
-                                    <input type='date' name="composer_death_date" id="composer_death_date" max="2000-01-01" class="form-control unstyled"/>
+                                    <input type='number' name="composer_death_date" id="composer_death_date" max="2000" class="form-control unstyled" onkeypress='return event.charCode >= 48 && event.charCode <= 57'/>
                                     <span class="input-group-addon">Death</span>
                                 </div>
                                 <div id="composer_death_date_error"></div>
@@ -276,11 +283,11 @@ $(document).ready(function($)
                         <div class="form-group">
                             <div class="input-group">
                                 <span class="input-group-addon" data-toggle="popover" data-placement="top" data-trigger="focus" data-html='true' title="<b>Composition Start Date</b> <span class='label label-warning pull-right'>Optional</span>"
-                                      data-viewport="#new-piece-form" data-content="The date work began on the piece.<br>
+                                       data-content="The year work began on the piece.<br>
                                       <ul><li>If only one date is known, submit it as the 'Composition End Date'.</li>
                                         <li>If you don’t know the date(s) of the piece, input a reasonable date range (e.g. adult years of composer’s life, or date range of sources in which it
-                                      is found; you can also use dates from Grove).</li><li>If only the year is known, input 01/01/YYYY.</li></ul>">Composition Start Date</span>
-                                <input type='date' name="composition_start_date" id="composition_start_date" autocomplete='off' max="2000-01-01" class="form-control unstyled upload-input-field"/>
+                                      is found; you can also use dates from Grove).</li></ul>">Composition Start Date</span>
+                                <input type='number' name="composition_start_date" id="composition_start_date" placeholder="1600" autocomplete='off' max="2000" class="form-control unstyled upload-input-field" onkeypress='return event.charCode >= 48 && event.charCode <= 57'/>
                             </div>
                             <div id="composition_start_date_error"></div>
                         </div>
@@ -289,9 +296,9 @@ $(document).ready(function($)
                         <div class="form-group">
                             <div class="input-group">
                                 <span class="input-group-addon" data-toggle="popover" data-placement="top" data-trigger="focus" data-html='true' title="<b>Composition End Date</b><span class='label label-primary pull-right'>Required</span>"
-                                      data-content="The date the piece was completed, or the first date of publication.<br><ul><li>If you don’t know the date(s) of the piece, input a reasonable date range (e.g. adult years of composer’s life,
-                                      or date range of sources in which it is found; you can also use dates from Grove).</li><li>If only the year is known, input 01/01/YYYY.</li></ul>">Composition End Date</span>
-                                <input type='date' name="composition_end_date" id="composition_end_date" autocomplete='off' max="2000-01-01" class="form-control unstyled upload-input-field"/>
+                                      data-content="The year the piece was completed, or the first date of publication.<br><ul><li>If you don’t know the date(s) of the piece, input a reasonable date range (e.g. adult years of composer’s life,
+                                      or date range of sources in which it is found; you can also use dates from Grove).</li></ul>">Composition End Date</span>
+                                <input type='number' name="composition_end_date" id="composition_end_date" placeholder="1605" autocomplete='off' max="2000" class="form-control unstyled upload-input-field" onkeypress='return event.charCode >= 48 && event.charCode <= 57'/>
                             </div>
                             <div id="composition_end_date_error"></div>
                         </div>

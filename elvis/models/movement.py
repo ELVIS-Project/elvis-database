@@ -19,6 +19,8 @@ class Movement(models.Model):
     composer = models.ForeignKey("elvis.Composer", blank=True, null=True, related_name="movements")
     date_of_composition = models.DateField(blank=True, null=True)
     date_of_composition2 = models.DateField(blank=True, null=True)
+    new_date_of_composition = models.IntegerField(blank=True, null=True)
+    new_date_of_composition2 = models.IntegerField(blank=True, null=True)
     number_of_voices = models.IntegerField(blank=True, null=True)
     tags = models.ManyToManyField("elvis.Tag", blank=True, related_name="movements")
     genres = models.ManyToManyField("elvis.Genre", blank=True, related_name="movements")

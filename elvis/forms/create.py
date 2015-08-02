@@ -4,12 +4,12 @@ class PieceForm(forms.Form):
     # Basic Fields
     title = forms.CharField()
     composer = forms.CharField()
-    composition_start_date = forms.DateField(required=False)
-    composition_end_date = forms.DateField(required=False)
+    composition_start_date = forms.IntegerField(required=False)
+    composition_end_date = forms.IntegerField(required=False)
 
     # New composer fields
-    composer_birth_date = forms.DateField(required=False)
-    composer_death_date = forms.DateField(required=False)
+    composer_birth_date = forms.IntegerField(required=False)
+    composer_death_date = forms.IntegerField(required=False)
 
     collections = forms.CharField(required=True)
     number_of_voices = forms.IntegerField(required=True)
