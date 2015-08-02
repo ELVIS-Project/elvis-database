@@ -415,9 +415,7 @@ def abstract_model_factory(model_name, model_type, cleanup=Cleanup(), **kwargs):
                     tag = Tag.objects.get(name=token)
                     cleanup.list.append({"model": tag, "new": False})
                 except ObjectDoesNotExist:
-                    tag = Tag(name=token,
-                              created=datetime.datetime.now(pytz.utc),
-                              updated=datetime.datetime.now(pytz.utc))
+                    tag = Tag(name=token)
                     tag.save()
                     cleanup.list.append({"model": tag, "new": True})
                 tag_list.append(tag)
