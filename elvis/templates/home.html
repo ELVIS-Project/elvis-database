@@ -6,29 +6,13 @@
 
 {% block wrap %}
     <div id="home-jumbotron">
-        <div class="jumbotron">
-            <h1 id="home-title"> ELVIS Database</h1>
-
+        <div class="jumbotron home-jumbo">
+            <h1> ELVIS Database</h1>
             <p class="lead"> Polyphonic music in symbolic notation to search and download.</p>
         </div>
     </div>
 
     <div class="row" id="home-nav">
-        <div class="col-md-4">
-            <a href="/pieces/create/">
-                <div class="media ">
-                    <div class="pull-left">
-                        <img class="media-object img-responsive" src="{{ STATIC_URL }}/img/glyphicons_up.svg"
-                             alt="Upload Icon">
-                    </div>
-                    <div class="media-body">
-                        <h4 class="media-heading">Upload</h4>
-
-                        <p> ... your symbolic music encoded to the database.
-                    </div>
-                </div>
-            </a>
-        </div>
         <div class="col-md-4">
             <a href='/search/'>
                 <div class="media">
@@ -37,27 +21,40 @@
                              alt="Search Icon">
                     </div>
                     <div class="media-body">
-                        <h4 class="media-heading">Search</h4>
-
-                        <p> ... for other symbolic music files, metadata, and collections and test-sets.
+                        <h2 class="media-heading">Search</h2>
+                        <p>Powerful multi-field search for scores in symbolic notation with metadata.</p>
                     </div>
                 </div>
             </a>
         </div>
         <div class="col-md-4">
-            <a href='/collections/current/'>
-                <div class="media">
+        <a href='/collections/current/'>
+            <div class="media">
+                <div class="pull-left">
+                    <img class="media-object img-responsive" src="{{ STATIC_URL }}/img/glyphicons_down.svg"
+                         alt="Download Icon">
+                </div>
+                <div class="media-body">
+                    <h2 class="media-heading">Download</h2>
+                    <p>Add scores to your cart as if shopping, then download only the files you need.</p>
+                </div>
+            </div>
+        </a>
+    </div>
+        <div class="col-md-4">
+            <a href="/pieces/create/">
+                <div class="media ">
                     <div class="pull-left">
-                        <img class="media-object img-responsive" src="{{ STATIC_URL }}/img/glyphicons_down.svg"
-                             alt="Download Icon">
+                        <img class="media-object img-responsive" src="{{ STATIC_URL }}/img/glyphicons_up.svg"
+                             alt="Upload Icon">
                     </div>
                     <div class="media-body">
-                        <h4 class="media-heading">Download</h4>
-
-                        <p> ... files for use in the ELVIS Counterpoint Web Application or your own apps.
+                        <h2 class="media-heading">Upload</h2>
+                        <p>Upload pieces, movements, and collections of symbolic notation.</p>
                     </div>
                 </div>
             </a>
         </div>
+
     </div>
 {% endblock %}
