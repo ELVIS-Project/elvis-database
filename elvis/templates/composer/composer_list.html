@@ -15,7 +15,7 @@
             <div class='col-xs-1 list-add'>{% include "includes/download-badge-inc.html" with download_type="elvis_composer" download_item_id=composer.item_id %}</div>
             <a href='{{ composer.url }}' class='list-item col-xs-11'>
                 <span class='badge alert-info right-badge' style='margin-top:10px'>{{ composer.piece_count }} Pieces, {{ composer.movement_count }} Movements</span><h4>{{ composer.name }}</h4>
-                <p class='list-group-item-text'><small>{% if not composer.birth_date %} (Unknown) {% else %} ({{ composer.birth_date | date:"Y" }}&ndash;{{ composer.death_date | date:"Y" }}) {% endif %}</small><br>
+                <p class='list-group-item-text'><small>{% if not composer.birth_date %} (Unknown) {% else %} ({{ composer.birth_date }}&ndash;{{ composer.death_date }}) {% endif %}</small><br>
                 </p>
             </a>
         </div>

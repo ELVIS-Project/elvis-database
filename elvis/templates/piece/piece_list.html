@@ -17,7 +17,7 @@
             {% if piece.movement_count > 0 %}<span style="float:right;"><span class="label label-default">{{ piece.movement_count }} movement{{ piece.movement_count | pluralize }}</span></span> {% endif %}
             <h4>{{ piece.title }}<br>
                 <small>
-                    Composed by {{ piece.composer.name }} {% if piece.date_of_composition2 %}in {{ piece.date_of_composition2 | date:"Y" }}{% endif %}<br>
+                    Composed by {{ piece.composer.name }} {% if piece.date_of_composition2 %}in {{ piece.date_of_composition2 }}{% endif %}<br>
                 </small>
             </h4>
             {% if piece.tags %}<p class='list-group-item-text'>Tags: {% for tag in piece.tags %} <span class="label label-primary rounded"> {{tag.name}} </span> &nbsp; {% endfor %}</p>{% endif %}

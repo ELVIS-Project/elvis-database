@@ -58,9 +58,9 @@
                 <dd><a href="{{ content.composer.url }}">{{ content.composer.name }}</a></dd>
                 <dt>Date of Composition</dt>
                 {% if content.date_of_composition  == content.date_of_composition2 %}
-                    <dd>{{ content.date_of_composition | date:"Y" }}</dd>
+                    <dd>{{ content.date_of_composition }}</dd>
                 {% else %}
-                    <dd>{{ content.date_of_composition | date:"Y" }}-{{ content.date_of_composition2 | date:"Y" }} </dd>
+                    <dd>{{ content.date_of_composition }}-{{ content.date_of_composition2 }} </dd>
                 {% endif %}
                 <dt>Number of voices</dt>
                 <dd>
