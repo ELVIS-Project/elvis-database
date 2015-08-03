@@ -60,7 +60,7 @@
             {% if user.is_authenticated %}
                 <ul class="nav navbar-nav navbar-right">
                     <li>
-                        <a href="/collections/current/">
+                        <a href="/download/cart/">
                             <span class="glyphicon glyphicon-circle-arrow-down hidden-xs"></span> Download Cart
                             <span id="collection-count">({{ user.downloads.all.first.cart_size }})</span>
                         </a>
@@ -85,7 +85,7 @@
     </nav>
 
     <div id="content">
-        <div class="container">
+        <div class="container" id="content-container">
             {% if not user.is_authenticated %}
                 <a href="/login/" class="login-alert">
                     <div class="alert alert-info text-center login-alert">

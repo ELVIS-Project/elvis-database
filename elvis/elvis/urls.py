@@ -37,6 +37,7 @@ urlpatterns += format_suffix_patterns(
         #url(r'^users/$', UserList.as_view(), name="user-list"),
         url(r'^user/(?P<pk>[0-9]+)/$', UserDetail.as_view(), name="user-detail"),
         url(r'^account/$', UserAccount.as_view(), name="user-account"),
+        url(r'^register/$', UserAccount.as_view(), name="user-account"),
         url(r'^account/update/$', UserUpdate.as_view(), name="user-update"),
         url(r'^account/password_change/$', auth_views.password_change, {'template_name': 'user/password_change.html'}, name='password_change'),
         url(r'^account/password_change_done/$', auth_views.password_change_done, {'template_name': 'user/password_change_done.html'}, name='password_change_done'),
@@ -60,7 +61,7 @@ urlpatterns += format_suffix_patterns(
 
         url(r'^collections/$', CollectionList.as_view(), name="collection-list"),
         url(r'^collection/(?P<pk>[0-9]+)/$', CollectionDetail.as_view(), name="collection-detail"),
-        url(r'^collections/current/$', CollectionCurrent.as_view(), name="collection-create"),
+        url(r'^download/cart/$', CollectionCurrent.as_view(), name="collection-create"),
 
         url(r'^composers/$', ComposerList.as_view(), name="composer-list"),
         url(r'^composer/(?P<pk>[0-9]+)/$', ComposerDetail.as_view(), name="composer-detail"),
