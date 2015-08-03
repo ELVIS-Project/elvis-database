@@ -69,7 +69,7 @@ class ProjectAdmin(admin.ModelAdmin):
 
 
 class PieceAdmin(admin.ModelAdmin):
-    list_display = ("title", "composer", "date_of_composition", "uploader", "created", "updated")
+    list_display = ("title", "composer", "uploader", "created", "updated")
     # Other things for interest: , "attached_files", "tagged_as"
     filter_horizontal = ("tags",)
     readonly_fields = ("attachments",)
@@ -79,7 +79,7 @@ class PieceAdmin(admin.ModelAdmin):
 
 
 class MovementAdmin(admin.ModelAdmin):
-    list_display = ("title", "composer", "date_of_composition", "uploader", "created", "updated")
+    list_display = ("title", "composer", "uploader", "created", "updated")
     # Other things for interest , "attached_files", "tagged_as"
     filter_horizontal = ("tags",)
     readonly_fields = ("attachments",)
@@ -95,7 +95,7 @@ class CollectionAdmin(admin.ModelAdmin):
 
 
 class ComposerAdmin(SimpleHistoryAdmin):
-    list_display = ("name", "birth_date", "death_date")
+    list_display = ("name",)
     actions = [reindex_in_solr, delete_in_solr]
     list_per_page = listperpage
     list_max_show_all = listmaxshowall

@@ -15,8 +15,8 @@ class Composer(models.Model):
 
     old_id = models.IntegerField(db_index=True, blank=True, null=True)
     name = models.CharField(max_length=255)
-    birth_date = models.DateField(blank=True, null=True)
-    death_date = models.DateField(blank=True, null=True)
+    old_birth_date = models.DateField(blank=True, null=True)
+    old_death_date = models.DateField(blank=True, null=True)
     new_birth_date = models.IntegerField(blank=True, null=True)
     new_death_date = models.IntegerField(blank=True, null=True)
     history = HistoricalRecords()
