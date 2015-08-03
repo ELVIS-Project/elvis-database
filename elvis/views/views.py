@@ -19,8 +19,6 @@ import pytz
 import os
 import zipfile
 
-import pdb
-from django.contrib.auth import views as auth_views
 
 class Cleanup:
     """Keep track of created objects during an attempt to create a new piece. """
@@ -58,7 +56,7 @@ def solr_suggest(request):
     return HttpResponse(j_results, content_type="json")
 
 
-def upload_files(request, file_name):
+def upload_files(request, file_name, parent):
     """Upload files to a temporary directory, unzip any .zip files along the way.
 
     :param request: Django request object.
@@ -76,21 +74,21 @@ def upload_files(request, file_name):
         # If the file has an accepted extension, upload it.
         if not any(f.name.startswith(x) for x in settings.ELVIS_BAD_PREFIX) and any(
                 f.name.endswith(x) for x in settings.ELVIS_EXTENSIONS):
-            upload_file(f, settings.MEDIA_ROOT + 'temp/' + f.name)
+            upload_file(f, os.path.join(settings.MEDIA_ROOT, 'temp/', f.name))
             files.append({'name': f.name,
                           'uploader': request.user.username,
-                          'path': settings.MEDIA_ROOT + 'temp/'})
+                          'path': os.path.join(settings.MEDIA_ROOT, 'temp/')})
 
         # Or, if the file is a zip file, upload, extract good files, then delete the archive.
         if f.name.endswith('.zip'):
-            upload_file(f, settings.MEDIA_ROOT + 'temp/' + f.name)
+            upload_file(f, os.path.join(settings.MEDIA_ROOT, 'temp/', f.name))
 
             try:
-                unzipped_files = unzip_file(settings.MEDIA_ROOT + 'temp/', f.name, delete=True)
+                unzipped_files = unzip_file(settings.MEDIA_ROOT + 'temp/', f.name, parent, delete_after=True)
                 for file_name in unzipped_files:
                     files.append({'name': file_name,
                                   'uploader': request.user.username,
-                                  'path': settings.MEDIA_ROOT + 'temp/'})
+                                  'path': os.path.join(settings.MEDIA_ROOT, 'temp/')})
             except zipfile.BadZipfile:
                 files.append({'name': f.name, 'error': "Zip file could not be opened."})
 
@@ -108,28 +106,36 @@ def upload_file(mem_file, local_path):
             destination.write(chunk)
 
 
-def unzip_file(file_dir, file_name, **kwargs):
+def unzip_file(file_dir, file_name, parent, **kwargs):
     """Unzip files with acceptable extensions to the archives directory.
 
     :param file_dir: Directory of the zip archive.
     :param file_name: Name of the zip archive.
-    :param kwargs: -delete: Deletes the archive after extraction.
+    :param kwargs: -delete_after: Deletes the archive after extraction.
     :return:
     """
     files = []
-    zipped_file = zipfile.ZipFile(file_dir + file_name, 'r')
+    zipped_file = zipfile.ZipFile(os.path.join(file_dir, file_name), 'r')
     file_contents = zipped_file.namelist()
 
+    i = 1
     for f_name in file_contents:
         if (not any(f_name.startswith(x) for x in settings.ELVIS_BAD_PREFIX) and
                 any(f_name.endswith(x) for x in settings.ELVIS_EXTENSIONS) and
                 not any(x in f_name for x in ('/', '\\'))):
             zipped_file.extract(f_name, file_dir)
-            files.append(f_name)
+            new_name = "{0}_{1}_{2}.{3}".format(parent.title.replace(" ", "-"),
+                                                parent.composer.name.replace(" ", "-"),
+                                                "file" + str(i),
+                                                f_name.rsplit('.')[-1])
+            new_name.replace('/', '-')
+            os.rename(os.path.join(file_dir, f_name), os.path.join(file_dir, new_name))
+            files.append(new_name)
+            i += 1
 
     zipped_file.close()
 
-    if 'delete_after' in kwargs and kwargs['delete']:
+    if 'delete_after' in kwargs:
         os.remove(file_dir + file_name)
 
     return files
@@ -146,26 +152,19 @@ def handle_attachments(request, parent, cleanup, file_name):
     """
     results = []
 
-    files = upload_files(request, file_name)
+    files = upload_files(request, file_name, parent)
     i = 1
     for f in files:
         att = Attachment()
         att.save()  # needed to create hash dir.
         cleanup.list.append({"model": att, "new": True})
         att.uploader = request.user
-
-        new_name = "{0}_{1}_{2}.{3}".format(parent.title.replace(" ", "-"),
-                                            parent.composer.name.replace(" ", "-"),
-                                            "file" + str(i),
-                                            f['name'].rsplit('.')[-1])
-        os.rename(f['path'] + f['name'], f['path'] + new_name)
-        with open("{0}/{1}".format(f['path'], new_name), 'r+') as dest:
+        with open(os.path.join(f['path'], f['name']), 'r+') as dest:
             file_content = File(dest)
-            att.attachment.save("{0}/{1}".format(att.attachment_path, new_name), file_content)
-        os.remove(f['path'] + new_name)
-
+            att.attachment.save(os.path.join(att.attachment_path, f['name']), file_content)
         att.save()
         results.append(att)
+        os.remove(os.path.join(f['path'], f['name']))
         i += 1
 
     for att in results:
@@ -205,7 +204,7 @@ def handle_dynamic_file_table(request, parent, table_name, cleanup=Cleanup()):
             mov_free_tags_string = request.POST.get('mov' + k + "_free_tags")
             mov_vocalization = request.POST.get('mov' + k + "_vocalization")
             mov_comment = request.POST.get('mov' + k + "_comment")
-
+            mov_comment = request.POST.get('mov' + k + "_comment")
             new_mov = Movement(title=files[k],
                                position=i,
                                date_of_composition=parent.date_of_composition,
