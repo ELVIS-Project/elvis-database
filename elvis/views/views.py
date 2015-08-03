@@ -65,8 +65,8 @@ def upload_files(request, file_name, parent):
     """
     files = []
 
-    if not os.path.exists(settings.MEDIA_ROOT + 'temp/'):
-        os.makedirs(settings.MEDIA_ROOT + 'temp/')
+    if not os.path.exists(os.path.join(settings.MEDIA_ROOT + 'temp/')):
+        os.makedirs(os.path.join(settings.MEDIA_ROOT + 'temp/'))
 
     file_list = request.FILES.getlist(file_name)
 
