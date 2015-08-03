@@ -159,7 +159,7 @@ def handle_attachments(request, parent, cleanup, file_name):
                                             parent.composer.name.replace(" ", "-"),
                                             "file" + str(i),
                                             f['name'].rsplit('.')[-1])
-        new_name = new_name.replace('/', '-')
+        new_name = new_name.replace('/', '-').encode('ascii', 'ignore')
         os.rename(os.path.join(f['path'], f['name']), os.path.join(f['path'],new_name))
         with open(os.path.join(f['path'], new_name), 'r+') as dest:
             file_content = File(dest)
