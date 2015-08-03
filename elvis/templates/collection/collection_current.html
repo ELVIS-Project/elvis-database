@@ -91,15 +91,7 @@
 
             $("#download-collection").click(function ()
             {
-                $.ajax({
-                    type: "post",
-                    url: "/downloads/",
-                    data: {'prepare-cart': true},
-                    success: function (data)
-                    {
-                        window.location.replace("/downloads/")
-                    }
-                })
+                window.location.replace("/downloads/")
             });
 
 

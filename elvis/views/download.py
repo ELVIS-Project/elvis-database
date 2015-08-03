@@ -121,13 +121,14 @@ class DownloadDetail(generics.RetrieveUpdateAPIView):
             for movement in item.movements.all():
                 self._download_helper(movement, user_download)
         if item.__class__.__name__ == "Piece":
+            for att in item.attachments.all():
+                user_download.attachments.add(att)
             user_download.collection_pieces.add(item)
         if item.__class__.__name__ == "Movement":
             if item.piece not in user_download.collection_pieces.all():
                 user_download.collection_movements.add(item)
-
-
-
+                for att in item.attachments.all():
+                    user_download.attachments.add(att)
 
     # Choose the right model based on request, again to help recursive-patching
     def _type_selector(self, item_type, item_id, user_download):
@@ -194,21 +195,6 @@ class DownloadDetail(generics.RetrieveUpdateAPIView):
             user_download.save()
             jresults = json.dumps({'count': user_download.cart_size})
             return HttpResponse(content=jresults, content_type="json")
-
-        elif 'prepare-cart' in request.POST:
-            user_download.attachments.clear()
-            user_download.save()
-            for piece in user_download.collection_pieces.all():
-                for att in piece.attachments.all():
-                    user_download.attachments.add(att)
-                for mov in piece.movements.all():
-                    for att in mov.attachments.all():
-                        user_download.attachments.add(att)
-            for mov in user_download.collection_movements.all():
-                for att in mov.attachments.all():
-                    user_download.attachments.add(att)
-            user_download.save()
-            return HttpResponse(status=status.HTTP_200_OK)
 
         elif 'remove' in request.POST:
             type = request.POST.get('type')
