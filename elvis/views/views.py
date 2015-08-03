@@ -166,7 +166,7 @@ def handle_attachments(request, parent, cleanup, file_name):
             att.attachment.save(os.path.join(att.attachment_path, new_name), file_content)
         att.save()
         results.append(att)
-        os.remove(os.path.join(f['path'], f['name']))
+        os.remove(os.path.join(f['path'], new_name))
         i += 1
 
     for att in results:
