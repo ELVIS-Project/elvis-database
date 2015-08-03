@@ -131,12 +131,21 @@ def solr_index(sender, instance, created, **kwargs):
     else:
         composer_name = None
 
+    if piece.date_of_composition:
+        d1 = datetime.date(piece.date_of_composition, 01, 01)
+    else:
+        d1 = None
+    if piece.date_of_composition2:
+        d2 = datetime.date(piece.date_of_composition2, 01, 01)
+    else:
+        d2 = None
+
     d = {'type': 'elvis_piece',
          'id': str(uuid.uuid4()),
          'item_id': int(piece.id),
          'title': piece.title,
-         'date_of_composition': datetime.date(piece.date_of_composition, 01, 01),
-         'date_of_composition2': datetime.date(piece.date_of_composition2, 01, 01),
+         'date_of_composition': d1,
+         'date_of_composition2': d2,
          'number_of_voices': piece.number_of_voices,
          'created': piece.created,
          'updated': piece.updated,

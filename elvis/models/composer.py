@@ -58,12 +58,24 @@ def solr_index(sender, instance, created, **kwargs):
         solrconn.delete(record.results[0]['id'])
 
     composer = instance
+
+    if composer.birth_date:
+        birth = datetime.date(composer.birth_date, 01, 01)
+    else:
+        birth = None
+    if composer.death_date:
+        death = datetime.date(composer.death_date, 01, 01)
+    else:
+        death = None
+
+
+
     d = {'type': 'elvis_composer',
          'id': str(uuid.uuid4()),
          'item_id': int(composer.id),
          'name': composer.name,
-         'birth_date': datetime.date(composer.birth_date, 01, 01),
-         'death_date': datetime.date(composer.death_date, 01, 01),
+         'birth_date': birth,
+         'death_date': death,
          'created': composer.created,
          'updated': composer.updated,
          'composers_searchable': composer.name}

@@ -119,12 +119,20 @@ def solr_index(sender, instance, created, **kwargs):
     else:
         parent_piece = None
 
+    if movement.date_of_composition:
+        d1 = datetime.date(movement.date_of_composition, 01, 01)
+    else:
+        d1 = None
+    if movement.date_of_composition2:
+        d2 = datetime.date(movement.date_of_composition2, 01, 01)
+    else:
+        d2 = None
     d = {'type': 'elvis_movement',
          'id': str(uuid.uuid4()),
          'item_id': int(movement.id),
          'title': movement.title,
-         'date_of_composition': datetime.date(movement.date_of_composition, 01, 01),
-         'date_of_composition2': datetime.date(movement.date_of_composition2, 01, 01),
+         'date_of_composition': d1,
+         'date_of_composition2': d2,
          'number_of_voices': movement.number_of_voices,
          'created': movement.created,
          'updated': movement.updated,
