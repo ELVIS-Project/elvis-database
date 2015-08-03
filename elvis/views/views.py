@@ -124,7 +124,7 @@ def unzip_file(file_dir, file_name, parent, **kwargs):
                 any(f_name.endswith(x) for x in settings.ELVIS_EXTENSIONS) and
                 not any(x in f_name for x in ('/', '\\'))):
             zipped_file.extract(f_name, file_dir)
-            new_name = "{0}{1}.{3}".format("unzippedfile", str(i), f_name.rsplit('.')[-1])
+            new_name = "{0}{1}.{2}".format("unzippedfile", str(i), f_name.rsplit('.')[-1])
             os.rename(os.path.join(file_dir, f_name), os.path.join(file_dir, new_name))
             files.append(new_name)
             i += 1
