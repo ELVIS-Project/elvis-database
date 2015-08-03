@@ -124,11 +124,7 @@ def unzip_file(file_dir, file_name, parent, **kwargs):
                 any(f_name.endswith(x) for x in settings.ELVIS_EXTENSIONS) and
                 not any(x in f_name for x in ('/', '\\'))):
             zipped_file.extract(f_name, file_dir)
-            new_name = "{0}_{1}_{2}.{3}".format(parent.title.replace(" ", "-"),
-                                                parent.composer.name.replace(" ", "-"),
-                                                "file" + str(i),
-                                                f_name.rsplit('.')[-1])
-            new_name.replace('/', '-')
+            new_name = "{0}{1}.{3}".format("unzippedfile", str(i), f_name.rsplit('.')[-1])
             os.rename(os.path.join(file_dir, f_name), os.path.join(file_dir, new_name))
             files.append(new_name)
             i += 1
@@ -159,9 +155,15 @@ def handle_attachments(request, parent, cleanup, file_name):
         att.save()  # needed to create hash dir.
         cleanup.list.append({"model": att, "new": True})
         att.uploader = request.user
-        with open(os.path.join(f['path'], f['name']), 'r+') as dest:
+        new_name = "{0}_{1}_{2}.{3}".format(parent.title.replace(" ", "-"),
+                                            parent.composer.name.replace(" ", "-"),
+                                            "file" + str(i),
+                                            f['name'].rsplit('.')[-1])
+        new_name = new_name.replace('/', '-')
+        os.rename(os.path.join(f['path'], f['name']), os.path.join(f['path'],new_name))
+        with open(os.path.join(f['path'], new_name), 'r+') as dest:
             file_content = File(dest)
-            att.attachment.save(os.path.join(att.attachment_path, f['name']), file_content)
+            att.attachment.save(os.path.join(att.attachment_path, new_name), file_content)
         att.save()
         results.append(att)
         os.remove(os.path.join(f['path'], f['name']))
