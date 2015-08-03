@@ -10,41 +10,20 @@
 </div>
 {% include "paginate.html" with content=content %}
 
-<ul class="media-list">
 {% for movement in content.results %}
-    <li class="media">
-        <a href="{{ movement.url }}" class="list-group-item">
-            <h4 class="list-group-item-heading">{% include "includes/download-badge-inc.html" with download_type="elvis_movement" download_item_id=movement.item_id %} {{ movement.title }} <span style="float:right;">{{ movement.date_of_composition | date:"Y"}}</span></h4>
-            <p class="list-group-item-text"> In {{ movement.piece.title}} by {{ movement.composer.name }}
-            </p>
-            <p >
-                <ul>
-                    <li>
-                        {% if movement.date_of_composition  == movement.date_of_composition2 %} 
-                        Composed in {{ movement.date_of_composition | date:"Y"}}</dd> 
-                        {% else %}
-                        Composed between {{ movement.date_of_composition | date:"Y"}}-{{ movement.date_of_composition2 | date:"Y" }} </dd> 
-                        {% endif %}
-                    </li>
-                    <li>
-                        Uploaded by {{ movement.uploader.username }} on {{ movement.created | date:"d F Y"}} <em> with {{ movement.attachments | length }} {% if movement.attachments|length == 1 %} File {% else %} Files {% endif %}. </em>
-                    </li>
-                    <li>
-                        Tags: 
-                        {% for tag in movement.tags %}
-                            <span class="label label-primary rounded"> {{tag.name}} </span> &nbsp;
-                        {% endfor %}
-                    </li>
-                    {% if not movement.comment == None %}
-                         <li>{{ movement.comment}} </li>
-                    {% endif %}
-                </ul>
-            </p>
-        </a>
-    </li>
-    <br />
+    <div class="row list-row row-eq-height">
+        <div class='col-xs-1 list-add'>{% include "includes/download-badge-inc.html" with download_type="elvis_movement" download_item_id=movement.item_id %}</div>
+            <a href='{{ movement.url }}' class='list-item col-xs-11'>
+                <h4>{{ movement.title }}<br>
+                    <small>
+                        Composed by {{ movement.composer.name }} {% if movement.date_of_composition2 %}in {{ movement.date_of_composition2 | date:"Y" }}<br>{% endif %}
+                        {% if movement.piece %}Part of {{ movement.piece.title}}<br>{% endif %}
+                    </small>
+                </h4>
+                {% if movement.tags %}<p class='list-group-item-text'>Tags:{% for tag in movement.tags %} <span class="label label-primary rounded"> {{tag.name}} </span> &nbsp; {% endfor %}</p> {% endif %}
+            </a>
+    </div>
 {% endfor %}
-</ul>
 
 {% include "paginate.html" with content=content %}
 

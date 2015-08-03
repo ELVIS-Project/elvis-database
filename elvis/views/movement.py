@@ -3,7 +3,7 @@ from rest_framework import permissions
 from rest_framework.renderers import JSONRenderer
 
 from elvis.renderers.custom_html_renderer import CustomHTMLRenderer
-from elvis.serializers.movement import MovementSerializer
+from elvis.serializers.movement import MovementSerializer, MovementListSerializer
 from elvis.models.movement import Movement
 
 
@@ -18,7 +18,7 @@ class MovementDetailHTMLRenderer(CustomHTMLRenderer):
 class MovementList(generics.ListCreateAPIView):
     model = Movement
     permission_classes = (permissions.IsAuthenticatedOrReadOnly,)
-    serializer_class = MovementSerializer
+    serializer_class = MovementListSerializer
     renderer_classes = (JSONRenderer,MovementListHTMLRenderer)
     paginate_by = 20
     paginate_by_param = 'page_size'

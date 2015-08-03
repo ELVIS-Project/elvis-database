@@ -111,3 +111,16 @@ class PieceSerializer(serializers.HyperlinkedModelSerializer):
 
     class Meta:
         model = Piece
+
+class PieceListSerializer(serializers.HyperlinkedModelSerializer):
+    composer = ComposerPieceSerializer()
+    tags = TagPieceSerializer(many=True)
+    date_of_composition2 = serializers.DateField(format=None)
+    movement_count = serializers.IntegerField()
+    uploader = UserPieceSerializer()
+    created = serializers.DateTimeField(format=None)
+    item_id = serializers.ReadOnlyField(source='pk')
+
+    class Meta:
+        model = Piece
+        fields = ('title', 'url', 'composer', 'movement_count', 'tags', 'uploader', 'item_id', 'date_of_composition2', 'created')

@@ -113,3 +113,18 @@ class MovementSerializer(serializers.HyperlinkedModelSerializer):
 
     class Meta:
         model = Movement
+
+
+class MovementListSerializer(serializers.HyperlinkedModelSerializer):
+    composer = ComposerMovementSerializer()
+    tags = TagMovementSerializer(many=True)
+    uploader = UserMovementSerializer()
+    piece = PieceMovementSerializer()
+    item_id = serializers.ReadOnlyField(source='pk')
+    date_of_composition2 = serializers.DateField(format=None)
+    created = serializers.DateTimeField(format=None)
+
+    class Meta:
+        model = Movement
+        fields = ('title','composer', 'url', 'tags', 'uploader', 'piece', 'item_id', 'date_of_composition2', 'created')
+

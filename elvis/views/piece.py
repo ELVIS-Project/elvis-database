@@ -11,7 +11,7 @@ from rest_framework.renderers import JSONRenderer
 from rest_framework.response import Response
 
 from elvis.renderers.custom_html_renderer import CustomHTMLRenderer
-from elvis.serializers.piece import PieceSerializer
+from elvis.serializers.piece import PieceSerializer, PieceListSerializer
 from elvis.models.piece import Piece
 from elvis.forms import PieceForm
 from elvis.elvis.tasks import rebuild_suggester_dicts
@@ -58,7 +58,7 @@ class PieceCreate(generics.GenericAPIView):
 class PieceList(generics.ListCreateAPIView):
     model = Piece
     permission_classes = (permissions.IsAuthenticatedOrReadOnly,)
-    serializer_class = PieceSerializer
+    serializer_class = PieceListSerializer
     renderer_classes = (JSONRenderer, PieceListHTMLRenderer)
     paginate_by = 10
     paginate_by_param = 'page_size'
