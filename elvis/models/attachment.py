@@ -29,6 +29,7 @@ class Attachment(models.Model):
     """
     class Meta:
         app_label = "elvis"
+        ordering = ['id']
 
     @property
     def attachment_path(self):
