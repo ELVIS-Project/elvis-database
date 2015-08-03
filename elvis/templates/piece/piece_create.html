@@ -81,7 +81,7 @@
             {
                 if (event['target']['activeElement']['id'] === 'goto-piece')
                 {
-                    return false;
+                    event.preventDefault();
                 }
                 else
                 {
@@ -182,7 +182,7 @@
                 }
             });
 
-            $("#upload-page-content").html("<p class='lead text-center'>Sorry, uploads are temporarily disabled while the database is updated.</p>")
+            //$("#upload-page-content").html("<p class='lead text-center'>Sorry, uploads are temporarily disabled while the database is updated.</p>")
         })
 
     </script>

@@ -4,6 +4,7 @@ from django.db import models
 from simple_history.models import HistoricalRecords
 from django.dispatch import receiver
 from django.db.models.signals import post_save, post_delete
+import datetime
 
 def picture_path(instance, filename):
     return os.path.join(settings.MEDIA_ROOT, "pictures", "composers", filename)
@@ -61,8 +62,8 @@ def solr_index(sender, instance, created, **kwargs):
          'id': str(uuid.uuid4()),
          'item_id': int(composer.id),
          'name': composer.name,
-         'birth_date': composer.birth_date,
-         'death_date': composer.death_date,
+         'birth_date': datetime.date(composer.birth_date, 01, 01),
+         'death_date': datetime.date(composer.death_date, 01, 01),
          'created': composer.created,
          'updated': composer.updated,
          'composers_searchable': composer.name}
