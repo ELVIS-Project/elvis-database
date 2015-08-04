@@ -18,4 +18,4 @@ pom.xml
 manage.py
 solr/solr/collection1/conf/solrconfig.xml
 elvis/elvis/settings/base.py
-elivs/elvis/wsgy.py
+elvis/elvis/wsgi.py
