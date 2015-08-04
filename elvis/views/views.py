@@ -57,7 +57,7 @@ def solr_suggest(request):
                 for i in range(min(7,data['numFound'])):
                     results.append({'name': sorted_suggestions[i]['term']})
     j_results = json.dumps(results)
-    return HttpResponse(j_results, content_type="json")
+    return HttpResponse(j_results, content_type="application/json")
 
 
 def upload_files(request, file_name, upload_path):
