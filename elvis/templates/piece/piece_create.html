@@ -28,8 +28,8 @@
             autocomplete("sources", "source_suggestion_menu", "sourceSuggest", 'list');
             autocomplete("instruments_voices", "instrumentation_suggestion_menu", "instrumentSuggest", 'list');
             autocomplete("tags", "tags_suggestion_menu", "tagSuggest", 'list');
-            dynamicFileTable("new_mov", "movement_table", "mov", "Movement Files", true);
-            dynamicFileTable("new_piece_file", "piece_file_table", "piece", "Piece Files", false);
+            dynamicFileTable("new_mov", "movement_table", "mov", true);
+            dynamicFileTable("new_piece_file", "piece_file_table", "piece", false);
 
             $("#id_comp_pic").filestyle({
                 input: false,
@@ -81,7 +81,7 @@
             {
                 if (event['target']['activeElement']['id'] === 'goto-piece')
                 {
-                    event.preventDefault();
+                    $(window).off('beforeunload');
                 }
                 else
                 {
@@ -120,8 +120,8 @@
                         {
                             var $upload_modal = $('#upload_modal');
                             $upload_modal.find('.modal-title').html("Done!");
-                            $upload_modal.find('.modal-footer').html("<a href='/pieces/create/'><button class='btn btn-default pull-left'>Upload Another Piece</button></a>" +
-                                    "<a href='" + data['url'] + "'><button class='btn btn-default' id='goto-piece'>Go to Piece</button></a>");
+                            $upload_modal.find('.modal-footer').html("<a href='/pieces/create/' class='btn btn-default pull-left'>Upload Another Piece</a>" +
+                                    "<a href='" + data['url'] + "' class='btn btn-default' id='goto-piece'>Go to Piece</a>");
                             $upload_modal.find('.progress-bar').removeClass("progress-bar-striped active");
                         }
                         else
@@ -194,7 +194,7 @@
 {% block wrap %}
 
     <!-- Modal -->
-    <div class="modal fade" id="upload_modal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel"
+    <div class="modal fade" id="upload_modal" tabindex="-1" role="dialog"
          aria-hidden="true">
         <div class="modal-dialog">
             <div class="modal-content">
@@ -507,8 +507,8 @@
                 <colgroup>
                     <col class="text-center" style="width: 5%;">
                     <col style="width: 5%;">
-                    <col style="width: 55%;">
-                    <col style="width: 24%;">
+                    <col style="width: 40%;">
+                    <col style="width: 50%;">
                 </colgroup>
                 <tbody id="piece_file_table">
                 <tr>
@@ -538,9 +538,9 @@
                 <colgroup>
                     <col class="text-center" style="width: 5%;">
                     <col style="width: 5%;">
-                    <col style="width: 50%;">
-                    <col style="width: 15%;">
-                    <col style="width: 5%;">
+                    <col style="width: 40%;">
+                    <col style="width: 40%;">
+                    <col style="width: 10%;">
                 </colgroup>
                 <tbody id="movement_table">
                 <tr>
@@ -548,7 +548,7 @@
                     <th class="text-center">#</th>
                     <th>Movement Title</th>
                     <th>Files</th>
-                    <th>Advanced</th>
+                    <th class="text-center">Advanced</th>
                 </tr>
                 <!-- User can add rows for files here -->
                 </tbody>
