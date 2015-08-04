@@ -21,7 +21,7 @@ from elvis.models import Genre
 from elvis.models import InstrumentVoice
 from elvis.models import Tag
 from django.db.models import ObjectDoesNotExist
-
+from difflib import SequenceMatcher
 
 class Cleanup:
     """Keep track of created objects during an attempt to create a new piece. """
@@ -53,8 +53,9 @@ def solr_suggest(request):
             resp = json.loads(json_string.read())['suggest']['{0}'.format(dictionary)]
             data = resp[resp.keys()[0]]
             if data['numFound'] > 0:
-                for suggestion in data['suggestions']:
-                    results.append({'name': suggestion['term']})
+                sorted_suggestions = sorted(data['suggestions'], key=lambda s: SequenceMatcher(None, value, s['term']).ratio(), reverse=True)
+                for i in range(min(7,data['numFound'])):
+                    results.append({'name': sorted_suggestions[i]['term']})
     j_results = json.dumps(results)
     return HttpResponse(j_results, content_type="json")
 

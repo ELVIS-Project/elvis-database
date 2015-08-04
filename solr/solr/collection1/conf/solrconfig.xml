@@ -1438,7 +1438,7 @@
  <requestHandler name="/suggest" class="solr.SearchHandler" startup="lazy" >
    <lst name="defaults">
      <str name="suggest">true</str>
-     <str name="suggest.count">5</str>
+     <str name="suggest.count">15</str>
    </lst>
    <arr name="components">
      <str>suggest</str>

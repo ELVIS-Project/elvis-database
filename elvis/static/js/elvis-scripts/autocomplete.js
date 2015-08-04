@@ -1,21 +1,23 @@
 /*
-    Generates typeahead style suggestions based on a solr search. The /suggest/ page should
-    be configured to process GET requests by querying the Solr suggestion module and returning
-    a JSON array of names.
+ Generates typeahead style suggestions based on a solr search. The /suggest/ page should
+ be configured to process GET requests by querying the Solr suggestion module and returning
+ a JSON array of names.
 
-    Example:
-    Given q = 'ba' and d = 'composerSearch', /suggest/ should request a JSON string from
-    SOLR_SERVER/suggest/?wt=json&suggest.dictionary=composerSearch&q=ba
+ Example:
+ Given q = 'ba' and d = 'composerSearch', /suggest/ should request a JSON string from
+ SOLR_SERVER/suggest/?wt=json&suggest.dictionary=composerSearch&q=ba
 
-    inputField: The id of the HTML input field who's value will be sent as a query.
-    suggestionField: The id of the HTML list where results will be sent.
-    dictionary: The name of the suggestion dictionary to be used.
+ inputField: The id of the HTML input field who's value will be sent as a query.
+ suggestionField: The id of the HTML list where results will be sent.
+ dictionary: The name of the suggestion dictionary to be used.
  */
-function autocomplete(inputField, suggestionField, dictionary, multiple) {
+function autocomplete(inputField, suggestionField, dictionary, multiple)
+{
     var menuActive = -1;
     var menuSize = -1;
     var isInit = true;
     var gotResults = true;
+    var chosenSuggestion = "";
     var selectedSuggestion;
     var $inputField = $("#" + inputField);
     var $suggestionMenu = $("#" + suggestionField);
@@ -81,31 +83,33 @@ function autocomplete(inputField, suggestionField, dictionary, multiple) {
         var key = event['keyCode'];
 
         //Typing a-z, deleteing, or focusing on the input will generate a suggestion list
-        if ((key > 63 && key < 91) || key === 8 || event['type'] === "focusin")
+        if ((key > 47 && key < 58) || (key > 64 && key < 91) || key === 8 || event['type'] === "focusin")
         {
             if (multiple === 'list')
             {
                 var split_vals = $inputField.val().split(";");
-                var query = encodeURI(split_vals[split_vals.length-1].trim());
+                var query = encodeURI(split_vals[split_vals.length - 1].trim());
             }
             else if (multiple === 'bool')
             {
-                var split_vals = $inputField.val().split(/( AND| OR| NOT )/);
-                var query = encodeURI(split_vals[split_vals.length-1].trim());
+                var split_vals = $inputField.val().split(/(AND|OR|NOT)/);
+                var query = encodeURI(split_vals[split_vals.length - 1].trim());
             }
             else
             {
                 query = encodeURI($inputField.val());
             }
 
+            if (multiple === 'bool')
+                var input_width = $inputField.parent().width();
+            else
+                var input_width = $inputField.parent().width() - 120;
+
             if (key === 8 || (query.length) < 2)
                 isInit = true;
-            if (multiple === 'bool')
-                var input_width = $(this).parent().width();
-            else
-                var input_width = $(this).parent().width() - 120;
+
             //Sends the query to /suggest/ and prints the results to the suggestion-menu
-            if ((gotResults || isInit) && selectedSuggestion !== $inputField.val())
+            if (gotResults || isInit)
             {
                 $.ajax({
                     url: "/suggest/",
@@ -115,6 +119,11 @@ function autocomplete(inputField, suggestionField, dictionary, multiple) {
                         $suggestionMenu.html("");
                         menuSize = data.length;
                         menuActive = 0;
+
+                        if (menuSize === 1 && query === chosenSuggestion)
+                        {
+                            return false;
+                        }
 
                         if (isInit && menuSize !== 0)
                             isInit = false;
@@ -129,26 +138,38 @@ function autocomplete(inputField, suggestionField, dictionary, multiple) {
                         {
                             if (i === menuActive)
                             {
-                                suggestions +="<li class='list-group-item active' id='suggestion-item" + i + "'>" + data[i]['name'] + "</li>";
+                                suggestions += "<li class='list-group-item active suggestion-element' id='suggestion-item" + i + "'>" + data[i]['name'] + "</li>";
                             }
                             else
                             {
-                                suggestions += "<li class='list-group-item' id='suggestion-item" + i + "'>" + data[i]['name'] + "</li>";
+                                suggestions += "<li class='list-group-item suggestion-element' id='suggestion-item" + i + "'>" + data[i]['name'] + "</li>";
                             }
                         }
 
-                        $suggestionMenu.html("<ul class='listgroup' style='position: absolute; padding-left: 0px; z-index:10; cursor: pointer; width:"+input_width+"px'>" + suggestions + "</ul>");
+                        $suggestionMenu.html("<ul class='listgroup suggestion-menu' style='width:" + input_width + "px'>" + suggestions + "</ul>");
                         $suggestionListItems = $suggestionMenu.children().children();
-                        selectedSuggestion = $suggestionListItems. eq(menuActive).text();
+                        selectedSuggestion = $suggestionListItems.eq(menuActive).text();
                     },
                     dataType: "json"
+
                 });
+            }
+            else
+            {
+                $suggestionMenu.html("");
+                menuSize = 0;
+                menuActive = 0;
+                selectedSuggestion = "";
             }
         }
     });
 
-    $inputField.on("focusout", function()
+    $inputField.on("focusout", function ()
     {
+        if (selectedSuggestion !== "")
+        {
+            chosenSuggestion = encodeURI(selectedSuggestion);
+        }
         $suggestionMenu.html("");
         isInit = true;
     });
@@ -171,7 +192,8 @@ function autocomplete(inputField, suggestionField, dictionary, multiple) {
     //Clicking suggestion item sends its value to the input field
     $suggestionMenu.on("mousedown", function (event)
     {
-        if (event['target'])
+        console.log(event);
+        if (event['target']['className'].indexOf('suggestion-element') > -1) // If you clicked on a selection element and not the scrollbar.
         {
             write_input();
             $suggestionMenu.html("");
@@ -185,7 +207,7 @@ function autocomplete(inputField, suggestionField, dictionary, multiple) {
         if (multiple === 'list')
         {
             var split_vals = $inputField.val().split(";");
-            split_vals[split_vals.length-1] = selectedSuggestion;
+            split_vals[split_vals.length - 1] = selectedSuggestion;
             var result = split_vals[0] + "; ";
             for (var i = 1; i < split_vals.length; i++)
             {
@@ -195,8 +217,8 @@ function autocomplete(inputField, suggestionField, dictionary, multiple) {
         }
         else if (multiple === 'bool')
         {
-            var split_vals = $inputField.val().split(/( AND | OR | NOT )/);
-            split_vals[split_vals.length-1] = selectedSuggestion;
+            var split_vals = $inputField.val().split(/(AND|OR|NOT)/);
+            split_vals[split_vals.length - 1] = selectedSuggestion;
             for (var i = 0; i < split_vals.length; i++)
             {
                 split_vals[i] = $.trim(split_vals[i])
@@ -207,5 +229,6 @@ function autocomplete(inputField, suggestionField, dictionary, multiple) {
         {
             $inputField.val(selectedSuggestion);
         }
+        chosenSuggestion = encodeURI(selectedSuggestion);
     }
 }
