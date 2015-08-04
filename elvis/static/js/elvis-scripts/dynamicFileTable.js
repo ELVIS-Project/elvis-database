@@ -2,10 +2,10 @@
 // Given a button and a table body, this function will add new rows to the table with an input field
 // and a file upload field. The inputs will be named table_name_title_# and table_name_files_# and will
 // be sent in the post request for the form (the files will appear in request.FILES).
-function dynamicFileTable(add_row_button_id, table_body_id, table_name, file_button_name, movement_bool)
+function dynamicFileTable(add_row_button_id, table_body_id, table_name, movement_bool)
 {
     //The movement table javascript.
-    if (file_button_name === undefined) file_button_name = "Files";
+    var file_button_name = "Files";
     var row_count = 1;
     var $newRowButton = $("#"+add_row_button_id);
     var $table = $("#"+ table_body_id);
@@ -14,7 +14,6 @@ function dynamicFileTable(add_row_button_id, table_body_id, table_name, file_but
     //Defines row adding behaviour for the plus button
     $newRowButton.on("click", function()
     {
-        console.log($table);
         addRow($table);
         $newRowButton.blur();
     });
@@ -30,8 +29,8 @@ function dynamicFileTable(add_row_button_id, table_body_id, table_name, file_but
             "<td><input name='" + table_name + "_title_" + row_count + "' id='" + table_name + "_title" + row_count + "' class='form-control' autocomplete='off'" +
                 "data-toggle='popover' data-placement='top' data-trigger='focus' data-html='true' title='<b>Movement Title</b>'" +
                 "data-content='If no title is provided, this movement will be ignored on upload. It is not necessary to number movements, as they will retain the ordering in which they are here presented.'> </td>" +
-            "<td><input name='" + table_name +"_files_" + row_count + "' id='" + table_name + "_files" + row_count + "' type='file' multiple='multiple' value=''></td>" +
-            "<td><button id='show_advanced_"+ table_name + row_count + "' type='button' tabindex='-1'class='btn btn-default'>Show</button></td></tr>"+
+            "<td><input name='" + table_name +"_files_" + row_count + "' id='" + table_name + "_files" + row_count + "' type='file' multiple='multiple'></td>" +
+            "<td class='text-center'><button id='show_advanced_"+ table_name + row_count + "' type='button' tabindex='-1'class='btn btn-default'>Show</button></td></tr>"+
             "<tr id='"+ table_name + row_count + "_tags' hidden='hidden'> " +
             "<td colspan='5'>" +
             "<div class='row' style='padding-left:12%; padding-right:15px'>" +
@@ -64,7 +63,7 @@ function dynamicFileTable(add_row_button_id, table_body_id, table_name, file_but
                 "</div>" +
                 "<div class='col-md-4'>" +
                     "<div class='form-group'>" +
-                    "<div class='input-group'><span class='input-group-addon'>Number of Voices</span><input name='"+ table_name + row_count + "_number_of_voices' id='"+ table_name + row_count + "_number_of_voices' type='number' onkeypress='return event.charCode >= 48 && event.charCode <= 57' class='form-control unstyled'></div>" +
+                    "<div class='input-group'><span class='input-group-addon'>Number of Voices</span><input name='"+ table_name + row_count + "_number_of_voices' id='"+ table_name + row_count + "_number_of_voices' type='number' class='form-control unstyled'></div>" +
                     "</div>" +
                 "</div>" +
             "</div>" +
@@ -76,7 +75,7 @@ function dynamicFileTable(add_row_button_id, table_body_id, table_name, file_but
             "</td></tr>");
             autocomplete(table_name + row_count + "_free_tags", table_name + row_count + "_free_tags_suggestions", "tagSuggest", true);
             autocomplete(table_name + row_count + "_instrumentation", table_name + row_count + "_instrumentation_suggestions", "instrumentSuggest", true);
-            $("#" + table_name + "_files" + row_count).filestyle({input:false, iconName: "glyphicon-file", buttonText: file_button_name});
+            $("#" + table_name + "_files" + row_count).filestyle({buttonBefore: true, iconName: "glyphicon-file", buttonText: file_button_name});
         }
         else
         {
@@ -86,8 +85,8 @@ function dynamicFileTable(add_row_button_id, table_body_id, table_name, file_but
             "<td class='text-center' style='padding-top:14px'>" + t_size + "</td>" +
             "<td><input name='" + table_name + "_title_" + row_count + "' id='" + table_name + "_title" + row_count + "' class='form-control' autocomplete='off' data-toggle='popover' data-placement='top' data-trigger='focus' data-html='true' title='<b>File Source</b>'" +
             "data-content='Indicate the source of the file here, such as <em>Choral Wiki</em> or <em>Transcribed by Uploader</em>. If no source is provided, this file will be ignored. This file will be renamed automatically, so does not require a title.'> </td>" +
-            "<td><input name='" + table_name +"_files_" + row_count + "' id='" + table_name + "_files" + row_count + "' type='file' multiple='multiple' value=''></td></tr>");
-            $("#" + table_name + "_files" + row_count).filestyle({input:false, iconName: "glyphicon-file", buttonText: file_button_name});
+            "<td><input name='" + table_name +"_files_" + row_count + "' id='" + table_name + "_files" + row_count + "' type='file' multiple='multiple'></td></tr>");
+            $("#" + table_name + "_files" + row_count).filestyle({buttonBefore: true, iconName: "glyphicon-file", buttonText: file_button_name});
         }
 
         initRow(row_count);
