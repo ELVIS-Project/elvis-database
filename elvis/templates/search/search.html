@@ -442,7 +442,7 @@
 
             $("#datefiltt, #datefiltf ").keypress(function (event)
             {
-                if (event.which !== 0)
+                if (event.which !== 0 && event.which !== 8)
                 {
                     if (this.value.length > 3 || (event.which < 48 || event.which > 57))
                     {

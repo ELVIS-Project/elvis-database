@@ -175,7 +175,7 @@
             //Limit date inputs to 4 characters.
             $("[id$='date'], #number_of_voices ").keypress(function (event)
             {
-                if (event.which !== 0)
+                if (event.which !== 0 && event.which !== 8)
                 {
                     if (this.value.length > 3 || (event.which < 48 || event.which > 57))
                     {
@@ -294,7 +294,7 @@
                                       is found; you can also use dates from Grove).</li></ul>">Composition Start Date</span>
                         <input type='number' name="composition_start_date" id="composition_start_date"
                                placeholder="1600" autocomplete='off' max="2000"
-                               class="form-control unstyled upload-input-field"/>
+                               class="form-control upload-input-field"/>
                     </div>
                     <div id="composition_start_date_error"></div>
                 </div>
@@ -308,7 +308,7 @@
                                       data-content="The year the piece was completed, or the first date of publication.<br><ul><li>If you don’t know the date(s) of the piece, input a reasonable date range (e.g. adult years of composer’s life,
                                       or date range of sources in which it is found; you can also use dates from Grove).</li></ul>">Composition End Date</span>
                         <input type='number' name="composition_end_date" id="composition_end_date" placeholder="1605"
-                               autocomplete='off' max="2000" class="form-control unstyled upload-input-field"/>
+                               autocomplete='off' max="2000" class="form-control upload-input-field"/>
                     </div>
                     <div id="composition_end_date_error"></div>
                 </div>
