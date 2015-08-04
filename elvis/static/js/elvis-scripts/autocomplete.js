@@ -109,7 +109,7 @@ function autocomplete(inputField, suggestionField, dictionary, multiple)
                 isInit = true;
 
             //Sends the query to /suggest/ and prints the results to the suggestion-menu
-            if (gotResults || isInit)
+            if ((gotResults || isInit) && query.length > 2)
             {
                 $.ajax({
                     url: "/suggest/",
