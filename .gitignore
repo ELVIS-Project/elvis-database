@@ -13,3 +13,9 @@ media_root/*
 static_root/*
 pom.xml
 *.iml
+
+#Local file ignores
+manage.py
+solr/solr/collection1/conf/solrconfig.xml
+elvis/elvis/settings/base.py
+elivs/elvis/wsgy.py
