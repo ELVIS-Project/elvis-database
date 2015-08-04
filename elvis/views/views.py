@@ -1,3 +1,12 @@
+import datetime
+import json
+import urllib2
+import zipfile
+import uuid
+import shutil
+import pytz
+import os
+
 from django.http import HttpResponse
 from django.conf import settings
 from django.core.files.base import File
@@ -12,16 +21,11 @@ from elvis.models import Genre
 from elvis.models import InstrumentVoice
 from elvis.models import Tag
 from django.db.models import ObjectDoesNotExist
-import datetime
-import json
-import urllib2
-import pytz
-import os
-import zipfile
 
 
 class Cleanup:
     """Keep track of created objects during an attempt to create a new piece. """
+
     def __init__(self):
         self.list = []
 
@@ -34,7 +38,6 @@ class Cleanup:
 
 def solr_suggest(request):
     """Query solr suggester for typeahead suggestions based on the contents of the database.
-
     :param request: Django request object with a 'q' parameter (the query) and a 'd' parameter (the name of the
         suggestion dictionary to query).
     :return: json-formatted list of the suggestions.
@@ -56,17 +59,20 @@ def solr_suggest(request):
     return HttpResponse(j_results, content_type="json")
 
 
-def upload_files(request, file_name, parent):
+def upload_files(request, file_name, upload_path):
     """Upload files to a temporary directory, unzip any .zip files along the way.
-
     :param request: Django request object.
     :param file_name: Name of the multi-file input field in request.FILES to upload from.
+    :param upload_path: The random filename in temp where the files will be uploaded.
     :return: List of dicts describing uploaded files.
     """
+
     files = []
 
-    if not os.path.exists(os.path.join(settings.MEDIA_ROOT + 'temp/')):
-        os.makedirs(os.path.join(settings.MEDIA_ROOT + 'temp/'))
+    if not os.path.exists(os.path.join(settings.MEDIA_ROOT, 'temp/')):
+        os.makedirs(os.path.join(settings.MEDIA_ROOT, 'temp/'))
+    if not os.path.exists(upload_path):
+        os.makedirs(upload_path)
 
     file_list = request.FILES.getlist(file_name)
 
@@ -74,21 +80,21 @@ def upload_files(request, file_name, parent):
         # If the file has an accepted extension, upload it.
         if not any(f.name.startswith(x) for x in settings.ELVIS_BAD_PREFIX) and any(
                 f.name.endswith(x) for x in settings.ELVIS_EXTENSIONS):
-            upload_file(f, os.path.join(settings.MEDIA_ROOT, 'temp/', f.name))
+            upload_file(f, os.path.join(upload_path, f.name))
             files.append({'name': f.name,
                           'uploader': request.user.username,
-                          'path': os.path.join(settings.MEDIA_ROOT, 'temp/')})
+                          'path': upload_path})
 
         # Or, if the file is a zip file, upload, extract good files, then delete the archive.
         if f.name.endswith('.zip'):
-            upload_file(f, os.path.join(settings.MEDIA_ROOT, 'temp/', f.name))
+            upload_file(f, os.path.join(upload_path, f.name))
 
             try:
-                unzipped_files = unzip_file(settings.MEDIA_ROOT + 'temp/', f.name, parent, delete_after=True)
+                unzipped_files = unzip_file(upload_path, f.name)
                 for file_name in unzipped_files:
                     files.append({'name': file_name,
                                   'uploader': request.user.username,
-                                  'path': os.path.join(settings.MEDIA_ROOT, 'temp/')})
+                                  'path': upload_path})
             except zipfile.BadZipfile:
                 files.append({'name': f.name, 'error': "Zip file could not be opened."})
 
@@ -97,7 +103,6 @@ def upload_files(request, file_name, parent):
 
 def upload_file(mem_file, local_path):
     """Upload file in chunks.
-
     :param mem_file: In-memory file from request.FILES.
     :param local_path: Path to upload file to.
     """
@@ -106,9 +111,8 @@ def upload_file(mem_file, local_path):
             destination.write(chunk)
 
 
-def unzip_file(file_dir, file_name, parent, **kwargs):
+def unzip_file(file_dir, file_name, **kwargs):
     """Unzip files with acceptable extensions to the archives directory.
-
     :param file_dir: Directory of the zip archive.
     :param file_name: Name of the zip archive.
     :param kwargs: -delete_after: Deletes the archive after extraction.
@@ -131,24 +135,21 @@ def unzip_file(file_dir, file_name, parent, **kwargs):
 
     zipped_file.close()
 
-    if 'delete_after' in kwargs:
-        os.remove(file_dir + file_name)
-
     return files
 
 
 def handle_attachments(request, parent, cleanup, file_name):
     """Creates attachment objects for all files and links them with their parent
-
     :param request: Django request object.
     :param parent: The parent object to link attachments to.
     :param cleanup: Cleanup object.
     :param file_name: Name of the multi-file input field in request.FILES to upload from.
     :return: List of attachment objects that are created.
     """
-    results = []
 
-    files = upload_files(request, file_name, parent)
+    upload_path = os.path.join(settings.MEDIA_ROOT, 'temp/', (uuid.uuid4().__str__() + '/'))
+    results = []
+    files = upload_files(request, file_name, upload_path)
     i = 1
     for f in files:
         att = Attachment()
@@ -160,7 +161,7 @@ def handle_attachments(request, parent, cleanup, file_name):
                                             "file" + str(i),
                                             f['name'].rsplit('.')[-1])
         new_name = new_name.replace('/', '-').encode('ascii', 'ignore')
-        os.rename(os.path.join(f['path'], f['name']), os.path.join(f['path'],new_name))
+        os.rename(os.path.join(f['path'], f['name']), os.path.join(f['path'], new_name))
         with open(os.path.join(f['path'], new_name), 'r+') as dest:
             file_content = File(dest)
             att.attachment.save(os.path.join(att.attachment_path, new_name), file_content)
@@ -173,13 +174,12 @@ def handle_attachments(request, parent, cleanup, file_name):
         parent.attachments.add(att)
 
     parent.save()
-
+    shutil.rmtree(upload_path)
     return results
 
 
 def handle_dynamic_file_table(request, parent, table_name, cleanup=Cleanup()):
     """Upload all files and create all objects and relationships in a dynamic file table.
-
     :param request: Django request object.
     :param parent: The parent object to link movements/files to.
     :param table_name: The name of the dynamic table in the page template.
@@ -192,7 +192,7 @@ def handle_dynamic_file_table(request, parent, table_name, cleanup=Cleanup()):
     for item in request.POST:
         if item.startswith(table_name + "_title_") and request.POST[item]:
             file_name = request.POST[item]
-            file_num = item[(len(table_name)+7):]
+            file_num = item[(len(table_name) + 7):]
             files[file_num] = file_name
 
     keys = files.keys()
@@ -276,7 +276,6 @@ def handle_dynamic_file_table(request, parent, table_name, cleanup=Cleanup()):
 
 def abstract_model_factory(model_name, model_type, cleanup=Cleanup(), **kwargs):
     """Find or create models from user-inputted text.
-
     :param model_name: Name or list of names of models to be found/created.
     :param model_type: Type of model(s) to find/create.
     :param cleanup: Cleanup object.
@@ -284,7 +283,8 @@ def abstract_model_factory(model_name, model_type, cleanup=Cleanup(), **kwargs):
                     -death_date: Death date for composer objects.
                     -is_public: Boolean for collections.
                     -creator: Django user for objects that require a creator.
-    :return:
+    :return: A list of dicts where l[index]['model'] = The model itself and l[index]['new'] = a bool saying whether the
+            model was newly created or not.
     """
     if model_type == "Composer":
         composer_list = []
@@ -421,9 +421,3 @@ def abstract_model_factory(model_name, model_type, cleanup=Cleanup(), **kwargs):
                     cleanup.list.append({"model": tag, "new": True})
                 tag_list.append(tag)
         return tag_list
-
-
-def rebuild_suggester_dicts():
-    """Rebuild all suggester dictionaries in Solr"""
-    for d in settings.SUGGEST_DICTS:
-        urllib2.urlopen(settings.SOLR_SERVER + "/suggest/?suggest.dictionary={0}&suggest.reload=true".format(d))
