@@ -89,12 +89,6 @@
                 $('#save_modal').modal('show');
             });
 
-            $("#download-collection").click(function ()
-            {
-                window.location.replace("/downloads/")
-            });
-
-
         });
     </script>
 
@@ -177,9 +171,9 @@
                 <button id="save-collection" name="save-collection" type="button" class="btn btn-primary">
                     <span class="glyphicon glyphicon-floppy-disk"></span> Save as Collection
                 </button>
-                <button id="download-collection" name="download-collection" type="button" class="btn btn-info">
+                <a href="/downloads/" id="download-collection" name="download-collection" class="btn btn-info">
                     <span class="glyphicon glyphicon-download"></span> Select Files to Download
-                </button>
+                </a>
             </span>
         </h2>
     </div>
