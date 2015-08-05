@@ -12,25 +12,12 @@ function cartButtonRefresh()
 
     $(".cart-button").off('click').tooltip().on("click", function (event)
     {
+        $button = $(this);
+        event.preventDefault();
+        event.stopImmediatePropagation();
 
         if ($(this).hasClass('btn-success'))
         {
-            event.preventDefault();
-            event.stopImmediatePropagation();
-            $(this).fadeOut(100, function ()
-            {
-                $(this).blur()
-                    .tooltip('hide')
-                    .attr({'data-original-title': 'Remove From Downloads'})
-                    .tooltip('fixTitle')
-                    .removeClass('btn-success')
-                    .addClass('btn-danger')
-                    .html("<span class='glyphicon glyphicon-minus'></span>");
-                $($(this).siblings()[2]).val('remove');
-            }).fadeIn(100, function()
-            {
-                $(this).tooltip('show');
-            });
             cart_timeout = setTimeout(function ()
             {
                 $base_modal_header.html("<h4 class='modal-title'>Adding to Downloads...</h4>");
@@ -40,27 +27,43 @@ function cartButtonRefresh()
                     "</div>");
                 $base_modal.modal('show');
             }, 1000);
-        }
 
+            $.ajax({
+                type: "post",
+                url: "/downloads/",
+                data: $(event.target).parents(".recursive-patch-download-form").serialize(),
+                success: function (data)
+                {
+                    clearTimeout(cart_timeout);
+                    $base_modal.modal('hide');
+                    $collection_count.fadeOut(100, function ()
+                    {
+                        $collection_count.text("(" + data.count + ")");
+                    });
+                    $collection_count.fadeIn(100);
+
+                    $button.fadeOut(100, function ()
+                    {
+                        $button.blur()
+                            .tooltip('hide')
+                            .attr({'data-original-title': 'Remove From Downloads'})
+                            .tooltip('fixTitle')
+                            .removeClass('btn-success')
+                            .addClass('btn-danger')
+                            .html("<span class='glyphicon glyphicon-minus'></span>");
+                        $($button.siblings()[2]).val('remove');
+                    }).fadeIn(100)
+                },
+                error: function (data)
+                {
+                    $base_modal_header.html("<h4 class='modal-title'>Error adding file to downloads!</h4>");
+                    $base_modal_body.html("<p>Something went wrong and your item was not added to your download cart./p>");
+                    $base_modal_footer.html("<button type='button' class='btn btn-default' data-dismiss='base-modal'>Close</button>");
+                }
+            })
+        }
         else
         {
-            event.preventDefault();
-            event.stopImmediatePropagation();
-            $(this).fadeOut(100, function ()
-            {
-                $(this).blur()
-                    .tooltip('hide')
-                    .attr({'data-original-title': 'Add to Downloads'})
-                    .tooltip('fixTitle')
-                    .removeClass('btn-danger')
-                    .addClass('btn-success')
-                    .html("<span class='glyphicon glyphicon-plus'></span>");
-                $($(this).siblings()[2]).val('add');
-            }).fadeIn(100, function()
-            {
-                $(this).tooltip('show')
-            });
-
             cart_timeout = setTimeout(function ()
             {
                 $base_modal_header.html("<h4 class='modal-title'>Removing from Downloads...</h4>");
@@ -70,28 +73,42 @@ function cartButtonRefresh()
                     "</div>");
                 $base_modal.modal('show');
             }, 1000);
+
+            $.ajax({
+                type: "post",
+                url: "/downloads/",
+                data: $(event.target).parents(".recursive-patch-download-form").serialize(),
+                success: function (data)
+                {
+                    clearTimeout(cart_timeout);
+                    $base_modal.modal('hide');
+                    $collection_count.fadeOut(100, function ()
+                    {
+                        $collection_count.text("(" + data.count + ")");
+                    });
+                    $collection_count.fadeIn(100);
+
+                    $button.fadeOut(100, function ()
+                    {
+                        $button.blur()
+                            .tooltip('hide')
+                            .attr({'data-original-title': 'Add to Downloads'})
+                            .tooltip('fixTitle')
+                            .removeClass('btn-danger')
+                            .addClass('btn-success')
+                            .html("<span class='glyphicon glyphicon-plus'></span>");
+                        $($button.siblings()[2]).val('add');
+                    }).fadeIn(100)
+                },
+                error: function (data)
+                {
+                    $base_modal_header.html("<h4 class='modal-title'>Error adding file to downloads!</h4>");
+                    $base_modal_body.html("<p>Something went wrong and your item was not added to your download cart./p>");
+                    $base_modal_footer.html("<button type='button' class='btn btn-default' data-dismiss='base-modal'>Close</button>");
+                }
+            })
         }
 
-        $.ajax({
-            type: "post",
-            url: "/downloads/",
-            data: $(event.target).parents(".recursive-patch-download-form").serialize(),
-            success: function (data)
-            {
-                clearTimeout(cart_timeout);
-                $base_modal.modal('hide');
-                $collection_count.fadeOut(100, function ()
-                {
-                    $collection_count.text("(" + data.count + ")");
-                });
-                $collection_count.fadeIn(100);
-            },
-            error: function (data)
-            {
-                $base_modal_header.html("<h4 class='modal-title'>Error adding file to downloads!</h4>");
-                $base_modal_body.html("<p>Something went wrong and your item was not added to your download cart./p>");
-                $base_modal_footer.html("<button type='button' class='btn btn-default' data-dismiss='base-modal'>Close</button>");
-            }
-        })
+
     });
 }
