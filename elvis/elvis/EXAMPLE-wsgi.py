@@ -1,4 +1,6 @@
 """
+*** THIS FILE SHOULD BE MODIFIED with your local settings, then saved as wsgi.py ***
+
 WSGI config for elvis project.
 
 This module contains the WSGI application used by Django's development server

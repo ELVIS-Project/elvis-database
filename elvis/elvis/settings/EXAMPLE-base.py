@@ -1,4 +1,8 @@
 """
+
+*** THIS FILE SHOULD BE MODIFIED with your local settings, then saved as base.py ***
+
+
 Django settings for elvis project.
 
 For more information on this file, see

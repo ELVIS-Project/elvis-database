@@ -1,4 +1,6 @@
 <?xml version="1.0" encoding="UTF-8" ?>
+
+<!-- THIS FILE SHOULD BE MODIFIED so <dataDir> on 104 points to your solr datadir, then saved as solrconfig.xml -->
 <!--
  Licensed to the Apache Software Foundation (ASF) under one or more
  contributor license agreements.  See the NOTICE file distributed with
