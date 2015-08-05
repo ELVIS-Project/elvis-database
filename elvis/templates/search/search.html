@@ -4,7 +4,10 @@
     <script type="text/javascript" src="{{ STATIC_URL }}bootstrap/plugins/bootstrap-multiselect.js"></script>
     <script type="text/javascript" src="{{ STATIC_URL }}js/elvis-scripts/downloadBadge.js"></script>
     <script type='text/javascript' src="{{ STATIC_URL }}js/elvis-scripts/autocomplete.js"></script>
+    <script type='text/javascript' src="{{ STATIC_URL }}js/elvis-scripts/cartButtonScript.js"></script>
+
     <link rel="stylesheet" href="{{ STATIC_URL }}bootstrap/plugins/bootstrap-multiselect.css" type="text/css"/>
+
     <script type="text/javascript">
         $(document).ready(function ($)
         {
@@ -156,7 +159,8 @@
                 push_to_history = typeof push_to_history !== 'undefined' ? push_to_history : true;
                 fadewindow = typeof fadewindow !== 'undefined' ? fadewindow : "result-page";
 
-                $.ajax({
+                $.ajax(
+                {
                     type: "get",
                     url: "search",
                     data: data,
@@ -167,12 +171,9 @@
                             pushToHistory(data, results)
                         }
 
-                        $("#" + fadewindow).fadeOut(300, function ()
-                        {
-                            drawResults(results)
-                        }).fadeIn();
+                        $("#" + fadewindow).fadeOut(300, function() { drawResults(results) }).fadeIn(300, function(){cartButtonRefresh();})
                     }
-                })
+                });
             }
 
             //Write the results of a query to the page (including drawing paginators and facets)
@@ -224,7 +225,7 @@
                                 "<div class='col-xs-1 search-result-add' id='result-list-add" + key + "'><div id='add" + key + "'></div></div>" +
                                 "<a href='/collection/" + entry['item_id'] + "' id='result-list-item" + key + "' class='search-result-item col-xs-11'>" +
                                 "<span class='label label-info right-label' style='margin-top:10px'>Collection</span><h4>" + entry['title'] + "</h4>" +
-                                "<p class='list-group-item-text'>Created By: " + entry['creator_name'] + " on " + entry['created'].substring(0,10)  + "</p>" +
+                                "<p class='list-group-item-text'>Created By: " + entry['creator_name'] + " on " + entry['created'].substring(0, 10) + "</p>" +
                                 "</a></div>");
                         create_download_badge("elvis_collection", entry['item_id'], "add" + key);
                         continue;
@@ -255,7 +256,7 @@
                         var result = "<div class='row search-result-row row-eq-height'>" +
                                 "<div class='col-xs-1 search-result-add' id='result-list-add" + key + "'><div id='add" + key + "'></div></div>" +
                                 "<a href='/piece/" + entry['item_id'] + "' id='result-list-item" + key + "' class='search-result-item col-xs-11'>" +
-                                "<span class='label label-success right-label'>Piece</span><h4> " + entry['title'] + "</h4>"+
+                                "<span class='label label-success right-label'>Piece</span><h4> " + entry['title'] + "</h4>" +
                                 "<p class='list-group-item-text'> Composer: " + entry['composer_name'] + "</p>" +
                                 "<p class='list-group-item-text'> Date: " + entry['date_of_composition2'].slice(0, 4) + "</p>";
                         if (entry['tags'] !== undefined)
@@ -375,7 +376,7 @@
                         else
                             var facet_name = j;
                         facet_body += "<div class='facet-list'>" +
-                                "<div id='facet-"+keys[i]+"-" + encodeName(j) + "' class='facet-wrapper'>" +
+                                "<div id='facet-" + keys[i] + "-" + encodeName(j) + "' class='facet-wrapper'>" +
                                 "<label class='facet-label' for='facet-link-" + encodeName(j) + "-" + keys[i] + "'>" +
                                 "<input type='checkbox' class='facet-link' style='margin: 4px 4px 0' data-facet-name='" + keys[i] +
                                 "' data-facet-value='" + encodeName(j) + "' id='facet-link-" + encodeName(j) + "-" + keys[i] + "'>" +
@@ -450,6 +451,7 @@
                     }
                 }
             });
+
         });
     </script>
 

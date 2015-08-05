@@ -3,27 +3,10 @@ function create_download_badge(item_type, item_id, DOM_id)
 {
     var $DOM = $("#" + DOM_id);
     $DOM.append("<form class='recursive-patch-download-form' action='/downloads/' method='post'>" +
-        "<a class='button btn btn-mini btn-success' data-container='body' data-toggle='tooltip' data-placement='top' title='Add to Downloads' ><span class='glyphicon glyphicon-plus'></span></a>" +
+        "<a class='button btn btn-mini btn-success cart-button' data-container='body' data-toggle='tooltip' data-placement='top' title='Add to Downloads' ><span class='glyphicon glyphicon-plus'></span></a>" +
         "<input type='hidden' name='item_type'  value='" + item_type + "'/>" +
-        "<input type='hidden' name='item_id'  value='"+ item_id + "'/>" +
-        "</form>");
+        "<input type='hidden' name='item_id'  value='" + item_id + "'/>" +
+        "<input type='hidden' name='add' value='add' />" +
 
-    $('.button.btn.btn-mini.btn-success').on('click', function(event)
-    {
-        event.preventDefault();
-        event.stopImmediatePropagation();
-        $.ajax(
-            {
-                type: 'post',
-                url: '/downloads/',
-                data: $(event.target).parents('.recursive-patch-download-form').serialize(),
-                success: function (data) {
-                    var $collection_count = $('#collection-count');
-                    $collection_count.fadeOut(100, function () {
-                        $collection_count.text('(' + data.count + ')');
-                    });
-                    $collection_count.fadeIn(100);
-                }
-            })
-    })
+        "</form>");
 }

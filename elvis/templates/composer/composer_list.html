@@ -1,12 +1,21 @@
 {% extends "base.html" %}
 
 {% block extra_hd %}
-<title>Composers</title>
+    <title>Composers</title>
+    <script type='text/javascript' src="{{ STATIC_URL }}js/elvis-scripts/cartButtonScript.js"></script>
+    <script>
+        $(document).ready(function ($)
+        {
+            cartButtonRefresh();
+        });
+    </script>
 {% endblock %}
 
 {% block wrap %}
     <div class="page-header">
-        <h2>Composers <small>({{ content.count }})</small></h2>
+        <h2>Composers
+            <small>({{ content.count }})</small>
+        </h2>
     </div>
     {% include "paginate.html" with content=content %}
 
@@ -14,14 +23,20 @@
         <div class="row list-row row-eq-height">
             <div class='col-xs-1 list-add'>{% include "includes/download-badge-inc.html" with download_type="elvis_composer" download_item_id=composer.item_id %}</div>
             <a href='{{ composer.url }}' class='list-item col-xs-11'>
-                <span class='badge alert-info right-badge' style='margin-top:10px'>{{ composer.piece_count }} Pieces, {{ composer.movement_count }} Movements</span><h4>{{ composer.name }}</h4>
-                <p class='list-group-item-text'><small>{% if not composer.birth_date %} (Unknown) {% else %} ({{ composer.birth_date }}&ndash;{{ composer.death_date }}) {% endif %}</small><br>
+                <span class='badge alert-info right-badge'
+                      style='margin-top:10px'>{{ composer.piece_count }} Pieces, {{ composer.movement_count }} Movements</span>
+                <h4>{{ composer.name }}</h4>
+
+                <p class='list-group-item-text'>
+                    <small>{% if not composer.birth_date %} (Unknown) {% else %} ({{ composer.birth_date }}&ndash;
+                        {{ composer.death_date }}) {% endif %}</small>
+                    <br>
                 </p>
             </a>
         </div>
 
     {% endfor %}
-        {% include "paginate.html" with content=content %}
+    {% include "paginate.html" with content=content %}
 
 
 {% endblock %}

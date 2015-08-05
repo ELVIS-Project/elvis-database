@@ -1,50 +1,8 @@
 {% if user.is_authenticated %}
     <form class="recursive-patch-download-form" action="/downloads/" method="post">
-        {% csrf_token %}
-    <button type="button" class="btn btn-mini btn-success" data-container="body" data-toggle="tooltip" data-placement="top" title="Add to Downloads" ><span class="glyphicon glyphicon-plus"> </span> </button>
-
-   	<input type="hidden" name="item_type"  value="{{ download_type }}" />
-   	<input type="hidden" name="item_id"  value="{{ download_item_id }}" />
-   	<input type="hidden" class="this_url" name="this_url"  value="" />
-
-</form>
-
-<script type="text/javascript">
-    var inputs = document.getElementsByClassName('this_url');
-
-    for(var i = 0; i < inputs.length; i++)
-    {
-      inputs[i].value = window.location.href;
-    }
-
-    $('.btn.btn-mini.btn-success').val(window.location.href);
-
-    $(function()
-    {
-        $('.btn-mini').tooltip();
-            
-    });
-
-
-    $('.btn.btn-mini.btn-success').on("click", function(event)
-    {
-        event.preventDefault();
-        event.stopImmediatePropagation();
-        $.ajax({
-            type: "post",
-            url: "/downloads/",
-            data: $(event.target).parents(".recursive-patch-download-form").serialize(),
-            success: function(data)
-            {
-                var $collection_count = $("#collection-count");
-                $collection_count.fadeOut(100, function()
-                {
-                    $collection_count.text("(" + data.count + ")");
-                });
-                $collection_count.fadeIn(100);
-            }
-        })
-    });
-
-</script>
+        <button type="button" class="btn btn-mini btn-success cart-button" data-container="body" data-toggle="tooltip" data-placement="top" title="Add to Downloads" ><span class="glyphicon glyphicon-plus"> </span> </button>
+        <input type="hidden" name="item_type"  value="{{ download_type }}" />
+        <input type="hidden" name="item_id"  value="{{ download_item_id }}" />
+        <input type="hidden" name="add" value="add" />
+    </form>
 {% endif %}

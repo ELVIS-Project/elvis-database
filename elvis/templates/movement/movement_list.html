@@ -1,30 +1,42 @@
 {% extends "base.html" %}
 
 {% block extra_hd %}
-<title>Movements</title>
+    <title>Movements</title>
+    <script type='text/javascript' src="{{ STATIC_URL }}js/elvis-scripts/cartButtonScript.js"></script>
+    <script>
+        $(document).ready(function ($)
+        {
+            cartButtonRefresh();
+        });
+    </script>
 {% endblock %}
 
 {% block wrap %}
-<div class="page-header">
-    <h2>Movements <small>({{ content.count }})</small></h2>
-</div>
-{% include "paginate.html" with content=content %}
+    <div class="page-header">
+        <h2>Movements
+            <small>({{ content.count }})</small>
+        </h2>
+    </div>
+    {% include "paginate.html" with content=content %}
 
-{% for movement in content.results %}
-    <div class="row list-row row-eq-height">
-        <div class='col-xs-1 list-add'>{% include "includes/download-badge-inc.html" with download_type="elvis_movement" download_item_id=movement.item_id %}</div>
+    {% for movement in content.results %}
+        <div class="row list-row row-eq-height">
+            <div class='col-xs-1 list-add'>{% include "includes/download-badge-inc.html" with download_type="elvis_movement" download_item_id=movement.item_id %}</div>
             <a href='{{ movement.url }}' class='list-item col-xs-11'>
                 <h4>{{ movement.title }}<br>
                     <small>
-                        Composed by {{ movement.composer.name }} {% if movement.date_of_composition2 %}in {{ movement.date_of_composition2 }}<br>{% endif %}
-                        {% if movement.piece %}Part of {{ movement.piece.title}}<br>{% endif %}
+                        Composed by {{ movement.composer.name }} {% if movement.date_of_composition2 %}in
+                        {{ movement.date_of_composition2 }}<br>{% endif %}
+                        {% if movement.piece %}Part of {{ movement.piece.title }}<br>{% endif %}
                     </small>
                 </h4>
-                {% if movement.tags %}<p class='list-group-item-text'>Tags:{% for tag in movement.tags %} <span class="label label-primary rounded"> {{tag.name}} </span> &nbsp; {% endfor %}</p> {% endif %}
+                {% if movement.tags %}<p class='list-group-item-text'>Tags:{% for tag in movement.tags %}
+                    <span class="label label-primary rounded"> {{ tag.name }} </span> &nbsp; {% endfor %}
+                </p> {% endif %}
             </a>
-    </div>
-{% endfor %}
+        </div>
+    {% endfor %}
 
-{% include "paginate.html" with content=content %}
+    {% include "paginate.html" with content=content %}
 
 {% endblock %}

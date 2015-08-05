@@ -2,17 +2,18 @@
 
 {% block extra_hd %}
     <title>Collections</title>
-
+    <script type='text/javascript' src="{{ STATIC_URL }}js/elvis-scripts/cartButtonScript.js"></script>
     <script>
         $(document).ready(function ($)
         {
+            cartButtonRefresh();
             creatorQuery();
 
             function creatorQuery()
             {
                 var qstr = window.location.search.replace("?", "");
                 var qstr_params = $.parseParams(qstr);
-                if (qstr['creator'])
+                if (qstr_params['creator'])
                 {
                     $("#page-header").text(qstr_params['creator'] + "'s Collections")
                 }
@@ -31,20 +32,25 @@
     </div>
 
     {% include "paginate.html" with content=content %}
-        {% for collection in content.results %}
-            <div class="row list-row row-eq-height">
-                <div class='col-xs-1 list-add'>{% include "includes/download-badge-inc.html" with download_type="elvis_collection" download_item_id=collection.item_id %}</div>
-                <a href='{{ collection.url }}' class='list-item col-xs-11'>
-                    <span class='badge alert-info right-badge' style='margin-top:10px'>{{ collection.piece_count }} Pieces, {{ collection.movement_count }} Movements</span><h4>{{ collection.title }}</h4>
-                    <p class='list-group-item-text'><small>Created by {{ collection.creator.full_name }} on {{ collection.created }}</small><br>
-                    {{ collection.comment | default_if_none:"No Comment" | truncatechars:100 }} </p>
-                </a>
-            </div>
+    {% for collection in content.results %}
+        <div class="row list-row row-eq-height">
+            <div class='col-xs-1 list-add'>{% include "includes/download-badge-inc.html" with download_type="elvis_collection" download_item_id=collection.item_id %}</div>
+            <a href='{{ collection.url }}' class='list-item col-xs-11'>
+                <span class='badge alert-info right-badge'
+                      style='margin-top:10px'>{{ collection.piece_count }} Pieces, {{ collection.movement_count }} Movements</span>
+                <h4>{{ collection.title }}</h4>
 
-        {% endfor %}
-        {% if not content.results %}
-            <div class="text-center"><h4>There's nothing here!</h4></div>
-        {% endif %}
+                <p class='list-group-item-text'>
+                    <small>Created by {{ collection.creator.full_name }} on {{ collection.created }}</small>
+                    <br>
+                    {{ collection.comment | default_if_none:"No Comment" | truncatechars:100 }} </p>
+            </a>
+        </div>
+
+    {% endfor %}
+    {% if not content.results %}
+        <div class="text-center"><h4>There's nothing here!</h4></div>
+    {% endif %}
 
     {% include "paginate.html" with content=content %}
 

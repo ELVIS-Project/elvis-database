@@ -1,30 +1,42 @@
 {% extends "base.html" %}
 
 {% block extra_hd %}
-<title>Pieces</title>
+    <title>Pieces</title>
+    <script type='text/javascript' src="{{ STATIC_URL }}js/elvis-scripts/cartButtonScript.js"></script>
+    <script>
+        $(document).ready(function ($)
+        {
+            cartButtonRefresh();
+        });
+    </script>
 {% endblock %}
 
 {% block wrap %}
-<div class="page-header">
-    <h2>Pieces <small>({{ content.count }})</small></h2>
-</div>
-{% include "paginate.html" with content=content %}
-
-{% for piece in content.results %}
-    <div class="row list-row row-eq-height">
-        <div class='col-xs-1 list-add'>{% include "includes/download-badge-inc.html" with download_type="elvis_piece" download_item_id=piece.item_id %}</div>
-        <a href='{{ piece.url }}' class='list-item col-xs-11'>
-            {% if piece.movement_count > 0 %}<span style="float:right;"><span class="label label-default">{{ piece.movement_count }} movement{{ piece.movement_count | pluralize }}</span></span> {% endif %}
-            <h4>{{ piece.title }}<br>
-                <small>
-                    Composed by {{ piece.composer.name }} {% if piece.date_of_composition2 %}in {{ piece.date_of_composition2 }}{% endif %}<br>
-                </small>
-            </h4>
-            {% if piece.tags %}<p class='list-group-item-text'>Tags: {% for tag in piece.tags %} <span class="label label-primary rounded"> {{tag.name}} </span> &nbsp; {% endfor %}</p>{% endif %}
-        </a>
+    <div class="page-header">
+        <h2>Pieces
+            <small>({{ content.count }})</small>
+        </h2>
     </div>
-{% endfor %}
+    {% include "paginate.html" with content=content %}
 
-{% include "paginate.html" with content=content %}
+    {% for piece in content.results %}
+        <div class="row list-row row-eq-height">
+            <div class='col-xs-1 list-add'>{% include "includes/download-badge-inc.html" with download_type="elvis_piece" download_item_id=piece.item_id %}</div>
+            <a href='{{ piece.url }}' class='list-item col-xs-11'>
+                {% if piece.movement_count > 0 %}<span style="float:right;"><span
+                        class="label label-default">{{ piece.movement_count }} movement{{ piece.movement_count | pluralize }}</span></span> {% endif %}
+                <h4>{{ piece.title }}<br>
+                    <small>
+                        Composed by {{ piece.composer.name }} {% if piece.date_of_composition2 %}in
+                        {{ piece.date_of_composition2 }}{% endif %}<br>
+                    </small>
+                </h4>
+                {% if piece.tags %}<p class='list-group-item-text'>Tags: {% for tag in piece.tags %}
+                    <span class="label label-primary rounded"> {{ tag.name }} </span> &nbsp; {% endfor %}</p>{% endif %}
+            </a>
+        </div>
+    {% endfor %}
+
+    {% include "paginate.html" with content=content %}
 
 {% endblock %}

@@ -8,6 +8,8 @@ class Download(models.Model):
         app_label = "elvis"
 
     user = models.ForeignKey(User, blank=True, null=True, related_name="downloads")
+    collection_composers = models.ManyToManyField("elvis.Composer", blank=True)
+    collection_collections = models.ManyToManyField("elvis.Collection", blank=True)
     collection_pieces = models.ManyToManyField("elvis.Piece", blank=True)
     collection_movements = models.ManyToManyField("elvis.Movement", blank=True)
     attachments = models.ManyToManyField("elvis.Attachment", blank=True, related_name="downloads")

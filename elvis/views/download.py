@@ -1,8 +1,7 @@
 # LM: TODO lots of cleaning up; make modular methods
-import os
 import json
-import pdb
-import datetime
+
+import os
 from rest_framework import generics
 from rest_framework import permissions
 from rest_framework import status
@@ -13,8 +12,7 @@ from django.utils.decorators import method_decorator
 from django.views.decorators.csrf import csrf_protect
 from django.conf import settings
 from django.core.exceptions import ObjectDoesNotExist
-from django.core.servers.basehttp import FileWrapper
-from django.http import HttpResponse, HttpResponseRedirect, JsonResponse
+from django.http import HttpResponse, HttpResponseRedirect
 from celery.result import AsyncResult
 from elvis.elvis import tasks
 from elvis.renderers.custom_html_renderer import CustomHTMLRenderer
@@ -60,7 +58,7 @@ class DownloadDetail(generics.RetrieveUpdateAPIView):
 
     def get_object(self):
         user = self.request.user
-        
+
         try:
             obj = Download.objects.filter(user=user).latest("created")
             return obj
@@ -83,8 +81,9 @@ class DownloadDetail(generics.RetrieveUpdateAPIView):
             obj = Movement.objects.get(pk=item_id)
 
         if not obj:
-            return Response({'message': "The item with id {0} was not found".format(item_id)}, status=status.HTTP_404_NOT_FOUND)
-       
+            return Response({'message': "The item with id {0} was not found".format(item_id)},
+                            status=status.HTTP_404_NOT_FOUND)
+
         dlobj = self.get_object()
 
         for attachment in obj.attachments.all():
@@ -100,7 +99,7 @@ class DownloadDetail(generics.RetrieveUpdateAPIView):
         user_download = request.user.downloads.all()[0]
         add_attachments = request.POST.getlist('a_ids')
 
-        #add_attachments is a list of ids
+        # add_attachments is a list of ids
         for a in add_attachments:
             a_object = Attachment.objects.filter(pk=a).all()[0]
             user_download.attachments.add(a_object)
@@ -109,29 +108,54 @@ class DownloadDetail(generics.RetrieveUpdateAPIView):
         return HttpResponseRedirect(request.POST.get('this_url'))
 
     # Method to help recursive-alteration of user's download object
-    def _download_helper(self, item, user_download):
-        if item.__class__.__name__ == "Collection":
-            for piece in item.pieces.all():
-                self._download_helper(piece, user_download)
-            for movement in item.movements.all():
-                self._download_helper(movement, user_download)
-        if item.__class__.__name__ == "Composer":
-            for piece in item.pieces.all():
-                self._download_helper(piece, user_download)
-            for movement in item.movements.all():
-                self._download_helper(movement, user_download)
-        if item.__class__.__name__ == "Piece":
-            for att in item.attachments.all():
-                user_download.attachments.add(att)
-            user_download.collection_pieces.add(item)
-        if item.__class__.__name__ == "Movement":
-            if item.piece not in user_download.collection_pieces.all():
-                user_download.collection_movements.add(item)
+    def _download_helper(self, item, user_download, add='add'):
+
+        if add == 'remove':
+            if item.__class__.__name__ == "Collection":
+                for piece in item.pieces.all():
+                    self._download_helper(piece, user_download, add)
+                for movement in item.movements.all():
+                    self._download_helper(movement, user_download, add)
+                    user_download.collection_collections.remove(item)
+            if item.__class__.__name__ == "Composer":
+                for piece in item.pieces.all():
+                    self._download_helper(piece, user_download, add)
+                for movement in item.movements.all():
+                    self._download_helper(movement, user_download, add)
+                    user_download.collection_composers.remove(item)
+            if item.__class__.__name__ == "Piece":
+                for att in item.attachments.all():
+                    user_download.attachments.remove(att)
+                user_download.collection_pieces.remove(item)
+            if item.__class__.__name__ == "Movement":
+                user_download.collection_movements.remove(item)
+                for att in item.attachments.all():
+                    user_download.attachments.remove(att)
+        else:
+            if item.__class__.__name__ == "Collection":
+                for piece in item.pieces.all():
+                    self._download_helper(piece, user_download)
+                for movement in item.movements.all():
+                    self._download_helper(movement, user_download)
+                user_download.collection_collections.add(item)
+            if item.__class__.__name__ == "Composer":
+                for piece in item.pieces.all():
+                    self._download_helper(piece, user_download)
+                for movement in item.movements.all():
+                    self._download_helper(movement, user_download)
+                    user_download.collection_composers.add(item)
+            if item.__class__.__name__ == "Piece":
                 for att in item.attachments.all():
                     user_download.attachments.add(att)
+                user_download.collection_pieces.add(item)
+            if item.__class__.__name__ == "Movement":
+                if item.piece not in user_download.collection_pieces.all():
+                    user_download.collection_movements.add(item)
+                    for att in item.attachments.all():
+                        user_download.attachments.add(att)
 
     # Choose the right model based on request, again to help recursive-patching
-    def _type_selector(self, item_type, item_id, user_download):
+    def _type_selector(self, item_type, item_id, user_download, add):
         if item_type == "elvis_movement":
             item = Movement.objects.filter(pk=item_id)[0]
         elif item_type == "elvis_piece":
@@ -143,9 +167,9 @@ class DownloadDetail(generics.RetrieveUpdateAPIView):
         elif item_type == "elvis_tag":
             item = Tag.objects.filter(pk=item_id)[0]
         else:
-            raise TypeError("Item type '"+ item_type +"' passed not found in database.")
+            raise TypeError("Item type '" + item_type + "' passed not found in database.")
 
-        self._download_helper(item, user_download)
+        self._download_helper(item, user_download, add)
         user_download.save()
         jresults = json.dumps({'count': user_download.cart_size})
         return HttpResponse(content=jresults, content_type="json")
@@ -169,8 +193,9 @@ class DownloadDetail(generics.RetrieveUpdateAPIView):
         else:
             item_type = request.POST.getlist('item_type')
             item_id = request.POST.getlist('item_id')
+            add = request.POST.get('add')
             for i in range(len(item_type)):
-                self._type_selector(item_type[i], item_id[i], user_download)
+                self._type_selector(item_type[i], item_id[i], user_download, add)
 
         jresults = json.dumps({'count': user_download.cart_size})
         return HttpResponse(content=jresults, content_type="json")
@@ -217,15 +242,15 @@ class Downloading(APIView):
     permission_classes = (permissions.IsAuthenticated,)
     serializer_class = DownloadingSerializer
     renderer_classes = (JSONRenderer, DownloadingHTMLRenderer)
-        
-        # LM: Things needed:
-        # 1. Parse request to extract path to all requested files
-        # 2. Create subprocess - Celery
-        # 3. Get files and copy into dummy directory
-        # 4. Zip directory
-        # 5. Track subprocess
-        # 6. Serve
-        # 7. Remove dummy directory and zipped file - do this daily
+
+    # LM: Things needed:
+    # 1. Parse request to extract path to all requested files
+    # 2. Create subprocess - Celery
+    # 3. Get files and copy into dummy directory
+    # 4. Zip directory
+    # 5. Track subprocess
+    # 6. Serve
+    # 7. Remove dummy directory and zipped file - do this daily
 
     def get(self, request, *args, **kwargs):
         """ A view to report the progress to the user """
@@ -234,7 +259,8 @@ class Downloading(APIView):
                 task_id = request.GET['task']
                 task = AsyncResult(task_id)
                 if task.ready():
-                    return Response({'ready': task.ready(), 'state': task.status, 'path': task.result['path'], 'info': task.info})
+                    return Response(
+                        {'ready': task.ready(), 'state': task.status, 'path': task.result['path'], 'info': task.info})
                 else:
                     return Response({'ready': task.ready(), 'state': task.status, 'info': task.info})
             except Exception:
@@ -260,7 +286,7 @@ class Downloading(APIView):
             extensions = request.POST.getlist('extension')
 
             others_check = False
-            
+
             if '.midi' in extensions:
                 extensions.append('.mid')
             if '.xml' in extensions:
@@ -286,7 +312,6 @@ class Downloading(APIView):
             # Call celery tasks with our parsed files
             zip_task = tasks.zip_files.delay(files, request.user.username)
 
-
             return HttpResponseRedirect('?task=' + zip_task.id)
 
         # Remove selected
@@ -300,7 +325,7 @@ class Downloading(APIView):
 
             # do the extensions thing above
             others_check = False
-            
+
             if '.midi' in extensions:
                 extensions.append('.mid')
             if '.xml' in extensions:
@@ -334,7 +359,7 @@ class Downloading(APIView):
                     ranked_remover(parent_m, user_download)
                 except Exception as e:
                     parent_m = None
-                    
+
             return HttpResponseRedirect('/downloads/')
 
 
@@ -365,7 +390,3 @@ def ranked_remover(parent, user_download):
             user_download.attachments.add(sibling_a)
         else:
             user_download.attachments.remove(sibling_a)
-
-
-
-
