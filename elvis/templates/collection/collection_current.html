@@ -213,8 +213,8 @@
                     <td><a href="{{ piece.url }}">{{ piece.title }}</a></td>
                     <td><a href="{{ piece.composer.url }}">{{ piece.composer.name }}</a></td>
                     <td>{% if piece.date_of_composition  == piece.date_of_composition2 %}
-                        {{ piece.date_of_composition | date:"Y" }}{% else %}{{ piece.date_of_composition | date:"Y" }}-
-                        {{ piece.date_of_composition2 | date:"Y" }}{% endif %}</td>
+                        {{ piece.date_of_composition2 }}{% else %}{{ piece.date_of_composition }}-
+                        {{ piece.date_of_composition2 }}{% endif %}</td>
                     <td><span class="label label-success">Piece</span>{% if piece.movements %}<br>
                         <span class="label label-default">+ {{ piece.movements | length }} movement{{ piece.movements|length|pluralize }}</span> {% endif %}</td>
 
@@ -232,8 +232,8 @@
                     <td><a href="{{ movement.url }}">{{ movement.title }}</a></td>
                     <td><a href="{{ movement.composer.url }}">{{ movement.composer.name }}</a></td>
                     <td>{% if movement.date_of_composition  == movement.date_of_composition2 %}
-                        {{ movement.date_of_composition | date:"Y" }}{% else %}{{ movement.date_of_composition | date:"Y" }}
-                        -{{ movement.date_of_composition2 | date:"Y" }}{% endif %}</td>
+                        {{ movement.date_of_composition }}{% else %}{{ movement.date_of_composition }}
+                        -{{ movement.date_of_composition2  }}{% endif %}</td>
                     <td><span class="label label-primary">Movement</span><br><span class="label label-default">{{ movement.piece.title }}</span></td>
                 </tr>
             {% endfor %}
