@@ -58,7 +58,6 @@ class DownloadDetail(generics.RetrieveUpdateAPIView):
 
     def get_object(self):
         user = self.request.user
-
         try:
             obj = Download.objects.filter(user=user).latest("created")
             return obj
@@ -116,13 +115,13 @@ class DownloadDetail(generics.RetrieveUpdateAPIView):
                     self._download_helper(piece, user_download, add)
                 for movement in item.movements.all():
                     self._download_helper(movement, user_download, add)
-                    user_download.collection_collections.remove(item)
+                user_download.collection_collections.remove(item)
             if item.__class__.__name__ == "Composer":
                 for piece in item.pieces.all():
                     self._download_helper(piece, user_download, add)
                 for movement in item.movements.all():
                     self._download_helper(movement, user_download, add)
-                    user_download.collection_composers.remove(item)
+                user_download.collection_composers.remove(item)
             if item.__class__.__name__ == "Piece":
                 for att in item.attachments.all():
                     user_download.attachments.remove(att)
@@ -211,6 +210,8 @@ class DownloadDetail(generics.RetrieveUpdateAPIView):
             user_download.attachments.clear()
             user_download.collection_movements.clear()
             user_download.collection_pieces.clear()
+            user_download.collection_collections.clear()
+            user_download.collection_composers.clear()
             user_download.save()
             jresults = json.dumps({'count': user_download.cart_size})
             return HttpResponse(content=jresults, content_type="json")

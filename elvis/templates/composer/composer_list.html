@@ -21,7 +21,7 @@
 
     {% for composer in content.results %}
         <div class="row list-row row-eq-height">
-            <div class='col-xs-1 list-add'>{% include "includes/download-badge-inc.html" with download_type="elvis_composer" download_item_id=composer.item_id %}</div>
+            <div class='col-xs-1 list-add'>{% include "includes/download-badge-inc.html" with download_type="elvis_composer" download_item_id=composer.item_id in_cart=composer.in_cart %}</div>
             <a href='{{ composer.url }}' class='list-item col-xs-11'>
                 <span class='badge alert-info right-badge'
                       style='margin-top:10px'>{{ composer.piece_count }} Pieces, {{ composer.movement_count }} Movements</span>

@@ -21,7 +21,7 @@
 
     {% for movement in content.results %}
         <div class="row list-row row-eq-height">
-            <div class='col-xs-1 list-add'>{% include "includes/download-badge-inc.html" with download_type="elvis_movement" download_item_id=movement.item_id %}</div>
+            <div class='col-xs-1 list-add'>{% include "includes/download-badge-inc.html" with download_type="elvis_movement" download_item_id=movement.item_id in_cart=movement.in_cart%}</div>
             <a href='{{ movement.url }}' class='list-item col-xs-11'>
                 <h4>{{ movement.title }}<br>
                     <small>

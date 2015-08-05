@@ -59,6 +59,21 @@ class CollectionList(generics.ListCreateAPIView):
             else:
                 return Collection.objects.filter(Q(public=True) | Q(creator=user))
 
+    def get(self, request):
+        user = self.request.user
+        if user.is_anonymous():
+            return super(CollectionList, self).get(self, request)
+
+        response = super(CollectionList, self).get(self, request)
+        user_download = request.user.downloads.all()[0]
+        for i in range(len(response.data['results'])):
+            col_pk = response.data['results'][i]['item_id']
+            if user_download.collection_collections.filter(pk=col_pk):
+                response.data['results'][i]['in_cart'] = True
+            else:
+                response.data['results'][i]['in_cart'] = False
+        return response
+
     @method_decorator(csrf_protect)
     def post(self, request, *args, **kwargs):
         if 'make-private' in request.POST:

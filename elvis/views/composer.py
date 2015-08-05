@@ -32,6 +32,21 @@ class ComposerList(generics.ListCreateAPIView):
         else:
             return self.queryset
 
+    def get(self, request):
+        user = self.request.user
+        if user.is_anonymous():
+            return super(ComposerList, self).get(self, request)
+
+        response = super(ComposerList, self).get(self, request)
+        user_download = request.user.downloads.all()[0]
+        for i in range(len(response.data['results'])):
+            com_pk = response.data['results'][i]['item_id']
+            if user_download.collection_composers.filter(pk=com_pk):
+                response.data['results'][i]['in_cart'] = True
+            else:
+                response.data['results'][i]['in_cart'] = False
+        return response
+
 class ComposerDetail(generics.RetrieveUpdateDestroyAPIView):
     model = Composer
     permission_classes = (permissions.IsAuthenticatedOrReadOnly,)

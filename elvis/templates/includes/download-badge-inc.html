@@ -1,8 +1,17 @@
 {% if user.is_authenticated %}
-    <form class="recursive-patch-download-form" action="/downloads/" method="post">
-        <button type="button" class="btn btn-mini btn-success cart-button" data-container="body" data-toggle="tooltip" data-placement="top" title="Add to Downloads" ><span class="glyphicon glyphicon-plus"> </span> </button>
-        <input type="hidden" name="item_type"  value="{{ download_type }}" />
-        <input type="hidden" name="item_id"  value="{{ download_item_id }}" />
-        <input type="hidden" name="add" value="add" />
-    </form>
+    {% if in_cart %}
+        <form class="recursive-patch-download-form" action="/downloads/" method="post">
+            <button type="button" class="btn btn-mini btn-danger cart-button" data-container="body" data-toggle="tooltip" data-placement="top" title="Remove From Downloads" ><span class="glyphicon glyphicon-minus"> </span> </button>
+            <input type="hidden" name="item_type"  value="{{ download_type }}" />
+            <input type="hidden" name="item_id"  value="{{ download_item_id }}" />
+            <input type="hidden" name="add" value="remove" />
+        </form>
+    {% else %}
+        <form class="recursive-patch-download-form" action="/downloads/" method="post">
+            <button type="button" class="btn btn-mini btn-success cart-button" data-container="body" data-toggle="tooltip" data-placement="top" title="Add to Downloads" ><span class="glyphicon glyphicon-plus"> </span> </button>
+            <input type="hidden" name="item_type"  value="{{ download_type }}" />
+            <input type="hidden" name="item_id"  value="{{ download_item_id }}" />
+            <input type="hidden" name="add" value="add" />
+        </form>
+    {% endif %}
 {% endif %}

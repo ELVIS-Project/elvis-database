@@ -65,6 +65,21 @@ class PieceList(generics.ListCreateAPIView):
     max_paginate_by = 100
     queryset = Piece.objects.all()
 
+    def get(self, request):
+        user = self.request.user
+        if user.is_anonymous():
+            return super(PieceList, self).get(self, request)
+
+        response = super(PieceList, self).get(self, request)
+        user_download = request.user.downloads.all()[0]
+        for i in range(len(response.data['results'])):
+            piece_pk = response.data['results'][i]['item_id']
+            if user_download.collection_pieces.filter(pk=piece_pk):
+                response.data['results'][i]['in_cart'] = True
+            else:
+                response.data['results'][i]['in_cart'] = False
+        return response
+
     @method_decorator(csrf_protect)
     def post(self, request, *args, **kwargs):
         return self.create(request, *args, **kwargs)
