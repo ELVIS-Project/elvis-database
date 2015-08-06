@@ -16,7 +16,7 @@
     <script type='text/javascript' src="{{ STATIC_URL }}js/jquery-1.11.3.min.js"></script>
     <script type='text/javascript' src="{{ STATIC_URL }}js/plugins.js"></script>
     <script type='text/javascript' src="{{ STATIC_URL }}bootstrap/js/bootstrap.min.js"></script>
-    <script type='text/javascript' src="{{ STATIC_URL }}js/elvis-scripts/download-manager.js"></script>
+    <script type='text/javascript' src="{{ STATIC_URL }}js/elvis-scripts/cartButtonScript.js"></script>
 
     {% block extra_hd %}
     {% endblock %}
@@ -25,7 +25,7 @@
         $(document).ready(function ($)
         {
             // initialize the download manager script
-            initializeDownloadBadges();
+            cartButtonRefresh();
         });
 
     </script>
@@ -78,7 +78,7 @@
                 <ul class="nav navbar-nav navbar-right">
                     <li>
                         <a href="/download/cart/">
-                            <span class="glyphicon glyphicon-circle-arrow-down hidden-xs"></span> Download Cart
+                            Download Cart
                             <span id="collection-count">({{ user.downloads.all.first.cart_size }})</span>
                         </a>
                     </li>
