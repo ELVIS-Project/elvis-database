@@ -11,7 +11,7 @@ class ComposerMovementSerializer(serializers.HyperlinkedModelSerializer):
 
     class Meta:
         model = Movement
-        fields = ('url', 'item_id', 'title')
+        fields = ('url', 'item_id', 'title', 'date_of_composition')
 
 
 class ComposerPieceSerializer(serializers.HyperlinkedModelSerializer):
@@ -59,8 +59,6 @@ class ComposerSerializer(serializers.HyperlinkedModelSerializer):
                   "created",
                   "updated",
                   "history")
-
-
 
 class ComposerListSerializer(serializers.HyperlinkedModelSerializer):
     item_id = serializers.ReadOnlyField(source='pk')

@@ -25,7 +25,7 @@ class PieceCollectionSerializer(serializers.HyperlinkedModelSerializer):
 class PieceMovementCollectionSerializer(serializers.HyperlinkedModelSerializer):
     class Meta:
         model = Piece
-        fields = ("url", "title")
+        fields = ("url", "title", "pk")
 
 
 class MovementCollectionSerializer(serializers.HyperlinkedModelSerializer):

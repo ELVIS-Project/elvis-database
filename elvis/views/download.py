@@ -67,6 +67,7 @@ class DownloadDetail(generics.RetrieveUpdateAPIView):
     def get(self, request, *args, **kwargs):
         return self.retrieve(request, *args, **kwargs)
 
+
     def patch(self, request, *args, **kwargs):
         itype = request.DATA.get("type", None)
         item_id = request.DATA.get('item_id', None)
@@ -91,70 +92,55 @@ class DownloadDetail(generics.RetrieveUpdateAPIView):
         d = DownloadSerializer(dlobj).data
         return Response(d)
 
-    # Method to alter user's download object based on a singular attachment id
-    def _patch_downloads(self, request):
-        if not request.user.is_authenticated():
-            raise Http404
-        user_download = request.user.downloads.all()[0]
-        add_attachments = request.POST.getlist('a_ids')
-
-        # add_attachments is a list of ids
-        for a in add_attachments:
-            a_object = Attachment.objects.filter(pk=a).all()[0]
-            user_download.attachments.add(a_object)
-
-        user_download.save()
-        return HttpResponseRedirect(request.POST.get('this_url'))
-
-    # Method to help recursive-alteration of user's download object
-    def _download_helper(self, item, user_download, add='add'):
-
-        if add == 'remove':
-            if item.__class__.__name__ == "Collection":
-                for piece in item.pieces.all():
-                    self._download_helper(piece, user_download, add)
-                for movement in item.movements.all():
-                    self._download_helper(movement, user_download, add)
-                user_download.collection_collections.remove(item)
-            if item.__class__.__name__ == "Composer":
-                for piece in item.pieces.all():
-                    self._download_helper(piece, user_download, add)
-                for movement in item.movements.all():
-                    self._download_helper(movement, user_download, add)
-                user_download.collection_composers.remove(item)
-            if item.__class__.__name__ == "Piece":
-                for att in item.attachments.all():
-                    user_download.attachments.remove(att)
-                user_download.collection_pieces.remove(item)
-            if item.__class__.__name__ == "Movement":
-                user_download.collection_movements.remove(item)
-                for att in item.attachments.all():
-                    user_download.attachments.remove(att)
-        else:
-            if item.__class__.__name__ == "Collection":
-                for piece in item.pieces.all():
-                    self._download_helper(piece, user_download)
-                for movement in item.movements.all():
-                    self._download_helper(movement, user_download)
-                user_download.collection_collections.add(item)
-            if item.__class__.__name__ == "Composer":
-                for piece in item.pieces.all():
-                    self._download_helper(piece, user_download)
-                for movement in item.movements.all():
-                    self._download_helper(movement, user_download)
-                    user_download.collection_composers.add(item)
-            if item.__class__.__name__ == "Piece":
+    # Recursively add object to users download
+    def _download_adder(self, item, user_download):
+        if item.__class__.__name__ == "Collection":
+            for piece in item.pieces.all():
+                self._download_adder(piece, user_download)
+            for movement in item.movements.all():
+                self._download_adder(movement, user_download)
+            user_download.collection_collections.add(item)
+        if item.__class__.__name__ == "Composer":
+            for piece in item.pieces.all():
+                self._download_adder(piece, user_download)
+            for movement in item.movements.all():
+                self._download_adder(movement, user_download)
+                user_download.collection_composers.add(item)
+        if item.__class__.__name__ == "Piece":
+            for att in item.attachments.all():
+                user_download.attachments.add(att)
+            user_download.collection_pieces.add(item)
+        if item.__class__.__name__ == "Movement":
+            if item.piece not in user_download.collection_pieces.all():
+                user_download.collection_movements.add(item)
                 for att in item.attachments.all():
                     user_download.attachments.add(att)
-                user_download.collection_pieces.add(item)
-            if item.__class__.__name__ == "Movement":
-                if item.piece not in user_download.collection_pieces.all():
-                    user_download.collection_movements.add(item)
-                    for att in item.attachments.all():
-                        user_download.attachments.add(att)
+
+    # Recursively remove object to users download
+    def _download_remover(self, item, user_download):
+        if item.__class__.__name__ == "Collection":
+            for piece in item.pieces.all():
+                self._download_remover(piece, user_download)
+            for movement in item.movements.all():
+                self._download_remover(movement, user_download)
+            user_download.collection_collections.remove(item)
+        if item.__class__.__name__ == "Composer":
+            for piece in item.pieces.all():
+                self._download_remover(piece, user_download)
+            for movement in item.movements.all():
+                self._download_remover(movement, user_download)
+            user_download.collection_composers.remove(item)
+        if item.__class__.__name__ == "Piece":
+            for att in item.attachments.all():
+                user_download.attachments.remove(att)
+            user_download.collection_pieces.remove(item)
+        if item.__class__.__name__ == "Movement":
+            user_download.collection_movements.remove(item)
+            for att in item.attachments.all():
+                user_download.attachments.remove(att)
 
     # Choose the right model based on request, again to help recursive-patching
-    def _type_selector(self, item_type, item_id, user_download, add):
+    def _type_selector(self, item_type, item_id, user_download, action):
         if item_type == "elvis_movement":
             item = Movement.objects.filter(pk=item_id)[0]
         elif item_type == "elvis_piece":
@@ -168,10 +154,11 @@ class DownloadDetail(generics.RetrieveUpdateAPIView):
         else:
             raise TypeError("Item type '" + item_type + "' passed not found in database.")
 
-        self._download_helper(item, user_download, add)
-        user_download.save()
-        jresults = json.dumps({'count': user_download.cart_size})
-        return HttpResponse(content=jresults, content_type="json")
+        if action == 'add':
+            self._download_adder(item, user_download)
+        if action == 'remove':
+            self._download_remover(item, user_download)
+
 
     # Recursive version of the flat-downloads
     def _recursive_patch_downloads(self, request):
@@ -192,10 +179,11 @@ class DownloadDetail(generics.RetrieveUpdateAPIView):
         else:
             item_type = request.POST.getlist('item_type')
             item_id = request.POST.getlist('item_id')
-            add = request.POST.get('add')
+            action = request.POST.get('action')
             for i in range(len(item_type)):
-                self._type_selector(item_type[i], item_id[i], user_download, add)
+                self._type_selector(item_type[i], item_id[i], user_download, action)
 
+        user_download.save()
         jresults = json.dumps({'count': user_download.cart_size})
         return HttpResponse(content=jresults, content_type="json")
 
@@ -203,10 +191,7 @@ class DownloadDetail(generics.RetrieveUpdateAPIView):
     def post(self, request, *args, **kwargs):
         user_download = request.user.downloads.all()[0]
 
-        if 'a_ids' in request.POST:
-            return self._patch_downloads(request)
-
-        elif 'clear-collection' in request.POST:
+        if 'clear-collection' in request.POST:
             user_download.attachments.clear()
             user_download.collection_movements.clear()
             user_download.collection_pieces.clear()

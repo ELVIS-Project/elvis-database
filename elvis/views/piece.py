@@ -40,6 +40,28 @@ class PieceDetail(generics.RetrieveUpdateDestroyAPIView):
     renderer_classes = (JSONRenderer, PieceDetailHTMLRenderer)
     queryset = Piece.objects.all()
 
+    def get(self, request, *args, **kwargs):
+        user = self.request.user
+        if user.is_anonymous():
+            return super(PieceDetail, self).get(self, request)
+
+        response = super(PieceDetail, self).get(self, request)
+        user_download = request.user.downloads.all()[0]
+
+        if user_download.collection_pieces.filter(pk=response.data['item_id']):
+            response.data['in_cart'] = True
+            for i in range(len(response.data['movements'])):
+                response.data['movements'][i]['in_cart'] = 'Piece'
+        else:
+            response.data['in_cart'] = False
+            for i in range(len(response.data['movements'])):
+                mov_pk = response.data['movements'][i]['item_id']
+                if user_download.collection_movements.filter(pk=mov_pk):
+                    response.data['movements'][i]['in_cart'] = True
+                else:
+                    response.data['movements'][i]['in_cart'] = False
+        return response
+
 
 class PieceCreate(generics.GenericAPIView):
     model = Piece
@@ -65,7 +87,7 @@ class PieceList(generics.ListCreateAPIView):
     max_paginate_by = 100
     queryset = Piece.objects.all()
 
-    def get(self, request):
+    def get(self, request, *args, **kwargs):
         user = self.request.user
         if user.is_anonymous():
             return super(PieceList, self).get(self, request)

@@ -32,7 +32,7 @@ class ComposerList(generics.ListCreateAPIView):
         else:
             return self.queryset
 
-    def get(self, request):
+    def get(self, request, *args, **kwargs):
         user = self.request.user
         if user.is_anonymous():
             return super(ComposerList, self).get(self, request)
@@ -53,3 +53,29 @@ class ComposerDetail(generics.RetrieveUpdateDestroyAPIView):
     serializer_class = ComposerSerializer
     renderer_classes = (JSONRenderer, ComposerDetailHTMLRenderer)
     queryset = Composer.objects.all()
+
+    def get(self, request, *args, **kwargs):
+        user = self.request.user
+        if user.is_anonymous():
+            return super(ComposerDetail, self).get(self, request)
+
+        response = super(ComposerDetail, self).get(self, request)
+        user_download = request.user.downloads.all()[0]
+        if user_download.collection_composers.filter(pk=response.data['item_id']):
+            response.data['in_cart'] = True
+        else:
+            response.data['in_cart'] = False
+
+        for i in range(len(response.data['pieces'])):
+            com_pk = response.data['pieces'][i]['item_id']
+            if user_download.collection_pieces.filter(pk=com_pk):
+                response.data['pieces'][i]['in_cart'] = True
+            else:
+                response.data['pieces'][i]['in_cart'] = False
+        for i in range(len(response.data['free_movements'])):
+            com_pk = response.data['free_movements'][i]['item_id']
+            if user_download.collection_movements.filter(pk=com_pk):
+                response.data['free_movements'][i]['in_cart'] = True
+            else:
+                response.data['free_movements'][i]['in_cart'] = False
+        return response

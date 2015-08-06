@@ -30,25 +30,16 @@
 {% endblock %}
 
 {% block wrap %}
-    <div class="row">
-        <h2> {{ content.title }} <span class="pull-right">
-        {% if user.is_authenticated %}
-            <form class="recursive-patch-download-form" action="/downloads/" method="post"/>
-            {% csrf_token %}
-            <button type="button" id='add-piece' class="btn btn-default" data-container="body" data-toggle="tooltip"
-                    data-placement="top" title="Add to Downloads">Add to Downloads
-            </button>
-            <input type="hidden" name="item_type" value="elvis_piece"/>
-            <input type="hidden" name="item_id" value="{{ content.item_id }}"/>
-            <input type="hidden" class="this_url" name="this_url" value=""/>
-            </form>
-        {% endif %}
-        </span></h2>
+    <div class="page-header">
+        <h2> {{ content.title }}
+            <span class="pull-right">
+                {% include "includes/download-button-inc.html" with download_type="elvis_piece" download_item_id=content.item_id title="Add to Downloads" in_cart=content.in_cart%}
+            </span>
+        </h2>
         <p>
             <span class="label label-success">Piece</span> - Created by {{ content.uploader.username }}
             on {{ content.created | date:"d F Y" }}. Last updated on {{ content.updated | date:"d F Y" }}.
         </p>
-        <hr>
     </div>
 
     <div class="row">
@@ -170,7 +161,7 @@
                 {% for movement in content.movements %}
                     <tr>
                         <td width="5%">
-                            {% include "includes/download-badge-inc.html" with download_type="elvis_movement" download_item_id=movement.item_id title="Add to Downloads" %}
+                            {% include "includes/download-badge-inc.html" with download_type="elvis_movement" download_item_id=movement.item_id title="Add to Downloads" in_cart=movement.in_cart %}
                         </td>
                         <td><a href="{{ movement.url }}">{{ movement.title }}</a></td>
                     </tr>

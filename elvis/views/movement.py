@@ -25,7 +25,7 @@ class MovementList(generics.ListCreateAPIView):
     max_paginate_by = 20
     queryset = Movement.objects.all()
 
-    def get(self, request):
+    def get(self, request, *args, **kwargs):
         user = self.request.user
         if user.is_anonymous():
             return super(MovementList, self).get(self, request)
@@ -47,3 +47,19 @@ class MovementDetail(generics.RetrieveUpdateDestroyAPIView):
     serializer_class = MovementSerializer
     renderer_classes = (JSONRenderer, MovementDetailHTMLRenderer)
     queryset = Movement.objects.all()
+
+    def get(self, request, *args, **kwargs):
+        user = self.request.user
+        if user.is_anonymous():
+            return super(MovementDetail, self).get(self, request)
+
+        response = super(MovementDetail, self).get(self, request)
+        user_download = request.user.downloads.all()[0]
+        if (response.data['piece'] and user_download.collection_pieces.filter(pk=response.data['piece']['pk'])):
+            response.data['in_cart'] = "Piece"
+        elif user_download.collection_movements.filter(pk=response.data['item_id']):
+            response.data['in_cart'] = True
+        else:
+            response.data['in_cart'] = False
+
+        return response
