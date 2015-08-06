@@ -90,7 +90,7 @@ class UserMovementSerializer(serializers.HyperlinkedModelSerializer):
 class PieceMovementSerializer(serializers.HyperlinkedModelSerializer):
     class Meta:
         model = Piece
-        fields = ("url", "title")
+        fields = ("url", "title", "pk")
 
 
 class MovementSerializer(serializers.HyperlinkedModelSerializer):

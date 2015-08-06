@@ -50,16 +50,18 @@
 {% block wrap %}
 <div class="row">
     <div class="page-header"><h2>{{ content.title }} <small>{{ content.pieces | length }} Pieces, {{ content.movements | length }} Movements</small>
-    {% if user.username == content.creator.username %}
-                        <span class="pull-right">
-                        {% if content.public %}
-                        <button type="button" class="btn btn-default" id="private-button">Make Private</button>
-                        {% else %}
-                        <button type="button" class="btn btn-default" id="public-button">Make Public</button>
-                        {% endif %}
-                        <button type="button" class="btn btn-warning" id="delete-button">Delete</button>
-                        </span>
-    {% endif %}</h2> </div>
+        <span class="pull-right">
+            {% include "includes/download-button-inc.html" with download_type="elvis_collection" download_item_id=content.item_id title="Add to Downloads" in_cart=content.in_cart%}
+            {% if user.username == content.creator.username %}
+                {% if content.public %}
+                <button type="button" class="btn btn-default" id="private-button">Make Private</button>
+                {% else %}
+                <button type="button" class="btn btn-default" id="public-button">Make Public</button>
+                {% endif %}
+                <button type="button" class="btn btn-warning" id="delete-button">Delete</button>
+            {% endif %}
+        </span>
+    </h2></div>
     <p>Created by {{ content.creator.full_name }} on {{ content.created | date:"d F Y, f a" }}<br> Last updated {{ content.updated | date:"d F Y, f a" }}</p>
     <p> {% autoescape off %}{{ content.comment }}{% endautoescape %} </p>
 </div>
@@ -79,7 +81,7 @@
     <tbody>
         {% for piece in content.pieces %}
             <tr>
-                <td width="5%">{% include "includes/download-badge-inc.html" with download_type="elvis_piece" download_item_id=piece.item_id title="Add to Downloads" %}</td>
+                <td width="5%">{% include "includes/download-badge-inc.html" with download_type="elvis_piece" download_item_id=piece.item_id title="Add to Downloads" in_cart=piece.in_cart %}</td>
                 <td width="70%"><a href="{{ piece.url }}">{{ piece.title }}</a></td>
                 <td width="10%"><span class="label label-info">{% if piece.movement_count %}{{ piece.movement_count }} included {% endif %}</span></td>
                 <td width="10%">{{ piece.date_of_composition | date:"Y"}}</td>
@@ -102,7 +104,7 @@
     <tbody>
         {% for mov in content.movements %}
             <tr >
-                <td width="5%">{% include "includes/download-badge-inc.html" with download_type="elvis_movement" download_item_id=piece.item_id title="Add to Downloads" %}</td>
+                <td width="5%">{% include "includes/download-badge-inc.html" with download_type="elvis_movement" download_item_id=mov.item_id title="Add to Downloads" in_cart=mov.in_cart %}</td>
                 <td width="70%"><a href="{{ mov.url }}">{{ mov.title }}</a></td>
                 <td width="10%">{{ mov.date_of_composition | date:"Y"}}</td>
             </tr>

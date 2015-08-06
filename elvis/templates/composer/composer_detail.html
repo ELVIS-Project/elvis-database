@@ -6,14 +6,18 @@
 
 {% block wrap %}
 <div class="row">
-    <div class="col-lg-10">
-        <h2>{{ content.name }} <small>({{ content.birth_date }}&ndash;{{ content.death_date }})</small></h2>
-    </div>
+<div class="page-header">
+    <h2>{{ content.name }} <small>({{ content.birth_date }}&ndash;{{ content.death_date }})</small>
+        <span class="pull-right">
+            {% include "includes/download-button-inc.html" with download_type="elvis_composer" download_item_id=content.item_id title="Add to Downloads" in_cart=content.in_cart%}
+        </span>
+    </h2>
 </div>
-<hr>
+</div>
 
 
-    {% if content.pieces %}
+
+{% if content.pieces %}
 <h3>Pieces ({{ content.pieces | length }})</h3>
 <table class="table">
     <thead>
@@ -27,10 +31,10 @@
     <tbody>
         {% for piece in content.pieces %}
             <tr>
-                <td width="5%">{% include "includes/download-badge-inc.html" with download_type="elvis_piece" download_item_id=piece.item_id title="Add to Downloads" %}</td>
+                <td width="5%">{% include "includes/download-badge-inc.html" with download_type="elvis_piece" download_item_id=piece.item_id in_cart=piece.in_cart %}</td>
                 <td width="70%"><a href="{{ piece.url }}">{{ piece.title }}</a></td>
                 <td width="10%"><span class="label label-info">{% if piece.movement_count %}{{ piece.movement_count }} included {% endif %}</span></td>
-                <td width="10%">{{ piece.date_of_composition | date:"Y"}}</td>
+                <td width="10%">{{ piece.date_of_composition}}</td>
             </tr>
         {% endfor %}
     </tbody>
@@ -50,9 +54,9 @@
     <tbody>
         {% for mov in content.free_movements %}
             <tr >
-                <td width="5%">{% include "includes/download-badge-inc.html" with download_type="elvis_movement" download_item_id=piece.item_id title="Add to Downloads" %}</td>
+                <td width="5%">{% include "includes/download-badge-inc.html" with download_type="elvis_movement" download_item_id=mov.item_id in_cart=mov.in_cart%}</td>
                 <td width="70%"><a href="{{ mov.url }}">{{ mov.title }}</a></td>
-                <td width="10%">{{ mov.date_of_composition | date:"Y"}}</td>
+                <td width="10%">{{ mov.date_of_composition }}</td>
             </tr>
         {% endfor %}
     </tbody>
