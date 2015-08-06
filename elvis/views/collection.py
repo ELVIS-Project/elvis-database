@@ -59,7 +59,7 @@ class CollectionList(generics.ListCreateAPIView):
             else:
                 return Collection.objects.filter(Q(public=True) | Q(creator=user))
 
-    def get(self, request):
+    def get(self, request, *args, **kwargs):
         user = self.request.user
         if user.is_anonymous():
             return super(CollectionList, self).get(self, request)
@@ -136,6 +136,33 @@ class CollectionDetail(generics.RetrieveUpdateDestroyAPIView):
             return self.queryset
         else:
             return Collection.objects.filter(Q(public=True) | Q(creator=user))
+
+    def get(self, request, *args, **kwargs):
+        user = self.request.user
+        if user.is_anonymous():
+            return super(CollectionDetail, self).get(self, request)
+
+        response = super(CollectionDetail, self).get(self, request)
+        user_download = request.user.downloads.all()[0]
+        if user_download.collection_collections.filter(pk=response.data['item_id']):
+            response.data['in_cart'] = True
+        else:
+            response.data['in_cart'] = False
+        for i in range(len(response.data['pieces'])):
+            col_pk = response.data['pieces'][i]['item_id']
+            if user_download.collection_pieces.filter(pk=col_pk):
+                response.data['pieces'][i]['in_cart'] = True
+            else:
+                response.data['pieces'][i]['in_cart'] = False
+        for i in range(len(response.data['movements'])):
+            col_pk = response.data['movements'][i]['item_id']
+            if user_download.collection_movements.filter(pk=col_pk):
+                response.data['movements'][i]['in_cart'] = True
+            elif response.data['movements'][i]['piece'] and user_download.collection_pieces.filter(pk=response.data['movements'][i]['piece']['pk']):
+                response.data['movements'][i]['in_cart'] = "Piece"
+            else:
+                response.data['movements'][i]['in_cart'] = False
+        return response
 
 
 class CollectionCurrent(generics.RetrieveUpdateDestroyAPIView):
