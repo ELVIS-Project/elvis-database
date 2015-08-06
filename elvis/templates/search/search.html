@@ -171,7 +171,7 @@
                             pushToHistory(data, results)
                         }
 
-                        $("#" + fadewindow).fadeOut(300, function() { drawResults(results) }).fadeIn(300, function(){cartButtonRefresh();})
+                        $("#" + fadewindow).fadeOut(300, function() { drawResults(results); }).fadeIn(300, function(){cartButtonRefresh();});
                     }
                 });
             }
@@ -219,7 +219,7 @@
                                 "<span class='label label-default right-label'>Composer</span><h4>" + entry['name'] + "</h4>" +
                                 "<p class='list-group-item-text'>" + birthday + "-" + death + "</p>" +
                                 "</a></div>");
-                        create_download_badge("elvis_composer", entry['item_id'], "add" + key);
+                        create_download_form("elvis_composer", entry['item_id'], "add" + key);
                         continue;
                     }
                     if (entry['type'] === "elvis_collection")
@@ -230,7 +230,7 @@
                                 "<span class='label label-info right-label' style='margin-top:10px'>Collection</span><h4>" + entry['title'] + "</h4>" +
                                 "<p class='list-group-item-text'>Created By: " + entry['creator_name'] + " on " + entry['created'].substring(0, 10) + "</p>" +
                                 "</a></div>");
-                        create_download_badge("elvis_collection", entry['item_id'], "add" + key);
+                        create_download_form("elvis_collection", entry['item_id'], "add" + key);
                         continue;
                     }
                     if (entry['type'] === "elvis_movement")
@@ -251,7 +251,7 @@
                         }
                         result += "</a></div>";
                         $results.append(result);
-                        create_download_badge("elvis_movement", entry['item_id'], "add" + key);
+                        create_download_form("elvis_movement", entry['item_id'], "add" + key);
                         continue;
                     }
                     if (entry['type'] === "elvis_piece")
@@ -268,12 +268,13 @@
                         }
                         result += "</a></div>";
                         $results.append(result);
-                        create_download_badge("elvis_piece", entry['item_id'], "add" + key);
+                        create_download_form("elvis_piece", entry['item_id'], "add" + key);
                         continue;
                     }
                 }
                 drawPageLinks(results);
                 drawFacets(results);
+                draw_download_buttons();
             }
 
             //Draw the paginators at the bottom of the page.
@@ -432,6 +433,42 @@
                         qstr = qstr.replace("&" + facetName + "=" + facetValue, "");
                         window.history.pushState(results, "Search", "/search/?" + qstr);
                         queryQString("search-results-list");
+                    }
+                });
+            }
+
+            function draw_download_buttons()
+            {
+                var $forms = $(".recursive-patch-download-form");
+                var items = [];
+                for (var i = 0; i < $forms.size(); i++)
+                {
+                    items.push({type: $forms[i][0]['value'], id: $forms[i][1]['value'], num: i})
+                }
+                $.ajax({
+                    url: "/downloads/",
+                    data: {check_in_cart: JSON.stringify(items)},
+                    success: function (data)
+                    {
+                        console.log(data);
+                        for (var i = 0; i < $forms.size(); i++)
+                        {
+                            if (data[i]['in_cart'] == "Piece")
+                            {
+                                $($forms[i]).prepend('<button type="button" class="btn btn-mini btn-info disabled" data-container="body" data-toggle="tooltip" data-placement="top" title="Movement in Downloads under parent Piece. Remove Piece to modify."><span class="glyphicon glyphicon-lock"> </span> </button>');
+                                continue;
+                            }
+                            if (data[i]['in_cart'] == true)
+                            {
+                                $($forms[i].children[2]).val("remove");
+                                $($forms[i]).prepend('<button type="button" class="btn btn-mini btn-danger cart-badge" data-container="body" data-toggle="tooltip" data-placement="top" title="Remove from Downloads"><span class="glyphicon glyphicon-minus"> </span> </button>');
+                                continue
+                            }
+                            if (data[i]['in_cart'] == false)
+                            {
+                                $($forms[i]).prepend('<button type="button" class="btn btn-mini btn-success cart-badge" data-container="body" data-toggle="tooltip" data-placement="top" title="Add to Downloads"><span class="glyphicon glyphicon-plus"> </span> </button> ');
+                            }
+                        }
                     }
                 });
             }

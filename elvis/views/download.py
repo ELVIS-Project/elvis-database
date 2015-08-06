@@ -1,6 +1,5 @@
 # LM: TODO lots of cleaning up; make modular methods
 import json
-
 import os
 from rest_framework import generics
 from rest_framework import permissions
@@ -65,8 +64,45 @@ class DownloadDetail(generics.RetrieveUpdateAPIView):
             return None
 
     def get(self, request, *args, **kwargs):
+        if 'check_in_cart' in request.GET:
+            results = self._check_in_cart(request)
+            jresults = json.dumps(results)
+            return HttpResponse(jresults, content_type="application/json")
+
         return self.retrieve(request, *args, **kwargs)
 
+    def _check_in_cart(self, request):
+        user_download = request.user.downloads.all()[0]
+        item_list = json.loads(request.GET['check_in_cart'])
+        results = []
+        for item in item_list:
+            if item['type'] == "elvis_composer":
+                if user_download.collection_composers.filter(pk=item['id']):
+                    results.append({'id': item['id'], 'in_cart': True})
+                else:
+                    results.append({'id': item['id'], 'in_cart': False})
+                continue
+            if item['type'] == "elvis_collection":
+                if user_download.collection_collections.filter(pk=item['id']):
+                    results.append({'id': item['id'], 'in_cart': True})
+                else:
+                    results.append({'id': item['id'], 'in_cart': False})
+                continue
+            if item['type'] == "elvis_piece":
+                if user_download.collection_pieces.filter(pk=item['id']):
+                    results.append({'id': item['id'], 'in_cart': True})
+                else:
+                    results.append({'id': item['id'], 'in_cart': False})
+                continue
+            if item['type'] == "elvis_movement":
+                piece = Movement.objects.get(pk=item['id']).piece
+                if piece and user_download.collection_pieces.filter(pk=piece.id):
+                    results.append({'id': item['id'], 'in_cart': 'Piece'})
+                elif user_download.collection_movements.filter(pk=item['id']):
+                    results.append({'id': item['id'], 'in_cart': True})
+                else:
+                    results.append({'id': item['id'], 'in_cart': False})
+        return results
 
     def patch(self, request, *args, **kwargs):
         itype = request.DATA.get("type", None)
