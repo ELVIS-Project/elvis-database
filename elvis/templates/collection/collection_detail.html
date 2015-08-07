@@ -1,125 +1,150 @@
 {% extends "base.html" %}
 
 {% block extra_hd %}
-<title>{{ content.title }}</title>
-<script>
-    $(document).ready(function($)
-    {
-        $("#private-button").click(function(event){
-            $.ajax({
-                type: "post",
-                url: "/collections/",
-                data: {action: 'make-private', id: {{ content.item_id }}},
-                success: function(data)
-                {
-                    console.log("Made {{ content.title }} private.");
-                    location.reload();
-                }
-            })
-        });
-
-        $("#public-button").click(function(event){
-            $.ajax({
-                type: "post",
-                url: "/collections/",
-                data: {action: 'make-public', id: {{ content.item_id }}},
-                success: function(data)
-                {
-                    console.log("Made {{ content.title }} public.");
-                    location.reload();
-                }
-            })
-        });
-
-        $("#delete-button").click(function(event){
-            $base_modal_header.html("<h4 class='modal-title'>Confirm Deletion.</h4>");
-            $base_modal_body.html("<p>Are you sure you want to delete this Collection?</p>");
-            $base_modal_footer.html('<button type="button" class="btn btn-default" data-dismiss="modal">No</button>' +
-                    '<button id="confirm-delete-button" type="button" class="btn btn-danger" data-dismiss="modal">' +
-                    '<span class="glyphicon glyphicon-remove"></span>Yes</button>');
-            $base_modal.modal('show');
-            $("#confirm-delete-button").click(function (event)
+    <title>{{ content.title }}</title>
+    <script>
+        $(document).ready(function ($)
+        {
+            $("#private-button").click(function (event)
             {
                 $.ajax({
                     type: "post",
                     url: "/collections/",
-                    data: {action: 'delete', id: {{ content.item_id }}},
+                    data: {action: 'make-private', id: {{ content.item_id }}},
                     success: function (data)
                     {
-                        console.log("Deleted {{ content.title }}");
-                        document.location.href = '/collections/?creator={{ user.username }}';
+                        console.log("Made {{ content.title }} private.");
+                        location.reload();
                     }
                 })
-            })
+            });
+
+            $("#public-button").click(function (event)
+            {
+                $.ajax({
+                    type: "post",
+                    url: "/collections/",
+                    data: {action: 'make-public', id: {{ content.item_id }}},
+                    success: function (data)
+                    {
+                        console.log("Made {{ content.title }} public.");
+                        location.reload();
+                    }
+                })
+            });
+
+            $("#delete-button").click(function (event)
+            {
+                $base_modal_header.html("<h4 class='modal-title'>Confirm Deletion.</h4>");
+                $base_modal_body.html("<p>Are you sure you want to delete this Collection?</p>");
+                $base_modal_footer.html('<button type="button" class="btn btn-default" data-dismiss="modal">No</button>' +
+                        '<button id="confirm-delete-button" type="button" class="btn btn-danger" data-dismiss="modal">' +
+                        '<span class="glyphicon glyphicon-remove"></span>Yes</button>');
+                $base_modal.modal('show');
+                $("#confirm-delete-button").click(function (event)
+                {
+                    $.ajax({
+                        type: "post",
+                        url: "/collections/",
+                        data: {action: 'delete', id: {{ content.item_id }}},
+                        success: function (data)
+                        {
+                            console.log("Deleted {{ content.title }}");
+                            document.location.href = '/collections/?creator={{ user.username }}';
+                        }
+                    })
+                })
+            });
         });
-    });
-</script>
+    </script>
 {% endblock %}
 
 {% block wrap %}
-<div class="row">
-    <div class="page-header"><h2>{{ content.title }} <small>{{ content.pieces | length }} Pieces, {{ content.movements | length }} Movements</small>
-        <span class="pull-right">
-            {% if user.id == content.creator.pk  or user.is_superuser %}
-                <button type="button" class="btn btn-default" id="delete-button">Delete</button>
-                {% if content.public %}
-                <button type="button" class="btn btn-default" id="private-button">Make Private</button>
-                {% else %}
-                <button type="button" class="btn btn-default" id="public-button">Make Public</button>
+    <div class="page-header">
+        <h2>{{ content.title }}
+            <small>{{ content.pieces | length }}
+                Pieces, {{ content.movements | length }} Movements
+            </small>
+            <span class="pull-right">
+                {% if user.id == content.creator.pk  or user.is_superuser %}
+                    <button type="button" class="btn btn-default"
+                            id="delete-button">Delete
+                    </button>
+                    {% if content.public %}
+                        <button type="button" class="btn btn-default"
+                                id="private-button">Make Private
+                        </button>
+                    {% else %}
+                        <button type="button" class="btn btn-default"
+                                id="public-button">Make Public
+                        </button>
+                    {% endif %}
                 {% endif %}
-            {% endif %}
-            {% include "includes/download-button-inc.html" with download_type="elvis_collection" download_item_id=content.item_id title="Add to Downloads" in_cart=content.in_cart%}
-        </span>
-    </h2></div>
-    <p>Created by {{ content.creator.full_name }} on {{ content.created | date:"d F Y, f a" }}<br> Last updated {{ content.updated | date:"d F Y, f a" }}</p>
-    <p> {% autoescape off %}{{ content.comment }}{% endautoescape %} </p>
-</div>
+                {% include "includes/download-button-inc.html" with download_type="elvis_collection" download_item_id=content.item_id title="Add to Downloads" in_cart=content.in_cart %}
+            </span>
+        </h2>
 
 
-{% if content.pieces %}
-<h3>Pieces ({{ content.pieces | length }})</h3>
-<table class="table">
-    <thead>
-        <tr>
-            <th width="5%">Add</th>
-            <th width="70%">Title</th>
-            <th width="10%">Movements</th>
-            <th width="10%">Date</th>
-        </tr>
-    </thead>
-    <tbody>
-        {% for piece in content.pieces %}
+        <p>Created by {{ content.creator.full_name }}
+                on {{ content.created | date:"d F Y, f a" }}<br> Last
+                updated {{ content.updated | date:"d F Y, f a" }}</p>
+    </div>
+    {% if content.comment %}
+        <pre>{{ content.comment }}</pre>
+    {% endif %}
+
+
+
+
+    {% if content.pieces %}
+        <h3>Pieces ({{ content.pieces | length }})</h3>
+        <table class="table">
+            <thead>
             <tr>
-                <td width="5%">{% include "includes/download-badge-inc.html" with download_type="elvis_piece" download_item_id=piece.item_id title="Add to Downloads" in_cart=piece.in_cart %}</td>
-                <td width="70%"><a href="{{ piece.url }}">{{ piece.title }}</a></td>
-                <td width="10%"><span class="label label-info">{% if piece.movement_count %}{{ piece.movement_count }} included {% endif %}</span></td>
-                <td width="10%">{{ piece.date_of_composition | date:"Y"}}</td>
+                <th width="5%">Add</th>
+                <th width="70%">Title</th>
+                <th width="10%">Movements</th>
+                <th width="10%">Date</th>
             </tr>
-        {% endfor %}
-    </tbody>
-</table>
-{% endif %}
+            </thead>
+            <tbody>
+            {% for piece in content.pieces %}
+                <tr>
+                    <td width="5%">{% include "includes/download-badge-inc.html" with download_type="elvis_piece" download_item_id=piece.item_id title="Add to Downloads" in_cart=piece.in_cart %}</td>
+                    <td width="70%"><a
+                            href="{{ piece.url }}">{{ piece.title }}</a></td>
+                    <td width="10%"><span
+                            class="label label-info">{% if piece.movement_count %}
+                        {{ piece.movement_count }} included {% endif %}</span>
+                    </td>
+                    <td width="10%">{{ piece.date_of_composition }}</td>
+                </tr>
+            {% endfor %}
+            </tbody>
+        </table>
+    {% endif %}
 
-{% if content.movements %}
-<h3>Movements ({{ content.movement_count }})</h3>
-<table class="table">
-    <thead>
-        <tr>
-            <th width="5%">Add</th>
-            <th width="70%">Title</th>
-            <th width="10%">Date</th>
-        </tr>
-    </thead>
-    <tbody>
-        {% for mov in content.movements %}
-            <tr >
-                <td width="5%">{% include "includes/download-badge-inc.html" with download_type="elvis_movement" download_item_id=mov.item_id title="Add to Downloads" in_cart=mov.in_cart %}</td>
-                <td width="70%"><a href="{{ mov.url }}">{{ mov.title }}</a></td>
-                <td width="10%">{{ mov.date_of_composition | date:"Y"}}</td>
+    {% if content.movements %}
+        <h3>Movements ({{ content.movement_count }})</h3>
+        <table class="table">
+            <thead>
+            <tr>
+                <th width="5%">Add</th>
+                <th width="70%">Title</th>
+                <th width="10%">Date</th>
             </tr>
-        {% endfor %}
-    </tbody>
-</table>
-{% endif %}
+            </thead>
+            <tbody>
+            {% for mov in content.movements %}
+                <tr>
+                    <td width="5%">{% include "includes/download-badge-inc.html" with download_type="elvis_movement" download_item_id=mov.item_id title="Add to Downloads" in_cart=mov.in_cart %}</td>
+                    <td width="70%"><a href="{{ mov.url }}">{{ mov.title }}</a>
+                    </td>
+                    <td width="10%">{{ mov.date_of_composition }}</td>
+                </tr>
+            {% endfor %}
+            </tbody>
+        </table>
+    {% endif %}
 
 {% endblock %}
