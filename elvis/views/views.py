@@ -304,7 +304,7 @@ def abstract_model_factory(model_name, model_type, cleanup=Cleanup(), **kwargs):
         composer_list.append(composer)
         return composer_list
 
-    if model_type == "Collection":
+    elif model_type == "Collection":
         tokenized_inputs = map((lambda x: x.strip()), model_name.rsplit(";"))
         collection_list = []
         for token in tokenized_inputs:
@@ -323,7 +323,7 @@ def abstract_model_factory(model_name, model_type, cleanup=Cleanup(), **kwargs):
                 collection_list.append(collection)
         return collection_list
 
-    if model_type == "Language":
+    elif model_type == "Language":
         tokenized_inputs = map((lambda x: x.strip()), model_name.rsplit(";"))
         language_list = []
         for token in tokenized_inputs:
@@ -340,7 +340,7 @@ def abstract_model_factory(model_name, model_type, cleanup=Cleanup(), **kwargs):
                 language_list.append(language)
         return language_list
 
-    if model_type == "Genre":
+    elif model_type == "Genre":
         tokenized_inputs = map((lambda x: x.strip()), model_name.rsplit(";"))
         genre_list = []
         for token in tokenized_inputs:
@@ -357,7 +357,7 @@ def abstract_model_factory(model_name, model_type, cleanup=Cleanup(), **kwargs):
                 genre_list.append(genre)
         return genre_list
 
-    if model_type == "Location":
+    elif model_type == "Location":
         tokenized_inputs = map((lambda x: x.strip()), model_name.rsplit(";"))
         location_list = []
         for token in tokenized_inputs:
@@ -374,7 +374,7 @@ def abstract_model_factory(model_name, model_type, cleanup=Cleanup(), **kwargs):
                 location_list.append(location)
         return location_list
 
-    if model_type == "Source":
+    elif model_type == "Source":
         tokenized_inputs = map((lambda x: x.strip()), model_name.rsplit(";"))
         source_list = []
         for token in tokenized_inputs:
@@ -391,7 +391,7 @@ def abstract_model_factory(model_name, model_type, cleanup=Cleanup(), **kwargs):
                 source_list.append(source)
         return source_list
 
-    if model_type == "InstrumentVoice":
+    elif model_type == "InstrumentVoice":
         tokenized_inputs = map((lambda x: x.strip()), model_name.rsplit(";"))
         instrument_list = []
         for token in tokenized_inputs:
@@ -408,7 +408,7 @@ def abstract_model_factory(model_name, model_type, cleanup=Cleanup(), **kwargs):
                 instrument_list.append(instrument)
         return instrument_list
 
-    if model_type == "Tag":
+    elif model_type == "Tag":
         tokenized_inputs = map((lambda x: x.strip()), model_name.rsplit(";"))
         tag_list = []
         for token in tokenized_inputs:
