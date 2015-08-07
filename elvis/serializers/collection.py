@@ -44,7 +44,7 @@ class UserCollectionSerializer(serializers.HyperlinkedModelSerializer):
 
     class Meta:
         model = User
-        fields = ("url", "full_name", "username")
+        fields = ("url", "full_name", "username", "pk")
 
     def get_full_name(self, obj):
         if not obj.last_name:

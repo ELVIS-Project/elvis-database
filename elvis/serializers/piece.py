@@ -80,7 +80,7 @@ class AttachmentPieceSerializer(serializers.HyperlinkedModelSerializer):
 class UserPieceSerializer(serializers.HyperlinkedModelSerializer):
     class Meta:
         model = User
-        fields = ('url', 'username', 'first_name', "last_name")
+        fields = ('url', 'username', 'first_name', "last_name", "pk")
 
 
 class MovementPieceSerializer(serializers.HyperlinkedModelSerializer):
