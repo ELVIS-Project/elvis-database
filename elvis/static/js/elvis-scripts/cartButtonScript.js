@@ -1,14 +1,20 @@
+var type = null;
+var action = null;
+var $button = null;
+var cart_timeout = null;
+var $base_modal = $("#base-modal");
+var $base_modal_header = $("#base-modal-header");
+var $base_modal_body = $("#base-modal-body");
+var $base_modal_footer = $("#base-modal-footer");
+var $collection_count = $("#collection-count");
+
 function cartButtonRefresh()
 {
-    var type = null;
-    var action = null;
-    var $button = null;
-    var cart_timeout = null;
-    var $base_modal = $("#base-modal");
-    var $base_modal_header = $("#base-modal-header");
-    var $base_modal_body = $("#base-modal-body");
-    var $base_modal_footer = $("#base-modal-footer");
-    var $collection_count = $("#collection-count");
+    $base_modal = $("#base-modal");
+    $base_modal_header = $("#base-modal-header");
+    $base_modal_body = $("#base-modal-body");
+    $base_modal_footer = $("#base-modal-footer");
+    $collection_count = $("#collection-count");
 
     $(".cart-badge, .cart-button").off('click').tooltip().on("click", function (event)
     {
