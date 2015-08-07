@@ -104,9 +104,11 @@
 
             $("#new-piece-form").submit(function (event)
             {
+                var $upload_modal = $('#upload_modal');
+
                 event.preventDefault();
-                $('#upload_modal').replaceWith(upload_modal_clone.clone());
-                $('#upload_modal').modal('show');
+                $upload_modal.replaceWith(upload_modal_clone.clone());
+                $upload_modal.modal('show');
 
                 $.ajax({
                     type: "post",
@@ -118,7 +120,6 @@
                     {
                         if (data['errors'] === undefined)
                         {
-                            var $upload_modal = $('#upload_modal');
                             $upload_modal.find('.modal-title').html("Done!");
                             $upload_modal.find('.modal-footer').html("<a href='/pieces/create/' class='btn btn-default pull-left'>Upload Another Piece</a>" +
                                     "<a href='" + data['url'] + "' class='btn btn-default' id='goto-piece'>Go to Piece</a>");
@@ -146,7 +147,6 @@
                                 $("#" + key + "_error").html("<b style='color:red'>" + data['errors'][key][0] + "</b>");
                                 errors = errors + "<strong>" + (key.charAt(0).toUpperCase() + key.slice(1)).replace(/_/g, ' ') + "</strong>: " + data['errors'][key][0] + "<br>"
                             }
-                            var $upload_modal = $('#upload_modal');
                             $upload_modal.find('.modal-title').html("Form Error");
                             $upload_modal.find('.progress').hide();
                             $upload_modal.find('.modal-body').prepend("Your submission has the following errors: <br>" + errors);
@@ -158,6 +158,14 @@
                         {
                             $upload_modal.modal('hide');
                         });
+                    },
+                    error: function(data)
+                    {
+                        $upload_modal.find('.modal-title').html("Server Error!");
+                        $upload_modal.find('.progress').hide();
+                        $upload_modal.find('.modal-body').prepend("An error occurred while uploading your file. Please try again, or, if the error persists, " +
+                                "<a href='mailto:elvisdatabase@gmail.com?Subject=Upload%20Error'>contact us</a>");
+
                     }
                 })
             });
