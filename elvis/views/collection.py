@@ -76,22 +76,30 @@ class CollectionList(generics.ListCreateAPIView):
 
     @method_decorator(csrf_protect)
     def post(self, request, *args, **kwargs):
-        if 'make-private' in request.POST:
-            collection = Collection.objects.get(id=request.POST['make-private'])
-            collection.public = False
-            collection.save()
-            return HttpResponse(json.dumps({'url': "/collection/{0}".format(collection.id)}), content_type="json")
-        elif 'make-public' in request.POST:
-            collection = Collection.objects.get(id=request.POST['make-public'])
-            collection.public = True
-            collection.save()
-            return HttpResponse(json.dumps({'url': "/collection/{0}".format(collection.id)}), content_type="json")
-        elif 'delete' in request.POST:
-            collection = Collection.objects.get(id=request.POST['delete'])
-            collection.delete()
-            return HttpResponse(json.dumps({'url': "/collections/"}), content_type="json")
+        if 'action' in request.POST:
+            return self._modify_collection(request)
         else:
             return self.create(request, *args, **kwargs)
+
+    def _modify_collection(self, request):
+        collection = Collection.objects.get(id=request.POST['id'])
+        action = request.POST['action']
+        if not request.user == collection.creator \
+                or not request.user.is_superuser:
+            return Response(status=status.HTTP_401_UNAUTHORIZED)
+
+        if action == 'make-private':
+            collection.public = False
+            collection.save()
+        elif action == 'make-public':
+            collection.public = True
+            collection.save()
+        elif action == 'delete':
+            collection.delete()
+        else:
+            return Response(status=status.HTTP_400_BAD_REQUEST)
+        return Response(status=status.HTTP_202_ACCEPTED)
+
 
     def create(self, request, *args, **kwargs):
         if not request.user.is_active:

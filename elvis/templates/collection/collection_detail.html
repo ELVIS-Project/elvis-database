@@ -9,7 +9,7 @@
             $.ajax({
                 type: "post",
                 url: "/collections/",
-                data: {'make-private': {{ content.item_id }} },
+                data: {action: 'make-private', id: {{ content.item_id }}},
                 success: function(data)
                 {
                     console.log("Made {{ content.title }} private.");
@@ -22,7 +22,7 @@
             $.ajax({
                 type: "post",
                 url: "/collections/",
-                data: {'make-public': {{ content.item_id }} },
+                data: {action: 'make-public', id: {{ content.item_id }}},
                 success: function(data)
                 {
                     console.log("Made {{ content.title }} public.");
@@ -32,15 +32,24 @@
         });
 
         $("#delete-button").click(function(event){
-            $.ajax({
-                type: "post",
-                url: "/collections/",
-                data: {'delete': {{ content.item_id }} },
-                success: function(data)
-                {
-                    console.log("Deleted {{ content.title }}");
-                    document.location.href = '/collections/';
-                }
+            $base_modal_header.html("<h4 class='modal-title'>Confirm Deletion.</h4>");
+            $base_modal_body.html("<p>Are you sure you want to delete this Collection?</p>");
+            $base_modal_footer.html('<button type="button" class="btn btn-default" data-dismiss="modal">No</button>' +
+                    '<button id="confirm-delete-button" type="button" class="btn btn-danger" data-dismiss="modal">' +
+                    '<span class="glyphicon glyphicon-remove"></span>Yes</button>');
+            $base_modal.modal('show');
+            $("#confirm-delete-button").click(function (event)
+            {
+                $.ajax({
+                    type: "post",
+                    url: "/collections/",
+                    data: {action: 'delete', id: {{ content.item_id }}},
+                    success: function (data)
+                    {
+                        console.log("Deleted {{ content.title }}");
+                        document.location.href = '/collections/?creator={{ user.username }}';
+                    }
+                })
             })
         });
     });
@@ -51,15 +60,15 @@
 <div class="row">
     <div class="page-header"><h2>{{ content.title }} <small>{{ content.pieces | length }} Pieces, {{ content.movements | length }} Movements</small>
         <span class="pull-right">
-            {% include "includes/download-button-inc.html" with download_type="elvis_collection" download_item_id=content.item_id title="Add to Downloads" in_cart=content.in_cart%}
-            {% if user.username == content.creator.username %}
+            {% if user.id == content.creator.pk  or user.is_superuser %}
+                <button type="button" class="btn btn-default" id="delete-button">Delete</button>
                 {% if content.public %}
                 <button type="button" class="btn btn-default" id="private-button">Make Private</button>
                 {% else %}
                 <button type="button" class="btn btn-default" id="public-button">Make Public</button>
                 {% endif %}
-                <button type="button" class="btn btn-warning" id="delete-button">Delete</button>
             {% endif %}
+            {% include "includes/download-button-inc.html" with download_type="elvis_collection" download_item_id=content.item_id title="Add to Downloads" in_cart=content.in_cart%}
         </span>
     </h2></div>
     <p>Created by {{ content.creator.full_name }} on {{ content.created | date:"d F Y, f a" }}<br> Last updated {{ content.updated | date:"d F Y, f a" }}</p>
