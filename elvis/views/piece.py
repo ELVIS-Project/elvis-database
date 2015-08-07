@@ -120,7 +120,8 @@ class PieceList(generics.ListCreateAPIView):
     def post(self, request, *args, **kwargs):
         if 'delete' in request.POST:
             piece = Piece.objects.get(id=request.POST['delete'])
-            if not request.user == piece.uploader:
+            if not request.user == piece.uploader \
+                    or not request.user.is_superuser:
                 return Response(status=status.HTTP_401_UNAUTHORIZED)
             piece.delete()
             return Response(status=status.HTTP_202_ACCEPTED)
