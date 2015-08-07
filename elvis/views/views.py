@@ -77,21 +77,23 @@ def upload_files(request, file_name, upload_path):
 
     file_list = request.FILES.getlist(file_name)
 
+    i = 1
     for f in file_list:
         # If the file has an accepted extension, upload it.
         if not any(f.name.startswith(x) for x in settings.ELVIS_BAD_PREFIX) and any(
                 f.name.endswith(x) for x in settings.ELVIS_EXTENSIONS):
-            upload_file(f, os.path.join(upload_path, f.name))
-            files.append({'name': f.name,
+            new_name = f.name.replace('/', '-').encode('ascii', 'ignore')
+            upload_file(f, os.path.join(upload_path, new_name))
+            files.append({'name': new_name,
                           'uploader': request.user.username,
                           'path': upload_path})
 
         # Or, if the file is a zip file, upload, extract good files, then delete the archive.
         if f.name.endswith('.zip'):
-            upload_file(f, os.path.join(upload_path, f.name))
-
+            new_name = f.name.replace('/', '-').encode('ascii', 'ignore')
+            upload_file(f, os.path.join(upload_path, new_name))
             try:
-                unzipped_files = unzip_file(upload_path, f.name)
+                unzipped_files = unzip_file(upload_path, new_name)
                 for file_name in unzipped_files:
                     files.append({'name': file_name,
                                   'uploader': request.user.username,
@@ -128,9 +130,9 @@ def unzip_file(file_dir, file_name, **kwargs):
         if (not any(f_name.startswith(x) for x in settings.ELVIS_BAD_PREFIX) and
                 any(f_name.endswith(x) for x in settings.ELVIS_EXTENSIONS) and
                 not any(x in f_name for x in ('/', '\\'))):
-            zipped_file.extract(f_name, file_dir)
             new_name = "{0}{1}.{2}".format("unzippedfile", str(i), f_name.rsplit('.')[-1])
-            os.rename(os.path.join(file_dir, f_name), os.path.join(file_dir, new_name))
+            f = open(os.path.join(file_dir, new_name), 'wb+')
+            f.write(zipped_file.open(f_name).read())
             files.append(new_name)
             i += 1
 
