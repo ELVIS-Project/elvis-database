@@ -453,18 +453,18 @@
                         console.log(data);
                         for (var i = 0; i < $forms.size(); i++)
                         {
-                            if (data[i]['in_cart'] == "Piece")
+                            if (data[i]['in_cart'] === "Piece")
                             {
                                 $($forms[i]).prepend('<button type="button" class="btn btn-mini btn-info disabled" data-container="body" data-toggle="tooltip" data-placement="top" title="Movement in Downloads under parent Piece. Remove Piece to modify."><span class="glyphicon glyphicon-lock"> </span> </button>');
                                 continue;
                             }
-                            if (data[i]['in_cart'] == true)
+                            if (data[i]['in_cart'] === true)
                             {
                                 $($forms[i].children[2]).val("remove");
                                 $($forms[i]).prepend('<button type="button" class="btn btn-mini btn-danger cart-badge" data-container="body" data-toggle="tooltip" data-placement="top" title="Remove from Downloads"><span class="glyphicon glyphicon-minus"> </span> </button>');
                                 continue
                             }
-                            if (data[i]['in_cart'] == false)
+                            if (data[i]['in_cart'] === false)
                             {
                                 $($forms[i]).prepend('<button type="button" class="btn btn-mini btn-success cart-badge" data-container="body" data-toggle="tooltip" data-placement="top" title="Add to Downloads"><span class="glyphicon glyphicon-plus"> </span> </button> ');
                             }

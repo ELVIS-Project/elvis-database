@@ -30,7 +30,7 @@ function cartButtonRefresh()
         else
             action = 'remove';
 
-        if (action == 'add')
+        if (action === 'add')
         {
             cart_timeout = setTimeout(function ()
             {
