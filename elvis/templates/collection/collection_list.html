@@ -2,11 +2,9 @@
 
 {% block extra_hd %}
     <title>Collections</title>
-    <script type='text/javascript' src="{{ STATIC_URL }}js/elvis-scripts/cartButtonScript.js"></script>
     <script>
         $(document).ready(function ($)
         {
-            cartButtonRefresh();
             creatorQuery();
 
             function creatorQuery()
@@ -41,9 +39,11 @@
                 <h4>{{ collection.title }}</h4>
 
                 <p class='list-group-item-text'>
-                    <small>Created by {{ collection.creator.full_name }} on {{ collection.created }}</small>
+                    <small>Created by {{ collection.creator.full_name }}
+                        on {{ collection.created }}</small>
                     <br>
-                    {{ collection.comment | default_if_none:"No Comment" | truncatechars:100 }} </p>
+                    {{ collection.comment | default_if_none:"No Comment" | truncatechars:100 }}
+                </p>
             </a>
         </div>
 
