@@ -1,24 +1,24 @@
 import datetime
-import pytz
 import json
+
+import pytz
 from django.views.decorators.csrf import csrf_protect
 from django.contrib.auth.models import User
 from rest_framework import generics
 from rest_framework import status
 from rest_framework import permissions
-
 from rest_framework.renderers import JSONRenderer
 from rest_framework.response import Response
-
 from elvis.renderers.custom_html_renderer import CustomHTMLRenderer
 from elvis.serializers.piece import PieceSerializer, PieceListSerializer
 from elvis.models.piece import Piece
 from elvis.forms import PieceForm
 from elvis.elvis.tasks import rebuild_suggester_dicts
-
-from elvis.views.views import abstract_model_factory, handle_dynamic_file_table, Cleanup
+from elvis.views.views import abstract_model_factory
+from elvis.views.views import handle_dynamic_file_table
+from elvis.views.views import Cleanup
 from django.utils.decorators import method_decorator
-from django.http import  HttpResponse
+from django.http import HttpResponse
 
 
 class PieceListHTMLRenderer(CustomHTMLRenderer):
@@ -60,6 +60,12 @@ class PieceDetail(generics.RetrieveUpdateDestroyAPIView):
                     response.data['movements'][i]['in_cart'] = True
                 else:
                     response.data['movements'][i]['in_cart'] = False
+
+        piece = Piece.objects.get(pk=response.data['item_id'])
+
+        if piece.uploader == user:
+            response.data['can_edit'] = True
+
         return response
 
 
@@ -82,11 +88,19 @@ class PieceList(generics.ListCreateAPIView):
     permission_classes = (permissions.IsAuthenticatedOrReadOnly,)
     serializer_class = PieceListSerializer
     renderer_classes = (JSONRenderer, PieceListHTMLRenderer)
-    paginate_by = 10
+    paginate_by = 20
     paginate_by_param = 'page_size'
     max_paginate_by = 100
     queryset = Piece.objects.all()
 
+    def get_queryset(self):
+        query = self.request.GET.get('creator', None)
+        if query:
+            return Piece.objects.filter(uploader__username=query)
+        else:
+            return Piece.objects.all()
+
+    # Inserting a flag that specifies if the piece is currently in the users' cart
     def get(self, request, *args, **kwargs):
         user = self.request.user
         if user.is_anonymous():
@@ -104,6 +118,12 @@ class PieceList(generics.ListCreateAPIView):
 
     @method_decorator(csrf_protect)
     def post(self, request, *args, **kwargs):
+        if 'delete' in request.POST:
+            piece = Piece.objects.get(id=request.POST['delete'])
+            if not request.user == piece.uploader:
+                return Response(status=status.HTTP_401_UNAUTHORIZED)
+            piece.delete()
+            return Response(status=status.HTTP_202_ACCEPTED)
         return self.create(request, *args, **kwargs)
 
     def create(self, request, *args, **kwargs):
@@ -118,8 +138,10 @@ class PieceList(generics.ListCreateAPIView):
         clean = Cleanup()
         clean_form = form.cleaned_data
         new_piece = Piece(title=clean_form['title'],
-                          date_of_composition=clean_form['composition_start_date'],
-                          date_of_composition2=clean_form['composition_end_date'],
+                          date_of_composition=clean_form[
+                              'composition_start_date'],
+                          date_of_composition2=clean_form[
+                              'composition_end_date'],
                           religiosity=clean_form['religiosity'],
                           vocalization=clean_form['vocalization'],
                           uploader=request.user,
@@ -134,9 +156,12 @@ class PieceList(generics.ListCreateAPIView):
             new_piece.comment = clean_form['comment']
 
         try:
-            composer_list = abstract_model_factory(clean_form['composer'], "Composer", clean,
-                                                   birth_date=clean_form['composer_birth_date'],
-                                                   death_date=clean_form['composer_death_date'])
+            composer_list = abstract_model_factory(clean_form['composer'],
+                                                   "Composer", clean,
+                                                   birth_date=clean_form[
+                                                       'composer_birth_date'],
+                                                   death_date=clean_form[
+                                                       'composer_death_date'])
             composer = composer_list[0]
             new_piece.composer = composer
         except:
@@ -144,7 +169,9 @@ class PieceList(generics.ListCreateAPIView):
             raise
         try:
             if clean_form['collections']:
-                collection_list = abstract_model_factory(clean_form['collections'], "Collection", clean, is_public=True, creator=request.user)
+                collection_list = abstract_model_factory(
+                    clean_form['collections'], "Collection", clean,
+                    is_public=True, creator=request.user)
                 for x in collection_list:
                     new_piece.collections.add(x)
         except:
@@ -152,7 +179,8 @@ class PieceList(generics.ListCreateAPIView):
             raise
         try:
             if clean_form['languages']:
-                language_list = abstract_model_factory(clean_form['languages'], "Language", clean)
+                language_list = abstract_model_factory(clean_form['languages'],
+                                                       "Language", clean)
                 for x in language_list:
                     new_piece.languages.add(x)
         except:
@@ -160,7 +188,8 @@ class PieceList(generics.ListCreateAPIView):
             raise
         try:
             if clean_form['genres']:
-                genre_list = abstract_model_factory(clean_form['genres'], "Genre", clean)
+                genre_list = abstract_model_factory(clean_form['genres'],
+                                                    "Genre", clean)
                 for x in genre_list:
                     new_piece.genres.add(x)
         except:
@@ -168,7 +197,8 @@ class PieceList(generics.ListCreateAPIView):
             raise
         try:
             if clean_form['locations']:
-                location_list = abstract_model_factory(clean_form['locations'], "Location", clean)
+                location_list = abstract_model_factory(clean_form['locations'],
+                                                       "Location", clean)
                 for x in location_list:
                     new_piece.locations.add(x)
         except:
@@ -176,7 +206,8 @@ class PieceList(generics.ListCreateAPIView):
             raise
         try:
             if clean_form['sources']:
-                source_list = abstract_model_factory(clean_form['sources'], "Source", clean)
+                source_list = abstract_model_factory(clean_form['sources'],
+                                                     "Source", clean)
                 for x in source_list:
                     new_piece.sources.add(x)
         except:
@@ -184,7 +215,8 @@ class PieceList(generics.ListCreateAPIView):
             raise
         try:
             if clean_form['tags']:
-                tag_list = abstract_model_factory(clean_form['tags'], "Tag", clean)
+                tag_list = abstract_model_factory(clean_form['tags'], "Tag",
+                                                  clean)
                 for x in tag_list:
                     new_piece.tags.add(x)
         except:
@@ -192,7 +224,8 @@ class PieceList(generics.ListCreateAPIView):
             raise
         try:
             if clean_form['instruments_voices']:
-                instrument_list = abstract_model_factory(clean_form['instruments_voices'], "InstrumentVoice", clean)
+                instrument_list = abstract_model_factory(
+                    clean_form['instruments_voices'], "InstrumentVoice", clean)
                 for x in instrument_list:
                     new_piece.instruments_voices.add(x)
         except:
@@ -213,5 +246,6 @@ class PieceList(generics.ListCreateAPIView):
 
         new_piece.save()
         rebuild_suggester_dicts.delay()
-        data = json.dumps({'success': True, 'id': new_piece.id, 'url': "/piece/{0}".format(new_piece.id)})
+        data = json.dumps({'success': True, 'id': new_piece.id,
+                           'url': "/piece/{0}".format(new_piece.id)})
         return HttpResponse(data, content_type="json")

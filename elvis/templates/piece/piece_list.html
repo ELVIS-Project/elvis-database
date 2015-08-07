@@ -2,13 +2,32 @@
 
 {% block extra_hd %}
     <title>Pieces</title>
+    <script>
+        $(document).ready(function ($)
+        {
+            creatorQuery();
+
+            function creatorQuery()
+            {
+                var qstr = window.location.search.replace("?", "");
+                var qstr_params = $.parseParams(qstr);
+                if (qstr_params['creator'])
+                {
+                    $("#page-header").text(qstr_params['creator'] + "'s Uploaded Pieces")
+                }
+                else
+                {
+                    $("#page-header").text("Collections")
+                }
+            }
+
+        })
+    </script>
 {% endblock %}
 
 {% block wrap %}
     <div class="page-header">
-        <h2>Pieces
-            <small>({{ content.count }})</small>
-        </h2>
+        <h2 id="page-header"></h2>
     </div>
     {% include "paginate.html" with content=content %}
 
