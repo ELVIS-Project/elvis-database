@@ -63,8 +63,10 @@
                 <dt>Date of Composition</dt>
                 {% if content.date_of_composition  == content.date_of_composition2 %}
                     <dd>{{ content.date_of_composition }}</dd>
-                {% else %}
+                {% elif content.date_of_composition %}
                     <dd>{{ content.date_of_composition }}-{{ content.date_of_composition2 }} </dd>
+                {% else %}
+                    {{ content.date_of_composition2 }}
                 {% endif %}
                 <dt>Number of voices</dt>
                 <dd>
