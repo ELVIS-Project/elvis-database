@@ -463,3 +463,30 @@ body
 {
     border-style:solid solid none solid ;
 }
+th.headerSortUp {
+    background-repeat: no-repeat;
+    background-image: url(/static/img/small_asc.gif);
+}
+
+th.headerSortDown {
+    background-repeat: no-repeat;
+    background-image: url(/static/img/small_desc.gif);
+}
+th.header {
+    cursor: pointer;
+    font-weight: bold;
+    background-repeat: no-repeat;
+    background-position: center right;
+    padding-left: 20px;
+    margin-left: -1px;
+}
+
+th.header:hover {
+    background-color: #EEEEEE;
+}
+
+.help-text
+{
+    color: #737373;
+}
+

@@ -2,6 +2,23 @@
 
 {% block extra_hd %}
 <title>{{ content.title }}</title>
+    <script type='text/javascript' src="{{ STATIC_URL }}js/jquery.tablesorter.js"></script>
+    <script>
+        $(document).ready(function ($)
+        {
+            $("#piece-table").tablesorter({
+                headers: {0: {sorter: false}},
+                textExtraction: "complex",
+                sortList: [[2, 0]]
+            });
+
+            $("#mov-table").tablesorter({
+                headers: {0: {sorter: false}},
+                textExtraction: "complex",
+                sortList: [[2, 0]]
+            });
+        })
+    </script>
 {% endblock %}
 
 {% block wrap %}
@@ -18,49 +35,49 @@
 
 
 {% if content.pieces %}
-<h3>Pieces ({{ content.pieces | length }})</h3>
-<table class="table">
-    <thead>
+    <h3>Pieces ({{ content.pieces | length }})</h3>
+    <table class="table" id="piece-table">
+        <thead>
         <tr>
             <th width="5%">Add</th>
-            <th width="70%">Title</th>
+            <th width="50%">Title</th>
             <th width="10%">Movements</th>
             <th width="10%">Date</th>
         </tr>
-    </thead>
-    <tbody>
+        </thead>
+        <tbody>
         {% for piece in content.pieces %}
             <tr>
-                <td width="5%">{% include "includes/download-badge-inc.html" with download_type="elvis_piece" download_item_id=piece.item_id in_cart=piece.in_cart %}</td>
-                <td width="70%"><a href="{{ piece.url }}">{{ piece.title }}</a></td>
-                <td width="10%"><span class="label label-info">{% if piece.movement_count %}{{ piece.movement_count }} included {% endif %}</span></td>
-                <td width="10%">{{ piece.date_of_composition}}</td>
+                <td>{% include "includes/download-badge-inc.html" with download_type="elvis_piece" download_item_id=piece.item_id title="Add to Downloads" in_cart=piece.in_cart %}</td>
+                <td><a href="{{ piece.url }}">{{ piece.title }}</a></td>
+                <td>{% if piece.movement_count %}<span class="label label-info"> {{ piece.movement_count }} movement{{  piece.movement_count | pluralize }}</span> {% else %}<span class="label label-default">0 movements</span>{% endif %}</td>
+                <td width="10%">{{ piece.date_of_composition }}</td>
             </tr>
         {% endfor %}
-    </tbody>
-</table>
+        </tbody>
+    </table>
 {% endif %}
 
 {% if content.free_movements %}
-<h3>Movements ({{ content.free_movements_count }})</h3>
-<table class="table">
-    <thead>
+    <h3>Movements not in a Piece ({{ content.free_movements_count }})</h3>
+    <table class="table" id="mov-table">
+        <thead >
         <tr>
             <th width="5%">Add</th>
-            <th width="70%">Title</th>
+            <th width="60%">Title</th>
             <th width="10%">Date</th>
         </tr>
-    </thead>
-    <tbody>
+        </thead>
+        <tbody>
         {% for mov in content.free_movements %}
-            <tr >
-                <td width="5%">{% include "includes/download-badge-inc.html" with download_type="elvis_movement" download_item_id=mov.item_id in_cart=mov.in_cart%}</td>
-                <td width="70%"><a href="{{ mov.url }}">{{ mov.title }}</a></td>
-                <td width="10%">{{ mov.date_of_composition }}</td>
+            <tr>
+                <td>{% include "includes/download-badge-inc.html" with download_type="elvis_movement" download_item_id=mov.item_id title="Add to Downloads" in_cart=mov.in_cart %}</td>
+                <td><a href="{{ mov.url }}">{{ mov.title }}</a> </td>
+                <td>{{ mov.date_of_composition }}</td>
             </tr>
         {% endfor %}
-    </tbody>
-</table>
+        </tbody>
+    </table>
 {% endif %}
 
 

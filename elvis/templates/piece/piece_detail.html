@@ -142,8 +142,35 @@
         <pre>{{ content.comment }}</pre>
     {% endif %}
 
+    {% if content.movements %}
+        <div class="col-md-12">
+            <h3>Movements
+                <small>({{ content.movements | length }})</small>
+            </h3>
+            <table class="table table-condensed">
+                <thead>
+                <tr>
+                    <th width="5%"></th>
+                    <th>Title</th>
+                </tr>
+                </thead>
+                <tbody>
+                {% for movement in content.movements %}
+                    <tr>
+                        <td class="text-center">
+                            {% include "includes/download-badge-inc.html" with download_type="elvis_movement" download_item_id=movement.item_id title="Add to Downloads" in_cart=movement.in_cart %}
+                        </td>
+                        <td>
+                            <a href="{{ movement.url }}">{{ movement.title }}</a>
+                        </td>
+                    </tr>
+                {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    {% endif %}
+    
     {% if content.attachments and user.is_authenticated %}
-        <div class="row">
             <div class="col-md-12">
                 <h3>Available Attachments</h3>
                 <table class="table table-condensed">
@@ -167,37 +194,8 @@
                     </tbody>
                 </table>
             </div>
-        </div>
     {% endif %}
 
-    {% if content.movements %}
-        <div class="row">
-            <div class="col-md-12">
-            <h3>Movements
-                    <small>({{ content.movements | length }})</small>
-                </h3>
-                <table class="table table-condensed">
-                    <thead>
-                    <tr>
-                        <th width="5%"></th>
-                        <th>Title</th>
-                    </tr>
-                    </thead>
-                    <tbody>
-                    {% for movement in content.movements %}
-                        <tr>
-                            <td class="text-center">
-                                {% include "includes/download-badge-inc.html" with download_type="elvis_movement" download_item_id=movement.item_id title="Add to Downloads" in_cart=movement.in_cart %}
-                            </td>
-                            <td>
-                                <a href="{{ movement.url }}">{{ movement.title }}</a>
-                            </td>
-                        </tr>
-                    {% endfor %}
-                    </tbody>
-                </table>
-            </div>
-        </div>
-    {% endif %}
+
 
 {% endblock %}

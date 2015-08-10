@@ -124,13 +124,12 @@
         <pre>{{ content.comment }}</pre>
     {% endif %}
 
-    {% if content.attachments and user.is_authenticated %}
-        <div class="row">
+    {% if content.attachments %}
             <h3>Available Attachments</h3>
             <table class="table table-condensed">
                 <thead>
                 <tr>
-                    <th width="5%" style="text-align:center">Add</th>
+                    <th width="5%" style="text-align:center"></th>
                     <th width="60%">Title</th>
                     <th>Source</th>
                 </tr>
@@ -146,7 +145,6 @@
                 {% endfor %}
                 </tbody>
             </table>
-        </div>
     {% endif %}
 
 {% endblock %}

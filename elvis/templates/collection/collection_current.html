@@ -2,29 +2,6 @@
 
 {% block extra_hd %}
     <title>Download Cart</title>
-    <style>
-        th.headerSortUp {
-            background: url({{ STATIC_URL }}img/small_asc.gif);
-        }
-
-        th.headerSortDown {
-            background: url({{ STATIC_URL }}img/small_desc.gif);
-        }
-
-        th.header {
-            cursor: pointer;
-            font-weight: bold;
-            background-repeat: no-repeat;
-            background-position: center right;
-            padding-left: 20px;
-            margin-left: -1px;
-
-        }
-
-        th.header:hover {
-            background-color: #EEEEEE;
-        }
-    </style>
 
     <script type='text/javascript' src="{{ STATIC_URL }}js/jquery.tablesorter.js"></script>
     <!-- Okay this plugin is the boss -->
@@ -239,12 +216,7 @@
             {% endfor %}
             </tbody>
         </table>
-        <div class="row">
-            <div class="col-sm-12">
 
-            </div>
-        </div>
-        <br>
     {% else %}
         <div class="text-center">Nothing added yet to your collection!</div>
     {% endif %}
