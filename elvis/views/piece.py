@@ -235,11 +235,6 @@ class PieceList(generics.ListCreateAPIView):
 
         new_piece.save()
         try:
-            handle_dynamic_file_table(request, new_piece, "piece", clean)
-        except:
-            clean.cleanup()
-            raise
-        try:
             handle_dynamic_file_table(request, new_piece, "mov", clean)
         except:
             clean.cleanup()

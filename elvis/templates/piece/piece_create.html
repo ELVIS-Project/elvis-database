@@ -9,6 +9,9 @@
     <script type='text/javascript' src="{{ STATIC_URL }}js/elvis-scripts/autocomplete.js"></script>
     <script type='text/javascript' src="{{ STATIC_URL }}js/elvis-scripts/dynamicFileTable.js"></script>
     <script type='text/javascript' src="{{ STATIC_URL }}bootstrap/plugins/bootstrap-filestyle.js"></script>
+    <script type='text/javascript' src="{{ STATIC_URL }}js/bootstrap-select.min.js"></script>
+    <link href="{{ STATIC_URL }}css/bootstrap-select.css" rel="stylesheet" media="screen"/>
+
     <style>
         .popover
         {
@@ -29,14 +32,8 @@
             autocomplete("instruments_voices", "instrumentation_suggestion_menu", "instrumentSuggest", 'list');
             autocomplete("tags", "tags_suggestion_menu", "tagSuggest", 'list');
             dynamicFileTable("new_mov", "movement_table", "mov", true);
-            dynamicFileTable("new_piece_file", "piece_file_table", "piece", false);
+            dynamicFileTable("new_piece_file", "piece_file_table", "files", false);
 
-            $("#id_comp_pic").filestyle({
-                input: false,
-                iconName: "glyphicon-picture",
-                buttonText: "Composer Picture",
-                disabled: "true"
-            });
             $('[data-toggle="popover"]').popover();
 
             // The dropdown form for additional composer information.
@@ -77,6 +74,7 @@
                 }
             });
 
+{% comment %}
             $(window).on('beforeunload', function (event)
             {
                 if (event['target']['activeElement']['id'] === 'goto-piece')
@@ -88,6 +86,7 @@
                     return 'Leaving this page will clear your form.'
                 }
             });
+{% endcomment %}
 
             //Disable default behaviour for hitting 'enter' for all inputs except the comment.
             $('input:not(#comment)').on("keydown", function (event)
@@ -500,63 +499,28 @@
         </div>
         <br>
 
-        <h2>Upload Files</h2>
+        <h2>Movements</h2>
         <hr>
-        <span class="help-block">
-            This table allows you to attach files to the piece itself. The source field is for information
-            regarding the source of the file itself, for instance "Choral wiki" or "Transcribed by Uploader",
-            or the name of the repository it comes from. You may add as many file groups as you like.
-            <strong>If you do not provide a source for your file, it will be ignored and not uploaded.</strong>
+            <span class="help-block">
+            If the piece has movements, or any other logical separators (such as acts) that you wish
+                to specify, you may declare them in this table. Many inputs from the previous page
+                are may be overridden on a per-movement basis by clicking the 'show advanced' button.
         </span>
-
-        <div class="well">
-            <h4>Piece Files</h4>
-            <table class="table table-hover">
-                <colgroup>
-                    <col class="text-center" style="width: 5%;">
-                    <col style="width: 5%;">
-                    <col style="width: 40%;">
-                    <col style="width: 50%;">
-                </colgroup>
-                <tbody id="piece_file_table">
-                <tr>
-                    <th class="text-center">Remove</th>
-                    <th class="text-center">#</th>
-                    <th>File Source</th>
-                    <th>Files</th>
-                </tr>
-                <!-- User can add rows for files here -->
-                </tbody>
-            </table>
-            <div>
-                <button id="new_piece_file" type="button" class="btn btn-default">Add File</button>
-            </div>
-        </div>
-        <br>
-        <span class="help-block">
-            This table allows you to define movements for the piece. Multiple fields from the previous
-            page may be overridden on a movement by movement basis by clicking the 'show advanced' button.
-            <strong>If you do not provide a name for a movement, it will be ignored and its files
-                not uploaded.</strong>
-        </span>
-
         <div class="well">
             <h4>Movements</h4>
             <table class="table table-hover">
                 <colgroup>
                     <col class="text-center" style="width: 5%;">
                     <col style="width: 5%;">
-                    <col style="width: 40%;">
-                    <col style="width: 40%;">
-                    <col style="width: 10%;">
+                    <col style="width: 70%;">
+                    <col style="width: 20%;">
                 </colgroup>
                 <tbody id="movement_table">
                 <tr>
                     <th class="text-center">Remove</th>
                     <th class="text-center">#</th>
                     <th>Movement Title</th>
-                    <th>Files</th>
-                    <th class="text-center">Advanced</th>
+                    <th>Advanced</th>
                 </tr>
                 <!-- User can add rows for files here -->
                 </tbody>
@@ -566,6 +530,42 @@
                 <button id="new_mov" type="button" class="btn btn-default">Add Movement</button>
             </div>
         </div>
+        <br>
+        <h2>Files</h2>
+        <hr>
+
+
+        <span class="help-block">
+            This table allows you to select files you wish to upload. Each file must be attached
+            to something, so either choose "Attach to Piece" or one of the movements you
+            created above.
+        </span>
+
+        <div class="well">
+            <h4>Files</h4>
+            <table class="table table-hover">
+                <colgroup>
+                    <col class="text-center" style="width: 5%;">
+                    <col style="width: 45%;">
+                    <col style="width: 15%;">
+                    <col style="width: 35%;">
+                </colgroup>
+                <tbody id="piece_file_table">
+                <tr>
+                    <th class="text-center">Remove</th>
+                    <th>Files</th>
+                    <th>Attach To</th>
+                    <th>File Source</th>
+                </tr>
+                <!-- User can add rows for files here -->
+                </tbody>
+            </table>
+            <div>
+                <button id="new_piece_file" type="button" class="btn btn-default">Add File</button>
+            </div>
+        </div>
+        <br>
+
         <hr>
         <div class="text-right">
             <button type='submit' id='piece-submit' class='btn btn-success'>Submit</button>

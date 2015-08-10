@@ -141,12 +141,13 @@ def unzip_file(file_dir, file_name, **kwargs):
     return files
 
 
-def handle_attachments(request, parent, cleanup, file_name):
+def handle_attachments(request, parent, cleanup, file_name, file_source):
     """Creates attachment objects for all files and links them with their parent
     :param request: Django request object.
     :param parent: The parent object to link attachments to.
     :param cleanup: Cleanup object.
     :param file_name: Name of the multi-file input field in request.FILES to upload from.
+    :param file_source: The value for the source of the file.
     :return: List of attachment objects that are created.
     """
 
@@ -168,6 +169,7 @@ def handle_attachments(request, parent, cleanup, file_name):
         with open(os.path.join(f['path'], new_name), 'r+') as dest:
             file_content = File(dest)
             att.attachment.save(os.path.join(att.attachment_path, new_name), file_content)
+        att.source = file_source
         att.save()
         results.append(att)
         os.remove(os.path.join(f['path'], new_name))
@@ -202,77 +204,82 @@ def handle_dynamic_file_table(request, parent, table_name, cleanup=Cleanup()):
     keys.sort()
     i = 1
 
+    # Creating movements, then attaching files to them.
     for k in keys:
-        if table_name == "mov":
-            mov_instrumentation_string = request.POST.get('mov' + k + "_instrumentation")
-            mov_number_of_voices_string = request.POST.get('mov' + k + "_number_of_voices")
-            mov_free_tags_string = request.POST.get('mov' + k + "_free_tags")
-            mov_vocalization = request.POST.get('mov' + k + "_vocalization")
-            mov_comment = request.POST.get('mov' + k + "_comment")
-            mov_comment = request.POST.get('mov' + k + "_comment")
-            new_mov = Movement(title=files[k],
-                               position=i,
-                               date_of_composition=parent.date_of_composition,
-                               date_of_composition2=parent.date_of_composition2,
-                               uploader=parent.uploader,
-                               religiosity=parent.religiosity,
-                               composer=parent.composer,
-                               piece=parent)
-            new_mov.save()
-            for language in parent.languages.all():
-                new_mov.languages.add(language)
-            for genre in parent.genres.all():
-                new_mov.genres.add(genre)
-            for location in parent.locations.all():
-                new_mov.locations.add(location)
-            for source in parent.sources.all():
-                new_mov.sources.add(source)
-            for collection in parent.collections.all():
-                new_mov.collections.add(collection)
+        mov_instrumentation_string = request.POST.get('mov' + k + "_instrumentation")
+        mov_number_of_voices_string = request.POST.get('mov' + k + "_number_of_voices")
+        mov_free_tags_string = request.POST.get('mov' + k + "_free_tags")
+        mov_vocalization = request.POST.get('mov' + k + "_vocalization")
+        mov_comment = request.POST.get('mov' + k + "_comment")
+        mov_comment = request.POST.get('mov' + k + "_comment")
+        new_mov = Movement(title=files[k],
+                           position=i,
+                           date_of_composition=parent.date_of_composition,
+                           date_of_composition2=parent.date_of_composition2,
+                           uploader=parent.uploader,
+                           religiosity=parent.religiosity,
+                           composer=parent.composer,
+                           piece=parent)
+        new_mov.save()
+        for language in parent.languages.all():
+            new_mov.languages.add(language)
+        for genre in parent.genres.all():
+            new_mov.genres.add(genre)
+        for location in parent.locations.all():
+            new_mov.locations.add(location)
+        for source in parent.sources.all():
+            new_mov.sources.add(source)
+        for collection in parent.collections.all():
+            new_mov.collections.add(collection)
 
-            if mov_instrumentation_string:
-                mov_instrumentation = abstract_model_factory(mov_instrumentation_string, "InstrumentVoice", cleanup)
-                for x in mov_instrumentation:
-                    new_mov.instruments_voices.add(x)
-            else:
-                for x in parent.instruments_voices.all():
-                    new_mov.instruments_voices.add(x)
-
-            if mov_free_tags_string:
-                mov_free_tags = abstract_model_factory(mov_free_tags_string, "Tag", cleanup)
-                for x in mov_free_tags:
-                    new_mov.tags.add(x)
-            else:
-                for x in parent.tags.all():
-                    new_mov.tags.add(x)
-
-            if mov_number_of_voices_string:
-                new_mov.number_of_voices = mov_number_of_voices_string
-            else:
-                new_mov.number_of_voices = parent.number_of_voices
-
-            if mov_vocalization:
-                new_mov.vocalization = mov_vocalization
-            else:
-                new_mov.vocalization = parent.vocalization
-
-            if mov_comment:
-                new_mov.comment = mov_comment
-
-            attachments.extend(handle_attachments(request, new_mov, cleanup, table_name + "_files_" + k))
-            cleanup.list.append({"model": new_mov, "new": True})
-            new_mov.save()
-            results.append(new_mov)
-            i += 1
-        elif table_name == "piece":
-            piece_attachments = handle_attachments(request, parent, cleanup, table_name + "_files_" + k)
-            for att in piece_attachments:
-                att.source = files[k]
-                att.save()
-            attachments.extend(piece_attachments)
+        if mov_instrumentation_string:
+            mov_instrumentation = abstract_model_factory(mov_instrumentation_string, "InstrumentVoice", cleanup)
+            for x in mov_instrumentation:
+                new_mov.instruments_voices.add(x)
         else:
-            return results
+            for x in parent.instruments_voices.all():
+                new_mov.instruments_voices.add(x)
 
+        if mov_free_tags_string:
+            mov_free_tags = abstract_model_factory(mov_free_tags_string, "Tag", cleanup)
+            for x in mov_free_tags:
+                new_mov.tags.add(x)
+        else:
+            for x in parent.tags.all():
+                new_mov.tags.add(x)
+
+        if mov_number_of_voices_string:
+            new_mov.number_of_voices = mov_number_of_voices_string
+        else:
+            new_mov.number_of_voices = parent.number_of_voices
+
+        if mov_vocalization:
+            new_mov.vocalization = mov_vocalization
+        else:
+            new_mov.vocalization = parent.vocalization
+
+        if mov_comment:
+            new_mov.comment = mov_comment
+
+        file_keys = [x for x in request.POST.keys() if x.startswith('files_parent_')]
+        file_numbers = [x.split('files_parent_')[-1] for x in file_keys if request.POST.get(x) == 'mov_title_' + k]
+        for num in file_numbers:
+            attachments.extend(handle_attachments(request, new_mov, cleanup, "files_files_" + num, request.POST.get('files_source_' + num)))
+            request.POST.pop('files_source_' + num)
+            request.POST.pop('files_parent_' + num)
+            request.FILES.pop('files_files_' + num)
+        request.POST.pop('mov_title_' + k)
+
+        cleanup.list.append({"model": new_mov, "new": True})
+        new_mov.save()
+        results.append(new_mov)
+        i += 1
+
+    # Attaching files to piece.
+    file_numbers = [x.split('files_parent_')[-1] for x in request.POST.keys() if request.POST.get(x) == 'piece']
+    for num in file_numbers:
+        attachments.extend(handle_attachments(request, parent, cleanup, "files_files_" + num, request.POST.get('files_source_' + num)))
+    parent.save()
     results.extend(attachments)
     return results
 

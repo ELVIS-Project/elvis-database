@@ -5,10 +5,11 @@
 function dynamicFileTable(add_row_button_id, table_body_id, table_name, movement_bool)
 {
     //The movement table javascript.
-    var file_button_name = "Files";
+    var file_button_name = "Click to select";
     var row_count = 1;
     var $newRowButton = $("#"+add_row_button_id);
     var $table = $("#"+ table_body_id);
+    var t_size = 0;
     addRow();
 
     //Defines row adding behaviour for the plus button
@@ -22,15 +23,14 @@ function dynamicFileTable(add_row_button_id, table_body_id, table_name, movement
     {
         if (movement_bool)
         {
-            var t_size = (($table.children().length + 1) / 2);
+            t_size = (($table.children().length + 1) / 2);
             $table.append("<tr id='"+ table_name + row_count + "'>" +
             "<td class='text-center'><button id='del_"+ table_name + row_count + "' type='button' tabindex='-1' class='btn btn-default'><span class='glyphicon glyphicon-remove'></span></button></td>" +
             "<td class='text-center' style='padding-top:14px'>" + t_size + "</td>" +
-            "<td><input name='" + table_name + "_title_" + row_count + "' id='" + table_name + "_title" + row_count + "' class='form-control' autocomplete='off'" +
+            "<td><input name='" + table_name + "_title_" + row_count + "' id='" + table_name + "_title_" + row_count + "' class='form-control' autocomplete='off'" +
                 "data-toggle='popover' data-placement='top' data-trigger='focus' data-html='true' title='<b>Movement Title</b>'" +
                 "data-content='If no title is provided, this movement will be ignored on upload. It is not necessary to number movements, as they will retain the ordering in which they are here presented.'> </td>" +
-            "<td><input name='" + table_name +"_files_" + row_count + "' id='" + table_name + "_files" + row_count + "' type='file' multiple='multiple'></td>" +
-            "<td class='text-center'><button id='show_advanced_"+ table_name + row_count + "' type='button' tabindex='-1'class='btn btn-default'>Show</button></td></tr>"+
+            "<td><button id='show_advanced_"+ table_name + row_count + "' type='button' tabindex='-1'class='btn btn-default'>Show Advanced</button></td></tr>"+
             "<tr id='"+ table_name + row_count + "_tags' hidden='hidden'> " +
             "<td colspan='5'>" +
             "<div class='row' style='padding-left:12%; padding-right:15px'>" +
@@ -79,37 +79,46 @@ function dynamicFileTable(add_row_button_id, table_body_id, table_name, movement
         }
         else
         {
-            var t_size = $table.children().length;
+            t_size = $table.children().length;
             $table.append("<tr id='"+ table_name + row_count + "'>" +
             "<td class='text-center'><button id='del_"+ table_name + row_count + "' type='button' tabindex='-1' class='btn btn-default'><span class='glyphicon glyphicon-remove'></span></button></td>" +
-            "<td class='text-center' style='padding-top:14px'>" + t_size + "</td>" +
-            "<td><input name='" + table_name + "_title_" + row_count + "' id='" + table_name + "_title" + row_count + "' class='form-control' autocomplete='off' data-toggle='popover' data-placement='top' data-trigger='focus' data-html='true' title='<b>File Source</b>'" +
-            "data-content='Indicate the source of the file here, such as <em>Choral Wiki</em> or <em>Transcribed by Uploader</em>. If no source is provided, this file will be ignored. This file will be renamed automatically, so does not require a title.'> </td>" +
-            "<td><input name='" + table_name +"_files_" + row_count + "' id='" + table_name + "_files" + row_count + "' type='file' multiple='multiple'></td></tr>");
-            $("#" + table_name + "_files" + row_count).filestyle({buttonBefore: true, iconName: "glyphicon-file", buttonText: file_button_name});
+            "<td><input name='" + table_name +"_files_" + row_count + "' id='" + table_name + "_files_" + row_count + "' type='file' multiple='multiple'></td>" +
+            "<td><select class='selectpicker' multiple data-max-options='1' name='" + table_name + "_parent_" + row_count + "'id='" + table_name + "_parent_" + row_count + "'>" +
+            "<option value='piece'>Attach to Piece</option></select></td>" +
+            "<td><input name='" + table_name + "_source_" + row_count + "' id='" + table_name + "_source_" + row_count + "' class='form-control' autocomplete='off' data-toggle='popover' data-placement='top' data-trigger='focus' data-html='true' title='<b>File Source</b>'" +
+            "data-content='Indicate the source of the file here, such as <em>Choral Wiki</em> or <em>Transcribed by Uploader</em>. If no source is provided, this file will be ignored. This file will be renamed automatically, so does not require a title.'> </td></tr>");
+            $("#" + table_name + "_files_" + row_count).filestyle({buttonBefore: true, iconName: "glyphicon-file", buttonText: file_button_name});
         }
-
         initRow(row_count);
         row_count++;
     }
 
     function initRow(row)
     {
+        drawAttachSelects();
+
         $("#del_" + table_name + row).on("click", function(event)
         {
             var row_num = parseInt(event.currentTarget.getAttribute("id").substring(table_name.length + 4));
             $("#" + table_name + "_files" + row_num).filestyle('destroy');
             $table.children().remove("#" + table_name + row_num +  "_tags");
             $table.children().remove("#" + table_name + row_num);
-            renumberRows();
+            if (table_name !== 'files')
+            {
+                renumberRows();
+            }
+            drawAttachSelects();
         });
 
-        $("#" + table_name + "_title" + row).on("keydown", function(event) {
+        $("#" + table_name + "_title_" + row).on("keydown", function(event) {
             if (event.keyCode === 13)
             {
                 event.preventDefault();
                 return false
             }
+        });
+        $("#" + table_name + "_title_" + row).focusout(function() {
+            drawAttachSelects();
         });
 
         $("#show_advanced_"+ table_name + row_count).click(function(event)
@@ -130,6 +139,32 @@ function dynamicFileTable(add_row_button_id, table_body_id, table_name, movement
             }
         }
     }
+
+    function drawAttachSelects(){
+        var movements = $("[id^=mov_title]");
+        var content = "<option value='piece'>Attach to Piece</option>";
+        var attachSelects = $("[id^=files_parent_]");
+        var i = 0;
+        var oldVal = null;
+        for (i = 0; i < movements.length; i++)
+        {
+            if (movements[i].value !== "")
+            {
+                if (i == 0)
+                {
+                    content += "<option data-divider='true'></option>";
+                }
+                content += "<option value='" + movements[i].id + "'>" +movements[i].value + "</option>"
+            }
+        }
+        for (i = 0; i < attachSelects.length; i++)
+        {
+            oldVal = attachSelects[i].value;
+            attachSelects[i].innerHTML = content;
+            $(attachSelects[i]).selectpicker('refresh').selectpicker('val', oldVal);
+        }
+    }
+
     function autocomplete(inputField, suggestionField, dictionary, multiple) {
         var menuActive = -1;
         var menuSize = -1;
