@@ -56,8 +56,7 @@ urlpatterns += format_suffix_patterns(
         url(r'^downloading/$', Downloading.as_view(), name="downloading"),
 
         url(r'^pieces/upload/$', PieceCreate.as_view(), name="piece-create"),
-        url(r'^pieces/create/$', PieceCreate.as_view(), name="piece-create"),
-        url(r'^piece/update/(?P<pk>[0-9]+)/$', PieceUpdate.as_view(), name="piece-update"),
+        url(r'^pieces/update/(?P<pk>[0-9]+)/$', PieceUpdate.as_view(), name="piece-update"),
         url(r'^pieces/$', PieceList.as_view(), name="piece-list"),
         url(r'^piece/(?P<pk>[0-9]+)/$', PieceDetail.as_view(), name="piece-detail"),
 
