@@ -1,0 +1,579 @@
+{% extends "base.html" %}
+
+
+<!-- The javascript function for the typeahead functionality on the fields. -->
+
+{% block extra_hd %}
+    <title>Create Piece</title>
+
+    <script type='text/javascript' src="{{ STATIC_URL }}js/elvis-scripts/autocomplete.js"></script>
+    <script type='text/javascript' src="{{ STATIC_URL }}js/elvis-scripts/dynamicFileTable.js"></script>
+    <script type='text/javascript' src="{{ STATIC_URL }}bootstrap/plugins/bootstrap-filestyle.js"></script>
+    <style>
+        .popover
+        {
+            max-width: 500px;
+            width: auto;
+        }
+    </style>
+    <script>
+        $(document).ready(function ($)
+        {
+            autocomplete("title", "title_suggestion_menu", "pieceSuggest");
+            autocomplete("composer", "composer_suggestion_menu", "composerSuggest");
+            autocomplete("collections", "collection_suggestion_menu", "collectionSuggest", 'list');
+            autocomplete("languages", "language_suggestion_menu", "languageSuggest", 'list');
+            autocomplete("genres", "genre_suggestion_menu", "genreSuggest", 'list');
+            autocomplete("locations", "location_suggestion_menu", "locationSuggest", 'list');
+            autocomplete("sources", "source_suggestion_menu", "sourceSuggest", 'list');
+            autocomplete("instruments_voices", "instrumentation_suggestion_menu", "instrumentSuggest", 'list');
+            autocomplete("tags", "tags_suggestion_menu", "tagSuggest", 'list');
+            dynamicFileTable("new_mov", "movement_table", "mov", true);
+            dynamicFileTable("new_piece_file", "piece_file_table", "piece", false);
+
+            $("#id_comp_pic").filestyle({
+                input: false,
+                iconName: "glyphicon-picture",
+                buttonText: "Composer Picture",
+                disabled: "true"
+            });
+            $('[data-toggle="popover"]').popover();
+
+            // The dropdown form for additional composer information.
+            var $newComposerMenu = $("#composer-create-new-menu");
+            var $composerInput = $("#composer");
+            $newComposerMenu.hide();
+
+            $composerInput.on("focusout", function (event)
+            {
+                var query = $("#composer").val();
+
+                if (query.length > 0)
+                {
+                    $.ajax({
+                        url: "/composers/",
+                        data: {q: query},
+                        success: function (data)
+                        {
+                            if (data['count'] == 0)
+                            {
+                                $newComposerMenu.children().remove(".top-message");
+                                $newComposerMenu.prepend("<div class='top-message'><span class='help-block'>" +
+                                        "<hr>We don't have <strong>" + query + "</strong> in our database. " +
+                                        "Submitting a piece by an unknown composer will add the composer to the database. <br>" +
+                                        "Do you have additional information to add to this new composer?<br><br></span></div>");
+                                $newComposerMenu.slideDown("slow");
+                            }
+                        }
+                    });
+                }
+            });
+
+            $composerInput.on("keydown", function (event)
+            {
+                if (event['keyCode'] !== 13)
+                {
+                    $newComposerMenu.slideUp("slow");
+                }
+            });
+
+            $(window).on('beforeunload', function (event)
+            {
+                if (event['target']['activeElement']['id'] === 'goto-piece')
+                {
+                    $(window).off('beforeunload');
+                }
+                else
+                {
+                    return 'Leaving this page will clear your form.'
+                }
+            });
+
+            //Disable default behaviour for hitting 'enter' for all inputs except the comment.
+            $('input:not(#comment)').on("keydown", function (event)
+            {
+                if (event.keyCode === 13)
+                {
+                    event.preventDefault()
+                }
+            });
+
+
+            // Logic for form validation and submission, as well as the modal which appears on submission.,
+            var upload_modal_clone = $('#upload_modal').clone();
+
+            $("#new-piece-form").submit(function (event)
+            {
+                var $upload_modal = $('#upload_modal');
+
+                event.preventDefault();
+                $upload_modal.replaceWith(upload_modal_clone.clone());
+                $upload_modal.modal('show');
+
+                $.ajax({
+                    type: "post",
+                    url: "/pieces/",
+                    data: new FormData(this),
+                    processData: false,
+                    contentType: false,
+                    success: function (data)
+                    {
+                        if (data['errors'] === undefined)
+                        {
+                            $upload_modal.find('.modal-title').html("Done!");
+                            $upload_modal.find('.modal-footer').html("<a href='/pieces/create/' class='btn btn-default pull-left'>Upload Another Piece</a>" +
+                                    "<a href='" + data['url'] + "' class='btn btn-default' id='goto-piece'>Go to Piece</a>");
+                            $upload_modal.find('.progress-bar').removeClass("progress-bar-striped active");
+                        }
+                        else
+                        {
+                            var errors = "";
+                            for (var key in data['errors'])
+                            {
+                                if (key === "religiosity")
+                                {
+                                    $("input[name='religiosity']").parent().removeClass("btn-default").addClass("btn-danger")
+                                }
+                                if (key === "vocalization")
+                                {
+                                    $("input[name='vocalization']").parent().removeClass("btn-default").addClass("btn-danger")
+                                }
+
+                                else
+                                {
+                                    $("#" + key).parent().addClass("has-error");
+                                }
+
+                                $("#" + key + "_error").html("<b style='color:red'>" + data['errors'][key][0] + "</b>");
+                                errors = errors + "<strong>" + (key.charAt(0).toUpperCase() + key.slice(1)).replace(/_/g, ' ') + "</strong>: " + data['errors'][key][0] + "<br>"
+                            }
+                            $upload_modal.find('.modal-title').html("Form Error");
+                            $upload_modal.find('.progress').hide();
+                            $upload_modal.find('.modal-body').prepend("Your submission has the following errors: <br>" + errors);
+                            $upload_modal.find('.modal-footer').html("<button class='btn btn-default' id='close_modal'>Close</button>");
+                        }
+
+
+                        $('#close_modal').click(function ()
+                        {
+                            $upload_modal.modal('hide');
+                        });
+                    },
+                    error: function(data)
+                    {
+                        $upload_modal.find('.modal-title').html("Server Error!");
+                        $upload_modal.find('.progress').hide();
+                        $upload_modal.find('.modal-body').prepend("An error occurred while uploading your file. Please try again, or, if the error persists, " +
+                                "<a href='mailto:elvisdatabase@gmail.com?Subject=Upload%20Error'>contact us</a>");
+
+                    }
+                })
+            });
+
+            var $upload_fields = $(".upload-input-field");
+            $upload_fields.focus(function (event)
+            {
+                $(event.target.parentElement.children[0]).popover('toggle');
+            });
+            $upload_fields.focusout(function (event)
+            {
+                $(event.target.parentElement.children[0]).popover('hide');
+            });
+
+            //Limit date inputs to 4 characters.
+            $("[id$='date'], #number_of_voices ").keypress(function (event)
+            {
+                if (event.which !== 0 && event.which !== 8)
+                {
+                    if (this.value.length > 3 || (event.which < 48 || event.which > 57))
+                    {
+                        return false
+                    }
+                }
+            });
+
+            //$("#upload-page-content").html("<p class='lead text-center'>Sorry, uploads are temporarily disabled while the database is updated.</p>")
+        })
+
+    </script>
+{% endblock %}
+
+
+{% block wrap %}
+
+    <!-- Modal -->
+    <div class="modal fade" id="upload_modal" tabindex="-1" role="dialog"
+         aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h4 class="modal-title">Creating Piece</h4>
+                </div>
+                <div class="modal-body">
+                    <div class="progress">
+                        <div class="progress-bar progress-bar-striped active" role="progressbar" aria-valuenow="100"
+                             aria-valuemin="0" aria-valuemax="100" style="width: 100%">
+                            <span class="sr-only">100% Complete</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="page-header">
+        <h2>Create a Piece</h2>
+    </div>
+<div id="upload-page-content">
+    <form action="/pieces/" method="post" id="new-piece-form" enctype="multipart/form-data">{% csrf_token %}
+            <span class="help-block">
+                A title and composer are required fields to create a piece. Suggestions are offered for composers
+                which already exist in the database, and selecting one of these suggestions will add the piece
+                to the existing composers oeuvre. While you are encouraged to provide beginning and ending dates
+                for the composition, you are only required to provide one date.
+            </span>
+        <br>
+
+        <div class="input-group">
+              <span class="input-group-addon" data-toggle="popover" data-placement="top" data-trigger="focus"
+                    data-html='true'
+                    title="<b>Title</b><span class='label label-primary pull-right'>Required</span>"
+                    data-viewport="#content-container"
+                    data-content="Note: Duplicate titles will produce duplicate pieces in the database: this is to allow for
+                    composers who may have more than one piece with the same name.">Title</span>
+            <input type="text" id="title" name="title" autocomplete="off" class="form-control upload-input-field"
+                   placeholder="e.g. Ach Gott, vom Himmel sieh darein, BWV 2">
+        </div>
+        <div id="title_suggestion_menu" style="padding-left:120px"></div>
+        <div id="title_error"></div>
+        <br>
+
+        <div class="input-group">
+                    <span class="input-group-addon" data-toggle="popover" data-placement="top" data-trigger="focus"
+                          data-html='true' data-viewport="#content-container"
+                          title="<b>Composer Name</b><span class='label label-primary pull-right'>Required</span>"
+                          data-content="<ul><li>If present, select your composer from the dropdown suggestion menu in order to minimize duplicates.</li>
+                          <li>If you add a new composer, use the spelling from Grove.</li><li>If you don’t know the composer, input Anonymous.</li></ul>">Composer</span>
+            <input type="text" id="composer" name="composer" autocomplete='off' class="form-control upload-input-field"
+                   placeholder="e.g. Bach, Johann Sebastian">
+        </div>
+        <div id="composer_suggestion_menu" style="padding-left:120px"></div>
+        <div id="composer_error"></div>
+        <div id="composer-create-new-menu" style="padding-left:50px; padding-right:50px">
+            <div class="row" style="padding-left:20px; padding-right:20px">
+                <div class="col-md-6">
+                    <div class="form-group">
+                        <div class="input-group">
+                            <input type='number' name="composer_birth_date" id="composer_birth_date" max="2000"
+                                   class="form-control unstyled"/>
+                            <span class="input-group-addon">Birth</span>
+                        </div>
+                        <div id="composer_birth_date_error"></div>
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <div class="form-group">
+                        <div class="input-group">
+                            <input type='number' name="composer_death_date" id="composer_death_date" max="2000"
+                                   class="form-control unstyled"/>
+                            <span class="input-group-addon">Death</span>
+                        </div>
+                        <div id="composer_death_date_error"></div>
+                    </div>
+                </div>
+            </div>
+            <hr>
+        </div>
+        <br>
+
+        <div class="row">
+            <div class="col-md-6">
+                <div class="form-group">
+                    <div class="input-group">
+                                <span class="input-group-addon" data-toggle="popover" data-placement="top"
+                                      data-trigger="focus" data-html='true' data-viewport="#content-container"
+                                      title="<b>Composition Start Date</b> <span class='label label-warning pull-right'>Optional</span>"
+                                      data-content="The year work began on the piece.<br>
+                                      <ul><li>If only one date is known, submit it as the 'Composition End Date'.</li>
+                                        <li>If you don’t know the date(s) of the piece, input a reasonable date range (e.g. adult years of composer’s life, or date range of sources in which it
+                                      is found; you can also use dates from Grove).</li></ul>">Composition Start Date</span>
+                        <input type='number' name="composition_start_date" id="composition_start_date"
+                               placeholder="1600" autocomplete='off' max="2000"
+                               class="form-control upload-input-field"/>
+                    </div>
+                    <div id="composition_start_date_error"></div>
+                </div>
+            </div>
+            <div class="col-md-6">
+                <div class="form-group">
+                    <div class="input-group">
+                                <span class="input-group-addon" data-toggle="popover" data-placement="top"
+                                      data-trigger="focus" data-html='true' data-viewport="#content-container"
+                                      title="<b>Composition End Date</b><span class='label label-primary pull-right'>Required</span>"
+                                      data-content="The year the piece was completed, or the first date of publication.<br><ul><li>If you don’t know the date(s) of the piece, input a reasonable date range (e.g. adult years of composer’s life,
+                                      or date range of sources in which it is found; you can also use dates from Grove).</li></ul>">Composition End Date</span>
+                        <input type='number' name="composition_end_date" id="composition_end_date" placeholder="1605"
+                               autocomplete='off' max="2000" class="form-control upload-input-field"/>
+                    </div>
+                    <div id="composition_end_date_error"></div>
+                </div>
+            </div>
+        </div>
+
+        <h2>Additional Information</h2>
+        <hr>
+        <span class="help-block">
+            These fields make it easier to find the piece using the database search engine. Most fields can accept a list of inputs separated by semicolons.
+            For example, if the piece has a harpsichord, violin and cello, you can input "harpsichord; violin; cello" in the instrumentation field. If
+            this piece has movements, which you can define on the next tab, a number of these fields can be overridden on a per-movement basis.
+        </span>
+
+        <div class="row">
+            <div class="col-md-6">
+                <div class="btn-group btn-group-justified form-inline radio" id="religiosity" data-toggle="buttons">
+                    <label class="btn btn-default">
+                        <input type="radio" name="religiosity" value="Sacred"> Sacred
+                    </label>
+                    <label class="btn btn-default">
+                        <input type="radio" name="religiosity" value="Secular"> Secular
+                    </label>
+                    <label class="btn btn-default">
+                        <input type="radio" name="religiosity" value="Ambiguous"> Ambiguous
+                    </label>
+                </div>
+                <div id="religiosity_error"></div>
+            </div>
+            <div class="col-md-6">
+                <div class="btn-group btn-group-justified form-inline radio" id="vocalization" data-toggle="buttons">
+                    <label class="btn btn-default">
+                        <input type="radio" name="vocalization" value="Vocal"> Vocal
+                    </label>
+                    <label class="btn btn-default">
+                        <input type="radio" name="vocalization" value="Instrumental"> Instrumental
+                    </label>
+                    <label class="btn btn-default">
+                        <input type="radio" name="vocalization" value="Mixed"> Mixed
+                    </label>
+                </div>
+                <div id="vocalization_error"></div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-6">
+                <div class="form-group">
+                    <div class="input-group">
+                                <span class="input-group-addon" data-toggle="popover" data-placement="top"
+                                      data-trigger="focus" data-html='true' data-viewport="#content-container"
+                                      title="<b>Collections</b><span class='label label-primary pull-right'>Required</span>"
+                                      data-content="A collection is user-defined grouping of pieces. The collection can be based on date, uploader,
+                                       composer - or any other parameter. If you input a collection name which is not already in the database, this new
+                                       collection will be created and visible to the public. You can make the collection private on the <a href='/collections/?creator={{ user.username }}' target='_blank'>My Collections</a> page">Collections</span>
+                        <input type="text" id="collections" name="collections" autocomplete="off"
+                               class="form-control upload-input-field"
+                               placeholder="e.g. Prof.Fujinaga's Collection; McGill Collection">
+                    </div>
+                    <div id="collection_suggestion_menu" style="padding-left:120px"></div>
+                    <div id="collections_error"></div>
+                </div>
+            </div>
+            <div class="col-md-6">
+                <div class="form-group">
+                    <div class="input-group">
+                                <span class="input-group-addon" data-toggle="popover" data-placement="top"
+                                      data-trigger="focus" data-html='true' data-viewport="#content-container"
+                                      title="<b>Number of Voices</b> <span class='label label-primary pull-right'>Required</span>"
+                                      data-content="Follow these rules for polyphonic instruments (keyboard, lute, guitar):<br><br>
+                                      <ul>
+                                       <li>If the piece has clearly defined independent voices for the whole piece (e.g. 2-part invention) list the number of voices</li>
+                                       <li>If the individual voices are not clearly defined, or the voice leading is free, input 0.</li>
+                                       <li>List the basso continuo as one voice.</li>
+                                      </ul>">
+                                    Num. of Voices</span>
+                        <input type='number' name="number_of_voices" autocomplete="off" placeholder="e.g. 2"
+                               id="number_of_voices" max="100" class="form-control unstyled upload-input-field"/>
+                    </div>
+                    <div id="number_of_voices_error"></div>
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-6">
+                <div class="form-group">
+                    <div class="input-group">
+                                <span class="input-group-addon" data-toggle="popover" data-placement="top"
+                                      data-trigger="focus" data-html='true' data-viewport="#content-container"
+                                      title="<b>Languages</b><span class='label label-warning pull-right'>Contextual</span>"
+                                      data-content="Languages are required if the piece is <b>Vocal</b> or <b>Mixed</b>, but <i>should be left blank for</i> <b>Instrumental</b> pieces.">Text Language</span>
+                        <input type='text' name="languages" id="languages" autocomplete="off"
+                               placeholder="e.g. English; German" class="form-control unstyled upload-input-field"/>
+                    </div>
+                    <div id="language_suggestion_menu" style="padding-left:120px"></div>
+                    <div id="languages_error"></div>
+                </div>
+            </div>
+            <div class="col-md-6">
+                <div class="form-group">
+                    <div class="input-group">
+                                <span class="input-group-addon" data-toggle="popover" data-placement="top"
+                                      data-trigger="focus" data-html='true' data-viewport="#content-container"
+                                      title="<b>Genres</b> <span class='label label-primary pull-right'>Required</span>"
+                                      data-content="If present, select a genres from the drop-down list.">Genres</span>
+                        <input type='text' name="genres" id="genres" autocomplete="off" placeholder="e.g. Mass"
+                               class="form-control unstyled upload-input-field"/>
+                    </div>
+                    <div id="genre_suggestion_menu" style="padding-left:120px"></div>
+                    <div id="genres_error"></div>
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-6">
+                <div class="form-group">
+                    <div class="input-group">
+                                    <span class="input-group-addon" data-toggle="popover" data-placement="top"
+                                          data-trigger="focus" data-html='true' data-viewport="#content-container"
+                                          title="<b>Place of Origin</b> <span class='label label-warning pull-right'>Optional</span>"
+                                          data-content="Indicate the region where the piece might have been composed. General terms are preferred (e.g. Low Countries; Austria, not Vienna; Italy, not Rome)">Place of Origin</span>
+                        <input type='text' name="locations" id='locations' autocomplete="off" placeholder="e.g. France"
+                               class="form-control unstyled upload-input-field"/>
+                    </div>
+                    <div id="location_suggestion_menu" style="padding-left:120px"></div>
+                    <div id="locations_error"></div>
+                </div>
+            </div>
+            <div class="col-md-6">
+                <div class="form-group">
+                    <div class="input-group">
+                                <span class="input-group-addon" data-toggle="popover" data-placement="top"
+                                      data-trigger="focus" data-html='true' data-viewport="#content-container"
+                                      title="<b>Instrumentation</b> <span class='label label-primary pull-right'>Required</span>"
+                                      data-content="Use semicolons as a separator for the list of instruments in the piece.">Instrumentation</span>
+                        <input type='text' name="instruments_voices" autocomplete="off" id="instruments_voices"
+                               placeholder="e.g. Harpsichord" class="form-control unstyled upload-input-field"/>
+                    </div>
+                    <div id="instrumentation_suggestion_menu" style="padding-left:120px"></div>
+                    <div id="instruments_voices_error"></div>
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-6">
+                <div class="form-group">
+                    <div class="input-group">
+                                <span class="input-group-addon" data-toggle="popover" data-placement="top"
+                                      data-trigger="focus" data-html='true' data-viewport="#content-container"
+                                      title="<b>Sources</b> <span class='label label-warning pull-right'>Optional</span>"
+                                      data-content="Use this field to specify the name(s) of the manuscript or print that was the source of this score.">Sources</span>
+                        <input type='text' name="sources" id="sources" autocomplete="off"
+                               placeholder="e.g. Bologna Q15"
+                               class="form-control unstyled upload-input-field"/>
+                    </div>
+                    <div id="source_suggestion_menu" style="padding-left:120px"></div>
+                    <div id="sources_error"></div>
+                </div>
+            </div>
+            <div class="col-md-6">
+                <div class="form-group">
+                    <div class="input-group">
+                    <span class="input-group-addon" data-toggle="popover" data-placement="top" data-trigger="focus"
+                          data-html='true'
+                          data-viewport="#content-container"
+                          title="<b>Tags</b> <span class='label label-warning pull-right'>Optional</span>"
+                          data-content="You may add any other tags you believe would help organize and define this piece here. Try not to
+                          duplicate information from the previous fields.">Tags</span>
+                        <input type='text' name="tags" id="tags" autocomplete="off"
+                               class="form-control unstyled upload-input-field" placeholder="D-sharp Minor; 4/4"/>
+                    </div>
+                    <div id="tags_suggestion_menu" style="padding-left:120px"></div>
+                    <div id="tags_error"></div>
+                </div>
+            </div>
+        </div>
+        <br>
+
+        <div class="form-group">
+            <textarea class="form-control" rows="7" name="comment" id="comment" style="resize:vertical"
+                      placeholder="Comments..."></textarea>
+        </div>
+        <br>
+
+        <h2>Upload Files</h2>
+        <hr>
+        <span class="help-block">
+            This table allows you to attach files to the piece itself. The source field is for information
+            regarding the source of the file itself, for instance "Choral wiki" or "Transcribed by Uploader",
+            or the name of the repository it comes from. You may add as many file groups as you like.
+            <strong>If you do not provide a source for your file, it will be ignored and not uploaded.</strong>
+        </span>
+
+        <div class="well">
+            <h4>Piece Files</h4>
+            <table class="table table-hover">
+                <colgroup>
+                    <col class="text-center" style="width: 5%;">
+                    <col style="width: 5%;">
+                    <col style="width: 40%;">
+                    <col style="width: 50%;">
+                </colgroup>
+                <tbody id="piece_file_table">
+                <tr>
+                    <th class="text-center">Remove</th>
+                    <th class="text-center">#</th>
+                    <th>File Source</th>
+                    <th>Files</th>
+                </tr>
+                <!-- User can add rows for files here -->
+                </tbody>
+            </table>
+            <div>
+                <button id="new_piece_file" type="button" class="btn btn-default">Add File</button>
+            </div>
+        </div>
+        <br>
+        <span class="help-block">
+            This table allows you to define movements for the piece. Multiple fields from the previous
+            page may be overridden on a movement by movement basis by clicking the 'show advanced' button.
+            <strong>If you do not provide a name for a movement, it will be ignored and its files
+                not uploaded.</strong>
+        </span>
+
+        <div class="well">
+            <h4>Movements</h4>
+            <table class="table table-hover">
+                <colgroup>
+                    <col class="text-center" style="width: 5%;">
+                    <col style="width: 5%;">
+                    <col style="width: 40%;">
+                    <col style="width: 40%;">
+                    <col style="width: 10%;">
+                </colgroup>
+                <tbody id="movement_table">
+                <tr>
+                    <th class="text-center">Remove</th>
+                    <th class="text-center">#</th>
+                    <th>Movement Title</th>
+                    <th>Files</th>
+                    <th class="text-center">Advanced</th>
+                </tr>
+                <!-- User can add rows for files here -->
+                </tbody>
+            </table>
+            <hr>
+            <div>
+                <button id="new_mov" type="button" class="btn btn-default">Add Movement</button>
+            </div>
+        </div>
+        <hr>
+        <div class="text-right">
+            <button type='submit' id='piece-submit' class='btn btn-success'>Submit</button>
+        </div>
+        <br>
+    </form>
+</div>
+
+
+{% endblock %}
+

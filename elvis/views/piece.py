@@ -32,6 +32,10 @@ class PieceDetailHTMLRenderer(CustomHTMLRenderer):
 class PieceCreateHTMLRenderer(CustomHTMLRenderer):
     template_name = "piece/piece_create.html"
 
+class PieceUpdateHTMLRenderer(CustomHTMLRenderer):
+    template_name = "piece/piece_update.html"
+
+
 
 class PieceDetail(generics.RetrieveUpdateDestroyAPIView):
     model = Piece
@@ -81,6 +85,21 @@ class PieceCreate(generics.GenericAPIView):
             return Response(status=status.HTTP_200_OK)
         else:
             return Response(status=status.HTTP_401_UNAUTHORIZED)
+
+
+class PieceUpdate(generics.RetrieveUpdateDestroyAPIView):
+    model = Piece
+    permission_classes = (permissions.IsAuthenticatedOrReadOnly,)
+    serializer_class = PieceSerializer
+    renderer_classes = (JSONRenderer, PieceUpdateHTMLRenderer)
+    queryset = Piece.objects.all()
+
+    def get(self, request, *args, **kwargs):
+        piece = Piece.objects.get(pk=int(kwargs['pk']))
+        if not piece or (piece.uploader != request.user
+                         and not request.user.is_superuser):
+            return Response(status=status.HTTP_401_UNAUTHORIZED)
+        return super(PieceUpdate, self).get(self, request, *args, **kwargs)
 
 
 class PieceList(generics.ListCreateAPIView):
