@@ -55,11 +55,9 @@ urlpatterns += format_suffix_patterns(
         url(r'^downloads/$', DownloadDetail.as_view(), name="download-detail"),
         url(r'^downloading/$', Downloading.as_view(), name="downloading"),
 
-<<<<<<< HEAD
         url(r'^pieces/upload/$', PieceCreate.as_view(), name="piece-create"),
         url(r'^pieces/create/$', PieceCreate.as_view(), name="piece-create"),
         url(r'^piece/update/(?P<pk>[0-9]+)/$', PieceUpdate.as_view(), name="piece-update"),
->>>>>>> 5e6418d... WIP: Laid groundwork for updating feature.
         url(r'^pieces/$', PieceList.as_view(), name="piece-list"),
         url(r'^piece/(?P<pk>[0-9]+)/$', PieceDetail.as_view(), name="piece-detail"),
 
