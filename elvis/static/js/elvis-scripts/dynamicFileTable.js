@@ -83,7 +83,7 @@ function dynamicFileTable(add_row_button_id, table_body_id, table_name, movement
             $table.append("<tr id='"+ table_name + row_count + "'>" +
             "<td class='text-center'><button id='del_"+ table_name + row_count + "' type='button' tabindex='-1' class='btn btn-default'><span class='glyphicon glyphicon-remove'></span></button></td>" +
             "<td><input name='" + table_name +"_files_" + row_count + "' id='" + table_name + "_files_" + row_count + "' type='file' multiple='multiple'></td>" +
-            "<td><select class='selectpicker' multiple data-max-options='1' name='" + table_name + "_parent_" + row_count + "'id='" + table_name + "_parent_" + row_count + "'>" +
+            "<td><select class='selectpicker show-tick' name='" + table_name + "_parent_" + row_count + "'id='" + table_name + "_parent_" + row_count + "'>" +
             "<option value='piece'>Attach to Piece</option></select></td>" +
             "<td><input name='" + table_name + "_source_" + row_count + "' id='" + table_name + "_source_" + row_count + "' class='form-control' autocomplete='off' data-toggle='popover' data-placement='top' data-trigger='focus' data-html='true' title='<b>File Source</b>'" +
             "data-content='Indicate the source of the file here, such as <em>Choral Wiki</em> or <em>Transcribed by Uploader</em>. If no source is provided, this file will be ignored. This file will be renamed automatically, so does not require a title.'> </td></tr>");
@@ -143,6 +143,8 @@ function dynamicFileTable(add_row_button_id, table_body_id, table_name, movement
     function drawAttachSelects(){
         var movements = $("[id^=mov_title]");
         var content = "<option value='piece'>Attach to Piece</option>";
+        var currentIDs = [];
+
         var attachSelects = $("[id^=files_parent_]");
         var i = 0;
         var oldVal = null;
@@ -154,14 +156,22 @@ function dynamicFileTable(add_row_button_id, table_body_id, table_name, movement
                 {
                     content += "<option data-divider='true'></option>";
                 }
-                content += "<option value='" + movements[i].id + "'>" +movements[i].value + "</option>"
+                content += "<option value='" + movements[i].id + "'>" +movements[i].value + "</option>";
+                currentIDs.push(movements[i].id);
             }
         }
         for (i = 0; i < attachSelects.length; i++)
         {
             oldVal = attachSelects[i].value;
             attachSelects[i].innerHTML = content;
-            $(attachSelects[i]).selectpicker('refresh').selectpicker('val', oldVal);
+            if (oldVal === "" || $.inArray(oldVal, currentIDs) === -1)
+            {
+                $(attachSelects[i]).selectpicker('refresh').selectpicker('val', 'piece');
+            }
+            else
+            {
+                $(attachSelects[i]).selectpicker('refresh').selectpicker('val', oldVal);
+            }
         }
     }
 

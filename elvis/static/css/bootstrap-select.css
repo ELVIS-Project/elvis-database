@@ -114,6 +114,8 @@
 }
 .bootstrap-select.btn-group .dropdown-menu li a {
   cursor: pointer;
+  /* ADDED BY ALEX - stops the gross black border on the selected item */
+  outline-width:0px;
 }
 .bootstrap-select.btn-group .dropdown-menu li a.opt {
   position: relative;
