@@ -3,6 +3,7 @@
 <!--[if IE 7]>         <html class="no-js lt-ie9 lt-ie8"> <![endif]-->
 <!--[if IE 8]>         <html class="no-js lt-ie9"> <![endif]-->
 <!--[if gt IE 8]><!-->
+{% load staticfiles %}
 <html class="no-js" lang="en"> <!--<![endif]-->
 <head>
     <meta charset="utf-8">
@@ -10,13 +11,13 @@
     <meta name="description" content="">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-    <link href="{{ STATIC_URL }}bootstrap/css/bootstrap.min.css" rel="stylesheet" media="screen">
-    <link href="{{ STATIC_URL }}css/elvis-style.css" rel="stylesheet" media="screen"/>
+    <link href="{% static "bootstrap/css/bootstrap.min.css" %}" rel="stylesheet" media="screen">
+    <link href="{% static "css/elvis-style.css" %}" rel="stylesheet" media="screen">
 
-    <script type='text/javascript' src="{{ STATIC_URL }}js/jquery-1.11.3.min.js"></script>
-    <script type='text/javascript' src="{{ STATIC_URL }}js/plugins.js"></script>
-    <script type='text/javascript' src="{{ STATIC_URL }}bootstrap/js/bootstrap.min.js"></script>
-    <script type='text/javascript' src="{{ STATIC_URL }}js/elvis-scripts/cartButtonScript.js"></script>
+    <script type='text/javascript' src="{% static "js/jquery-1.11.3.min.js" %}"></script>
+    <script type='text/javascript' src="{% static "js/plugins.js" %}"></script>
+    <script type='text/javascript' src="{% static "bootstrap/js/bootstrap.min.js" %}"></script>
+    <script type='text/javascript' src="{% static "js/elvis-scripts/cartButtonScript.js" %}"></script>
 
     {% block extra_hd %}
     {% endblock %}

@@ -4,13 +4,14 @@
 <!-- The javascript function for the typeahead functionality on the fields. -->
 
 {% block extra_hd %}
-    <title>Create Piece</title>
+    {% load staticfiles %}
+    <script type='text/javascript' src="{% static "js/elvis-scripts/autocomplete.js" %}"></script>
+    <script type='text/javascript' src="{% static "js/elvis-scripts/dynamicFileTable.js" %}"></script>
+    <script type='text/javascript' src="{% static "bootstrap/plugins/bootstrap-filestyle.js" %}"></script>
+    <script type='text/javascript' src="{% static "js/bootstrap-select.min.js" %}"></script>
+    <link href="{% static "css/bootstrap-select.css" %}" rel="stylesheet" media="screen"/>
 
-    <script type='text/javascript' src="{{ STATIC_URL }}js/elvis-scripts/autocomplete.js"></script>
-    <script type='text/javascript' src="{{ STATIC_URL }}js/elvis-scripts/dynamicFileTable.js"></script>
-    <script type='text/javascript' src="{{ STATIC_URL }}bootstrap/plugins/bootstrap-filestyle.js"></script>
-    <script type='text/javascript' src="{{ STATIC_URL }}js/bootstrap-select.min.js"></script>
-    <link href="{{ STATIC_URL }}css/bootstrap-select.css" rel="stylesheet" media="screen"/>
+    <title>Create Piece</title>
 
     <style>
         .popover

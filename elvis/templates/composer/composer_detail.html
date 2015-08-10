@@ -1,8 +1,10 @@
 {% extends "base.html" %}
 
 {% block extra_hd %}
+{% load staticfiles %}
+<script type='text/javascript' src="{% static "js/jquery.tablesorter.js" %}"></script>
 <title>{{ content.title }}</title>
-    <script type='text/javascript' src="{{ STATIC_URL }}js/jquery.tablesorter.js"></script>
+
     <script>
         $(document).ready(function ($)
         {

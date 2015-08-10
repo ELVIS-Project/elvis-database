@@ -1,12 +1,16 @@
 {% extends "base.html" %}
 {% block extra_hd %}
+
+    {% load staticfiles %}
+    <script type='text/javascript' src="{% static "bootstrap/plugins/bootstrap-multiselect.js" %}"></script>
+    <script type='text/javascript' src="{% static "js/elvis-scripts/downloadBadge.js" %}"></script>
+    <script type='text/javascript' src="{% static "js/elvis-scripts/autocomplete.js" %}"></script>
+    <script type='text/javascript' src="{% static "js/elvis-scripts/cartButtonScript.js" %}"></script>
+    <script type='text/javascript' src="{% static "js/elvis-scripts/searchFunctions.js" %}"></script>
+    <link rel="stylesheet" href="{% static "bootstrap/plugins/bootstrap-multiselect.css" %}" type="text/css"/>
+
     <title>Search</title>
-    <script type="text/javascript" src="{{ STATIC_URL }}bootstrap/plugins/bootstrap-multiselect.js"></script>
-    <script type="text/javascript" src="{{ STATIC_URL }}js/elvis-scripts/downloadBadge.js"></script>
-    <script type='text/javascript' src="{{ STATIC_URL }}js/elvis-scripts/autocomplete.js"></script>
-    <script type='text/javascript' src="{{ STATIC_URL }}js/elvis-scripts/cartButtonScript.js"></script>
-    <script type='text/javascript' src="{{ STATIC_URL }}js/elvis-scripts/searchFunctions.js"></script>
-    <link rel="stylesheet" href="{{ STATIC_URL }}bootstrap/plugins/bootstrap-multiselect.css" type="text/css"/>
+
 {% endblock %}
 
 {% block wrap %}
