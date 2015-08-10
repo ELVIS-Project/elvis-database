@@ -75,7 +75,6 @@
                 }
             });
 
-{% comment %}
             $(window).on('beforeunload', function (event)
             {
                 if (event['target']['activeElement']['id'] === 'goto-piece')
@@ -87,7 +86,6 @@
                     return 'Leaving this page will clear your form.'
                 }
             });
-{% endcomment %}
 
             //Disable default behaviour for hitting 'enter' for all inputs except the comment.
             $('input:not(#comment)').on("keydown", function (event)
@@ -503,9 +501,8 @@
         <h2>Movements</h2>
         <hr>
             <span class="help-block">
-            If the piece has movements, or any other logical separators (such as acts) that you wish
-                to specify, you may declare them in this table. Many inputs from the previous page
-                may be overridden on a per-movement basis by clicking the 'show advanced' button.
+                If the work is divided into movements, acts, or other parts, declare them in this table.
+                Many inputs from the previous page may be overridden on a per-movement basis by clicking the 'show advanced' button.
         </span>
         <div class="well">
             <h4>Movements</h4>
@@ -537,9 +534,10 @@
 
 
         <span class="help-block">
-            This table allows you to select files you wish to upload. Each file must be attached
-            to something, so either choose "Attach to Piece" or one of the movements you
-            created above.
+            Upload files with <a href="#" onClick="return false;" data-toggle="popover" data-placement="top" data-trigger="hover" title="<b>Acceptable Formats</b>"
+                                 data-html='true' data-content=".mei, .xml, .pdf, .mxl, .krn, .nwc, .tntxt, .capx, .abc, .midi"
+                >
+            acceptable formats</a> here. If the file is for a specific act or movement as entered above, select that entry from the drop-down menu.
         </span>
 
         <div class="well">
