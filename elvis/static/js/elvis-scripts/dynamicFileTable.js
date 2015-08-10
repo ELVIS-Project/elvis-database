@@ -125,6 +125,17 @@ function dynamicFileTable(add_row_button_id, table_body_id, table_name, movement
         {
             $(event.target.parentElement.parentElement.nextElementSibling).toggle();
         });
+
+        $("input[type=number]").off().keypress(function (event)
+        {
+            if (event.which !== 0 && event.which !== 8)
+            {
+                if (this.value.length > 3 || (event.which < 48 || event.which > 57))
+                {
+                    return false
+                }
+            }
+        });
     }
 
 
