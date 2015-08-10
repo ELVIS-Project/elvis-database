@@ -11,7 +11,7 @@
     <script type='text/javascript' src="{% static "js/bootstrap-select.min.js" %}"></script>
     <link href="{% static "css/bootstrap-select.css" %}" rel="stylesheet" media="screen"/>
 
-    <title>Create Piece</title>
+    <title>Upload a Piece</title>
 
     <style>
         .popover
@@ -223,7 +223,7 @@
     </div>
 
     <div class="page-header">
-        <h2>Create a Piece</h2>
+        <h2>Upload a Piece</h2>
     </div>
 <div id="upload-page-content">
     <form action="/pieces/" method="post" id="new-piece-form" enctype="multipart/form-data">{% csrf_token %}
