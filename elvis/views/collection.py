@@ -84,8 +84,7 @@ class CollectionList(generics.ListCreateAPIView):
     def _modify_collection(self, request):
         collection = Collection.objects.get(id=request.POST['id'])
         action = request.POST['action']
-        if not request.user == collection.creator \
-                or not request.user.is_superuser:
+        if not (request.user == collection.creator or request.user.is_superuser):
             return Response(status=status.HTTP_401_UNAUTHORIZED)
 
         if action == 'make-private':
