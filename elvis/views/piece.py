@@ -101,6 +101,15 @@ class PieceUpdate(generics.RetrieveUpdateDestroyAPIView):
             return Response(status=status.HTTP_401_UNAUTHORIZED)
         return super(PieceUpdate, self).get(self, request, *args, **kwargs)
 
+    @method_decorator(csrf_protect)
+    def post(self, request, *args, **kwargs):
+        if 'delete' in request.POST:
+            piece = Piece.objects.get(id=request.POST['delete'])
+            if not (request.user == piece.uploader or request.user.is_superuser):
+                return Response(status=status.HTTP_401_UNAUTHORIZED)
+            piece.delete()
+            return Response(status=status.HTTP_202_ACCEPTED)
+        return update(request, *args, **kwargs)
 
 class PieceList(generics.ListCreateAPIView):
     model = Piece
@@ -138,129 +147,134 @@ class PieceList(generics.ListCreateAPIView):
     @method_decorator(csrf_protect)
     def post(self, request, *args, **kwargs):
         if 'delete' in request.POST:
+            import pdb
+            pdb.set_trace()
             piece = Piece.objects.get(id=request.POST['delete'])
-            if not request.user == piece.uploader \
-                    or not request.user.is_superuser:
+            if not (request.user == piece.uploader or request.user.is_superuser):
                 return Response(status=status.HTTP_401_UNAUTHORIZED)
             piece.delete()
             return Response(status=status.HTTP_202_ACCEPTED)
-        return self.create(request, *args, **kwargs)
+        else:
+            return create(request, *args, **kwargs)
 
-    def create(self, request, *args, **kwargs):
-        if not request.user.is_active:
-            return Response(status=status.HTTP_401_UNAUTHORIZED)
+def create(request, *args, **kwargs):
+    if not request.user.is_active:
+        return Response(status=status.HTTP_401_UNAUTHORIZED)
 
-        form = PieceForm(request.POST)
-        if not form.is_valid():
-            data = json.dumps({'errors': form.errors})
-            return HttpResponse(data, content_type="json")
-
-        clean = Cleanup()
-        clean_form = form.cleaned_data
-        new_piece = Piece(title=clean_form['title'],
-                          date_of_composition=clean_form[
-                              'composition_start_date'],
-                          date_of_composition2=clean_form[
-                              'composition_end_date'],
-                          religiosity=clean_form['religiosity'],
-                          vocalization=clean_form['vocalization'],
-                          uploader=request.user,
-                          created=datetime.datetime.now(pytz.utc),
-                          updated=datetime.datetime.now(pytz.utc))
-        new_piece.save()
-        clean.list.append({"model": new_piece, "new": True})
-
-        if clean_form['number_of_voices']:
-            new_piece.number_of_voices = int(clean_form['number_of_voices'])
-        if clean_form['comment']:
-            new_piece.comment = clean_form['comment']
-
-        try:
-            composer_list = abstract_model_factory(clean_form['composer'],
-                                                   "Composer", clean,
-                                                   birth_date=clean_form[
-                                                       'composer_birth_date'],
-                                                   death_date=clean_form[
-                                                       'composer_death_date'])
-            composer = composer_list[0]
-            new_piece.composer = composer
-        except:
-            clean.cleanup()
-            raise
-        try:
-            if clean_form['collections']:
-                collection_list = abstract_model_factory(
-                    clean_form['collections'], "Collection", clean,
-                    is_public=True, creator=request.user)
-                for x in collection_list:
-                    new_piece.collections.add(x)
-        except:
-            clean.cleanup()
-            raise
-        try:
-            if clean_form['languages']:
-                language_list = abstract_model_factory(clean_form['languages'],
-                                                       "Language", clean)
-                for x in language_list:
-                    new_piece.languages.add(x)
-        except:
-            clean.cleanup()
-            raise
-        try:
-            if clean_form['genres']:
-                genre_list = abstract_model_factory(clean_form['genres'],
-                                                    "Genre", clean)
-                for x in genre_list:
-                    new_piece.genres.add(x)
-        except:
-            clean.cleanup()
-            raise
-        try:
-            if clean_form['locations']:
-                location_list = abstract_model_factory(clean_form['locations'],
-                                                       "Location", clean)
-                for x in location_list:
-                    new_piece.locations.add(x)
-        except:
-            clean.cleanup()
-            raise
-        try:
-            if clean_form['sources']:
-                source_list = abstract_model_factory(clean_form['sources'],
-                                                     "Source", clean)
-                for x in source_list:
-                    new_piece.sources.add(x)
-        except:
-            clean.cleanup()
-            raise
-        try:
-            if clean_form['tags']:
-                tag_list = abstract_model_factory(clean_form['tags'], "Tag",
-                                                  clean)
-                for x in tag_list:
-                    new_piece.tags.add(x)
-        except:
-            clean.cleanup()
-            raise
-        try:
-            if clean_form['instruments_voices']:
-                instrument_list = abstract_model_factory(
-                    clean_form['instruments_voices'], "InstrumentVoice", clean)
-                for x in instrument_list:
-                    new_piece.instruments_voices.add(x)
-        except:
-            clean.cleanup()
-            raise
-
-        new_piece.save()
-        try:
-            handle_dynamic_file_table(request, new_piece, "mov", clean)
-        except:
-            clean.cleanup()
-            raise
-
-        new_piece.save()
-        rebuild_suggester_dicts.delay()
-        data = json.dumps({'success': True, 'id': new_piece.id,
-                           'url': "/piece/{0}".format(new_piece.id)})
+    form = PieceForm(request.POST)
+    if not form.is_valid():
+        data = json.dumps({'errors': form.errors})
         return HttpResponse(data, content_type="json")
+
+    clean = Cleanup()
+    clean_form = form.cleaned_data
+    new_piece = Piece(title=clean_form['title'],
+                      date_of_composition=clean_form[
+                          'composition_start_date'],
+                      date_of_composition2=clean_form[
+                          'composition_end_date'],
+                      religiosity=clean_form['religiosity'],
+                      vocalization=clean_form['vocalization'],
+                      uploader=request.user,
+                      created=datetime.datetime.now(pytz.utc),
+                      updated=datetime.datetime.now(pytz.utc))
+    new_piece.save()
+    clean.list.append({"model": new_piece, "new": True})
+
+    if clean_form['number_of_voices']:
+        new_piece.number_of_voices = int(clean_form['number_of_voices'])
+    if clean_form['comment']:
+        new_piece.comment = clean_form['comment']
+
+    try:
+        composer_list = abstract_model_factory(clean_form['composer'],
+                                               "Composer", clean,
+                                               birth_date=clean_form[
+                                                   'composer_birth_date'],
+                                               death_date=clean_form[
+                                                   'composer_death_date'])
+        composer = composer_list[0]
+        new_piece.composer = composer
+    except:
+        clean.cleanup()
+        raise
+    try:
+        if clean_form['collections']:
+            collection_list = abstract_model_factory(
+                clean_form['collections'], "Collection", clean,
+                is_public=True, creator=request.user)
+            for x in collection_list:
+                new_piece.collections.add(x)
+    except:
+        clean.cleanup()
+        raise
+    try:
+        if clean_form['languages']:
+            language_list = abstract_model_factory(clean_form['languages'],
+                                                   "Language", clean)
+            for x in language_list:
+                new_piece.languages.add(x)
+    except:
+        clean.cleanup()
+        raise
+    try:
+        if clean_form['genres']:
+            genre_list = abstract_model_factory(clean_form['genres'],
+                                                "Genre", clean)
+            for x in genre_list:
+                new_piece.genres.add(x)
+    except:
+        clean.cleanup()
+        raise
+    try:
+        if clean_form['locations']:
+            location_list = abstract_model_factory(clean_form['locations'],
+                                                   "Location", clean)
+            for x in location_list:
+                new_piece.locations.add(x)
+    except:
+        clean.cleanup()
+        raise
+    try:
+        if clean_form['sources']:
+            source_list = abstract_model_factory(clean_form['sources'],
+                                                 "Source", clean)
+            for x in source_list:
+                new_piece.sources.add(x)
+    except:
+        clean.cleanup()
+        raise
+    try:
+        if clean_form['tags']:
+            tag_list = abstract_model_factory(clean_form['tags'], "Tag",
+                                              clean)
+            for x in tag_list:
+                new_piece.tags.add(x)
+    except:
+        clean.cleanup()
+        raise
+    try:
+        if clean_form['instruments_voices']:
+            instrument_list = abstract_model_factory(
+                clean_form['instruments_voices'], "InstrumentVoice", clean)
+            for x in instrument_list:
+                new_piece.instruments_voices.add(x)
+    except:
+        clean.cleanup()
+        raise
+
+    new_piece.save()
+    try:
+        handle_dynamic_file_table(request, new_piece, "mov", clean)
+    except:
+        clean.cleanup()
+        raise
+
+    new_piece.save()
+    rebuild_suggester_dicts.delay()
+    data = json.dumps({'success': True, 'id': new_piece.id,
+                       'url': "/piece/{0}".format(new_piece.id)})
+    return HttpResponse(data, content_type="json")
+
+def update(request, *args, **kwargs):
+    piece = Piece.objects.get(pk=int(kwargs['pk']))
