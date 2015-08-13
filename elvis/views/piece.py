@@ -21,6 +21,7 @@ from elvis.views.views import handle_dynamic_file_table
 from elvis.views.views import Cleanup
 from django.utils.decorators import method_decorator
 from django.http import HttpResponse
+from django.shortcuts import render
 
 
 class PieceListHTMLRenderer(CustomHTMLRenderer):
@@ -99,7 +100,7 @@ class PieceUpdate(generics.RetrieveUpdateDestroyAPIView):
     def get(self, request, *args, **kwargs):
         piece = Piece.objects.get(pk=int(kwargs['pk']))
         if not (request.user == piece.uploader or request.user.is_superuser):
-            return Response(status=status.HTTP_401_UNAUTHORIZED)
+            return render(request, "403.html", status=status.HTTP_403_FORBIDDEN)
         return super(PieceUpdate, self).get(self, request, *args, **kwargs)
 
     @method_decorator(csrf_protect)
@@ -107,7 +108,7 @@ class PieceUpdate(generics.RetrieveUpdateDestroyAPIView):
         if 'delete' in request.POST:
             piece = Piece.objects.get(id=request.POST['delete'])
             if not (request.user == piece.uploader or request.user.is_superuser):
-                return Response(status=status.HTTP_401_UNAUTHORIZED)
+                return render(request, "403.html", status=status.HTTP_403_FORBIDDEN)
             piece.delete()
             return Response(status=status.HTTP_202_ACCEPTED)
         return update(request, *args, **kwargs)
@@ -191,6 +192,10 @@ def create(request, *args, **kwargs):
 def update(request, *args, **kwargs):
     # Update a piece based on a dict of changes in request.POST['changes']
 
+    piece = Piece.objects.get(pk=int(kwargs['pk']))
+    if not (request.user == piece.uploader or request.user.is_superuser):
+        return render(request, "403.html", status=status.HTTP_403_FORBIDDEN)
+    
     form = PieceForm(request.POST)
     if not form.is_valid():
         # Form errors are rendered for user on the front end.
