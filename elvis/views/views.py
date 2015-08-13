@@ -22,6 +22,7 @@ from elvis.models import InstrumentVoice
 from elvis.models import Tag
 from django.db.models import ObjectDoesNotExist
 from difflib import SequenceMatcher
+import unicodedata
 
 class Cleanup:
     """Keep track of created objects during an attempt to create a new piece. """
@@ -160,8 +161,8 @@ def handle_attachments(request, parent, cleanup, file_name, file_source):
         att.save()  # needed to create hash dir.
         cleanup.list.append({"model": att, "new": True})
         att.uploader = request.user
-        new_name = "{0}_{1}_{2}.{3}".format(parent.title.replace(" ", "-"),
-                                            parent.composer.name.replace(" ", "-"),
+        new_name = "{0}_{1}_{2}.{3}".format(unicodedata.normalize("NFKD", parent.title).encode('ascii', 'ignore').strip().replace(" ", "-"),
+                                            unicodedata.normalize("NFKD", parent.composer.name).encode('ascii', 'ignore').strip().replace(" ", "-"),
                                             "file" + str(i),
                                             f['name'].rsplit('.')[-1])
         new_name = new_name.replace('/', '-').encode('ascii', 'ignore')
