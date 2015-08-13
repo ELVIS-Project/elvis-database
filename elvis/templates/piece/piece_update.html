@@ -231,7 +231,7 @@
                         {
                             $base_modal_header.html("<h4 class='modal-title'>Done!</h4>");
                             $base_modal_body.html("<p>Piece succesfuly updated!</p>");
-                            $base_modal_footer.html('.modal-footer').html( "<button type='button' class='btn btn-default' data-dismiss='modal'>Close</button>" +
+                            $base_modal_footer.html('.modal-footer').html( "<a href='"+ window.location.href + "' class='btn btn-default' >Refresh Page</a>" +
                                     "<a href='" + data['url'] + "' class='btn btn-default' id='goto-piece'>Go to Piece</a>");
                         }
                         else
