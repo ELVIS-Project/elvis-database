@@ -270,18 +270,20 @@ def update(request, *args, **kwargs):
         # Can use the same function as the piece-create here.
         handle_related_models(modify_piece, piece, clean)
 
-    delete_movements = [x for x in change['delete'] if x['type'] == "M"]
-    if delete_movements:
-        for item in delete_movements:
-            mov = Movement.objects.filter(pk=item['id'])[0]
-            if mov:
-                mov.delete()
     delete_attachments = [x for x in change['delete'] if x['type'] == "A"]
     if delete_attachments:
         for item in delete_attachments:
             att = Attachment.objects.filter(pk=item['id'])[0]
             if att:
                 att.delete()
+                
+    delete_movements = [x for x in change['delete'] if x['type'] == "M"]
+    if delete_movements:
+        for item in delete_movements:
+            mov = Movement.objects.filter(pk=item['id'])[0]
+            if mov:
+                mov.delete()
+
 
     data = json.dumps({'success': True, 'id': piece.id, 'url': "/piece/{0}".format(piece.id)})
     return HttpResponse(data, content_type="json")
