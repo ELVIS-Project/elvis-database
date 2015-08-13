@@ -121,7 +121,7 @@ function cartButtonRefresh()
             {
                 $base_modal_header.html("<h4 class='modal-title'>Error modifying downloads!</h4>");
                 $base_modal_body.html("<p>Something went wrong and your cart was not modified!</p>");
-                $base_modal_footer.html("<button type='button' class='btn btn-default' data-dismiss='base-modal'>Close</button>");
+                $base_modal_footer.html("<button type='button' class='btn btn-default' data-dismiss='modal'>Close</button>");
             }
         })
     });

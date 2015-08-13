@@ -12,7 +12,7 @@ from elvis.views.views import solr_suggest
 from elvis.views.auth import LoginFormView, logout_view
 from elvis.views.search import SearchView
 from elvis.views.download import DownloadDetail, Downloading
-from elvis.views.piece import PieceList, PieceDetail, PieceCreate
+from elvis.views.piece import PieceList, PieceDetail, PieceCreate, PieceUpdate
 from elvis.views.user import  UserDetail, UserAccount, UserUpdate
 from elvis.views.movement import MovementList, MovementDetail
 from elvis.views.composer import ComposerList, ComposerDetail
@@ -58,6 +58,7 @@ urlpatterns += format_suffix_patterns(
         url(r'^pieces/upload/$', PieceCreate.as_view(), name="piece-create"),
         url(r'^pieces/$', PieceList.as_view(), name="piece-list"),
         url(r'^piece/(?P<pk>[0-9]+)/$', PieceDetail.as_view(), name="piece-detail"),
+        url(r'^piece/(?P<pk>[0-9]+)/update/$', PieceUpdate.as_view(), name="piece-update"),
 
         url(r'^collections/$', CollectionList.as_view(), name="collection-list"),
         url(r'^collection/(?P<pk>[0-9]+)/$', CollectionDetail.as_view(), name="collection-detail"),

@@ -6,10 +6,14 @@ import uuid
 import shutil
 import pytz
 import os
+import re
 
+from difflib import SequenceMatcher
 from django.http import HttpResponse
 from django.conf import settings
 from django.core.files.base import File
+from django.db.models import ObjectDoesNotExist
+
 from elvis.models import Attachment
 from elvis.models import Movement
 from elvis.models import Composer
@@ -20,12 +24,11 @@ from elvis.models import Source
 from elvis.models import Genre
 from elvis.models import InstrumentVoice
 from elvis.models import Tag
-from django.db.models import ObjectDoesNotExist
-from difflib import SequenceMatcher
-import unicodedata
+
 
 class Cleanup:
-    """Keep track of created objects during an attempt to create a new piece. """
+    """Keep track of created objects during an attempt to create a new
+    piece. """
 
     def __init__(self):
         self.list = []
@@ -33,14 +36,15 @@ class Cleanup:
     def cleanup(self):
         """Delete all models created to support piece-creation."""
         for x in self.list:
-            if x['new']:
-                x['model'].delete()
+            if x['isNew']:
+                x['object'].delete()
 
 
 def solr_suggest(request):
-    """Query solr suggester for typeahead suggestions based on the contents of the database.
-    :param request: Django request object with a 'q' parameter (the query) and a 'd' parameter (the name of the
-        suggestion dictionary to query).
+    """Query solr suggester for typeahead-style suggestions based on the
+    contents of the database.
+    :param request: Django request object with a 'q' parameter (the query)
+    and a 'd' parameter (the name of the suggestion dictionary to query).
     :return: json-formatted list of the suggestions.
     """
     results = []
@@ -49,23 +53,30 @@ def solr_suggest(request):
         value = request.GET['q']
         dictionary = request.GET['d']
         if len(value) > 1:
-            json_string = urllib2.urlopen(
-                settings.SOLR_SERVER + "/suggest/?wt=json&suggest.dictionary={0}&q={1}".format(dictionary, value))
+            url = settings.SOLR_SERVER + "/suggest/?wt=json&suggest.dictionary={0}&q={1}".format(
+                dictionary, value)
+            json_string = urllib2.urlopen(url)
             resp = json.loads(json_string.read())['suggest']['{0}'.format(dictionary)]
             data = resp[resp.keys()[0]]
             if data['numFound'] > 0:
-                sorted_suggestions = sorted(data['suggestions'], key=lambda s: SequenceMatcher(None, value, s['term']).ratio(), reverse=True)
-                for i in range(min(7,data['numFound'])):
+                sorted_suggestions = sorted(data['suggestions'],
+                                            key=lambda s: SequenceMatcher(None, value,
+                                                                          s['term']).ratio(),
+                                            reverse=True)
+                for i in range(min(7, data['numFound'])):
                     results.append({'name': sorted_suggestions[i]['term']})
     j_results = json.dumps(results)
     return HttpResponse(j_results, content_type="application/json")
 
 
 def upload_files(request, file_name, upload_path):
-    """Upload files to a temporary directory, unzip any .zip files along the way.
+    """Upload files to a temporary directory, unzip any .zip files along the
+    way.
     :param request: Django request object.
-    :param file_name: Name of the multi-file input field in request.FILES to upload from.
-    :param upload_path: The random filename in temp where the files will be uploaded.
+    :param file_name: Name of the multi-file input field in request.FILES to
+    upload from.
+    :param upload_path: The random filename in temp where the files will be
+    uploaded.
     :return: List of dicts describing uploaded files.
     """
 
@@ -78,26 +89,24 @@ def upload_files(request, file_name, upload_path):
 
     file_list = request.FILES.getlist(file_name)
 
-    i = 1
     for f in file_list:
         # If the file has an accepted extension, upload it.
         if not any(f.name.startswith(x) for x in settings.ELVIS_BAD_PREFIX) and any(
                 f.name.endswith(x) for x in settings.ELVIS_EXTENSIONS):
             new_name = f.name.replace('/', '-').encode('ascii', 'ignore')
             upload_file(f, os.path.join(upload_path, new_name))
-            files.append({'name': new_name,
-                          'uploader': request.user.username,
-                          'path': upload_path})
+            files.append(
+                {'name': new_name, 'uploader': request.user.username, 'path': upload_path})
 
-        # Or, if the file is a zip file, upload, extract good files, then delete the archive.
+        # Or, if the file is a zip file, upload, extract good files,
+        # then delete the archive.
         if f.name.endswith('.zip'):
             new_name = f.name.replace('/', '-').encode('ascii', 'ignore')
             upload_file(f, os.path.join(upload_path, new_name))
             try:
                 unzipped_files = unzip_file(upload_path, new_name)
                 for file_name in unzipped_files:
-                    files.append({'name': file_name,
-                                  'uploader': request.user.username,
+                    files.append({'name': file_name, 'uploader': request.user.username,
                                   'path': upload_path})
             except zipfile.BadZipfile:
                 files.append({'name': f.name, 'error': "Zip file could not be opened."})
@@ -115,12 +124,11 @@ def upload_file(mem_file, local_path):
             destination.write(chunk)
 
 
-def unzip_file(file_dir, file_name, **kwargs):
+def unzip_file(file_dir, file_name):
     """Unzip files with acceptable extensions to the archives directory.
     :param file_dir: Directory of the zip archive.
     :param file_name: Name of the zip archive.
-    :param kwargs: -delete_after: Deletes the archive after extraction.
-    :return:
+    :return: A list of files that have been created in file_dir
     """
     files = []
     zipped_file = zipfile.ZipFile(os.path.join(file_dir, file_name), 'r')
@@ -128,9 +136,9 @@ def unzip_file(file_dir, file_name, **kwargs):
 
     i = 1
     for f_name in file_contents:
-        if (not any(f_name.startswith(x) for x in settings.ELVIS_BAD_PREFIX) and
-                any(f_name.endswith(x) for x in settings.ELVIS_EXTENSIONS) and
-                not any(x in f_name for x in ('/', '\\'))):
+        if (not any(f_name.startswith(x) for x in settings.ELVIS_BAD_PREFIX) and any(
+                f_name.endswith(x) for x in settings.ELVIS_EXTENSIONS) and not any(
+                x in f_name for x in ('/', '\\'))):
             new_name = "{0}{1}.{2}".format("unzippedfile", str(i), f_name.rsplit('.')[-1])
             f = open(os.path.join(file_dir, new_name), 'wb+')
             f.write(zipped_file.open(f_name).read())
@@ -142,29 +150,32 @@ def unzip_file(file_dir, file_name, **kwargs):
     return files
 
 
-def handle_attachments(request, parent, cleanup, file_name, file_source):
+def handle_attachments(request, parent, cleanup, file_field, file_source):
     """Creates attachment objects for all files and links them with their parent
     :param request: Django request object.
     :param parent: The parent object to link attachments to.
     :param cleanup: Cleanup object.
-    :param file_name: Name of the multi-file input field in request.FILES to upload from.
+    :param file_field: Name of the multi-file input field in request.FILES to
+    upload from.
     :param file_source: The value for the source of the file.
     :return: List of attachment objects that are created.
     """
 
     upload_path = os.path.join(settings.MEDIA_ROOT, 'temp/', (uuid.uuid4().__str__() + '/'))
     results = []
-    files = upload_files(request, file_name, upload_path)
-    i = 1
+    files = upload_files(request, file_field, upload_path)
+    i = parent.attachments.all().count() + 1
     for f in files:
         att = Attachment()
         att.save()  # needed to create hash dir.
-        cleanup.list.append({"model": att, "new": True})
+        cleanup.list.append({"object": att, "isNew": True})
         att.uploader = request.user
+
         new_name = "{0}_{1}_{2}.{3}".format(unicodedata.normalize("NFKD", parent.title).encode('ascii', 'ignore').strip().replace(" ", "-"),
                                             unicodedata.normalize("NFKD", parent.composer.name).encode('ascii', 'ignore').strip().replace(" ", "-"),
                                             "file" + str(i),
                                             f['name'].rsplit('.')[-1])
+
         new_name = new_name.replace('/', '-').encode('ascii', 'ignore')
         os.rename(os.path.join(f['path'], f['name']), os.path.join(f['path'], new_name))
         with open(os.path.join(f['path'], new_name), 'r+') as dest:
@@ -184,11 +195,11 @@ def handle_attachments(request, parent, cleanup, file_name, file_source):
     return results
 
 
-def handle_dynamic_file_table(request, parent, table_name, cleanup=Cleanup()):
-    """Upload all files and create all objects and relationships in a dynamic file table.
+def handle_dynamic_file_table(request, parent, cleanup=Cleanup()):
+    """Upload all files and create all objects and relationships in a
+    dynamic file table.
     :param request: Django request object.
     :param parent: The parent object to link movements/files to.
-    :param table_name: The name of the dynamic table in the page template.
     :param cleanup: Cleanup object.
     :return: List of all objects created.
     """
@@ -196,31 +207,33 @@ def handle_dynamic_file_table(request, parent, table_name, cleanup=Cleanup()):
     attachments = []
     files = {}
     for item in request.POST:
-        if item.startswith(table_name + "_title_") and request.POST[item]:
+        if item.startswith("mov_title_") and request.POST[item]:
             file_name = request.POST[item]
-            file_num = item[(len(table_name) + 7):]
+            file_num = int(re.findall(r'\d+', item)[0])
             files[file_num] = file_name
 
     keys = files.keys()
     keys.sort()
+
+    # Renumber existing movements before adding more.
     i = 1
+    for mov in parent.movements.all():
+        mov.position = i
+        mov.save()
+        i += 1
 
     # Creating movements, then attaching files to them.
     for k in keys:
-        mov_instrumentation_string = request.POST.get('mov' + k + "_instrumentation")
-        mov_number_of_voices_string = request.POST.get('mov' + k + "_number_of_voices")
-        mov_free_tags_string = request.POST.get('mov' + k + "_free_tags")
-        mov_vocalization = request.POST.get('mov' + k + "_vocalization")
-        mov_comment = request.POST.get('mov' + k + "_comment")
-        mov_comment = request.POST.get('mov' + k + "_comment")
-        new_mov = Movement(title=files[k],
-                           position=i,
+        mov_instrumentation_string = request.POST.get('mov' + str(k) + "_instrumentation")
+        mov_number_of_voices_string = request.POST.get('mov' + str(k) + "_number_of_voices")
+        mov_free_tags_string = request.POST.get('mov' + str(k) + "_free_tags")
+        mov_vocalization = request.POST.get('mov' + str(k) + "_vocalization")
+        mov_comment = request.POST.get('mov' + str(k) + "_comment")
+        new_mov = Movement(title=files[k], position=i,
                            date_of_composition=parent.date_of_composition,
                            date_of_composition2=parent.date_of_composition2,
-                           uploader=parent.uploader,
-                           religiosity=parent.religiosity,
-                           composer=parent.composer,
-                           piece=parent)
+                           uploader=parent.uploader, religiosity=parent.religiosity,
+                           composer=parent.composer, piece=parent)
         new_mov.save()
         for language in parent.languages.all():
             new_mov.languages.add(language)
@@ -234,7 +247,8 @@ def handle_dynamic_file_table(request, parent, table_name, cleanup=Cleanup()):
             new_mov.collections.add(collection)
 
         if mov_instrumentation_string:
-            mov_instrumentation = abstract_model_factory(mov_instrumentation_string, "InstrumentVoice", cleanup)
+            mov_instrumentation = abstract_model_factory(mov_instrumentation_string,
+                                                         "InstrumentVoice", cleanup)
             for x in mov_instrumentation:
                 new_mov.instruments_voices.add(x)
         else:
@@ -263,172 +277,202 @@ def handle_dynamic_file_table(request, parent, table_name, cleanup=Cleanup()):
             new_mov.comment = mov_comment
 
         file_keys = [x for x in request.POST.keys() if x.startswith('files_parent_')]
-        file_numbers = [x.split('files_parent_')[-1] for x in file_keys if request.POST.get(x) == 'mov_title_' + k]
+        file_numbers = [x.split('files_parent_')[-1] for x in file_keys if
+                        request.POST.get(x) == 'mov_title_' +str(k)]
         for num in file_numbers:
-            attachments.extend(handle_attachments(request, new_mov, cleanup, "files_files_" + num, request.POST.get('files_source_' + num)))
+            attachments.extend(handle_attachments(request, new_mov, cleanup, "files_files_" + num,
+                                                  request.POST.get('files_source_' + num)))
             request.POST.pop('files_source_' + num)
             request.POST.pop('files_parent_' + num)
             request.FILES.pop('files_files_' + num)
-        request.POST.pop('mov_title_' + k)
+        request.POST.pop('mov_title_' +str(k))
 
-        cleanup.list.append({"model": new_mov, "new": True})
+        cleanup.list.append({"object": new_mov, "isNew": True})
         new_mov.save()
         results.append(new_mov)
         i += 1
 
-    # Attaching files to piece.
-    file_numbers = [x.split('files_parent_')[-1] for x in request.POST.keys() if request.POST.get(x) == 'piece']
-    for num in file_numbers:
-        attachments.extend(handle_attachments(request, parent, cleanup, "files_files_" + num, request.POST.get('files_source_' + num)))
+    # Attaching other files.
+    file_numbers = [x for x in request.POST.keys() if x.startswith('files_parent_')]
+    for postfile in file_numbers:
+        if request.POST.get(postfile) == 'piece':
+            # This attaches files to the piece itself - is pretty
+            # straightforward.
+            num = postfile.split('files_parent_')[-1]
+            attachments.extend(handle_attachments(request, parent, cleanup, "files_files_" + num,
+                                                  request.POST.get('files_source_' + num)))
+        else:
+            """
+            This attaches new files to an existing movement and is *very* hacky.
+            It finds the html-id of the row of the movement table it is
+            attached to (request.POST.get(postfile)), then parses
+            the number of that movement-id, then attaches to the [n-1]'th
+            movement of the piece.
+            This works because:
+                ->The id's assigned to movements rows by javascript go from
+                    1-[piece.attachments.length+1]
+                ->The ordering on the frontend is based on the ordering in the backend
+                ->It is impossible to insert a new movement between existing
+                    movements: the movement table works like a stack.
+                ->Even if an existing movement is to be deleted (therby throwing off the count),
+                    the deletion step will occour *after* this step.
+            By the above logic, the [n-1]'th movement in the table on the
+            frontend will be the n'th movement on the backend - so this works.
+            """
+            movnum = int(re.findall(r'\d+', request.POST.get(postfile))[0])
+            mov = parent.movements.all()[movnum - 1]
+            num = postfile.split('files_parent_')[-1]
+            mov.save()
+            attachments.extend(handle_attachments(request, mov, cleanup, "files_files_" + num,
+                                                  request.POST.get('files_source_' + num)))
+
     parent.save()
     results.extend(attachments)
     return results
 
 
-def abstract_model_factory(model_name, model_type, cleanup=Cleanup(), **kwargs):
+def abstract_model_factory(object_name, object_type, cleanup=Cleanup(), **kwargs):
     """Find or create models from user-inputted text.
-    :param model_name: Name or list of names of models to be found/created.
-    :param model_type: Type of model(s) to find/create.
+    :param object_name: Name or list of names of models to be found/created.
+    :param object_type: Type of model(s) to find/create.
     :param cleanup: Cleanup object.
-    :param kwargs:  -birth_date: Birth date for composer objects.
-                    -death_date: Death date for composer objects.
-                    -is_public: Boolean for collections.
-                    -creator: Django user for objects that require a creator.
-    :return: A list of dicts where l[index]['model'] = The model itself and l[index]['new'] = a bool saying whether the
-            model was newly created or not.
+    kwargs:
+        birth_date: Birth date for composer objects.
+        death_date: Death date for composer objects.
+        creator: Django user for objects that require a creator.
+    :return: A list of dicts of the form [{object: x, isNew: y}], where
+        object is the object created, and isNew describes if it was created (True)
+        or found (False)
+
+    where l[index]['model'] = The model itself and
+    l[index]['new'] = a bool saying whether the model was newly created or not.
     """
-    if model_type == "Composer":
+    if object_type == "Composer":
         composer_list = []
         try:
-            composer = Composer.objects.get(name=model_name)
-            cleanup.list.append({"model": composer, "new": False})
+            composer = Composer.objects.get(name=object_name)
+            cleanup.list.append({"object": composer, "isNew": False})
         except ObjectDoesNotExist:
-            composer = Composer(name=model_name,
-                                birth_date=kwargs.get('birth_date'),
-                                death_date=kwargs.get('death_date'),
+            composer = Composer(name=object_name, birth_date=kwargs.pop('birth_date'),
+                                death_date=kwargs.pop('death_date'),
                                 created=datetime.datetime.now(pytz.utc),
                                 updated=datetime.datetime.now(pytz.utc))
             composer.save()
-            cleanup.list.append({"model": composer, "new": True})
+            cleanup.list.append({"object": composer, "isNew": True})
 
         composer_list.append(composer)
         return composer_list
 
-    elif model_type == "Collection":
-        tokenized_inputs = map((lambda x: x.strip()), model_name.rsplit(";"))
+    elif object_type == "Collection":
+        tokenized_inputs = map((lambda x: x.strip()), object_name.rsplit(";"))
         collection_list = []
         for token in tokenized_inputs:
             if token != "":
                 try:
                     collection = Collection.objects.get(title=token)
-                    cleanup.list.append({"model": collection, "new": False})
+                    cleanup.list.append({"object": collection, "isNew": False})
                 except ObjectDoesNotExist:
-                    collection = Collection(title=token,
-                                            public=kwargs.get('is_public'),
+                    collection = Collection(title=token, public=True,
                                             creator=kwargs.get('creator'),
                                             created=datetime.datetime.now(pytz.utc),
                                             updated=datetime.datetime.now(pytz.utc))
                     collection.save()
-                    cleanup.list.append({"model": collection, "new": True})
+                    cleanup.list.append({"object": collection, "isNew": True})
                 collection_list.append(collection)
         return collection_list
 
-    elif model_type == "Language":
-        tokenized_inputs = map((lambda x: x.strip()), model_name.rsplit(";"))
+    elif object_type == "Language":
+        tokenized_inputs = map((lambda x: x.strip()), object_name.rsplit(";"))
         language_list = []
         for token in tokenized_inputs:
             if token != "":
                 try:
                     language = Language.objects.get(name=token)
-                    cleanup.list.append({"model": language, "new": False})
+                    cleanup.list.append({"object": language, "isNew": False})
                 except ObjectDoesNotExist:
-                    language = Language(name=token,
-                                        created=datetime.datetime.now(pytz.utc),
+                    language = Language(name=token, created=datetime.datetime.now(pytz.utc),
                                         updated=datetime.datetime.now(pytz.utc))
                     language.save()
-                    cleanup.list.append({"model": language, "new": True})
+                    cleanup.list.append({"object": language, "isNew": True})
                 language_list.append(language)
         return language_list
 
-    elif model_type == "Genre":
-        tokenized_inputs = map((lambda x: x.strip()), model_name.rsplit(";"))
+    elif object_type == "Genre":
+        tokenized_inputs = map((lambda x: x.strip()), object_name.rsplit(";"))
         genre_list = []
         for token in tokenized_inputs:
             if token != "":
                 try:
                     genre = Genre.objects.get(name=token)
-                    cleanup.list.append({"model": genre, "new": False})
+                    cleanup.list.append({"object": genre, "isNew": False})
                 except ObjectDoesNotExist:
-                    genre = Genre(name=token,
-                                  created=datetime.datetime.now(pytz.utc),
+                    genre = Genre(name=token, created=datetime.datetime.now(pytz.utc),
                                   updated=datetime.datetime.now(pytz.utc))
                     genre.save()
-                    cleanup.list.append({"model": genre, "new": True})
+                    cleanup.list.append({"object": genre, "isNew": True})
                 genre_list.append(genre)
         return genre_list
 
-    elif model_type == "Location":
-        tokenized_inputs = map((lambda x: x.strip()), model_name.rsplit(";"))
+    elif object_type == "Location":
+        tokenized_inputs = map((lambda x: x.strip()), object_name.rsplit(";"))
         location_list = []
         for token in tokenized_inputs:
             if token != "":
                 try:
                     location = Location.objects.get(name=token)
-                    cleanup.list.append({"model": location, "new": False})
+                    cleanup.list.append({"object": location, "isNew": False})
                 except ObjectDoesNotExist:
-                    location = Location(name=token,
-                                        created=datetime.datetime.now(pytz.utc),
+                    location = Location(name=token, created=datetime.datetime.now(pytz.utc),
                                         updated=datetime.datetime.now(pytz.utc))
                     location.save()
-                    cleanup.list.append({"model": location, "new": True})
+                    cleanup.list.append({"object": location, "isNew": True})
                 location_list.append(location)
         return location_list
 
-    elif model_type == "Source":
-        tokenized_inputs = map((lambda x: x.strip()), model_name.rsplit(";"))
+    elif object_type == "Source":
+        tokenized_inputs = map((lambda x: x.strip()), object_name.rsplit(";"))
         source_list = []
         for token in tokenized_inputs:
             if token != "":
                 try:
                     source = Source.objects.get(name=token)
-                    cleanup.list.append({"model": source, "new": False})
+                    cleanup.list.append({"object": source, "isNew": False})
                 except ObjectDoesNotExist:
-                    source = Source(name=token,
-                                    created=datetime.datetime.now(pytz.utc),
+                    source = Source(name=token, created=datetime.datetime.now(pytz.utc),
                                     updated=datetime.datetime.now(pytz.utc))
                     source.save()
-                    cleanup.list.append({"model": source, "new": True})
+                    cleanup.list.append({"object": source, "isNew": True})
                 source_list.append(source)
         return source_list
 
-    elif model_type == "InstrumentVoice":
-        tokenized_inputs = map((lambda x: x.strip()), model_name.rsplit(";"))
+    elif object_type == "InstrumentVoice":
+        tokenized_inputs = map((lambda x: x.strip()), object_name.rsplit(";"))
         instrument_list = []
         for token in tokenized_inputs:
             if token != "":
                 try:
                     instrument = InstrumentVoice.objects.get(name=token)
-                    cleanup.list.append({"model": instrument, "new": False})
+                    cleanup.list.append({"object": instrument, "isNew": False})
                 except ObjectDoesNotExist:
                     instrument = InstrumentVoice(name=token,
                                                  created=datetime.datetime.now(pytz.utc),
                                                  updated=datetime.datetime.now(pytz.utc))
                     instrument.save()
-                    cleanup.list.append({"model": instrument, "new": True})
+                    cleanup.list.append({"object": instrument, "isNew": True})
                 instrument_list.append(instrument)
         return instrument_list
 
-    elif model_type == "Tag":
-        tokenized_inputs = map((lambda x: x.strip()), model_name.rsplit(";"))
+    elif object_type == "Tag":
+        tokenized_inputs = map((lambda x: x.strip()), object_name.rsplit(";"))
         tag_list = []
         for token in tokenized_inputs:
             if token != "":
                 try:
                     tag = Tag.objects.get(name=token)
-                    cleanup.list.append({"model": tag, "new": False})
+                    cleanup.list.append({"object": tag, "isNew": False})
                 except ObjectDoesNotExist:
                     tag = Tag(name=token)
                     tag.save()
-                    cleanup.list.append({"model": tag, "new": True})
+                    cleanup.list.append({"object": tag, "isNew": True})
                 tag_list.append(tag)
         return tag_list
