@@ -322,8 +322,6 @@ def update(request, *args, **kwargs):
                 if item.get('parent') == "piece":
                     att.movements.clear()
                     att.pieces.clear()
-                    import pdb
-                    pdb.set_trace
                     att.pieces.add(piece)
                     att.save()
                 else:
@@ -338,6 +336,110 @@ def update(request, *args, **kwargs):
             if item.get('source'):
                 att.source = item.get('source')
                 att.save()
+    modify_piece = [x for x in change['modify'] if x['type'] == "F"]
+    if modify_piece:
+        for item in modify_piece:
+            id = item.get('id')
+            if id == "title":
+                piece.title = item.get('value')
+                continue
+            if id == "composer":
+                try:
+                    composer_list = abstract_model_factory(item.get('value'),
+                                           "Composer", clean)
+                    composer = composer_list[0]
+                    piece.composer = composer
+                    continue
+                except:
+                    clean.cleanup()
+                    raise
+            if id == "collections":
+                try:
+                    collection_list = abstract_model_factory(
+                        item.get('value'), "Collection", clean,
+                        is_public=True, creator=request.user)
+                    for x in collection_list:
+                        piece.collections.add(x)
+                    continue
+                except:
+                    clean.cleanup()
+                    raise
+            if id == "languages":
+                try:
+                    language_list = abstract_model_factory(
+                        item.get('value'), "Language", clean)
+                    piece.languages.clear()
+                    for x in language_list:
+                        piece.languages.add(x)
+                    continue
+                except:
+                    clean.cleanup()
+                    raise
+            if id == "locations":
+                try:
+                    location_list = abstract_model_factory(
+                        item.get('value'), "Location", clean)
+                    piece.locations.clear()
+                    for x in location_list:
+                        piece.locations.add(x)
+                    continue
+                except:
+                    clean.cleanup()
+                    raise
+            if id == "sources":
+                try:
+                    source_list = abstract_model_factory(
+                        item.get('value'), "Source", clean)
+                    piece.sources.clear()
+                    for x in source_list:
+                        piece.sources.add(x)
+                    continue
+                except:
+                    clean.cleanup()
+                    raise
+            if id == "tags":
+                try:
+                    tag_list = abstract_model_factory(
+                        item.get('value'), "Tag", clean)
+                    piece.tags.clear()
+                    for x in tag_list:
+                        piece.tags.add(x)
+                    continue
+                except:
+                    clean.cleanup()
+                    raise
+            if id == "genres":
+                try:
+                    genre_list = abstract_model_factory(
+                        item.get('value'), "Genre", clean)
+                    piece.genres.clear()
+                    for x in genre_list:
+                        piece.genres.add(x)
+                    continue
+                except:
+                    clean.cleanup()
+                    raise
+            if id == "instruments_voices":
+                try:
+                    ins_list = abstract_model_factory(
+                        item.get('value'), "InstrumentVoice", clean)
+                    piece.instruments_voices.clear()
+                    for x in ins_list:
+                        piece.instruments_voices.add(x)
+                    continue
+                except:
+                    clean.cleanup()
+                    raise
+            if id == "number_of_voices":
+                piece.number_of_voices = int(item.get('value'))
+                continue
+            if id == "date_of_composition":
+                piece.date_of_composition = int(item.get('value'))
+            if id == "date_of_composition2":
+                piece.date_of_composition2 = int(item.get('value'))
+            if id == "comment":
+                piece.comment = item.get('value')
+    piece.save()
 
     if change.get('delete'):
         delete_movements = [x for x in change['delete'] if x['type'] == "M"]
