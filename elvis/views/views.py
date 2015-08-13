@@ -7,6 +7,7 @@ import shutil
 import pytz
 import os
 import re
+import unicodedata
 
 from difflib import SequenceMatcher
 from django.http import HttpResponse
