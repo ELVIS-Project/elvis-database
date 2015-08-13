@@ -37,7 +37,7 @@
             <span class="pull-right">
                 {% if user.id == content.uploader.pk or user.is_superuser %}
                     <button type="button" class="btn btn-default" id="delete-button">Delete</button>
-                    <button type="button" class="btn btn-default disabled" id="update-button">Update</button>
+                    <a href="{{ content.url }}update/" class="btn btn-default" id="update-button">Update</a>
                 {% endif %}
                 {% include "includes/download-button-inc.html" with download_type="elvis_piece" download_item_id=content.item_id title="Add to Downloads" in_cart=content.in_cart %}
 
