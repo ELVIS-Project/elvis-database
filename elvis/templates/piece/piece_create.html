@@ -32,8 +32,19 @@
             autocomplete("sources", "source_suggestion_menu", "sourceSuggest", 'list');
             autocomplete("instruments_voices", "instrumentation_suggestion_menu", "instrumentSuggest", 'list');
             autocomplete("tags", "tags_suggestion_menu", "tagSuggest", 'list');
-            dynamicFileTable("new_mov", "movement_table", "mov", true);
-            dynamicFileTable("new_piece_file", "piece_file_table", "files", false);
+
+            var mov_table = $("#movement_table");
+            mov_table.dynamicTable({
+                button: $("#new_mov"),
+                table_name: "mov",
+                movement: true
+            }).dynamicTable('addRow');
+
+            var file_table = $("#piece_file_table");
+            file_table.dynamicTable({
+                button: $("#new_piece_file"),
+                table_name: "files"
+            }).dynamicTable('addRow');
 
             $('[data-toggle="popover"]').popover();
 
@@ -97,16 +108,15 @@
             });
 
 
-            // Logic for form validation and submission, as well as the modal which appears on submission.,
-            var upload_modal_clone = $('#upload_modal').clone();
-
+            // Logic for form validation and submission, as well as the modal which appears on submission.
             $("#new-piece-form").submit(function (event)
             {
-                var $upload_modal = $('#upload_modal');
-
                 event.preventDefault();
-                $upload_modal.replaceWith(upload_modal_clone.clone());
-                $upload_modal.modal('show');
+                $base_modal_header.html("<h4 class='modal-title'>Creating Piece...</h4>");
+                $base_modal_body.html("<div class='progress'>" +
+                        "<div class='progress-bar progress-bar-striped active' role='progressbar' style='width: 100%'></div> " +
+                        "</div>");
+                $base_modal.modal('show');
 
                 $.ajax({
                     type: "post",
@@ -118,10 +128,10 @@
                     {
                         if (data['errors'] === undefined)
                         {
-                            $upload_modal.find('.modal-title').html("Done!");
-                            $upload_modal.find('.modal-footer').html("<a href='/pieces/create/' class='btn btn-default pull-left'>Upload Another Piece</a>" +
+                            $base_modal_header.html("<h4 class='modal-title'>Done!</h4>");
+                            $base_modal_body.html("<p>Piece succesfuly updated!</p>");
+                            $base_modal_footer.html('.modal-footer').html( " <button type='button' class='btn btn-default' data-dismiss='modal'>Close</button>" +
                                     "<a href='" + data['url'] + "' class='btn btn-default' id='goto-piece'>Go to Piece</a>");
-                            $upload_modal.find('.progress-bar').removeClass("progress-bar-striped active");
                         }
                         else
                         {
@@ -145,10 +155,9 @@
                                 $("#" + key + "_error").html("<b style='color:red'>" + data['errors'][key][0] + "</b>");
                                 errors = errors + "<strong>" + (key.charAt(0).toUpperCase() + key.slice(1)).replace(/_/g, ' ') + "</strong>: " + data['errors'][key][0] + "<br>"
                             }
-                            $upload_modal.find('.modal-title').html("Form Error");
-                            $upload_modal.find('.progress').hide();
-                            $upload_modal.find('.modal-body').prepend("Your submission has the following errors: <br>" + errors);
-                            $upload_modal.find('.modal-footer').html("<button class='btn btn-default' id='close_modal'>Close</button>");
+                            $base_modal_header.html("<h4 class='modal-title'>Form Error<h4>");
+                            $base_modal_body.html("<p>Your submission has the following errors: <br>" + errors + "</p>");
+                            $base_modal_footer.html("<button type='button' class='btn btn-default' data-dismiss='modal'>Close</button>");
                         }
 
 
@@ -159,11 +168,10 @@
                     },
                     error: function(data)
                     {
-                        $upload_modal.find('.modal-title').html("Server Error!");
-                        $upload_modal.find('.progress').hide();
-                        $upload_modal.find('.modal-body').prepend("An error occurred while uploading your file. Please try again, or, if the error persists, " +
-                                "<a href='mailto:elvisdatabase@gmail.com?Subject=Upload%20Error'>contact us</a>");
-
+                        $base_modal_header.html("<h4 class='modal-title'>Server Error<h4>");
+                        $base_modal_body.html("<p>An error occurred while uploading your file. Please try again, or, if the error persists, " +
+                                "<a href='mailto:elvisdatabase@gmail.com?Subject=Upload%20Error'>contact us</a></p>");
+                        $base_modal_footer.html("<button type='button' class='btn btn-default' data-dismiss='modal'>Close</button>");
                     }
                 })
             });
@@ -199,32 +207,10 @@
 
 {% block wrap %}
 
-    <!-- Modal -->
-    <div class="modal fade" id="upload_modal" tabindex="-1" role="dialog"
-         aria-hidden="true">
-        <div class="modal-dialog">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h4 class="modal-title">Creating Piece</h4>
-                </div>
-                <div class="modal-body">
-                    <div class="progress">
-                        <div class="progress-bar progress-bar-striped active" role="progressbar" aria-valuenow="100"
-                             aria-valuemin="0" aria-valuemax="100" style="width: 100%">
-                            <span class="sr-only">100% Complete</span>
-                        </div>
-                    </div>
-                </div>
-                <div class="modal-footer">
 
-                </div>
-            </div>
-        </div>
-    </div>
-
-    <div class="page-header">
-        <h2>Upload a Piece</h2>
-    </div>
+<div class="page-header">
+    <h2>Upload a Piece</h2>
+</div>
 <div id="upload-page-content">
     <form action="/pieces/" method="post" id="new-piece-form" enctype="multipart/form-data">{% csrf_token %}
             <span class="help-block">
