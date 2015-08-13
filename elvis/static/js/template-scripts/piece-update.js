@@ -326,17 +326,18 @@ $(document).ready(function ($)
         var $religButtons = $("#religiosity");
         for (var i = 0; i < 3; i++)
         {
-            if ($religButtons.children()[i].innerText == oldPiece['religiosity'])
+
+            if ($religButtons.children()[i].children[0].value === oldPiece['religiosity'])
             {
                 $religButtons.children()[i].className += " active ";
                 $($religButtons.children()[i].children[0]).prop("checked", "true");
                 break;
             }
         }
-        var $vocalButtons = $("#vocalization");
+                var $vocalButtons = $("#vocalization");
         for (var i = 0; i < 3; i++)
         {
-            if ($vocalButtons.children()[i].innerText == oldPiece['vocalization'])
+            if ($vocalButtons.children()[i].children[0].value === oldPiece['vocalization'])
             {
                 $vocalButtons.children()[i].className += " active ";
                 $($vocalButtons.children()[i].children[0]).prop("checked", "true");
@@ -381,7 +382,7 @@ $(document).ready(function ($)
             var $vocalization = mov_table.find("#_existingmov" + (i + 1) + "_vocalization");
             for (var j = 0; j < 3; j++)
             {
-                if ($vocalization.children()[j].innerText === oldPiece['movements'][i]['vocalization'])
+                if ($vocalization.children()[j].children[0].value === oldPiece['movements'][i]['vocalization'])
                 {
                     $vocalization.children()[j].className += " active ";
                     $($vocalization.children()[j].children[0]).prop("checked", "true");
@@ -507,7 +508,7 @@ $(document).ready(function ($)
         {
             if ($religButtons.children()[i].className.indexOf("active") !== -1)
             {
-                if ($religButtons.children()[i].innerText == oldPiece['religiosity'])
+                if ($religButtons.children()[i].children[0].value == oldPiece['religiosity'])
                 {
                     break
                 }
@@ -515,7 +516,7 @@ $(document).ready(function ($)
                 {
                     changes['modify'].push({
                         type: 'F', id: 'religiosity',
-                        value: $religButtons.children()[i].innerText
+                        value: $religButtons.children()[i].children[0].value
                     })
                 }
             }
@@ -525,7 +526,7 @@ $(document).ready(function ($)
         {
             if ($vocalButtons.children()[i].className.indexOf("active") !== -1)
             {
-                if ($vocalButtons.children()[i].innerText == oldPiece['vocalization'])
+                if ($vocalButtons.children()[i].children[0].value == oldPiece['vocalization'])
                 {
                     break
                 }
@@ -533,7 +534,7 @@ $(document).ready(function ($)
                 {
                     changes['modify'].push({
                         type: 'F', id: 'vocalization',
-                        value: $vocalButtons.children()[i].innerText
+                        value: $vocalButtons.children()[i].children[0].value
                     })
                 }
             }
