@@ -75,17 +75,22 @@
                 }
             });
 
-            $(window).on('beforeunload', function (event)
+            $(":input").on('input', function()
             {
-                if (event['target']['activeElement']['id'] === 'goto-piece')
+                $(window).on('beforeunload', function (event)
                 {
-                    $(window).off('beforeunload');
-                }
-                else
-                {
-                    return 'Leaving this page will clear your form.'
-                }
+                    if (event['target']['activeElement']['id'] === 'goto-piece')
+                    {
+                        $(window).off('beforeunload');
+                    }
+                    else
+                    {
+                        return 'Leaving this page will clear your form.'
+                    }
+                });
+                $(":input").off('input')
             });
+
 
             //Disable default behaviour for hitting 'enter' for all inputs except the comment.
             $('input:not(#comment)').on("keydown", function (event)
