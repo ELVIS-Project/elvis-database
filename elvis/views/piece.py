@@ -245,13 +245,13 @@ def update(request, *args, **kwargs):
                 break
             att = att[0]
             if item.get('parent'):
-                if item.get('parent') == "piece":
+                if item.get('newParentTitle') == "Attach to Piece":
                     att.movements.clear()
                     att.pieces.clear()
                     att.pieces.add(piece)
                     att.save()
                 else:
-                    mov = piece.movements.filter(title=item['newParent'])
+                    mov = piece.movements.filter(title=item['newParentTitle'])
                     if not mov:
                         break
                     mov = mov[0]
