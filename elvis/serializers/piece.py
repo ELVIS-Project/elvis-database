@@ -98,7 +98,7 @@ class MovementPieceSerializer(serializers.HyperlinkedModelSerializer):
     class Meta:
         model = Movement
         fields = ('url', 'item_id', 'title', 'instruments_voices', 'tags',
-                  'number_of_voices', 'comment', 'attachments')
+                  'number_of_voices', 'comment', 'attachments', 'vocalization')
 
 
 class PieceSerializer(serializers.HyperlinkedModelSerializer):
