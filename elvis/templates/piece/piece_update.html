@@ -7,8 +7,7 @@
 
     {% load staticfiles %}
     <script type='text/javascript' src="{% static "js/elvis-scripts/autocomplete.js" %}"></script>
-
-    <script type='text/javascript' src="{% static "js/elvis-scripts/filetable2.js" %}"></script>
+    <script type='text/javascript' src="{% static "js/elvis-scripts/dynamicFileTable.js" %}"></script>
     <script type='text/javascript' src="{% static "bootstrap/plugins/bootstrap-filestyle.js" %}"></script>
     <script type='text/javascript' src="{% static "js/bootstrap-select.min.js" %}"></script>
     <link href="{% static "css/bootstrap-select.css" %}" rel="stylesheet" media="screen"/>
@@ -29,6 +28,7 @@
             var changes = {};
             changes['modify'] = [];
             changes['delete'] = [];
+            changes['add'] = [];
 
             autocomplete("title", "title_suggestion_menu", "pieceSuggest");
             autocomplete("composer", "composer_suggestion_menu", "composerSuggest");
@@ -54,8 +54,8 @@
             });
 
             fillUpdateForm();
-
             $('[data-toggle="popover"]').popover();
+
 
             // The dropdown form for additional composer information.
             var $newComposerMenu = $("#composer-create-new-menu");
@@ -116,158 +116,106 @@
                 }
             });
 
+            $("#piece-submit").click(function()
+            {
+                findChanges();
+                if (changes['delete'].length > 0 || changes['add'].length > 0 ||changes['modify'].length > 0 )
+                {
+                    var body_string = "";
+                    if (changes['delete'].length > 0)
+                    {
+                        var deletion_string = "<h4>Delete</h4><ul>";
+                        for (var i = 0; i < changes['delete'].length; i++)
+                        {
+                            var item = changes['delete'][i];
+                            if (item['type'] === 'A')
+                            {
+                                deletion_string += "<li>Delete file <em>" + item['name'] + "</em> attached to <strong>" + item['parent'] + "</strong>.</li>"
+                            }
+                            else
+                            {
+                                deletion_string += "<li>Delete movement <strong>" + item['name'] + "</strong>.</li>"
+                            }
+                        }
+                        deletion_string += "</ul>";
+                        body_string += deletion_string;
+                    }
+                    if (changes['add'].length > 0)
+                    {
+                        var addition_string = "<h4>Add</h4><ul>";
+                        for (var i = 0; i < changes['add'].length; i++)
+                        {
+                            var item = changes['add'][i];
+                            if (item['type'] === 'A')
+                            {
+                                addition_string += "<li>Add file <em>" + item['name'] + "</em> attached to <strong>" + item['parent'] + "</strong>.</li>"
+                            }
+                            else
+                            {
+                                addition_string += "<li>Add movement <strong>" + item['name'] + "</strong> to <strong>{{ content.title }}</strong></li>"
+                            }
+                        }
+                        addition_string += "</ul>";
+                        body_string += addition_string;
+                    }
+                    if (changes['modify'].length > 0)
+                    {
+                        var isObjectFound = false;
+                        var modify_string = "<h4>Moving</h4><ul>";
+                        for (var i = 0; i < changes['modify'].length; i++)
+                        {
+                            var item = changes['modify'][i];
+                            if (item['type'] === 'A')
+                            {
+                                isObjectFound = true;
+                                modify_string += "<li>Moving file <em>" + item['name'] + "</em> from <strong>" + item['oldParent'] + "</strong> to <strong>" + item['newParentTitle'] + "</strong>.</li>"
+                            }
+                        }
+                        modify_string += "</ul>";
+                        if (isObjectFound)
+                        {
+                            body_string += modify_string;
+                        }
+                    }
+
+                    if (body_string !== "")
+                    {
+                        $base_modal_header.html("<h4 class='modal-title'>Confirm Database Changes</h4>");
+                        $base_modal_body.html(body_string);
+                        $base_modal_footer.html('.modal-footer').html("<button type='button' class='btn btn-default' id='restart-button'>Restart</button>" +
+                                "<button class='btn btn-default' id='confirm-changes'>Looks good!</a>");
+                        $base_modal.modal('show');
+                        $("#restart-button").click(function ()
+                        {
+                            location.reload();
+                        });
+                        $("#confirm-changes").click(function ()
+                        {
+                            $("#new-piece-form").submit();
+                        })
+                    }
+                    else
+                    {
+                        $("#new-piece-form").submit();
+                    }
+                }
+                else
+                {
+                    $("#new-piece-form").submit();
+                }
+
+            });
 
             // Logic for form validation and submission, as well as the modal which appears on submission.,
-            var upload_modal_clone = $('#upload_modal').clone();
-
             $("#new-piece-form").submit(function (event)
             {
                 event.preventDefault();
-
-                var $upload_modal = $('#upload_modal');
-
-                $upload_modal.replaceWith(upload_modal_clone.clone());
-                $upload_modal.modal('show');
-
-                // Compare text and number fields to their previous values, save
-                // changes in the changes dict.
-                var $inputs = $(".upload-input-field");
-                for (var i = 0; i < $inputs.length; i++)
-                {
-                    var id = $inputs[i].getAttribute('id');
-                    if (id === "composition_start_date")
-                        var id2 = "date_of_composition";
-                    else if (id === "composition_end_date")
-                        id2 = "date_of_composition2";
-                    else
-                        id2 = id;
-                    if ($("#" + id).val() != oldPiece[id2])
-                    {
-                        if (id === "comment" && $("#" + id).val() === "" && oldPiece[id2] === null)
-                            continue;
-                        //A text field from the top of the form doesnt match the previous value.
-                        changes['modify'].push({
-                            type: 'F',
-                            id: id2,
-                            value: $("#" + id).val()
-                        });
-                    }
-                }
-
-                // Find changed movements, record their changes.
-                var $existing_movements = mov_table.children('[id^=_existingmov]');
-                for (var i = 0; i < $existing_movements.length; i += 2)
-                {
-                    // Get info from form
-                    var modifications = {};
-                    var oldMov = null;
-                    var fields = [];
-                    var $titleRow = $($existing_movements[i]);
-                    var $advancedRow = $($existing_movements[i + 1]);
-                    var id = parseInt($titleRow[0].getAttribute('name'));
-                    fields.push(['title', $titleRow.find("[id^=_existingmov_title_]")[0].value]);
-                    fields.push(['instruments_voices', $advancedRow.find("[id$=_instrumentation]")[0].value]);
-                    fields.push(['tags', $advancedRow.find("[id$=_free_tags]")[0].value]);
-                    fields.push(['number_of_voices', $advancedRow.find("[id$=_number_of_voices]")[0].value]);
-                    fields.push(['comment', $advancedRow.find("[id$=_comment]")[0].value]);
-                    var selected_vocal = $($advancedRow.find("[id$=_vocalization]")[0]).children(".active")[0];
-                    if (selected_vocal)
-                        fields.push(['vocalization', selected_vocal.children[0].value]);
-
-                    // Get old movement info
-                    for (var j = 0; j < oldPiece['movements'].length; j++)
-                    {
-                        if (oldPiece['movements'][j]['item_id'] === id)
-                        {
-                            oldMov = oldPiece['movements'][j];
-                            break
-                        }
-                    }
-
-                    //Compare the two and add changed values to changes.
-                    var key = 0;
-                    var value = 1;
-                    for (var j = 0; j < fields.length; j++)
-                    {
-                        if (oldMov[fields[j][key]] != fields[j][value])
-                        {
-                            if (fields[j][key] === "comment" && fields[j][value] === "" && oldMov[fields[j][key]] === null)
-                                continue;
-                            modifications[fields[j][key]] = fields[j][value]
-                        }
-                    }
-                    if (!$.isEmptyObject(modifications))
-                    {
-                        modifications['id'] = id;
-                        modifications['type'] = "M";
-                        changes['modify'].push(modifications)
-                    }
-                }
-
-                //Find changed attachments.
-                var $existing_attachments = file_table.children('[id^=_existingfiles]');
-                for (var i = 0; i < $existing_attachments.length; i++)
-                {
-                    var modifications = {};
-                    var oldAtt = null;
-                    var fields = [];
-                    var row = $($existing_attachments[i]);
-                    var id = parseInt(row.attr('name'));
-                    fields.push(['parent', row.find("[id^=_existingfiles_parent_]")[0].value]);
-                    fields.push(['source', row.find("[id^=_existingfiles_source_]")[0].value]);
-
-                    //Find old attachment.
-                    //First search piece attachments
-                    for (var j = 0; j < oldPiece['attachments'].length; j++)
-                    {
-                        if (oldPiece['attachments'][j]['id'] === id)
-                        {
-                            oldAtt = oldPiece['attachments'][j];
-                            break;
-                        }
-                    }
-                    //If not found, search movement attachments
-                    if (oldAtt === null)
-                    {
-                        for (var j = 0; j < oldPiece['movements'].length; j++)
-                        {
-                            for (var k = 0; k < oldPiece['movements'][j]['attachments'].length; k++)
-                            {
-                                if (oldPiece['movements'][j]['attachments'][k]['id'] === id)
-                                {
-                                    oldAtt = oldPiece['movements'][j]['attachments'][k];
-                                    break;
-                                }
-                            }
-                            if (oldAtt !== null)
-                            {
-                                break
-                            }
-                        }
-                    }
-                    //Compare the two
-                    for (var j = 0; j < fields.length; j++)
-                    {
-                        if (oldAtt[fields[j][key]] !== fields[j][value])
-                        {
-                            if (fields[j][key] === "source" && fields[j][value] === "" && oldAtt[fields[j][key]] === null)
-                                continue;
-                            modifications[fields[j][key]] = fields[j][value]
-                        }
-                    }
-
-                    if (!$.isEmptyObject(modifications))
-                    {
-                        modifications['id'] = id;
-                        modifications['type'] = "A";
-                        if (modifications['parent'] !== "piece")
-                        {
-                            modifications['newParent'] = $("#"+row.find("[id^=_existingfiles_parent_]")[0].value)[0].value;
-                        }
-                        changes['modify'].push(modifications)
-                    }
-                }
-                debugger;
+                $base_modal_header.html("<h4 class='modal-title'>Creating Piece...</h4>");
+                $base_modal_body.html("<div class='progress'>" +
+                        "<div class='progress-bar progress-bar-striped active' role='progressbar' style='width: 100%'></div> " +
+                        "</div>");
+                $base_modal_footer.html("");
+                $base_modal.modal('show');
 
                 var formData = new FormData(this);
                 formData.append('changes', JSON.stringify(changes));
@@ -281,10 +229,10 @@
                     {
                         if (data['errors'] === undefined)
                         {
-                            $upload_modal.find('.modal-title').html("Done!");
-                            $upload_modal.find('.modal-footer').html("<a href='/pieces/create/' class='btn btn-default pull-left'>Upload Another Piece</a>" +
+                            $base_modal_header.html("<h4 class='modal-title'>Done!</h4>");
+                            $base_modal_body.html("<p>Piece succesfuly updated!</p>");
+                            $base_modal_footer.html('.modal-footer').html( "<button type='button' class='btn btn-default' data-dismiss='modal'>Close</button>" +
                                     "<a href='" + data['url'] + "' class='btn btn-default' id='goto-piece'>Go to Piece</a>");
-                            $upload_modal.find('.progress-bar').removeClass("progress-bar-striped active");
                         }
                         else
                         {
@@ -295,11 +243,14 @@
                                 {
                                     $("input[name='religiosity']").parent().removeClass("btn-default").addClass("btn-danger")
                                 }
-                                if (key === "vocalization")
+                                else if (key === "vocalization")
                                 {
                                     $("input[name='vocalization']").parent().removeClass("btn-default").addClass("btn-danger")
                                 }
-
+                                else if (key === "collections")
+                                {
+                                    continue
+                                }
                                 else
                                 {
                                     $("#" + key).parent().addClass("has-error");
@@ -308,25 +259,18 @@
                                 $("#" + key + "_error").html("<b style='color:red'>" + data['errors'][key][0] + "</b>");
                                 errors = errors + "<strong>" + (key.charAt(0).toUpperCase() + key.slice(1)).replace(/_/g, ' ') + "</strong>: " + data['errors'][key][0] + "<br>"
                             }
-                            $upload_modal.find('.modal-title').html("Form Error");
-                            $upload_modal.find('.progress').hide();
-                            $upload_modal.find('.modal-body').prepend("Your submission has the following errors: <br>" + errors);
-                            $upload_modal.find('.modal-footer').html("<button type='button' class='btn btn-default' data-dismiss='upload_modal'>Close</button>");
+                            $base_modal_header.html("<h4 class='modal-title'>Form Error<h4>");
+                            $base_modal_body.html("<p>Your submission has the following errors: <br>" + errors + "</p>");
+                            $base_modal_footer.html("<button type='button' class='btn btn-default' data-dismiss='modal'>Close</button>");
                         }
 
-
-                        $('#close_modal').click(function ()
-                        {
-                            $upload_modal.modal('hide');
-                        });
                     },
                     error: function (data)
                     {
-                        $upload_modal.find('.modal-title').html("Server Error!");
-                        $upload_modal.find('.progress').hide();
-                        $upload_modal.find('.modal-body').prepend("An error occurred while uploading your file. Please try again, or, if the error persists, " +
-                                "<a href='mailto:elvisdatabase@gmail.com?Subject=Upload%20Error'>contact us</a>");
-
+                        $base_modal_header.html("<h4 class='modal-title'>Server Error<h4>");
+                        $base_modal_body.html("<p>An error occurred while uploading your file. Please try again, or, if the error persists, " +
+                                "<a href='mailto:elvisdatabase@gmail.com?Subject=Upload%20Error'>contact us</a></p>");
+                        $base_modal_footer.html("<button type='button' class='btn btn-default' data-dismiss='modal'>Close</button>");
                     }
                 })
             });
@@ -490,24 +434,36 @@
                 $("[id^=del_mov], [id^=del_files]").click(function (event)
                 {
                     var row = $(event['target']).parents("[id^=_existing]")[0];
-                    var type;
-                    var id;
-                    var name;
+                    var type,
+                        id,
+                        name,
+                        parent;
                     if (row.id.indexOf('mov') !== -1)
                         type = "M";
                     else
                         type = "A";
                     if (type == "A")
                     {
-                        name = row.children[2].children[1].children[0].title
+                        parent = row.children[2].children[1].children[0].title;
+                        name = row.children[1].children[0].text;
+                        id = row.getAttribute('name');
+                        changes['delete'].push({type: type, id: id, name: name, parent: parent});
                     }
                     else
                     {
-                        name = row.children[2].children[0].value
+                        name = row.children[2].children[0].value;
+                        id = row.getAttribute('name');
+                        changes['delete'].push({type: type, id: id, name: name});
                     }
-                    id = row.getAttribute('name');
-                    changes['delete'].push({type: type, id: id, name: name});
-                })
+
+                });
+                $base_modal_header.html("<h4 class='modal-title'>Modifying an existing piece...<h4>");
+                $base_modal_body.html("<p>This form has been pre-filled with the current state of <em>{{ content.title }}</em>.<ul><li>You may modify any of its properties.</li>" +
+                        "<li>Do not modfiy any fields that you do not wish to change.</li> <li>Existing movements and files are colored dark grey - you may modify or delete these as well.</li>" +
+                        "<li>You may also add new movements and files.</li></ul>" +
+                        "<strong>No changes are applied until you click the submit button </strong> at the bottom of the page. If you make a mistake, or need to restart the process, simply reload the page. </p>");
+                $base_modal_footer.html("<button type='button' class='btn btn-success' data-dismiss='modal'>Got it</button>");
+                $base_modal.modal('show');
             }
 
             function writeList(jlist, collection)
@@ -530,8 +486,217 @@
                         result += jlist[i].name + "; "
                     }
                 }
-
                 return result
+            }
+
+            function findChanges()
+            {
+                // Compare text and number fields to their previous values, save
+                // changes in the changes dict.
+                var $inputs = $(".upload-input-field");
+                for (var i = 0; i < $inputs.length; i++)
+                {
+                    var id = $inputs[i].getAttribute('id');
+                    if (id === "composition_start_date")
+                        var id2 = "date_of_composition";
+                    else if (id === "composition_end_date")
+                        id2 = "date_of_composition2";
+                    else
+                        id2 = id;
+                    if ($("#" + id).val() != oldPiece[id2])
+                    {
+                        if (id === "comment" && $("#" + id).val() === "" && oldPiece[id2] === null)
+                            continue;
+                        //A text field from the top of the form doesnt match the previous value.
+                        changes['modify'].push({
+                            type: 'F',
+                            id: id2,
+                            value: $("#" + id).val()
+                        });
+                    }
+                }
+                var $religButtons = $("#religiosity");
+                for (var i = 0; i < 3; i++)
+                {
+                    if ($religButtons.children()[i].className.indexOf("active") !== -1)
+                    {
+                        if ($religButtons.children()[i].innerText == oldPiece['religiosity'])
+                        {
+                            break
+                        }
+                        else
+                        {
+                            changes['modify'].push({
+                                type: 'F', id: 'religiosity',
+                                value: $religButtons.children()[i].innerText
+                            })
+                        }
+                    }
+                }
+                var $vocalButtons = $("#vocalization");
+                for (var i = 0; i < 3; i++)
+                {
+                    if ($vocalButtons.children()[i].className.indexOf("active") !== -1)
+                    {
+                        if ($vocalButtons.children()[i].innerText == oldPiece['vocalization'])
+                        {
+                            break
+                        }
+                        else
+                        {
+                            changes['modify'].push({
+                                type: 'F', id: 'vocalization',
+                                value: $vocalButtons.children()[i].innerText
+                            })
+                        }
+                    }
+                }
+
+                // Find changed movements, record their changes.
+                var $existing_movements = mov_table.children('[id^=_existingmov]');
+                for (var i = 0; i < $existing_movements.length; i += 2)
+                {
+                    // Get info from form
+                    var modifications = {};
+                    var oldMov = null;
+                    var fields = [];
+                    var $titleRow = $($existing_movements[i]);
+                    var $advancedRow = $($existing_movements[i + 1]);
+                    var id = parseInt($titleRow[0].getAttribute('name'));
+                    fields.push(['title', $titleRow.find("[id^=_existingmov_title_]")[0].value]);
+                    fields.push(['instruments_voices', $advancedRow.find("[id$=_instrumentation]")[0].value]);
+                    fields.push(['tags', $advancedRow.find("[id$=_free_tags]")[0].value]);
+                    fields.push(['number_of_voices', $advancedRow.find("[id$=_number_of_voices]")[0].value]);
+                    fields.push(['comment', $advancedRow.find("[id$=_comment]")[0].value]);
+                    var selected_vocal = $($advancedRow.find("[id$=_vocalization]")[0]).children(".active")[0];
+                    if (selected_vocal)
+                        fields.push(['vocalization', selected_vocal.children[0].value]);
+
+                    // Get old movement info
+                    for (var j = 0; j < oldPiece['movements'].length; j++)
+                    {
+                        if (oldPiece['movements'][j]['item_id'] === id)
+                        {
+                            oldMov = oldPiece['movements'][j];
+                            break
+                        }
+                    }
+
+                    //Compare the two and add changed values to changes.
+                    var key = 0;
+                    var value = 1;
+                    for (var j = 0; j < fields.length; j++)
+                    {
+                        if (oldMov[fields[j][key]] != fields[j][value])
+                        {
+                            if (fields[j][key] === "comment" && fields[j][value] === "" && oldMov[fields[j][key]] === null)
+                                continue;
+                            modifications[fields[j][key]] = fields[j][value]
+                        }
+                    }
+                    if (!$.isEmptyObject(modifications))
+                    {
+                        modifications['id'] = id;
+                        modifications['type'] = "M";
+                        changes['modify'].push(modifications)
+                    }
+                }
+                // Find and log new movements.
+                var $new_movements = mov_table.children('[id^=mov]');
+                for (var i = 0; i < $new_movements.length; i += 2)
+                {
+                    var $titleRow = $($new_movements[i]);
+                    var title = $titleRow.find("[id^=mov_title_]")[0].value;
+                    if (title === "")
+                        continue;
+
+                    changes['add'].push({type:"M", name: title})
+                }
+
+                //Find changed attachments - record changes
+                var $existing_attachments = file_table.children('[id^=_existingfiles]');
+                for (var i = 0; i < $existing_attachments.length; i++)
+                {
+                    var modifications = {};
+                    var oldAtt = null;
+                    var fields = [];
+                    var row = $($existing_attachments[i]);
+                    var id = parseInt(row.attr('name'));
+                    fields.push(['parent', row.find("[id^=_existingfiles_parent_]")[0].value]);
+                    fields.push(['source', row.find("[id^=_existingfiles_source_]")[0].value]);
+
+                    //Find old attachment.
+                    //First search piece attachments
+                    for (var j = 0; j < oldPiece['attachments'].length; j++)
+                    {
+                        if (oldPiece['attachments'][j]['id'] === id)
+                        {
+                            oldAtt = oldPiece['attachments'][j];
+                            var oldParent= 'the piece';
+                            break;
+                        }
+                    }
+                    //If not found, search movement attachments
+                    if (oldAtt === null)
+                    {
+                        for (var j = 0; j < oldPiece['movements'].length; j++)
+                        {
+                            for (var k = 0; k < oldPiece['movements'][j]['attachments'].length; k++)
+                            {
+                                if (oldPiece['movements'][j]['attachments'][k]['id'] === id)
+                                {
+                                    oldAtt = oldPiece['movements'][j]['attachments'][k];
+                                    var oldParent = oldPiece['movements'][j]['title'];
+                                    break;
+                                }
+                            }
+                            if (oldAtt !== null)
+                            {
+                                break
+                            }
+                        }
+                    }
+                    //Compare the two
+                    for (var j = 0; j < fields.length; j++)
+                    {
+                        if (oldAtt[fields[j][key]] !== fields[j][value])
+                        {
+                            if (fields[j][key] === "source" && fields[j][value] === "" && oldAtt[fields[j][key]] === null)
+                                continue;
+                            modifications[fields[j][key]] = fields[j][value]
+                        }
+                    }
+
+                    //If differences exist, push th
+                    if (!$.isEmptyObject(modifications))
+                    {
+                        modifications['id'] = id;
+                        modifications['type'] = "A";
+                        modifications['name'] = row.children()[1].children[0].text;
+                        modifications['oldParent'] = oldParent;
+                        modifications['newParentTitle'] = row.children()[2].children[1].children[0].title;
+                        if (modifications['parent'] !== "piece")
+                        {
+                            modifications['newParent'] = row.children()[2].children[0].value;
+                        }
+                        changes['modify'].push(modifications)
+                    }
+                }
+                // Find and log new attachments.
+                var $new_attachments = file_table.children('[id^=files]');
+                for (var i = 0; i < $new_attachments.length; i ++)
+                {
+                    var row = $($new_attachments[i]);
+                    var title = row.children()[1].children[1].children[1].value;
+                    if (title === "")
+                        continue;
+
+                    var parent = row.children()[2].children[1].children[0].title;
+                    if (parent === "Attach to Piece")
+                        parent = "the piece";
+
+                    changes['add'].push({type:"A", name: title, parent: parent})
+                }
             }
         });
     </script>
@@ -541,31 +706,6 @@
 
 {% block wrap %}
 
-    <!-- Modal -->
-    <div class="modal fade" id="upload_modal" tabindex="-1" role="dialog"
-         aria-hidden="true">
-        <div class="modal-dialog">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h4 class="modal-title">Creating Piece</h4>
-                </div>
-                <div class="modal-body">
-                    <div class="progress">
-                        <div class="progress-bar progress-bar-striped active"
-                             role="progressbar" aria-valuenow="100"
-                             aria-valuemin="0" aria-valuemax="100"
-                             style="width: 100%">
-                            <span class="sr-only">100% Complete</span>
-                        </div>
-                    </div>
-                </div>
-                <div class="modal-footer">
-
-                </div>
-            </div>
-        </div>
-    </div>
-
     <div class="page-header">
         <h2>Update <em>{{ content.title }}</em> by {{ content.composer.name }}
         </h2>
@@ -574,9 +714,8 @@
         <form action="/pieces/" method="post" id="new-piece-form"
               enctype="multipart/form-data">{% csrf_token %}
             <span class="help-block">
-                Suggestions are offered for items which already exist in the database. Selecting a suggested composer will add the piece
-                to the existing composers oeuvre. While you are encouraged to provide beginning and ending dates
-                for the composition, you are only required to provide one date.
+                The fields in this form have been pre-filled with the data of this piece. You may
+                modify any field just as you would when creating a piece.
             </span>
             <br>
 
@@ -732,21 +871,6 @@
             </div>
             <div class="row">
                 <div class="col-md-6">
-                    <div class="form-group">
-                        <div class="input-group">
-                                <span class="input-group-addon" data-toggle="popover" data-placement="top"
-                                      data-trigger="focus" data-html='true' data-viewport="#content-container"
-                                      title="<b>Collections</b><span class='label label-primary pull-right'>Required</span>"
-                                      data-content="A collection is user-defined grouping of pieces. The collection can be based on date, uploader,
-                                       composer - or any other parameter. If you input a collection name which is not already in the database, this new
-                                       collection will be created and visible to the public. You can make the collection private on the <a href='/collections/?creator={{ user.username }}' target='_blank'>My Collections</a> page">Collections</span>
-                            <input type="text" id="collections" name="collections" autocomplete="off"
-                                   class="form-control upload-input-field"
-                                   placeholder="e.g. Prof.Fujinaga's Collection; McGill Collection">
-                        </div>
-                        <div id="collection_suggestion_menu" style="padding-left:120px"></div>
-                        <div id="collections_error"></div>
-                    </div>
                 </div>
                 <div class="col-md-6">
                     <div class="form-group">
@@ -913,7 +1037,8 @@
             <hr>
             <span class="help-block">
                 If the work is divided into movements, acts, or other parts, declare them in this table.
-                Many inputs from the previous page may be overridden on a per-movement basis by clicking the 'Show Advanced' button.
+                Many inputs may be overridden on a per-movement basis by clicking the 'Show Advanced' button.
+                Movement that already exist in this piece are shaded dark-grey.
         </span>
 
             <div class="well">
@@ -987,7 +1112,7 @@
 
             <hr>
             <div class="text-right">
-                <button type='submit' id='piece-submit'
+                <button type='button' id='piece-submit'
                         class='btn btn-success'>Submit
                 </button>
             </div>

@@ -161,155 +161,83 @@ class PieceList(generics.ListCreateAPIView):
 
 def create(request, *args, **kwargs):
     if not request.user.is_active:
+        # Only active users may upload pieces.
         return Response(status=status.HTTP_401_UNAUTHORIZED)
 
     form = PieceForm(request.POST)
     if not form.is_valid():
+        # Form errors are rendered for user on the front end.
         data = json.dumps({'errors': form.errors})
         return HttpResponse(data, content_type="json")
 
     clean = Cleanup()
     clean_form = form.cleaned_data
     new_piece = Piece(title=clean_form['title'],
-                      date_of_composition=clean_form[
-                          'composition_start_date'],
-                      date_of_composition2=clean_form[
-                          'composition_end_date'],
-                      religiosity=clean_form['religiosity'],
-                      vocalization=clean_form['vocalization'],
                       uploader=request.user,
                       created=datetime.datetime.now(pytz.utc),
                       updated=datetime.datetime.now(pytz.utc))
     new_piece.save()
-    clean.list.append({"model": new_piece, "new": True})
+    clean.list.append({"object": new_piece, "isNew": True})
+    object_list = []
+    for key in clean_form:
+        object_list.append({'id': key, 'value': clean_form[key]})
+    handle_related_models(object_list, new_piece, clean,
+                          user=request.user, birth_date=clean_form['composer_birth_date'],
+                          death_date=clean_form['composer_death_date'])
 
-    if clean_form['number_of_voices']:
-        new_piece.number_of_voices = int(clean_form['number_of_voices'])
-    if clean_form['comment']:
-        new_piece.comment = clean_form['comment']
-
-    try:
-        composer_list = abstract_model_factory(clean_form['composer'],
-                                               "Composer", clean,
-                                               birth_date=clean_form[
-                                                   'composer_birth_date'],
-                                               death_date=clean_form[
-                                                   'composer_death_date'])
-        composer = composer_list[0]
-        new_piece.composer = composer
-    except:
-        clean.cleanup()
-        raise
-    try:
-        if clean_form['collections']:
-            collection_list = abstract_model_factory(
-                clean_form['collections'], "Collection", clean,
-                is_public=True, creator=request.user)
-            for x in collection_list:
-                new_piece.collections.add(x)
-    except:
-        clean.cleanup()
-        raise
-    try:
-        if clean_form['languages']:
-            language_list = abstract_model_factory(clean_form['languages'],
-                                                   "Language", clean)
-            for x in language_list:
-                new_piece.languages.add(x)
-    except:
-        clean.cleanup()
-        raise
-    try:
-        if clean_form['genres']:
-            genre_list = abstract_model_factory(clean_form['genres'],
-                                                "Genre", clean)
-            for x in genre_list:
-                new_piece.genres.add(x)
-    except:
-        clean.cleanup()
-        raise
-    try:
-        if clean_form['locations']:
-            location_list = abstract_model_factory(clean_form['locations'],
-                                                   "Location", clean)
-            for x in location_list:
-                new_piece.locations.add(x)
-    except:
-        clean.cleanup()
-        raise
-    try:
-        if clean_form['sources']:
-            source_list = abstract_model_factory(clean_form['sources'],
-                                                 "Source", clean)
-            for x in source_list:
-                new_piece.sources.add(x)
-    except:
-        clean.cleanup()
-        raise
-    try:
-        if clean_form['tags']:
-            tag_list = abstract_model_factory(clean_form['tags'], "Tag",
-                                              clean)
-            for x in tag_list:
-                new_piece.tags.add(x)
-    except:
-        clean.cleanup()
-        raise
-    try:
-        if clean_form['instruments_voices']:
-            instrument_list = abstract_model_factory(
-                clean_form['instruments_voices'], "InstrumentVoice", clean)
-            for x in instrument_list:
-                new_piece.instruments_voices.add(x)
-    except:
-        clean.cleanup()
-        raise
-
-    new_piece.save()
-    try:
-        handle_dynamic_file_table(request, new_piece, "mov", clean)
-    except:
-        clean.cleanup()
-        raise
-
-    new_piece.save()
+    handle_dynamic_file_table(request, new_piece, clean)
     rebuild_suggester_dicts.delay()
     data = json.dumps({'success': True, 'id': new_piece.id,
                        'url': "/piece/{0}".format(new_piece.id)})
     return HttpResponse(data, content_type="json")
 
 def update(request, *args, **kwargs):
+    # Update a piece based on a dict of changes in request.POST['changes']
+
+    form = PieceForm(request.POST)
+    if not form.is_valid():
+        # Form errors are rendered for user on the front end.
+        f_data = form.errors.as_data()
+        if not (len(f_data.keys()) == 1 and f_data.get('collections')):
+            data = json.dumps({"errors": form.errors})
+            return HttpResponse(data, content_type="json")
+
     clean = Cleanup()
     piece = Piece.objects.get(pk=int(kwargs['pk']))
     change = json.loads(request.POST.get('changes'))
 
-    handle_dynamic_file_table(request, piece, "mov", clean)
+    """
+    Creating new movements must occur before old movements are deleted,
+    as the attachment of files depends on the ordering and numbering
+    of movements in the piece's present state. See comment in
+    handle_dynamic_file_table() for more information.
+    """
+    handle_dynamic_file_table(request, piece, clean)
 
-    if change.get('modify'):
-        modify_movements = [x for x in change['modify'] if x['type'] == "M"]
-        if modify_movements:
-            for item in modify_movements:
-                mov = Movement.objects.filter(pk=item['id'])
-                if not mov:
-                    break
-                mov = mov[0]
-                if item.get('tags'):
-                    tag_list = abstract_model_factory(item['tags'], "Tag", clean)
-                    mov.tags.clear()
-                    for x in tag_list:
-                        mov.tags.add(x)
-                if item.get('instruments_voices'):
-                    ins_list = abstract_model_factory(item['instruments_voices'], "InstrumentVoice", clean)
-                    mov.instruments_voices.clear()
-                    for x in ins_list:
-                        mov.instruments_voices.add(x)
-                if item.get('comment'):
-                    mov.comment = item['comment']
-                if item.get('number_of_voices'):
-                    mov.number_of_voices = int(item['number_of_voices'])
-                if item.get('vocalization'):
-                    mov.vocalization = item['vocalization']
-                mov.save()
+    modify_movements = [x for x in change['modify'] if x['type'] == "M"]
+    if modify_movements:
+        for item in modify_movements:
+            mov = Movement.objects.filter(pk=item['id'])
+            if not mov:
+                break
+            mov = mov[0]
+            if item.get('tags'):
+                tag_list = abstract_model_factory(item['tags'], "Tag", clean)
+                mov.tags.clear()
+                for x in tag_list:
+                    mov.tags.add(x)
+            if item.get('instruments_voices'):
+                ins_list = abstract_model_factory(item['instruments_voices'], "InstrumentVoice", clean)
+                mov.instruments_voices.clear()
+                for x in ins_list:
+                    mov.instruments_voices.add(x)
+            if item.get('comment'):
+                mov.comment = item['comment']
+            if item.get('number_of_voices'):
+                mov.number_of_voices = int(item['number_of_voices'])
+            if item.get('vocalization'):
+                mov.vocalization = item['vocalization']
+            mov.save()
 
     modify_atts = [x for x in change['modify'] if x['type'] == "A"]
     if modify_atts:
@@ -336,128 +264,143 @@ def update(request, *args, **kwargs):
             if item.get('source'):
                 att.source = item.get('source')
                 att.save()
+
     modify_piece = [x for x in change['modify'] if x['type'] == "F"]
     if modify_piece:
-        for item in modify_piece:
-            id = item.get('id')
-            if id == "title":
-                piece.title = item.get('value')
-                continue
-            if id == "composer":
-                try:
-                    composer_list = abstract_model_factory(item.get('value'),
-                                           "Composer", clean)
-                    composer = composer_list[0]
-                    piece.composer = composer
-                    continue
-                except:
-                    clean.cleanup()
-                    raise
-            if id == "collections":
-                try:
-                    collection_list = abstract_model_factory(
-                        item.get('value'), "Collection", clean,
-                        is_public=True, creator=request.user)
-                    for x in collection_list:
-                        piece.collections.add(x)
-                    continue
-                except:
-                    clean.cleanup()
-                    raise
-            if id == "languages":
-                try:
-                    language_list = abstract_model_factory(
-                        item.get('value'), "Language", clean)
-                    piece.languages.clear()
-                    for x in language_list:
-                        piece.languages.add(x)
-                    continue
-                except:
-                    clean.cleanup()
-                    raise
-            if id == "locations":
-                try:
-                    location_list = abstract_model_factory(
-                        item.get('value'), "Location", clean)
-                    piece.locations.clear()
-                    for x in location_list:
-                        piece.locations.add(x)
-                    continue
-                except:
-                    clean.cleanup()
-                    raise
-            if id == "sources":
-                try:
-                    source_list = abstract_model_factory(
-                        item.get('value'), "Source", clean)
-                    piece.sources.clear()
-                    for x in source_list:
-                        piece.sources.add(x)
-                    continue
-                except:
-                    clean.cleanup()
-                    raise
-            if id == "tags":
-                try:
-                    tag_list = abstract_model_factory(
-                        item.get('value'), "Tag", clean)
-                    piece.tags.clear()
-                    for x in tag_list:
-                        piece.tags.add(x)
-                    continue
-                except:
-                    clean.cleanup()
-                    raise
-            if id == "genres":
-                try:
-                    genre_list = abstract_model_factory(
-                        item.get('value'), "Genre", clean)
-                    piece.genres.clear()
-                    for x in genre_list:
-                        piece.genres.add(x)
-                    continue
-                except:
-                    clean.cleanup()
-                    raise
-            if id == "instruments_voices":
-                try:
-                    ins_list = abstract_model_factory(
-                        item.get('value'), "InstrumentVoice", clean)
-                    piece.instruments_voices.clear()
-                    for x in ins_list:
-                        piece.instruments_voices.add(x)
-                    continue
-                except:
-                    clean.cleanup()
-                    raise
-            if id == "number_of_voices":
-                piece.number_of_voices = int(item.get('value'))
-                continue
-            if id == "date_of_composition":
-                piece.date_of_composition = int(item.get('value'))
-            if id == "date_of_composition2":
-                piece.date_of_composition2 = int(item.get('value'))
-            if id == "comment":
-                piece.comment = item.get('value')
-    piece.save()
+        # Can use the same function as the piece-create here.
+        handle_related_models(modify_piece, piece, clean)
 
-    if change.get('delete'):
-        delete_movements = [x for x in change['delete'] if x['type'] == "M"]
-        if delete_movements:
-            for item in delete_movements:
-                mov = Movement.objects.filter(pk=item['id'])[0]
-                if mov:
-                    mov.delete()
-        delete_attachments = [x for x in change['delete'] if x['type'] == "A"]
-        if delete_attachments:
-            for item in delete_attachments:
-                att = Attachment.objects.filter(pk=item['id'])[0]
-                if att:
-                    att.delete()
+    delete_movements = [x for x in change['delete'] if x['type'] == "M"]
+    if delete_movements:
+        for item in delete_movements:
+            mov = Movement.objects.filter(pk=item['id'])[0]
+            if mov:
+                mov.delete()
+    delete_attachments = [x for x in change['delete'] if x['type'] == "A"]
+    if delete_attachments:
+        for item in delete_attachments:
+            att = Attachment.objects.filter(pk=item['id'])[0]
+            if att:
+                att.delete()
 
-    data = json.dumps({'success': True, 'id': piece.id,
-                       'url': "/piece/{0}".format(piece.id)})
+    data = json.dumps({'success': True, 'id': piece.id, 'url': "/piece/{0}".format(piece.id)})
     return HttpResponse(data, content_type="json")
 
-
-
+def handle_related_models(object_list, parent, clean, **kwargs):
+    """ Create/find and attach all related models for a piece.
+    :param object_list: The list of objects to create/find, and which
+     field they belong to, in the format [{id: field_name, value: x},]
+    :param parent: The object to relate to.
+    :param clean: A Cleanup object.
+    :kwargs
+            creator: the creator of the piece, taken from request.user
+            birth_date: The birth-date of a composer object
+            death_date: The death-date of a composer object
+    :return:
+    """
+    for item in object_list:
+        field = item.get('id')
+        if field == "title":
+            parent.title = item.get('value')
+            continue
+        if field == "composer":
+            birth_date = kwargs.pop('birth_date', None)
+            death_date = kwargs.pop('death_date', None)
+            try:
+                composer_list = abstract_model_factory(item.get('value'), "Composer", clean,
+                                                       birth_date=birth_date,
+                                                       death_date=death_date)
+                composer = composer_list[0]
+                parent.composer = composer
+                continue
+            except:
+                clean.cleanup()
+                raise
+        if field == "collections":
+            user = kwargs.pop('user', None)
+            try:
+                collection_list = abstract_model_factory(item.get('value'), "Collection", clean,
+                                                         creator=user)
+                for x in collection_list:
+                    parent.collections.add(x)
+                continue
+            except:
+                clean.cleanup()
+                raise
+        if field == "languages":
+            try:
+                language_list = abstract_model_factory(item.get('value'), "Language", clean)
+                parent.languages.clear()
+                for x in language_list:
+                    parent.languages.add(x)
+                continue
+            except:
+                clean.cleanup()
+                raise
+        if field == "locations":
+            try:
+                location_list = abstract_model_factory(item.get('value'), "Location", clean)
+                parent.locations.clear()
+                for x in location_list:
+                    parent.locations.add(x)
+                continue
+            except:
+                clean.cleanup()
+                raise
+        if field == "sources":
+            try:
+                source_list = abstract_model_factory(item.get('value'), "Source", clean)
+                parent.sources.clear()
+                for x in source_list:
+                    parent.sources.add(x)
+                continue
+            except:
+                clean.cleanup()
+                raise
+        if field == "tags":
+            try:
+                tag_list = abstract_model_factory(item.get('value'), "Tag", clean)
+                parent.tags.clear()
+                for x in tag_list:
+                    parent.tags.add(x)
+                continue
+            except:
+                clean.cleanup()
+                raise
+        if field == "genres":
+            try:
+                genre_list = abstract_model_factory(item.get('value'), "Genre", clean)
+                parent.genres.clear()
+                for x in genre_list:
+                    parent.genres.add(x)
+                continue
+            except:
+                clean.cleanup()
+                raise
+        if field == "instruments_voices":
+            try:
+                ins_list = abstract_model_factory(item.get('value'), "InstrumentVoice", clean)
+                parent.instruments_voices.clear()
+                for x in ins_list:
+                    parent.instruments_voices.add(x)
+                continue
+            except:
+                clean.cleanup()
+                raise
+        if field == "number_of_voices":
+            parent.number_of_voices = int(item.get('value'))
+        if field == "vocalization":
+            parent.vocalization = item.get('value')
+        if field == "religiosity":
+            parent.religiosity = item.get('value')
+        if field == "date_of_composition" or field == "composition_start_date":
+            parent.date_of_composition = int(item.get('value'))
+        if field == "date_of_composition2" or field == "composition_end_date":
+            parent.date_of_composition2 = int(item.get('value'))
+        if field == "comment":
+            parent.comment = item.get('value')
+    parent.save()
+    rebuild_suggester_dicts.delay()
+    data = json.dumps({'success': True, 'id': parent.id,
+                       'url': "/piece/{0}".format(parent.id)})
+    return HttpResponse(data, content_type="json")
