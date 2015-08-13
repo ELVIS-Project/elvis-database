@@ -12,6 +12,8 @@ from rest_framework.response import Response
 from elvis.renderers.custom_html_renderer import CustomHTMLRenderer
 from elvis.serializers.piece import PieceSerializer, PieceListSerializer
 from elvis.models.piece import Piece
+from elvis.models.movement import Movement
+from elvis.models.attachment import Attachment
 from elvis.forms import PieceForm
 from elvis.elvis.tasks import rebuild_suggester_dicts
 from elvis.views.views import abstract_model_factory
@@ -277,4 +279,83 @@ def create(request, *args, **kwargs):
     return HttpResponse(data, content_type="json")
 
 def update(request, *args, **kwargs):
+    clean = Cleanup()
     piece = Piece.objects.get(pk=int(kwargs['pk']))
+    change = json.loads(request.POST.get('changes'))
+
+    handle_dynamic_file_table(request, piece, "mov", clean)
+
+    if change.get('modify'):
+        modify_movements = [x for x in change['modify'] if x['type'] == "M"]
+        if modify_movements:
+            for item in modify_movements:
+                mov = Movement.objects.filter(pk=item['id'])
+                if not mov:
+                    break
+                mov = mov[0]
+                if item.get('tags'):
+                    tag_list = abstract_model_factory(item['tags'], "Tag", clean)
+                    mov.tags.clear()
+                    for x in tag_list:
+                        mov.tags.add(x)
+                if item.get('instruments_voices'):
+                    ins_list = abstract_model_factory(item['instruments_voices'], "InstrumentVoice", clean)
+                    mov.instruments_voices.clear()
+                    for x in ins_list:
+                        mov.instruments_voices.add(x)
+                if item.get('comment'):
+                    mov.comment = item['comment']
+                if item.get('number_of_voices'):
+                    mov.number_of_voices = int(item['number_of_voices'])
+                if item.get('vocalization'):
+                    mov.vocalization = item['vocalization']
+                mov.save()
+
+    modify_atts = [x for x in change['modify'] if x['type'] == "A"]
+    if modify_atts:
+        for item in modify_atts:
+            att = Attachment.objects.filter(pk=item['id'])
+            if not att:
+                break
+            att = att[0]
+            if item.get('parent'):
+                if item.get('parent') == "piece":
+                    att.movements.clear()
+                    att.pieces.clear()
+                    import pdb
+                    pdb.set_trace
+                    att.pieces.add(piece)
+                    att.save()
+                else:
+                    mov = piece.movements.filter(title=item['newParent'])
+                    if not mov:
+                        break
+                    mov = mov[0]
+                    att.movements.clear()
+                    att.pieces.clear()
+                    att.movements.add(mov)
+                    att.save()
+            if item.get('source'):
+                att.source = item.get('source')
+                att.save()
+
+    if change.get('delete'):
+        delete_movements = [x for x in change['delete'] if x['type'] == "M"]
+        if delete_movements:
+            for item in delete_movements:
+                mov = Movement.objects.filter(pk=item['id'])[0]
+                if mov:
+                    mov.delete()
+        delete_attachments = [x for x in change['delete'] if x['type'] == "A"]
+        if delete_attachments:
+            for item in delete_attachments:
+                att = Attachment.objects.filter(pk=item['id'])[0]
+                if att:
+                    att.delete()
+
+    data = json.dumps({'success': True, 'id': piece.id,
+                       'url': "/piece/{0}".format(piece.id)})
+    return HttpResponse(data, content_type="json")
+
+
+

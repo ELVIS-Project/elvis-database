@@ -154,7 +154,7 @@ def handle_attachments(request, parent, cleanup, file_name, file_source):
     upload_path = os.path.join(settings.MEDIA_ROOT, 'temp/', (uuid.uuid4().__str__() + '/'))
     results = []
     files = upload_files(request, file_name, upload_path)
-    i = 1
+    i = parent.attachments.all().count() + 1
     for f in files:
         att = Attachment()
         att.save()  # needed to create hash dir.
@@ -202,7 +202,13 @@ def handle_dynamic_file_table(request, parent, table_name, cleanup=Cleanup()):
 
     keys = files.keys()
     keys.sort()
+
+    #Renumber existing movements before adding more.
     i = 1
+    for mov in parent.movements.all():
+        mov.position = i
+        mov.save()
+        i += 1
 
     # Creating movements, then attaching files to them.
     for k in keys:
@@ -275,10 +281,22 @@ def handle_dynamic_file_table(request, parent, table_name, cleanup=Cleanup()):
         results.append(new_mov)
         i += 1
 
-    # Attaching files to piece.
-    file_numbers = [x.split('files_parent_')[-1] for x in request.POST.keys() if request.POST.get(x) == 'piece']
-    for num in file_numbers:
-        attachments.extend(handle_attachments(request, parent, cleanup, "files_files_" + num, request.POST.get('files_source_' + num)))
+    # Attaching other files.
+    file_numbers = [x for x in request.POST.keys() if x.startswith('files_parent_')]
+    for postfile in file_numbers:
+        import pdb
+        pdb.set_trace()
+        if request.POST.get(postfile) == 'piece':
+            num = postfile.split('files_parent_')[-1]
+            attachments.extend(handle_attachments(request, parent, cleanup, "files_files_" + num, request.POST.get('files_source_' + num)))
+        else:
+            import re
+            movnum = int(re.findall(r'\d+', request.POST.get(postfile))[0])
+            mov = parent.movements.all()[movnum-1]
+            num = postfile.split('files_parent_')[-1]
+            mov.save()
+            attachments.extend(handle_attachments(request, mov, cleanup, "files_files_" + num, request.POST.get('files_source_' + num)))
+
     parent.save()
     results.extend(attachments)
     return results

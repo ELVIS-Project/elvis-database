@@ -13,7 +13,7 @@
     <script type='text/javascript' src="{% static "js/bootstrap-select.min.js" %}"></script>
     <link href="{% static "css/bootstrap-select.css" %}" rel="stylesheet" media="screen"/>
 
-    <title>Upload a Piece</title>
+    <title>Update a Piece</title>
 
     <style>
         .popover
@@ -25,6 +25,11 @@
     <script>
         $(document).ready(function ($)
         {
+            var oldPiece = {};
+            var changes = {};
+            changes['modify'] = [];
+            changes['delete'] = [];
+
             autocomplete("title", "title_suggestion_menu", "pieceSuggest");
             autocomplete("composer", "composer_suggestion_menu", "composerSuggest");
             autocomplete("collections", "collection_suggestion_menu", "collectionSuggest", 'list');
@@ -34,6 +39,7 @@
             autocomplete("sources", "source_suggestion_menu", "sourceSuggest", 'list');
             autocomplete("instruments_voices", "instrumentation_suggestion_menu", "instrumentSuggest", 'list');
             autocomplete("tags", "tags_suggestion_menu", "tagSuggest", 'list');
+
             var mov_table = $("#movement_table");
             mov_table.dynamicTable({
                 button: $("#new_mov"),
@@ -47,11 +53,6 @@
                 table_name: "files"
             });
 
-            var oldPiece = {};
-            var changes = {};
-            changes['modify'] = {};
-            changes['delete'] = {};
-            changes['add'] = {};
             fillUpdateForm();
 
             $('[data-toggle="popover"]').popover();
@@ -127,38 +128,153 @@
 
                 $upload_modal.replaceWith(upload_modal_clone.clone());
                 $upload_modal.modal('show');
+
+                // Compare text and number fields to their previous values, save
+                // changes in the changes dict.
                 var $inputs = $(".upload-input-field");
                 for (var i = 0; i < $inputs.length; i++)
                 {
                     var id = $inputs[i].getAttribute('id');
-                    if (id === "composition_start_date") {var id2 = "date_of_composition"}
-                    else if (id === "composition_end_date") {id2 = "date_of_composition2"}
-                    else {id2 = id}
-                    if ($("#"+ id).val() != oldPiece[id2])
+                    if (id === "composition_start_date")
+                        var id2 = "date_of_composition";
+                    else if (id === "composition_end_date")
+                        id2 = "date_of_composition2";
+                    else
+                        id2 = id;
+                    if ($("#" + id).val() != oldPiece[id2])
                     {
+                        if (id === "comment" && $("#" + id).val() === "" && oldPiece[id2] === null)
+                            continue;
                         //A text field from the top of the form doesnt match the previous value.
-                        changes['modify'][id2] = $("#"+ id).val();
+                        changes['modify'].push({
+                            type: 'F',
+                            id: id2,
+                            value: $("#" + id).val()
+                        });
                     }
                 }
 
-                debugger;
-                for (var i = 0; i < $existingmovements.length; i += 2)
+                // Find changed movements, record their changes.
+                var $existing_movements = mov_table.children('[id^=_existingmov]');
+                for (var i = 0; i < $existing_movements.length; i += 2)
                 {
+                    // Get info from form
+                    var modifications = {};
+                    var oldMov = null;
+                    var fields = [];
+                    var $titleRow = $($existing_movements[i]);
+                    var $advancedRow = $($existing_movements[i + 1]);
+                    var id = parseInt($titleRow[0].getAttribute('name'));
+                    fields.push(['title', $titleRow.find("[id^=_existingmov_title_]")[0].value]);
+                    fields.push(['instruments_voices', $advancedRow.find("[id$=_instrumentation]")[0].value]);
+                    fields.push(['tags', $advancedRow.find("[id$=_free_tags]")[0].value]);
+                    fields.push(['number_of_voices', $advancedRow.find("[id$=_number_of_voices]")[0].value]);
+                    fields.push(['comment', $advancedRow.find("[id$=_comment]")[0].value]);
+                    var selected_vocal = $($advancedRow.find("[id$=_vocalization]")[0]).children(".active")[0];
+                    if (selected_vocal)
+                        fields.push(['vocalization', selected_vocal.children[0].value]);
 
-                    var title = $existingmovements[i].children[2].children[0].value;
-                    var instrumentation = $($existingmovements[i+1]).find("[id$=_instrumentation]").val();
-                    var tags = $($existingmovements[i+1]).find("[id$=_free_tags]").val();
-                    var num_voices = $($existingmovements[i+1]).find("[id$=_number_of_voices]").val();
-                    var comment = $($existingmovements[i+1]).find("[id$=_comments]").val();
-                    debugger;
+                    // Get old movement info
+                    for (var j = 0; j < oldPiece['movements'].length; j++)
+                    {
+                        if (oldPiece['movements'][j]['item_id'] === id)
+                        {
+                            oldMov = oldPiece['movements'][j];
+                            break
+                        }
+                    }
 
+                    //Compare the two and add changed values to changes.
+                    var key = 0;
+                    var value = 1;
+                    for (var j = 0; j < fields.length; j++)
+                    {
+                        if (oldMov[fields[j][key]] != fields[j][value])
+                        {
+                            if (fields[j][key] === "comment" && fields[j][value] === "" && oldMov[fields[j][key]] === null)
+                                continue;
+                            modifications[fields[j][key]] = fields[j][value]
+                        }
+                    }
+                    if (!$.isEmptyObject(modifications))
+                    {
+                        modifications['id'] = id;
+                        modifications['type'] = "M";
+                        changes['modify'].push(modifications)
+                    }
                 }
 
+                //Find changed attachments.
+                var $existing_attachments = file_table.children('[id^=_existingfiles]');
+                for (var i = 0; i < $existing_attachments.length; i++)
+                {
+                    var modifications = {};
+                    var oldAtt = null;
+                    var fields = [];
+                    var row = $($existing_attachments[i]);
+                    var id = parseInt(row.attr('name'));
+                    fields.push(['parent', row.find("[id^=_existingfiles_parent_]")[0].value]);
+                    fields.push(['source', row.find("[id^=_existingfiles_source_]")[0].value]);
 
+                    //Find old attachment.
+                    //First search piece attachments
+                    for (var j = 0; j < oldPiece['attachments'].length; j++)
+                    {
+                        if (oldPiece['attachments'][j]['id'] === id)
+                        {
+                            oldAtt = oldPiece['attachments'][j];
+                            break;
+                        }
+                    }
+                    //If not found, search movement attachments
+                    if (oldAtt === null)
+                    {
+                        for (var j = 0; j < oldPiece['movements'].length; j++)
+                        {
+                            for (var k = 0; k < oldPiece['movements'][j]['attachments'].length; k++)
+                            {
+                                if (oldPiece['movements'][j]['attachments'][k]['id'] === id)
+                                {
+                                    oldAtt = oldPiece['movements'][j]['attachments'][k];
+                                    break;
+                                }
+                            }
+                            if (oldAtt !== null)
+                            {
+                                break
+                            }
+                        }
+                    }
+                    //Compare the two
+                    for (var j = 0; j < fields.length; j++)
+                    {
+                        if (oldAtt[fields[j][key]] !== fields[j][value])
+                        {
+                            if (fields[j][key] === "source" && fields[j][value] === "" && oldAtt[fields[j][key]] === null)
+                                continue;
+                            modifications[fields[j][key]] = fields[j][value]
+                        }
+                    }
+
+                    if (!$.isEmptyObject(modifications))
+                    {
+                        modifications['id'] = id;
+                        modifications['type'] = "A";
+                        if (modifications['parent'] !== "piece")
+                        {
+                            modifications['newParent'] = $("#"+row.find("[id^=_existingfiles_parent_]")[0].value)[0].value;
+                        }
+                        changes['modify'].push(modifications)
+                    }
+                }
+                debugger;
+
+                var formData = new FormData(this);
+                formData.append('changes', JSON.stringify(changes));
                 $.ajax({
                     type: "post",
                     url: window.location.href,
-                    data: new FormData(this),
+                    data: formData,
                     processData: false,
                     contentType: false,
                     success: function (data)
@@ -239,104 +355,161 @@
 
             //$("#upload-page-content").html("<p class='lead text-center'>Sorry, uploads are temporarily disabled while the database is updated.</p>")
 
+            // Get a json representation of the piece, and fill the form with its values.
             function fillUpdateForm()
             {
                 $.ajax({
                     datatype: "json",
                     url: "/piece/{{ content.item_id }}/?format=json",
-                    success: function(data){
+                    success: function (data)
+                    {
                         oldPiece = data;
-                        $("#title").val(oldPiece['title']);
-                        oldPiece['composer'] = oldPiece['composer'].name;
-                        $("#composer").val(oldPiece['composer']);
-                        $("#comment").val(oldPiece['comment']);
-                        $("#composition_start_date").val(oldPiece['date_of_composition']);
-                        $("#composition_end_date").val(oldPiece['date_of_composition2']);
-                        $("#number_of_voices").val(oldPiece['number_of_voices']);
-                        oldPiece['languages'] = writeList(oldPiece['languages']);
-                        oldPiece['collections'] = writeList(oldPiece['collections'], true);
-                        oldPiece['genres'] = writeList(oldPiece['genres']);
-                        oldPiece['locations'] = writeList(oldPiece['locations']);
-                        oldPiece['instruments_voices'] = writeList(oldPiece['instruments_voices']);
-                        oldPiece['sources'] = writeList(oldPiece['sources']);
-                        oldPiece['tags'] = writeList(oldPiece['tags']);
-                        $("#collections").val(oldPiece['collections']);
-                        $("#languages").val(oldPiece['languages']);
-                        $("#genres").val(oldPiece['genres']);
-                        $("#locations").val(oldPiece['locations']);
-                        $("#instruments_voices").val(oldPiece['instruments_voices']);
-                        $("#sources").val(oldPiece['sources']);
-                        $("#tags").val(oldPiece['tags']);
-
-                        var $religButtons = $("#religiosity");
-                        for (var i = 0; i < 3; i++)
-                        {
-                            if ($religButtons.children()[i].innerText == oldPiece['religiosity'])
-                            {
-                                $religButtons.children()[i].className += " active ";
-                                $($religButtons.children()[i].children[0]).prop("checked", "true");
-                                break;
-                            }
-                        }
-                        var $vocalButtons = $("#vocalization");
-                        for (var i = 0; i < 3; i++)
-                        {
-                            if ($vocalButtons.children()[i].innerText == oldPiece['vocalization'])
-                            {
-                                $vocalButtons.children()[i].className += " active ";
-                                $($vocalButtons.children()[i].children[0]).prop("checked", "true");
-                                break;
-                            }
-                        }
-                        var file_table = $("#piece_file_table");
-                        var mov_table = $("#movement_table");
-                        var fc = 1;
-                        for (var i = 0; i < oldPiece['movements'].length; i++)
-                        {
-                            mov_table.dynamicTable('addRow', true);
-                            var $title = mov_table.find("#mov_title_" + (i+1));
-                            var $instruments = mov_table.find("#mov" + (i+1) +"_instrumentation");
-                            var $tags = mov_table.find("#mov" + (i+1) +"_free_tags");
-                            var $num_voices = mov_table.find("#mov" + (i+1) +"_number_of_voices");
-                            var $comment = mov_table.find("#mov" + (i+1) +"_comment");
-                            oldPiece['movements'][i]['instruments_voices'] = writeList(oldPiece['movements'][i]['instruments_voices']);
-                            oldPiece['movements'][i]['tags'] = writeList(oldPiece['movements'][i]['tags']);
-                            $title.val(oldPiece['movements'][i].title);
-                            $instruments.val(oldPiece['movements'][i].instruments_voices);
-                            $tags.val(oldPiece['movements'][i].tags);
-                            $num_voices.val(oldPiece['movements'][i].number_of_voices);
-                            $comment.val(oldPiece['movements'][i].comment);
-                            for (var j = 0; j < oldPiece['movements'][i]['attachments'].length; j++)
-                            {
-                                file_table.dynamicTable('addRow', true);
-                                var $file = file_table.find("#files_existing_files_" + (fc));
-                                var $attach = file_table.find("#files_existing_parent_" + (fc));
-                                var $source = file_table.find("#files_existing_source_" + (fc));
-                                $file.attr("href", oldPiece['movements'][i]['attachments'][j]['attachment']).text(oldPiece['movements'][i]['attachments'][j]['file_name']);
-                                $source.val(oldPiece['movements'][i]['attachments'][j]['source']);
-                                $attach.selectpicker('val', "mov_title_" + (i+1));
-                                fc++;
-                            }
-                        }
-
-                        for (var i = 0; i < oldPiece['attachments'].length; i++)
-                        {
-                            file_table.dynamicTable('addRow', true);
-                            var $file = file_table.find("#files_existing_files_" + (fc));
-                            var $source = file_table.find("#files_existing_source_" + (fc));
-                            $file.attr("href", oldPiece['attachments'][i]['attachment']).text(oldPiece['attachments'][i]['file_name']);
-                            $source.val(oldPiece['attachments'][i]['source']);
-                            fc++;
-                        }
-
-                        //listener for deleting existing movements or files
-                        $("[id^=del_mov], [id^=del_files]").click(function(event){
-                            console.log(event);
-                        })
-
+                        fillPieceForm();
+                        fillDynamicTables();
                     }
                 });
             }
+
+            // Fill the text and number form inputs.
+            function fillPieceForm()
+            {
+                $("#title").val(oldPiece['title']);
+                oldPiece['composer'] = oldPiece['composer'].name;
+                $("#composer").val(oldPiece['composer']);
+                $("#comment").val(oldPiece['comment']);
+                $("#composition_start_date").val(oldPiece['date_of_composition']);
+                $("#composition_end_date").val(oldPiece['date_of_composition2']);
+                $("#number_of_voices").val(oldPiece['number_of_voices']);
+                oldPiece['languages'] = writeList(oldPiece['languages']);
+                oldPiece['collections'] = writeList(oldPiece['collections'], true);
+                oldPiece['genres'] = writeList(oldPiece['genres']);
+                oldPiece['locations'] = writeList(oldPiece['locations']);
+                oldPiece['instruments_voices'] = writeList(oldPiece['instruments_voices']);
+                oldPiece['sources'] = writeList(oldPiece['sources']);
+                oldPiece['tags'] = writeList(oldPiece['tags']);
+                $("#collections").val(oldPiece['collections']);
+                $("#languages").val(oldPiece['languages']);
+                $("#genres").val(oldPiece['genres']);
+                $("#locations").val(oldPiece['locations']);
+                $("#instruments_voices").val(oldPiece['instruments_voices']);
+                $("#sources").val(oldPiece['sources']);
+                $("#tags").val(oldPiece['tags']);
+
+                var $religButtons = $("#religiosity");
+                for (var i = 0; i < 3; i++)
+                {
+                    if ($religButtons.children()[i].innerText == oldPiece['religiosity'])
+                    {
+                        $religButtons.children()[i].className += " active ";
+                        $($religButtons.children()[i].children[0]).prop("checked", "true");
+                        break;
+                    }
+                }
+                var $vocalButtons = $("#vocalization");
+                for (var i = 0; i < 3; i++)
+                {
+                    if ($vocalButtons.children()[i].innerText == oldPiece['vocalization'])
+                    {
+                        $vocalButtons.children()[i].className += " active ";
+                        $($vocalButtons.children()[i].children[0]).prop("checked", "true");
+                        break;
+                    }
+                }
+            }
+
+            // Populate and fill the dynamicTables.
+            function fillDynamicTables()
+            {
+                var file_table = $("#piece_file_table");
+                var mov_table = $("#movement_table");
+                var fc = 1;
+
+                for (var i = 0; i < oldPiece['attachments'].length; i++)
+                {
+                    file_table.dynamicTable('addRow', true);
+                    var $file = file_table.find("#files_existing_files_" + (fc));
+                    var $source = file_table.find("#_existingfiles_source_" + (fc));
+                    var row = file_table.find("#_existingfiles" + (fc));
+                    row.attr('name', oldPiece['attachments'][i]['id']);
+                    row.css('background-color', '#E8E8E8');
+                    $file.attr("href", oldPiece['attachments'][i]['attachment']).text(oldPiece['attachments'][i]['file_name']);
+                    $source.val(oldPiece['attachments'][i]['source']);
+                    oldPiece['attachments'][i]['parent'] = "piece";
+
+                    fc++;
+                }
+
+                for (var i = 0; i < oldPiece['movements'].length; i++)
+                {
+                    mov_table.dynamicTable('addRow', true);
+                    var row = mov_table.find("#_existingmov" + (i + 1));
+                    row.attr('name',oldPiece['movements'][i]['item_id'] );
+                    row.css('background-color', '#E8E8E8');
+                    var $title = mov_table.find("#_existingmov_title_" + (i + 1));
+                    var $instruments = mov_table.find("#_existingmov" + (i + 1) + "_instrumentation");
+                    var $tags = mov_table.find("#_existingmov" + (i + 1) + "_free_tags");
+                    var $num_voices = mov_table.find("#_existingmov" + (i + 1) + "_number_of_voices");
+                    var $comment = mov_table.find("#_existingmov" + (i + 1) + "_comment");
+                    var $vocalization = mov_table.find("#_existingmov" + (i + 1) + "_vocalization");
+                    for (var j = 0; j < 3; j++)
+                    {
+                        if ($vocalization.children()[j].innerText === oldPiece['movements'][i]['vocalization'])
+                        {
+                            $vocalization.children()[j].className += " active ";
+                            $($vocalization.children()[j].children[0]).prop("checked", "true");
+                            break;
+                        }
+                    }
+                    oldPiece['movements'][i]['instruments_voices'] = writeList(oldPiece['movements'][i]['instruments_voices']);
+                    oldPiece['movements'][i]['tags'] = writeList(oldPiece['movements'][i]['tags']);
+                    $title.val(oldPiece['movements'][i].title);
+                    $instruments.val(oldPiece['movements'][i].instruments_voices);
+                    $tags.val(oldPiece['movements'][i].tags);
+                    $num_voices.val(oldPiece['movements'][i].number_of_voices);
+                    $comment.val(oldPiece['movements'][i].comment);
+                    for (var j = 0; j < oldPiece['movements'][i]['attachments'].length; j++)
+                    {
+                        file_table.dynamicTable('addRow', true);
+                        var row = file_table.find("#_existingfiles" + (fc));
+                        row.css('background-color', '#E8E8E8');
+                        var $file = file_table.find("#files_existing_files_" + (fc));
+                        var $attach = file_table.find("#_existingfiles_parent_" + (fc));
+                        var $source = file_table.find("#_existingfiles_source_" + (fc));
+                        var row = file_table.find("#_existingfiles" + (fc));
+                        row.attr('name', oldPiece['movements'][i]['attachments'][j]['id']);
+                        $file.attr("href", oldPiece['movements'][i]['attachments'][j]['attachment']).text(oldPiece['movements'][i]['attachments'][j]['file_name']);
+                        $source.val(oldPiece['movements'][i]['attachments'][j]['source']);
+                        $attach.selectpicker('val', "_existingmov_title_" + (i + 1));
+                        oldPiece['movements'][i]['attachments'][j]['parent'] = "_existingmov_title_" + (i + 1);
+                        fc++;
+                    }
+                    file_table.dynamicTable('drawAttachSelects');
+                }
+
+                //listener for deleting existing movements or files
+                $("[id^=del_mov], [id^=del_files]").click(function (event)
+                {
+                    var row = $(event['target']).parents("[id^=_existing]")[0];
+                    var type;
+                    var id;
+                    var name;
+                    if (row.id.indexOf('mov') !== -1)
+                        type = "M";
+                    else
+                        type = "A";
+                    if (type == "A")
+                    {
+                        name = row.children[2].children[1].children[0].title
+                    }
+                    else
+                    {
+                        name = row.children[2].children[0].value
+                    }
+                    id = row.getAttribute('name');
+                    changes['delete'].push({type: type, id: id, name: name});
+                })
+            }
+
             function writeList(jlist, collection)
             {
                 var result = "";
@@ -360,8 +533,6 @@
 
                 return result
             }
-            setTimeout(function(){console.log(oldPiece)}, 2000);
-
         });
     </script>
 
