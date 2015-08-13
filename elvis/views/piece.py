@@ -98,8 +98,7 @@ class PieceUpdate(generics.RetrieveUpdateDestroyAPIView):
 
     def get(self, request, *args, **kwargs):
         piece = Piece.objects.get(pk=int(kwargs['pk']))
-        if not piece or (piece.uploader != request.user
-                         and not request.user.is_superuser):
+        if not (request.user == piece.uploader or request.user.is_superuser):
             return Response(status=status.HTTP_401_UNAUTHORIZED)
         return super(PieceUpdate, self).get(self, request, *args, **kwargs)
 
