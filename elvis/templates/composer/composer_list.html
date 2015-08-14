@@ -12,24 +12,30 @@
     </div>
     {% include "paginate.html" with content=content %}
 
-    {% for composer in content.results %}
-        <div class="row list-row row-eq-height">
-            <div class='col-xs-1 list-add'>{% include "includes/download-badge-inc.html" with download_type="elvis_composer" download_item_id=composer.item_id in_cart=composer.in_cart %}</div>
-            <a href='{{ composer.url }}' class='list-item col-xs-11'>
+    <div class="row">
+        <div class="col-md-12">
+            {% for composer in content.results %}
+                <div class="list-row row-eq-height">
+                    <div class='col-xs-1 list-add'>{% include "includes/download-badge-inc.html" with download_type="elvis_composer" download_item_id=composer.item_id in_cart=composer.in_cart %}</div>
+                    <a href='{{ composer.url }}' class='list-item col-xs-11'>
                 <span class='badge alert-info right-badge'
                       style='margin-top:10px'>{{ composer.piece_count }} Pieces, {{ composer.movement_count }} Movements</span>
-                <h4>{{ composer.name }}</h4>
+                        <h4>{{ composer.name }}</h4>
 
-                <p class='list-group-item-text'>
-                    <small>{% if not composer.birth_date %} (Unknown) {% else %} ({{ composer.birth_date }}&ndash;
-                        {{ composer.death_date }}) {% endif %}</small>
-                    <br>
-                </p>
-            </a>
+                        <p class='list-group-item-text'>
+                            <small>{% if not composer.birth_date %} (Unknown) {% else %} (
+                                {{ composer.birth_date }}&ndash;
+                                {{ composer.death_date }}) {% endif %}</small>
+                            <br>
+                        </p>
+                    </a>
+                </div>
+
+            {% endfor %}
+            {% include "paginate.html" with content=content %}
         </div>
+    </div>
 
-    {% endfor %}
-    {% include "paginate.html" with content=content %}
 
 
 {% endblock %}
