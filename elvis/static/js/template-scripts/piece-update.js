@@ -1,12 +1,12 @@
 $(document).ready(function ($)
 {
-
     var oldPiece = {};
     var changes = {};
     changes['modify'] = [];
     changes['delete'] = [];
     changes['add'] = [];
 
+    //Loading plugins for the various form fields
     autocomplete("title", "title_suggestion_menu", "pieceSuggest");
     autocomplete("composer", "composer_suggestion_menu", "composerSuggest");
     autocomplete("collections", "collection_suggestion_menu", "collectionSuggest", 'list');
@@ -71,6 +71,7 @@ $(document).ready(function ($)
         }
     });
 
+    //If an input is changed, set a listener to warn user when leaving the page.
     $(":input").on('input', function()
     {
         $(window).on('beforeunload', function (event)
@@ -97,6 +98,7 @@ $(document).ready(function ($)
         }
     });
 
+    //Create a list of database changes (deleting and moving objects) and write to screen.
     $("#piece-submit").click(function()
     {
         findChanges();
@@ -249,13 +251,14 @@ $(document).ready(function ($)
             error: function (data)
             {
                 $base_modal_header.html("<h4 class='modal-title'>Server Error<h4>");
-                $base_modal_body.html("<p>An error occurred while uploading your file. Please try again, or, if the error persists, " +
+                $base_modal_body.html("<p>An error occurred while updating this piece. Please try again, or, if the error persists, " +
                     "<a href='mailto:elvisdatabase@gmail.com?Subject=Upload%20Error'>contact us</a></p>");
                 $base_modal_footer.html("<button type='button' class='btn btn-default' data-dismiss='modal'>Close</button>");
             }
         })
     });
 
+    //Listeners to open popovers on the labels of inputs when the input is focused.
     var $upload_fields = $(".upload-input-field");
     $upload_fields.focus(function (event)
     {
@@ -283,8 +286,6 @@ $(document).ready(function ($)
     // Get a json representation of the piece, and fill the form with its values.
     function fillUpdateForm()
     {
-
-
         $.ajax({
             datatype: "json",
             url: window.location.href  + "?format=json",
@@ -415,7 +416,8 @@ $(document).ready(function ($)
             file_table.dynamicTable('drawAttachSelects');
         }
 
-        //listener for deleting existing movements or files
+        //Listener for deleting existing movements or files. Adds the information to the
+        //changes dict when one is deleted.
         $("[id^=del_mov], [id^=del_files]").click(function (event)
         {
             var row = $(event['target']).parents("[id^=_existing]")[0];
@@ -443,17 +445,23 @@ $(document).ready(function ($)
         });
     }
 
+    //Draws a modal with instructions for uploading, but only once per session.
     function drawWelcomeModal()
     {
-        $base_modal_header.html("<h4 class='modal-title'>Modifying an existing piece...<h4>");
-        $base_modal_body.html("<p>This form has been pre-filled with the current state of <em>"+oldPiece['title']+"</em>.<ul><li>You may modify any of its properties.</li>" +
-            "<li>Do not modfiy any fields that you do not wish to change.</li> <li>Existing movements and files are colored dark grey - you may modify or delete these as well.</li>" +
-            "<li>You may also add new movements and files.</li></ul>" +
-            "<strong>No changes are applied until you click the submit button </strong> at the bottom of the page. If you make a mistake, or need to restart the process, simply reload the page. </p>");
-        $base_modal_footer.html("<button type='button' class='btn btn-success' data-dismiss='modal'>Got it</button>");
-        $base_modal.modal('show');
+        if (sessionStorage.getItem('saw_instructions') !== 'true')
+        {
+            $base_modal_header.html("<h4 class='modal-title'>Modifying an existing piece...<h4>");
+            $base_modal_body.html("<p>This form has been pre-filled with the current state of <em>"+oldPiece['title']+"</em>.<ul><li>You may modify any of its properties.</li>" +
+                "<li>Do not modfiy any fields that you do not wish to change.</li> <li>Existing movements and files are colored dark grey - you may modify or delete these as well.</li>" +
+                "<li>You may also add new movements and files.</li></ul>" +
+                "<strong>No changes are applied until you click the submit button </strong> at the bottom of the page. If you make a mistake, or need to restart the process, simply reload the page. </p>");
+            $base_modal_footer.html("<button type='button' class='btn btn-success' data-dismiss='modal'>Got it</button>");
+            $base_modal.modal('show');
+            sessionStorage.setItem("saw_instructions", 'true');
+        }
     }
 
+    //Utility function. Turns a json list objects into a semicolon seperated string.
     function writeList(jlist, collection)
     {
         var result = "";
@@ -477,6 +485,8 @@ $(document).ready(function ($)
         return result
     }
 
+    //Scan the form and dynamic tables, comparing the current values to the values stored in
+    //oldPiece. Record differences in the changes dict.
     function findChanges()
     {
         // Compare text and number fields to their previous values, save
@@ -560,7 +570,7 @@ $(document).ready(function ($)
             if (selected_vocal)
                 fields.push(['vocalization', selected_vocal.children[0].value]);
 
-            // Get old movement info
+            // Find the old movement in the oldPiece.
             for (var j = 0; j < oldPiece['movements'].length; j++)
             {
                 if (oldPiece['movements'][j]['item_id'] === id)
@@ -570,7 +580,7 @@ $(document).ready(function ($)
                 }
             }
 
-            //Compare the two and add changed values to changes.
+            //Compare the old to the new, and record differences in a modifications dict.
             var key = 0;
             var value = 1;
             for (var j = 0; j < fields.length; j++)
@@ -584,11 +594,13 @@ $(document).ready(function ($)
             }
             if (!$.isEmptyObject(modifications))
             {
+                //if the movement has been modified, push the modifications to changes dict.
                 modifications['id'] = id;
                 modifications['type'] = "M";
                 changes['modify'].push(modifications)
             }
         }
+
         // Find and log new movements.
         var $new_movements = mov_table.children('[id^=mov]');
         for (var i = 0; i < $new_movements.length; i += 2)
@@ -613,18 +625,17 @@ $(document).ready(function ($)
             fields.push(['parent', row.find("[id^=_existingfiles_parent_]")[0].value]);
             fields.push(['source', row.find("[id^=_existingfiles_source_]")[0].value]);
 
-            //Find old attachment.
-            //First search piece attachments
+            //Find old attachment. First search piece attachments
             for (var j = 0; j < oldPiece['attachments'].length; j++)
             {
                 if (oldPiece['attachments'][j]['id'] === id)
                 {
                     oldAtt = oldPiece['attachments'][j];
-                    var oldParent= 'the piece';
+                    var oldParent= 'Attach to Piece';
                     break;
                 }
             }
-            //If not found, search movement attachments
+            //If not found, search movement attachments.
             if (oldAtt === null)
             {
                 for (var j = 0; j < oldPiece['movements'].length; j++)
@@ -644,7 +655,7 @@ $(document).ready(function ($)
                     }
                 }
             }
-            //Compare the two
+            //Compare the old to the new
             for (var j = 0; j < fields.length; j++)
             {
                 if (oldAtt[fields[j][key]] !== fields[j][value])
@@ -655,7 +666,7 @@ $(document).ready(function ($)
                 }
             }
 
-            //If differences exist, push th
+            //If differences exist, push them to changes.
             if (!$.isEmptyObject(modifications))
             {
                 modifications['id'] = id;
