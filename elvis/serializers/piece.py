@@ -105,8 +105,8 @@ class PieceSerializer(serializers.HyperlinkedModelSerializer):
     composer = ComposerPieceSerializer()
     tags = TagPieceSerializer(many=True)
     genres = GenrePieceSerializer(many=True)
-    date_of_composition = serializers.IntegerField()
-    date_of_composition2 = serializers.IntegerField()
+    composition_start_date = serializers.IntegerField()
+    composition_end_date = serializers.IntegerField()
     collections = CollectionPieceSerialzer(many=True)
     instruments_voices = InstrumentVoicePieceSerializer(many=True)
     languages = LanguagePieceSerializer(many=True)
@@ -126,7 +126,7 @@ class PieceSerializer(serializers.HyperlinkedModelSerializer):
 class PieceListSerializer(serializers.HyperlinkedModelSerializer):
     composer = ComposerPieceSerializer()
     tags = TagPieceSerializer(many=True)
-    date_of_composition2 = serializers.IntegerField()
+    composition_end_date = serializers.IntegerField()
     movement_count = serializers.IntegerField()
     uploader = UserPieceSerializer()
     created = serializers.DateTimeField(format=None)
@@ -134,4 +134,4 @@ class PieceListSerializer(serializers.HyperlinkedModelSerializer):
 
     class Meta:
         model = Piece
-        fields = ('title', 'url', 'composer', 'movement_count', 'tags', 'uploader', 'item_id', 'date_of_composition2', 'created')
+        fields = ('title', 'url', 'composer', 'movement_count', 'tags', 'uploader', 'item_id', 'composition_end_date', 'created')

@@ -397,10 +397,10 @@ def handle_related_models(object_list, parent, clean, **kwargs):
             parent.vocalization = item.get('value')
         if field == "religiosity":
             parent.religiosity = item.get('value')
-        if field == "date_of_composition" or field == "composition_start_date":
-            parent.date_of_composition = int(item.get('value'))
-        if field == "date_of_composition2" or field == "composition_end_date":
-            parent.date_of_composition2 = int(item.get('value'))
+        if field == "composition_start_date" or field == "composition_start_date":
+            parent.composition_start_date = int(item.get('value'))
+        if field == "composition_end_date" or field == "composition_end_date":
+            parent.composition_end_date = int(item.get('value'))
         if field == "comment":
             parent.comment = item.get('value')
     parent.save()

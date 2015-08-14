@@ -191,9 +191,9 @@
                     <td style="display: none;">{{ piece.id }}</td>
                     <td><a href="{{ piece.url }}">{{ piece.title }}</a></td>
                     <td><a href="{{ piece.composer.url }}">{{ piece.composer.name }}</a></td>
-                    <td>{% if piece.date_of_composition  == piece.date_of_composition2 %}
-                        {{ piece.date_of_composition2 }}{% else %}{{ piece.date_of_composition }}-
-                        {{ piece.date_of_composition2 }}{% endif %}</td>
+                    <td>{% if piece.composition_start_date  == piece.composition_end_date %}
+                        {{ piece.composition_end_date }}{% else %}{{ piece.composition_start_date }}-
+                        {{ piece.composition_end_date }}{% endif %}</td>
                     <td><span class="label label-success">Piece</span>{% if piece.movements %}<br>
                         <span class="label label-default">+ {{ piece.movements | length }} movement{{ piece.movements|length|pluralize }}</span> {% endif %}</td>
 
@@ -210,9 +210,9 @@
                     <td style="display: none;">{{ movement.id }}</td>
                     <td><a href="{{ movement.url }}">{{ movement.title }}</a></td>
                     <td><a href="{{ movement.composer.url }}">{{ movement.composer.name }}</a></td>
-                    <td>{% if movement.date_of_composition  == movement.date_of_composition2 %}
-                        {{ movement.date_of_composition }}{% else %}{{ movement.date_of_composition }}
-                        -{{ movement.date_of_composition2  }}{% endif %}</td>
+                    <td>{% if movement.composition_start_date  == movement.composition_end_date %}
+                        {{ movement.composition_start_date }}{% else %}{{ movement.composition_start_date }}
+                        -{{ movement.composition_end_date  }}{% endif %}</td>
                     <td><span class="label label-primary">Movement</span><br><span class="label label-default">{{ movement.piece.title }}</span></td>
                 </tr>
             {% endfor %}

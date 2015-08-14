@@ -317,7 +317,7 @@ class DumpDrupal(object):
                 'updated': datetime.datetime.fromtimestamp(item.get('updated'))
             }
 
-            #if not item.get('date_of_composition', None) == item.get('date_of_composition2', None):
+            #if not item.get('composition_start_date', None) == item.get('composition_end_date', None):
 
             if rettype == "piece":
                 x = Piece(**p)

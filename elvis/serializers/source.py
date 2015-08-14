@@ -25,11 +25,11 @@ class SourcePieceSerializer(serializers.HyperlinkedModelSerializer):
     movements = SourceMovementSerializer(many=True)
     composer = SourceComposerSerializer()
     item_id = serializers.ReadOnlyField(source='pk')
-    date_of_composition = serializers.DateField(format=None)
+    composition_start_date = serializers.DateField(format=None)
 
     class Meta:
         model = Piece
-        fields = ('url', 'item_id', 'title', 'movements', "date_of_composition", "composer")
+        fields = ('url', 'item_id', 'title', 'movements', "composition_start_date", "composer")
 
 
 class SourceSerializer(serializers.HyperlinkedModelSerializer):

@@ -21,23 +21,23 @@ class AttachmentComposerSerializer(serializers.HyperlinkedModelSerializer):
 
 class AttachmentPieceSerializer(serializers.HyperlinkedModelSerializer):
     composer = AttachmentComposerSerializer()
-    date_of_composition = serializers.DateField(format=None)
-    date_of_composition2 = serializers.DateField(format=None)
+    composition_start_date = serializers.DateField(format=None)
+    composition_end_date = serializers.DateField(format=None)
 
     class Meta:
         model = Piece
-        fields = ('url', 'title', 'date_of_composition',  'date_of_composition2', 'composer', 'id')
+        fields = ('url', 'title', 'composition_start_date',  'composition_end_date', 'composer', 'id')
 
 
 class AttachmentMovementSerializer(serializers.HyperlinkedModelSerializer):
     composer = AttachmentComposerSerializer()
     piece = AttachmentPieceSerializer()
-    date_of_composition = serializers.DateField(format=None)
-    date_of_composition2 = serializers.DateField(format=None)
+    composition_start_date = serializers.DateField(format=None)
+    composition_end_date = serializers.DateField(format=None)
 
     class Meta:
         model = Movement
-        fields = ('url', 'title', 'date_of_composition', 'date_of_composition2', 'composer', 'id', 'piece')
+        fields = ('url', 'title', 'composition_start_date', 'composition_end_date', 'composer', 'id', 'piece')
 
 
 class UserAttachmentSerializer(serializers.HyperlinkedModelSerializer):
@@ -60,11 +60,11 @@ class DownloadMovementSerializer(serializers.HyperlinkedModelSerializer):
 class DownloadPieceSerializer(serializers.HyperlinkedModelSerializer):
     movements = DownloadMovementSerializer(many=True)
     composer = AttachmentComposerSerializer()
-    date_of_composition = serializers.DateField(format=None)
-    date_of_composition2 = serializers.DateField(format=None)
+    composition_start_date = serializers.DateField(format=None)
+    composition_end_date = serializers.DateField(format=None)
     class Meta:
         model = Piece
-        fields = ('title', 'id', 'composer', 'url', 'movements', 'date_of_composition', 'date_of_composition2',)
+        fields = ('title', 'id', 'composer', 'url', 'movements', 'composition_start_date', 'composition_end_date',)
 
 
 class DownloadSerializer(serializers.ModelSerializer):

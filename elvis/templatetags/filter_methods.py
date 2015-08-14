@@ -80,7 +80,7 @@ def get_field(model, fieldname):
 			fieldname = fieldname.replace('-', '')
 		field = getattr(model, fieldname)
 		if type(field) == date or type(field) == datetime:
-			if fieldname == "date_of_composition" or fieldname == "birth_date" or fieldname == "death_date":
+			if fieldname == "composition_start_date" or fieldname == "birth_date" or fieldname == "death_date":
 				return format_composition(field)
 			else:
 				return format_timestamp(field)

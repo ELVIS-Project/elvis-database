@@ -130,7 +130,7 @@
                     <td><a href="{{ piece.url }}">{{ piece.title }}</a></td>
                     <td><a href="{{ piece.composer.url }}">{{ piece.composer.name}}</a></td>
                     <td>{% if piece.movement_count %}<span class="label label-primary">{{ piece.movement_count }} movement{{  piece.movement_count | pluralize }} included</span></a>{% else %}<span class="label label-default">No movements</span>{% endif %}</td>
-                    <td width="10%">{{ piece.date_of_composition2 }}</td>
+                    <td width="10%">{{ piece.composition_end_date }}</td>
                 </tr>
             {% endfor %}
             </tbody>
@@ -164,7 +164,7 @@
                     <td><a href="{{ mov.url }}">{{ mov.title }}</a> </td>
                     <td><a href="{{ mov.composer.url }}">{{ mov.composer.name}}</a></td>
                     <td>{% if mov.piece %}<a href="{{ mov.piece.url }}"><span class="label label-success">{{ mov.piece.title }}</span></a>{% else %}<span class="label label-default">No piece</span>{% endif %}</td>
-                    <td>{{ mov.date_of_composition2 }}</td>
+                    <td>{{ mov.composition_end_date }}</td>
                 </tr>
             {% endfor %}
             </tbody>

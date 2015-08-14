@@ -19,8 +19,8 @@
             <a href='{{ movement.url }}' class='list-item col-xs-11'>
                 <h4>{{ movement.title }}<br>
                     <small>
-                        Composed by {{ movement.composer.name }} {% if movement.date_of_composition2 %}in
-                        {{ movement.date_of_composition2 }}<br>{% endif %}
+                        Composed by {{ movement.composer.name }} {% if movement.composition_end_date %}in
+                        {{ movement.composition_end_date }}<br>{% endif %}
                         {% if movement.piece %}Part of {{ movement.piece.title }}<br>{% endif %}
                     </small>
                 </h4>

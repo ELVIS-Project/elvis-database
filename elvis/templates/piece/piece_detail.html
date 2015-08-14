@@ -61,12 +61,12 @@
                     <a href="{{ content.composer.url }}">{{ content.composer.name }}</a>
                 </dd>
                 <dt>Date of Composition</dt>
-                {% if content.date_of_composition  == content.date_of_composition2 %}
-                    <dd>{{ content.date_of_composition }}</dd>
-                {% elif content.date_of_composition %}
-                    <dd>{{ content.date_of_composition }}-{{ content.date_of_composition2 }} </dd>
+                {% if content.composition_start_date  == content.composition_end_date %}
+                    <dd>{{ content.composition_start_date }}</dd>
+                {% elif content.composition_start_date %}
+                    <dd>{{ content.composition_start_date }}-{{ content.composition_end_date }} </dd>
                 {% else %}
-                    <dd>{{ content.date_of_composition2 }}</dd>
+                    <dd>{{ content.composition_end_date }}</dd>
                 {% endif %}
                 <dt>Number of voices</dt>
                 <dd>

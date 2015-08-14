@@ -234,7 +234,7 @@ $(document).ready(function ($)
                     result += "<p class='list-group-item-text'> Piece: " + entry['parent_piece_name'] + "</p>";
                 }
                 result += "<p class='list-group-item-text'> Composer: " + entry['composer_name'] + "</p>" +
-                    "<p class='list-group-item-text'> Date: " + entry['date_of_composition2'].slice(0, 4) + "</p>";
+                    "<p class='list-group-item-text'> Date: " + entry['composition_end_date'].slice(0, 4) + "</p>";
                 if (entry['tags'] !== undefined)
                 {
                     result += "<p class='list-group-item-text'> Tags: " + entry['tags'] + "</p>";
@@ -251,7 +251,7 @@ $(document).ready(function ($)
                     "<a href='/piece/" + entry['item_id'] + "' id='result-list-item" + key + "' class='search-result-item col-xs-11'>" +
                     "<span class='label label-success right-label'>Piece</span><h4> " + entry['title'] + "</h4>" +
                     "<p class='list-group-item-text'> Composer: " + entry['composer_name'] + "</p>" +
-                    "<p class='list-group-item-text'> Date: " + entry['date_of_composition2'].slice(0, 4) + "</p>";
+                    "<p class='list-group-item-text'> Date: " + entry['composition_end_date'].slice(0, 4) + "</p>";
                 if (entry['tags'] !== undefined)
                 {
                     result += "<p class='list-group-item-text'> Tags: " + entry['tags'] + "</p>";

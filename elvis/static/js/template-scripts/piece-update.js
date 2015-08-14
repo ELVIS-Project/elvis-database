@@ -306,8 +306,8 @@ $(document).ready(function ($)
         oldPiece['composer'] = oldPiece['composer'].name;
         $("#composer").val(oldPiece['composer']);
         $("#comment").val(oldPiece['comment']);
-        $("#composition_start_date").val(oldPiece['date_of_composition']);
-        $("#composition_end_date").val(oldPiece['date_of_composition2']);
+        $("#composition_start_date").val(oldPiece['composition_start_date']);
+        $("#composition_end_date").val(oldPiece['composition_end_date']);
         $("#number_of_voices").val(oldPiece['number_of_voices']);
         oldPiece['languages'] = writeList(oldPiece['languages']);
         oldPiece['collections'] = writeList(oldPiece['collections'], true);
@@ -496,9 +496,9 @@ $(document).ready(function ($)
         {
             var id = $inputs[i].getAttribute('id');
             if (id === "composition_start_date")
-                var id2 = "date_of_composition";
+                var id2 = "composition_start_date";
             else if (id === "composition_end_date")
-                id2 = "date_of_composition2";
+                id2 = "composition_end_date";
             else
                 id2 = id;
             if ($("#" + id).val() != oldPiece[id2])

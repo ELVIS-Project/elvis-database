@@ -231,8 +231,8 @@ def handle_dynamic_file_table(request, parent, cleanup=Cleanup()):
         mov_vocalization = request.POST.get('mov' + str(k) + "_vocalization")
         mov_comment = request.POST.get('mov' + str(k) + "_comment")
         new_mov = Movement(title=files[k], position=i,
-                           date_of_composition=parent.date_of_composition,
-                           date_of_composition2=parent.date_of_composition2,
+                           composition_start_date=parent.composition_start_date,
+                           composition_end_date=parent.composition_end_date,
                            uploader=parent.uploader, religiosity=parent.religiosity,
                            composer=parent.composer, piece=parent)
         new_mov.save()

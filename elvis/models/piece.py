@@ -18,8 +18,8 @@ class Piece(models.Model):
     composer = models.ForeignKey("elvis.Composer", db_index=True, blank=True, null=True, related_name="pieces")
     old_date_of_composition = models.DateField(blank=True, null=True)
     old_date_of_composition2 = models.DateField(blank=True, null=True)
-    date_of_composition = models.IntegerField(blank=True, null=True)
-    date_of_composition2 = models.IntegerField(blank=True, null=True)
+    composition_start_date = models.IntegerField(blank=True, null=True)
+    composition_end_date = models.IntegerField(blank=True, null=True)
     number_of_voices = models.IntegerField(blank=True, null=True)
     tags = models.ManyToManyField("elvis.Tag", blank=True, related_name="pieces")
     genres = models.ManyToManyField("elvis.Genre", blank=True, related_name="pieces")
@@ -131,12 +131,12 @@ def solr_index(sender, instance, created, **kwargs):
     else:
         composer_name = None
 
-    if piece.date_of_composition:
-        d1 = datetime.date(piece.date_of_composition, 01, 01)
+    if piece.composition_start_date:
+        d1 = datetime.date(piece.composition_start_date, 01, 01)
     else:
         d1 = None
-    if piece.date_of_composition2:
-        d2 = datetime.date(piece.date_of_composition2, 01, 01)
+    if piece.composition_end_date:
+        d2 = datetime.date(piece.composition_end_date, 01, 01)
     else:
         d2 = None
 
@@ -144,8 +144,8 @@ def solr_index(sender, instance, created, **kwargs):
          'id': str(uuid.uuid4()),
          'item_id': int(piece.id),
          'title': piece.title,
-         'date_of_composition': d1,
-         'date_of_composition2': d2,
+         'composition_start_date': d1,
+         'composition_end_date': d2,
          'number_of_voices': piece.number_of_voices,
          'created': piece.created,
          'updated': piece.updated,

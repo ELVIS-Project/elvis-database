@@ -43,7 +43,7 @@
                                 <td width="21%"><a href="{{ piece.url }}">{{ piece.title }}</a></td>
                                 <td width="22.5%"> {{ attachment.file_name }} </td>
                                 <td width="20.5%"><a href="{{ piece.composer.url }}">{{ piece.composer.name }}</a></td>
-                                <td width="11.5%">{% if piece.date_of_composition  == piece.date_of_composition2 %}{{ piece.date_of_composition | date:"Y" }}{% else %}{{ piece.date_of_composition | date:"Y" }}-{{ piece.date_of_composition2 | date:"Y" }}{% endif %}</td>
+                                <td width="11.5%">{% if piece.composition_start_date  == piece.composition_end_date %}{{ piece.composition_start_date | date:"Y" }}{% else %}{{ piece.composition_start_date | date:"Y" }}-{{ piece.composition_end_date | date:"Y" }}{% endif %}</td>
                                 <td width="7%"><span class="label label-success">Piece</span></td>
                             {% endfor %}
                             {% for mvmt in attachment.movements %}
@@ -53,7 +53,7 @@
                                 <td width="21%"><a href="{{ mvmt.url }}">{{ mvmt.title }}</a></td>
                                 <td width="22.5%"> {{ attachment.file_name }} </td>
                                 <td width="20.5%"><a href="{{ mvmt.composer.url }}">{{ mvmt.composer.name }}</a></td>
-                                <td width="11.5%">{% if mvmt.date_of_composition  == mvmt.date_of_composition2 %}{{ mvmt.date_of_composition | date:"Y" }}{% else %}{{ mvmt.date_of_composition | date:"Y" }}-{{ mvmt.date_of_composition2 | date:"Y" }}{% endif %}</td>
+                                <td width="11.5%">{% if mvmt.composition_start_date  == mvmt.composition_end_date %}{{ mvmt.composition_start_date | date:"Y" }}{% else %}{{ mvmt.composition_start_date | date:"Y" }}-{{ mvmt.composition_end_date | date:"Y" }}{% endif %}</td>
                                 <td width="7%"><span class="label label-primary">Movement</span></td>
                             {% endfor %}
                         </tr>

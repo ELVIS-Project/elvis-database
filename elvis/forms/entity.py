@@ -25,7 +25,7 @@ class MovementForm(forms.Form):
     attachment = forms.FileField()
     composer = forms.CharField(max_length=255)
     corpus = forms.CharField(max_length=255)
-    date_of_composition = forms.CharField(required=False)
+    composition_start_date = forms.CharField(required=False)
     number_of_voices = forms.IntegerField(required=False)
     tags = forms.CharField(widget=forms.Textarea)
     comment = forms.CharField(widget=forms.Textarea, required=False)

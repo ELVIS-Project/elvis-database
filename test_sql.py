@@ -35,7 +35,7 @@ COMPOSERS_QUERY = """SELECT td.tid AS old_id, td.name, dt.field_dates_value AS b
                      WHERE td.vid = 3"""
 
 PIECE_MOVEMENT_QUERY = """SELECT rv.title, cp.field_composer_tid AS composer_id, rv.nid AS old_id,
-                 rv.uid AS uploader, fd.field_date_value AS date_of_composition, fd.field_date_value2 AS date_of_composition2,
+                 rv.uid AS uploader, fd.field_date_value AS composition_start_date, fd.field_date_value2 AS composition_end_date,
                  fv.field_voices_value AS number_of_voices, fc.field_comment_value AS comment,
                  n.created AS created, n.changed AS updated, b.bid AS book_id FROM node n
                   LEFT JOIN node_revision rv ON (n.vid = rv.vid)

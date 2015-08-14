@@ -135,8 +135,8 @@ class Search:
 		start_date = datetime.date(start, 1, 1)
 		end_date = datetime.date(end, 12, 31)
 		self.date_results['composers'].append(Composer.objects.filter(birth_date__range=(start_date, end_date)))
-		self.date_results['pieces'].append(Piece.objects.filter(date_of_composition__range=(start_date, end_date)))
-		self.date_results['movements'].append(Movement.objects.filter(date_of_composition__range=(start_date, end_date)))
+		self.date_results['pieces'].append(Piece.objects.filter(composition_start_date__range=(start_date, end_date)))
+		self.date_results['movements'].append(Movement.objects.filter(composition_start_date__range=(start_date, end_date)))
 
 	# If there is no input query and operator is disjunction return union of filters
 	# Individual selections within filter override the filter itself

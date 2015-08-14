@@ -99,8 +99,8 @@
      <!-- LM Date fields -->
     <field name="created" type="date" indexed="true" stored="true" />
     <field name="updated" type="date" indexed="true" stored="true" />
-    <field name="date_of_composition" type="date" indexed="true" stored="true" /> 
-    <field name="date_of_composition2" type="date" indexed="true" stored="true" />
+    <field name="composition_start_date" type="date" indexed="true" stored="true" />
+    <field name="composition_end_date" type="date" indexed="true" stored="true" />
     <field name="birth_date" type="date" indexed="true" stored="true" />
     <field name="death_date" type="date" indexed="true" stored="true" />
     <field name="date_general" type="date" indexed="true" stored="true" />
@@ -187,9 +187,9 @@
              
     <!-- Advanced Search -->
     <copyField source="birth_date" dest="date_general"/>
-    <copyField source="date_of_composition" dest="date_general" />
+    <copyField source="composition_start_date" dest="date_general" />
     <copyField source="death_date" dest="date_general2"/>	
-    <copyField source="date_of_composition2" dest="date_general2"/>
+    <copyField source="composition_end_date" dest="date_general2"/>
     <copyField source="composer_name" dest="name_general" />
     <copyField source="name" dest="name_general"/>
     <copyField source="title" dest="name_sort" />
@@ -199,7 +199,7 @@
 
 
     <!--<copyField source="birth_date" dest="text" />
-    <copyField source="date_of_composition" dest="text" /> -->   
+    <copyField source="composition_start_date" dest="text" /> -->
     
    
    <!-- <copyField source="*_t" dest="text" maxChars="3000"/> -->

@@ -106,8 +106,8 @@ class MovementSerializer(serializers.HyperlinkedModelSerializer):
     uploader = UserMovementSerializer()
     piece = PieceMovementSerializer()
     item_id = serializers.ReadOnlyField(source='pk')
-    date_of_composition = serializers.IntegerField()
-    date_of_composition2 = serializers.IntegerField()
+    composition_start_date = serializers.IntegerField()
+    composition_end_date = serializers.IntegerField()
     created = serializers.DateTimeField(format=None)
     updated = serializers.DateTimeField(format=None)
 
@@ -121,10 +121,10 @@ class MovementListSerializer(serializers.HyperlinkedModelSerializer):
     uploader = UserMovementSerializer()
     piece = PieceMovementSerializer()
     item_id = serializers.ReadOnlyField(source='pk')
-    date_of_composition2 = serializers.IntegerField()
+    composition_end_date = serializers.IntegerField()
     created = serializers.DateTimeField(format=None)
 
     class Meta:
         model = Movement
-        fields = ('title','composer', 'url', 'tags', 'uploader', 'piece', 'item_id', 'date_of_composition2', 'created')
+        fields = ('title','composer', 'url', 'tags', 'uploader', 'piece', 'item_id', 'composition_end_date', 'created')
 
