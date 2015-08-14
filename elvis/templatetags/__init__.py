@@ -1,1 +1,0 @@
-import elvis.templatetags.filter_methods 
