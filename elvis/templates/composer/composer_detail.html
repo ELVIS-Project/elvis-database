@@ -53,7 +53,7 @@
                 <td>{% include "includes/download-badge-inc.html" with download_type="elvis_piece" download_item_id=piece.item_id title="Add to Downloads" in_cart=piece.in_cart %}</td>
                 <td><a href="{{ piece.url }}">{{ piece.title }}</a></td>
                 <td>{% if piece.movement_count %}<span class="label label-info"> {{ piece.movement_count }} movement{{  piece.movement_count | pluralize }}</span> {% else %}<span class="label label-default">0 movements</span>{% endif %}</td>
-                <td width="10%">{{ piece.date_of_composition }}</td>
+                <td width="10%">{{ piece.date_of_composition2 }}</td>
             </tr>
         {% endfor %}
         </tbody>
@@ -75,7 +75,7 @@
             <tr>
                 <td>{% include "includes/download-badge-inc.html" with download_type="elvis_movement" download_item_id=mov.item_id title="Add to Downloads" in_cart=mov.in_cart %}</td>
                 <td><a href="{{ mov.url }}">{{ mov.title }}</a> </td>
-                <td>{{ mov.date_of_composition }}</td>
+                <td>{{ mov.date_of_composition2 }}</td>
             </tr>
         {% endfor %}
         </tbody>
