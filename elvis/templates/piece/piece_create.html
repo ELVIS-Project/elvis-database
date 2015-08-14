@@ -33,13 +33,6 @@
 </div>
 <div id="upload-page-content">
     <form action="/pieces/" method="post" id="new-piece-form" enctype="multipart/form-data">{% csrf_token %}
-            <span class="help-block">
-                Suggestions are offered for items which already exist in the database. Selecting a suggested composer will add the piece
-                to the existing composers oeuvre. While you are encouraged to provide beginning and ending dates
-                for the composition, you are only required to provide one date.
-            </span>
-        <br>
-
         <div class="input-group">
               <span class="input-group-addon" data-toggle="popover" data-placement="top" data-trigger="focus"
                     data-html='true'
@@ -98,7 +91,7 @@
                 <div class="form-group">
                     <div class="input-group">
                                 <span class="input-group-addon" data-toggle="popover" data-placement="top"
-                                      data-trigger="focus" data-html='true' data-viewport="#content-container"
+                                      data-trigger="focus" data-html='true' data-viewport="#content"
                                       title="<b>Composition Start Date</b> <span class='label label-warning pull-right'>Optional</span>"
                                       data-content="The year work began on the piece.<br>
                                       <ul><li>If only one date is known, submit it as the 'Composition End Date'.</li>
@@ -130,9 +123,8 @@
         <h2>Additional Information</h2>
         <hr>
         <span class="help-block">
-            These fields make it easier to find the piece using the database search engine. Most fields can accept a list of inputs separated by semicolons.
-            For example, if the piece has a harpsichord, violin and cello, you can input "harpsichord; violin; cello" in the instrumentation field. If
-            this piece has movements, which you can define below, a number of these fields can be overridden on a per-movement basis.
+            These fields make it easier to find the piece using the database search engine.
+            Multiple values can be specified in most fields using a semicolon (e.g. Tags: D-Sharp; Motet).
         </span>
 
         <div class="row">
@@ -308,9 +300,8 @@
         <hr>
             <span class="help-block">
                 If the work is divided into movements, acts, or other parts, declare them in this table.
-                Many inputs from may be overridden on a per-movement basis by clicking the 'Show Advanced' button.
-
-        </span>
+                To specify information on a per-movement basis, click on the 'Show Advanced' button.
+            </span>
         <div class="well">
             <h4>Movements</h4>
             <table class="table table-hover">
