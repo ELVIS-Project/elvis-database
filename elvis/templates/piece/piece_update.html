@@ -148,38 +148,32 @@
         </span>
 
             <div class="row">
-                <div class="col-md-6">
-                    <div class="btn-group btn-group-justified form-inline radio"
-                         id="religiosity" data-toggle="buttons">
+                <div class="col-md-6" data-toggle="popover" data-placement="top" data-trigger="hover focus" data-html='true' title="<b>Religious Nature</b><span class='label label-primary pull-right'>Required</span>"
+                     data-content="This field is required because for many repertories it is useful to search, sort, and group all sacred pieces at once, or all secular pieces. If your piece does not easily fall into the sacred or secular categories, you may choose the 'Uncategorized' option.">
+                    <div class="btn-group btn-group-justified form-inline radio" id="religiosity" data-toggle="buttons">
                         <label class="btn btn-default">
-                            <input type="radio" name="religiosity"
-                                   value="Sacred"> Sacred
+                            <input type="radio" name="religiosity" value="Sacred"> Sacred
                         </label>
                         <label class="btn btn-default">
-                            <input type="radio" name="religiosity"
-                                   value="Secular"> Secular
+                            <input type="radio" name="religiosity" value="Secular"> Secular
                         </label>
                         <label class="btn btn-default">
-                            <input type="radio" name="religiosity"
-                                   value="Ambiguous"> Ambiguous
+                            <input type="radio" name="religiosity" value="Uncategorized"> Uncategorized
                         </label>
                     </div>
                     <div id="religiosity_error"></div>
                 </div>
-                <div class="col-md-6">
-                    <div class="btn-group btn-group-justified form-inline radio"
-                         id="vocalization" data-toggle="buttons">
+                <div class="col-md-6" data-toggle="popover" data-placement="top" data-trigger="hover focus" data-html='true' title="<b>Vocalization</b><span class='label label-primary pull-right'>Required</span>"
+                     data-content="Categorizing the piece as one of these three options helps to search and sort the database.">
+                    <div class="btn-group btn-group-justified form-inline radio" id="vocalization" data-toggle="buttons">
                         <label class="btn btn-default">
-                            <input type="radio" name="vocalization"
-                                   value="Vocal"> Vocal
+                            <input type="radio" name="vocalization" value="Vocal"> Vocal
                         </label>
                         <label class="btn btn-default">
-                            <input type="radio" name="vocalization"
-                                   value="Instrumental"> Instrumental
+                            <input type="radio" name="vocalization" value="Instrumental"> Instrumental
                         </label>
                         <label class="btn btn-default">
-                            <input type="radio" name="vocalization"
-                                   value="Mixed"> Mixed
+                            <input type="radio" name="vocalization" value="Mixed"> Mixed
                         </label>
                     </div>
                     <div id="vocalization_error"></div>
