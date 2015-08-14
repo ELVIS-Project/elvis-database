@@ -105,9 +105,12 @@ $(document).ready(function ($)
         if (changes['delete'].length > 0 || changes['add'].length > 0 ||changes['modify'].length > 0 )
         {
             var body_string = "";
+            var deletion_string = "";
+            var addition_string = "";
+            var modify_string = "";
             if (changes['delete'].length > 0)
             {
-                var deletion_string = "<h4>Delete</h4><ul>";
+                deletion_string = "<h4>Delete</h4><ul>";
                 for (var i = 0; i < changes['delete'].length; i++)
                 {
                     var item = changes['delete'][i];
@@ -125,7 +128,7 @@ $(document).ready(function ($)
             }
             if (changes['add'].length > 0)
             {
-                var addition_string = "<h4>Add</h4><ul>";
+                addition_string = "<h4>Add</h4><ul>";
                 for (var i = 0; i < changes['add'].length; i++)
                 {
                     var item = changes['add'][i];
@@ -144,14 +147,14 @@ $(document).ready(function ($)
             if (changes['modify'].length > 0)
             {
                 var isObjectFound = false;
-                var modify_string = "<h4>Moving</h4><ul>";
+                modify_string = "<h4>Moving</h4><ul>";
                 for (var i = 0; i < changes['modify'].length; i++)
                 {
                     var item = changes['modify'][i];
                     if (item['type'] === 'A')
                     {
                         isObjectFound = true;
-                        modify_string += "<li>Moving file <em>" + item['name'] + "</em> from <strong>" + item['oldParent'] + "</strong> to <strong>" + item['newParentTitle'] + "</strong>.</li>"
+                        modify_string += "<li>Moving file <em>" + item['name'] + "</em> from <strong>" + item['oldParent'] + "</strong> to <strong>" + item['newParentTitle']+ "</strong>.</li>"
                     }
                 }
                 modify_string += "</ul>";
@@ -165,8 +168,9 @@ $(document).ready(function ($)
             {
                 $base_modal_header.html("<h4 class='modal-title'>Confirm Database Changes</h4>");
                 $base_modal_body.html(body_string);
-                $base_modal_footer.html('.modal-footer').html("<button type='button' class='btn btn-default' id='restart-button'>Restart</button>" +
-                    "<button class='btn btn-default' id='confirm-changes'>Looks good!</a>");
+                $base_modal_footer.html('.modal-footer').html("<div class='row'><div class='col-xs-2'><button type='button' class='btn btn-warning' id='restart-button'>Restart</button></div>" +
+                    "<div class='col-xs-10'><button type='button' class='btn btn-default btn' data-dismiss='modal'>Change something</button>" +
+                    "<button class='btn btn-success' id='confirm-changes'>Looks good!</a></div></div>");
                 $base_modal.modal('show');
                 $("#restart-button").click(function ()
                 {
@@ -335,7 +339,7 @@ $(document).ready(function ($)
                 break;
             }
         }
-                var $vocalButtons = $("#vocalization");
+        var $vocalButtons = $("#vocalization");
         for (var i = 0; i < 3; i++)
         {
             if ($vocalButtons.children()[i].children[0].value === oldPiece['vocalization'])
@@ -489,6 +493,10 @@ $(document).ready(function ($)
     //oldPiece. Record differences in the changes dict.
     function findChanges()
     {
+        changes['modify'] = [];
+        changes['delete'] = [];
+        changes['add'] = [];
+
         // Compare text and number fields to their previous values, save
         // changes in the changes dict.
         var $inputs = $(".upload-input-field");
