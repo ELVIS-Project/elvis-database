@@ -75,7 +75,7 @@
                     "data-content='If no title is provided, this movement will be ignored on upload. It is not necessary to number movements, as they will retain the ordering in which they are here presented.'> </td>" +
                     "<td><button id='show_advanced_" + settings.table_name + settings.row_count + "' type='button' tabindex='-1'class='btn btn-default'>Show Advanced</button></td></tr>" +
                     "<tr id='" + e + settings.table_name + settings.row_count + "_tags' hidden='hidden'> " +
-                    "<td colspan='5'>" +
+                    "<td colspan='4'>" +
                     "<div class='row' style='padding-left:12%; padding-right:15px'>" +
                     "<div class='col-md-7'>" +
                     "<div class='form-group'>" +
