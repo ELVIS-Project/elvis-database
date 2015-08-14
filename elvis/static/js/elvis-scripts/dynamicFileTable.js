@@ -1,6 +1,3 @@
-/**
- * Created by lexpar on 11/08/15.
- */
 
 (function ($)
 {
