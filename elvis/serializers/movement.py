@@ -78,7 +78,7 @@ class AttachmentMovementSerializer(serializers.HyperlinkedModelSerializer):
 class CollectionMovementSerializer(serializers.HyperlinkedModelSerializer):
     class Meta:
         model = Collection
-        fields = ("url", "title")
+        fields = ("url", "title", "public")
 
 
 class UserMovementSerializer(serializers.HyperlinkedModelSerializer):

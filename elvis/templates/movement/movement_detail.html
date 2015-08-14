@@ -78,11 +78,13 @@
                         Unknown
                     {% endfor %}
                 </dd>
-                {% if content.tags %}
-                    <dt>Tag{{ content.tags.count|length|pluralize }}</dt>
+                {% if content.collections %}
+                    <dt>Collection{{ content.collections|length|pluralize }}
                     <dd>
-                        {% for tag in content.tags %}
-                            <a href="{{ tag.url }}" class="label label-default rounded">{{ tag.name }} </a> &nbsp;
+                        {% for collection in content.collections %}
+                            {% if collection.public %}
+                                <a href="{{ collection.url }}">{{ collection.title }}</a>
+                            {% endif %}
                         {% endfor %}
                     </dd>
                 {% endif %}
@@ -118,6 +120,14 @@
                 <dd>{{ content.religiosity }}</dd>
                 <dt>Voice Type</dt>
                 <dd>{{ content.vocalization }}</dd>
+                {% if content.tags %}
+                    <dt>Tag{{ content.tags.count|length|pluralize }}</dt>
+                    <dd>
+                        {% for tag in content.tags %}
+                            <a href="{{ tag.url }}" class="label label-primary rounded">{{ tag.name }} </a> &nbsp;
+                        {% endfor %}
+                    </dd>
+                {% endif %}
             </dl>
         </div>
     </div>
