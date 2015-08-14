@@ -40,7 +40,7 @@ class CollectionList(generics.ListCreateAPIView):
     permission_classes = (permissions.IsAuthenticatedOrReadOnly,)
     serializer_class = CollectionListSerializer
     renderer_classes = (JSONRenderer, CollectionListHTMLRenderer)
-    paginate_by = 10
+    paginate_by = 20
     paginate_by_param = 'page_size'
     max_paginate_by = 100
     queryset = Collection.objects.filter(public=True)

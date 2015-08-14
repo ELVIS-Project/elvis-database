@@ -22,7 +22,7 @@ class MovementList(generics.ListCreateAPIView):
     renderer_classes = (JSONRenderer,MovementListHTMLRenderer)
     paginate_by = 20
     paginate_by_param = 'page_size'
-    max_paginate_by = 20
+    max_paginate_by = 100
     queryset = Movement.objects.all()
 
     def get(self, request, *args, **kwargs):

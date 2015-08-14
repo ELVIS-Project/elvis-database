@@ -22,7 +22,7 @@ class ComposerList(generics.ListCreateAPIView):
     renderer_classes = (JSONRenderer, ComposerListHTMLRenderer)
     paginate_by = 20
     paginate_by_param = 'page_size'
-    max_paginate_by = 20
+    max_paginate_by = 100
     queryset = Composer.objects.all()
 
     def get_queryset(self):
