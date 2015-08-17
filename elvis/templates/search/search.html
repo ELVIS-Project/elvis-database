@@ -2,11 +2,13 @@
 {% block extra_hd %}
 
     {% load staticfiles %}
-    <script type='text/javascript' src="{% static "bootstrap/plugins/bootstrap-multiselect.min.js" %}"></script>
     <script type='text/javascript' src="{% static "js/elvis-scripts/downloadBadge.js" %}"></script>
     <script type='text/javascript' src="{% static "js/elvis-scripts/autocomplete.min.js" %}"></script>
-    <script type='text/javascript' src="{% static "js/template-scripts/search.min.js" %}"></script>
-    <link rel="stylesheet" href="{% static "bootstrap/plugins/bootstrap-multiselect.css" %}" type="text/css"/>
+    <script type='text/javascript' src="{% static "js/bootstrap-select.min.js" %}"></script>
+    <script type='text/javascript' src="{% static "js/template-scripts/search.js" %}"></script>
+    <link href="{% static "css/bootstrap-select.css" %}" rel="stylesheet" media="screen"/>
+
+
 
     <title>Search</title>
 
@@ -48,20 +50,6 @@
             <div class="tab-pane fade" id="asearch">
                 <div class="panel-body search">
                     <form id="advanced-search-form" action="/search/" method="get">
-                        <div class="row">
-                            <label for="asearch-input" hidden="hidden">Advanced Search Keyword</label>
-
-                            <div class="input-group col-sm-10 col-sm-offset-1 col-md-8 col-md-offset-2">
-                                <input type="text" id="asearch-input" class="form-control input-lg asearch-input"
-                                       style="text-align:center;" name='q'/>
-                                <span class="input-group-btn">
-                                    <button class="btn btn-default btn-lg" type="button" id="asearch-submit">
-                                        <span class="glyphicon glyphicon-search"></span>
-                                    </button>
-                                </span>
-                            </div>
-                        </div>
-                        <br><br>
 
                         <div class="row asearch-row">
                             <div class="col-md-6">
@@ -79,13 +67,13 @@
                         </div>
 
                         <div class="row asearch-row">
-                            <div class="col-sm-3">
+                            <div class="col-xs-6 col-md-3">
                                 <label class="asearch-label" for="datefiltf">Min Date</label>
                                 <input type="number" class="form-control asearch-input" name="datefiltf" id="datefiltf"
                                        max="2000"
                                        placeholder="YYYY">
                             </div>
-                            <div class="col-sm-3" style="padding-left: 0px">
+                            <div class="col-xs-6 col-md-3" style="padding-left: 0px">
                                 <label class="asearch-label" for="datefiltt">Max Date</label>
                                 <input type="number" class="form-control asearch-input" name="datefiltt" id="datefiltt"
                                        max="2000"
@@ -95,7 +83,6 @@
                                 <label class="asearch-label" for="tagfilt">Tags</label>
                                 <input type="text" class="form-control asearch-input" id="tagfilt" name="tagfilt"
                                        placeholder="Tag1 AND Tag2">
-
                                 <div id="tagfilt-suggestions"></div>
 
                             </div>
@@ -103,16 +90,22 @@
                         <div class="row asearch-row">
                             <div class="col-sm-6">
                                 <label class="asearch-label" for="voicefilt">Voice Count</label><br>
-                                <input type="text" class="form-control asearch-input" id="voicefilt" name="voicefilt"
+                                <input type="number" class="form-control asearch-input" id="voicefilt" name="voicefilt"
                                        placeholder="1 OR 2">
                             </div>
+                        <div class="col-sm-6">
+                                <label class="asearch-label" for="genrefilt">Genres</label><br>
+                                <input type="text" class="form-control asearch-input" id="genrefilt" name="genrefilt"
+                                       placeholder="Genre 1">
+                            <div id="genrefilt-suggestions"></div>
                         </div>
-                        <br>
+                        </div>
+                <br>
 
                         <div class="row asearch-row">
                             <div class="col-md-4">
                                 <label class="asearch-label" for="typefilt">Only results of this type</label><br>
-                                <select id="typefilt" multiple="multiple">
+                                <select class="selectpicker" data-width="100%" data-title="Any type" id="typefilt" multiple>
                                     <option id="elvis_composer" value="elvis_composer">Composers</option>
                                     <option id="elvis_piece" value="elvis_piece">Pieces</option>
                                     <option id="elvis_movement" value="elvis_movement">Movements</option>
@@ -121,7 +114,7 @@
                             </div>
                             <div class="col-md-4">
                                 <label class="asearch-label" for="filefilt">Only results with these files</label><br>
-                                <select id="filefilt" multiple="multiple">
+                                <select class="selectpicker" data-width="100%" data-title="Any files" id="filefilt" multiple>
                                     <option value=".mei"> .mei</option>
                                     <option value=".xml"> .xml</option>
                                     <option value=".midi"> .midi</option>
@@ -138,13 +131,18 @@
                             </div>
                             <div class="col-md-4">
                                 <label class="asearch-label" for="sortby">Sort results by</label><br>
-                                <select id="sortby">
+                                <select class="selectpicker" data-width="100%" id="sortby">
                                     <option value=""> Default (By Type)</option>
                                     <option value="name_sort asc"> Alphabetical &#9660; </option>
                                     <option value="name_sort desc"> Reverse Alphabetical &#9650; </option>
                                     <option value="date_general asc"> Chronological &#9660;</option>
                                     <option value="date_general desc"> Reverse Chronological &#9650; </option>
                                 </select>
+                            </div>
+                        </div>
+                        <div class="row asearch-row">
+                            <div class="col-md-12">
+                                <button class="btn btn-default btn-lg" type="button" id="asearch-submit">Search</button>
                             </div>
                         </div>
                     </form>
@@ -218,4 +216,5 @@
             </div>
         </div>
     </div>
+
 {% endblock %}

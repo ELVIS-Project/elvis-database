@@ -2,11 +2,10 @@
 $(document).ready(function ($)
 {
     $('.input-group-addon').tooltip();
-    $('#typefilt').multiselect({checkboxName: 'typefilt[]'});
-    $('#sortby').multiselect({checkboxName: 'sortby'});
-    $('#filefilt').multiselect({checkboxName: 'filefilt[]'});
+    $('.selectpicker').selectpicker();
     autocomplete("namefilt", "namefilt-suggestions", "composerSuggest", 'bool');
     autocomplete("tagfilt", "tagfilt-suggestions", "tagSuggest", 'bool');
+    autocomplete("genrefilt", "genrefilt-suggestions", "genreSuggest", 'bool');
     queryQString();
 
     //Do a search for the query string when the page back button is hit.
@@ -35,9 +34,12 @@ $(document).ready(function ($)
     {
         event.preventDefault();
         var data = $.parseParams($(this).serialize());
+        data['typefilt'] = $("#typefilt").val();
+        data['filefilt'] = $("#filefilt").val();
+        data['sortby'] = $("#sortby").val();
         for (var key in data)
         {
-            if (data[key] === "")
+            if (data[key] === "" || data[key] === null)
             {
                 delete data[key]
             }
@@ -95,17 +97,17 @@ $(document).ready(function ($)
             {
                 if (keys[i] === 'typefilt[]')
                 {
-                    $('#typefilt').multiselect('select', qstr_params[keys[i]]);
+                    $('#typefilt').selectpicker('val', qstr_params[keys[i]]);
                     continue;
                 }
                 if (keys[i] === 'filefilt[]')
                 {
-                    $('#filefilt').multiselect('select', qstr_params[keys[i]]);
+                    $('#filefilt').selectpicker('val', qstr_params[keys[i]]);
                     continue;
                 }
                 if (keys[i] === 'sortby')
                 {
-                    $('#sortby').multiselect('select', qstr_params[keys[i]]);
+                    $('#sortby').selectpicker('val', qstr_params[keys[i]]);
                     continue;
                 }
 
