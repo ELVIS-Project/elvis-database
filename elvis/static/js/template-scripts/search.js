@@ -6,6 +6,9 @@ $(document).ready(function ($)
     autocomplete("namefilt", "namefilt-suggestions", "composerSuggest", 'bool');
     autocomplete("tagfilt", "tagfilt-suggestions", "tagSuggest", 'bool');
     autocomplete("genrefilt", "genrefilt-suggestions", "genreSuggest", 'bool');
+    autocomplete("instrumentfilt", "instrumentfilt-suggestions", "instrumentSuggest", 'bool');
+    autocomplete("sourcesfilt", "sourcesfilt-suggestions", "sourceSuggest", 'bool');
+    autocomplete("locationsfilt", "locationsfilt-suggestions", "locationSuggest", 'bool');
     queryQString();
 
     //Do a search for the query string when the page back button is hit.
@@ -37,6 +40,8 @@ $(document).ready(function ($)
         data['typefilt'] = $("#typefilt").val();
         data['filefilt'] = $("#filefilt").val();
         data['sortby'] = $("#sortby").val();
+        data['vocalizationfilt'] = $("#vocalizationfilt").val();
+        data['religiosityfilt'] = $("#religiosityfilt").val();
         for (var key in data)
         {
             if (data[key] === "" || data[key] === null)
@@ -103,6 +108,16 @@ $(document).ready(function ($)
                 if (keys[i] === 'filefilt[]')
                 {
                     $('#filefilt').selectpicker('val', qstr_params[keys[i]]);
+                    continue;
+                }
+                if (keys[i] === 'vocalizationfilt')
+                {
+                    $('#vocalizationfilt').selectpicker('val', qstr_params[keys[i]]);
+                    continue;
+                }
+                if (keys[i] === 'religiosityfilt')
+                {
+                    $('#religiosityfilt').selectpicker('val', qstr_params[keys[i]]);
                     continue;
                 }
                 if (keys[i] === 'sortby')

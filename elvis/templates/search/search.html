@@ -84,36 +84,84 @@
                                 <input type="text" class="form-control asearch-input" id="tagfilt" name="tagfilt"
                                        placeholder="Tag1 AND Tag2">
                                 <div id="tagfilt-suggestions"></div>
-
                             </div>
                         </div>
                         <div class="row asearch-row">
                             <div class="col-sm-6">
                                 <label class="asearch-label" for="voicefilt">Voice Count</label><br>
-                                <input type="number" class="form-control asearch-input" id="voicefilt" name="voicefilt"
+                                <input type="text" class="form-control asearch-input" id="voicefilt" name="voicefilt"
                                        placeholder="1 OR 2">
                             </div>
-                        <div class="col-sm-6">
-                                <label class="asearch-label" for="genrefilt">Genres</label><br>
-                                <input type="text" class="form-control asearch-input" id="genrefilt" name="genrefilt"
-                                       placeholder="Genre 1">
-                            <div id="genrefilt-suggestions"></div>
+                            <div class="col-sm-6">
+                                    <label class="asearch-label" for="genrefilt">Genres</label><br>
+                                    <input type="text" class="form-control asearch-input" id="genrefilt" name="genrefilt"
+                                           placeholder="Genre 1">
+                                <div id="genrefilt-suggestions"></div>
+                            </div>
                         </div>
+                        <div class="row asearch-row">
+                            <div class="col-sm-6">
+                                <label class="asearch-label" for="instrumentfilt">Instruments</label><br>
+                                <input type="text" class="form-control asearch-input" id="instrumentfilt" name="instrumentfilt"
+                                       placeholder="Lute">
+                                <div id="instrumentfilt-suggestions"></div>
+                            </div>
+                            <div class="col-sm-6">
+                                <label class="asearch-label" for="languagefilt">Languages</label><br>
+                                <input type="text" class="form-control asearch-input" id="languagefilt" name="languagefilt"
+                                       placeholder="English OR French">
+                                <div id="languagefilt-suggestions"></div>
+                            </div>
                         </div>
-                <br>
-
+                        <div class="row asearch-row">
+                            <div class="col-sm-6">
+                                <label class="asearch-label" for="sourcesfilt">Sources</label><br>
+                                <input type="text" class="form-control asearch-input" id="sourcesfilt" name="sourcesfilt"
+                                       placeholder="Werner">
+                                <div id="sourcesfilt-suggestions"></div>
+                            </div>
+                            <div class="col-sm-6">
+                                <label class="asearch-label" for="locationsfilt">Locations</label><br>
+                                <input type="text" class="form-control asearch-input" id="locationsfilt" name="locationsfilt"
+                                       placeholder="France OR Paris">
+                                <div id="locationsfilt-suggestions"></div>
+                            </div>
+                        </div>
+                        <br>
                         <div class="row asearch-row">
                             <div class="col-md-4">
-                                <label class="asearch-label" for="typefilt">Only results of this type</label><br>
-                                <select class="selectpicker" data-width="100%" data-title="Any type" id="typefilt" multiple>
-                                    <option id="elvis_composer" value="elvis_composer">Composers</option>
-                                    <option id="elvis_piece" value="elvis_piece">Pieces</option>
-                                    <option id="elvis_movement" value="elvis_movement">Movements</option>
-                                    <option id="elvis_collection" value="elvis_collection">Collections</option>
+                                <label class="asearch-label" for="religiosityfilt">Religious nature</label><br>
+                                <select class="selectpicker" data-width="100%" id="religiosityfilt" data-title="Any kind">
+                                    <option value="">Any kind</option>
+                                    <option data-divider="true"></option>
+                                    <option>Secular</option>
+                                    <option>Sacred</option>
                                 </select>
                             </div>
                             <div class="col-md-4">
-                                <label class="asearch-label" for="filefilt">Only results with these files</label><br>
+                                <label class="asearch-label" for="religiosityfilt">Voice types</label><br>
+                                <select class="selectpicker" data-width="100%" id="vocalizationfilt" data-title="Any kind">
+                                    <option value="">Any kind</option>
+                                    <option data-divider="true"></option>
+                                    <option>Vocal</option>
+                                    <option>Instrumental</option>
+                                    <option>Mixed</option>
+                                </select>
+                            </div>
+                            <div class="col-md-4">
+                                <label class="asearch-label" for="typefilt">Result types</label><br>
+                                <select class="selectpicker" data-width="100%" data-title="Any type" id="typefilt" multiple>
+                                    <option value="elvis_composer">Composers</option>
+                                    <option value="elvis_piece">Pieces</option>
+                                    <option value="elvis_movement">Movements</option>
+                                    <option value="elvis_collection">Collections</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="row asearch-row">
+
+                            <div class="col-md-4">
+                                <label class="asearch-label" for="filefilt">File types</label><br>
                                 <select class="selectpicker" data-width="100%" data-title="Any files" id="filefilt" multiple>
                                     <option value=".mei"> .mei</option>
                                     <option value=".xml"> .xml</option>
@@ -140,8 +188,9 @@
                                 </select>
                             </div>
                         </div>
-                        <div class="row asearch-row">
-                            <div class="col-md-12">
+                        <br><br>
+                        <div class="row">
+                            <div class="col-md-12 text-center">
                                 <button class="btn btn-default btn-lg" type="button" id="asearch-submit">Search</button>
                             </div>
                         </div>

@@ -27,7 +27,7 @@ class SolrSearch(object):
         self.request = request
         self.parsed_request = {}
         self.prepared_query = u""
-        self.solr_params = {'wt': 'json'}
+        self.solr_params = {'wt': 'json', 'fq':[]}
         self._parse_request()
 
     def search(self, **kwargs):
@@ -70,42 +70,74 @@ class SolrSearch(object):
         general_query = []
 
         for k in qdict.keys():
-
             # Filter Parameters
             if k == 'titlefilt':
                 title_filt = u"title_searchable:({0})".format(self.parse_bool(unicode(qdict[k])))
-                filter_query.append(title_filt)
+                self.solr_params['fq'].append(title_filt)
                 continue
 
             if k =='namefilt':
                 name_filt = u"name_general:({0})".format(self.parse_bool(unicode(qdict[k])))
-                filter_query.append(name_filt)
+                self.solr_params['fq'].append(name_filt)
                 continue
 
             if k =='voicefilt':
                 voice_filt = "number_of_voices:({0})".format(self.parse_bool(qdict[k]))
-                filter_query.append(voice_filt)
+                self.solr_params['fq'].append(voice_filt)
                 continue
 
             if k =='tagfilt':
                 tag_filt = u"tags:({0})".format(self.parse_bool(unicode(qdict['tagfilt'])))
-                filter_query.append(tag_filt)
+                self.solr_params['fq'].append(tag_filt)
                 continue
+
             if k =='genrefilt':
                 genre_filt = u"genres:({0})".format(self.parse_bool(unicode(qdict['genrefilt'])))
-                filter_query.append(genre_filt)
+                self.solr_params['fq'].append(genre_filt)
+                continue
+
+            if k =='instrumentfilt':
+                ins_filt = u"instruments_voices:({0})".format(self.parse_bool(unicode(qdict['instrumentfilt'])))
+                self.solr_params['fq'].append(ins_filt)
+                continue
+
+            if k =='languagefilt':
+                lan_filt = u"languages:({0})".format(self.parse_bool(unicode(qdict['languagefilt'])))
+                self.solr_params['fq'].append(lan_filt)
+                continue
+
+            if k =='sourcesfilt':
+                source_filt = u"sources:({0})".format(self.parse_bool(unicode(qdict['sourcesfilt'])))
+                self.solr_params['fq'].append(source_filt)
+                continue
+
+            if k =='locationsfilt':
+                loc_filt = u"locations:({0})".format(self.parse_bool(unicode(qdict['locationsfilt'])))
+                self.solr_params['fq'].append(loc_filt)
                 continue
 
             if k =='typefilt[]':
                 type_filt = "type:"
-                type_filt += ' OR type:'.join(qdict.getlist('typefilt[]'))
-                filter_query.append("(" + type_filt + ")")
+                type_filt += ' OR '.join(qdict.getlist('typefilt[]'))
+                self.solr_params['fq'].append(type_filt)
                 continue
 
             if k =='filefilt[]':
                 file_filt = "file_formats:"
-                file_filt += ' OR file_formats:'.join(qdict.getlist('filefilt[]'))
-                filter_query.append("(" + file_filt + ")")
+                file_filt += ' OR :'.join(qdict.getlist('filefilt[]'))
+                self.solr_params['fq'].append(file_filt)
+                continue
+
+            if k =='vocalizationfilt':
+                voc_filt = "vocalization:"
+                voc_filt += ' OR '.join(qdict.getlist('vocalizationfilt'))
+                self.solr_params['fq'].append(voc_filt)
+                continue
+
+            if k =='religiosityfilt':
+                rel_filt = "religiosity:"
+                rel_filt += ' OR '.join(qdict.getlist('religiosityfilt'))
+                self.solr_params['fq'].append(rel_filt)
                 continue
 
             if k == 'datefiltf':
@@ -115,12 +147,12 @@ class SolrSearch(object):
                     date_filt = "(date_general:[{0} TO {1}] OR date_general2:[{0} TO {1}])".format(from_date, to_date)
                 else:
                     date_filt = "(date_general:[{0} TO *] OR date_general2:[{0} TO *])".format(from_date)
-                filter_query.append(date_filt)
+                self.solr_params['fq'].append(date_filt)
                 continue
             elif k == 'datefiltt':
                 to_date = u" {0}-00-00T00:00:00Z ".format(str(int(qdict.get('datefiltt')) + 1))
                 date_filt = "(date_general:[* TO {0}] OR date_general2:[* TO {0}])".format(to_date)
-                filter_query.append(date_filt)
+                self.solr_params['fq'].append(date_filt)
                 continue
 
             # Query Parameters
@@ -152,21 +184,23 @@ class SolrSearch(object):
                 self.solr_params.update({'rows': qdict.get(k)})
 
         if qdict.get('q'):
-            keywords = u"({0})".format(self.parse_bool(unicode(qdict['q'])))
+            keywords = u"({0})".format(self.parse_bool(unicode(qdict['q']), general=True))
             general_query.append(keywords)
         else:
             general_query.append("(*:*)")
         if not qdict.get('typefilt[]') and not qdict.get('type'):
-            filter_query.append("type:(elvis_piece OR elvis_movement OR elvis_collection OR elvis_composer)")
+            self.solr_params['fq'].append("type:(elvis_piece OR elvis_movement OR elvis_collection OR elvis_composer)")
 
-        # AND together the prepared filters and query.
-        self.solr_params['fq'] = " AND ".join(filter_query)
+        # AND together the query.
         self.prepared_query = " AND ".join(general_query)
 
-    def parse_bool(self, bool_string):
+    def parse_bool(self, bool_string, **kwargs):
         bools = ['AND', 'OR', 'NOT']
         if not any(x in bool_string for x in bools):
-            return bool_string
+            if kwargs.get('general'):
+                return bool_string
+            else:
+                return '"{0}"'.format(bool_string)
 
         if bool_string.startswith('NOT'):
             bool_string = "* AND " + bool_string
