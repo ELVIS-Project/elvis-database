@@ -157,6 +157,8 @@ def solr_index(sender, instance, created, **kwargs):
          'languages': languages,
          'locations': locations,
          'sources': sources,
+         'religiosity': piece.religiosity,
+         'vocalization': piece.vocalization,
          'file_formats': piece.file_formats,
          'pieces_searchable': piece.title}
     solrconn.add(**d)

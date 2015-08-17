@@ -90,6 +90,8 @@
     <field name="locations_searchable" type="text_general" indexed="true" stored="true" multiValued="true"/>
     <field name="sources" type="string" indexed="true" stored="true" multiValued="true"/>
     <field name="sources_searchable" type="text_general" indexed="true" stored="true" multiValued="true"/>
+    <field name="religiosity" type="string" indexed="true" stored="true" multiValued="true"/>
+    <field name="vocalization" type="string" indexed="true" stored="true" multiValued="true"/>
     <field name="pieces_searchable" type="string" indexed="true" stored="true"/>
     <field name="composers_searchable" type="string" indexed="true" stored="true"/>
     <field name="collections_searchable" type="string" indexed="true" stored="true"/>

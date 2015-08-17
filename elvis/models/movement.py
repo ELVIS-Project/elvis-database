@@ -145,6 +145,8 @@ def solr_index(sender, instance, created, **kwargs):
          'languages': languages,
          'locations': locations,
          'sources': sources,
+         'religiosity': movement.religiosity,
+         'vocalization': movement.vocalization,
          'file_formats': movement.file_formats,
          }
     solrconn.add(**d)
