@@ -494,7 +494,6 @@ $(document).ready(function ($)
     function findChanges()
     {
         changes['modify'] = [];
-        changes['delete'] = [];
         changes['add'] = [];
 
         // Compare text and number fields to their previous values, save
