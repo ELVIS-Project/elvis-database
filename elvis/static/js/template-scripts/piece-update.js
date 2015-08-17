@@ -456,7 +456,7 @@ $(document).ready(function ($)
         {
             $base_modal_header.html("<h4 class='modal-title'>Modifying an existing piece...<h4>");
             $base_modal_body.html("<p>This form has been pre-filled with the current state of <em>"+oldPiece['title']+"</em>.<ul><li>You may modify any of its properties.</li>" +
-                "<li>Do not modfiy any fields that you do not wish to change.</li> <li>Existing movements and files are colored dark grey - you may modify or delete these as well.</li>" +
+                "<li>Do not modify any fields that you do not wish to change.</li> <li>Existing movements and files are colored dark grey - you may modify or delete these as well.</li>" +
                 "<li>You may also add new movements and files.</li></ul>" +
                 "<strong>No changes are applied until you click the submit button </strong> at the bottom of the page. If you make a mistake, or need to restart the process, simply reload the page. </p>");
             $base_modal_footer.html("<button type='button' class='btn btn-success' data-dismiss='modal'>Got it</button>");
