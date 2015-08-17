@@ -73,12 +73,12 @@ class SolrSearch(object):
 
             # Filter Parameters
             if k == 'titlefilt':
-                title_filt = "title_searchable:({0})".format(self.parse_bool(qdict[k]))
+                title_filt = u"title_searchable:({0})".format(self.parse_bool(unicode(qdict[k])))
                 filter_query.append(title_filt)
                 continue
 
             if k =='namefilt':
-                name_filt = "name_general:({0})".format(self.parse_bool(qdict[k]))
+                name_filt = u"name_general:({0})".format(self.parse_bool(unicode(qdict[k])))
                 filter_query.append(name_filt)
                 continue
 
@@ -88,8 +88,12 @@ class SolrSearch(object):
                 continue
 
             if k =='tagfilt':
-                tag_filt = "tags:({0})".format(self.parse_bool(qdict['tagfilt']))
+                tag_filt = u"tags:({0})".format(self.parse_bool(unicode(qdict['tagfilt'])))
                 filter_query.append(tag_filt)
+                continue
+            if k =='genrefilt':
+                genre_filt = u"genres:({0})".format(self.parse_bool(unicode(qdict['genrefilt'])))
+                filter_query.append(genre_filt)
                 continue
 
             if k =='typefilt[]':
@@ -121,22 +125,22 @@ class SolrSearch(object):
 
             # Query Parameters
             if k == 'composer_name':
-                general_query.append('(composer_name:"{0}")'.format(qdict[k]))
+                general_query.append(u'(composer_name:"{0}")'.format(unicode(qdict[k])))
                 continue
             if k == 'type':
-                general_query.append('(type:"{0}")'.format(qdict[k]))
+                general_query.append(u'(type:"{0}")'.format(unicode(qdict[k])))
                 continue
             if k == 'number_of_voices':
-                general_query.append('(number_of_voices:{0})'.format(qdict[k]))
+                general_query.append(u'(number_of_voices:{0})'.format(unicode(qdict[k])))
                 continue
             if k == 'tags':
-                tag_query = '(tags:"{0}")'.format(qdict[k])
+                tag_query = u'(tags:"{0}")'.format(unicode(qdict[k]))
                 general_query.append(tag_query)
                 continue
             if k == 'tags[]':
-                tags = qdict.getlist('tags[]')
-                tags = '" AND "'.join(x for x in tags)
-                tag_query = '(tags:"{0}")'.format(tags)
+                tags = unicode(qdict.getlist('tags[]'))
+                tags = u'" AND "'.join(x for x in tags)
+                tag_query = u'(tags:"{0}")'.format(tags)
                 general_query.append(tag_query)
                 continue
 
@@ -148,7 +152,7 @@ class SolrSearch(object):
                 self.solr_params.update({'rows': qdict.get(k)})
 
         if qdict.get('q'):
-            keywords = "({0})".format(self.parse_bool(qdict['q']))
+            keywords = u"({0})".format(self.parse_bool(unicode(qdict['q'])))
             general_query.append(keywords)
         else:
             general_query.append("(*:*)")
