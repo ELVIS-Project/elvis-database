@@ -242,6 +242,11 @@ $(document).ready(function ($)
             }
             if (entry['type'] === "elvis_movement")
             {
+                if (entry['composition_end_date'])
+                    var end_date = entry['composition_end_date'].slice(0, 4);
+                else
+                    var end_date = "Unknown";
+
                 var result = "<div class='row search-result-row row-eq-height'>" +
                     "<div class='col-xs-1 search-result-add' id='result-list-add" + key + "'><div id='add" + key + "'></div></div>" +
                     "<a href='/movement/" + entry['item_id'] + "' id='result-list-item" + key + "' class='search-result-item col-xs-11'>" +
@@ -251,7 +256,7 @@ $(document).ready(function ($)
                     result += "<p class='list-group-item-text'> Piece: " + entry['parent_piece_name'] + "</p>";
                 }
                 result += "<p class='list-group-item-text'> Composer: " + entry['composer_name'] + "</p>" +
-                    "<p class='list-group-item-text'> Date: " + entry['composition_end_date'].slice(0, 4) + "</p>";
+                    "<p class='list-group-item-text'> Date: " + end_date + "</p>";
                 if (entry['tags'] !== undefined)
                 {
                     result += "<p class='list-group-item-text'> Tags: " + entry['tags'] + "</p>";
@@ -263,12 +268,16 @@ $(document).ready(function ($)
             }
             if (entry['type'] === "elvis_piece")
             {
+                if (entry['composition_end_date'])
+                    var end_date = entry['composition_end_date'].slice(0, 4);
+                else
+                    var end_date = "Unknown";
                 var result = "<div class='row search-result-row row-eq-height'>" +
                     "<div class='col-xs-1 search-result-add' id='result-list-add" + key + "'><div id='add" + key + "'></div></div>" +
                     "<a href='/piece/" + entry['item_id'] + "' id='result-list-item" + key + "' class='search-result-item col-xs-11'>" +
                     "<span class='label label-success right-label'>Piece</span><h4> " + entry['title'] + "</h4>" +
                     "<p class='list-group-item-text'> Composer: " + entry['composer_name'] + "</p>" +
-                    "<p class='list-group-item-text'> Date: " + entry['composition_end_date'].slice(0, 4) + "</p>";
+                    "<p class='list-group-item-text'> Date: " + end_date + "</p>";
                 if (entry['tags'] !== undefined)
                 {
                     result += "<p class='list-group-item-text'> Tags: " + entry['tags'] + "</p>";
