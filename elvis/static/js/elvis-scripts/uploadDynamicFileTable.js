@@ -106,7 +106,7 @@
                     "</div>" +
                     "<div class='col-md-4'>" +
                     "<div class='form-group'>" +
-                    "<div class='input-group'><span class='input-group-addon'>Number of Voices</span><input name='" +  e + settings.table_name + settings.row_count + "_number_of_voices' id='" +  e + settings.table_name + settings.row_count + "_number_of_voices' type='number' class='form-control unstyled'></div>" +
+                    "<div class='input-group'><span class='input-group-addon'>Number of Voices</span><input name='" +  e + settings.table_name + settings.row_count + "_number_of_voices' id='" +  e + settings.table_name + settings.row_count + "_number_of_voices' type='number' min='0' max='100' class='form-control unstyled'></div>" +
                     "</div>" +
                     "</div>" +
                     "</div>" +
