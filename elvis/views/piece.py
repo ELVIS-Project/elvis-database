@@ -244,9 +244,24 @@ def update(request, *args, **kwargs):
                 mov.number_of_voices = int(item['number_of_voices'])
             if item.get('vocalization'):
                 mov.vocalization = item['vocalization']
-            if item.get('renumber'):
-                mov.position = int(item['renumber'])
+            if item.get('title'):
+                mov.title = item['title']
+
             mov.save()
+
+    movement_positions = [x for x in change['modify'] if x['type'] == "M" and x.get('position')]
+    movement_positions.extend([x for x in change['add'] if x['type'] == "M" and x.get('position')])
+    if movement_positions:
+        movements = piece.movements.all()
+        for item in movement_positions:
+            if item.get('id'):
+                mov = movements.get(id=item['id'])
+                mov.position = item['position']
+                mov.save()
+            elif item.get('name'):
+                mov = movements.get(title=item['name'])
+                mov.position = item['position']
+                mov.save()
 
     modify_atts = [x for x in change['modify'] if x['type'] == "A"]
     if modify_atts:

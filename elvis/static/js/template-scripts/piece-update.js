@@ -396,6 +396,7 @@ $(document).ready(function ($)
             }
             oldPiece['movements'][i]['instruments_voices'] = writeList(oldPiece['movements'][i]['instruments_voices']);
             oldPiece['movements'][i]['tags'] = writeList(oldPiece['movements'][i]['tags']);
+            oldPiece['movements'][i]['position'] = i + 1;
             $title.val(oldPiece['movements'][i].title);
             $instruments.val(oldPiece['movements'][i].instruments_voices);
             $tags.val(oldPiece['movements'][i].tags);
@@ -465,7 +466,7 @@ $(document).ready(function ($)
         }
     }
 
-    //Utility function. Turns a json list objects into a semicolon seperated string.
+    //Utility function. Turns a json list objects into a semicolon separated string.
     function writeList(jlist, collection)
     {
         var result = "";
@@ -569,6 +570,7 @@ $(document).ready(function ($)
             var $advancedRow = $($existing_movements[i + 1]);
             var id = parseInt($titleRow[0].getAttribute('name'));
             fields.push(['title', $titleRow.find("[id^=_existingmov_title_]")[0].value]);
+            fields.push(['position', $titleRow.find("[id$=_position]")[0].value]);
             fields.push(['instruments_voices', $advancedRow.find("[id$=_instrumentation]")[0].value]);
             fields.push(['tags', $advancedRow.find("[id$=_free_tags]")[0].value]);
             fields.push(['number_of_voices', $advancedRow.find("[id$=_number_of_voices]")[0].value]);
@@ -614,10 +616,11 @@ $(document).ready(function ($)
         {
             var $titleRow = $($new_movements[i]);
             var title = $titleRow.find("[id^=mov_title_]")[0].value;
+            var position = $titleRow.find("[id$=_position]")[0].value;
             if (title === "")
                 continue;
 
-            changes['add'].push({type:"M", name: title})
+            changes['add'].push({type:"M", name: title, position: position})
         }
 
         //Find changed attachments - record changes
