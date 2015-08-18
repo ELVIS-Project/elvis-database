@@ -3,7 +3,9 @@
 
 {% block extra_hd %}
     {% load staticfiles %}
+    <script type='text/javascript' src="{% static "bootstrap/plugins/bootstrap-markdown.js" %}"></script>
     <script type='text/javascript' src="{% static "js/jquery.tablesorter.js" %}"></script>
+    <link href="{% static "bootstrap/plugins/bootstrap-markdown.min.css" %}" rel="stylesheet" media="screen"/>
     <title>Download Cart</title>
 
     <!-- Okay this plugin is the boss -->
@@ -104,9 +106,8 @@
                         </div>
                     </div>
                     <div class="form-group" style="padding-left:18px; padding-right: 18px">
-                        Comments:
-                        <textarea class="form-control" rows="7" name="comment" id="comment"
-                                  style="resize:vertical"></textarea>
+                        <textarea class="form-control" data-provide="markdown" rows="7" name="comment" id="comment"
+                                  style="resize:vertical" placeholder="Comments..."></textarea>
                     </div>
                     <div class="modal-footer">
                         <div class="text-right">

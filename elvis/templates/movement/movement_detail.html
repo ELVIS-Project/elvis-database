@@ -2,6 +2,8 @@
 
 {% block extra_hd %}
     <title>{{ content.title }}</title>
+    {% load staticfiles %}
+    <script type='text/javascript' src="{% static "bootstrap/plugins/markdown.min.js" %}"></script>
     <script>
         $(document).ready(function ($)
         {
@@ -26,6 +28,7 @@
                 })
             });
             $add_movement.val(window.location.href);
+            $("#rendered-comment").html(markdown.toHTML($("#hidden-comment").text()))
         })
     </script>
 {% endblock %}
@@ -133,7 +136,8 @@
     </div>
 
     {% if content.comment %}
-        <pre>{{ content.comment }}</pre>
+        <div id="hidden-comment" hidden="hidden">{{ content.comment }}</div>
+        <div id='rendered-comment' class="well"></div>
     {% endif %}
 
     {% if content.attachments %}

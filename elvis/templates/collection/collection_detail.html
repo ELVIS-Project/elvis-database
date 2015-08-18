@@ -2,6 +2,7 @@
 
 {% block extra_hd %}
     {% load staticfiles %}
+    <script type='text/javascript' src="{% static "bootstrap/plugins/markdown.min.js" %}"></script>
     <script type='text/javascript' src="{% static "js/jquery.tablesorter.js" %}"></script>
 
     <title>{{ content.title }}</title>
@@ -70,6 +71,7 @@
                     })
                 })
             });
+            $("#rendered-comment").html(markdown.toHTML($("#hidden-comment").text()))
         });
     </script>
 {% endblock %}
@@ -104,12 +106,11 @@
                 on {{ content.created | date:"d F Y, f a" }}<br> Last
                 updated {{ content.updated | date:"d F Y, f a" }}</p>
     </div>
+
     {% if content.comment %}
-        <pre>{{ content.comment }}</pre>
+        <div id="hidden-comment" hidden="hidden">{{ content.comment }}</div>
+        <div id='rendered-comment' class="well"></div>
     {% endif %}
-
-
-
 
     {% if content.pieces %}
         <h3>Pieces ({{ content.pieces | length }})</h3>
