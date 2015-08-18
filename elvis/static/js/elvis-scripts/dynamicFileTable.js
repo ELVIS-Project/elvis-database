@@ -130,7 +130,7 @@
                     "<td><select class='selectpicker show-tick' name='" + e + settings.table_name + "_parent_" + settings.row_count + "'id='" + e + settings.table_name + "_parent_" + settings.row_count + "'>" +
                     "<option value='piece'>Attach to Piece</option></select></td>" +
                     "<td><input name='" +  e + settings.table_name + "_source_" + settings.row_count + "' id='" +  e + settings.table_name + "_source_" + settings.row_count + "' class='form-control' autocomplete='off' data-toggle='popover' data-placement='top' data-trigger='focus' data-html='true' title='<b>File Source</b>'" +
-                    "data-content='Indicate the source of the file here, such as <em>Choral Wiki</em> or <em>Transcribed by Uploader</em>. If no source is provided, this file will be ignored. This file will be renamed automatically, so does not require a title.'> </td></tr>");
+                    "data-content='Indicate the source of the file here, such as <em>Choral Wiki</em> or <em>Transcribed by Uploader</em>. If no source is provided, this file will be ignored.'> </td></tr>");
                 $("#" +  e + settings.table_name + "_files_" + settings.row_count).filestyle({
                     buttonBefore: true,
                     iconName: "glyphicon-file",
