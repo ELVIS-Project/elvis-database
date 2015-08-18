@@ -5,12 +5,15 @@
 
 {% block extra_hd %}
     {% load staticfiles %}
+    <script type='text/javascript' src="{% static "bootstrap/plugins/bootstrap-filestyle.min.js" %}"></script>
+    <script type='text/javascript' src="{% static "bootstrap/plugins/bootstrap-select.min.js" %}"></script>
+    <script type='text/javascript' src="{% static "bootstrap/plugins/markdown.min.js" %}"></script>
+    <script type='text/javascript' src="{% static "bootstrap/plugins/bootstrap-markdown.js" %}"></script>
     <script type='text/javascript' src="{% static "js/elvis-scripts/autocomplete.min.js" %}"></script>
     <script type='text/javascript' src="{% static "js/elvis-scripts/dynamicFileTable.min.js" %}"></script>
-    <script type='text/javascript' src="{% static "bootstrap/plugins/bootstrap-filestyle.min.js" %}"></script>
-    <script type='text/javascript' src="{% static "js/bootstrap-select.min.js" %}"></script>
-    <script type='text/javascript' src="{% static "js/template-scripts/piece-create.min.js" %}"></script>
-    <link href="{% static "css/bootstrap-select.css" %}" rel="stylesheet" media="screen"/>
+    <script type='text/javascript' src="{% static "js/template-scripts/piece-create.js" %}"></script>
+    <link href="{% static "bootstrap/plugins/bootstrap-select.css" %}" rel="stylesheet" media="screen"/>
+    <link href="{% static "bootstrap/plugins/bootstrap-markdown.min.css" %}" rel="stylesheet" media="screen"/>
 
     <title>Upload a Piece</title>
 
@@ -293,7 +296,7 @@
         <br>
 
         <div class="form-group">
-            <textarea class="form-control" rows="7" name="comment" id="comment" style="resize:vertical"
+            <textarea class="form-control" rows="7" name="comment" id="comment" data-provide="markdown" style="resize:vertical"
                       placeholder="Comments..."></textarea>
         </div>
         <br>
