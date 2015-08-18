@@ -174,8 +174,13 @@ def create(request, *args, **kwargs):
                       uploader=request.user,
                       created=datetime.datetime.now(pytz.utc),
                       updated=datetime.datetime.now(pytz.utc))
-    new_piece.save()
     clean.list.append({"object": new_piece, "isNew": True})
+    try:
+        new_piece.save()
+    except:
+        clean.cleanup()
+        raise
+
     object_list = []
     for key in clean_form:
         object_list.append({'id': key, 'value': clean_form[key]})
@@ -239,6 +244,8 @@ def update(request, *args, **kwargs):
                 mov.number_of_voices = int(item['number_of_voices'])
             if item.get('vocalization'):
                 mov.vocalization = item['vocalization']
+            if item.get('renumber'):
+                mov.position = int(item['renumber'])
             mov.save()
 
     modify_atts = [x for x in change['modify'] if x['type'] == "A"]
