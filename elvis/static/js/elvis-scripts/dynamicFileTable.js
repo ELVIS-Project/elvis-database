@@ -112,12 +112,13 @@
                     "</div>" +
                     "<div class='row' style='padding-left:12%; padding-right:15px'>" +
                     "<div class='col-md-12'>" +
-                    "<strong>Comments:</strong> <div class='form-group'><textarea rows='7' class='form-control' name='" +  e + settings.table_name + settings.row_count + "_comment' id='" +  e + settings.table_name + settings.row_count + "_comment' style='resize:vertical'></textarea>" +
+                    "<div class='form-group'><textarea rows='7' class='form-control' name='" +  e + settings.table_name + settings.row_count + "_comment' id='" +  e + settings.table_name + settings.row_count + "_comment' placeholder='Comments...' style='resize:vertical'></textarea>" +
                     "</div>" +
                     "</div>" +
                     "</td></tr>");
                 autocomplete(e + settings.table_name + settings.row_count + "_free_tags", e + settings.table_name + settings.row_count + "_free_tags_suggestions", "tagSuggest", true);
                 autocomplete(e + settings.table_name + settings.row_count + "_instrumentation", e + settings.table_name + settings.row_count + "_instrumentation_suggestions", "instrumentSuggest", true);
+                $("#" + e + settings.table_name + settings.row_count + "_comment").markdown({autofocus:false,savable:false})
             }
             else
             {
