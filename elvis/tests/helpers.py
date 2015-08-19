@@ -14,10 +14,12 @@ class ElvisTestSetup(object):
 
     def setUp_test_models(self):
         self.test_composer = mommy.make('elvis.Composer')
+        self.test_piece = mommy.make('elvis.Piece', composer=self.test_composer, uploader=self.creator_user)
+        self.test_movement = mommy.make('elvis.Movement', composer=self.test_composer, uploader=self.creator_user)
         self.test_collection = mommy.make('elvis.Collection', public=True)
-        self.test_private_collection = mommy.make('elvis.Collection', public=False, creator=self.test_creator_user)
+        self.test_private_collection = mommy.make('elvis.Collection', public=False, creator=self.creator_user)
 
     def setUp_user(self):
-        self.test_user = User.objects.create_user(username='temptestuser', password='test')
-        self.test_creator_user = User.objects.create_user(username='tempcreatoruser', password='test')
-        self.test_superuser = User.objects.create_superuser(username='supertemptestuser', email='a@g.com', password='test')
+        self.test_user = User.objects.create_user(username='testuser', password='test')
+        self.creator_user = User.objects.create_user(username='creatoruser', password='test')
+        self.super_user = User.objects.create_superuser(username='superuser', email='a@g.com', password='test')
