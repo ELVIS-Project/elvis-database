@@ -1,13 +1,7 @@
-import os
-from django.conf import settings
 from django.db import models
-from simple_history.models import HistoricalRecords
 from django.dispatch import receiver
 from django.db.models.signals import post_save, post_delete
 import datetime
-
-def picture_path(instance, filename):
-    return os.path.join(settings.MEDIA_ROOT, "pictures", "composers", filename)
 
 class Composer(models.Model):
     class Meta:
@@ -20,7 +14,6 @@ class Composer(models.Model):
     old_death_date = models.DateField(blank=True, null=True)
     birth_date = models.IntegerField(blank=True, null=True)
     death_date = models.IntegerField(blank=True, null=True)
-    history = HistoricalRecords()
     created = models.DateTimeField(auto_now_add=True)
     updated = models.DateTimeField(auto_now=True)
 
