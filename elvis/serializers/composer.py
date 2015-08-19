@@ -37,9 +37,7 @@ class ComposerSerializer(serializers.HyperlinkedModelSerializer):
     class Meta:
         model = Composer
         fields = ("url",
-                  "id",
                   "item_id",
-                  "old_id",
                   "name",
                   "birth_date",
                   "death_date",
