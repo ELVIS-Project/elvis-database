@@ -1,8 +1,10 @@
-import pdb
 import json
 import datetime
 import pytz
 from django.db.models import Q
+from rest_framework.exceptions import PermissionDenied
+from rest_framework.exceptions import NotAuthenticated
+from rest_framework.exceptions import MethodNotAllowed
 
 from rest_framework import generics
 from rest_framework import permissions
@@ -76,6 +78,8 @@ class CollectionList(generics.ListCreateAPIView):
 
     @method_decorator(csrf_protect)
     def post(self, request, *args, **kwargs):
+        if not request.user.is_active:
+            raise NotAuthenticated
         if 'action' in request.POST:
             return self._modify_collection(request)
         else:
@@ -85,7 +89,7 @@ class CollectionList(generics.ListCreateAPIView):
         collection = Collection.objects.get(id=request.POST['id'])
         action = request.POST['action']
         if not (request.user == collection.creator or request.user.is_superuser):
-            return Response(status=status.HTTP_401_UNAUTHORIZED)
+            raise PermissionDenied
 
         if action == 'make-private':
             collection.public = False
@@ -96,13 +100,10 @@ class CollectionList(generics.ListCreateAPIView):
         elif action == 'delete':
             collection.delete()
         else:
-            return Response(status=status.HTTP_400_BAD_REQUEST)
+            raise MethodNotAllowed
         return Response(status=status.HTTP_202_ACCEPTED)
 
-
     def create(self, request, *args, **kwargs):
-        if not request.user.is_active:
-            return Response(status=status.HTTP_401_UNAUTHORIZED)
         form = CollectionForm(request.POST)
 
         if not form.is_valid():
@@ -135,21 +136,17 @@ class CollectionDetail(generics.RetrieveUpdateDestroyAPIView):
     permission_classes = (permissions.IsAuthenticatedOrReadOnly,)
     serializer_class = CollectionSerializer
     renderer_classes = (JSONRenderer, CollectionDetailHTMLRenderer)
-    queryset = Collection.objects.filter(public=True)
-
-    def get_queryset(self):
-        user = self.request.user
-        if user.is_anonymous():
-            return self.queryset
-        else:
-            return Collection.objects.filter(Q(public=True) | Q(creator=user))
+    queryset = Collection.objects.all()
 
     def get(self, request, *args, **kwargs):
+        response = super(CollectionDetail, self).get(self, request)
+        collection = Collection.objects.get(pk=response.data['item_id'])
         user = self.request.user
+        if not collection.public and not (collection.creator == user or user.is_superuser):
+            raise PermissionDenied
         if user.is_anonymous():
             return super(CollectionDetail, self).get(self, request)
 
-        response = super(CollectionDetail, self).get(self, request)
         user_download = request.user.downloads.all()[0]
         if user_download.collection_collections.filter(pk=response.data['item_id']):
             response.data['in_cart'] = True
@@ -191,4 +188,4 @@ class CollectionCurrent(generics.RetrieveUpdateDestroyAPIView):
         if User.is_authenticated(request.user):
             return self.retrieve(request, *args, **kwargs)
         else:
-            return Response(status=status.HTTP_401_UNAUTHORIZED)
+            raise PermissionDenied
