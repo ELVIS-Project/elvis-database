@@ -1,5 +1,7 @@
 import datetime
 import json
+from rest_framework.exceptions import PermissionDenied
+from rest_framework.exceptions import NotAuthenticated
 
 import pytz
 from django.views.decorators.csrf import csrf_protect
@@ -21,7 +23,6 @@ from elvis.views.views import handle_dynamic_file_table
 from elvis.views.views import Cleanup
 from django.utils.decorators import method_decorator
 from django.http import HttpResponse
-from django.shortcuts import render
 
 
 class PieceListHTMLRenderer(CustomHTMLRenderer):
@@ -34,6 +35,7 @@ class PieceDetailHTMLRenderer(CustomHTMLRenderer):
 
 class PieceCreateHTMLRenderer(CustomHTMLRenderer):
     template_name = "piece/piece_create.html"
+
 
 class PieceUpdateHTMLRenderer(CustomHTMLRenderer):
     template_name = "piece/piece_update.html"
@@ -87,7 +89,7 @@ class PieceCreate(generics.GenericAPIView):
         if User.is_authenticated(request.user):
             return Response(status=status.HTTP_200_OK)
         else:
-            return Response(status=status.HTTP_401_UNAUTHORIZED)
+            raise NotAuthenticated
 
 
 class PieceUpdate(generics.RetrieveUpdateDestroyAPIView):
@@ -100,18 +102,9 @@ class PieceUpdate(generics.RetrieveUpdateDestroyAPIView):
     def get(self, request, *args, **kwargs):
         piece = Piece.objects.get(pk=int(kwargs['pk']))
         if not (request.user == piece.uploader or request.user.is_superuser):
-            return render(request, "403.html", status=status.HTTP_403_FORBIDDEN)
+            raise PermissionDenied
         return super(PieceUpdate, self).get(self, request, *args, **kwargs)
 
-    @method_decorator(csrf_protect)
-    def post(self, request, *args, **kwargs):
-        if 'delete' in request.POST:
-            piece = Piece.objects.get(id=request.POST['delete'])
-            if not (request.user == piece.uploader or request.user.is_superuser):
-                return render(request, "403.html", status=status.HTTP_403_FORBIDDEN)
-            piece.delete()
-            return Response(status=status.HTTP_202_ACCEPTED)
-        return update(request, *args, **kwargs)
 
 class PieceList(generics.ListCreateAPIView):
     model = Piece
@@ -151,7 +144,7 @@ class PieceList(generics.ListCreateAPIView):
         if 'delete' in request.POST:
             piece = Piece.objects.get(id=request.POST['delete'])
             if not (request.user == piece.uploader or request.user.is_superuser):
-                return Response(status=status.HTTP_401_UNAUTHORIZED)
+                raise PermissionDenied
             piece.delete()
             return Response(status=status.HTTP_202_ACCEPTED)
         else:
@@ -160,13 +153,13 @@ class PieceList(generics.ListCreateAPIView):
 def create(request, *args, **kwargs):
     if not request.user.is_active:
         # Only active users may upload pieces.
-        return Response(status=status.HTTP_401_UNAUTHORIZED)
+        raise NotAuthenticated
 
     form = PieceForm(request.POST)
     if not form.is_valid():
         # Form errors are rendered for user on the front end.
         data = json.dumps({'errors': form.errors})
-        return HttpResponse(data, content_type="json")
+        return HttpResponse(data, content_type="json", status=status.HTTP_400_BAD_REQUEST)
 
     clean = Cleanup()
     clean_form = form.cleaned_data
@@ -192,14 +185,14 @@ def create(request, *args, **kwargs):
     rebuild_suggester_dicts.delay()
     data = json.dumps({'success': True, 'id': new_piece.id,
                        'url': "/piece/{0}".format(new_piece.id)})
-    return HttpResponse(data, content_type="json")
+    return HttpResponse(data, content_type="json", status=status.HTTP_201_CREATED)
 
 def update(request, *args, **kwargs):
     # Update a piece based on a dict of changes in request.POST['changes']
 
     piece = Piece.objects.get(pk=int(kwargs['pk']))
     if not (request.user == piece.uploader or request.user.is_superuser):
-        return render(request, "403.html", status=status.HTTP_403_FORBIDDEN)
+        raise PermissionDenied
     
     form = PieceForm(request.POST)
     if not form.is_valid():
