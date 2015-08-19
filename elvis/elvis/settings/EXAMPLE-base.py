@@ -55,7 +55,6 @@ PREREQ_APPS = [
     'django.contrib.staticfiles',
     'django.contrib.sites',
     'django.contrib.flatpages',
-    'simple_history',
     'rest_framework',
     'rest_framework.authtoken',
     'django_extensions',
@@ -70,7 +69,6 @@ MIDDLEWARE_CLASSES = (
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
     'django.contrib.flatpages.middleware.FlatpageFallbackMiddleware',
-    'simple_history.middleware.HistoryRequestMiddleware'
 )
 
 

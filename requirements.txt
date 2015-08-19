@@ -4,14 +4,12 @@ billiard==3.3.0.20
 celery==3.1.18
 Django==1.8.1
 django-extensions==1.5.3
-django-simple-history==1.6.2
 djangorestframework==3.1.1
 gnureadline==6.3.3
 ipython==3.1.0
 kombu==3.0.26
 librabbitmq==1.5.2
 MySQL-python==1.2.5
-Pillow==2.8.1
 psycopg2==2.6
 pytz==2014.3
 six==1.9.0

@@ -24,15 +24,6 @@ class ComposerPieceSerializer(serializers.HyperlinkedModelSerializer):
         fields = ('url', 'item_id', 'title', 'movement_count', "composition_end_date")
 
 
-class ComposerHistorySerializer(serializers.HyperlinkedModelSerializer):
-    history_user_id = serializers.ReadOnlyField()
-    updated = serializers.DateTimeField()
-
-    class Meta:
-        model = Composer
-        fields = ('history_user_id', 'updated')
-
-
 class ComposerSerializer(serializers.HyperlinkedModelSerializer):
     pieces = ComposerPieceSerializer(many=True)
     free_movements = ComposerMovementSerializer(many=True)
@@ -42,7 +33,6 @@ class ComposerSerializer(serializers.HyperlinkedModelSerializer):
     death_date = serializers.IntegerField()
     created = serializers.DateTimeField(format=None)
     updated = serializers.DateTimeField(format=None)
-    history = ComposerHistorySerializer(many=True)
 
     class Meta:
         model = Composer
@@ -57,8 +47,7 @@ class ComposerSerializer(serializers.HyperlinkedModelSerializer):
                   "free_movements",
                   "free_movements_count",
                   "created",
-                  "updated",
-                  "history")
+                  "updated")
 
 class ComposerListSerializer(serializers.HyperlinkedModelSerializer):
     item_id = serializers.ReadOnlyField(source='pk')

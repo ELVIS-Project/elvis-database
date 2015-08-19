@@ -4,10 +4,6 @@ from django.contrib.auth.models import User
 from django.db.models.signals import post_save
 
 
-def picture_path(instance, filename):
-    return os.path.join('user_photos', filename)
-
-
 class UserProfile(models.Model):
 
     #user = models.ForeignKey(User, unique=True)
