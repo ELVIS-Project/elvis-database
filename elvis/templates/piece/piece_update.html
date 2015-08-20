@@ -29,7 +29,7 @@
 {% endblock %}
 
 {% block wrap %}
-    
+
     <div class="page-header">
         <h2>Update <em>{{ content.title }}</em> by {{ content.composer.name }}
         </h2>
@@ -148,13 +148,13 @@
                      data-content="This field is required because for many repertories it is useful to search, sort, and group all sacred pieces at once, or all secular pieces. If your piece does not easily fall into the sacred or secular categories, you may choose the 'Uncategorized' option.">
                     <div class="btn-group btn-group-justified form-inline radio" id="religiosity" data-toggle="buttons">
                         <label class="btn btn-default">
-                            <input type="radio" name="religiosity" value="Sacred" aria-label="Sacred"> Sacred
+                            <input type="radio" name="religiosity" value="Sacred" aria-label="Religious Nature"> Sacred
                         </label>
                         <label class="btn btn-default">
-                            <input type="radio" name="religiosity" value="Secular" aria-label="Secular"> Secular
+                            <input type="radio" name="religiosity" value="Secular" aria-label="Religious Nature"> Secular
                         </label>
                         <label class="btn btn-default">
-                            <input type="radio" name="religiosity" value="Uncategorized" aria-label="Uncategorized"> Uncategorized
+                            <input type="radio" name="religiosity" value="Uncategorized" aria-label="Religious Nature"> Uncategorized
                         </label>
                     </div>
                     <div id="religiosity_error"></div>
@@ -163,13 +163,13 @@
                      data-content="Categorizing the piece as one of these three options helps to search and sort the database.">
                     <div class="btn-group btn-group-justified form-inline radio" id="vocalization" data-toggle="buttons">
                         <label class="btn btn-default">
-                            <input type="radio" name="vocalization" value="Vocal" aria-label="Vocal"> Vocal
+                            <input type="radio" name="vocalization" value="Vocal" aria-label="Voice Type"> Vocal
                         </label>
                         <label class="btn btn-default">
-                            <input type="radio" name="vocalization" value="Instrumental" aria-label="Instrumental"> Instrumental
+                            <input type="radio" name="vocalization" value="Instrumental" aria-label="Voice Type"> Instrumental
                         </label>
                         <label class="btn btn-default">
-                            <input type="radio" name="vocalization" value="Mixed" aria-label="Mixed"> Mixed
+                            <input type="radio" name="vocalization" value="Mixed" aria-label="Voice Type"> Mixed
                         </label>
                     </div>
                     <div id="vocalization_error"></div>
