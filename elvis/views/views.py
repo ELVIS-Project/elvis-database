@@ -53,9 +53,39 @@ def solr_suggest(request):
     if request.method == "GET" and 'q' in request.GET and 'd' in request.GET:
         value = request.GET['q']
         dictionary = request.GET['d']
-        if len(value) > 1:
-            url = settings.SOLR_SERVER + "/suggest/?wt=json&suggest.dictionary={0}&q={1}".format(
-                dictionary, value)
+        if len(value) < 1:
+            return False
+        if dictionary == "generalSuggest":
+            url = settings.SOLR_SERVER + "/suggest/?wt=json&suggest.dictionary=pieceSuggest" \
+                                         "&suggest.dictionary=composerSuggest" \
+                                         "&suggest.dictionary=collectionSuggest" \
+                                         "&q={1}".format(dictionary, value)
+            json_string = urllib2.urlopen(url)
+            json_dict = json.loads(json_string.read())
+            piece_suggestions = json_dict['suggest']['pieceSuggest'][value]
+            comp_suggestions = json_dict['suggest']['composerSuggest'][value]
+            coll_suggestions = json_dict['suggest']['collectionSuggest'][value]
+            all_suggestions = []
+            if piece_suggestions['numFound']:
+                all_suggestions = piece_suggestions['suggestions']
+            if comp_suggestions['numFound']:
+                if all_suggestions:
+                    all_suggestions.extend(comp_suggestions['suggestions'])
+                else:
+                    all_suggestions = comp_suggestions['suggestions']
+            if coll_suggestions['numFound']:
+                if all_suggestions:
+                    all_suggestions.extend(coll_suggestions['suggestions'])
+                else:
+                    all_suggestions = coll_suggestions['suggestions']
+            if all_suggestions:
+                sorted_suggestions = sorted(all_suggestions, key=lambda s: SequenceMatcher(None, value, s['term']).ratio(), reverse=True)
+                for i in range(min(7, len(sorted_suggestions))):
+                    results.append({'name': sorted_suggestions[i]['term']})
+        else:
+            url = settings.SOLR_SERVER + "/suggest/?wt=json" \
+                                         "&suggest.dictionary={0}" \
+                                         "&q={1}".format(dictionary, value)
             json_string = urllib2.urlopen(url)
             resp = json.loads(json_string.read())['suggest']['{0}'.format(dictionary)]
             data = resp[resp.keys()[0]]

@@ -1,60 +1,68 @@
 {% extends "base.html" %}
 
 {% block extra_hd %}
+    {% load staticfiles %}
+    <script type='text/javascript' src="{% static "js/elvis-scripts/autocomplete.min.js" %}"></script>
+    <script>
+        $(document).ready(function ($)
+        {
+            autocomplete("search-input", "search-suggestions", "generalSuggest", 'bool');
+            $("#search-input").keyup(function(event){
+                if (event.which === 13)
+                    $("#general-search-form").submit()
+            })
+        })
+
+    </script>
+
     <title>Elvis Database</title>
 {% endblock %}
+{% block full-header %}
+    <div class="front-page-header" style="text-align:center">
+        <div class="panel-body search">
+            <form id="general-search-form" action="/search/" method="get">
+                <div class="row">
+                    <label for="gsearch-input" hidden="hidden">General Search Keyword</label>
 
+                    <div class="col-xs-10 col-xs-offset-1 col-md-8 col-md-offset-2 col-lg-6 col-lg-offset-3">
+                        <img src="{{ STATIC_URL }}/img/elvis1.png" height="150px" style="margin-bottom:20px; padding-right:20px">
+                        <div style="margin: auto; max-width:600px">
+                            <div class="input-group">
+                                <input type="text" class="form-control input-lg" id='search-input' autocomplete="off" name='q'/>
+                            <span class="input-group-btn">
+                                <button class="btn btn-default btn-lg" type="submit" id="gsearch-submit">
+                                    <span class="glyphicon glyphicon-search"></span>
+                                </button>
+                            </span>
+                            </div>
+                            <div id="search-suggestions" style="text-align:left"></div>
+                        </div>
+
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+{% endblock %}
 {% block wrap %}
-    <div id="home-jumbotron">
-        <div class="jumbotron home-jumbo">
-            <h1> ELVIS Database</h1>
-            <p class="lead"> Polyphonic music in symbolic notation to search and download.</p>
-        </div>
-    </div>
-
-    <div class="row" id="home-nav">
+    <div class="row vertical-align" id="home-nav" style="text-align: center">
         <div class="col-md-4">
-            <a href='/search/'>
-                <div class="media">
-                    <div class="pull-left">
-                        <img class="media-object img-responsive" src="{{ STATIC_URL }}/img/glyphicons_search.svg"
-                             alt="Search Icon">
-                    </div>
-                    <div class="media-body">
-                        <h2 class="media-heading">Search</h2>
-                        <p>Powerful multi-field search for scores in symbolic notation with metadata.</p>
-                    </div>
-                </div>
-            </a>
-        </div>
-        <div class="col-md-4">
-        <a href='/download/cart/'>
-            <div class="media">
-                <div class="pull-left">
-                    <img class="media-object img-responsive" src="{{ STATIC_URL }}/img/glyphicons_down.svg"
-                         alt="Download Icon">
-                </div>
-                <div class="media-body">
-                    <h2 class="media-heading">Download</h2>
-                    <p>Add scores to your cart as if shopping, then download only the files you need.</p>
-                </div>
+            <div style="margin-left:40px; margin-right:40px">
+                <h2 class="media-heading" >Search</h2>
+                <p>Powerful multi-field search for scores in symbolic notation with metadata.</p>
             </div>
-        </a>
-    </div>
-        <div class="col-md-4">
-            <a href="/pieces/upload">
-                <div class="media ">
-                    <div class="pull-left">
-                        <img class="media-object img-responsive" src="{{ STATIC_URL }}/img/glyphicons_up.svg"
-                             alt="Upload Icon">
-                    </div>
-                    <div class="media-body">
-                        <h2 class="media-heading">Upload</h2>
-                        <p>Upload pieces, movements, and collections of symbolic notation.</p>
-                    </div>
-                </div>
-            </a>
         </div>
-
+        <div class="col-md-4">
+            <div style="margin-left:40px; margin-right:40px">
+                    <h2 class="media-heading">Download</h2>
+                <p>Add scores to your cart as if shopping, then download only the files you need.</p>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div style="margin-left:40px; margin-right:40px">
+                <h2 class="media-heading">Create</h2>
+                <p>Upload pieces, movements, and collections of symbolic notation </p>
+            </div>
+        </div>
     </div>
 {% endblock %}

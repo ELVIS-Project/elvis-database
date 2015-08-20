@@ -46,8 +46,9 @@
 </div>
 
 <body>
+
 <div id="wrapper">
-    <nav class="navbar navbar-default">
+    <nav class="navbar navbar-default" style="margin-bottom:0px">
         <div class="navbar-header">
             <a class="navbar-brand" href="/">ELVIS Database</a>
             <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#homeNavbar"><span
@@ -98,27 +99,10 @@
             {% endif %}
         </div>
     </nav>
-
+    {% block full-header %}
+    {% endblock %}
     <div id="content">
         <div class="container" id="content-container">
-            {% if not user.is_authenticated %}
-                <a href="/login/" class="login-alert">
-                    <div class="alert alert-info text-center login-alert">
-                        <strong>Note!</strong> You aren't logged in... download functionality has
-                        been disabled.
-                    </div>
-                </a>
-            {% endif %}
-            <noscript>
-                <div class="row text-center">
-                    <div class="alert alert-info">
-                        <a href="#" class="close" data-dismiss="alert">&times;</a>
-                        <strong>Note!</strong> &nbsp; &nbsp; &nbsp; Your browser doesn't support JavaScript... many
-                        features
-                        will be unavailable.
-                    </div>
-                </div>
-            </noscript>
             <div class="row">
                 <div class="col-12" style="padding-left:20px; padding-right:20px">
                     {% block wrap %}

@@ -490,3 +490,22 @@ th.header:hover {
     color: #737373;
 }
 
+.front-page-header {
+    padding-top: 80px;
+    padding-bottom: 80px;
+    text-align: left;
+    padding-left:-20px;
+    color: black;
+    text-shadow: 0 1px 0 rgba(0,0,0,.1);
+
+    background-color: #fff;
+    background-image: linear-gradient(to bottom,#e7e7e7 0, #fff 100%);
+
+    background-repeat: repeat-x;
+}
+#content-container {
+    padding-top: 25px;
+}
+#elvis-navbar {
+    margin-bottom:0px;
+}
