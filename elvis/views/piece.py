@@ -444,8 +444,5 @@ def validateDynamicForm(request, form):
     for source in file_source_list:
         if request.FILES.get(source.replace('source', 'files')) and not request.POST.get(source):
             form.add_error(None, [source, "Files require a source!"])
-    file_source_list = [x for x in request.POST.keys() if x.startswith('_existingfiles_source')]
-    for source in file_source_list:
-        if not request.POST.get(source):
-            form.add_error(None, [source, "Files require a source!"])
+            
     return form
