@@ -435,16 +435,17 @@ def handle_related_models(object_list, parent, clean, **kwargs):
 
 def validateDynamicForm(request, form):
     form.is_valid()
-    movement_title_list = [x for x in request.POST.keys() if x.startswith('_existingmov_title_')
-                           or x.startswith('mov_title_')]
+    movement_title_list = [x for x in request.POST.keys() if x.startswith('_existingmov_title_')]
     for mov in movement_title_list:
         if not request.POST.get(mov):
             form.add_error(None, [mov, "Movements require a title."])
 
-    file_source_list = [x for x in request.POST.keys() if x.startswith('_existingfiles_source_')
-                           or x.startswith('files_source')]
+    file_source_list = [x for x in request.POST.keys() if x.startswith('files_source')]
+    for source in file_source_list:
+        if request.FILES.get(source.replace('source', 'files')) and not request.POST.get(source):
+            form.add_error(None, [source, "Files require a source!"])
+    file_source_list = [x for x in request.POST.keys() if x.startswith('_existingfiles_source')]
     for source in file_source_list:
         if not request.POST.get(source):
             form.add_error(None, [source, "Files require a source!"])
-
     return form

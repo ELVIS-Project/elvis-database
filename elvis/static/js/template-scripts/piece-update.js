@@ -151,10 +151,10 @@ $(document).ready(function ($)
                 for (var i = 0; i < changes['modify'].length; i++)
                 {
                     var item = changes['modify'][i];
-                    if (item['type'] === 'A')
+                    if (item['type'] === 'A' && item['oldParent'] !== item['newParentTitle'])
                     {
                         isObjectFound = true;
-                        modify_string += "<li>Moving file <em>" + item['name'] + "</em> from <strong>" + item['oldParent'] + "</strong> to <strong>" + item['newParentTitle']+ "</strong>.</li>"
+                        modify_string += "<li>Moving file <em>" + item['name'] + "</em> from <strong>" + item['oldParent'] + "</strong> to <strong>" + item['newParentTitle'] + "</strong>.</li>"
                     }
                 }
                 modify_string += "</ul>";
@@ -163,7 +163,7 @@ $(document).ready(function ($)
                     body_string += modify_string;
                 }
             }
-
+            debugger;
             if (body_string !== "")
             {
                 $base_modal_header.html("<h4 class='modal-title'>Confirm Database Changes</h4>");
@@ -197,7 +197,7 @@ $(document).ready(function ($)
     $("#new-piece-form").submit(function (event)
     {
         event.preventDefault();
-        $base_modal_header.html("<h4 class='modal-title'>Creating Piece...</h4>");
+        $base_modal_header.html("<h4 class='modal-title'>Modifying Piece...</h4>");
         $base_modal_body.html("<div class='progress'>" +
             "<div class='progress-bar progress-bar-striped active' role='progressbar' style='width: 100%'></div> " +
             "</div>");
@@ -229,7 +229,7 @@ $(document).ready(function ($)
                     $base_modal_footer.html("<button id='close-and-goto-button' type='button' class='btn btn-default' data-dismiss='modal'>Close</button>");
                     $("#close-and-goto-button").click(function(){
                         $('html, body').animate({
-                            scrollTop: $("#title").offset().top
+                            scrollTop: $(".validation-error").offset().top
                         }, 500);
                     })
                 }
@@ -589,6 +589,7 @@ $(document).ready(function ($)
                 //if the movement has been modified, push the modifications to changes dict.
                 modifications['id'] = id;
                 modifications['type'] = "M";
+                modifications['oldTitle'] = oldMov['title'];
                 changes['modify'].push(modifications)
             }
         }
@@ -624,7 +625,7 @@ $(document).ready(function ($)
                 if (oldPiece['attachments'][j]['id'] === id)
                 {
                     oldAtt = oldPiece['attachments'][j];
-                    var oldParent= 'Attach to Piece';
+                    var oldParent = 'Attach to Piece';
                     break;
                 }
             }
@@ -666,6 +667,7 @@ $(document).ready(function ($)
                 modifications['type'] = "A";
                 modifications['name'] = row.children()[1].children[0].text;
                 modifications['oldParent'] = oldParent;
+                modifications['oldSource'] = oldAtt['source'];
                 modifications['newParentTitle'] = row.children()[2].children[1].children[0].title;
                 if (modifications['parent'] !== "piece")
                 {
@@ -734,20 +736,26 @@ $(document).ready(function ($)
                 var id = data['errors']['__all__'][i];
                 if (id.indexOf('files') !== -1)
                 {
-                    var row_number = id.replace( /^\D+/g, '');
-                    var file_val = $("[id$=files_"+row_number+"]").val();
+                    var file_val = null;
+                    var row_number = id.replace(/^\D+/g, '');
+                    id.indexOf('existing') === -1 ? file_val = $("[id$=files_" + row_number + "]").val() : file_val = $("[id$=files_" + row_number + "]").text();
                     if (file_val)
                     {
                         var path = file_val.split("\\");
-                        var file_name = path[path.length-1];
-                        errors += "<strong>File</strong><em> "+file_name+"</em> requires a source.";
-                        $("#"+id).css('border-color', 'red').addClass('validation-error');
+                        var file_name = path[path.length - 1];
+                        errors += "<strong>File</strong><em> " + file_name + "</em> requires a source.<br>";
+                        $("#" + id).css('border-color', 'red').addClass('validation-error');
                     }
+                }
+                if (id.indexOf('mov') !== -1)
+                {
+                    errors += "<strong>Movements</strong> requires a title!<br>";
+                    $("#" + id).css('border-color', 'red').addClass('validation-error');
                 }
             }
         }
 
-        $(".validation-error").on("click", function(){
+        $(".validation-error").on("focus", function(){
             if (this.parentElement.id === "vocalization")
             {
                 $("#vocalization").children().css('border-color', '#ccc').removeClass('validation-error');
@@ -758,7 +766,6 @@ $(document).ready(function ($)
             }
             else{
                 $(this).css("border-color", '#ccc').removeClass('validation-error');
-
             }
         });
 

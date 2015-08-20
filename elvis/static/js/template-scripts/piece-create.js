@@ -123,7 +123,7 @@ $(document).ready(function ($)
                     $base_modal_footer.html("<button id='close-and-goto-button' type='button' class='btn btn-default' data-dismiss='modal'>Close</button>");
                     $("#close-and-goto-button").click(function(){
                         $('html, body').animate({
-                            scrollTop: $("#title").offset().top
+                            scrollTop: $(".validation-error").offset().top
                         }, 500);
                     })
                 }
@@ -217,7 +217,7 @@ $(document).ready(function ($)
             }
         }
 
-        $(".validation-error").on("click", function(){
+        $(".validation-error").on("focus click", function(){
             if (this.parentElement.id === "vocalization")
             {
                 $("#vocalization").children().css('border-color', '#ccc').removeClass('validation-error');
@@ -231,7 +231,7 @@ $(document).ready(function ($)
 
             }
         });
-
-        return errors
+        debugger;
+        return errors;
     }
 });
