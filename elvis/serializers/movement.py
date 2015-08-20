@@ -61,10 +61,11 @@ class AttachmentMovementSerializer(serializers.HyperlinkedModelSerializer):
     # LM: Must add this to serializers explicitly, otherwise will raise KeyError
     file_name = serializers.ReadOnlyField()
     attachment = serializers.SerializerMethodField("retrieve_attachment")
+    source = serializers.ReadOnlyField()
 
     class Meta:
         model = Attachment
-        fields = ("file_name", "id", "attachment")
+        fields = ("file_name", "id", "attachment", 'source')
 
     def retrieve_attachment(self, obj):
         request = self.context.get('request', None)
