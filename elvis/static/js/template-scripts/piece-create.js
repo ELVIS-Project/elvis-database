@@ -117,15 +117,13 @@ $(document).ready(function ($)
                 }
                 else
                 {
-                    var error_dict = createErrorString(data);
-                    var errors = error_dict['errors'];
-                    var first_error = error_dict['first_error'];
+                    var errors = createErrorString(data);
                     $base_modal_header.html("<h4 class='modal-title'>Form Error<h4>");
                     $base_modal_body.html("<p>Your submission has the following errors: <br>" + errors + "</p>");
                     $base_modal_footer.html("<button id='close-and-goto-button' type='button' class='btn btn-default' data-dismiss='modal'>Close</button>");
                     $("#close-and-goto-button").click(function(){
                         $('html, body').animate({
-                            scrollTop: $("#"+first_error).offset().top
+                            scrollTop: $("#title").offset().top
                         }, 500);
                     })
                 }
@@ -166,7 +164,6 @@ $(document).ready(function ($)
     {
         var errors = "";
         var form_inputs = $(":input");
-        var first_error = "";
         for (var i = 0; i < form_inputs.length; i++)
         {
             var label = form_inputs[i].getAttribute('aria-label');
@@ -175,7 +172,6 @@ $(document).ready(function ($)
             {
                 errors += "<strong>"+ label + "</strong> is required. <br>";
                 $("#"+form_inputs[i].id).css("border-color", 'red').addClass('validation-error');
-                !first_error ? first_error = form_inputs[i].id : null;
             }
             else
             {
@@ -186,7 +182,6 @@ $(document).ready(function ($)
         {
             errors += "<strong>Religious Nature</strong> is required. <br>";
             $("#religiosity").children().css('border-color', 'red').addClass('validation-error');
-            !first_error ? first_error = form_inputs[i].id : null;
         }
         else
         {
@@ -196,7 +191,6 @@ $(document).ready(function ($)
         {
             errors += "<strong>Voice Type</strong> is required. <br>";
             $("#vocalization").children().css('border-color', 'red').addClass('validation-error');
-            !first_error ? first_error = form_inputs[i].id : null;
         }
         else
         {
@@ -218,7 +212,6 @@ $(document).ready(function ($)
                         var file_name = path[path.length-1];
                         errors += "<strong>File</strong><em> "+file_name+"</em> requires a source.";
                         $("#"+id).css('border-color', 'red').addClass('validation-error');
-                        !first_error ? first_error = form_inputs[i].id : null;
                     }
                 }
             }
@@ -239,6 +232,6 @@ $(document).ready(function ($)
             }
         });
 
-        return {errors: errors, first_error:first_error}
+        return errors
     }
 });
