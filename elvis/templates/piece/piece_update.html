@@ -28,9 +28,8 @@
 
 {% endblock %}
 
-
 {% block wrap %}
-
+    
     <div class="page-header">
         <h2>Update <em>{{ content.title }}</em> by {{ content.composer.name }}
         </h2>
@@ -47,7 +46,7 @@
                     data-content="Note: Duplicate titles will produce duplicate pieces in the database: this is to allow for
                     composers who may have more than one piece with the same name.">Title</span>
                 <input type="text" id="title" name="title" autocomplete="off"
-                       class="form-control upload-input-field">
+                       class="form-control upload-input-field" aria-label="Title">
             </div>
             <div id="title_suggestion_menu" style="padding-left:120px"></div>
             <div id="title_error"></div>
@@ -61,9 +60,8 @@
                           data-content="<ul><li>If present, select your composer from the dropdown suggestion menu in order to minimize duplicates.</li>
                             <li>If you add a new composer, input the name 'First, Last' and employ the spelling conventions of Grove Music Online.</li>
                 <li>If you don’t know the composer, input Anonymous.</li></ul>">Composer</span>
-                <input type="text" id="composer" name="composer"
-                       autocomplete='off'
-                       class="form-control upload-input-field">
+                <input type="text" id="composer" name="composer" autocomplete='off'
+                       class="form-control upload-input-field" aria-label="Composer">
             </div>
             <div id="composer_suggestion_menu"
                  style="padding-left:120px"></div>
@@ -74,9 +72,8 @@
                     <div class="col-md-6">
                         <div class="form-group">
                             <div class="input-group">
-                                <input type='number' name="composer_birth_date"
-                                       id="composer_birth_date" max="2000"
-                                       class="form-control unstyled"/>
+                                <input type='number' name="composer_birth_date" id="composer_birth_date" max="2000"
+                                       class="form-control unstyled" aria-label="Composer Birth Date"/>
                                 <span class="input-group-addon">Birth</span>
                             </div>
                             <div id="composer_birth_date_error"></div>
@@ -85,9 +82,8 @@
                     <div class="col-md-6">
                         <div class="form-group">
                             <div class="input-group">
-                                <input type='number' name="composer_death_date"
-                                       id="composer_death_date" max="2000"
-                                       class="form-control unstyled"/>
+                                <input type='number' name="composer_death_date" id="composer_death_date" max="2000"
+                                       class="form-control unstyled" aria-label="Composer Death Date"/>
                                 <span class="input-group-addon">Death</span>
                             </div>
                             <div id="composer_death_date_error"></div>
@@ -112,11 +108,8 @@
                                       <ul><li>If only one date is known, submit it as the 'Composition End Date'.</li>
                                         <li>If you don’t know the date(s) of the piece, input a reasonable date range (e.g. adult years of composer’s life, or date range of sources in which it
                                       is found; you can also use dates from Grove).</li></ul>">Composition Start Date</span>
-                            <input type='number' name="composition_start_date"
-                                   id="composition_start_date"
-                                   autocomplete='off' max="2000"
-                                   placeholder="Not specified in piece."
-                                   class="form-control upload-input-field"/>
+                            <input type='number' name="composition_start_date" id="composition_start_date" autocomplete='off' max="2000"
+                                   placeholder="Not specified in piece." class="form-control upload-input-field" aria-label="Composition Start Date"/>
                         </div>
                         <div id="composition_start_date_error"></div>
                     </div>
@@ -136,7 +129,7 @@
                                    id="composition_end_date"
                                    autocomplete='off' max="2000"
                                    placeholder="Not specified in piece."
-                                   class="form-control upload-input-field"/>
+                                   class="form-control upload-input-field" aria-label="Composition End Date"/>
                         </div>
                         <div id="composition_end_date_error"></div>
                     </div>
@@ -155,13 +148,13 @@
                      data-content="This field is required because for many repertories it is useful to search, sort, and group all sacred pieces at once, or all secular pieces. If your piece does not easily fall into the sacred or secular categories, you may choose the 'Uncategorized' option.">
                     <div class="btn-group btn-group-justified form-inline radio" id="religiosity" data-toggle="buttons">
                         <label class="btn btn-default">
-                            <input type="radio" name="religiosity" value="Sacred"> Sacred
+                            <input type="radio" name="religiosity" value="Sacred" aria-label="Sacred"> Sacred
                         </label>
                         <label class="btn btn-default">
-                            <input type="radio" name="religiosity" value="Secular"> Secular
+                            <input type="radio" name="religiosity" value="Secular" aria-label="Secular"> Secular
                         </label>
                         <label class="btn btn-default">
-                            <input type="radio" name="religiosity" value="Uncategorized"> Uncategorized
+                            <input type="radio" name="religiosity" value="Uncategorized" aria-label="Uncategorized"> Uncategorized
                         </label>
                     </div>
                     <div id="religiosity_error"></div>
@@ -170,13 +163,13 @@
                      data-content="Categorizing the piece as one of these three options helps to search and sort the database.">
                     <div class="btn-group btn-group-justified form-inline radio" id="vocalization" data-toggle="buttons">
                         <label class="btn btn-default">
-                            <input type="radio" name="vocalization" value="Vocal"> Vocal
+                            <input type="radio" name="vocalization" value="Vocal" aria-label="Vocal"> Vocal
                         </label>
                         <label class="btn btn-default">
-                            <input type="radio" name="vocalization" value="Instrumental"> Instrumental
+                            <input type="radio" name="vocalization" value="Instrumental" aria-label="Instrumental"> Instrumental
                         </label>
                         <label class="btn btn-default">
-                            <input type="radio" name="vocalization" value="Mixed"> Mixed
+                            <input type="radio" name="vocalization" value="Mixed" aria-label="Mixed"> Mixed
                         </label>
                     </div>
                     <div id="vocalization_error"></div>
@@ -205,7 +198,8 @@
                                    autocomplete="off"
                                    placeholder="Not specified in piece."
                                    id="number_of_voices" max="100" min="0"
-                                   class="form-control unstyled upload-input-field"/>
+                                   class="form-control unstyled upload-input-field"
+                                   aria-label="Number Of Voices"/>
                         </div>
                         <div id="number_of_voices_error"></div>
                     </div>
@@ -225,7 +219,8 @@
                             <input type='text' name="languages" id="languages"
                                    autocomplete="off"
                                    placeholder="Not specified in piece."
-                                   class="form-control unstyled upload-input-field"/>
+                                   class="form-control unstyled upload-input-field"
+                                   aria-label="Languages"/>
                         </div>
                         <div id="language_suggestion_menu"
                              style="padding-left:120px"></div>
@@ -245,7 +240,8 @@
                             <input type='text' name="genres" id="genres"
                                    autocomplete="off"
                                    placeholder="Not specified in piece."
-                                   class="form-control unstyled upload-input-field"/>
+                                   class="form-control unstyled upload-input-field"
+                                   aria-label="Genres"/>
                         </div>
                         <div id="genre_suggestion_menu"
                              style="padding-left:120px"></div>
@@ -267,7 +263,8 @@
                             <input type='text' name="locations" id='locations'
                                    autocomplete="off"
                                    placeholder="Not specified in piece."
-                                   class="form-control unstyled upload-input-field"/>
+                                   class="form-control unstyled upload-input-field"
+                                   aria-label="Locations"/>
                         </div>
                         <div id="location_suggestion_menu"
                              style="padding-left:120px"></div>
@@ -287,7 +284,8 @@
                             <input type='text' name="instruments_voices"
                                    autocomplete="off" id="instruments_voices"
                                    placeholder="Not specified in piece."
-                                   class="form-control unstyled upload-input-field"/>
+                                   class="form-control unstyled upload-input-field"
+                                   aria-label="Instrumentation"/>
                         </div>
                         <div id="instrumentation_suggestion_menu"
                              style="padding-left:120px"></div>
@@ -309,7 +307,8 @@
                             <input type='text' name="sources" id="sources"
                                    autocomplete="off"
                                    placeholder="Not specified in piece."
-                                   class="form-control unstyled upload-input-field"/>
+                                   class="form-control unstyled upload-input-field"
+                                   aria-label="Sources"/>
                         </div>
                         <div id="source_suggestion_menu"
                              style="padding-left:120px"></div>
@@ -329,7 +328,8 @@
                             <input type='text' name="tags" id="tags"
                                    autocomplete="off"
                                    class="form-control unstyled upload-input-field"
-                                   placeholder="Not specified in piece."/>
+                                   placeholder="Not specified in piece."
+                                   aria-label="Tags"/>
                         </div>
                         <div id="tags_suggestion_menu"
                              style="padding-left:120px"></div>

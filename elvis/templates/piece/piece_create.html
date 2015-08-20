@@ -11,7 +11,7 @@
     <script type='text/javascript' src="{% static "bootstrap/plugins/bootstrap-markdown.js" %}"></script>
     <script type='text/javascript' src="{% static "js/elvis-scripts/autocomplete.min.js" %}"></script>
     <script type='text/javascript' src="{% static "js/elvis-scripts/uploadDynamicFileTable.min.js" %}"></script>
-    <script type='text/javascript' src="{% static "js/template-scripts/piece-create.js" %}"></script>
+    <script type='text/javascript' src="{% static "js/template-scripts/piece-create.min.js" %}"></script>
     <link href="{% static "bootstrap/plugins/bootstrap-select.css" %}" rel="stylesheet" media="screen"/>
     <link href="{% static "bootstrap/plugins/bootstrap-markdown.min.css" %}" rel="stylesheet" media="screen"/>
 
@@ -27,9 +27,7 @@
 
 {% endblock %}
 
-
 {% block wrap %}
-
 
 <div class="page-header">
     <h2>Upload a Piece</h2>
@@ -44,7 +42,7 @@
                     data-content="Note: Duplicate titles will produce duplicate pieces in the database: this is to allow for
                     composers who may have more than one piece with the same name.">Title</span>
             <input type="text" id="title" name="title" autocomplete="off" class="form-control upload-input-field"
-                   placeholder="e.g. Ach Gott, vom Himmel sieh darein, BWV 2">
+                   placeholder="e.g. Ach Gott, vom Himmel sieh darein, BWV 2" aria-label="Title">
         </div>
         <div id="title_suggestion_menu" style="padding-left:120px"></div>
         <div id="title_error"></div>
@@ -58,7 +56,7 @@
                           <li>If you add a new composer, input the name 'First, Last' and employ the spelling conventions of Grove Music Online.</li>
                           <li>If you don’t know the composer, input Anonymous.</li></ul>">Composer</span>
             <input type="text" id="composer" name="composer" autocomplete='off' class="form-control upload-input-field"
-                   placeholder="e.g. Bach, Johann Sebastian">
+                   placeholder="e.g. Bach, Johann Sebastian" aria-label="Composer">
         </div>
         <div id="composer_suggestion_menu" style="padding-left:120px"></div>
         <div id="composer_error"></div>
@@ -68,7 +66,7 @@
                     <div class="form-group">
                         <div class="input-group">
                             <input type='number' name="composer_birth_date" id="composer_birth_date" max="2000"
-                                   class="form-control unstyled"/>
+                                   class="form-control unstyled" aria-label="Composer Birth Date"/>
                             <span class="input-group-addon">Birth</span>
                         </div>
                         <div id="composer_birth_date_error"></div>
@@ -78,7 +76,7 @@
                     <div class="form-group">
                         <div class="input-group">
                             <input type='number' name="composer_death_date" id="composer_death_date" max="2000"
-                                   class="form-control unstyled"/>
+                                   class="form-control unstyled" aria-label="Composer Death Date"/>
                             <span class="input-group-addon">Death</span>
                         </div>
                         <div id="composer_death_date_error"></div>
@@ -102,7 +100,7 @@
                                       is found; you can also use dates from Grove).</li></ul>">Composition Start Date</span>
                         <input type='number' name="composition_start_date" id="composition_start_date"
                                placeholder="1600" autocomplete='off' max="2000"
-                               class="form-control upload-input-field"/>
+                               class="form-control upload-input-field" aria-label="Composition Start Date"/>
                     </div>
                     <div id="composition_start_date_error"></div>
                 </div>
@@ -116,7 +114,7 @@
                                       data-content="The year the piece was completed, or the first date of publication.<br><ul><li>If you don’t know the date(s) of the piece, input a reasonable date range (e.g. adult years of composer’s life,
                                       or date range of sources in which it is found; you can also use dates from Grove).</li></ul>">Composition End Date</span>
                         <input type='number' name="composition_end_date" id="composition_end_date" placeholder="1605"
-                               autocomplete='off' max="2000" class="form-control upload-input-field"/>
+                               autocomplete='off' max="2000" class="form-control upload-input-field" aria-label="Composition End Date"/>
                     </div>
                     <div id="composition_end_date_error"></div>
                 </div>
@@ -135,13 +133,13 @@
                     data-content="This field is required because for many repertories it is useful to search, sort, and group all sacred pieces at once, or all secular pieces. If your piece does not easily fall into the sacred or secular categories, you may choose the 'Uncategorized' option.">
                 <div class="btn-group btn-group-justified form-inline radio" id="religiosity" data-toggle="buttons">
                     <label class="btn btn-default">
-                        <input type="radio" name="religiosity" value="Sacred"> Sacred
+                        <input type="radio" name="religiosity" value="Sacred" aria-label="Religious Nature"> Sacred
                     </label>
                     <label class="btn btn-default">
-                        <input type="radio" name="religiosity" value="Secular"> Secular
+                        <input type="radio" name="religiosity" value="Secular" aria-label="Religious Nature"> Secular
                     </label>
                     <label class="btn btn-default">
-                        <input type="radio" name="religiosity" value="Uncategorized"> Uncategorized
+                        <input type="radio" name="religiosity" value="Uncategorized" aria-label="Religious Nature"> Uncategorized
                     </label>
                 </div>
                 <div id="religiosity_error"></div>
@@ -150,13 +148,13 @@
                  data-content="Categorizing the piece as one of these three options helps to search and sort the database.">
                 <div class="btn-group btn-group-justified form-inline radio" id="vocalization" data-toggle="buttons">
                     <label class="btn btn-default">
-                        <input type="radio" name="vocalization" value="Vocal"> Vocal
+                        <input type="radio" name="vocalization" value="Vocal" aria-label="Voice Type"> Vocal
                     </label>
                     <label class="btn btn-default">
-                        <input type="radio" name="vocalization" value="Instrumental"> Instrumental
+                        <input type="radio" name="vocalization" value="Instrumental" aria-label="Voice Type"> Instrumental
                     </label>
                     <label class="btn btn-default">
-                        <input type="radio" name="vocalization" value="Mixed"> Mixed
+                        <input type="radio" name="vocalization" value="Mixed" aria-label="Voice Type"> Mixed
                     </label>
                 </div>
                 <div id="vocalization_error"></div>
@@ -174,7 +172,7 @@
                                        collection will be created and visible to the public. You can make the collection private on the <a href='/collections/?creator={{ user.username }}' target='_blank'>My Collections</a> page">Collections</span>
                         <input type="text" id="collections" name="collections" autocomplete="off"
                                class="form-control upload-input-field"
-                               placeholder="e.g. Prof.Fujinaga's Collection; McGill Collection">
+                               placeholder="e.g. Prof.Fujinaga's Collection; McGill Collection" aria-label="Collections">
                     </div>
                     <div id="collection_suggestion_menu" style="padding-left:120px"></div>
                     <div id="collections_error"></div>
@@ -194,7 +192,7 @@
                                       </ul>">
                                     Num. of Voices</span>
                         <input type='number' name="number_of_voices" autocomplete="off" placeholder="e.g. 2"
-                               id="number_of_voices" max="100" min="0" class="form-control unstyled upload-input-field"/>
+                               id="number_of_voices" max="100" min="0" class="form-control unstyled upload-input-field" aria-label="Number Of Voices"/>
                     </div>
                     <div id="number_of_voices_error"></div>
                 </div>
@@ -209,7 +207,7 @@
                                       title="<b>Languages</b><span class='label label-warning pull-right'>Contextual</span>"
                                       data-content="Languages are required if the piece is <b>Vocal</b> or <b>Mixed</b>, but <i>should be left blank for</i> <b>Instrumental</b> pieces.">Text Language</span>
                         <input type='text' name="languages" id="languages" autocomplete="off"
-                               placeholder="e.g. English; German" class="form-control unstyled upload-input-field"/>
+                               placeholder="e.g. English; German" class="form-control unstyled upload-input-field" aria-label="Languages"/>
                     </div>
                     <div id="language_suggestion_menu" style="padding-left:120px"></div>
                     <div id="languages_error"></div>
@@ -223,7 +221,7 @@
                                       title="<b>Genres</b> <span class='label label-primary pull-right'>Required</span>"
                                       data-content="If present, select a genres from the drop-down list.">Genres</span>
                         <input type='text' name="genres" id="genres" autocomplete="off" placeholder="e.g. Mass"
-                               class="form-control unstyled upload-input-field"/>
+                               class="form-control unstyled upload-input-field" aria-label="Genres"/>
                     </div>
                     <div id="genre_suggestion_menu" style="padding-left:120px"></div>
                     <div id="genres_error"></div>
@@ -239,7 +237,7 @@
                                           title="<b>Place of Origin</b> <span class='label label-warning pull-right'>Optional</span>"
                                           data-content="Indicate the region where the piece might have been composed. General terms are preferred (e.g. Low Countries; Austria, not Vienna; Italy, not Rome)">Place of Origin</span>
                         <input type='text' name="locations" id='locations' autocomplete="off" placeholder="e.g. France"
-                               class="form-control unstyled upload-input-field"/>
+                               class="form-control unstyled upload-input-field" aria-label="Locations"/>
                     </div>
                     <div id="location_suggestion_menu" style="padding-left:120px"></div>
                     <div id="locations_error"></div>
@@ -253,7 +251,7 @@
                                       title="<b>Instrumentation</b> <span class='label label-primary pull-right'>Required</span>"
                                       data-content="Use semicolons as a separator for the list of instruments in the piece.">Instrumentation</span>
                         <input type='text' name="instruments_voices" autocomplete="off" id="instruments_voices"
-                               placeholder="e.g. Harpsichord" class="form-control unstyled upload-input-field"/>
+                               placeholder="e.g. Harpsichord" class="form-control unstyled upload-input-field" aria-label="Instrumentation"/>
                     </div>
                     <div id="instrumentation_suggestion_menu" style="padding-left:120px"></div>
                     <div id="instruments_voices_error"></div>
@@ -269,8 +267,7 @@
                                       title="<b>Sources</b> <span class='label label-warning pull-right'>Optional</span>"
                                       data-content="Use this field to specify the name(s) of the manuscript or print that was the source of this score.">Sources</span>
                         <input type='text' name="sources" id="sources" autocomplete="off"
-                               placeholder="e.g. Bologna Q15"
-                               class="form-control unstyled upload-input-field"/>
+                               placeholder="e.g. Bologna Q15" class="form-control unstyled upload-input-field" aria-label="Sources"/>
                     </div>
                     <div id="source_suggestion_menu" style="padding-left:120px"></div>
                     <div id="sources_error"></div>
@@ -286,7 +283,7 @@
                           data-content="You may add any other tags you believe would help organize and define this piece here. Try not to
                           duplicate information from the previous fields.">Tags</span>
                         <input type='text' name="tags" id="tags" autocomplete="off"
-                               class="form-control unstyled upload-input-field" placeholder="D-sharp Minor; 4/4"/>
+                               class="form-control unstyled upload-input-field" placeholder="D-sharp Minor; 4/4" aria-label="Tags"/>
                     </div>
                     <div id="tags_suggestion_menu" style="padding-left:120px"></div>
                     <div id="tags_error"></div>
@@ -297,7 +294,7 @@
 
         <div class="form-group">
             <textarea class="form-control" rows="7" name="comment" id="comment" data-provide="markdown" style="resize:vertical"
-                      placeholder="Comments..."></textarea>
+                      placeholder="Comments..." aria-label="Comments"></textarea>
         </div>
         <br>
 
