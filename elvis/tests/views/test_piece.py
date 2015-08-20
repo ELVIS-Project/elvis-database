@@ -66,7 +66,7 @@ class CollectionViewTestCase(ElvisTestSetup, APITestCase):
     def test_post_create_piece_empty_form_not_allowed(self):
         self.client.login(username='testuser', password='test')
         response = self.client.post("/pieces/")
-        self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
         self.client.logout()
 
     # Test for valid form submission with all new things
