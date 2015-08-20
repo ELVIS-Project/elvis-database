@@ -105,6 +105,15 @@ class PieceUpdate(generics.RetrieveUpdateDestroyAPIView):
             raise PermissionDenied
         return super(PieceUpdate, self).get(self, request, *args, **kwargs)
 
+    @method_decorator(csrf_protect)
+    def post(self, request, *args, **kwargs):
+        if 'delete' in request.POST:
+            piece = Piece.objects.get(id=request.POST['delete'])
+            if not (request.user == piece.uploader or request.user.is_superuser):
+                raise PermissionDenied
+            piece.delete()
+            return Response(status=status.HTTP_202_ACCEPTED)
+        return update(request, *args, **kwargs)
 
 class PieceList(generics.ListCreateAPIView):
     model = Piece
@@ -155,11 +164,11 @@ def create(request, *args, **kwargs):
         # Only active users may upload pieces.
         raise NotAuthenticated
 
-    form = PieceForm(request.POST)
+    form = validateDynamicForm(request, PieceForm(request.POST))
     if not form.is_valid():
         # Form errors are rendered for user on the front end.
         data = json.dumps({'errors': form.errors})
-        return HttpResponse(data, content_type="json", status=status.HTTP_400_BAD_REQUEST)
+        return HttpResponse(data, content_type="json")
 
     clean = Cleanup()
     clean_form = form.cleaned_data
@@ -194,7 +203,7 @@ def update(request, *args, **kwargs):
     if not (request.user == piece.uploader or request.user.is_superuser):
         raise PermissionDenied
     
-    form = PieceForm(request.POST)
+    form = validateDynamicForm(request, PieceForm(request.POST))
     if not form.is_valid():
         # Form errors are rendered for user on the front end.
         f_data = form.errors.as_data()
@@ -423,3 +432,19 @@ def handle_related_models(object_list, parent, clean, **kwargs):
     data = json.dumps({'success': True, 'id': parent.id,
                        'url': "/piece/{0}".format(parent.id)})
     return HttpResponse(data, content_type="json")
+
+def validateDynamicForm(request, form):
+    form.is_valid()
+    movement_title_list = [x for x in request.POST.keys() if x.startswith('_existingmov_title_')
+                           or x.startswith('mov_title_')]
+    for mov in movement_title_list:
+        if not request.POST.get(mov):
+            form.add_error(None, [mov, "Movements require a title."])
+
+    file_source_list = [x for x in request.POST.keys() if x.startswith('_existingfiles_source_')
+                           or x.startswith('files_source')]
+    for source in file_source_list:
+        if not request.POST.get(source):
+            form.add_error(None, [source, "Files require a source!"])
+
+    return form
