@@ -202,24 +202,15 @@
             <div class="tab-pane fade" id="help">
 
                 <div class="panel-body">
-                    <h4> Searching </h4>
-
-                    <p> You may use the words AND, OR, NOT and surround statements in brackets on any field in order
+                    <h3>Boolean Searching</h3>
+                    <p> You may use the words <code>AND</code>,<code>OR</code>,<code>NOT</code> and surround statements in brackets on any field in order
                         to better define your search parameters</p>
-
-                    <p> Each
-                        <button class="btn btn-mini btn-success"><span class="glyphicon glyphicon-plus"></span></button>
-                        recursively sends its object's attachments to your downloads. For example, clicking this in a
-                        piece-typed result will send all of its attachments, and the attachments of its movements, to
-                        your downloads cart. The
-                        <button class="btn btn-success btn-sm">Add Results on Current Page to Downloads <span
-                                class="glyphicon glyphicon-plus"></span></button>
-                        will recursively send all the attachments of the current page's results to your downloads. In
-                        other words, it's like clicking all of the small green buttons at once. The
-                        <button class="btn btn-danger btn-sm"> Add All Query Results to Downloads <span
-                                class="glyphicon glyphicon-plus"></span></button>
-                        will do the same for every page of results in your query.
+                    <p> <code>NOT Gloria</code> will return everything without the world 'Gloria' in it.<br>
+                        <code>Bach OR Josquin</code> will return both items with 'Bach' and items with 'Josquin'.<br>
+                        <code>Bach AND Josquin</code> will probably return nothing, as this will return <em>only</em> items that have 'Bach' and 'Josquin' in them.<br>
+                        <code>G Minor AND NOT(Gloria OR Sanctus)</code> will only return items tagged with 'G Minor' and which are <em>also</em> not tagged with either 'Gloria' or 'Sanctus'</code>
                     </p>
+
                 </div>
 
             </div>
