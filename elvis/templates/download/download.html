@@ -1,6 +1,19 @@
 {% extends "base.html" %}
 {% block extra_hd %}
+    {% load staticfiles %}
+    <script type='text/javascript' src="{% static "js/jquery.tablesorter.js" %}"></script>
 <title>Downloads</title>
+    <script>
+    $(document).ready(function ()
+    {
+        $("#file-table").tablesorter({
+            headers: {0: {sorter: false}},
+            textExtraction: "complex",
+            sortList: [[3,0],[5,0]]
+        });
+
+    })
+    </script>
 {% endblock %}
 
 {% block wrap %}
@@ -21,7 +34,7 @@
         <div class="row">
             <span class="help-block">Below are all files associated with your download cart. You may uncheck individual items to not download them, or use the boxes
             at the bottom of the page to include/exclude all of a specific file type.</span>
-            <table class="table table-hover">
+            <table class="table table-hover" id="file-table">
                 <thead>
                     <tr>
                         <th width="2%"> <input type="checkbox" name="select-all" id="select-all" checked="true"/>  </th>
