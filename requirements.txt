@@ -9,7 +9,6 @@ gnureadline==6.3.3
 ipython==3.1.0
 kombu==3.0.26
 librabbitmq==1.5.2
-MySQL-python==1.2.5
 psycopg2==2.6
 pytz==2014.3
 six==1.9.0
