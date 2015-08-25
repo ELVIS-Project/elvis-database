@@ -54,6 +54,8 @@ urlpatterns += format_suffix_patterns(
 
         url(r'^downloads/$', DownloadDetail.as_view(), name="download-detail"),
         url(r'^downloading/$', Downloading.as_view(), name="downloading"),
+        url(r'^download/cart/$', CollectionCurrent.as_view(), name="download-cart"),
+
 
         url(r'^pieces/upload/$', PieceCreate.as_view(), name="piece-create"),
         url(r'^pieces/$', PieceList.as_view(), name="piece-list"),
@@ -62,7 +64,6 @@ urlpatterns += format_suffix_patterns(
 
         url(r'^collections/$', CollectionList.as_view(), name="collection-list"),
         url(r'^collection/(?P<pk>[0-9]+)/$', CollectionDetail.as_view(), name="collection-detail"),
-        url(r'^download/cart/$', CollectionCurrent.as_view(), name="collection-create"),
 
         url(r'^composers/$', ComposerList.as_view(), name="composer-list"),
         url(r'^composer/(?P<pk>[0-9]+)/$', ComposerDetail.as_view(), name="composer-detail"),
