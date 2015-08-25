@@ -54,7 +54,7 @@ class CollectionViewTestCase(ElvisTestSetup, APITestCase):
 
     def test_get_upload_not_allowed(self):
         response = self.client.get("/pieces/upload/")
-        self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
+        self.assertEqual(response.status_code, status.HTTP_302_FOUND)
 
     def test_get_upload_allowed(self):
         self.client.login(username='creatoruser', password='test')

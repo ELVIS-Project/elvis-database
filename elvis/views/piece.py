@@ -23,6 +23,7 @@ from elvis.views.views import handle_dynamic_file_table
 from elvis.views.views import Cleanup
 from django.utils.decorators import method_decorator
 from django.http import HttpResponse
+from django.http import HttpResponseRedirect
 
 
 class PieceListHTMLRenderer(CustomHTMLRenderer):
@@ -80,16 +81,16 @@ class PieceDetail(generics.RetrieveUpdateDestroyAPIView):
 
 class PieceCreate(generics.GenericAPIView):
     model = Piece
-    permission_classes = (permissions.IsAuthenticated,)
+    permission_classes = (permissions.IsAuthenticatedOrReadOnly,)
     serializer_class = PieceSerializer
     renderer_classes = (JSONRenderer, PieceCreateHTMLRenderer)
     queryset = Piece.objects.all()
 
     def get(self, request, *args, **kwargs):
-        if User.is_authenticated(request.user):
+        if request.user.is_authenticated():
             return Response(status=status.HTTP_200_OK)
         else:
-            raise NotAuthenticated
+            return HttpResponseRedirect('/login/?error=upload')
 
 
 class PieceUpdate(generics.RetrieveUpdateDestroyAPIView):
@@ -162,7 +163,7 @@ class PieceList(generics.ListCreateAPIView):
 def create(request, *args, **kwargs):
     if not request.user.is_active:
         # Only active users may upload pieces.
-        raise NotAuthenticated
+        return NotAuthenticated
 
     form = validateDynamicForm(request, PieceForm(request.POST))
     if not form.is_valid():

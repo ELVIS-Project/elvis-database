@@ -35,7 +35,7 @@ class CollectionViewTestCase(ElvisTestSetup, APITestCase):
 
     def test_get_download_cart_not_allowed(self):
         response = self.client.get("/download/cart/")
-        self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
+        self.assertEqual(response.status_code, status.HTTP_302_FOUND)
 
     def test_get_download_cart_allowed(self):
         self.client.login(username='testuser', password='test')
@@ -54,7 +54,7 @@ class CollectionViewTestCase(ElvisTestSetup, APITestCase):
 
         self.client.login(username='testuser', password='test')
         response = self.client.post('/collections/', {'action': 'make-public', 'id': collection.id})
-        self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
+        self.assertEqual(response.status_code, status.HTTP_302_FOUND)
         response = self.client.post('/collections/', {'action': 'make-private', 'id': collection.id})
         self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
         response = self.client.post('/collections/', {'action': 'delete', 'id': collection.id})

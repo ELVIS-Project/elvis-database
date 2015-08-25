@@ -22,6 +22,11 @@
 </script>
 
 <div class="container">
+    {% if request.GET.error == "download" %}
+    <div class="alert alert-info text-center" role="alert">You must log in to create a download cart!</div>
+    {% elif request.GET.error == "upload" %}
+    <div class="alert alert-info text-center" role="alert">You must log in to upload new pieces!</div>
+    {% endif %}
     <div class="row">
         <div class="col-xs-12 col-sm-6 col-sm-offset-3 col-lg-4 col-lg-offset-4">
             <div class="account-wall">

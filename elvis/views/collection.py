@@ -171,7 +171,7 @@ class CollectionDetail(generics.RetrieveUpdateDestroyAPIView):
 
 class CollectionCurrent(generics.RetrieveUpdateDestroyAPIView):
     model = Download
-    permission_classes = (permissions.IsAuthenticated,)
+    permission_classes = (permissions.IsAuthenticatedOrReadOnly,)
     serializer_class = CartSerializer
     renderer_classes = (JSONRenderer, CollectionCurrentHTMLRenderer)
     queryset = Download.objects.all()
@@ -185,7 +185,7 @@ class CollectionCurrent(generics.RetrieveUpdateDestroyAPIView):
             return None
 
     def get(self, request, *args, **kwargs):
-        if User.is_authenticated(request.user):
+        if request.user.is_authenticated():
             return self.retrieve(request, *args, **kwargs)
         else:
-            raise PermissionDenied
+            return HttpResponseRedirect('/login/?error=download')
