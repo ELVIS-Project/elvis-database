@@ -8,4 +8,4 @@ DATE=$(date +%F)
 python manage.py dumpdata --natural-foreign --exclude contenttypes --exclude auth.permission > ../elvis-database-backups/$(echo $DATE).json
 rsync -r ../elvis-database-backups/ AlexPar@132.206.14.118:~/ELVISDB_BACKUP
 rsync -r ./media_root/ AlexPar@132.206.14.118:~/ELVISDB_BACKUP/media
-
+echo $DATE nightly back-up succesful!
