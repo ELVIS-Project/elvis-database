@@ -15,4 +15,4 @@ ssh AlexPar@132.206.14.118 'cd ~/ELVISDB_BACKUP/; rm -rf backup.3; mv backup.2 b
 
 echo Synching to remote server...
 rsync -r --delete /srv/webapps/elvis-database-backups/backup.0/ AlexPar@132.206.14.118:~/ELVISDB_BACKUP/backup.0/
-echo Done! $Date weekly backup complete.
+echo Done! $DATE weekly backup complete.
