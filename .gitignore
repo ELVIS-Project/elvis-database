@@ -13,6 +13,7 @@ media_root/*
 static_root/*
 pom.xml
 *.iml
+env_3
 
 #Local file ignores
 solr/solr/collection1/conf/solrconfig.xml
