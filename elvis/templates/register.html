@@ -1,5 +1,15 @@
 {% extends "base.html" %}
-
+{% block extra_hd %}
+<script src='https://www.google.com/recaptcha/api.js'></script>
+<style>
+    .captcha {
+        text-align: center;
+    }
+    .g-recaptcha {
+        display: inline-block;
+    }
+</style>
+{% endblock %}
 {% block wrap %}
 
 <script type="text/javascript">
@@ -46,7 +56,11 @@
                     <br>
                     <input name='first_name' id="first_name" type="text" class="form-control top" placeholder="First Name" required>
                     <input name='last_name' id="last_name" type="text" class="form-control bot" placeholder="Last Name" required>
-                    <br><br>
+                    <br>
+                    <div class="captcha">
+                    <div class="g-recaptcha" data-sitekey="6LfV4gsTAAAAAGK8vA-O2RrABlIb_XbNywrxJrTS"></div>
+                    </div>
+                    <br>
                     <button class="btn btn-lg btn-primary btn-block" id="login-submit">Register</button>
                 </form>
             </div>

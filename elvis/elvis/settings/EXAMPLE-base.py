@@ -105,6 +105,13 @@ EMAIL_HOST_USER = 'elvisdatabase@gmail.com'
 with open('/etc/elvis_emailpass.txt') as f:
     EMAIL_HOST_PASSWORD = f.read().strip()
 
+# Captcha Settings
+# ================
+RECAPTCHA_PUBLIC_KEY = "6LfV4gsTAAAAAGK8vA-O2RrABlIb_XbNywrxJrTS"
+
+with open('/etc/elvis_captchakey.txt') as f:
+    RECAPTCHA_PRIVATE_KEY = f.read().strip()
+
 # Internationalization
 # ====================
 LANGUAGE_CODE = 'en-us'

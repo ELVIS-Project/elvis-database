@@ -11,6 +11,9 @@ from django.http import HttpResponse, HttpResponseRedirect
 
 from django.utils.decorators import method_decorator
 from django.views.decorators.csrf import csrf_protect
+import urllib2
+import urllib
+from django.conf import settings
 
 from django.shortcuts import render
 
@@ -60,6 +63,17 @@ class UserAccount(generics.CreateAPIView):
         if user.is_anonymous():
             form = UserForm(data=request.POST)
             if form.is_valid():
+                #Verify captcaha
+                if not request.POST['g-recaptcha-response']:
+                    form.add_error(None, "You must complete the reCaptcha to register!")
+                    return render(request, "register.html", {'form': form})
+
+                captcha_data = urllib.urlencode({'secret': settings.RECAPTCHA_PRIVATE_KEY, 'response': request.POST['g-recaptcha-response']})
+                res = urllib2.urlopen("https://www.google.com/recaptcha/api/siteverify", captcha_data).read()
+                if 'false' in res:
+                    form.add_error(None, "You are a robot!")
+                    return render(request, "register.html", {'form': form})
+
                 user = form.save()        
                 user = authenticate(username=request.POST['username'], password=request.POST['password1'])
                 login(request, user)
