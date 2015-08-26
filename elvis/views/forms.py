@@ -2,7 +2,7 @@ import os, zipfile, tempfile, mimetypes
 from datetime import datetime
 from random import choice
 
-import urlparse
+import urllib.parse
 
 from django.shortcuts import render
 from django.http import HttpResponse, HttpResponseRedirect, Http404
@@ -57,7 +57,7 @@ def create_composer(request):
 
 # TODO: Send email to each email in invited list 
 def user_handler(users):
-    emails = map(lambda email:str(email).strip(), users.split(','))
+    emails = [str(email).strip() for email in users.split(',')]
     return emails
 
 # TODO : Send email to users

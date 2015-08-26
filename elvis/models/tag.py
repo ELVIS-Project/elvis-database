@@ -13,7 +13,7 @@ class Tag(models.Model):
     approved = models.NullBooleanField()
 
     def __unicode__(self):
-        return u"{0}".format(self.name)
+        return "{0}".format(self.name)
 
 
 @receiver(post_save, sender=Tag)
@@ -35,7 +35,7 @@ def solr_index(sender, instance, created, **kwargs):
         tag_name = None
     else:
         try:
-            tag_name = unicode(tag.name)
+            tag_name = str(tag.name)
         except UnicodeDecodeError:
             tag_name = tag.name.decode('utf-8')
 
@@ -43,7 +43,7 @@ def solr_index(sender, instance, created, **kwargs):
         tag_description = None
     else:
         try:
-            tag_description = unicode(tag.description)
+            tag_description = str(tag.description)
         except UnicodeDecodeError:
             tag_description = tag.description.decode('utf-8')
 

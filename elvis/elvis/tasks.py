@@ -1,5 +1,5 @@
 
-import urllib2
+import urllib.request, urllib.parse, urllib.error
 import os
 import time
 import shutil
@@ -15,7 +15,7 @@ def rebuild_suggester_dicts():
     """Rebuild all suggester dictionaries in Solr"""
     for d in settings.SUGGEST_DICTS:
         url = settings.SOLR_SERVER + "/suggest/?suggest.dictionary={0}&suggest.reload=true".format(d)
-        urllib2.urlopen(url)
+        urllib.request.urlopen(url)
 
 @app.task(name='elvis.elvis.zip_files')
 def zip_files(paths, username):

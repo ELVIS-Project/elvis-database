@@ -79,4 +79,4 @@ class Attachment(models.Model):
         self.save()
 
     def __unicode__(self):
-        return u"{0}".format(self.attachment)
+        return "{0}".format(self.attachment)

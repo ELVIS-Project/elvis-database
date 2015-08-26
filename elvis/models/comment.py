@@ -15,7 +15,7 @@ class Comment(models.Model):
     created = models.DateTimeField(auto_now_add=True)
 
     def __unicode__(self):
-        return u"{0}".format(self.text)
+        return "{0}".format(self.text)
 
 
 @receiver(post_save, sender=Comment)

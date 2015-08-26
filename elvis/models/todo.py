@@ -12,7 +12,7 @@ class Todo(models.Model):
     updated = models.DateTimeField(auto_now=True)
 
     def __unicode__(self):
-        return u"{0}".format(self.project)
+        return "{0}".format(self.project)
 
     class Meta:
         app_label = "elvis"

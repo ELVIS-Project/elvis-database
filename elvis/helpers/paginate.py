@@ -79,13 +79,13 @@ class SolrPaginator(object):
         if self.count == 0:
             return []
         # Add one because range is right-side exclusive
-        return range(1, self.num_pages + 1)
+        return list(range(1, self.num_pages + 1))
 
     def _fetch_page(self, start=0):
         """Retrieve a new result response from Solr."""
         # need to convert the keys to strings to pass them as parameters
         new_params = {}
-        for k, v in self.params.items():
+        for k, v in list(self.params.items()):
             try:
                 new_params[str(k)] = v.encode('utf-8')
             except AttributeError as e:
@@ -174,7 +174,7 @@ class SolrGroupedPaginator(object):
         if self.count == 0:
             return []
         # Add one because range is right-side exclusive
-        return range(1, self.num_pages + 1)
+        return list(range(1, self.num_pages + 1))
 
     def validate_number(self, number):
         try:
@@ -195,7 +195,7 @@ class SolrGroupedPaginator(object):
         """Retrieve a new result response from Solr."""
         # need to convert the keys to strings to pass them as parameters
         new_params = {}
-        for k, v in self.params.items():
+        for k, v in list(self.params.items()):
             new_params[str(k)] = v.encode('utf-8')
 
         # get the new start index

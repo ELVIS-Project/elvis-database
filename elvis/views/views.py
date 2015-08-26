@@ -1,6 +1,6 @@
 import datetime
 import json
-import urllib2
+import urllib.request, urllib.parse, urllib.error
 import zipfile
 import uuid
 import shutil
@@ -60,7 +60,7 @@ def solr_suggest(request):
                                          "&suggest.dictionary=composerSuggest" \
                                          "&suggest.dictionary=collectionSuggest" \
                                          "&q={1}".format(dictionary, value)
-            json_string = urllib2.urlopen(url)
+            json_string = urllib.request.urlopen(url)
             json_dict = json.loads(json_string.read())
             piece_suggestions = json_dict['suggest']['pieceSuggest'][value]
             comp_suggestions = json_dict['suggest']['composerSuggest'][value]
@@ -86,9 +86,9 @@ def solr_suggest(request):
             url = settings.SOLR_SERVER + "/suggest/?wt=json" \
                                          "&suggest.dictionary={0}" \
                                          "&q={1}".format(dictionary, value)
-            json_string = urllib2.urlopen(url)
+            json_string = urllib.request.urlopen(url)
             resp = json.loads(json_string.read())['suggest']['{0}'.format(dictionary)]
-            data = resp[resp.keys()[0]]
+            data = resp[list(resp.keys())[0]]
             if data['numFound'] > 0:
                 sorted_suggestions = sorted(data['suggestions'],
                                             key=lambda s: SequenceMatcher(None, value,
@@ -243,7 +243,7 @@ def handle_dynamic_file_table(request, parent, cleanup=Cleanup()):
             file_num = int(re.findall(r'\d+', item)[0])
             files[file_num] = file_name
 
-    keys = files.keys()
+    keys = list(files.keys())
     keys.sort()
 
     # Renumber existing movements before adding more.
@@ -307,7 +307,7 @@ def handle_dynamic_file_table(request, parent, cleanup=Cleanup()):
         if mov_comment:
             new_mov.comment = mov_comment
 
-        file_keys = [x for x in request.POST.keys() if x.startswith('files_parent_')]
+        file_keys = [x for x in list(request.POST.keys()) if x.startswith('files_parent_')]
         file_numbers = [x.split('files_parent_')[-1] for x in file_keys if
                         request.POST.get(x) == 'mov_title_' +str(k)]
         for num in file_numbers:
@@ -324,7 +324,7 @@ def handle_dynamic_file_table(request, parent, cleanup=Cleanup()):
         i += 1
 
     # Attaching other files.
-    file_numbers = [x for x in request.POST.keys() if x.startswith('files_parent_')]
+    file_numbers = [x for x in list(request.POST.keys()) if x.startswith('files_parent_')]
     for postfile in file_numbers:
         if request.POST.get(postfile) == 'piece':
             # This attaches files to the piece itself - is pretty
@@ -395,7 +395,7 @@ def abstract_model_factory(object_name, object_type, cleanup=Cleanup(), **kwargs
         return composer_list
 
     elif object_type == "Collection":
-        tokenized_inputs = map((lambda x: x.strip()), object_name.rsplit(";"))
+        tokenized_inputs = list(map((lambda x: x.strip()), object_name.rsplit(";")))
         collection_list = []
         for token in tokenized_inputs:
             if token != "":
@@ -413,7 +413,7 @@ def abstract_model_factory(object_name, object_type, cleanup=Cleanup(), **kwargs
         return collection_list
 
     elif object_type == "Language":
-        tokenized_inputs = map((lambda x: x.strip()), object_name.rsplit(";"))
+        tokenized_inputs = list(map((lambda x: x.strip()), object_name.rsplit(";")))
         language_list = []
         for token in tokenized_inputs:
             if token != "":
@@ -429,7 +429,7 @@ def abstract_model_factory(object_name, object_type, cleanup=Cleanup(), **kwargs
         return language_list
 
     elif object_type == "Genre":
-        tokenized_inputs = map((lambda x: x.strip()), object_name.rsplit(";"))
+        tokenized_inputs = list(map((lambda x: x.strip()), object_name.rsplit(";")))
         genre_list = []
         for token in tokenized_inputs:
             if token != "":
@@ -445,7 +445,7 @@ def abstract_model_factory(object_name, object_type, cleanup=Cleanup(), **kwargs
         return genre_list
 
     elif object_type == "Location":
-        tokenized_inputs = map((lambda x: x.strip()), object_name.rsplit(";"))
+        tokenized_inputs = list(map((lambda x: x.strip()), object_name.rsplit(";")))
         location_list = []
         for token in tokenized_inputs:
             if token != "":
@@ -461,7 +461,7 @@ def abstract_model_factory(object_name, object_type, cleanup=Cleanup(), **kwargs
         return location_list
 
     elif object_type == "Source":
-        tokenized_inputs = map((lambda x: x.strip()), object_name.rsplit(";"))
+        tokenized_inputs = list(map((lambda x: x.strip()), object_name.rsplit(";")))
         source_list = []
         for token in tokenized_inputs:
             if token != "":
@@ -477,7 +477,7 @@ def abstract_model_factory(object_name, object_type, cleanup=Cleanup(), **kwargs
         return source_list
 
     elif object_type == "InstrumentVoice":
-        tokenized_inputs = map((lambda x: x.strip()), object_name.rsplit(";"))
+        tokenized_inputs = list(map((lambda x: x.strip()), object_name.rsplit(";")))
         instrument_list = []
         for token in tokenized_inputs:
             if token != "":
@@ -494,7 +494,7 @@ def abstract_model_factory(object_name, object_type, cleanup=Cleanup(), **kwargs
         return instrument_list
 
     elif object_type == "Tag":
-        tokenized_inputs = map((lambda x: x.strip()), object_name.rsplit(";"))
+        tokenized_inputs = list(map((lambda x: x.strip()), object_name.rsplit(";")))
         tag_list = []
         for token in tokenized_inputs:
             if token != "":

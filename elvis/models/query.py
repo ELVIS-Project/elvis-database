@@ -9,7 +9,7 @@ class Query(models.Model):
     created = models.DateTimeField(auto_now_add=True, blank=True)
 
     def __unicode__(self):
-        return u"{0}".format(self.query)
+        return "{0}".format(self.query)
 
     class Meta:
         app_label = "elvis"

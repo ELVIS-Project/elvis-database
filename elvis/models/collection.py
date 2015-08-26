@@ -18,7 +18,7 @@ class Collection(models.Model):
     updated = models.DateTimeField(auto_now=True)
 
     def __unicode__(self):
-        return u"{0}".format(self.title)
+        return "{0}".format(self.title)
 
     @property
     def piece_count(self):
