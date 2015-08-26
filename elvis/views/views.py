@@ -124,7 +124,7 @@ def upload_files(request, file_name, upload_path):
         # If the file has an accepted extension, upload it.
         if not any(f.name.startswith(x) for x in settings.ELVIS_BAD_PREFIX) and any(
                 f.name.endswith(x) for x in settings.ELVIS_EXTENSIONS):
-            new_name = f.name.replace('/', '-').encode('ascii', 'ignore')
+            new_name = f.name.replace(" ", "-")
             upload_file(f, os.path.join(upload_path, new_name))
             files.append(
                 {'name': new_name, 'uploader': request.user.username, 'path': upload_path})
@@ -202,14 +202,16 @@ def handle_attachments(request, parent, cleanup, file_field, file_source):
         cleanup.list.append({"object": att, "isNew": True})
         att.uploader = request.user
 
-        new_name = "{0}_{1}_{2}.{3}".format(unicodedata.normalize("NFKD", parent.title).encode('ascii', 'ignore').strip().replace(" ", "-"),
-                                            unicodedata.normalize("NFKD", parent.composer.name).encode('ascii', 'ignore').strip().replace(" ", "-"),
+        new_name = "{0}_{1}_{2}.{3}".format(parent.title.replace(" ", "-"),
+                                            parent.composer.name.strip().replace(" ", "-"),
                                             "file" + str(i),
                                             f['name'].rsplit('.')[-1])
 
-        new_name = new_name.replace('/', '-').encode('ascii', 'ignore')
+        new_name = new_name.replace('/', '-')
         os.rename(os.path.join(f['path'], f['name']), os.path.join(f['path'], new_name))
-        with open(os.path.join(f['path'], new_name), 'r+') as dest:
+        with open(os.path.join(f['path'], new_name), 'rb+') as dest:
+            import pdb
+            pdb.set_trace()
             file_content = File(dest)
             att.attachment.save(os.path.join(att.attachment_path, new_name), file_content)
         att.source = file_source
