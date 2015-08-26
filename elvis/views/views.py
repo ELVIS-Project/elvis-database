@@ -61,7 +61,7 @@ def solr_suggest(request):
                                          "&suggest.dictionary=collectionSuggest" \
                                          "&q={1}".format(dictionary, value)
             json_string = urllib.request.urlopen(url)
-            json_dict = json.loads(json_string.read())
+            json_dict = json.loads((json_string.read()).decode('utf-8'))
             piece_suggestions = json_dict['suggest']['pieceSuggest'][value]
             comp_suggestions = json_dict['suggest']['composerSuggest'][value]
             coll_suggestions = json_dict['suggest']['collectionSuggest'][value]
