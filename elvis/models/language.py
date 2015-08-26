@@ -21,14 +21,15 @@ class Language(models.Model):
 def solr_index(sender, instance, created, **kwargs):
     if kwargs.get('raw', False):
         return False
+
     import uuid
-    import solr
+    import scorched
     from django.conf import settings
 
-    solrconn = solr.SolrConnection(settings.SOLR_SERVER)
-    record = solrconn.query("item_id:{0} AND type:elvis_language".format(instance.id))
-    if record:
-        solrconn.delete(record.results[0]['id'])
+    solrconn = scorched.SolrInterface(settings.SOLR_SERVER)
+    response = solrconn.query(item_id=instance.id, type="elvis_language").execute()
+    if response.result.docs:
+        solrconn.delete_by_ids(response[0]['id'])
 
     language = instance
     d = {'type': 'elvis_language',
@@ -39,16 +40,17 @@ def solr_index(sender, instance, created, **kwargs):
          'created': language.created,
          'updated': language.updated,
          'comment': language.comment}
-    solrconn.add(**d)
+    solrconn.add(d)
     solrconn.commit()
 
 
 @receiver(post_delete, sender=Language)
 def solr_delete(sender, instance, **kwargs):
-    import solr
+    import scorched
     from django.conf import settings
-    solrconn = solr.SolrConnection(settings.SOLR_SERVER)
-    record = solrconn.query("item_id:{0} AND type:elvis_language".format(instance.id))
-    if record:
-        solrconn.delete(record.results[0]['id'])
+
+    solrconn = scorched.SolrInterface(settings.SOLR_SERVER)
+    response = solrconn.query(item_id=instance.id, type="elvis_language").execute()
+    if response.result.docs:
+        solrconn.delete_by_ids(response[0]['id'])
         solrconn.commit()

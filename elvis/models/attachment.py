@@ -57,7 +57,7 @@ class Attachment(models.Model):
     def attached_to(self):
         p_list = " ".join([p.title for p in self.pieces.all()])
         m_list = " ".join([m.title for m in self.movements.all()])
-        return 'm: ' + m_list+ '; p: ' + p_list
+        return 'm: ' + m_list + '; p: ' + p_list
 
     def save(self, *args, **kwargs):
         super(Attachment, self).save(*args, **kwargs)

@@ -21,14 +21,15 @@ class InstrumentVoice(models.Model):
 def solr_index(sender, instance, created, **kwargs):
     if kwargs.get('raw', False):
         return False
+
     import uuid
-    import solr
+    import scorched
     from django.conf import settings
 
-    solrconn = solr.SolrConnection(settings.SOLR_SERVER)
-    record = solrconn.query("item_id:{0} AND type:elvis_instrument_voice".format(instance.id))
-    if record:
-        solrconn.delete(record.results[0]['id'])
+    solrconn = scorched.SolrInterface(settings.SOLR_SERVER)
+    response = solrconn.query(item_id=instance.id, type="elvis_instrument_voice").execute()
+    if response.result.docs:
+        solrconn.delete_by_ids(response[0]['id'])
 
     instrument_voice = instance
 
@@ -40,16 +41,17 @@ def solr_index(sender, instance, created, **kwargs):
          'created': instrument_voice.created,
          'updated': instrument_voice.updated,
          'comment': instrument_voice.comment}
-    solrconn.add(**d)
+    solrconn.add(d)
     solrconn.commit()
 
 
 @receiver(post_delete, sender=InstrumentVoice)
 def solr_delete(sender, instance, **kwargs):
+    import scorched
     from django.conf import settings
-    import solr
-    solrconn = solr.SolrConnection(settings.SOLR_SERVER)
-    record = solrconn.query("item_id:{0} AND type:elvis_instrument_voice".format(instance.id))
-    if record:
-        solrconn.delete(record.results[0]['id'])
+
+    solrconn = scorched.SolrInterface(settings.SOLR_SERVER)
+    response = solrconn.query(item_id=instance.id, type="elvis_instrument_voice").execute()
+    if response.result.docs:
+        solrconn.delete_by_ids(response[0]['id'])
         solrconn.commit()

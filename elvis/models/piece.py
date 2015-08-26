@@ -92,13 +92,13 @@ def solr_index(sender, instance, created, **kwargs):
         return False
 
     import uuid
-    import solr
+    import scorched
     from django.conf import settings
 
-    solrconn = solr.SolrConnection(settings.SOLR_SERVER)
-    record = solrconn.query("item_id:{0} AND type:elvis_piece".format(instance.id))
-    if record:
-        solrconn.delete(record.results[0]['id'])
+    solrconn = scorched.SolrInterface(settings.SOLR_SERVER)
+    response = solrconn.query(item_id=instance.id, type="elvis_piece").execute()
+    if response.result.docs:
+        solrconn.delete_by_ids(response[0]['id'])
 
     piece = instance
 
@@ -132,11 +132,11 @@ def solr_index(sender, instance, created, **kwargs):
         composer_name = None
 
     if piece.composition_start_date:
-        d1 = datetime.date(piece.composition_start_date, 1, 1)
+        d1 = str(piece.composition_start_date) + "-01-01"
     else:
         d1 = None
     if piece.composition_end_date:
-        d2 = datetime.date(piece.composition_end_date, 1, 1)
+        d2 = str(piece.composition_end_date) + "-01-01"
     else:
         d2 = None
 
@@ -161,7 +161,7 @@ def solr_index(sender, instance, created, **kwargs):
          'vocalization': piece.vocalization,
          'file_formats': piece.file_formats,
          'pieces_searchable': piece.title}
-    solrconn.add(**d)
+    solrconn.add(d)
     solrconn.commit()
 
 @receiver(pre_delete, sender=Piece)
@@ -171,10 +171,11 @@ def attachment_delete(sender, instance, **kwargs):
 
 @receiver(post_delete, sender=Piece)
 def solr_delete(sender, instance, **kwargs):
-    import solr
+    import scorched
     from django.conf import settings
-    solrconn = solr.SolrConnection(settings.SOLR_SERVER)
-    record = solrconn.query("item_id:{0} AND type:elvis_piece".format(instance.id))
-    if record:
-        solrconn.delete(record.results[0]['id'])
+
+    solrconn = scorched.SolrInterface(settings.SOLR_SERVER)
+    response = solrconn.query(item_id=instance.id, type="elvis_piece").execute()
+    if response.result.docs:
+        solrconn.delete_by_ids(response[0]['id'])
         solrconn.commit()

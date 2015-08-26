@@ -79,14 +79,15 @@ class Movement(models.Model):
 def solr_index(sender, instance, created, **kwargs):
     if kwargs.get('raw', False):
         return False
+
     import uuid
-    import solr
+    import scorched
     from django.conf import settings
 
-    solrconn = solr.SolrConnection(settings.SOLR_SERVER)
-    record = solrconn.query("item_id:{0} AND type:elvis_movement".format(instance.id))
-    if record:
-        solrconn.delete(record.results[0]['id'])
+    solrconn = scorched.SolrInterface(settings.SOLR_SERVER)
+    response = solrconn.query(item_id=instance.id, type="elvis_movement").execute()
+    if response.result.docs:
+        solrconn.delete_by_ids(response[0]['id'])
 
     movement = instance
 
@@ -120,11 +121,11 @@ def solr_index(sender, instance, created, **kwargs):
         parent_piece = None
 
     if movement.composition_start_date:
-        d1 = datetime.date(movement.composition_start_date, 1, 1)
+        d1 = str(movement.composition_start_date) + "-01-01"
     else:
         d1 = None
     if movement.composition_end_date:
-        d2 = datetime.date(movement.composition_end_date, 1, 1)
+        d2 = str(movement.composition_end_date) + "-01-01"
     else:
         d2 = None
     d = {'type': 'elvis_movement',
@@ -138,7 +139,7 @@ def solr_index(sender, instance, created, **kwargs):
          'updated': movement.updated,
          'parent_piece_name': parent_piece,
          'composer_name': movement.composer.name,
-         'uploader_name': movement.uploader,
+         'uploader_name': movement.uploader.username,
          'tags': tags,
          'genres': genres,
          'instruments_voices': instruments_voices,
@@ -149,7 +150,7 @@ def solr_index(sender, instance, created, **kwargs):
          'vocalization': movement.vocalization,
          'file_formats': movement.file_formats,
          }
-    solrconn.add(**d)
+    solrconn.add(d)
     solrconn.commit()
 
 
@@ -160,10 +161,11 @@ def attachment_delete(sender, instance, **kwargs):
 
 @receiver(post_delete, sender=Movement)
 def solr_delete(sender, instance, **kwargs):
-    import solr
+    import scorched
     from django.conf import settings
-    solrconn = solr.SolrConnection(settings.SOLR_SERVER)
-    record = solrconn.query("item_id:{0} AND type:elvis_movement".format(instance.id))
-    if record:
-        solrconn.delete(record.results[0]['id'])
+
+    solrconn = scorched.SolrInterface(settings.SOLR_SERVER)
+    response = solrconn.query(item_id=instance.id, type="elvis_movement").execute()
+    if response.result.docs:
+        solrconn.delete_by_ids(response[0]['id'])
         solrconn.commit()
