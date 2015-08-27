@@ -123,7 +123,7 @@ class SolrSearch(object):
 
             if k =='filefilt[]':
                 file_filt = "file_formats:"
-                file_filt += ' OR :'.join(qdict.getlist('filefilt[]'))
+                file_filt += ' OR '.join(qdict.getlist('filefilt[]'))
                 self.solr_params['fq'].append(file_filt)
                 continue
 
