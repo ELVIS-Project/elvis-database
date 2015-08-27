@@ -1,1 +1,1 @@
-from admin import *
+from elvis.admin.admin import *

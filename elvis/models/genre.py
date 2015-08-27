@@ -14,7 +14,7 @@ class Genre(models.Model):
     updated = models.DateTimeField(auto_now=True)
 
     def __unicode__(self):
-        return u"{0}".format(self.name)
+        return "{0}".format(self.name)
 
 
 @receiver(post_save, sender=Genre)
@@ -40,7 +40,7 @@ def solr_index(sender, instance, created, **kwargs):
          'created': genre.created,
          'updated': genre.updated,
          'comment': genre.comment,
-    }
+         }
     solrconn.add(**d)
     solrconn.commit()
 

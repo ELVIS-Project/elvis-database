@@ -55,7 +55,7 @@ class Movement(models.Model):
         return format_list
 
     def __unicode__(self):
-        return u"{0}".format(self.title)
+        return "{0}".format(self.title)
 
     def movement_collections(self):
         return " ".join([collection.title if collection.public else "" for collection in self.collections.all()])
@@ -120,11 +120,11 @@ def solr_index(sender, instance, created, **kwargs):
         parent_piece = None
 
     if movement.composition_start_date:
-        d1 = datetime.date(movement.composition_start_date, 01, 01)
+        d1 = datetime.date(movement.composition_start_date, 1, 1)
     else:
         d1 = None
     if movement.composition_end_date:
-        d2 = datetime.date(movement.composition_end_date, 01, 01)
+        d2 = datetime.date(movement.composition_end_date, 1, 1)
     else:
         d2 = None
     d = {'type': 'elvis_movement',
@@ -138,7 +138,7 @@ def solr_index(sender, instance, created, **kwargs):
          'updated': movement.updated,
          'parent_piece_name': parent_piece,
          'composer_name': movement.composer.name,
-         'uploader_name': movement.uploader,
+         'uploader_name': movement.uploader.username,
          'tags': tags,
          'genres': genres,
          'instruments_voices': instruments_voices,

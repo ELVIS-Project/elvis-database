@@ -18,7 +18,7 @@ class Composer(models.Model):
     updated = models.DateTimeField(auto_now=True)
 
     def __unicode__(self):
-        return u"{0}".format(self.name)
+        return "{0}".format(self.name)
 
     @property
     def piece_count(self):
@@ -43,7 +43,7 @@ def solr_index(sender, instance, created, **kwargs):
 
     import uuid
     import solr
-    from django.conf import settings 
+    from django.conf import settings
 
     solrconn = solr.SolrConnection(settings.SOLR_SERVER)
     record = solrconn.query("item_id:{0} AND type:elvis_composer".format(instance.id))
@@ -53,11 +53,11 @@ def solr_index(sender, instance, created, **kwargs):
     composer = instance
 
     if composer.birth_date:
-        birth = datetime.date(composer.birth_date, 01, 01)
+        birth = datetime.date(composer.birth_date, 1, 1)
     else:
         birth = None
     if composer.death_date:
-        death = datetime.date(composer.death_date, 01, 01)
+        death = datetime.date(composer.death_date, 1, 1)
     else:
         death = None
 

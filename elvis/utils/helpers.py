@@ -26,7 +26,7 @@ def partition(data, num_per_row):
 
 # Sort objects by value
 def sort_objects(object_name, val):
-    if val is None or val == u"0" or val == u"most":
+    if val is None or val == "0" or val == "most":
         return object_name.objects.all()
     else:
         return object_name.objects.all().order_by(val)
@@ -50,7 +50,7 @@ def getRandomUsers(num=12):
     return uprofs[:num]
 
 # Remove blank elements from list 
-def removeBlanks(l): return filter(lambda x: x != '', l)
+def removeBlanks(l): return [x for x in l if x != '']
 
 '''
 Tag helper stuff
@@ -69,7 +69,7 @@ def merge_tags(new_tag, old_tags):
     if new_tag == "New tag name":
         return
 
-    tag_objs = map(lambda tag: deduplicate(Tag.objects.filter(name=tag)), old_tags)
+    tag_objs = [deduplicate(Tag.objects.filter(name=tag)) for tag in old_tags]
     if all(tag_objs):
         # Create a new tag
         new_tag_obj = Tag(name=new_tag)
@@ -92,7 +92,7 @@ def merge_tags(new_tag, old_tags):
             tag.delete()
 
     else:
-        print "Some of old tags weren't found."
+        print("Some of old tags weren't found.")
 
 # TODO: Check that old_tag exists 
 # Tags everything that had old_tag with new_tags, then removes old_tag
@@ -101,8 +101,8 @@ def split_tags(old_tag, new_tags):
         return
 
     # Filter out names that might already exist
-    existing = map(lambda tag: tag.name, Tag.objects.all())
-    replacements = filter(lambda tag: tag not in existing, new_tags)
+    existing = [tag.name for tag in Tag.objects.all()]
+    replacements = [tag for tag in new_tags if tag not in existing]
 
     # Create new tag objects
     replacement_objects = []
@@ -164,7 +164,7 @@ def sendemails(fromuser, emails, subject, message):
         send_mass_mail((datatuple,), fail_silently=False)
         return True
     except SMTPException:
-        print "exceptin"
+        print("exceptin")
         return False
 
 ''' 

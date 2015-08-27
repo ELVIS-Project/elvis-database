@@ -1,8 +1,8 @@
 from django.contrib import admin
+from django.conf import settings
 import shutil
 import os
 
-from elvis.elvis import settings
 from elvis.elvis.tasks import rebuild_suggester_dicts
 from elvis.models import Project
 from elvis.models import Piece
@@ -126,15 +126,15 @@ class AttachmentAdmin(admin.ModelAdmin):
         def attachment_path(item):
             try:
                 return os.path.join(settings.MEDIA_ROOT,
-                            "attachments",
-                            "{0:0>2}".format(str(item.pk)[0:2]),
-                            "{0:0>2}".format(str(item.pk)[-2:]),
-                            "{0:0>15}".format(item.pk))
+                                    "attachments",
+                                    "{0:0>2}".format(str(item.pk)[0:2]),
+                                    "{0:0>2}".format(str(item.pk)[-2:]),
+                                    "{0:0>15}".format(item.pk))
             except AttributeError:
                 return os.path.join("attachments",
-                            "{0:0>2}".format(str(item.pk)[0:2]),
-                            "{0:0>2}".format(str(item.pk)[-2:]),
-                            "{0:0>15}".format(item.pk))
+                                    "{0:0>2}".format(str(item.pk)[0:2]),
+                                    "{0:0>2}".format(str(item.pk)[-2:]),
+                                    "{0:0>15}".format(item.pk))
         for item in queryset:
             if os.path.exists(attachment_path(item)):
                 shutil.rmtree(attachment_path(item))

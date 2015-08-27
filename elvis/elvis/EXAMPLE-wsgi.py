@@ -27,7 +27,7 @@ except ImportError:
 
 # Uncomment these lines if your deployment server uses virtualenv.
 activate_this = '/srv/webapps/elvis-database/elvis_virtualenv/bin/activate_this.py'
-execfile(activate_this, dict(__file__=activate_this))
+exec(compile(open(activate_this).read(), activate_this, 'exec'), dict(__file__=activate_this))
 
 # We defer to a DJANGO_SETTINGS_MODULE already in the environment. This breaks
 # if running multiple sites in the same mod_wsgi process. To fix this, use

@@ -16,7 +16,7 @@ class Discussion(models.Model):
     updated = models.DateTimeField(auto_now=True)
 
     def __unicode__(self):
-        return u"{0}".format(self.name)
+        return "{0}".format(self.name)
 
 
 @receiver(post_save, sender=Discussion)

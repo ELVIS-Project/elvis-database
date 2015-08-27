@@ -11,7 +11,7 @@ https://docs.djangoproject.com/en/1.6/topics/settings/
 For the full list of settings and their values, see
 https://docs.djangoproject.com/en/1.6/ref/settings/
 """
-from __future__ import absolute_import
+
 
 # for scheduling file removal using celery
 from celery import schedules

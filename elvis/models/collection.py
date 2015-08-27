@@ -18,7 +18,7 @@ class Collection(models.Model):
     updated = models.DateTimeField(auto_now=True)
 
     def __unicode__(self):
-        return u"{0}".format(self.title)
+        return "{0}".format(self.title)
 
     @property
     def piece_count(self):
@@ -62,7 +62,7 @@ def solr_index(sender, instance, created, **kwargs):
          'created': collection.created,
          'updated': collection.updated,
          'comment': collection.comment,
-         'creator_name': collection.creator,
+         'creator_name': collection.creator.username,
          'collections_searchable': collection.title}
     solrconn.add(**d)
     solrconn.commit()

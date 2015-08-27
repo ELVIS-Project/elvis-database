@@ -13,7 +13,7 @@ class UserProfile(models.Model):
     #TODO: Queries, Contributions, Collections
 
     def __unicode__(self):
-        return u"{0}".format(self.user.username)
+        return "{0}".format(self.user.username)
 
     class Meta:
         app_label = "elvis"

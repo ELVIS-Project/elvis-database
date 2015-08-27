@@ -35,7 +35,7 @@ class Piece(models.Model):
     updated = models.DateTimeField(auto_now=True)
 
     def __unicode__(self):
-        return u"{0}".format(self.title)
+        return "{0}".format(self.title)
 
     def number_of_movements(self):
         return len(self.movements.all())
@@ -132,11 +132,11 @@ def solr_index(sender, instance, created, **kwargs):
         composer_name = None
 
     if piece.composition_start_date:
-        d1 = datetime.date(piece.composition_start_date, 01, 01)
+        d1 = datetime.date(piece.composition_start_date, 1, 1)
     else:
         d1 = None
     if piece.composition_end_date:
-        d2 = datetime.date(piece.composition_end_date, 01, 01)
+        d2 = datetime.date(piece.composition_end_date, 1, 1)
     else:
         d2 = None
 

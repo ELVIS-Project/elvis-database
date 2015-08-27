@@ -7,9 +7,9 @@ class TagHierarchy(models.Model):
 
     def __unicode__(self):
         if self.parent:
-            return u"{0}:{1}".format(self.parent.name, self.tag.name)
+            return "{0}:{1}".format(self.parent.name, self.tag.name)
         else:
-            return u"NO-PARENT:{0}".format(self.tag.name)
+            return "NO-PARENT:{0}".format(self.tag.name)
 
     class Meta:
         app_label = "elvis"
