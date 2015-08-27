@@ -210,8 +210,6 @@ def handle_attachments(request, parent, cleanup, file_field, file_source):
         new_name = new_name.replace('/', '-')
         os.rename(os.path.join(f['path'], f['name']), os.path.join(f['path'], new_name))
         with open(os.path.join(f['path'], new_name), 'rb+') as dest:
-            import pdb
-            pdb.set_trace()
             file_content = File(dest)
             att.attachment.save(os.path.join(att.attachment_path, new_name), file_content)
         att.source = file_source
