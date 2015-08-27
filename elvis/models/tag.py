@@ -20,23 +20,22 @@ class Tag(models.Model):
 def solr_index(sender, instance, created, **kwargs):
     if kwargs.get('raw', False):
         return False
-
     import uuid
-    import scorched
     from django.conf import settings
+    import solr
 
-    solrconn = scorched.SolrInterface(settings.SOLR_SERVER)
-    response = solrconn.query(item_id=instance.id, type="elvis_tag").execute()
-    if response.result.docs:
-        solrconn.delete_by_ids(response[0]['id'])
-    
+    solrconn = solr.SolrConnection(settings.SOLR_SERVER)
+    record = solrconn.query("item_id:{0} AND type:elvis_tag".format(instance.id))
+    if record:
+        solrconn.delete(record.results[0]['id'])
+
     tag = instance
-    
+
     if tag.name is None:
         tag_name = None
     else:
         try:
-            tag_name = str(tag.name)
+            tag_name = unicode(tag.name)
         except UnicodeDecodeError:
             tag_name = tag.name.decode('utf-8')
 
@@ -44,31 +43,32 @@ def solr_index(sender, instance, created, **kwargs):
         tag_description = None
     else:
         try:
-            tag_description = str(tag.description)
+            tag_description = unicode(tag.description)
         except UnicodeDecodeError:
             tag_description = tag.description.decode('utf-8')
 
+
     d = {
-            'type': 'elvis_tag',
-            'id': str(uuid.uuid4()),
-            'item_id': int(tag.id),
-            'name': tag_name,
-            'tags': tag_name,
-            'description': tag_description,
-            'approved': tag.approved,
-            'tag_suggestions': tag_name
+        'type': 'elvis_tag',
+        'id': str(uuid.uuid4()),
+        'item_id': int(tag.id),
+        'name': tag_name,
+        'tags': tag_name,
+        'description': tag_description,
+        'approved': tag.approved,
+        'tag_suggestions': tag_name
     }
-    solrconn.add(d)
+    solrconn.add(**d)
     solrconn.commit()
 
 
 @receiver(post_delete, sender=Tag)
 def solr_delete(sender, instance, **kwargs):
-    import scorched
     from django.conf import settings
-
-    solrconn = scorched.SolrInterface(settings.SOLR_SERVER)
-    response = solrconn.query(item_id=instance.id, type="elvis_tag").execute()
-    if response.result.docs:
-        solrconn.delete_by_ids(response[0]['id'])
+    import solr
+    solrconn = solr.SolrConnection(settings.SOLR_SERVER)
+    record = solrconn.query("item_id:{0} AND type:elvis_tag".format(instance.id))
+    if record:
+        # the record already exists, so we'll remove it.
+        solrconn.delete(record.results[0]['id'])
         solrconn.commit()

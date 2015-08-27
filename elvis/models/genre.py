@@ -23,13 +23,13 @@ def solr_index(sender, instance, created, **kwargs):
         return False
 
     import uuid
-    import scorched
+    import solr
     from django.conf import settings
 
-    solrconn = scorched.SolrInterface(settings.SOLR_SERVER)
-    response = solrconn.query(item_id=instance.id, type="elvis_genre").execute()
-    if response.result.docs:
-        solrconn.delete_by_ids(response[0]['id'])
+    solrconn = solr.SolrConnection(settings.SOLR_SERVER)
+    record = solrconn.query("item_id:{0} AND type:elvis_genre".format(instance.id))
+    if record:
+        solrconn.delete(record.results[0]['id'])
 
     genre = instance
     d = {'type': 'elvis_genre',
@@ -40,18 +40,18 @@ def solr_index(sender, instance, created, **kwargs):
          'created': genre.created,
          'updated': genre.updated,
          'comment': genre.comment,
-    }
-    solrconn.add(d)
+         }
+    solrconn.add(**d)
     solrconn.commit()
 
 
 @receiver(post_delete, sender=Genre)
 def solr_delete(sender, instance, **kwargs):
-    import scorched
+    import solr
     from django.conf import settings
 
-    solrconn = scorched.SolrInterface(settings.SOLR_SERVER)
-    response = solrconn.query(item_id=instance.id, type="elvis_genre").execute()
-    if response.result.docs:
-        solrconn.delete_by_ids(response[0]['id'])
+    solrconn = solr.SolrConnection(settings.SOLR_SERVER)
+    record = solrconn.query("item_id:{0} AND type:elvis_genre".format(instance.id))
+    if record:
+        solrconn.delete(record.results[0]['id'])
         solrconn.commit()
