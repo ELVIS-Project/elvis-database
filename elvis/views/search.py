@@ -33,11 +33,11 @@ class SearchView(APIView):
         facets = s.facets(facet_fields=['type', 'composer_name', 'tags',  'parent_collection_names', 'number_of_voices'])  # LM TODO add here when facets are decided
 
         facet_fields = facets.facet_counts['facet_fields']        
-        facet_type = {t:s for (t,s) in facet_fields['type'].iteritems()}
-        facet_composer_name = {t:s for (t,s) in facet_fields['composer_name'].iteritems()}
-        facet_tags = {t:s for (t,s) in facet_fields['tags'].iteritems()}
-        facet_number_of_voices = {t:s for (t,s) in facet_fields['number_of_voices'].iteritems()}
-        facet_parent_collection_names = {t:s for (t,s) in facet_fields['parent_collection_names'].iteritems()}
+        facet_type = {t:s for (t,s) in facet_fields['type'].items()}
+        facet_composer_name = {t:s for (t,s) in facet_fields['composer_name'].items()}
+        facet_tags = {t:s for (t,s) in facet_fields['tags'].items()}
+        facet_number_of_voices = {t:s for (t,s) in facet_fields['number_of_voices'].items()}
+        facet_parent_collection_names = {t:s for (t,s) in facet_fields['parent_collection_names'].items()}
 
         facet_fields = {
             'type': facet_type,

@@ -87,7 +87,7 @@ def solr_suggest(request):
                                          "&suggest.dictionary={0}" \
                                          "&q={1}".format(dictionary, value)
             json_string = urllib.request.urlopen(url)
-            resp = json.loads(json_string.read())['suggest']['{0}'.format(dictionary)]
+            resp = json.loads((json_string.read()).decode('utf-8'))['suggest']['{0}'.format(dictionary)]
             data = resp[list(resp.keys())[0]]
             if data['numFound'] > 0:
                 sorted_suggestions = sorted(data['suggestions'],

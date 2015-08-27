@@ -1,8 +1,6 @@
 from django.conf import settings
-import urllib
 import re
-import json
-
+import solr
 class SolrSearch(object):
     """ 
         This class is a helper class for translating between query parameters in a GET
@@ -25,6 +23,7 @@ class SolrSearch(object):
     """
     def __init__(self, request, server=settings.SOLR_SERVER):
         self.request = request
+        self.server = solr.SolrConnection(server)
         self.parsed_request = {}
         self.prepared_query = ""
         self.solr_params = {'wt': 'json', 'fq':[]}
@@ -72,12 +71,12 @@ class SolrSearch(object):
         for k in list(qdict.keys()):
             # Filter Parameters
             if k == 'titlefilt':
-                title_filt = "title_searchable:({0})".format(self.parse_bool(str(qdict[k])))
+                title_filt = "title_searchable:({0})".format(self.parse_bool(qdict[k]))
                 self.solr_params['fq'].append(title_filt)
                 continue
 
             if k =='namefilt':
-                name_filt = "name_general:({0})".format(self.parse_bool(str(qdict[k])))
+                name_filt = "name_general:({0})".format(self.parse_bool(qdict[k]))
                 self.solr_params['fq'].append(name_filt)
                 continue
 
@@ -87,32 +86,32 @@ class SolrSearch(object):
                 continue
 
             if k =='tagfilt':
-                tag_filt = "tags:({0})".format(self.parse_bool(str(qdict['tagfilt'])))
+                tag_filt = "tags:({0})".format(self.parse_bool(qdict['tagfilt']))
                 self.solr_params['fq'].append(tag_filt)
                 continue
 
             if k =='genrefilt':
-                genre_filt = "genres:({0})".format(self.parse_bool(str(qdict['genrefilt'])))
+                genre_filt = "genres:({0})".format(self.parse_bool(qdict['genrefilt']))
                 self.solr_params['fq'].append(genre_filt)
                 continue
 
             if k =='instrumentfilt':
-                ins_filt = "instruments_voices:({0})".format(self.parse_bool(str(qdict['instrumentfilt'])))
+                ins_filt = "instruments_voices:({0})".format(self.parse_bool(qdict['instrumentfilt']))
                 self.solr_params['fq'].append(ins_filt)
                 continue
 
             if k =='languagefilt':
-                lan_filt = "languages:({0})".format(self.parse_bool(str(qdict['languagefilt'])))
+                lan_filt = "languages:({0})".format(self.parse_bool(qdict['languagefilt']))
                 self.solr_params['fq'].append(lan_filt)
                 continue
 
             if k =='sourcesfilt':
-                source_filt = "sources:({0})".format(self.parse_bool(str(qdict['sourcesfilt'])))
+                source_filt = "sources:({0})".format(self.parse_bool(qdict['sourcesfilt']))
                 self.solr_params['fq'].append(source_filt)
                 continue
 
             if k =='locationsfilt':
-                loc_filt = "locations:({0})".format(self.parse_bool(str(qdict['locationsfilt'])))
+                loc_filt = "locations:({0})".format(self.parse_bool(qdict['locationsfilt']))
                 self.solr_params['fq'].append(loc_filt)
                 continue
 
@@ -157,16 +156,16 @@ class SolrSearch(object):
 
             # Query Parameters
             if k == 'composer_name':
-                general_query.append('(composer_name:"{0}")'.format(str(qdict[k])))
+                general_query.append('(composer_name:"{0}")'.format(qdict[k]))
                 continue
             if k == 'type':
-                general_query.append('(type:"{0}")'.format(str(qdict[k])))
+                general_query.append('(type:"{0}")'.format(qdict[k]))
                 continue
             if k == 'number_of_voices':
-                general_query.append('(number_of_voices:{0})'.format(str(qdict[k])))
+                general_query.append('(number_of_voices:{0})'.format(qdict[k]))
                 continue
             if k == 'tags':
-                tag_query = '(tags:"{0}")'.format(str(qdict[k]))
+                tag_query = '(tags:"{0}")'.format(qdict[k])
                 general_query.append(tag_query)
                 continue
             if k == 'tags[]':
@@ -184,7 +183,7 @@ class SolrSearch(object):
                 self.solr_params.update({'rows': qdict.get(k)})
 
         if qdict.get('q'):
-            keywords = "({0})".format(self.parse_bool(str(qdict['q']), general=True))
+            keywords = "({0})".format(self.parse_bool(qdict['q'], general=True))
             general_query.append(keywords)
         else:
             general_query.append("(*:*)")
