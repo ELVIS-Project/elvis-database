@@ -35,7 +35,7 @@ def solr_index(sender, instance, created, **kwargs):
         tag_name = None
     else:
         try:
-            tag_name = unicode(tag.name)
+            tag_name = tag.name
         except UnicodeDecodeError:
             tag_name = tag.name.decode('utf-8')
 
@@ -43,7 +43,7 @@ def solr_index(sender, instance, created, **kwargs):
         tag_description = None
     else:
         try:
-            tag_description = unicode(tag.description)
+            tag_description = tag.description
         except UnicodeDecodeError:
             tag_description = tag.description.decode('utf-8')
 
