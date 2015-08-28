@@ -85,14 +85,14 @@ class CollectionAdmin(admin.ModelAdmin):
 
 
 class ComposerAdmin(admin.ModelAdmin):
-    list_display = ("name",)
+    list_display = ("title",)
     actions = [reindex_in_solr, delete_in_solr]
     list_per_page = listperpage
     list_max_show_all = listmaxshowall
 
 
 class TagAdmin(admin.ModelAdmin):
-    list_display = ("name",)
+    list_display = ("title",)
     actions = [reindex_in_solr, delete_in_solr]
     list_per_page = listperpage
     list_max_show_all = listmaxshowall
@@ -137,7 +137,7 @@ class AttachmentAdmin(admin.ModelAdmin):
 
 
 class GenericAdmin(admin.ModelAdmin):
-    list_display = ('name', 'created', 'updated')
+    list_display = ('title', 'created', 'updated')
     actions = [delete_in_solr]
     list_per_page = listperpage
     list_max_show_all = listmaxshowall

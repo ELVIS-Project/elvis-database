@@ -11,13 +11,10 @@ class Piece(models.Model):
         app_label = "elvis"
         ordering = ["title"]
 
-    old_id = models.IntegerField(db_index=True, blank=True, null=True)
     title = models.CharField(max_length=255)
     uploader = models.ForeignKey(User, blank=True, null=True, related_name="pieces")
     collections = models.ManyToManyField("elvis.Collection", blank=True, related_name="pieces")
     composer = models.ForeignKey("elvis.Composer", db_index=True, blank=True, null=True, related_name="pieces")
-    old_date_of_composition = models.DateField(blank=True, null=True)
-    old_date_of_composition2 = models.DateField(blank=True, null=True)
     composition_start_date = models.IntegerField(blank=True, null=True)
     composition_end_date = models.IntegerField(blank=True, null=True)
     number_of_voices = models.IntegerField(blank=True, null=True)

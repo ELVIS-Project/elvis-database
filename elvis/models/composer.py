@@ -6,12 +6,9 @@ import datetime
 class Composer(models.Model):
     class Meta:
         app_label = "elvis"
-        ordering = ["name"]
+        ordering = ["title"]
 
-    old_id = models.IntegerField(db_index=True, blank=True, null=True)
-    name = models.CharField(max_length=255)
-    old_birth_date = models.DateField(blank=True, null=True)
-    old_death_date = models.DateField(blank=True, null=True)
+    title = models.CharField(max_length=255)
     birth_date = models.IntegerField(blank=True, null=True)
     death_date = models.IntegerField(blank=True, null=True)
     created = models.DateTimeField(auto_now_add=True)

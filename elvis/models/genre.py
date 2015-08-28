@@ -5,10 +5,10 @@ from django.db.models.signals import post_save, post_delete
 
 class Genre(models.Model):
     class Meta:
-        ordering = ["name"]
+        ordering = ["title"]
         app_label = "elvis"
 
-    name = models.CharField(max_length=255, blank=True, null=True)
+    title = models.CharField(max_length=255, blank=True, null=True)
     comment = models.TextField(blank=True, null=True)
     created = models.DateTimeField(auto_now_add=True)
     updated = models.DateTimeField(auto_now=True)
