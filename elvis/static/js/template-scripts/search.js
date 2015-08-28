@@ -200,6 +200,7 @@ $(document).ready(function ($)
         else
         {
             $("#no-result-heading").hide();
+            $("#result-count").text(results['paginator']['count']);
             $("#result-heading").show();
         }
 
