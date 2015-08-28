@@ -524,9 +524,8 @@ th.header:hover {
 }
 .popover
 {
-    max-width: 600px;
+    max-width: 500px;
     width: auto;
-    margin-left:100px;
 }
 code
 {
