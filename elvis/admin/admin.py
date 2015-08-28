@@ -92,7 +92,7 @@ class ComposerAdmin(admin.ModelAdmin):
 
 
 class TagAdmin(admin.ModelAdmin):
-    list_display = ("name", "description", "old_id")
+    list_display = ("name",)
     actions = [reindex_in_solr, delete_in_solr]
     list_per_page = listperpage
     list_max_show_all = listmaxshowall
@@ -106,7 +106,7 @@ class TagHierarchyAdmin(admin.ModelAdmin):
 
 
 class AttachmentAdmin(admin.ModelAdmin):
-    list_display = ('attachment', 'description', 'pk', 'attached_to', 'file_name')
+    list_display = ('file', 'pk', 'attached_to', 'file_name')
     actions = [delete_in_solr]
     list_per_page = listperpage
     list_max_show_all = listmaxshowall
