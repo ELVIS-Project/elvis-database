@@ -522,3 +522,8 @@ th.header:hover {
 {
     border-color: rgb(255, 148, 148);
 }
+.popover
+{
+    max-width: 500px;
+    width: auto;
+}

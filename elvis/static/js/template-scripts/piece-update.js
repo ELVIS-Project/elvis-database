@@ -31,72 +31,23 @@ $(document).ready(function ($)
     });
 
     fillUpdateForm();
-    $('[data-toggle="popover"]').popover();
 
-    // The dropdown form for additional composer information.
-    var $newComposerMenu = $("#composer-create-new-menu");
-    var $composerInput = $("#composer");
-    $newComposerMenu.hide();
-
-    $composerInput.on("focusout", function (event)
+    // Get a json representation of the piece, and fill the form with its values, create input listeners.
+    function fillUpdateForm()
     {
-        var query = $("#composer").val();
-
-        if (query.length > 0)
-        {
-            $.ajax({
-                url: "/composers/",
-                data: {q: query},
-                success: function (data)
-                {
-                    if (data['count'] == 0)
-                    {
-                        $newComposerMenu.children().remove(".top-message");
-                        $newComposerMenu.prepend("<div class='top-message'><span class='help-block'>" +
-                            "<hr>We don't have <strong>" + query + "</strong> in our database. " +
-                            "Submitting a piece by an unknown composer will add the composer to the database. <br>" +
-                            "Do you have additional information to add to this new composer?<br><br></span></div>");
-                        $newComposerMenu.slideDown("slow");
-                    }
-                }
-            });
-        }
-    });
-
-    $composerInput.on("keydown", function (event)
-    {
-        if (event['keyCode'] !== 13)
-        {
-            $newComposerMenu.slideUp("slow");
-        }
-    });
-
-    //If an input is changed, set a listener to warn user when leaving the page.
-    $(":input").on('input', function()
-    {
-        $(window).on('beforeunload', function (event)
-        {
-            if (event['target']['activeElement']['id'] === 'goto-piece'
-                || event['target']['activeElement']['id'] === 'success-refresh')
+        $.ajax({
+            datatype: "json",
+            url: window.location.href  + "?format=json",
+            success: function (data)
             {
-                $(window).off('beforeunload');
-            }
-            else
-            {
-                return 'Leaving this page will clear your form.'
+                oldPiece = data;
+                drawWelcomeModal();
+                fillPieceForm();
+                fillDynamicTables();
+                createListeners();
             }
         });
-        $(":input").off('input')
-    });
-
-    //Disable default behaviour for hitting 'enter' for all inputs except the comment.
-    $('input:not(#comment)').on("keydown", function (event)
-    {
-        if (event.keyCode === 13)
-        {
-            event.preventDefault()
-        }
-    });
+    }
 
     //Create a list of database changes (deleting and moving objects) and write to screen.
     $("#piece-submit").click(function()
@@ -163,7 +114,6 @@ $(document).ready(function ($)
                     body_string += modify_string;
                 }
             }
-            debugger;
             if (body_string !== "")
             {
                 $base_modal_header.html("<h4 class='modal-title'>Confirm Database Changes</h4>");
@@ -246,45 +196,107 @@ $(document).ready(function ($)
     });
 
     //Listeners to open popovers on the labels of inputs when the input is focused.
-    var $upload_fields = $(".upload-input-field");
-    $upload_fields.focus(function (event)
+    function createListeners()
     {
-        $(event.target.parentElement.children[0]).popover('toggle');
-    });
-    $upload_fields.focusout(function (event)
-    {
-        $(event.target.parentElement.children[0]).popover('hide');
-    });
-
-    //Limit date inputs to 4 characters.
-    $("input[type=number]").keypress(function (event)
-    {
-        if (event.which !== 0 && event.which !== 8)
+        $('[data-toggle="popover"]').popover();
+        var $upload_fields = $(".upload-input-field");
+        $upload_fields.focus(function (event)
         {
-            if (this.value.length > 3 || (event.which < 48 || event.which > 57))
+            $(event.target.parentElement.children[0]).popover('show');
+        });
+        $upload_fields.focusout(function (event)
+        {
+            $(event.target.parentElement.children[0]).popover('hide');
+        });
+        $("#collection-input-group").mouseenter(function (event)
+        {
+            $(event.target.parentElement.children[0]).popover('show');
+        });
+        $("#collection-input-group").mouseleave(function (event)
+        {
+            $(event.target.parentElement.children[0]).popover('hide');
+        });
+
+        $("input[type=number]").keypress(function (event)
+        {
+            if (event.which !== 0 && event.which !== 8)
             {
-                return false
+                if (this.value.length > 3 || (event.which < 48 || event.which > 57))
+                {
+                    return false
+                }
             }
-        }
-    });
+        });
+        // The dropdown form for additional composer information.
+        var $newComposerMenu = $("#composer-create-new-menu");
+        var $composerInput = $("#composer");
+        $newComposerMenu.hide();
 
-    //$("#upload-page-content").html("<p class='lead text-center'>Sorry, uploads are temporarily disabled while the database is updated.</p>")
+        $composerInput.on("focusout", function (event)
+        {
+            var query = $("#composer").val();
 
-    // Get a json representation of the piece, and fill the form with its values.
-    function fillUpdateForm()
-    {
-        $.ajax({
-            datatype: "json",
-            url: window.location.href  + "?format=json",
-            success: function (data)
+            if (query.length > 0)
             {
-                oldPiece = data;
-                drawWelcomeModal();
-                fillPieceForm();
-                fillDynamicTables();
+                $.ajax({
+                    url: "/composers/",
+                    data: {q: query},
+                    success: function (data)
+                    {
+                        if (data['count'] == 0)
+                        {
+                            $newComposerMenu.children().remove(".top-message");
+                            $newComposerMenu.prepend("<div class='top-message'><span class='help-block'>" +
+                                "<hr>We don't have <strong>" + query + "</strong> in our database. " +
+                                "Submitting a piece by an unknown composer will add the composer to the database. <br>" +
+                                "Do you have additional information to add to this new composer?<br><br></span></div>");
+                            $newComposerMenu.slideDown("slow");
+                        }
+                    }
+                });
+            }
+        });
+
+        $composerInput.on("keydown", function (event)
+        {
+            if (event['keyCode'] !== 13)
+            {
+                $newComposerMenu.slideUp("slow");
+            }
+        });
+
+        //If an input is changed, set a listener to warn user when leaving the page.
+        $(":input").on('input', function()
+        {
+            $(window).on('beforeunload', function (event)
+            {
+                if (event['target']['activeElement']['id'] === 'goto-piece'
+                    || event['target']['activeElement']['id'] === 'success-refresh')
+                {
+                    $(window).off('beforeunload');
+                }
+                else
+                {
+                    return 'Leaving this page will clear your form.'
+                }
+            });
+            $(":input").off('input')
+        });
+
+        //Disable default behaviour for hitting 'enter' for all inputs except the comment.
+        $('input:not(#comment)').on("keydown", function (event)
+        {
+            if (event.keyCode === 13)
+            {
+                event.preventDefault()
             }
         });
     }
+
+
+
+    //$("#upload-page-content").html("<p class='lead text-center'>Sorry, uploads are temporarily disabled while the database is updated.</p>")
+
 
     // Fill the text and number form inputs.
     function fillPieceForm()
@@ -703,31 +715,32 @@ $(document).ready(function ($)
             if (data['errors'][form_inputs[i].name] && !(label === "Religious Nature" || label === "Voice Type"))
             {
                 errors += "<strong>"+ label + "</strong> is required. <br>";
-                $("#"+form_inputs[i].id).css("border-color", 'red').addClass('validation-error');
+                $("#"+form_inputs[i].id).addClass('validation-error');
             }
             else
             {
-                $("#"+form_inputs[i].id).css("border-color", '#ccc').removeClass('validation-error');
+                $("#"+form_inputs[i].id).removeClass('validation-error');
             }
         }
         if (data['errors']['religiosity'])
         {
             errors += "<strong>Religious Nature</strong> is required. <br>";
-            $("#religiosity").children().css('border-color', 'red').addClass('validation-error');
+            $("#religiosity").children().addClass('validation-error');
         }
         else
         {
-            $("#religiosity").children().css('border-color', '#ccc').removeClass('validation-error');
+            $("#religiosity").children().removeClass('validation-error');
         }
         if (data['errors']['vocalization'])
         {
             errors += "<strong>Voice Type</strong> is required. <br>";
-            $("#vocalization").children().css('border-color', 'red').addClass('validation-error');
+            $("#vocalization").children().addClass('validation-error');
         }
         else
         {
-            $("#vocalization").children().css('border-color', '#ccc').removeClass('validation-error');
+            $("#vocalization").children().removeClass('validation-error');
         }
+
 
         if (data['errors']['__all__'])
         {

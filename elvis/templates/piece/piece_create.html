@@ -18,11 +18,7 @@
     <title>Upload a Piece</title>
 
     <style>
-        .popover
-        {
-            max-width: 500px;
-            width: auto;
-        }
+
     </style>
 
 {% endblock %}
@@ -162,41 +158,28 @@
         </div>
         <div class="row">
             <div class="col-md-6">
-                <div class="form-group">
-                    <div class="input-group">
+                <div class="row">
+
+                    <div class="col-md-12">
+                        <div class="form-group">
+                            <div class="input-group">
                                 <span class="input-group-addon" data-toggle="popover" data-placement="top"
                                       data-trigger="focus" data-html='true' data-viewport="#content-container"
                                       title="<b>Collections</b><span class='label label-primary pull-right'>Required</span>"
                                       data-content="A collection is user-defined grouping of pieces. The collection can be based on date, uploader,
                                        composer - or any other parameter. If you input a collection name which is not already in the database, this new
                                        collection will be created and visible to the public. You can make the collection private on the <a href='/collections/?creator={{ user.username }}' target='_blank'>My Collections</a> page"><strong>Collections</strong></span>
-                        <input type="text" id="collections" name="collections" autocomplete="off"
-                               class="form-control upload-input-field"
-                               placeholder="e.g. Prof.Fujinaga's Collection; McGill Collection" aria-label="Collections">
+                                <input type="text" id="collections" name="collections" autocomplete="off"
+                                       class="form-control upload-input-field"
+                                       placeholder="e.g. Prof.Fujinaga's Collection; McGill Collection" aria-label="Collections">
+                            </div>
+                            <div id="collection_suggestion_menu" style="padding-left:120px"></div>
+                            <div id="collections_error"></div>
+                        </div>
                     </div>
-                    <div id="collection_suggestion_menu" style="padding-left:120px"></div>
-                    <div id="collections_error"></div>
-                </div>
-            </div>
-            <div class="col-md-6">
-                <div class="form-group">
-                    <div class="input-group">
-                                <span class="input-group-addon" data-toggle="popover" data-placement="top"
-                                      data-trigger="focus" data-html='true' data-viewport="#content-container"
-                                      title="<b>Languages</b><span class='label label-warning pull-right'>Contextual</span>"
-                                      data-content="Languages are required if the piece is <b>Vocal</b> or <b>Mixed</b>, but <i>should be left blank for</i> <b>Instrumental</b> pieces.">Text Language</span>
-                        <input type='text' name="languages" id="languages" autocomplete="off"
-                               placeholder="e.g. English; German" class="form-control unstyled upload-input-field" aria-label="Languages"/>
-                    </div>
-                    <div id="language_suggestion_menu" style="padding-left:120px"></div>
-                    <div id="languages_error"></div>
-                </div>
-            </div>
-        </div>
-        <div class="row">
-            <div class="col-md-6">
-                <div class="form-group">
-                    <div class="input-group">
+                    <div class="col-md-12">
+                        <div class="form-group">
+                            <div class="input-group">
                                 <span class="input-group-addon" data-toggle="popover" data-placement="top"
                                       data-trigger="focus" data-html='true' data-viewport="#content-container"
                                       title="<b>Number of Voices</b> <span class='label label-primary pull-right'>Required</span>"
@@ -206,88 +189,106 @@
                                        <li>If the individual voices are not clearly defined, or the voice leading is free, input 0.</li>
                                        <li>List the basso continuo as one voice.</li>
                                       </ul>"><strong>Num. of Voices</strong></span>
-                        <input type='number' name="number_of_voices" autocomplete="off" placeholder="e.g. 2"
-                               id="number_of_voices" max="100" min="0" class="form-control unstyled upload-input-field" aria-label="Number Of Voices"/>
+                                <input type='number' name="number_of_voices" autocomplete="off" placeholder="e.g. 2"
+                                       id="number_of_voices" max="100" min="0" class="form-control unstyled upload-input-field" aria-label="Number Of Voices"/>
+                            </div>
+                            <div id="number_of_voices_error"></div>
+                        </div>
                     </div>
-                    <div id="number_of_voices_error"></div>
-                </div>
-            </div>
-            <div class="col-md-6">
-                <div class="form-group">
-                    <div class="input-group">
-                                    <span class="input-group-addon" data-toggle="popover" data-placement="top"
-                                          data-trigger="focus" data-html='true' data-viewport="#content-container"
-                                          title="<b>Place of Origin</b> <span class='label label-warning pull-right'>Optional</span>"
-                                          data-content="Indicate the region where the piece might have been composed. General terms are preferred (e.g. Low Countries; Austria, not Vienna; Italy, not Rome)">Place of Origin</span>
-                        <input type='text' name="locations" id='locations' autocomplete="off" placeholder="e.g. France"
-                               class="form-control unstyled upload-input-field" aria-label="Locations"/>
-                    </div>
-                    <div id="location_suggestion_menu" style="padding-left:120px"></div>
-                    <div id="locations_error"></div>
-                </div>
-            </div>
-
-        </div>
-        <div class="row">
-            <div class="col-md-6">
-                <div class="form-group">
-                    <div class="input-group">
+                    <div class="col-md-12">
+                        <div class="form-group">
+                            <div class="input-group">
                                 <span class="input-group-addon" data-toggle="popover" data-placement="top"
                                       data-trigger="focus" data-html='true' data-viewport="#content-container"
                                       title="<b>Genres</b> <span class='label label-primary pull-right'>Required</span>"
                                       data-content="If present, select a genres from the drop-down list."><strong>Genres</strong></span>
-                        <input type='text' name="genres" id="genres" autocomplete="off" placeholder="e.g. Mass"
-                               class="form-control unstyled upload-input-field" aria-label="Genres"/>
+                                <input type='text' name="genres" id="genres" autocomplete="off" placeholder="e.g. Mass"
+                                       class="form-control unstyled upload-input-field" aria-label="Genres"/>
+                            </div>
+                            <div id="genre_suggestion_menu" style="padding-left:120px"></div>
+                            <div id="genres_error"></div>
+                        </div>
                     </div>
-                    <div id="genre_suggestion_menu" style="padding-left:120px"></div>
-                    <div id="genres_error"></div>
-                </div>
-            </div>
-            <div class="col-md-6">
-                <div class="form-group">
-                    <div class="input-group">
-                                <span class="input-group-addon" data-toggle="popover" data-placement="top"
-                                      data-trigger="focus" data-html='true' data-viewport="#content-container"
-                                      title="<b>Sources</b> <span class='label label-warning pull-right'>Optional</span>"
-                                      data-content="Use this field to specify the name(s) of the manuscript or print that was the source of this score.">Sources</span>
-                        <input type='text' name="sources" id="sources" autocomplete="off"
-                               placeholder="e.g. Bologna Q15" class="form-control unstyled upload-input-field" aria-label="Sources"/>
-                    </div>
-                    <div id="source_suggestion_menu" style="padding-left:120px"></div>
-                    <div id="sources_error"></div>
-                </div>
-            </div>
-        </div>
-        <div class="row">
-            <div class="col-md-6">
-                <div class="form-group">
-                    <div class="input-group">
+                    <div class="col-md-12">
+                        <div class="form-group">
+                            <div class="input-group">
                                 <span class="input-group-addon" data-toggle="popover" data-placement="top"
                                       data-trigger="focus" data-html='true' data-viewport="#content-container"
                                       title="<b>Instrumentation</b> <span class='label label-primary pull-right'>Required</span>"
                                       data-content="Use semicolons as a separator for the list of instruments in the piece."><strong>Instrumentation</strong></span>
-                        <input type='text' name="instruments_voices" autocomplete="off" id="instruments_voices"
-                               placeholder="e.g. Harpsichord" class="form-control unstyled upload-input-field" aria-label="Instrumentation"/>
+                                <input type='text' name="instruments_voices" autocomplete="off" id="instruments_voices"
+                                       placeholder="e.g. Harpsichord" class="form-control unstyled upload-input-field" aria-label="Instrumentation"/>
+                            </div>
+                            <div id="instrumentation_suggestion_menu" style="padding-left:120px"></div>
+                            <div id="instruments_voices_error"></div>
+                        </div>
                     </div>
-                    <div id="instrumentation_suggestion_menu" style="padding-left:120px"></div>
-                    <div id="instruments_voices_error"></div>
                 </div>
             </div>
 
             <div class="col-md-6">
-                <div class="form-group">
-                    <div class="input-group">
+                <div class="row">
+                    <div class="col-md-12">
+                        <div class="form-group">
+                            <div class="input-group">
+                                <span class="input-group-addon" data-toggle="popover" data-placement="top"
+                                      data-trigger="focus" data-html='true' data-viewport="#content-container"
+                                      title="<b>Languages</b><span class='label label-warning pull-right'>Contextual</span>"
+                                      data-content="Languages are required if the piece is <b>Vocal</b> or <b>Mixed</b>, but <i>should be left blank for</i> <b>Instrumental</b> pieces.">Text Language</span>
+                                <input type='text' name="languages" id="languages" autocomplete="off"
+                                       placeholder="e.g. English; German" class="form-control unstyled upload-input-field" aria-label="Languages"/>
+                            </div>
+                            <div id="language_suggestion_menu" style="padding-left:120px"></div>
+                            <div id="languages_error"></div>
+                        </div>
+                    </div>
+
+                    <div class="col-md-12">
+                        <div class="form-group">
+                            <div class="input-group">
+                                    <span class="input-group-addon" data-toggle="popover" data-placement="top"
+                                          data-trigger="focus" data-html='true' data-viewport="#content-container"
+                                          title="<b>Place of Origin</b> <span class='label label-warning pull-right'>Optional</span>"
+                                          data-content="Indicate the region where the piece might have been composed. General terms are preferred (e.g. Low Countries; Austria, not Vienna; Italy, not Rome)">Place of Origin</span>
+                                <input type='text' name="locations" id='locations' autocomplete="off" placeholder="e.g. France"
+                                       class="form-control unstyled upload-input-field" aria-label="Locations"/>
+                            </div>
+                            <div id="location_suggestion_menu" style="padding-left:120px"></div>
+                            <div id="locations_error"></div>
+                        </div>
+                    </div>
+
+                    <div class="col-md-12">
+                        <div class="form-group">
+                            <div class="input-group">
+                                <span class="input-group-addon" data-toggle="popover" data-placement="top"
+                                      data-trigger="focus" data-html='true' data-viewport="#content-container"
+                                      title="<b>Sources</b> <span class='label label-warning pull-right'>Optional</span>"
+                                      data-content="Use this field to specify the name(s) of the manuscript or print that was the source of this score.">Sources</span>
+                                <input type='text' name="sources" id="sources" autocomplete="off"
+                                       placeholder="e.g. Bologna Q15" class="form-control unstyled upload-input-field" aria-label="Sources"/>
+                            </div>
+                            <div id="source_suggestion_menu" style="padding-left:120px"></div>
+                            <div id="sources_error"></div>
+                        </div>
+                    </div>
+
+                    <div class="col-md-12">
+                        <div class="form-group">
+                            <div class="input-group">
                     <span class="input-group-addon" data-toggle="popover" data-placement="top" data-trigger="focus"
                           data-html='true'
                           data-viewport="#content-container"
                           title="<b>Tags</b> <span class='label label-warning pull-right'>Optional</span>"
                           data-content="You may add any other tags you believe would help organize and define this piece here. Try not to
                           duplicate information from the previous fields.">Tags</span>
-                        <input type='text' name="tags" id="tags" autocomplete="off"
-                               class="form-control unstyled upload-input-field" placeholder="D-sharp Minor; 4/4" aria-label="Tags"/>
+                                <input type='text' name="tags" id="tags" autocomplete="off"
+                                       class="form-control unstyled upload-input-field" placeholder="D-sharp Minor; 4/4" aria-label="Tags"/>
+                            </div>
+                            <div id="tags_suggestion_menu" style="padding-left:120px"></div>
+                            <div id="tags_error"></div>
+                        </div>
                     </div>
-                    <div id="tags_suggestion_menu" style="padding-left:120px"></div>
-                    <div id="tags_error"></div>
                 </div>
             </div>
         </div>
