@@ -208,14 +208,15 @@ $(document).ready(function ($)
         {
             $(event.target.parentElement.children[0]).popover('hide');
         });
-        $("#collection-input-group").mouseenter(function (event)
-        {
-            $(event.target.parentElement.children[0]).popover('show');
-        });
-        $("#collection-input-group").mouseleave(function (event)
-        {
-            $(event.target.parentElement.children[0]).popover('hide');
-        });
+        $("#collections").prop('disabled', true);
+        $("#collections-input-group")
+            .mouseenter(function (event)
+            {
+                $(event.target.parentElement.children[0]).popover('show');
+            })
+            .mouseleave(function (event){
+                $(event.target.parentElement.children[0]).popover('hide');
+            });
 
         $("input[type=number]").keypress(function (event)
         {

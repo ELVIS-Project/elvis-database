@@ -524,6 +524,11 @@ th.header:hover {
 }
 .popover
 {
-    max-width: 500px;
+    max-width: 600px;
     width: auto;
+    margin-left:100px;
+}
+code
+{
+    color: #337AB7;
 }
