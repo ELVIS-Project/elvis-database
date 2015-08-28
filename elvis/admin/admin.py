@@ -4,11 +4,9 @@ import shutil
 import os
 
 from elvis.elvis.tasks import rebuild_suggester_dicts
-from elvis.models import Project
 from elvis.models import Piece
 from elvis.models import Composer
 from elvis.models import Tag
-from elvis.models import TagHierarchy
 from elvis.models import Attachment
 from elvis.models import Movement
 from elvis.models import UserProfile
@@ -54,13 +52,6 @@ class DownloadAdmin(admin.ModelAdmin):
 
 
 class UserProfileAdmin(admin.ModelAdmin):
-    pass
-    actions = [reindex_in_solr, delete_in_solr]
-    list_per_page = listperpage
-    list_max_show_all = listmaxshowall
-
-
-class ProjectAdmin(admin.ModelAdmin):
     pass
     actions = [reindex_in_solr, delete_in_solr]
     list_per_page = listperpage
@@ -154,8 +145,6 @@ class GenericAdmin(admin.ModelAdmin):
 
 admin.site.register(Download, DownloadAdmin)
 admin.site.register(UserProfile, UserProfileAdmin)
-admin.site.register(Project, ProjectAdmin)
-admin.site.register(TagHierarchy, TagHierarchyAdmin)
 admin.site.register(Piece, PieceAdmin)
 admin.site.register(Tag, TagAdmin)
 admin.site.register(Collection, CollectionAdmin)
