@@ -424,11 +424,6 @@ body
     left: 0;
 }
 
-.input-group-addon
-{
-    min-width: 120px;
-}
-
 .collapse.in
 {
     height: auto !important;
@@ -508,4 +503,22 @@ th.header:hover {
 }
 #elvis-navbar {
     margin-bottom:0px;
+}
+
+.input-group-addon
+{
+    min-width: 130px;
+    background-color: #F5F5F5;
+}
+.upload-3button:first-child
+{
+    border-right: 0px;
+}
+.upload-3button:last-child
+{
+    border-left: 0px
+}
+.validation-error
+{
+    border-color: rgb(255, 148, 148);
 }

@@ -171,30 +171,30 @@ $(document).ready(function ($)
             if (data['errors'][form_inputs[i].name] && !(label === "Religious Nature" || label === "Voice Type"))
             {
                 errors += "<strong>"+ label + "</strong> is required. <br>";
-                $("#"+form_inputs[i].id).css("border-color", 'red').addClass('validation-error');
+                $("#"+form_inputs[i].id).addClass('validation-error');
             }
             else
             {
-                $("#"+form_inputs[i].id).css("border-color", '#ccc').removeClass('validation-error');
+                $("#"+form_inputs[i].id).removeClass('validation-error');
             }
         }
         if (data['errors']['religiosity'])
         {
             errors += "<strong>Religious Nature</strong> is required. <br>";
-            $("#religiosity").children().css('border-color', 'red').addClass('validation-error');
+            $("#religiosity").children().addClass('validation-error');
         }
         else
         {
-            $("#religiosity").children().css('border-color', '#ccc').removeClass('validation-error');
+            $("#religiosity").children().removeClass('validation-error');
         }
         if (data['errors']['vocalization'])
         {
             errors += "<strong>Voice Type</strong> is required. <br>";
-            $("#vocalization").children().css('border-color', 'red').addClass('validation-error');
+            $("#vocalization").children().addClass('validation-error');
         }
         else
         {
-            $("#vocalization").children().css('border-color', '#ccc').removeClass('validation-error');
+            $("#vocalization").children().removeClass('validation-error');
         }
 
         if (data['errors']['__all__'])
@@ -211,7 +211,7 @@ $(document).ready(function ($)
                         var path = file_val.split("\\");
                         var file_name = path[path.length-1];
                         errors += "<strong>File</strong><em> "+file_name+"</em> requires a source.";
-                        $("#"+id).css('border-color', 'red').addClass('validation-error');
+                        $("#"+id).css('border-color', '#FF9494').addClass('validation-error');
                     }
                 }
             }
