@@ -2,19 +2,15 @@ from django.db import models
 from django.contrib.auth.models import User
 from django.dispatch import receiver
 from django.db.models.signals import post_save, post_delete
+from elvis.models.main import ElvisModel
 
-class Collection(models.Model):
+class Collection(ElvisModel):
     class Meta:
         ordering = ["title"]
         verbose_name_plural = "collections"
         app_label = "elvis"
 
     public = models.NullBooleanField(blank=True)
-    creator = models.ForeignKey(User)
-    title = models.CharField(max_length=255, blank=True, null=True)
-    comment = models.TextField(blank=True, null=True)
-    created = models.DateTimeField(auto_now_add=True)
-    updated = models.DateTimeField(auto_now=True)
 
     def __unicode__(self):
         return "{0}".format(self.title)
@@ -54,6 +50,11 @@ def solr_index(sender, instance, created, **kwargs):
         solrconn.delete(record.results[0]['id'])
 
     collection = instance
+    if collection.creator:
+        creator_name = collection.creator.username
+    else:
+        creator_name = None
+
     d = {'type': 'elvis_collection',
          'id': str(uuid.uuid4()),
          'item_id': int(collection.id),
@@ -61,7 +62,7 @@ def solr_index(sender, instance, created, **kwargs):
          'created': collection.created,
          'updated': collection.updated,
          'comment': collection.comment,
-         'creator_name': collection.creator.username,
+         'creator_name': creator_name,
          'collections_searchable': collection.title}
     solrconn.add(**d)
     solrconn.commit()

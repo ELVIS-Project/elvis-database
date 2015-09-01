@@ -48,6 +48,7 @@ class ComposerSerializer(serializers.HyperlinkedModelSerializer):
                   "updated")
 
 class ComposerListSerializer(serializers.HyperlinkedModelSerializer):
+    name = serializers.CharField()
     item_id = serializers.ReadOnlyField(source='pk')
     birth_date = serializers.IntegerField()
     death_date = serializers.IntegerField()

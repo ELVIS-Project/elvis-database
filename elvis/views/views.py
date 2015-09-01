@@ -381,10 +381,10 @@ def abstract_model_factory(object_name, object_type, cleanup=Cleanup(), **kwargs
     if object_type == "Composer":
         composer_list = []
         try:
-            composer = Composer.objects.get(name=object_name)
+            composer = Composer.objects.get(title=object_name)
             cleanup.list.append({"object": composer, "isNew": False})
         except ObjectDoesNotExist:
-            composer = Composer(name=object_name, birth_date=kwargs.pop('birth_date'),
+            composer = Composer(title=object_name, birth_date=kwargs.pop('birth_date'),
                                 death_date=kwargs.pop('death_date'),
                                 created=datetime.datetime.now(pytz.utc),
                                 updated=datetime.datetime.now(pytz.utc))
@@ -418,10 +418,10 @@ def abstract_model_factory(object_name, object_type, cleanup=Cleanup(), **kwargs
         for token in tokenized_inputs:
             if token != "":
                 try:
-                    language = Language.objects.get(name=token)
+                    language = Language.objects.get(title=token)
                     cleanup.list.append({"object": language, "isNew": False})
                 except ObjectDoesNotExist:
-                    language = Language(name=token, created=datetime.datetime.now(pytz.utc),
+                    language = Language(title=token, created=datetime.datetime.now(pytz.utc),
                                         updated=datetime.datetime.now(pytz.utc))
                     language.save()
                     cleanup.list.append({"object": language, "isNew": True})
@@ -434,10 +434,10 @@ def abstract_model_factory(object_name, object_type, cleanup=Cleanup(), **kwargs
         for token in tokenized_inputs:
             if token != "":
                 try:
-                    genre = Genre.objects.get(name=token)
+                    genre = Genre.objects.get(title=token)
                     cleanup.list.append({"object": genre, "isNew": False})
                 except ObjectDoesNotExist:
-                    genre = Genre(name=token, created=datetime.datetime.now(pytz.utc),
+                    genre = Genre(title=token, created=datetime.datetime.now(pytz.utc),
                                   updated=datetime.datetime.now(pytz.utc))
                     genre.save()
                     cleanup.list.append({"object": genre, "isNew": True})
@@ -450,10 +450,10 @@ def abstract_model_factory(object_name, object_type, cleanup=Cleanup(), **kwargs
         for token in tokenized_inputs:
             if token != "":
                 try:
-                    location = Location.objects.get(name=token)
+                    location = Location.objects.get(title=token)
                     cleanup.list.append({"object": location, "isNew": False})
                 except ObjectDoesNotExist:
-                    location = Location(name=token, created=datetime.datetime.now(pytz.utc),
+                    location = Location(title=token, created=datetime.datetime.now(pytz.utc),
                                         updated=datetime.datetime.now(pytz.utc))
                     location.save()
                     cleanup.list.append({"object": location, "isNew": True})
@@ -466,10 +466,10 @@ def abstract_model_factory(object_name, object_type, cleanup=Cleanup(), **kwargs
         for token in tokenized_inputs:
             if token != "":
                 try:
-                    source = Source.objects.get(name=token)
+                    source = Source.objects.get(title=token)
                     cleanup.list.append({"object": source, "isNew": False})
                 except ObjectDoesNotExist:
-                    source = Source(name=token, created=datetime.datetime.now(pytz.utc),
+                    source = Source(title=token, created=datetime.datetime.now(pytz.utc),
                                     updated=datetime.datetime.now(pytz.utc))
                     source.save()
                     cleanup.list.append({"object": source, "isNew": True})
@@ -482,10 +482,10 @@ def abstract_model_factory(object_name, object_type, cleanup=Cleanup(), **kwargs
         for token in tokenized_inputs:
             if token != "":
                 try:
-                    instrument = InstrumentVoice.objects.get(name=token)
+                    instrument = InstrumentVoice.objects.get(title=token)
                     cleanup.list.append({"object": instrument, "isNew": False})
                 except ObjectDoesNotExist:
-                    instrument = InstrumentVoice(name=token,
+                    instrument = InstrumentVoice(title=token,
                                                  created=datetime.datetime.now(pytz.utc),
                                                  updated=datetime.datetime.now(pytz.utc))
                     instrument.save()
@@ -499,10 +499,10 @@ def abstract_model_factory(object_name, object_type, cleanup=Cleanup(), **kwargs
         for token in tokenized_inputs:
             if token != "":
                 try:
-                    tag = Tag.objects.get(name=token)
+                    tag = Tag.objects.get(title=token)
                     cleanup.list.append({"object": tag, "isNew": False})
                 except ObjectDoesNotExist:
-                    tag = Tag(name=token)
+                    tag = Tag(title=token)
                     tag.save()
                     cleanup.list.append({"object": tag, "isNew": True})
                 tag_list.append(tag)

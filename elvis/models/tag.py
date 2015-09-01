@@ -1,18 +1,15 @@
 from django.db import models
 from django.dispatch import receiver
 from django.db.models.signals import post_save, post_delete
+from elvis.models.main import ElvisModel
 
 
-class Tag(models.Model):
+class Tag(ElvisModel):
     class Meta:
         app_label = "elvis"
 
-    title = models.CharField(max_length=255)
     description = models.TextField(blank=True, null=True)
     approved = models.NullBooleanField()
-
-    def __unicode__(self):
-        return "{0}".format(self.name)
 
 
 @receiver(post_save, sender=Tag)

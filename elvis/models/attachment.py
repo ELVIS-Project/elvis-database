@@ -4,13 +4,14 @@ import shutil
 from django.db import models
 from django.contrib.auth.models import User
 from django.conf import settings
+from elvis.models.main import ElvisModel
 
 
 def upload_path(instance, filename):
     return os.path.join(instance.attachment_path, filename)
 
 
-class Attachment(models.Model):
+class Attachment(ElvisModel):
     """
         IMPORTANT: This model will store its attachments in a
         random (LM Edit: NOT random - hashed from pk) folder structure. This is to prevent the webapp from
@@ -39,15 +40,9 @@ class Attachment(models.Model):
                             "{0:0>2}".format(str(self.pk)[-2:]),
                             "{0:0>15}".format(self.pk))
 
-
-    old_id = models.IntegerField(null=True, blank=True, db_index=True)
     attachment = models.FileField(upload_to=upload_path, null=True, blank=True, max_length=512)
     source = models.CharField(blank=True, null=True, max_length=200)
     uploader = models.ForeignKey(User, blank=True, null=True, related_name="attachments")
-    description = models.CharField(max_length=255, blank=True, null=True)
-
-    created = models.DateTimeField(auto_now_add=True)
-    updated = models.DateTimeField(auto_now=True)
 
     @property
     def file_name(self):

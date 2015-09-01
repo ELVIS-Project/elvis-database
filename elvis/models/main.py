@@ -13,7 +13,20 @@ class ElvisModel(models.Model):
 
     @property
     def name(self):
+        # name property included as alternative to refactoring large amounts
+        # of code expecting a 'name' attribute, and a 'name' makes more
+        # sense for the Composer class.
         return self.title
+
+    @name.setter
+    def name(self, value):
+        self.title = value
+
+    @name.deleter
+    def name(self):
+        self.title.delete()
 
     def __str__(self):
         return self.title
+
+

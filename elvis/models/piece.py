@@ -4,14 +4,14 @@ from django.dispatch import receiver
 from django.db.models.signals import post_save, post_delete, pre_delete
 from os import path
 import datetime
+from elvis.models.main import ElvisModel
 
 
-class Piece(models.Model):
+class Piece(ElvisModel):
     class Meta:
         app_label = "elvis"
         ordering = ["title"]
 
-    title = models.CharField(max_length=255)
     uploader = models.ForeignKey(User, blank=True, null=True, related_name="pieces")
     collections = models.ManyToManyField("elvis.Collection", blank=True, related_name="pieces")
     composer = models.ForeignKey("elvis.Composer", db_index=True, blank=True, null=True, related_name="pieces")
@@ -27,12 +27,6 @@ class Piece(models.Model):
     attachments = models.ManyToManyField("elvis.Attachment", blank=True, related_name="pieces")
     religiosity = models.CharField(max_length=50, default="Unknown")
     vocalization = models.CharField(max_length=50, default="Unknown")
-    comment = models.TextField(blank=True, null=True)
-    created = models.DateTimeField(auto_now_add=True)
-    updated = models.DateTimeField(auto_now=True)
-
-    def __unicode__(self):
-        return "{0}".format(self.title)
 
     def number_of_movements(self):
         return len(self.movements.all())

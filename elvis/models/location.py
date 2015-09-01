@@ -1,20 +1,13 @@
 from django.db import models
 from django.dispatch import receiver
 from django.db.models.signals import post_save, post_delete
+from elvis.models.main import ElvisModel
 
 
-class Location(models.Model):
+class Location(ElvisModel):
     class Meta:
         ordering = ["title"]
         app_label = "elvis"
-
-    title = models.CharField(max_length=255, blank=True, null=True)
-    comment = models.TextField(blank=True, null=True)
-    created = models.DateTimeField(auto_now_add=True)
-    updated = models.DateTimeField(auto_now=True)
-
-    def __unicode__(self):
-        return "{0}".format(self.name)
 
 
 class Place(Location):

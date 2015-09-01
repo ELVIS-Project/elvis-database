@@ -2,20 +2,15 @@ from django.db import models
 from django.dispatch import receiver
 from django.db.models.signals import post_save, post_delete
 import datetime
+from elvis.models.main import ElvisModel
 
-class Composer(models.Model):
+class Composer(ElvisModel):
     class Meta:
         app_label = "elvis"
         ordering = ["title"]
 
-    title = models.CharField(max_length=255)
     birth_date = models.IntegerField(blank=True, null=True)
     death_date = models.IntegerField(blank=True, null=True)
-    created = models.DateTimeField(auto_now_add=True)
-    updated = models.DateTimeField(auto_now=True)
-
-    def __unicode__(self):
-        return "{0}".format(self.name)
 
     @property
     def piece_count(self):
