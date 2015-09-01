@@ -28,7 +28,7 @@ class ComposerList(generics.ListCreateAPIView):
     def get_queryset(self):
         query = self.request.GET.get('q', None)
         if query:
-            return self.queryset.filter(name=query)
+            return self.queryset.filter(title=query)
         else:
             return self.queryset
 
