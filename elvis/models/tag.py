@@ -29,7 +29,7 @@ def solr_index(sender, instance, created, **kwargs):
         'item_id': int(tag.id),
         'name': tag.title,
         'tags': tag.title,
-        'tag_suggestions': tag.title
+        'tags_searchable': tag.title
     }
     solrconn.add(**d)
     solrconn.commit()

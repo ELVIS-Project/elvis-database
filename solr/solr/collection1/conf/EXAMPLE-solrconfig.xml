@@ -1428,7 +1428,7 @@
         <str name="lookupImpl">AnalyzingInfixLookupFactory</str>
         <str name="indexPath">suggestions/tagSuggest_dict</str>
         <str name="dictionaryImpl">DocumentDictionaryFactory</str>
-        <str name="field">tag_suggestions</str>
+        <str name="field">tags_searchable</str>
         <str name="weightField">price</str>
         <str name="suggestAnalyzerFieldType">suggestTypeLc</str>
         <str name="buildOnStartup">true</str>
