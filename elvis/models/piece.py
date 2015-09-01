@@ -12,7 +12,6 @@ class Piece(ElvisModel):
         app_label = "elvis"
         ordering = ["title"]
 
-    uploader = models.ForeignKey(User, blank=True, null=True, related_name="pieces")
     collections = models.ManyToManyField("elvis.Collection", blank=True, related_name="pieces")
     composer = models.ForeignKey("elvis.Composer", db_index=True, blank=True, null=True, related_name="pieces")
     composition_start_date = models.IntegerField(blank=True, null=True)
@@ -141,7 +140,7 @@ def solr_index(sender, instance, created, **kwargs):
          'created': piece.created,
          'updated': piece.updated,
          'composer_name': composer_name,
-         'uploader_name': piece.uploader.username,
+         'uploader_name': piece.creator.username,
          'tags': tags,
          'genres': genres,
          'instruments_voices': instruments_voices,

@@ -73,7 +73,7 @@ class PieceDetail(generics.RetrieveUpdateDestroyAPIView):
 
         piece = Piece.objects.get(pk=response.data['item_id'])
 
-        if piece.uploader == user:
+        if piece.creator == user:
             response.data['can_edit'] = True
 
         return response
@@ -102,7 +102,7 @@ class PieceUpdate(generics.RetrieveUpdateDestroyAPIView):
 
     def get(self, request, *args, **kwargs):
         piece = Piece.objects.get(pk=int(kwargs['pk']))
-        if not (request.user == piece.uploader or request.user.is_superuser):
+        if not (request.user == piece.creator or request.user.is_superuser):
             raise PermissionDenied
         return super(PieceUpdate, self).get(self, request, *args, **kwargs)
 
@@ -110,7 +110,7 @@ class PieceUpdate(generics.RetrieveUpdateDestroyAPIView):
     def post(self, request, *args, **kwargs):
         if 'delete' in request.POST:
             piece = Piece.objects.get(id=request.POST['delete'])
-            if not (request.user == piece.uploader or request.user.is_superuser):
+            if not (request.user == piece.creator or request.user.is_superuser):
                 raise PermissionDenied
             piece.delete()
             return Response(status=status.HTTP_202_ACCEPTED)
@@ -129,7 +129,7 @@ class PieceList(generics.ListCreateAPIView):
     def get_queryset(self):
         query = self.request.GET.get('creator', None)
         if query:
-            return Piece.objects.filter(uploader__username=query)
+            return Piece.objects.filter(creator__username=query)
         else:
             return Piece.objects.all()
 
@@ -153,7 +153,7 @@ class PieceList(generics.ListCreateAPIView):
     def post(self, request, *args, **kwargs):
         if 'delete' in request.POST:
             piece = Piece.objects.get(id=request.POST['delete'])
-            if not (request.user == piece.uploader or request.user.is_superuser):
+            if not (request.user == piece.creator or request.user.is_superuser):
                 raise PermissionDenied
             piece.delete()
             return Response(status=status.HTTP_202_ACCEPTED)
@@ -174,7 +174,7 @@ def create(request, *args, **kwargs):
     clean = Cleanup()
     clean_form = form.cleaned_data
     new_piece = Piece(title=clean_form['title'],
-                      uploader=request.user,
+                      creator=request.user,
                       created=datetime.datetime.now(pytz.utc),
                       updated=datetime.datetime.now(pytz.utc))
     clean.list.append({"object": new_piece, "isNew": True})
@@ -201,7 +201,7 @@ def update(request, *args, **kwargs):
     # Update a piece based on a dict of changes in request.POST['changes']
 
     piece = Piece.objects.get(pk=int(kwargs['pk']))
-    if not (request.user == piece.uploader or request.user.is_superuser):
+    if not (request.user == piece.creator or request.user.is_superuser):
         raise PermissionDenied
     
     form = validateDynamicForm(request, PieceForm(request.POST))

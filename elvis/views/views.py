@@ -56,16 +56,19 @@ def solr_suggest(request):
         if len(value) < 1:
             return False
         if dictionary == "generalSuggest":
-            url = settings.SOLR_SERVER + "/suggest/?wt=json&suggest.dictionary=pieceSuggest" \
-                                         "&suggest.dictionary=composerSuggest" \
-                                         "&suggest.dictionary=collectionSuggest" \
-                                         "&q={1}".format(dictionary, value)
+            url = settings.SOLR_SERVER + \
+                "/suggest/?wt=json&suggest.dictionary=pieceSuggest" \
+                "&suggest.dictionary=composerSuggest" \
+                "&suggest.dictionary=collectionSuggest" \
+                "&q={1}".format(dictionary, value)
             json_string = urllib.request.urlopen(url)
             json_dict = json.loads((json_string.read()).decode('utf-8'))
+
             piece_suggestions = json_dict['suggest']['pieceSuggest'][value]
             comp_suggestions = json_dict['suggest']['composerSuggest'][value]
             coll_suggestions = json_dict['suggest']['collectionSuggest'][value]
             all_suggestions = []
+
             if piece_suggestions['numFound']:
                 all_suggestions = piece_suggestions['suggestions']
             if comp_suggestions['numFound']:
@@ -79,7 +82,9 @@ def solr_suggest(request):
                 else:
                     all_suggestions = coll_suggestions['suggestions']
             if all_suggestions:
-                sorted_suggestions = sorted(all_suggestions, key=lambda s: SequenceMatcher(None, value, s['term']).ratio(), reverse=True)
+                sorted_suggestions = sorted(all_suggestions,
+                                            key=lambda s: _seq(s, value),
+                                            reverse=True)
                 for i in range(min(7, len(sorted_suggestions))):
                     results.append({'name': sorted_suggestions[i]['term']})
         else:
@@ -87,17 +92,22 @@ def solr_suggest(request):
                                          "&suggest.dictionary={0}" \
                                          "&q={1}".format(dictionary, value)
             json_string = urllib.request.urlopen(url)
-            resp = json.loads((json_string.read()).decode('utf-8'))['suggest']['{0}'.format(dictionary)]
+            resp = json.loads((json_string.read()).decode('utf-8'))
+            resp = resp['suggest']['{0}'.format(dictionary)]
             data = resp[list(resp.keys())[0]]
             if data['numFound'] > 0:
                 sorted_suggestions = sorted(data['suggestions'],
-                                            key=lambda s: SequenceMatcher(None, value,
-                                                                          s['term']).ratio(),
+                                            key=lambda s: _seq(s, value),
                                             reverse=True)
                 for i in range(min(7, data['numFound'])):
                     results.append({'name': sorted_suggestions[i]['term']})
     j_results = json.dumps(results)
     return HttpResponse(j_results, content_type="application/json")
+
+def _seq(s, v):
+    """Return a num representing the results likeness to the query.
+       For use in solr_suggest"""
+    return SequenceMatcher(None, v, s['term']).ratio()
 
 
 def upload_files(request, file_name, upload_path):
@@ -122,12 +132,14 @@ def upload_files(request, file_name, upload_path):
 
     for f in file_list:
         # If the file has an accepted extension, upload it.
-        if not any(f.name.startswith(x) for x in settings.ELVIS_BAD_PREFIX) and any(
-                f.name.endswith(x) for x in settings.ELVIS_EXTENSIONS):
+        if not any(f.name.startswith(x) for x in settings.ELVIS_BAD_PREFIX) \
+                and any(f.name.endswith(x) for x in settings.ELVIS_EXTENSIONS):
             new_name = f.name.replace(" ", "-")
             upload_file(f, os.path.join(upload_path, new_name))
-            files.append(
-                {'name': new_name, 'uploader': request.user.username, 'path': upload_path})
+            files.append({
+                'name': new_name,
+                'uploader': request.user.username,
+                'path': upload_path})
 
         # Or, if the file is a zip file, upload, extract good files,
         # then delete the archive.
@@ -200,7 +212,7 @@ def handle_attachments(request, parent, cleanup, file_field, file_source):
         att = Attachment()
         att.save()  # needed to create hash dir.
         cleanup.list.append({"object": att, "isNew": True})
-        att.uploader = request.user
+        att.creator = request.user
 
         new_name = "{0}_{1}_{2}.{3}".format(parent.title.replace(" ", "-"),
                                             parent.composer.name.strip().replace(" ", "-"),
@@ -263,7 +275,7 @@ def handle_dynamic_file_table(request, parent, cleanup=Cleanup()):
         new_mov = Movement(title=files[k], position=i,
                            composition_start_date=parent.composition_start_date,
                            composition_end_date=parent.composition_end_date,
-                           uploader=parent.uploader, religiosity=parent.religiosity,
+                           creator=parent.creator, religiosity=parent.religiosity,
                            composer=parent.composer, piece=parent)
         new_mov.save()
         for language in parent.languages.all():

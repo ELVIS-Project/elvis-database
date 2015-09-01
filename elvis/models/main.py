@@ -26,6 +26,18 @@ class ElvisModel(models.Model):
     def name(self):
         self.title.delete()
 
+    @property
+    def uploader(self):
+        return self.creator
+
+    @uploader.setter
+    def uploader(self, value):
+        self.creator = value
+
+    @uploader.deleter
+    def uploader(self):
+        self.uploader.delete()
+
     def __str__(self):
         return self.title
 

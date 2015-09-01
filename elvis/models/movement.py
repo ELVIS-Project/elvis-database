@@ -11,7 +11,6 @@ class Movement(ElvisModel):
         app_label = "elvis"
         ordering = ["position", "title"]
 
-    uploader = models.ForeignKey(User, blank=True, null=True, related_name="movements")
     piece = models.ForeignKey("elvis.Piece", blank=True, null=True, related_name="movements")
     position = models.IntegerField(blank=True, null=True)
     collections = models.ManyToManyField("elvis.Collection", blank=True, related_name="movements")
@@ -133,7 +132,7 @@ def solr_index(sender, instance, created, **kwargs):
          'updated': movement.updated,
          'parent_piece_name': parent_piece,
          'composer_name': movement.composer.name,
-         'uploader_name': movement.uploader.username,
+         'uploader_name': movement.creator.username,
          'tags': tags,
          'genres': genres,
          'instruments_voices': instruments_voices,

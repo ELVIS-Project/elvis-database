@@ -8,9 +8,6 @@ class Tag(ElvisModel):
     class Meta:
         app_label = "elvis"
 
-    description = models.TextField(blank=True, null=True)
-    approved = models.NullBooleanField()
-
 
 @receiver(post_save, sender=Tag)
 def solr_index(sender, instance, created, **kwargs):
@@ -26,33 +23,13 @@ def solr_index(sender, instance, created, **kwargs):
         solrconn.delete(record.results[0]['id'])
 
     tag = instance
-
-    if tag.name is None:
-        tag_name = None
-    else:
-        try:
-            tag_name = tag.name
-        except UnicodeDecodeError:
-            tag_name = tag.name.decode('utf-8')
-
-    if tag.description is None:
-        tag_description = None
-    else:
-        try:
-            tag_description = tag.description
-        except UnicodeDecodeError:
-            tag_description = tag.description.decode('utf-8')
-
-
     d = {
         'type': 'elvis_tag',
         'id': str(uuid.uuid4()),
         'item_id': int(tag.id),
-        'name': tag_name,
-        'tags': tag_name,
-        'description': tag_description,
-        'approved': tag.approved,
-        'tag_suggestions': tag_name
+        'name': tag.title,
+        'tags': tag.title,
+        'tag_suggestions': tag.title
     }
     solrconn.add(**d)
     solrconn.commit()
