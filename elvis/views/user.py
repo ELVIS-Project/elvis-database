@@ -68,8 +68,15 @@ class UserAccount(generics.CreateAPIView):
                     form.add_error(None, "You must complete the reCaptcha to register!")
                     return render(request, "register.html", {'form': form})
 
-                captcha_data = urllib.parse.urlencode({'secret': settings.RECAPTCHA_PRIVATE_KEY, 'response': request.POST['g-recaptcha-response']})
-                res = urllib.request.urlopen("https://www.google.com/recaptcha/api/siteverify", captcha_data).read()
+                captcha_data = urllib.parse.urlencode({
+                    'secret': settings.RECAPTCHA_PRIVATE_KEY,
+                    'response': request.POST['g-recaptcha-response']})
+                captcha_data = captcha_data.encode('utf-8')
+
+                res = urllib.request.urlopen(
+                    "https://www.google.com/recaptcha/api/siteverify",
+                    captcha_data)
+                res = res.read().decode('utf-8')
                 if 'false' in res:
                     form.add_error(None, "You are a robot!")
                     return render(request, "register.html", {'form': form})
