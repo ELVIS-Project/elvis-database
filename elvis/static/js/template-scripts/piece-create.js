@@ -89,6 +89,10 @@ $(document).ready(function ($)
         }
     });
 
+    $("#piece-submit").click(function()
+    {
+        $("#new-piece-form").submit();
+    });
 
     // Logic for form validation and submission, as well as the modal which appears on submission.
     $("#new-piece-form").submit(function (event)
