@@ -220,8 +220,11 @@ def handle_attachments(request, parent, cleanup, file_field, file_source):
                                             f['name'].rsplit('.')[-1])
 
         new_name = new_name.replace('/', '-')
-        os.rename(os.path.join(f['path'], f['name']), os.path.join(f['path'], new_name))
-        with open(os.path.join(f['path'], new_name), 'rb+') as dest:
+        new_path = os.path.join(f['path'], new_name).encode('utf-8')
+        old_path = os.path.join(f['path'], f['name']).encode('utf-8')
+
+        os.rename(old_path, new_path)
+        with open(new_path, 'rb+') as dest:
             file_content = File(dest)
             att.attachment.save(os.path.join(att.attachment_path, new_name), file_content)
         att.source = file_source
