@@ -25,7 +25,7 @@ from elvis.models import Source
 from elvis.models import Genre
 from elvis.models import InstrumentVoice
 from elvis.models import Tag
-
+from urllib.parse import unquote
 
 class Cleanup:
     """Keep track of created objects during an attempt to create a new
@@ -64,6 +64,7 @@ def solr_suggest(request):
             json_string = urllib.request.urlopen(url)
             json_dict = json.loads((json_string.read()).decode('utf-8'))
 
+            value = unquote(value)
             piece_suggestions = json_dict['suggest']['pieceSuggest'][value]
             comp_suggestions = json_dict['suggest']['composerSuggest'][value]
             coll_suggestions = json_dict['suggest']['collectionSuggest'][value]
