@@ -77,11 +77,6 @@ class Attachment(ElvisModel):
             file_content = File(dest)
             self.attachment.save(new_name, file_content)
 
-    def save(self, *args, **kwargs):
-        super(Attachment, self).save(*args, **kwargs)
-        if not os.path.exists(self.attachment_path):
-            os.makedirs(self.attachment_path)
-
     def delete(self, *args, **kwargs):
         if os.path.exists(self.attachment_path):
             shutil.rmtree(self.attachment_path)
