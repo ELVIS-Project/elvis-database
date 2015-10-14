@@ -57,12 +57,13 @@ class Attachment(ElvisModel):
         i = str(i) if i else ""
         source = kwargs.get('source', None)
 
-        new_name = "{0}_{1}_{2}.{3}".format(parent.title.replace(" ", "-"),
+        new_name = "{0}_{1}_{2}.{3}".format(parent.title.strip(),
                                             parent.composer.name.strip(),
                                             "file" + str(i),
                                             file_name.rsplit('.')[-1])
         #replace unicode in string with normalized chars
         new_name = new_name.replace('/', '-')
+        new_name = new_name.replace(' ', '-')
         new_name = unicodedata.normalize('NFKD', new_name).encode('ascii', 'ignore')
         new_name = new_name.decode('utf-8')
 
