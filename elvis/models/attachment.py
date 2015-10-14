@@ -10,7 +10,6 @@ from django.core.files.base import File
 def upload_path(instance, filename):
     return os.path.join(instance.attachment_path, filename)
 
-
 class Attachment(ElvisModel):
     """
         IMPORTANT: This model will store its attachments in a
@@ -68,15 +67,12 @@ class Attachment(ElvisModel):
         new_path = os.path.join(file_path, new_name).encode('utf-8')
         os.rename(old_path, new_path)
 
-        with open(new_path, 'rb+') as dest:
-            file_content = File(dest)
-            self.attachment.save(os.path.join(self.attachment_path, new_name), file_content)
-
         if source:
             self.source = source
 
-        self.save()
-
+        with open(new_path, 'rb+') as dest:
+            file_content = File(dest)
+            self.attachment.save(new_name, file_content)
 
     def save(self, *args, **kwargs):
         super(Attachment, self).save(*args, **kwargs)
