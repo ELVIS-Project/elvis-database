@@ -226,7 +226,7 @@ def handle_attachments(request, parent, cleanup, file_field, file_source):
         os.rename(old_path, new_path)
         with open(new_path, 'rb+') as dest:
             file_content = File(dest)
-            att.attachment.save(os.path.join(att.attachment_path, new_name), file_content)
+            att.attachment.save(os.path.join(att.attachment_path, new_name.encode('utf-8')), file_content)
         att.source = file_source
         att.save()
         results.append(att)
