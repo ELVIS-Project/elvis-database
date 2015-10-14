@@ -213,24 +213,8 @@ def handle_attachments(request, parent, cleanup, file_field, file_source):
         att.save()  # needed to create hash dir.
         cleanup.list.append({"object": att, "isNew": True})
         att.creator = request.user
-
-        new_name = "{0}_{1}_{2}.{3}".format(parent.title.replace(" ", "-"),
-                                            parent.composer.name.strip().replace(" ", "-"),
-                                            "file" + str(i),
-                                            f['name'].rsplit('.')[-1])
-
-        new_name = new_name.replace('/', '-')
-        new_path = os.path.join(f['path'], new_name).encode('utf-8')
-        old_path = os.path.join(f['path'], f['name']).encode('utf-8')
-
-        os.rename(old_path, new_path)
-        with open(new_path, 'rb+') as dest:
-            file_content = File(dest)
-            att.attachment.save(os.path.join(att.attachment_path, new_name.encode('utf-8')), file_content)
-        att.source = file_source
-        att.save()
+        att.attach_file(f['path'], f['name'], parent, number=i, source=file_source)
         results.append(att)
-        os.remove(os.path.join(f['path'], new_name))
         i += 1
 
     for att in results:

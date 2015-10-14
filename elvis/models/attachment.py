@@ -2,9 +2,9 @@ import os
 import shutil
 
 from django.db import models
-from django.contrib.auth.models import User
 from django.conf import settings
 from elvis.models.main import ElvisModel
+from django.core.files.base import File
 
 
 def upload_path(instance, filename):
@@ -52,6 +52,31 @@ class Attachment(ElvisModel):
         p_list = " ".join([p.title for p in self.pieces.all()])
         m_list = " ".join([m.title for m in self.movements.all()])
         return 'm: ' + m_list + '; p: ' + p_list
+
+    def attach_file(self, file_path, file_name, parent, **kwargs):
+        i = kwargs.get('number', None)
+        i = str(i) if i else ""
+
+        source = kwargs.get('source', None)
+
+        new_name = "{0}_{1}_{2}.{3}".format(parent.title.replace(" ", "-"),
+                                            parent.composer.name.strip().replace(" ", "-"),
+                                            "file" + str(i),
+                                            file_name.rsplit('.')[-1])
+        new_name = new_name.replace('/', '-')
+        old_path = os.path.join(file_path, file_name).encode('utf-8')
+        new_path = os.path.join(file_path, new_name).encode('utf-8')
+        os.rename(old_path, new_path)
+
+        with open(new_path, 'rb+') as dest:
+            file_content = File(dest)
+            self.attachment.save(os.path.join(self.attachment_path, new_name), file_content)
+
+        if source:
+            self.source = source
+
+        self.save()
+
 
     def save(self, *args, **kwargs):
         super(Attachment, self).save(*args, **kwargs)
