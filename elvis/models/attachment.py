@@ -1,5 +1,6 @@
 import os
 import shutil
+import unicodedata
 
 from django.db import models
 from django.conf import settings
@@ -33,8 +34,7 @@ class Attachment(ElvisModel):
 
     @property
     def attachment_path(self):
-        return os.path.join(settings.MEDIA_ROOT,
-                            "attachments",
+        return os.path.join("attachments",
                             "{0:0>2}".format(str(self.pk)[0:2]),
                             "{0:0>2}".format(str(self.pk)[-2:]),
                             "{0:0>15}".format(self.pk))
@@ -55,16 +55,19 @@ class Attachment(ElvisModel):
     def attach_file(self, file_path, file_name, parent, **kwargs):
         i = kwargs.get('number', None)
         i = str(i) if i else ""
-
         source = kwargs.get('source', None)
 
         new_name = "{0}_{1}_{2}.{3}".format(parent.title.replace(" ", "-"),
-                                            parent.composer.name.strip().replace(" ", "-"),
+                                            parent.composer.name.strip(),
                                             "file" + str(i),
                                             file_name.rsplit('.')[-1])
+        #replace unicode in string with normalized chars
         new_name = new_name.replace('/', '-')
-        old_path = os.path.join(file_path, file_name).encode('utf-8')
-        new_path = os.path.join(file_path, new_name).encode('utf-8')
+        new_name = unicodedata.normalize('NFKD', new_name).encode('ascii', 'ignore')
+        new_name = new_name.decode('utf-8')
+
+        old_path = os.path.join(file_path, file_name)
+        new_path = os.path.join(file_path, new_name)
         os.rename(old_path, new_path)
 
         if source:
