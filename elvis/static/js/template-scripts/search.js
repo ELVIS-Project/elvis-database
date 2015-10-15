@@ -9,7 +9,7 @@ $(document).ready(function ($)
     autocomplete("instrumentfilt", "instrumentfilt-suggestions", "instrumentSuggest", 'bool');
     autocomplete("sourcesfilt", "sourcesfilt-suggestions", "sourceSuggest", 'bool');
     autocomplete("locationsfilt", "locationsfilt-suggestions", "locationSuggest", 'bool');
-    autocomplete("gsearch-input", "general-suggestions", "generalSuggest", 'bool');
+    autocomplete("gsearch-input", "general-search-suggestions", "generalSuggest", 'bool');
     queryQString();
 
     //Do a search for the query string when the page back button is hit.

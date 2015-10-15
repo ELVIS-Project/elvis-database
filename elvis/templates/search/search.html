@@ -31,9 +31,10 @@
                 <div class="panel-body search">
                     <form id="general-search-form" action="/search/" method="get">
                         <div class="row">
+                            <div class="col-xs-10 col-xs-offset-1 col-md-10 col-md-offset-1 col-lg-8 col-lg-offset-2">
                             <label for="gsearch-input" hidden="hidden">General Search Keyword</label>
 
-                            <div class="input-group col-sm-10 col-sm-offset-1 col-md-8 col-md-offset-2">
+                            <div class="input-group">
                                 <input type="text" class="form-control input-lg" id='gsearch-input'
                                        style="text-align:center;" autocomplete="off" name='q'/>
                                 <span class="input-group-btn">
@@ -41,6 +42,8 @@
                                         <span class="glyphicon glyphicon-search"></span>
                                     </button>
                                 </span>
+                            </div>
+                                <div id="general-search-suggestions" style="text-align:left"></div>
                             </div>
                         </div>
                     </form>
