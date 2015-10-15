@@ -7,12 +7,10 @@ import shutil
 import pytz
 import os
 import re
-import unicodedata
 
 from difflib import SequenceMatcher
 from django.http import HttpResponse
 from django.conf import settings
-from django.core.files.base import File
 from django.db.models import ObjectDoesNotExist
 
 from elvis.models import Attachment
