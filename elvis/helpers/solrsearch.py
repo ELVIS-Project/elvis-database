@@ -183,8 +183,13 @@ class SolrSearch(object):
                 self.solr_params.update({'rows': qdict.get(k)})
 
         if qdict.get('q'):
-            keywords = "({0})".format(self.parse_bool(qdict['q'], general=True))
-            general_query.append(keywords)
+            args = self.parse_bool(qdict['q'], general=True)
+            if type(args) == str:
+                key_query = args
+            else:
+                keywords = '" AND "'.join(x for x in args)
+                key_query = '"{0}"'.format(keywords)
+            general_query.append(key_query)
         else:
             general_query.append("(*:*)")
         if not qdict.get('typefilt[]') and not qdict.get('type'):
@@ -197,7 +202,7 @@ class SolrSearch(object):
         bools = ['AND', 'OR', 'NOT']
         if not any(x in bool_string for x in bools):
             if kwargs.get('general'):
-                return bool_string
+                return bool_string.split()
             else:
                 return '"{0}"'.format(bool_string)
 
