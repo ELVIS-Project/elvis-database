@@ -34,7 +34,8 @@ class Attachment(ElvisModel):
 
     @property
     def attachment_path(self):
-        return os.path.join("attachments",
+        return os.path.join(settings.MEDIA_ROOT,
+                            "attachments",
                             "{0:0>2}".format(str(self.pk)[0:2]),
                             "{0:0>2}".format(str(self.pk)[-2:]),
                             "{0:0>15}".format(self.pk))
