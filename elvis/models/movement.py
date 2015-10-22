@@ -69,19 +69,24 @@ class Movement(ElvisModel):
     def movement_sources(self):
         return " ".join([source.name for source in self.sources.all()])
 
+    def solr_index(self, **kwargs):
+        solr_index(Movement, self, None, commit=kwargs.get('commit', True))
+
 @receiver(post_save, sender=Movement)
 def solr_index(sender, instance, created, **kwargs):
     if kwargs.get('raw', False):
         return False
+    if kwargs.get('commit') != None:
+        commit = kwargs.get('commit')
+    else:
+        commit = True
+
     import uuid
     import solr
     from django.conf import settings
 
+    solr_delete(sender, instance, commit=commit)
     solrconn = solr.SolrConnection(settings.SOLR_SERVER)
-    record = solrconn.query("item_id:{0} AND type:elvis_movement".format(instance.id))
-    if record:
-        solrconn.delete(record.results[0]['id'])
-
     movement = instance
 
     tags = []
@@ -107,6 +112,10 @@ def solr_index(sender, instance, created, **kwargs):
     sources = []
     for source in movement.sources.all():
         sources.append(source.name)
+
+    file_paths = []
+    for att in movement.attachments.all():
+        file_paths.append(att.url)
 
     if movement.piece:
         parent_piece = movement.piece.title
@@ -142,9 +151,11 @@ def solr_index(sender, instance, created, **kwargs):
          'religiosity': movement.religiosity,
          'vocalization': movement.vocalization,
          'file_formats': movement.file_formats,
+         'attached_files': file_paths
          }
     solrconn.add(**d)
-    solrconn.commit()
+    if commit:
+        solrconn.commit()
 
 
 @receiver(pre_delete, sender=Movement)
@@ -156,8 +167,16 @@ def attachment_delete(sender, instance, **kwargs):
 def solr_delete(sender, instance, **kwargs):
     import solr
     from django.conf import settings
+
+    if kwargs.get('commit') != None:
+        commit = kwargs.get('commit')
+    else:
+        commit = True
+
     solrconn = solr.SolrConnection(settings.SOLR_SERVER)
     record = solrconn.query("item_id:{0} AND type:elvis_movement".format(instance.id))
-    if record:
-        solrconn.delete(record.results[0]['id'])
-        solrconn.commit()
+    if record and record.results:
+        for i, v in enumerate(record.results):
+            solrconn.delete(record.results[i]['id'])
+        if commit:
+            solrconn.commit()

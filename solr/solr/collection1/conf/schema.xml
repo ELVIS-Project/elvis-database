@@ -118,6 +118,7 @@
                stored="true"/>
         <field name="file_formats" type="string" indexed="true" stored="true"
                multiValued="True"/>
+        <field name="attached_files" type="string" indexed="true" stored="true" multiValued="true"/>
 
 
         <!-- LM Date fields -->

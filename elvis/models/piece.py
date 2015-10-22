@@ -76,20 +76,24 @@ class Piece(ElvisModel):
     def piece_sources(self):
         return " ".join([source.name for source in self.sources.all()])
 
+    def solr_index(self, **kwargs):
+        solr_index(Piece, self, None, commit=kwargs.get('commit', True))
+
 @receiver(post_save, sender=Piece)
 def solr_index(sender, instance, created, **kwargs):
     if kwargs.get('raw', False):
         return False
+    if kwargs.get('commit') != None:
+        commit = kwargs.get('commit')
+    else:
+        commit = True
 
     import uuid
     import solr
     from django.conf import settings
 
+    solr_delete(sender, instance, commit=commit)
     solrconn = solr.SolrConnection(settings.SOLR_SERVER)
-    record = solrconn.query("item_id:{0} AND type:elvis_piece".format(instance.id))
-    if record:
-        solrconn.delete(record.results[0]['id'])
-
     piece = instance
 
     tags = []
@@ -115,6 +119,10 @@ def solr_index(sender, instance, created, **kwargs):
     sources = []
     for source in piece.sources.all():
         sources.append(source.name)
+
+    file_paths = []
+    for att in piece.attachments.all():
+        file_paths.append(att.url)
 
     if piece.composer:
         composer_name = piece.composer.name
@@ -150,9 +158,12 @@ def solr_index(sender, instance, created, **kwargs):
          'religiosity': piece.religiosity,
          'vocalization': piece.vocalization,
          'file_formats': piece.file_formats,
-         'pieces_searchable': piece.title}
+         'pieces_searchable': piece.title,
+         'attached_files': file_paths
+         }
     solrconn.add(**d)
-    solrconn.commit()
+    if commit:
+        solrconn.commit()
 
 @receiver(pre_delete, sender=Piece)
 def attachment_delete(sender, instance, **kwargs):
@@ -163,8 +174,16 @@ def attachment_delete(sender, instance, **kwargs):
 def solr_delete(sender, instance, **kwargs):
     import solr
     from django.conf import settings
+
+    if kwargs.get('commit') != None:
+        commit = kwargs.get('commit')
+    else:
+        commit = True
+
     solrconn = solr.SolrConnection(settings.SOLR_SERVER)
     record = solrconn.query("item_id:{0} AND type:elvis_piece".format(instance.id))
-    if record:
-        solrconn.delete(record.results[0]['id'])
-        solrconn.commit()
+    if record and record.results:
+        for i, v in enumerate(record.results):
+            solrconn.delete(record.results[i]['id'])
+        if commit:
+            solrconn.commit()

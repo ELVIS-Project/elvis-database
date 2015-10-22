@@ -53,6 +53,12 @@ class Attachment(ElvisModel):
         m_list = " ".join([m.title for m in self.movements.all()])
         return 'm: ' + m_list + '; p: ' + p_list
 
+    @property
+    def url(self):
+        path = os.path.relpath(self.attachment.path, settings.MEDIA_ROOT)
+        url = os.path.join(settings.MEDIA_URL, path)
+        return url
+
     def attach_file(self, file_path, file_name, parent, **kwargs):
         i = kwargs.get('number', None)
         i = str(i) if i else ""
