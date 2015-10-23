@@ -181,7 +181,7 @@
                 $(event.target.parentElement.parentElement.nextElementSibling).toggle();
             });
 
-            $("input[type=number]").off().keypress(function (event)
+            $("input[type=number]").keypress(function (event)
             {
                 if (event.which !== 0 && event.which !== 8)
                 {
