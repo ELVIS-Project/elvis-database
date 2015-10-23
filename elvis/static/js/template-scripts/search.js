@@ -170,7 +170,7 @@ $(document).ready(function ($)
         $.ajax(
             {
                 type: "get",
-                url: "search",
+                url: "/search/",
                 data: data,
                 success: function (results)
                 {
