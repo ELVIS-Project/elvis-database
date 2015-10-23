@@ -31,7 +31,10 @@ function autocomplete(inputField, suggestionField, dictionary, multiple)
         if (key === 40)
         {
             event.preventDefault();
-            $suggestionListItems.eq(menuActive).toggleClass("active");
+            if (menuActive !== -1)
+            {
+                $suggestionListItems.eq(menuActive).toggleClass("active");
+            }
             menuActive = (menuActive + 1) % menuSize;
             $suggestionListItems.eq(menuActive).toggleClass("active");
             selectedSuggestion = $suggestionListItems.eq(menuActive).text();
@@ -103,7 +106,7 @@ function autocomplete(inputField, suggestionField, dictionary, multiple)
             if (multiple === 'bool')
                 var input_width = $inputField.parent().width();
             else
-                var input_width = $inputField.parent().width() - 120;
+                var input_width = $inputField.parent().width() - 130;
 
             if (key === 8 || (query.length) < 2)
                 isInit = true;
@@ -118,7 +121,7 @@ function autocomplete(inputField, suggestionField, dictionary, multiple)
                     {
                         $suggestionMenu.html("");
                         menuSize = data.length;
-                        menuActive = 0;
+                        menuActive = -1;
 
                         if (menuSize === 1 && query === chosenSuggestion)
                         {
