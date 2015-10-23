@@ -206,9 +206,12 @@ def update(request, *args, **kwargs):
     
     form = validateDynamicForm(request, PieceForm(request.POST))
     if not form.is_valid():
-        # Form errors are rendered for user on the front end.
-        f_data = form.errors.as_data()
-        if not (len(list(f_data.keys())) == 1 and f_data.get('collections')):
+        # Form errors are rendered for user on the front end. Collection
+        # validation errors are ignored, as these cannot be modified from
+        # the update page.
+        if form.errors.get('collections'):
+            del form.errors['collections']
+        if form.errors:
             data = json.dumps({"errors": form.errors})
             return HttpResponse(data, content_type="json")
 
