@@ -43,7 +43,7 @@
                         </div>
                     {% endfor %}
                 {% endif %}
-                <form class="form-signin" method="post" action="/login"> {% csrf_token %}
+                <form class="form-signin" method="post" action="/login/"> {% csrf_token %}
                     <input name='username' type="text" class="form-control top" placeholder="Username" required autofocus>
                     <input name='password' type="password" class="form-control bot" placeholder="Password" required>
                     <br>
