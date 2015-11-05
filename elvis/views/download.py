@@ -146,6 +146,9 @@ class DownloadDetail(generics.RetrieveUpdateAPIView):
             for att in item.attachments.all():
                 user_download.attachments.add(att)
             user_download.collection_pieces.add(item)
+            for mov in item.movements.all():
+                for att in mov.attachments.all():
+                    user_download.attachments.add(att)
         if item.__class__.__name__ == "Movement":
             if item.piece not in user_download.collection_pieces.all():
                 user_download.collection_movements.add(item)
