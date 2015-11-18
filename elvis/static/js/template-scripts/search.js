@@ -32,6 +32,13 @@ $(document).ready(function ($)
             $('#advanced-search-form').submit();
         }
     });
+    $("#gsearch-input").on('keydown', function (event)
+    {
+        if (event['keyCode'] === 13)
+        {
+            $('#general-search-form').submit();
+        }
+    });
 
     //Process advanced search form, and do a query based on it's contents.
     $('#advanced-search-form').submit(function (event)

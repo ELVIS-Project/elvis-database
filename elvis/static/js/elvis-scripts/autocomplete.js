@@ -58,6 +58,10 @@ function autocomplete(inputField, suggestionField, dictionary, multiple)
         if (key === 13 && menuSize > 0)
         {
             event.preventDefault();
+            if (menuActive == -1)
+            {
+                return;
+            }
             write_input();
             $suggestionMenu.html("");
             menuActive = -1;
