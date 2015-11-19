@@ -91,6 +91,11 @@ class Attachment(ElvisModel):
         super(Attachment, self).delete(*args, **kwargs)
 
     def rename(self, new_filename, *args, **kwargs):
+        try:
+            new_filename.encode('ascii')
+        except UnicodeEncodeError:
+            raise UnicodeError("No unicode allowed in file names.")
+
         (path, current_name) = os.path.split(self.attachment.name)
         (current_file_name, current_extension) = os.path.splitext(current_name)
         new_filename += current_extension
