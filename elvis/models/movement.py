@@ -1,10 +1,13 @@
+import datetime
+import uuid
+from os import path
+
 from django.db import models
-from django.contrib.auth.models import User
 from django.dispatch import receiver
 from django.db.models.signals import post_save, post_delete, pre_delete
-from os import path
-import datetime
+
 from elvis.models.main import ElvisModel
+
 
 class Movement(ElvisModel):
     class Meta:
@@ -27,7 +30,6 @@ class Movement(ElvisModel):
     attachments = models.ManyToManyField("elvis.Attachment", blank=True, related_name="movements")
     religiosity = models.CharField(max_length=50, default="Unknown")
     vocalization = models.CharField(max_length=50, default="Unknown")
-
 
     @property
     def attached_files(self):
@@ -69,93 +71,78 @@ class Movement(ElvisModel):
     def movement_sources(self):
         return " ".join([source.name for source in self.sources.all()])
 
-    def solr_index(self, **kwargs):
-        solr_index(Movement, self, None, commit=kwargs.get('commit', True))
+    def solr_dict(self):
+        movement = self
+
+        tags = []
+        for tag in movement.tags.all():
+            tags.append(tag.name)
+
+        genres = []
+        for genre in movement.genres.all():
+            genres.append(genre.name)
+
+        instruments_voices = []
+        for instrument_voice in movement.instruments_voices.all():
+            instruments_voices.append(instrument_voice.name)
+
+        languages = []
+        for language in movement.languages.all():
+            languages.append(language.name)
+
+        locations = []
+        for location in movement.locations.all():
+            locations.append(location.name)
+
+        sources = []
+        for source in movement.sources.all():
+            sources.append(source.name)
+
+        file_paths = []
+        for att in movement.attachments.all():
+            file_paths.append(att.url)
+
+        if movement.piece:
+            parent_piece = movement.piece.title
+        else:
+            parent_piece = None
+
+        if movement.composition_start_date:
+            d1 = datetime.date(movement.composition_start_date, 1, 1)
+        else:
+            d1 = None
+        if movement.composition_end_date:
+            d2 = datetime.date(movement.composition_end_date, 1, 1)
+        else:
+            d2 = None
+
+        return {'type': 'elvis_movement',
+                'id': str(uuid.uuid4()),
+                'item_id': int(movement.id),
+                'title': movement.title,
+                'composition_start_date': d1,
+                'composition_end_date': d2,
+                'number_of_voices': movement.number_of_voices,
+                'created': movement.created,
+                'updated': movement.updated,
+                'parent_piece_name': parent_piece,
+                'composer_name': movement.composer.name,
+                'uploader_name': movement.creator.username,
+                'tags': tags,
+                'genres': genres,
+                'instruments_voices': instruments_voices,
+                'languages': languages,
+                'locations': locations,
+                'sources': sources,
+                'religiosity': movement.religiosity,
+                'vocalization': movement.vocalization,
+                'file_formats': movement.file_formats,
+                'attached_files': file_paths}
+
 
 @receiver(post_save, sender=Movement)
-def solr_index(sender, instance, created, **kwargs):
-    if kwargs.get('raw', False):
-        return False
-    if kwargs.get('commit') != None:
-        commit = kwargs.get('commit')
-    else:
-        commit = True
-
-    import uuid
-    import solr
-    from django.conf import settings
-
-    solr_delete(sender, instance, commit=commit)
-    solrconn = solr.SolrConnection(settings.SOLR_SERVER)
-    movement = instance
-
-    tags = []
-    for tag in movement.tags.all():
-        tags.append(tag.name)
-
-    genres = []
-    for genre in movement.genres.all():
-        genres.append(genre.name)
-
-    instruments_voices = []
-    for instrument_voice in movement.instruments_voices.all():
-        instruments_voices.append(instrument_voice.name)
-
-    languages = []
-    for language in movement.languages.all():
-        languages.append(language.name)
-
-    locations = []
-    for location in movement.locations.all():
-        locations.append(location.name)
-
-    sources = []
-    for source in movement.sources.all():
-        sources.append(source.name)
-
-    file_paths = []
-    for att in movement.attachments.all():
-        file_paths.append(att.url)
-
-    if movement.piece:
-        parent_piece = movement.piece.title
-    else:
-        parent_piece = None
-
-    if movement.composition_start_date:
-        d1 = datetime.date(movement.composition_start_date, 1, 1)
-    else:
-        d1 = None
-    if movement.composition_end_date:
-        d2 = datetime.date(movement.composition_end_date, 1, 1)
-    else:
-        d2 = None
-    d = {'type': 'elvis_movement',
-         'id': str(uuid.uuid4()),
-         'item_id': int(movement.id),
-         'title': movement.title,
-         'composition_start_date': d1,
-         'composition_end_date': d2,
-         'number_of_voices': movement.number_of_voices,
-         'created': movement.created,
-         'updated': movement.updated,
-         'parent_piece_name': parent_piece,
-         'composer_name': movement.composer.name,
-         'uploader_name': movement.creator.username,
-         'tags': tags,
-         'genres': genres,
-         'instruments_voices': instruments_voices,
-         'languages': languages,
-         'locations': locations,
-         'sources': sources,
-         'religiosity': movement.religiosity,
-         'vocalization': movement.vocalization,
-         'file_formats': movement.file_formats,
-         'attached_files': file_paths
-         }
-    solrconn.add(**d)
-    if commit:
-        solrconn.commit()
+def save_listener(sender, instance, created, **kwargs):
+    instance.solr_index(commit=True)
 
 
 @receiver(pre_delete, sender=Movement)
@@ -163,20 +150,7 @@ def attachment_delete(sender, instance, **kwargs):
     for a in instance.attachments.all():
         a.delete()
 
+
 @receiver(post_delete, sender=Movement)
-def solr_delete(sender, instance, **kwargs):
-    import solr
-    from django.conf import settings
-
-    if kwargs.get('commit') != None:
-        commit = kwargs.get('commit')
-    else:
-        commit = True
-
-    solrconn = solr.SolrConnection(settings.SOLR_SERVER)
-    record = solrconn.query("item_id:{0} AND type:elvis_movement".format(instance.id))
-    if record and record.results:
-        for i, v in enumerate(record.results):
-            solrconn.delete(record.results[i]['id'])
-        if commit:
-            solrconn.commit()
+def delete_listener(sender, instance, **kwargs):
+    instance.solr_delete(commit=True)

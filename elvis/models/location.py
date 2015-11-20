@@ -1,6 +1,8 @@
-from django.db import models
+import uuid
+
 from django.dispatch import receiver
 from django.db.models.signals import post_save, post_delete
+
 from elvis.models.main import ElvisModel
 
 
@@ -9,6 +11,18 @@ class Location(ElvisModel):
         ordering = ["title"]
         app_label = "elvis"
 
+    def solr_dict(self):
+        location = self
+
+        return {'type': 'elvis_location',
+                'id': str(uuid.uuid4()),
+                'item_id': int(location.id),
+                'name': location.name,
+                'locations_searchable': location.name,
+                'created': location.created,
+                'updated': location.updated,
+                'comment': location.comment}
+
 
 class Place(Location):
     class Meta:
@@ -16,39 +30,10 @@ class Place(Location):
 
 
 @receiver(post_save, sender=Location)
-def solr_index(sender, instance, created, **kwargs):
-    if kwargs.get('raw', False):
-        return False
-
-    import uuid
-    import solr
-    from django.conf import settings
-
-    solrconn = solr.SolrConnection(settings.SOLR_SERVER)
-    record = solrconn.query("item_id:{0} AND type:elvis_location".format(instance.id))
-    if record:
-        solrconn.delete(record.results[0]['id'])
-
-    location = instance
-
-    d = {'type': 'elvis_location',
-         'id': str(uuid.uuid4()),
-         'item_id': int(location.id),
-         'name': location.name,
-         'locations_searchable': location.name,
-         'created': location.created,
-         'updated': location.updated,
-         'comment': location.comment}
-    solrconn.add(**d)
-    solrconn.commit()
+def save_listener(sender, instance, created, **kwargs):
+    instance.solr_index(commit=True)
 
 
 @receiver(post_delete, sender=Location)
-def solr_delete(sender, instance, **kwargs):
-    import solr
-    from django.conf import settings
-    solrconn = solr.SolrConnection(settings.SOLR_SERVER)
-    record = solrconn.query("item_id:{0} AND type:elvis_location".format(instance.id))
-    if record:
-        solrconn.delete(record.results[0]['id'])
-        solrconn.commit()
+def delete_listener(sender, instance, **kwargs):
+    instance.solr_delete(commit=True)

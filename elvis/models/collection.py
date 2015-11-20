@@ -1,8 +1,11 @@
+import uuid
+
 from django.db import models
-from django.contrib.auth.models import User
 from django.dispatch import receiver
 from django.db.models.signals import post_save, post_delete
+
 from elvis.models.main import ElvisModel
+
 
 class Collection(ElvisModel):
     class Meta:
@@ -31,50 +34,29 @@ class Collection(ElvisModel):
     def free_movements_count(self):
         return self.movements.filter(piece=None).count()
 
+    def solr_dict(self):
+        collection = self
+        if collection.creator:
+            creator_name = collection.creator.username
+        else:
+            creator_name = None
+
+        return {'type': 'elvis_collection',
+                'id': str(uuid.uuid4()),
+                'item_id': int(collection.id),
+                'title': collection.title,
+                'created': collection.created,
+                'updated': collection.updated,
+                'comment': collection.comment,
+                'creator_name': creator_name,
+                'collections_searchable': collection.title}
+
 
 @receiver(post_save, sender=Collection)
-def solr_index(sender, instance, created, **kwargs):
-    if kwargs.get('raw', False):
-        return False
-    if not instance.public:
-        solr_delete(sender, instance)
-        return False
-
-    import uuid
-    import solr
-    from django.conf import settings
-
-    solrconn = solr.SolrConnection(settings.SOLR_SERVER)
-    record = solrconn.query("item_id:{0} AND type:elvis_collection".format(instance.id))
-    if record:
-        solrconn.delete(record.results[0]['id'])
-
-    collection = instance
-    if collection.creator:
-        creator_name = collection.creator.username
-    else:
-        creator_name = None
-
-    d = {'type': 'elvis_collection',
-         'id': str(uuid.uuid4()),
-         'item_id': int(collection.id),
-         'title': collection.title,
-         'created': collection.created,
-         'updated': collection.updated,
-         'comment': collection.comment,
-         'creator_name': creator_name,
-         'collections_searchable': collection.title}
-    solrconn.add(**d)
-    solrconn.commit()
+def save_listener(sender, instance, created, **kwargs):
+    instance.solr_index(commit=True)
 
 
 @receiver(post_delete, sender=Collection)
-def solr_delete(sender, instance, **kwargs):
-    import solr
-    from django.conf import settings
-
-    solrconn = solr.SolrConnection(settings.SOLR_SERVER)
-    record = solrconn.query("item_id:{0} AND type:elvis_collection".format(instance.id))
-    if record:
-        solrconn.delete(record.results[0]['id'])
-        solrconn.commit()
+def delete_listener(sender, instance, **kwargs):
+    instance.solr_delete(commit=True)

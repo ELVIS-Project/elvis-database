@@ -1,9 +1,11 @@
+import datetime
+import uuid
+from os import path
+
 from django.db import models
-from django.contrib.auth.models import User
 from django.dispatch import receiver
 from django.db.models.signals import post_save, post_delete, pre_delete
-from os import path
-import datetime
+
 from elvis.models.main import ElvisModel
 
 
@@ -76,114 +78,86 @@ class Piece(ElvisModel):
     def piece_sources(self):
         return " ".join([source.name for source in self.sources.all()])
 
-    def solr_index(self, **kwargs):
-        solr_index(Piece, self, None, commit=kwargs.get('commit', True))
+    def solr_dict(self):
+        piece = self
+
+        tags = []
+        for tag in piece.tags.all():
+            tags.append(tag.name)
+
+        genres = []
+        for genre in piece.genres.all():
+            genres.append(genre.name)
+
+        instruments_voices = []
+        for instrument_voice in piece.instruments_voices.all():
+            instruments_voices.append(instrument_voice.name)
+
+        languages = []
+        for language in piece.languages.all():
+            languages.append(language.name)
+
+        locations = []
+        for location in piece.locations.all():
+            locations.append(location.name)
+
+        sources = []
+        for source in piece.sources.all():
+            sources.append(source.name)
+
+        file_paths = []
+        for att in piece.attachments.all():
+            file_paths.append(att.url)
+
+        if piece.composer:
+            composer_name = piece.composer.name
+        else:
+            composer_name = None
+
+        if piece.composition_start_date:
+            d1 = datetime.date(piece.composition_start_date, 1, 1)
+        else:
+            d1 = None
+        if piece.composition_end_date:
+            d2 = datetime.date(piece.composition_end_date, 1, 1)
+        else:
+            d2 = None
+
+        return {'type': 'elvis_piece',
+                'id': str(uuid.uuid4()),
+                'item_id': int(piece.id),
+                'title': piece.title,
+                'composition_start_date': d1,
+                'composition_end_date': d2,
+                'number_of_voices': piece.number_of_voices,
+                'created': piece.created,
+                'updated': piece.updated,
+                'composer_name': composer_name,
+                'uploader_name': piece.creator.username,
+                'tags': tags,
+                'genres': genres,
+                'instruments_voices': instruments_voices,
+                'languages': languages,
+                'locations': locations,
+                'sources': sources,
+                'religiosity': piece.religiosity,
+                'vocalization': piece.vocalization,
+                'file_formats': piece.file_formats,
+                'pieces_searchable': piece.title,
+                'attached_files': file_paths}
+
 
 @receiver(post_save, sender=Piece)
-def solr_index(sender, instance, created, **kwargs):
-    if kwargs.get('raw', False):
-        return False
-    if kwargs.get('commit') != None:
-        commit = kwargs.get('commit')
-    else:
-        commit = True
+def save_listener(sender, instance, created, **kwargs):
+    instance.solr_index(commit=True)
 
-    import uuid
-    import solr
-    from django.conf import settings
-
-    solr_delete(sender, instance, commit=commit)
-    solrconn = solr.SolrConnection(settings.SOLR_SERVER)
-    piece = instance
-
-    tags = []
-    for tag in piece.tags.all():
-        tags.append(tag.name)
-
-    genres = []
-    for genre in piece.genres.all():
-        genres.append(genre.name)
-
-    instruments_voices = []
-    for instrument_voice in piece.instruments_voices.all():
-        instruments_voices.append(instrument_voice.name)
-
-    languages = []
-    for language in piece.languages.all():
-        languages.append(language.name)
-
-    locations = []
-    for location in piece.locations.all():
-        locations.append(location.name)
-
-    sources = []
-    for source in piece.sources.all():
-        sources.append(source.name)
-
-    file_paths = []
-    for att in piece.attachments.all():
-        file_paths.append(att.url)
-
-    if piece.composer:
-        composer_name = piece.composer.name
-    else:
-        composer_name = None
-
-    if piece.composition_start_date:
-        d1 = datetime.date(piece.composition_start_date, 1, 1)
-    else:
-        d1 = None
-    if piece.composition_end_date:
-        d2 = datetime.date(piece.composition_end_date, 1, 1)
-    else:
-        d2 = None
-
-    d = {'type': 'elvis_piece',
-         'id': str(uuid.uuid4()),
-         'item_id': int(piece.id),
-         'title': piece.title,
-         'composition_start_date': d1,
-         'composition_end_date': d2,
-         'number_of_voices': piece.number_of_voices,
-         'created': piece.created,
-         'updated': piece.updated,
-         'composer_name': composer_name,
-         'uploader_name': piece.creator.username,
-         'tags': tags,
-         'genres': genres,
-         'instruments_voices': instruments_voices,
-         'languages': languages,
-         'locations': locations,
-         'sources': sources,
-         'religiosity': piece.religiosity,
-         'vocalization': piece.vocalization,
-         'file_formats': piece.file_formats,
-         'pieces_searchable': piece.title,
-         'attached_files': file_paths
-         }
-    solrconn.add(**d)
-    if commit:
-        solrconn.commit()
 
 @receiver(pre_delete, sender=Piece)
 def attachment_delete(sender, instance, **kwargs):
     for a in instance.attachments.all():
         a.delete()
 
+
 @receiver(post_delete, sender=Piece)
-def solr_delete(sender, instance, **kwargs):
-    import solr
-    from django.conf import settings
-
-    if kwargs.get('commit') != None:
-        commit = kwargs.get('commit')
-    else:
-        commit = True
-
-    solrconn = solr.SolrConnection(settings.SOLR_SERVER)
-    record = solrconn.query("item_id:{0} AND type:elvis_piece".format(instance.id))
-    if record and record.results:
-        for i, v in enumerate(record.results):
-            solrconn.delete(record.results[i]['id'])
-        if commit:
-            solrconn.commit()
+def delete_listener(sender, instance, **kwargs):
+    instance.solr_delete(commit=True)

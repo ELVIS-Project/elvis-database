@@ -1,6 +1,8 @@
-from django.db import models
+import uuid
+
 from django.dispatch import receiver
 from django.db.models.signals import post_save, post_delete
+
 from elvis.models.main import ElvisModel
 
 
@@ -9,39 +11,24 @@ class InstrumentVoice(ElvisModel):
         ordering = ["title"]
         app_label = "elvis"
 
+    def solr_dict(self):
+        instrument_voice = self
+
+        return {'type': 'elvis_instrument_voice',
+                'id': str(uuid.uuid4()),
+                'item_id': int(instrument_voice.id),
+                'name': instrument_voice.name,
+                'instruments_voices_searchable': instrument_voice.name,
+                'created': instrument_voice.created,
+                'updated': instrument_voice.updated,
+                'comment': instrument_voice.comment}
+
+
 @receiver(post_save, sender=InstrumentVoice)
-def solr_index(sender, instance, created, **kwargs):
-    if kwargs.get('raw', False):
-        return False
-    import uuid
-    import solr
-    from django.conf import settings
-
-    solrconn = solr.SolrConnection(settings.SOLR_SERVER)
-    record = solrconn.query("item_id:{0} AND type:elvis_instrument_voice".format(instance.id))
-    if record:
-        solrconn.delete(record.results[0]['id'])
-
-    instrument_voice = instance
-
-    d = {'type': 'elvis_instrument_voice',
-         'id': str(uuid.uuid4()),
-         'item_id': int(instrument_voice.id),
-         'name': instrument_voice.name,
-         'instruments_voices_searchable': instrument_voice.name,
-         'created': instrument_voice.created,
-         'updated': instrument_voice.updated,
-         'comment': instrument_voice.comment}
-    solrconn.add(**d)
-    solrconn.commit()
+def save_listener(sender, instance, created, **kwargs):
+    instance.solr_index(commit=True)
 
 
 @receiver(post_delete, sender=InstrumentVoice)
-def solr_delete(sender, instance, **kwargs):
-    from django.conf import settings
-    import solr
-    solrconn = solr.SolrConnection(settings.SOLR_SERVER)
-    record = solrconn.query("item_id:{0} AND type:elvis_instrument_voice".format(instance.id))
-    if record:
-        solrconn.delete(record.results[0]['id'])
-        solrconn.commit()
+def delete_listener(sender, instance, **kwargs):
+    instance.solr_delete(commit=True)

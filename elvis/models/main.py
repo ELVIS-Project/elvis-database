@@ -1,5 +1,9 @@
+import solr
+
 from django.db import models
 from django.contrib.auth.models import User
+from django.conf import settings
+
 
 class ElvisModel(models.Model):
     title = models.CharField(max_length=255, default="NOTITLE_ERROR")
@@ -37,6 +41,44 @@ class ElvisModel(models.Model):
     @uploader.deleter
     def uploader(self):
         self.uploader.delete()
+
+    def solr_dict(self):
+        """ A method to be over-ridden in children which returns the dict
+        of themselves to index in solr.
+        """
+        return {}
+
+    def solr_index(self, **kwargs):
+        """ Delete any duplicates and then index this object in solr.
+        :param kwargs:
+            commit: True to commit right away. False for batch updates.
+        """
+        self.solr_delete(commit=False)
+
+        solr_dict = self.solr_dict()
+        solrconn = solr.SolrConnection(settings.SOLR_SERVER)
+        solrconn.add(**solr_dict)
+
+        if kwargs.get('commit', True):
+            solrconn.commit()
+
+    def solr_delete(self, **kwargs):
+        """ Deletes the objects corresponding document in solr.
+        :param kwargs:
+            commit: True to commit right away. False for batch updates.
+        """
+        solr_dict = self.solr_dict()
+        item_id = solr_dict['item_id']
+        type = solr_dict['type']
+
+        solrconn = solr.SolrConnection(settings.SOLR_SERVER)
+        record = solrconn.query("item_id:{0} AND type:{1}".format(item_id, type))
+
+        if record and record.results:
+            for i, v in enumerate(record.results):
+                solrconn.delete(record.results[i]['id'])
+            if kwargs.get('commit', True):
+                solrconn.commit()
 
     def __str__(self):
         return self.title

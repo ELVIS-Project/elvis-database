@@ -1,6 +1,8 @@
-from django.db import models
+import uuid
+
 from django.dispatch import receiver
 from django.db.models.signals import post_save, post_delete
+
 from elvis.models.main import ElvisModel
 
 
@@ -9,39 +11,24 @@ class Language(ElvisModel):
         ordering = ["title"]
         app_label = "elvis"
 
+    def solr_dict(self):
+        language = self
+
+        return {'type': 'elvis_language',
+                'id': str(uuid.uuid4()),
+                'item_id': int(language.id),
+                'name': language.name,
+                'languages_searchable': language.name,
+                'created': language.created,
+                'updated': language.updated,
+                'comment': language.comment}
+
 
 @receiver(post_save, sender=Language)
-def solr_index(sender, instance, created, **kwargs):
-    if kwargs.get('raw', False):
-        return False
-    import uuid
-    import solr
-    from django.conf import settings
-
-    solrconn = solr.SolrConnection(settings.SOLR_SERVER)
-    record = solrconn.query("item_id:{0} AND type:elvis_language".format(instance.id))
-    if record:
-        solrconn.delete(record.results[0]['id'])
-
-    language = instance
-    d = {'type': 'elvis_language',
-         'id': str(uuid.uuid4()),
-         'item_id': int(language.id),
-         'name': language.name,
-         'languages_searchable': language.name,
-         'created': language.created,
-         'updated': language.updated,
-         'comment': language.comment}
-    solrconn.add(**d)
-    solrconn.commit()
+def save_listener(sender, instance, created, **kwargs):
+    instance.solr_index(commit=True)
 
 
 @receiver(post_delete, sender=Language)
-def solr_delete(sender, instance, **kwargs):
-    import solr
-    from django.conf import settings
-    solrconn = solr.SolrConnection(settings.SOLR_SERVER)
-    record = solrconn.query("item_id:{0} AND type:elvis_language".format(instance.id))
-    if record:
-        solrconn.delete(record.results[0]['id'])
-        solrconn.commit()
+def delete_listener(sender, instance, **kwargs):
+    instance.solr_delete(commit=True)
