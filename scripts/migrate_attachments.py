@@ -75,6 +75,7 @@ def reindex_all():
 
     # delete everything
     solrconn.delete_query("*:*")
+    solrconn.commit()
 
     print("Indexing collections...")
     for c in Collection.objects.all():
