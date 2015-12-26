@@ -23,6 +23,9 @@ $(document).ready(function ($)
     {
         $(this).blur();
         $('#advanced-search-form').submit();
+        $('html, body').animate({
+            scrollTop: $("#result-count").offset().top - 10
+        }, 1000);
     });
 
     $(".asearch-input").on('keydown', function (event)
