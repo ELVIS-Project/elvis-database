@@ -378,7 +378,7 @@ $(document).ready(function ($)
     function drawFacets(results)
     {
         var $facet_DOM = $("#accordion-facets");
-        var keys = Object.keys(results['facet_names']);
+        var keys = ['type', 'composer_name', 'number_of_voices', 'tags'];
         var facets = results['facets']['facet_fields'];
         var facet_containers = "";
         for (var i in keys)
@@ -395,21 +395,21 @@ $(document).ready(function ($)
                 "</div>";
             var facet_body = "<div id='collapse-" + name + "' class='panel-collapse collapse facets in'>" +
                 "<div class='panel-body facets' id='facet-panel-" + name + "'>";
-            var facet_keys = facets[keys[i]];
-            for (var j in facet_keys)
+            var key_list = Object.keys(facets[keys[i]]).sort();
+            for (var j in key_list)
             {
                 var facet_list = facets[keys[i]];
-
+                var key_title = key_list[j];
                 if (keys[i] === "type")
-                    var facet_name = j.slice(6)[0].toUpperCase() + j.slice(7);
+                    var facet_name = key_title.slice(6)[0].toUpperCase() + key_title.slice(7);
                 else
-                    var facet_name = j;
+                    var facet_name = key_title;
                 facet_body += "<div class='facet-list'>" +
-                    "<div id='facet-" + keys[i] + "-" + encodeName(j) + "' class='facet-wrapper'>" +
+                    "<div id='facet-" + keys[i] + "-" + encodeName(key_title) + "' class='facet-wrapper'>" +
                     "<label class='facet-label' for='facet-link-" + encodeName(j) + "-" + keys[i] + "'>" +
                     "<input type='checkbox' class='facet-link' style='margin: 4px 4px 0' data-facet-name='" + keys[i] +
-                    "' data-facet-value='" + encodeName(j) + "' id='facet-link-" + encodeName(j) + "-" + keys[i] + "'>" +
-                    facet_name + "  (" + facet_list[j] + ")" +
+                    "' data-facet-value='" + encodeName(key_title) + "' id='facet-link-" + encodeName(key_title) + "-" + keys[i] + "'>" +
+                    facet_name + "  (" + facet_list[key_title] + ")" +
                     "</label>" +
                     "</div>" +
                     "</div>";
