@@ -204,23 +204,11 @@ class DownloadDetail(generics.RetrieveUpdateAPIView):
         if not request.user.is_authenticated:
             raise Http404
         user_download = request.user.downloads.all()[0]
-        this_url = request.POST.get('this_url')
-
-        # If we are saving all the attachments in the search results
-        if request.POST.get("search_query"):
-            from django.test.client import RequestFactory
-            # Make a dummy get request (because we're requerying without pagination)
-            dummy_request = RequestFactory().get(request.POST.get("search_query") + "&rows=20000000")
-            s = SolrSearch(dummy_request)
-            search_results = s.search()
-            for result in search_results.results:
-                self._type_selector(result.get("type"), result.get("item_id"), user_download)
-        else:
-            item_type = request.POST.getlist('item_type')
-            item_id = request.POST.getlist('item_id')
-            action = request.POST.get('action')
-            for i in range(len(item_type)):
-                self._type_selector(item_type[i], item_id[i], user_download, action)
+        item_type = request.POST.getlist('item_type')
+        item_id = request.POST.getlist('item_id')
+        action = request.POST.get('action')
+        for i in range(len(item_type)):
+            self._type_selector(item_type[i], item_id[i], user_download, action)
 
         user_download.save()
         jresults = json.dumps({'count': user_download.cart_size})

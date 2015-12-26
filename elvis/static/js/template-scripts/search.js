@@ -78,28 +78,7 @@ $(document).ready(function ($)
         var input = $("#gsearch-input").val();
         doQuery({'q': input});
     });
-
-    //Button to add entire query to cart
-    $("#all-download").click(function ()
-    {
-        document.getElementById("search_query").value = window.location.href;
-        $.ajax(
-            {
-                type: 'post',
-                url: '/downloads/',
-                data: $("#all-patch-download-form").serialize(),
-                success: function (data)
-                {
-                    var $collection_count = $('#collection-count');
-                    $collection_count.fadeOut(100, function ()
-                    {
-                        $collection_count.text('(' + data.count + ')');
-                    });
-                    $collection_count.fadeIn(100);
-                }
-            })
-    });
-
+    
     //Search for the query parameters in the url via ajax and fill in the input fields to match the search.
     function queryQString(fadewindow)
     {

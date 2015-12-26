@@ -244,18 +244,6 @@
             </div>
             <div class="col-sm-3">
                 <div class="row panel-group" id="accordion-facets"></div>
-                <div class="text-center">
-                    <form id="all-patch-download-form" action="/downloads/" method="post">
-                        {% csrf_token %}
-                        <input type="hidden" class="this_url" name="this_url" value=""/>
-                        <input type="hidden" class="search_query" name="search_query" id="search_query" value=""/>
-                        <button type="button" id="all-download"
-                                onClick="return confirm('Are you sure you want to add all results in this query to your cart?\nUse with caution: this may add undesired items if you haven\'t checked all the results!')"
-                                class="btn btn-success btn-sm">
-                            Add All Query Results Downloads <span class="glyphicon glyphicon-plus"></span>
-                        </button>
-                    </form>
-                </div>
             </div>
         </div>
     </div>
