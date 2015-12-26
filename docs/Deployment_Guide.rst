@@ -306,13 +306,13 @@ Media and Static File Folders for the EDDA
 ::
     $ sudo mkdir /usr/local/elvis_database/media_root
     $ sudo chown apache:apache /usr/local/elvis_database/media_root
-    $ sudo semanage fcontext -a -t httpd_sys_rw_content_t /usr/elvis_database/media_root
-    $ sudo restorecon -v /usr/local/elvis_database/media_root
+    $ sudo semanage fcontext -a -t httpd_sys_rw_content_t /usr/elvis-database/media_root
+    $ sudo restorecon -v /srv/webapps/elvis-database/media_root
 
     $ sudo mkdir /usr/local/elvis_database/static_root
     $ sudo chown apache:apache /usr/local/elvis_database/static_root
-    $ sudo semanage fcontext -a -t httpd_sys_content_t /usr/elvis_database/static_root
-    $ sudo restorecon -v /usr/local/elvis_database/static_root
+    $ sudo semanage fcontext -a -t httpd_sys_content_t /usr/elvis-database/static_root
+    $ sudo restorecon -v /srv/webapps/elvis-database/static_root
 
 .. note:: The ``semanage`` commands above *are* /usr/elvis_database, *not* /usr/local/elvis_database.
 
@@ -426,7 +426,8 @@ In addition, if you installed the EDDA with virtualenv, uncomment the following 
 ------> TODO FIRST!!!!!!!!!!!!!!!: figure out SECRET_KEY
 ------> TODO: add a thing about Celery and RabbitMQ or whatever
 
-
+find /srv/webapps -type d -exec chmod 755 {} \;
+find /srv/webapps -type f -exec chmod 644 {} \;
 
 Celery Service for Downloads using Supervisord
 --------------------––––––––------------------
