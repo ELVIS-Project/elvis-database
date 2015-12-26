@@ -66,7 +66,7 @@ class AttachmentPieceSerializer(serializers.HyperlinkedModelSerializer):
 
     class Meta:
         model = Attachment
-        fields = ("file_name", "id", "source", "attachment")
+        fields = ("file_name", "id", "source", "attachment", "url")
 
     def retrieve_attachment(self, obj):
         request = self.context.get('request', None)
