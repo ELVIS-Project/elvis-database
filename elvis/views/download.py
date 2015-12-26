@@ -94,31 +94,6 @@ class DownloadCart(generics.GenericAPIView):
                     results.append({'id': item['id'], 'in_cart': False})
         return results
 
-    def patch(self, request, *args, **kwargs):
-        itype = request.DATA.get("type", None)
-        item_id = request.DATA.get('item_id', None)
-
-        if itype not in ('piece', 'movement'):
-            return Response({'message': "You must supply either piece or movement"}, status=status.HTTP_400_BAD_REQUEST)
-
-        if itype == 'piece':
-            obj = Piece.objects.get(pk=item_id)
-        elif itype == 'movement':
-            obj = Movement.objects.get(pk=item_id)
-
-        if not obj:
-            return Response({'message': "The item with id {0} was not found".format(item_id)},
-                            status=status.HTTP_404_NOT_FOUND)
-
-        dlobj = self.get_object()
-
-        for attachment in obj.attachments.all():
-            dlobj.attachments.add(attachment)
-
-        d = DownloadSerializer(dlobj).data
-        return Response(d)
-
-
     @method_decorator(csrf_protect)
     def post(self, request, *args, **kwargs):
         if 'clear-collection' in request.POST:
