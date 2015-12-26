@@ -21,7 +21,7 @@ from elvis.models.attachment import Attachment
 from elvis.models.collection import Collection
 from elvis.models.composer import Composer
 from elvis.serializers.download import DownloadPieceSerializer, DownloadMovementSerializer
-
+from django.core.cache import cache
 
 class DownloadListHTMLRenderer(CustomHTMLRenderer):
     template_name = "download/download_list.html"
@@ -46,7 +46,6 @@ class DownloadCart(generics.GenericAPIView):
             return HttpResponse(jresults, content_type="application/json")
 
         data = self.make_cart_response(request)
-
         return Response(data, *args, **kwargs)
 
     def make_cart_response(self, request):
@@ -54,12 +53,41 @@ class DownloadCart(generics.GenericAPIView):
         data = {"pieces": [], "movements": []}
         for key in cart.keys():
             if key.startswith("P"):
-                tmp = Piece.objects.get(id=key[2:])
-                data['pieces'].append(DownloadPieceSerializer(tmp, context={'request': request}).data)
+                data['pieces'].append(self.retrieve_piece(key, request))
             if key.startswith("M"):
-                tmp = Movement.objects.get(id=key[2:])
-                data['movements'].append(DownloadMovementSerializer(tmp, context={'request': request}).data)
+                data['movements'].append(self.retrieve_movement(key, request))
         return data
+
+    def retrieve_piece(self, pid, request):
+        """Use cache to speed up retrieving use cart contents.
+
+        :param pid: The id stored in the session for carts (P-[numbers])
+        :param request: The request object (for serialization)
+        :return: A serialized dict representing the Piece.
+        """
+        p = cache.get("cart-" + pid)
+        if p:
+            return p
+        tmp = Piece.objects.get(id=pid[2:])
+        p = DownloadPieceSerializer(tmp, context={'request': request}).data
+        cache.set("cart-" + pid, p)
+        return p
+
+    def retrieve_movement(self, mid, request):
+        """Use cache to speed up retrieving use cart contents.
+
+        :param pid: The id stored in the session for carts (M-[numbers])
+        :param request: The request object (for serialization)
+        :return: A serialized dict representing the Movement.
+        """
+        m = cache.get("cart-" + mid)
+        if m:
+            return m
+        tmp = Movement.objects.get(id=mid[2:])
+        m = DownloadMovementSerializer(tmp, context={'request': request}).data
+        cache.set("cart-" + mid, m)
+        return m
+
 
     def _check_in_cart(self, request):
         item_list = json.loads(request.GET['check_in_cart'])
