@@ -84,15 +84,25 @@ TEMPLATE_CONTEXT_PROCESSORS = [
 
 SESSION_ENGINE = "django.contrib.sessions.backends.cached_db"
 
+# This is only a dummy cache so the site won't break. You should enable one
+# of the others.
+CACHES = {
+    'default': {
+        'BACKEND': 'django.core.cache.backends.dummy.DummyCache',
+    }
+}
 # Decide which kind of cache you would like to use:
 #
-# This is way faster, but requires you install memcached and pylibmc.
+# This is way faster, but requires you install redis and django-redis.
 #
 # CACHES = {
-# 'default': {
-#     'BACKEND': 'django.core.cache.backends.memcached.PyLibMCCache',
-#     'LOCATION': "127.0.0.1:11211"
-#   }
+#     'default': {
+#         'BACKEND': 'django_redis.cache.RedisCache',
+#         'LOCATION': "redis://127.0.0.1:6379",
+#         "OPTIONS": {
+#             "CLIENT_CLASS": "django_redis.client.DefaultClient",
+#         }
+#     }
 # }
 #
 # The DB cache is slower, but only requires that you execute
