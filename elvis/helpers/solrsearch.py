@@ -65,7 +65,6 @@ class SolrSearch(object):
 
     def _parse_request(self):
         qdict = self.request.GET
-        filter_query = []
         general_query = []
 
         for k in list(qdict.keys()):
@@ -116,26 +115,22 @@ class SolrSearch(object):
                 continue
 
             if k =='typefilt[]':
-                type_filt = "type:"
-                type_filt += ' OR '.join(qdict.getlist('typefilt[]'))
+                type_filt = 'type: ({0})'.format(' OR '.join(qdict.getlist('typefilt[]')))
                 self.solr_params['fq'].append(type_filt)
                 continue
 
             if k =='filefilt[]':
-                file_filt = "file_formats:"
-                file_filt += ' OR '.join(qdict.getlist('filefilt[]'))
+                file_filt = 'file_formats: ({0})'.format(' OR '.join(qdict.getlist('filefilt[]')))
                 self.solr_params['fq'].append(file_filt)
                 continue
 
             if k =='vocalizationfilt':
-                voc_filt = "vocalization:"
-                voc_filt += ' OR '.join(qdict.getlist('vocalizationfilt'))
+                voc_filt = 'vocalization: ({0})'.format(' OR '.join(qdict.getlist('vocalizationfilt')))
                 self.solr_params['fq'].append(voc_filt)
                 continue
 
             if k =='religiosityfilt':
-                rel_filt = "religiosity:"
-                rel_filt += ' OR '.join(qdict.getlist('religiosityfilt'))
+                rel_filt = 'religiosity: ({0})'.format(' OR '.join(qdict.getlist('religiosityfilt')))
                 self.solr_params['fq'].append(rel_filt)
                 continue
 
@@ -165,13 +160,13 @@ class SolrSearch(object):
                 general_query.append('(number_of_voices:{0})'.format(qdict[k]))
                 continue
             if k == 'tags':
-                tag_query = '(tags:"{0}")'.format(qdict[k])
+                tag_query = 'tags:("{0}")'.format(qdict[k])
                 general_query.append(tag_query)
                 continue
             if k == 'tags[]':
-                tags = str(qdict.getlist('tags[]'))
-                tags = '" AND "'.join(x for x in tags)
-                tag_query = '(tags:"{0}")'.format(tags)
+                tags = qdict.getlist('tags[]')
+                tags = '" AND "'.join(tags)
+                tag_query = 'tags:("{0}")'.format(tags)
                 general_query.append(tag_query)
                 continue
 
