@@ -22,13 +22,14 @@
 
             $(".remove-row").click(function (event)
             {
-                var id = $(event.target).parents('tr').children()[1].textContent;
-                var type = $(event.target).parents('tr').children()[5].textContent.split(/\n/)[0];
+                var item_id = $(event.target).parents('tr').children()[1].textContent;
+                var item_type = $(event.target).parents('tr').children()[5].textContent.split(/\n/)[0];
+                item_type = "elvis_" + item_type.toLowerCase();
                 $(event.target).parents('tr').remove();
                 $.ajax({
                     type: "post",
                     url: "/download-cart/",
-                    data: {'remove': true, 'id': id, 'type': type},
+                    data: {'action': "remove", 'item_id': item_id, 'item_type': item_type},
                     success: function (data)
                     {
                         var $collection_count = $("#collection-count");
