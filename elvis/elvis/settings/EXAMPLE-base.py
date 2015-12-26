@@ -82,6 +82,27 @@ TEMPLATE_CONTEXT_PROCESSORS = [
     "django.core.context_processors.request"
 ]
 
+SESSION_ENGINE = "django.contrib.sessions.backends.cached_db"
+
+# Decide which kind of cache you would like to use:
+#
+# This is way faster, but requires you install memcached and pylibmc.
+#
+# CACHES = {
+# 'default': {
+#     'BACKEND': 'django.core.cache.backends.memcached.PyLibMCCache',
+#     'LOCATION': "127.0.0.1:11211"
+#   }
+# }
+#
+# The DB cache is slower, but only requires that you execute
+# manage.py createcachetable in order to begin using it.
+# CACHES = {
+#     'default': {
+#         'BACKEND': 'django.core.cache.backends.db.DatabaseCache',
+#         'LOCATION': 'my_cache_table',
+#     }
+# }
 
 # Database Configuration
 # ======================
