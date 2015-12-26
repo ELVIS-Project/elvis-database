@@ -15,12 +15,12 @@ from celery.result import AsyncResult
 from elvis.elvis import tasks
 from elvis.renderers.custom_html_renderer import CustomHTMLRenderer
 from elvis.serializers.download import DownloadingSerializer
-from elvis.models.download import Download
 from elvis.models.piece import Piece
 from elvis.models.movement import Movement
 from elvis.models.attachment import Attachment
 from elvis.models.collection import Collection
-from elvis.serializers.download import DownloadPieceSerializer,DownloadMovementSerializer
+from elvis.models.composer import Composer
+from elvis.serializers.download import DownloadPieceSerializer, DownloadMovementSerializer
 
 
 class DownloadListHTMLRenderer(CustomHTMLRenderer):
@@ -147,12 +147,12 @@ class DownloadCart(generics.GenericAPIView):
                     cart["M-" + str(mov.id)] = True
         elif elvis_type == "elvis_composer":
             cart["COM-" + item['item_id']] = True
-            comp = Collection.objects.filter(id=item['item_id'])[0]
+            comp = Composer.objects.filter(id=item['item_id'])[0]
             for piece in comp.pieces.all():
                 cart["P-" + str(piece.id)] = True
             for mov in comp.movements.all():
                 parent = mov.piece
-                if not parent or cart.get("P-" + str(parent.id)):
+                if not parent or not cart.get("P-" + str(parent.id)):
                     cart["M-" + str(mov.id)] = True
 
     def remove_item(self, item, cart):
@@ -170,7 +170,7 @@ class DownloadCart(generics.GenericAPIView):
                 cart.pop("M-" + str(mov.id), None)
         elif elvis_type == "elvis_composer":
             cart.pop("COM-" + item['item_id'], None)
-            comp = Collection.objects.filter(id=item['item_id'])[0]
+            comp = Composer.objects.filter(id=item['item_id'])[0]
             for piece in comp.pieces.all():
                 cart.pop("P-" + str(piece.id), None)
             for mov in comp.movements.all():
