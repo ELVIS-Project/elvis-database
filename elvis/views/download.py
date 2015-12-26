@@ -72,33 +72,33 @@ class DownloadDetail(generics.RetrieveUpdateAPIView):
         return self.retrieve(request, *args, **kwargs)
 
     def _check_in_cart(self, request):
-        user_download = request.user.downloads.all()[0]
         item_list = json.loads(request.GET['check_in_cart'])
+        cart = request.session.get('cart', {})
         results = []
         for item in item_list:
             if item['type'] == "elvis_composer":
-                if user_download.collection_composers.filter(pk=item['id']):
+                if cart.get("COM-" + item['id']):
                     results.append({'id': item['id'], 'in_cart': True})
                 else:
                     results.append({'id': item['id'], 'in_cart': False})
                 continue
             if item['type'] == "elvis_collection":
-                if user_download.collection_collections.filter(pk=item['id']):
+                if cart.get("COL-" + item['id']):
                     results.append({'id': item['id'], 'in_cart': True})
                 else:
                     results.append({'id': item['id'], 'in_cart': False})
                 continue
             if item['type'] == "elvis_piece":
-                if user_download.collection_pieces.filter(pk=item['id']):
+                if cart.get("P-" + item['id']):
                     results.append({'id': item['id'], 'in_cart': True})
                 else:
                     results.append({'id': item['id'], 'in_cart': False})
                 continue
             if item['type'] == "elvis_movement":
                 piece = Movement.objects.get(pk=item['id']).piece
-                if piece and user_download.collection_pieces.filter(pk=piece.id):
+                if piece and cart.get("P-" + item['id']):
                     results.append({'id': item['id'], 'in_cart': 'Piece'})
-                elif user_download.collection_movements.filter(pk=item['id']):
+                elif cart.get("M-" + item['id']):
                     results.append({'id': item['id'], 'in_cart': True})
                 else:
                     results.append({'id': item['id'], 'in_cart': False})
@@ -128,127 +128,82 @@ class DownloadDetail(generics.RetrieveUpdateAPIView):
         d = DownloadSerializer(dlobj).data
         return Response(d)
 
-    # Recursively add object to users download
-    def _download_adder(self, item, user_download):
-        if item.__class__.__name__ == "Collection":
-            for piece in item.pieces.all():
-                self._download_adder(piece, user_download)
-            for movement in item.movements.all():
-                self._download_adder(movement, user_download)
-            user_download.collection_collections.add(item)
-        if item.__class__.__name__ == "Composer":
-            for piece in item.pieces.all():
-                self._download_adder(piece, user_download)
-            for movement in item.movements.all():
-                self._download_adder(movement, user_download)
-                user_download.collection_composers.add(item)
-        if item.__class__.__name__ == "Piece":
-            for att in item.attachments.all():
-                user_download.attachments.add(att)
-            user_download.collection_pieces.add(item)
-            for mov in item.movements.all():
-                for att in mov.attachments.all():
-                    user_download.attachments.add(att)
-        if item.__class__.__name__ == "Movement":
-            if item.piece not in user_download.collection_pieces.all():
-                user_download.collection_movements.add(item)
-                for att in item.attachments.all():
-                    user_download.attachments.add(att)
-
-    # Recursively remove object to users download
-    def _download_remover(self, item, user_download):
-        if item.__class__.__name__ == "Collection":
-            for piece in item.pieces.all():
-                self._download_remover(piece, user_download)
-            for movement in item.movements.all():
-                self._download_remover(movement, user_download)
-            user_download.collection_collections.remove(item)
-        if item.__class__.__name__ == "Composer":
-            for piece in item.pieces.all():
-                self._download_remover(piece, user_download)
-            for movement in item.movements.all():
-                self._download_remover(movement, user_download)
-            user_download.collection_composers.remove(item)
-        if item.__class__.__name__ == "Piece":
-            for att in item.attachments.all():
-                user_download.attachments.remove(att)
-            user_download.collection_pieces.remove(item)
-        if item.__class__.__name__ == "Movement":
-            user_download.collection_movements.remove(item)
-            for att in item.attachments.all():
-                user_download.attachments.remove(att)
-
-    # Choose the right model based on request, again to help recursive-patching
-    def _type_selector(self, item_type, item_id, user_download, action):
-        if item_type == "elvis_movement":
-            item = Movement.objects.filter(pk=item_id)[0]
-        elif item_type == "elvis_piece":
-            item = Piece.objects.filter(pk=item_id)[0]
-        elif item_type == "elvis_composer":
-            item = Composer.objects.filter(pk=item_id)[0]
-        elif item_type == "elvis_collection":
-            item = Collection.objects.filter(pk=item_id)[0]
-        elif item_type == "elvis_tag":
-            item = Tag.objects.filter(pk=item_id)[0]
-        else:
-            raise TypeError("Item type '" + item_type + "' passed not found in database.")
-
-        if action == 'add':
-            self._download_adder(item, user_download)
-        if action == 'remove':
-            self._download_remover(item, user_download)
-
-
-    # Recursive version of the flat-downloads
-    def _recursive_patch_downloads(self, request):
-        if not request.user.is_authenticated:
-            raise Http404
-        user_download = request.user.downloads.all()[0]
-        item_type = request.POST.getlist('item_type')
-        item_id = request.POST.getlist('item_id')
-        action = request.POST.get('action')
-        for i in range(len(item_type)):
-            self._type_selector(item_type[i], item_id[i], user_download, action)
-
-        user_download.save()
-        jresults = json.dumps({'count': user_download.cart_size})
-        return HttpResponse(content=jresults, content_type="json")
 
     @method_decorator(csrf_protect)
     def post(self, request, *args, **kwargs):
-        user_download = request.user.downloads.all()[0]
 
         if 'clear-collection' in request.POST:
-            user_download.attachments.clear()
-            user_download.collection_movements.clear()
-            user_download.collection_pieces.clear()
-            user_download.collection_collections.clear()
-            user_download.collection_composers.clear()
-            user_download.save()
-            jresults = json.dumps({'count': user_download.cart_size})
-            return HttpResponse(content=jresults, content_type="json")
-
-        elif 'clear-attachments' in request.POST:
-            user_download.attachments.clear()
-            user_download.save()
-            jresults = json.dumps({'count': user_download.cart_size})
-            return HttpResponse(content=jresults, content_type="json")
-
-        elif 'remove' in request.POST:
-            type = request.POST.get('type')
-            id = int(request.POST.get('id'))
-            if type == "Piece":
-                rem = Piece.objects.get(id=id)
-                user_download.collection_pieces.remove(rem)
-            else:
-                rem = Movement.objects.get(id=id)
-                user_download.collection_movements.remove(rem)
-            user_download.save()
-            jresults = json.dumps({'count': user_download.cart_size})
+            request.session.pop('cart', None)
+            jresults = json.dumps({'count': 0})
             return HttpResponse(content=jresults, content_type="json")
         else:
-            return self._recursive_patch_downloads(request)
+            return self.update_cart(request)
 
+    def update_cart(self, request):
+        cart = request.session.get('cart', {})
+        items = request.POST.get('items', [])
+        for item in items:
+            action = item.get('action')
+            if action == 'add':
+                self.add_item(item, cart)
+            if action == 'remove':
+                self.remove_item(item, cart)
+
+        action = request.POST.get('action')
+        if action == 'add':
+            self.add_item(request.POST, cart)
+        elif action == 'remove':
+            self.remove_item(request.POST, cart)
+
+        request.session['cart'] = cart
+        jresults = json.dumps({'count': len(cart)})
+        return HttpResponse(content=jresults, content_type="json")
+
+    def add_item(self, item, cart):
+        elvis_type = item.get('item_type')
+        if elvis_type == "elvis_movement":
+            cart["M-" + item['item_id']] = True
+        elif elvis_type == "elvis_piece":
+            cart["P-" + item['item_id']] = True
+        elif elvis_type == "elvis_collection":
+            cart["COL-" + item['item_id']] = True
+            coll = Collection.objects.filter(id=item['item_id'])[0]
+            for piece in coll.pieces.all():
+                cart["P-" + str(piece.id)] = True
+            for mov in coll.movements.all():
+                parent = mov.piece
+                if not parent or not cart.get("P-" + str(parent.id)):
+                    cart["M-" + str(mov.id)] = True
+        elif elvis_type == "elvis_composer":
+            cart["COM-" + item['item_id']] = True
+            comp = Collection.objects.filter(id=item['item_id'])[0]
+            for piece in comp.pieces.all():
+                cart["P-" + str(piece.id)] = True
+            for mov in comp.movements.all():
+                parent = mov.piece
+                if not parent or cart.get("P-" + str(parent.id)):
+                    cart["M-" + str(mov.id)] = True
+
+    def remove_item(self, item, cart):
+        elvis_type = item.get('item_type')
+        if elvis_type == "elvis_movement":
+            cart.pop("M-" + item['item_id'], None)
+        elif elvis_type == "elvis_piece":
+            cart.pop("P-" + item['item_id'], None)
+        elif elvis_type == "elvis_collection":
+            cart.pop("COL-" + item['item_id'], None)
+            coll = Collection.objects.filter(id=item['item_id'])[0]
+            for piece in coll.pieces.all():
+                cart.pop("P-" + str(piece.id), None)
+            for mov in coll.movements.all():
+                cart.pop("M-" + str(mov.id), None)
+        elif elvis_type == "elvis_composer":
+            cart.pop("COM-" + item['item_id'], None)
+            comp = Collection.objects.filter(id=item['item_id'])[0]
+            for piece in comp.pieces.all():
+                cart.pop("P-" + str(piece.id), None)
+            for mov in comp.movements.all():
+                cart.pop("M-" + str(mov.id), None)
 
 # LM: New view 2, was original view but updated with post-only view below
 class Downloading(APIView):
