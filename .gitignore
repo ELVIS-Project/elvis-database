@@ -6,6 +6,7 @@ solr/logs/*
 solr/suggestions*
 elvis_env/*
 elvis_virtualenv
+.env
 .DS_Store
 dumps
 elvis/media/
