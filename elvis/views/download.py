@@ -10,20 +10,17 @@ from rest_framework.views import APIView
 from django.utils.decorators import method_decorator
 from django.views.decorators.csrf import csrf_protect
 from django.conf import settings
-from django.core.exceptions import ObjectDoesNotExist
 from django.http import HttpResponse, HttpResponseRedirect
 from celery.result import AsyncResult
 from elvis.elvis import tasks
 from elvis.renderers.custom_html_renderer import CustomHTMLRenderer
-from elvis.serializers.download import DownloadSerializer, DownloadingSerializer
-from elvis.helpers.solrsearch import SolrSearch
+from elvis.serializers.download import DownloadingSerializer
 from elvis.models.download import Download
 from elvis.models.piece import Piece
 from elvis.models.movement import Movement
 from elvis.models.attachment import Attachment
 from elvis.models.collection import Collection
-from elvis.models.tag import Tag
-from elvis.models.composer import Composer
+from elvis.serializers.download import DownloadPieceSerializer,DownloadMovementSerializer
 
 
 class DownloadListHTMLRenderer(CustomHTMLRenderer):
@@ -38,30 +35,9 @@ class DownloadingHTMLRenderer(CustomHTMLRenderer):
     template_name = "download/downloading.html"
 
 
-class DownloadList(generics.ListCreateAPIView):
-    model = Download
-    permission_classes = (permissions.IsAuthenticatedOrReadOnly,)
-    serializer_class = DownloadSerializer
-    renderer_classes = (JSONRenderer, DownloadListHTMLRenderer)
-
-    def get_queryset(self):
-        user = self.request.user
-        return Download.objects.filter(user=user)
-
-
-class DownloadCart(generics.RetrieveUpdateAPIView):
-    model = Download
+class DownloadCart(generics.GenericAPIView):
     permission_classes = (permissions.IsAuthenticated,)
-    serializer_class = DownloadSerializer
     renderer_classes = (JSONRenderer, DownloadCartHTMLRenderer)
-
-    def get_object(self):
-        user = self.request.user
-        try:
-            obj = Download.objects.filter(user=user).latest("created")
-            return obj
-        except ObjectDoesNotExist:
-            return None
 
     def get(self, request, *args, **kwargs):
         if 'check_in_cart' in request.GET:
@@ -69,7 +45,21 @@ class DownloadCart(generics.RetrieveUpdateAPIView):
             jresults = json.dumps(results)
             return HttpResponse(jresults, content_type="application/json")
 
-        return self.retrieve(request, *args, **kwargs)
+        data = self.make_cart_response(request)
+
+        return Response(data, *args, **kwargs)
+
+    def make_cart_response(self, request):
+        cart = request.session.get('cart', {})
+        data = {"pieces": [], "movements": []}
+        for key in cart.keys():
+            if key.startswith("P"):
+                tmp = Piece.objects.get(id=key[2:])
+                data['pieces'].append(DownloadPieceSerializer(tmp, context={'request': request}).data)
+            if key.startswith("M"):
+                tmp = Movement.objects.get(id=key[2:])
+                data['movements'].append(DownloadMovementSerializer(tmp, context={'request': request}).data)
+        return data
 
     def _check_in_cart(self, request):
         item_list = json.loads(request.GET['check_in_cart'])

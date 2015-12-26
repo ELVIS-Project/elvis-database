@@ -79,7 +79,7 @@
                     <li>
                         <a href="/download-cart/">
                             Download Cart
-                            <span id="collection-count">({{ user.downloads.all.first.cart_size }})</span>
+                            <span id="collection-count">({% if request.session.cart %}{{ request.session.cart | length}}{% else %}0{% endif %})</span>
                         </a>
                     </li>
                     <li class="dropdown">

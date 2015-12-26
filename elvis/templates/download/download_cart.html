@@ -158,7 +158,7 @@
         </h2>
     </div>
 
-    {% if content.collection_pieces or content.collection_movements %}
+    {% if content.pieces or content.movements %}
         <span class="help-block">These are the pieces and movements in your cart. You may save this cart as a collection,
         modify it, or proceed to the download screen.</span>
         <table class="table" id="collection-table">
@@ -181,7 +181,7 @@
             </tr>
             </thead>
             <tbody>
-            {% for piece in content.collection_pieces %}
+            {% for piece in content.pieces %}
                 <tr>
                     <td class="text-center">
                         <div style="min-height:36px">
@@ -195,12 +195,12 @@
                     <td>{% if piece.composition_start_date  == piece.composition_end_date %}
                         {{ piece.composition_end_date }}{% else %}{{ piece.composition_start_date }}-
                         {{ piece.composition_end_date }}{% endif %}</td>
-                    <td><span class="label label-success">Piece</span>{% if piece.movements %}<br>
-                        <span class="label label-default">+ {{ piece.movements | length }} movement{{ piece.movements|length|pluralize }}</span> {% endif %}</td>
+                    <td><span class="label label-success">Piece</span>{% if piece.movement_count %}<br>
+                        <span class="label label-default">+ {{ piece.movement_count}} movement{{ piece.movement_count|pluralize }}</span> {% endif %}</td>
 
                 </tr>
             {% endfor %}
-            {% for movement in content.collection_movements %}
+            {% for movement in content.movements %}
                 <tr>
                     <td class="text-center">
                         <div style="min-height:36px">

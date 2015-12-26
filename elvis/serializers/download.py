@@ -1,16 +1,7 @@
 from rest_framework import serializers
-from elvis.models.download import Download
-from elvis.models.attachment import Attachment
 from elvis.models.piece import Piece
 from elvis.models.movement import Movement
 from elvis.models.composer import Composer
-from django.contrib.auth.models import User
-
-
-class UserDownloadSerializer(serializers.HyperlinkedModelSerializer):
-    class Meta:
-        model = User
-        fields = ('url', 'username')
 
 
 class AttachmentComposerSerializer(serializers.HyperlinkedModelSerializer):
@@ -29,7 +20,7 @@ class AttachmentPieceSerializer(serializers.HyperlinkedModelSerializer):
         fields = ('url', 'title', 'composition_start_date',  'composition_end_date', 'composer', 'id')
 
 
-class AttachmentMovementSerializer(serializers.HyperlinkedModelSerializer):
+class DownloadMovementSerializer(serializers.HyperlinkedModelSerializer):
     composer = AttachmentComposerSerializer()
     piece = AttachmentPieceSerializer()
     composition_start_date = serializers.DateField(format=None)
@@ -40,52 +31,13 @@ class AttachmentMovementSerializer(serializers.HyperlinkedModelSerializer):
         fields = ('url', 'title', 'composition_start_date', 'composition_end_date', 'composer', 'id', 'piece')
 
 
-class UserAttachmentSerializer(serializers.HyperlinkedModelSerializer):
-    pieces = AttachmentPieceSerializer(many=True)
-    movements = AttachmentMovementSerializer(many=True)
-    file_name = serializers.ReadOnlyField()
-    attachment_path = serializers.ReadOnlyField()
-
-    class Meta:
-        model = Attachment
-        fields = ('url', 'pieces', 'movements', 'attachment', 'attachment_path', 'file_name', 'id')
-
-
-class DownloadMovementSerializer(serializers.HyperlinkedModelSerializer):
-    class Meta:
-        model = Movement
-        fields = ('title', 'url',)
-
-
 class DownloadPieceSerializer(serializers.HyperlinkedModelSerializer):
-    movements = DownloadMovementSerializer(many=True)
     composer = AttachmentComposerSerializer()
     composition_start_date = serializers.DateField(format=None)
     composition_end_date = serializers.DateField(format=None)
     class Meta:
         model = Piece
-        fields = ('title', 'id', 'composer', 'url', 'movements', 'composition_start_date', 'composition_end_date',)
-
-
-class DownloadSerializer(serializers.ModelSerializer):
-    user = UserDownloadSerializer()
-    collection_pieces = DownloadPieceSerializer(many=True)
-    collection_movements = AttachmentMovementSerializer(many=True)
-    attachments = UserAttachmentSerializer(many=True)
-    created = serializers.DateField(format=None)
-
-    class Meta:
-        model = Download
-
-
-class CartSerializer(serializers.ModelSerializer):
-    user = UserDownloadSerializer()
-    collection_pieces = DownloadPieceSerializer(many=True)
-    collection_movements = AttachmentMovementSerializer(many=True)
-    created = serializers.DateField(format=None)
-
-    class Meta:
-        model = Download
+        fields = ('title', 'id', 'composer', 'url', 'movement_count', 'composition_start_date', 'composition_end_date',)
 
 
 class DownloadingSerializer(serializers.Serializer):

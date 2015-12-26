@@ -16,7 +16,6 @@ from elvis.models import Download
 from elvis.forms.create import CollectionForm
 from django.views.decorators.csrf import csrf_protect
 from django.utils.decorators import method_decorator
-from elvis.serializers.download import CartSerializer
 from django.core.exceptions import ObjectDoesNotExist
 from django.http import HttpResponseRedirect, HttpResponse
 
