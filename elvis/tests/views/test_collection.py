@@ -34,12 +34,12 @@ class CollectionViewTestCase(ElvisTestSetup, APITestCase):
         self.client.logout()
 
     def test_get_download_cart_not_allowed(self):
-        response = self.client.get("/download/cart/")
+        response = self.client.get("/download-cart/")
         self.assertEqual(response.status_code, status.HTTP_302_FOUND)
 
     def test_get_download_cart_allowed(self):
         self.client.login(username='testuser', password='test')
-        response = self.client.get("/download/cart/")
+        response = self.client.get("/download-cart/")
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         self.client.logout()
 

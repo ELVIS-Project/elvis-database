@@ -30,8 +30,8 @@ class DownloadListHTMLRenderer(CustomHTMLRenderer):
     template_name = "download/download_list.html"
 
 
-class DownloadDetailHTMLRenderer(CustomHTMLRenderer):
-    template_name = "download/download.html"
+class DownloadCartHTMLRenderer(CustomHTMLRenderer):
+    template_name = "download/download_cart.html"
 
 
 class DownloadingHTMLRenderer(CustomHTMLRenderer):
@@ -49,11 +49,11 @@ class DownloadList(generics.ListCreateAPIView):
         return Download.objects.filter(user=user)
 
 
-class DownloadDetail(generics.RetrieveUpdateAPIView):
+class DownloadCart(generics.RetrieveUpdateAPIView):
     model = Download
     permission_classes = (permissions.IsAuthenticated,)
     serializer_class = DownloadSerializer
-    renderer_classes = (JSONRenderer, DownloadDetailHTMLRenderer)
+    renderer_classes = (JSONRenderer, DownloadCartHTMLRenderer)
 
     def get_object(self):
         user = self.request.user
@@ -131,8 +131,14 @@ class DownloadDetail(generics.RetrieveUpdateAPIView):
 
     @method_decorator(csrf_protect)
     def post(self, request, *args, **kwargs):
-
         if 'clear-collection' in request.POST:
+            user_download = request.user.downloads.all()[0]
+            user_download.attachments.clear()
+            user_download.collection_movements.clear()
+            user_download.collection_pieces.clear()
+            user_download.collection_collections.clear()
+            user_download.collection_composers.clear()
+            user_download.save()
             request.session.pop('cart', None)
             jresults = json.dumps({'count': 0})
             return HttpResponse(content=jresults, content_type="json")
@@ -309,7 +315,7 @@ class Downloading(APIView):
                 if ((fileExt in extensions) or ((not (fileExt in default_exts)) and others_check)):
                     user_download.attachments.remove(a_object)
 
-            return HttpResponseRedirect('/downloads/')
+            return HttpResponseRedirect('/download-cart/')
 
         # Optimize user downloads to contain the best file format for elvis
         elif 'select-elvis' in request.POST:
@@ -328,7 +334,7 @@ class Downloading(APIView):
                 except Exception as e:
                     parent_m = None
 
-            return HttpResponseRedirect('/downloads/')
+            return HttpResponseRedirect('/download-cart/')
 
 
 def ranked_remover(parent, user_download):

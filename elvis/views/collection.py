@@ -33,10 +33,6 @@ class CollectionDetailHTMLRenderer(CustomHTMLRenderer):
     template_name = "collection/collection_detail.html"
 
 
-class CollectionCurrentHTMLRenderer(CustomHTMLRenderer):
-    template_name = "collection/collection_current.html"
-
-
 class CollectionList(generics.ListCreateAPIView):
     model = Collection
     permission_classes = (permissions.IsAuthenticatedOrReadOnly,)
@@ -168,24 +164,3 @@ class CollectionDetail(generics.RetrieveUpdateDestroyAPIView):
                 response.data['movements'][i]['in_cart'] = False
         return response
 
-
-class CollectionCurrent(generics.RetrieveUpdateDestroyAPIView):
-    model = Download
-    permission_classes = (permissions.IsAuthenticatedOrReadOnly,)
-    serializer_class = CartSerializer
-    renderer_classes = (JSONRenderer, CollectionCurrentHTMLRenderer)
-    queryset = Download.objects.all()
-
-    def get_object(self):
-        user = self.request.user
-        try:
-            obj = Download.objects.filter(user=user).latest("created")
-            return obj
-        except ObjectDoesNotExist:
-            return None
-
-    def get(self, request, *args, **kwargs):
-        if request.user.is_authenticated():
-            return self.retrieve(request, *args, **kwargs)
-        else:
-            return HttpResponseRedirect('/login/?error=download')

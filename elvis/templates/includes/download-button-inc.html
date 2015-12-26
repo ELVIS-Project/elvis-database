@@ -1,6 +1,6 @@
 {% if user.is_authenticated %}
     {% if in_cart == "Piece" %}
-        <form class="recursive-patch-download-form" action="/downloads/" method="post">
+        <form class="recursive-patch-download-form" action="/download-cart/" method="post">
         <div class="disabled">
             <button type="button" class="btn btn-info cart-button disabled" data-container="body" data-toggle="tooltip"
                     title="Parent Piece in Downloads -- Remove to modify."
@@ -14,7 +14,7 @@
 
     {% endif %}
     {% if in_cart == True %}
-        <form class="recursive-patch-download-form" action="/downloads/" method="post">
+        <form class="recursive-patch-download-form" action="/download-cart/" method="post">
             <button type="button" class="btn btn-danger cart-button" data-container="body" data-toggle="tooltip"
                     data-placement="top">Remove from Downloads
             </button>
@@ -24,7 +24,7 @@
         </form>
     {% endif %}
     {% if in_cart == False %}
-        <form class="recursive-patch-download-form" action="/downloads/" method="post">
+        <form class="recursive-patch-download-form" action="/download-cart/" method="post">
             <button type="button" class="btn btn-success cart-button" data-container="body" data-toggle="tooltip"
                     data-placement="top">Add to Downloads
             </button>

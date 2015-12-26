@@ -11,13 +11,13 @@ from elvis.views.main import home, about, contact
 from elvis.views.views import solr_suggest
 from elvis.views.auth import LoginFormView, logout_view
 from elvis.views.search import SearchView
-from elvis.views.download import DownloadDetail, Downloading
+from elvis.views.download import DownloadCart, Downloading
 from elvis.views.piece import PieceList, PieceDetail, PieceCreate, PieceUpdate
 from elvis.views.user import  UserDetail, UserAccount, UserUpdate
 from elvis.views.movement import MovementList, MovementDetail
 from elvis.views.composer import ComposerList, ComposerDetail
 from elvis.views.attachment import AttachmentList, AttachmentDetail
-from elvis.views.collection import CollectionList, CollectionDetail, CollectionCurrent
+from elvis.views.collection import CollectionList, CollectionDetail
 from elvis.views.tag import TagDetail
 from django.contrib.auth import views as auth_views
 
@@ -52,9 +52,8 @@ urlpatterns += format_suffix_patterns(
         url(r'^reset/(?P<uidb64>[0-9A-Za-z_\-]+)/(?P<token>[0-9A-Za-z]{1,13}-[0-9A-Za-z]{1,20})/$', auth_views.password_reset_confirm, {'template_name': 'user/password_reset_confirm.html'}, name='password_reset_confirm'),
         url(r'^password/reset/complete/$', auth_views.password_reset_complete, {'template_name': 'user/password_reset_complete.html'}, name='password_reset_complete'),
 
-        url(r'^downloads/$', DownloadDetail.as_view(), name="download-detail"),
         url(r'^downloading/$', Downloading.as_view(), name="downloading"),
-        url(r'^download/cart/$', CollectionCurrent.as_view(), name="download-cart"),
+        url(r'^download-cart/$', DownloadCart.as_view(), name="download-cart"),
 
 
         url(r'^pieces/upload/$', PieceCreate.as_view(), name="piece-create"),

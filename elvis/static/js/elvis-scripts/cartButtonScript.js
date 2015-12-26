@@ -63,7 +63,7 @@ function cartButtonRefresh()
 
         $.ajax({
             type: "post",
-            url: "/downloads/",
+            url: "/download-cart/",
             data: $(event.target).parents(".recursive-patch-download-form").serialize(),
             success: function (data)
             {

@@ -454,7 +454,7 @@ $(document).ready(function ($)
             items.push({type: $forms[i][0]['value'], id: $forms[i][1]['value'], num: i})
         }
         $.ajax({
-            url: "/downloads/",
+            url: "/download-cart/",
             data: {check_in_cart: JSON.stringify(items)},
             success: function (data)
             {

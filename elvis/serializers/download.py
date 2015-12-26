@@ -77,6 +77,7 @@ class DownloadSerializer(serializers.ModelSerializer):
     class Meta:
         model = Download
 
+
 class CartSerializer(serializers.ModelSerializer):
     user = UserDownloadSerializer()
     collection_pieces = DownloadPieceSerializer(many=True)
