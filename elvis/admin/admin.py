@@ -4,18 +4,7 @@ import shutil
 import os
 
 from elvis.elvis.tasks import rebuild_suggester_dicts
-from elvis.models import Piece
-from elvis.models import Composer
-from elvis.models import Tag
-from elvis.models import Attachment
-from elvis.models import Movement
-from elvis.models import Download
-from elvis.models import Collection
-from elvis.models import Genre
-from elvis.models import InstrumentVoice
-from elvis.models import Language
-from elvis.models import Place
-from elvis.models import Source
+from elvis.models import *
 
 # summary of available actions: actions = [reindex_in_solr, delete_in_solr]
 
