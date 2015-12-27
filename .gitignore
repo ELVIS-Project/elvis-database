@@ -15,7 +15,7 @@ static_root/*
 pom.xml
 *.iml
 env_3
-
+dump.rdb
 #Local file ignores
 solr/solr/collection1/conf/solrconfig.xml
 elvis/elvis/settings/base.py
