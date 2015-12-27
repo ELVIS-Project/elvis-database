@@ -5,6 +5,7 @@ from os import path
 from django.db import models
 from django.dispatch import receiver
 from django.db.models.signals import post_save, post_delete, pre_delete
+from django.core.cache import cache
 
 from elvis.models.main import ElvisModel
 
@@ -143,6 +144,7 @@ class Movement(ElvisModel):
 @receiver(post_save, sender=Movement)
 def save_listener(sender, instance, created, **kwargs):
     instance.solr_index(commit=True)
+    cache.expire("cart-M-" + str(instance.id), timeout=0)
 
 
 @receiver(pre_delete, sender=Movement)
@@ -154,3 +156,4 @@ def attachment_delete(sender, instance, **kwargs):
 @receiver(post_delete, sender=Movement)
 def delete_listener(sender, instance, **kwargs):
     instance.solr_delete(commit=True)
+    cache.expire("cart-M-" + str(instance.id), timeout=0)
