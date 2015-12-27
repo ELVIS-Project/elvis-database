@@ -70,7 +70,7 @@ class DownloadCart(generics.GenericAPIView):
             return p
         tmp = Piece.objects.get(id=pid[2:])
         p = DownloadPieceSerializer(tmp, context={'request': request}).data
-        cache.set("cart-" + pid, p)
+        cache.set("cart-" + pid, p, timeout=None)
         return p
 
     def retrieve_movement(self, mid, request):
@@ -85,7 +85,7 @@ class DownloadCart(generics.GenericAPIView):
             return m
         tmp = Movement.objects.get(id=mid[2:])
         m = DownloadMovementSerializer(tmp, context={'request': request}).data
-        cache.set("cart-" + mid, m)
+        cache.set("cart-" + mid, m, timeout=None)
         return m
 
 
