@@ -499,21 +499,17 @@ $(document).ready(function ($)
         for (var i = 0; i < $inputs.length; i++)
         {
             var id = $inputs[i].getAttribute('id');
-            if (id === "composition_start_date")
-                var id2 = "composition_start_date";
-            else if (id === "composition_end_date")
-                id2 = "composition_end_date";
-            else
-                id2 = id;
-            if ($("#" + id).val() != oldPiece[id2])
+            var $selector = $("#" + id);
+            var new_val = $selector.val();
+            if (new_val != oldPiece[id])
             {
-                if (id === "comment" && $("#" + id).val() === "" && oldPiece[id2] === null)
+                if (new_val === "" && oldPiece[id] === null)
                     continue;
                 //A text field from the top of the form doesnt match the previous value.
                 changes['modify'].push({
                     type: 'F',
-                    id: id2,
-                    value: $("#" + id).val()
+                    id: id,
+                    value: new_val
                 });
             }
         }
