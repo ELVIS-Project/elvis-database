@@ -1,11 +1,9 @@
-from rest_framework.views import APIView
+from rest_framework import generics
 from rest_framework.response import Response
 from rest_framework import status
 from rest_framework.renderers import JSONRenderer
 from django.conf import settings
 
-
-from elvis.serializers.search import SearchSerializer
 from elvis.renderers.custom_html_renderer import CustomHTMLRenderer
 from elvis.helpers.solrsearch import SolrSearch
 
@@ -16,8 +14,7 @@ class SearchViewHTMLRenderer(CustomHTMLRenderer):
     template_name = "search/search.html"
 
 
-class SearchView(APIView):
-    serializer_class = SearchSerializer
+class SearchView(generics.GenericAPIView):
     renderer_classes = (JSONRenderer, SearchViewHTMLRenderer)
 
     def get(self, request, *args, **kwargs):

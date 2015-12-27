@@ -14,7 +14,7 @@ from rest_framework import generics
 from rest_framework import permissions
 from rest_framework.renderers import JSONRenderer
 
-from elvis.serializers.user import UserSerializer
+from elvis.serializers import UserFullSerializer
 from elvis.models.movement import Movement
 from elvis.models.composer import Composer
 from elvis.models.collection import Collection
@@ -37,7 +37,7 @@ class UserAccountHTMLRenderer(CustomHTMLRenderer):
 class UserList(generics.ListCreateAPIView):
     model = User
     permission_classes = (permissions.IsAuthenticatedOrReadOnly,)
-    serializer_class = UserSerializer
+    serializer_class = UserFullSerializer
     renderer_classes = (JSONRenderer, UserListHTMLRenderer)
     paginate_by = 10
     paginate_by_param = 'page_size'
@@ -47,14 +47,14 @@ class UserList(generics.ListCreateAPIView):
 class UserDetail(generics.RetrieveUpdateDestroyAPIView):
     model = User
     permission_classes = (permissions.IsAuthenticatedOrReadOnly,)
-    serializer_class = UserSerializer
+    serializer_class = UserFullSerializer
     renderer_classes = (JSONRenderer, UserDetailHTMLRenderer)
     queryset = User.objects.all()
 
 
 class UserAccount(generics.CreateAPIView):
     model = User
-    serializer_class = UserSerializer
+    serializer_class = UserFullSerializer
     renderer_classes = (JSONRenderer, UserAccountHTMLRenderer)
     
     def get(self, request, *args, **kwargs):
@@ -112,7 +112,7 @@ class UserAccount(generics.CreateAPIView):
 
 class UserUpdate(generics.CreateAPIView):
     model = User
-    serializer_class = UserSerializer
+    serializer_class = UserFullSerializer
     renderer_classes = (JSONRenderer, UserAccountHTMLRenderer)
 
     def get(self, request, *args, **kwargs):

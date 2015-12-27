@@ -1,4 +1,5 @@
 from rest_framework import serializers
+from django.contrib.auth.models import User
 from elvis.models.attachment import Attachment
 from elvis.models.composer import Composer
 from elvis.models.piece import Piece
@@ -104,6 +105,12 @@ class TagMinSerializer(serializers.ModelSerializer):
     class Meta:
         model = Tag
         fields = ('title', 'id')
+
+
+class UserMinSerializer(serializers.HyperlinkedModelSerializer):
+    class Meta:
+        model = User
+        fields = ('name', 'username', 'id')
 
 
 class MovementEmbedSerializer(serializers.HyperlinkedModelSerializer):
@@ -223,3 +230,18 @@ class MovementFullSerializer(serializers.HyperlinkedModelSerializer):
         fields = ('url', 'id', 'title', 'composer', 'tags', 'genres',
                   'collections', 'instruments_voices', 'languages',
                   'locations', 'attachments', 'uploader')
+
+
+class UserFullSerializer(serializers.HyperlinkedModelSerializer):
+    full_name = serializers.SerializerMethodField()
+    pieces = PieceListSerializer(many=True)
+    movements = MovementListSerializer(many=True)
+
+    class Meta:
+        model = User
+
+    def get_full_name(self, obj):
+        if not obj.last_name:
+            return "{0}".format(obj.username)
+        else:
+            return "{0} {1}".format(obj.first_name, obj.last_name)

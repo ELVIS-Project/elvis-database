@@ -6,7 +6,6 @@ from rest_framework import permissions
 from rest_framework import status
 from rest_framework.renderers import JSONRenderer
 from rest_framework.response import Response
-from rest_framework.views import APIView
 from django.utils.decorators import method_decorator
 from django.views.decorators.csrf import csrf_protect
 from django.conf import settings
@@ -14,13 +13,12 @@ from django.http import HttpResponse, HttpResponseRedirect
 from celery.result import AsyncResult
 from elvis.elvis import tasks
 from elvis.renderers.custom_html_renderer import CustomHTMLRenderer
-from elvis.serializers.download import DownloadingSerializer
+from elvis.serializers import PieceEmbedSerializer, MovementEmbedSerializer
 from elvis.models.piece import Piece
 from elvis.models.movement import Movement
-from elvis.models.attachment import Attachment
+from elvis.models import Attachment
 from elvis.models.collection import Collection
 from elvis.models.composer import Composer
-from elvis.serializers.download import DownloadPieceSerializer, DownloadMovementSerializer
 from django.core.cache import cache
 
 
@@ -70,7 +68,7 @@ class DownloadCart(generics.GenericAPIView):
         if p:
             return p
         tmp = Piece.objects.get(id=pid[2:])
-        p = DownloadPieceSerializer(tmp, context={'request': request}).data
+        p = PieceEmbedSerializer(tmp, context={'request': request}).data
         cache.set("cart-" + pid, p, timeout=None)
         return p
 
@@ -85,7 +83,7 @@ class DownloadCart(generics.GenericAPIView):
         if m:
             return m
         tmp = Movement.objects.get(id=mid[2:])
-        m = DownloadMovementSerializer(tmp, context={'request': request}).data
+        m = MovementEmbedSerializer(tmp, context={'request': request}).data
         cache.set("cart-" + mid, m, timeout=None)
         return m
 
@@ -206,9 +204,8 @@ class DownloadCart(generics.GenericAPIView):
                 cart.pop("M-" + str(mov.id), None)
 
 # LM: New view 2, was original view but updated with post-only view below
-class Downloading(APIView):
+class Downloading(generics.GenericAPIView):
     permission_classes = (permissions.IsAuthenticated,)
-    serializer_class = DownloadingSerializer
     renderer_classes = (JSONRenderer, DownloadingHTMLRenderer)
 
     # LM: Things needed:
