@@ -9,7 +9,6 @@ from elvis.models import Composer
 from elvis.models import Tag
 from elvis.models import Attachment
 from elvis.models import Movement
-from elvis.models import UserProfile
 from elvis.models import Download
 from elvis.models import Collection
 from elvis.models import Genre
@@ -144,7 +143,6 @@ class GenericAdmin(admin.ModelAdmin):
 
 
 admin.site.register(Download, DownloadAdmin)
-admin.site.register(UserProfile, UserProfileAdmin)
 admin.site.register(Piece, PieceAdmin)
 admin.site.register(Tag, TagAdmin)
 admin.site.register(Collection, CollectionAdmin)

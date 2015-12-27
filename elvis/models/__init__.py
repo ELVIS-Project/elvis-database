@@ -5,7 +5,6 @@ from elvis.models.piece import Piece
 from elvis.models.composer import Composer
 from elvis.models.tag import Tag
 from elvis.models.download import Download
-from elvis.models.userprofile import UserProfile
 from elvis.models.genre import Genre
 from elvis.models.instrumentation import InstrumentVoice
 from elvis.models.language import Language
