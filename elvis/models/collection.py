@@ -4,7 +4,7 @@ from django.db import models
 from django.dispatch import receiver
 from django.db.models.signals import post_save, post_delete
 
-from elvis.models.main import ElvisModel
+from elvis.models.elvis_model import ElvisModel
 
 
 class Collection(ElvisModel):

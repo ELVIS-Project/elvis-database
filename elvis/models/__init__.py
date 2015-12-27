@@ -11,4 +11,5 @@ from elvis.models.language import Language
 from elvis.models.location import Location
 from elvis.models.location import Place
 from elvis.models.source import Source
+from elvis.models.elvis_model import ElvisModel
 

@@ -4,7 +4,7 @@ import unicodedata
 
 from django.db import models
 from django.conf import settings
-from elvis.models.main import ElvisModel
+from elvis.models.elvis_model import ElvisModel
 from django.core.files.base import File
 
 

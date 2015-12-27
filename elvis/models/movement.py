@@ -7,7 +7,7 @@ from django.dispatch import receiver
 from django.db.models.signals import post_save, post_delete, pre_delete
 from django.core.cache import cache
 
-from elvis.models.main import ElvisModel
+from elvis.models.elvis_model import ElvisModel
 
 
 class Movement(ElvisModel):
