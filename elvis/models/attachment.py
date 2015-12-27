@@ -44,6 +44,11 @@ class Attachment(ElvisModel):
     source = models.CharField(blank=True, null=True, max_length=200)
 
     @property
+    def extension(self):
+        title, ext = os.path.splitext(self.file_name)
+        return ext
+
+    @property
     def file_name(self):
         return os.path.basename(self.attachment.name)
 
@@ -85,6 +90,9 @@ class Attachment(ElvisModel):
             file_content = File(dest)
             self.attachment.save(new_name, file_content)
 
+        self.title = self.file_name
+        self.save()
+
     def delete(self, *args, **kwargs):
         if os.path.exists(self.attachment_path):
             shutil.rmtree(self.attachment_path)
@@ -102,6 +110,7 @@ class Attachment(ElvisModel):
         new_path = os.path.join(path, new_filename)
         shutil.move(self.attachment.name, new_path)
         self.attachment.name = new_path
+        self.title = self.file_name
         self.save()
 
     def __unicode__(self):

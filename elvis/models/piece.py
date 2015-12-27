@@ -51,12 +51,12 @@ class Piece(ElvisModel):
     def file_formats(self):
         format_list = []
         for att in self.attachments.all():
-            ext = path.splitext(att.file_name)[1]
+            ext = att.extension
             if ext not in format_list:
                 format_list.append(ext)
         for mov in self.movements.all():
             for att in mov.attachments.all():
-                ext = path.splitext(att.file_name)[1]
+                ext = att.extension
                 if ext not in format_list:
                     format_list.append(ext)
         return format_list
