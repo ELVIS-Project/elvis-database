@@ -46,7 +46,7 @@ class ElvisModel(models.Model):
         """ A method to be over-ridden in children which returns the dict
         of themselves to index in solr.
         """
-        return {}
+        raise NotImplementedError
 
     def solr_index(self, **kwargs):
         """ Delete any duplicates and then index this object in solr.
