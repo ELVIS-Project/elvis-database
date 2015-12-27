@@ -3,7 +3,7 @@ from rest_framework import permissions
 from rest_framework.renderers import JSONRenderer
 
 from elvis.renderers.custom_html_renderer import CustomHTMLRenderer
-from elvis.serializers.attachment import AttachmentSerializer
+from elvis.serializers.attachment import AttachmentFullSerializer
 from elvis.models.attachment import Attachment
 
 
@@ -18,12 +18,12 @@ class AttachmentDetailHTMLRenderer(CustomHTMLRenderer):
 class AttachmentList(generics.ListCreateAPIView):
     model = Attachment
     permission_classes = (permissions.IsAuthenticatedOrReadOnly,)
-    serializer_class = AttachmentSerializer
+    serializer_class = AttachmentFullSerializer
     renderer_classes = (JSONRenderer, AttachmentListHTMLRenderer)
 
 
 class AttachmentDetail(generics.RetrieveUpdateDestroyAPIView):
     model = Attachment
     permission_classes = (permissions.IsAuthenticatedOrReadOnly,)
-    serializer_class = AttachmentSerializer
+    serializer_class = AttachmentFullSerializer
     renderer_classes = (JSONRenderer, AttachmentDetailHTMLRenderer)
