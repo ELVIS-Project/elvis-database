@@ -7,7 +7,7 @@
                     data-placement="top">Parent Piece in Downloads
             </button>
             <input type="hidden" name="item_type" value="{{ download_type }}"/>
-            <input type="hidden" name="item_id" value="{{ download_item_id }}"/>
+            <input type="hidden" name="id" value="{{ download_id }}"/>
             <input type="hidden" name="action" value="remove"/></div>
 
         </form>
@@ -19,7 +19,7 @@
                     data-placement="top">Remove from Downloads
             </button>
             <input type="hidden" name="item_type" value="{{ download_type }}"/>
-            <input type="hidden" name="item_id" value="{{ download_item_id }}"/>
+            <input type="hidden" name="id" value="{{ download_id }}"/>
             <input type="hidden" name="action" value="remove"/>
         </form>
     {% endif %}
@@ -29,7 +29,7 @@
                     data-placement="top">Add to Downloads
             </button>
             <input type="hidden" name="item_type" value="{{ download_type }}"/>
-            <input type="hidden" name="item_id" value="{{ download_item_id }}"/>
+            <input type="hidden" name="id" value="{{ download_id }}"/>
             <input type="hidden" name="action" value="add"/>
         </form>
     {% endif %}

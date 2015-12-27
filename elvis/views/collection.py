@@ -9,18 +9,15 @@ from rest_framework.exceptions import MethodNotAllowed
 from rest_framework import generics
 from rest_framework import permissions
 from rest_framework.renderers import JSONRenderer
-from django.contrib.auth.models import User
 from rest_framework.response import Response
 from rest_framework import status
-from elvis.models import Download
 from elvis.forms.create import CollectionForm
 from django.views.decorators.csrf import csrf_protect
 from django.utils.decorators import method_decorator
-from django.core.exceptions import ObjectDoesNotExist
 from django.http import HttpResponseRedirect, HttpResponse
 
 from elvis.renderers.custom_html_renderer import CustomHTMLRenderer
-from elvis.serializers.collection import CollectionSerializer, CollectionListSerializer
+from elvis.serializers import CollectionFullSerializer, CollectionListSerializer
 from elvis.models.collection import Collection
 
 
@@ -64,7 +61,7 @@ class CollectionList(generics.ListCreateAPIView):
         response = super(CollectionList, self).get(self, request)
         user_download = request.user.downloads.all()[0]
         for i in range(len(response.data['results'])):
-            col_pk = response.data['results'][i]['item_id']
+            col_pk = response.data['results'][i]['id']
             if user_download.collection_collections.filter(pk=col_pk):
                 response.data['results'][i]['in_cart'] = True
             else:
@@ -129,13 +126,13 @@ class CollectionList(generics.ListCreateAPIView):
 class CollectionDetail(generics.RetrieveUpdateDestroyAPIView):
     model = Collection
     permission_classes = (permissions.IsAuthenticatedOrReadOnly,)
-    serializer_class = CollectionSerializer
+    serializer_class = CollectionFullSerializer
     renderer_classes = (JSONRenderer, CollectionDetailHTMLRenderer)
     queryset = Collection.objects.all()
 
     def get(self, request, *args, **kwargs):
         response = super(CollectionDetail, self).get(self, request)
-        collection = Collection.objects.get(pk=response.data['item_id'])
+        collection = Collection.objects.get(id=response.data['id'])
         user = self.request.user
         if not collection.public and not (collection.creator == user or user.is_superuser):
             raise PermissionDenied
@@ -143,21 +140,21 @@ class CollectionDetail(generics.RetrieveUpdateDestroyAPIView):
             return super(CollectionDetail, self).get(self, request)
 
         user_download = request.user.downloads.all()[0]
-        if user_download.collection_collections.filter(pk=response.data['item_id']):
+        if user_download.collection_collections.filter(id=response.data['id']):
             response.data['in_cart'] = True
         else:
             response.data['in_cart'] = False
         for i in range(len(response.data['pieces'])):
-            col_pk = response.data['pieces'][i]['item_id']
-            if user_download.collection_pieces.filter(pk=col_pk):
+            col_id = response.data['pieces'][i]['id']
+            if user_download.collection_pieces.filter(id=col_id):
                 response.data['pieces'][i]['in_cart'] = True
             else:
                 response.data['pieces'][i]['in_cart'] = False
         for i in range(len(response.data['movements'])):
-            col_pk = response.data['movements'][i]['item_id']
-            if user_download.collection_movements.filter(pk=col_pk):
+            col_id = response.data['movements'][i]['id']
+            if user_download.collection_movements.filter(id=col_id):
                 response.data['movements'][i]['in_cart'] = True
-            elif response.data['movements'][i]['piece'] and user_download.collection_pieces.filter(pk=response.data['movements'][i]['piece']['pk']):
+            elif response.data['movements'][i]['piece'] and user_download.collection_pieces.filter(id=response.data['movements'][i]['piece']['id']):
                 response.data['movements'][i]['in_cart'] = "Piece"
             else:
                 response.data['movements'][i]['in_cart'] = False

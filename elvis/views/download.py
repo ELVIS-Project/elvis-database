@@ -23,6 +23,7 @@ from elvis.models.composer import Composer
 from elvis.serializers.download import DownloadPieceSerializer, DownloadMovementSerializer
 from django.core.cache import cache
 
+
 class DownloadListHTMLRenderer(CustomHTMLRenderer):
     template_name = "download/download_list.html"
 
@@ -161,12 +162,12 @@ class DownloadCart(generics.GenericAPIView):
     def add_item(self, item, cart):
         elvis_type = item.get('item_type')
         if elvis_type == "elvis_movement":
-            cart["M-" + item['item_id']] = True
+            cart["M-" + item['id']] = True
         elif elvis_type == "elvis_piece":
-            cart["P-" + item['item_id']] = True
+            cart["P-" + item['id']] = True
         elif elvis_type == "elvis_collection":
-            cart["COL-" + item['item_id']] = True
-            coll = Collection.objects.filter(id=item['item_id'])[0]
+            cart["COL-" + item['id']] = True
+            coll = Collection.objects.filter(id=item['id'])[0]
             for piece in coll.pieces.all():
                 cart["P-" + str(piece.id)] = True
             for mov in coll.movements.all():
@@ -174,8 +175,8 @@ class DownloadCart(generics.GenericAPIView):
                 if not parent or not cart.get("P-" + str(parent.id)):
                     cart["M-" + str(mov.id)] = True
         elif elvis_type == "elvis_composer":
-            cart["COM-" + item['item_id']] = True
-            comp = Composer.objects.filter(id=item['item_id'])[0]
+            cart["COM-" + item['id']] = True
+            comp = Composer.objects.filter(id=item['id'])[0]
             for piece in comp.pieces.all():
                 cart["P-" + str(piece.id)] = True
             for mov in comp.movements.all():
@@ -186,19 +187,19 @@ class DownloadCart(generics.GenericAPIView):
     def remove_item(self, item, cart):
         elvis_type = item.get('item_type')
         if elvis_type == "elvis_movement":
-            cart.pop("M-" + item['item_id'], None)
+            cart.pop("M-" + item['id'], None)
         elif elvis_type == "elvis_piece":
-            cart.pop("P-" + item['item_id'], None)
+            cart.pop("P-" + item['id'], None)
         elif elvis_type == "elvis_collection":
-            cart.pop("COL-" + item['item_id'], None)
-            coll = Collection.objects.filter(id=item['item_id'])[0]
+            cart.pop("COL-" + item['id'], None)
+            coll = Collection.objects.filter(id=item['id'])[0]
             for piece in coll.pieces.all():
                 cart.pop("P-" + str(piece.id), None)
             for mov in coll.movements.all():
                 cart.pop("M-" + str(mov.id), None)
         elif elvis_type == "elvis_composer":
-            cart.pop("COM-" + item['item_id'], None)
-            comp = Composer.objects.filter(id=item['item_id'])[0]
+            cart.pop("COM-" + item['id'], None)
+            comp = Composer.objects.filter(id=item['id'])[0]
             for piece in comp.pieces.all():
                 cart.pop("P-" + str(piece.id), None)
             for mov in comp.movements.all():

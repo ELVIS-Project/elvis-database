@@ -5,14 +5,12 @@ from rest_framework.exceptions import NotAuthenticated
 
 import pytz
 from django.views.decorators.csrf import csrf_protect
-from django.contrib.auth.models import User
 from rest_framework import generics
 from rest_framework import status
 from rest_framework import permissions
 from rest_framework.renderers import JSONRenderer
 from rest_framework.response import Response
 from elvis.renderers.custom_html_renderer import CustomHTMLRenderer
-from elvis.serializers.piece import PieceSerializer, PieceListSerializer
 from elvis.models.piece import Piece
 from elvis.models.movement import Movement
 from elvis.models.attachment import Attachment
@@ -24,7 +22,7 @@ from elvis.views.views import Cleanup
 from django.utils.decorators import method_decorator
 from django.http import HttpResponse
 from django.http import HttpResponseRedirect
-
+from elvis.serializers import PieceFullSerializer, PieceListSerializer
 
 class PieceListHTMLRenderer(CustomHTMLRenderer):
     template_name = "piece/piece_list.html"
@@ -46,32 +44,17 @@ class PieceUpdateHTMLRenderer(CustomHTMLRenderer):
 class PieceDetail(generics.RetrieveUpdateDestroyAPIView):
     model = Piece
     permission_classes = (permissions.IsAuthenticatedOrReadOnly,)
-    serializer_class = PieceSerializer
+    serializer_class = PieceFullSerializer
     renderer_classes = (JSONRenderer, PieceDetailHTMLRenderer)
     queryset = Piece.objects.all()
 
     def get(self, request, *args, **kwargs):
         user = self.request.user
         if user.is_anonymous():
-            return super(PieceDetail, self).get(self, request)
+            return super().get(self, request,args, kwargs)
 
-        response = super(PieceDetail, self).get(self, request)
-        user_download = request.user.downloads.all()[0]
-
-        if user_download.collection_pieces.filter(pk=response.data['item_id']):
-            response.data['in_cart'] = True
-            for i in range(len(response.data['movements'])):
-                response.data['movements'][i]['in_cart'] = 'Piece'
-        else:
-            response.data['in_cart'] = False
-            for i in range(len(response.data['movements'])):
-                mov_pk = response.data['movements'][i]['item_id']
-                if user_download.collection_movements.filter(pk=mov_pk):
-                    response.data['movements'][i]['in_cart'] = True
-                else:
-                    response.data['movements'][i]['in_cart'] = False
-
-        piece = Piece.objects.get(pk=response.data['item_id'])
+        response = super().get(self, request, args, kwargs)
+        piece = Piece.objects.get(id=response.data['id'])
 
         if piece.creator == user:
             response.data['can_edit'] = True
@@ -82,7 +65,7 @@ class PieceDetail(generics.RetrieveUpdateDestroyAPIView):
 class PieceCreate(generics.GenericAPIView):
     model = Piece
     permission_classes = (permissions.IsAuthenticatedOrReadOnly,)
-    serializer_class = PieceSerializer
+    serializer_class = PieceFullSerializer
     renderer_classes = (JSONRenderer, PieceCreateHTMLRenderer)
     queryset = Piece.objects.all()
 
@@ -96,7 +79,7 @@ class PieceCreate(generics.GenericAPIView):
 class PieceUpdate(generics.RetrieveUpdateDestroyAPIView):
     model = Piece
     permission_classes = (permissions.IsAuthenticatedOrReadOnly,)
-    serializer_class = PieceSerializer
+    serializer_class = PieceFullSerializer
     renderer_classes = (JSONRenderer, PieceUpdateHTMLRenderer)
     queryset = Piece.objects.all()
 
@@ -142,7 +125,7 @@ class PieceList(generics.ListCreateAPIView):
         response = super(PieceList, self).get(self, request)
         user_download = request.user.downloads.all()[0]
         for i in range(len(response.data['results'])):
-            piece_pk = response.data['results'][i]['item_id']
+            piece_pk = response.data['results'][i]['id']
             if user_download.collection_pieces.filter(pk=piece_pk):
                 response.data['results'][i]['in_cart'] = True
             else:

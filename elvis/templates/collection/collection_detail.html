@@ -26,7 +26,7 @@
                 $.ajax({
                     type: "post",
                     url: "/collections/",
-                    data: {action: 'make-private', id: {{ content.item_id }}},
+                    data: {action: 'make-private', id: {{ content.id }}},
                     success: function (data)
                     {
                         console.log("Made {{ content.title }} private.");
@@ -40,7 +40,7 @@
                 $.ajax({
                     type: "post",
                     url: "/collections/",
-                    data: {action: 'make-public', id: {{ content.item_id }}},
+                    data: {action: 'make-public', id: {{ content.id }}},
                     success: function (data)
                     {
                         console.log("Made {{ content.title }} public.");
@@ -62,7 +62,7 @@
                     $.ajax({
                         type: "post",
                         url: "/collections/",
-                        data: {action: 'delete', id: {{ content.item_id }}},
+                        data: {action: 'delete', id: {{ content.id }}},
                         success: function (data)
                         {
                             console.log("Deleted {{ content.title }}");
@@ -97,7 +97,7 @@
                         </button>
                     {% endif %}
                 {% endif %}
-                {% include "includes/download-button-inc.html" with download_type="elvis_collection" download_item_id=content.item_id title="Add to Downloads" in_cart=content.in_cart %}
+                {% include "includes/download-button-inc.html" with download_type="elvis_collection" download_id=content.id title="Add to Downloads" in_cart=content.in_cart %}
             </span>
         </h2>
 
@@ -127,7 +127,7 @@
             <tbody>
             {% for piece in content.pieces %}
                 <tr>
-                    <td>{% include "includes/download-badge-inc.html" with download_type="elvis_piece" download_item_id=piece.item_id title="Add to Downloads" in_cart=piece.in_cart %}</td>
+                    <td>{% include "includes/download-badge-inc.html" with download_type="elvis_piece" download_id=piece.id title="Add to Downloads" in_cart=piece.in_cart %}</td>
                     <td><a href="{{ piece.url }}">{{ piece.title }}</a></td>
                     <td><a href="{{ piece.composer.url }}">{{ piece.composer.name}}</a></td>
                     <td>{% if piece.movement_count %}<span class="label label-primary">{{ piece.movement_count }} movement{{  piece.movement_count | pluralize }} included</span></a>{% else %}<span class="label label-default">No movements</span>{% endif %}</td>
@@ -161,7 +161,7 @@
             <tbody>
             {% for mov in content.movements %}
                 <tr>
-                    <td>{% include "includes/download-badge-inc.html" with download_type="elvis_movement" download_item_id=mov.item_id title="Add to Downloads" in_cart=mov.in_cart %}</td>
+                    <td>{% include "includes/download-badge-inc.html" with download_type="elvis_movement" download_id=mov.id title="Add to Downloads" in_cart=mov.in_cart %}</td>
                     <td><a href="{{ mov.url }}">{{ mov.title }}</a> </td>
                     <td><a href="{{ mov.composer.url }}">{{ mov.composer.name}}</a></td>
                     <td>{% if mov.piece %}<a href="{{ mov.piece.url }}"><span class="label label-success">{{ mov.piece.title }}</span></a>{% else %}<span class="label label-default">No piece</span>{% endif %}</td>

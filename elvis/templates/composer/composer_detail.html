@@ -28,7 +28,7 @@
 <div class="page-header">
     <h2>{{ content.name }} <small>({{ content.birth_date }}&ndash;{{ content.death_date }})</small>
         <span class="pull-right">
-            {% include "includes/download-button-inc.html" with download_type="elvis_composer" download_item_id=content.item_id title="Add to Downloads" in_cart=content.in_cart%}
+            {% include "includes/download-button-inc.html" with download_type="elvis_composer" download_id=content.id title="Add to Downloads" in_cart=content.in_cart%}
         </span>
     </h2>
 </div>
@@ -50,7 +50,7 @@
         <tbody>
         {% for piece in content.pieces %}
             <tr>
-                <td>{% include "includes/download-badge-inc.html" with download_type="elvis_piece" download_item_id=piece.item_id title="Add to Downloads" in_cart=piece.in_cart %}</td>
+                <td>{% include "includes/download-badge-inc.html" with download_type="elvis_piece" download_id=piece.id title="Add to Downloads" in_cart=piece.in_cart %}</td>
                 <td><a href="{{ piece.url }}">{{ piece.title }}</a></td>
                 <td>{% if piece.movement_count %}<span class="label label-info"> {{ piece.movement_count }} movement{{  piece.movement_count | pluralize }}</span> {% else %}<span class="label label-default">0 movements</span>{% endif %}</td>
                 <td width="10%">{{ piece.composition_end_date }}</td>
@@ -73,7 +73,7 @@
         <tbody>
         {% for mov in content.free_movements %}
             <tr>
-                <td>{% include "includes/download-badge-inc.html" with download_type="elvis_movement" download_item_id=mov.item_id title="Add to Downloads" in_cart=mov.in_cart %}</td>
+                <td>{% include "includes/download-badge-inc.html" with download_type="elvis_movement" download_id=mov.id title="Add to Downloads" in_cart=mov.in_cart %}</td>
                 <td><a href="{{ mov.url }}">{{ mov.title }}</a> </td>
                 <td>{{ mov.composition_end_date }}</td>
             </tr>

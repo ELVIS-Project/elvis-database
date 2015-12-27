@@ -3,7 +3,7 @@
         <form class="recursive-patch-download-form" action="/download-cart/" method="post">
             <button type="button" class="btn btn-mini btn-info disabled" data-container="body" data-toggle="tooltip" data-placement="top" title="Parent Piece in Downloads - must remove Piece to modify."><span class="glyphicon glyphicon-lock"> </span> </button>
             <input type="hidden" name="item_type"  value="{{ download_type }}" />
-            <input type="hidden" name="item_id"  value="{{ download_item_id }}" />
+            <input type="hidden" name="id"  value="{{ download_id }}" />
             <input type="hidden" name="action" value="remove" />
         </form>
     {% endif %}
@@ -11,7 +11,7 @@
         <form class="recursive-patch-download-form" action="/download-cart/" method="post">
             <button type="button" class="btn btn-mini btn-danger cart-badge" data-container="body" data-toggle="tooltip" data-placement="top" title="Remove from Downloads"><span class="glyphicon glyphicon-minus"> </span> </button>
             <input type="hidden" name="item_type"  value="{{ download_type }}" />
-            <input type="hidden" name="item_id"  value="{{ download_item_id }}" />
+            <input type="hidden" name="id"  value="{{ download_id }}" />
             <input type="hidden" name="action" value="remove" />
         </form>
     {% endif %}
@@ -19,7 +19,7 @@
         <form class="recursive-patch-download-form" action="/download-cart/" method="post">
             <button type="button" class="btn btn-mini btn-success cart-badge" data-container="body" data-toggle="tooltip" data-placement="top" title="Add to Downloads"><span class="glyphicon glyphicon-plus"> </span> </button>
             <input type="hidden" name="item_type"  value="{{ download_type }}" />
-            <input type="hidden" name="item_id"  value="{{ download_item_id }}" />
+            <input type="hidden" name="id"  value="{{ download_id }}" />
             <input type="hidden" name="action" value="add" />
         </form>
     {% endif %}

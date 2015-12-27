@@ -13,12 +13,10 @@ from elvis.views.auth import LoginFormView, logout_view
 from elvis.views.search import SearchView
 from elvis.views.download import DownloadCart, Downloading
 from elvis.views.piece import PieceList, PieceDetail, PieceCreate, PieceUpdate
-from elvis.views.user import  UserDetail, UserAccount, UserUpdate
+from elvis.views.user import UserDetail, UserAccount, UserUpdate
 from elvis.views.movement import MovementList, MovementDetail
 from elvis.views.composer import ComposerList, ComposerDetail
-from elvis.views.attachment import AttachmentList, AttachmentDetail
 from elvis.views.collection import CollectionList, CollectionDetail
-from elvis.views.tag import TagDetail
 from django.contrib.auth import views as auth_views
 
 # Uncomment the next two lines to enable the admin:
@@ -69,10 +67,6 @@ urlpatterns += format_suffix_patterns(
 
         url(r'^movements/$', MovementList.as_view(), name="movement-list"),
         url(r'^movement/(?P<pk>[0-9]+)/$', MovementDetail.as_view(), name="movement-detail"),
-        url(r'^attachments/$', AttachmentList.as_view(), name="attachment-list"),
-        url(r'^attachment/(?P<pk>[0-9]+)/$', AttachmentDetail.as_view(), name="attachment-detail"),
-
-        url(r'^tag/(?P<pk>[0-9]+)/$', TagDetail.as_view(), name="tag-detail"),
 
         url(r'^about/$', about, name='about'),
 

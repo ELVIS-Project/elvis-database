@@ -12,7 +12,7 @@
         <tbody>
             {% for movement in piece.movements %}
                 <tr>
-                    <td class="small-column">{% include "includes/download-badge-inc.html" with download_type="elvis_movement" download_item_id=movement.item_id %}</td>
+                    <td class="small-column">{% include "includes/download-badge-inc.html" with download_type="elvis_movement" download_id=movement.id %}</td>
                     <td><a href="{{ movement.url }}">{{ movement.title }}</a></td>
                 </tr>
             {% endfor %}

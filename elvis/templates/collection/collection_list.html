@@ -33,7 +33,7 @@
             {% include "paginate.html" with content=content %}
             {% for collection in content.results %}
                 <div class="list-row row-eq-height">
-                    <div class='col-xs-1 list-add'>{% include "includes/download-badge-inc.html" with download_type="elvis_collection" download_item_id=collection.item_id  in_cart=collection.in_cart %}</div>
+                    <div class='col-xs-1 list-add'>{% include "includes/download-badge-inc.html" with download_type="elvis_collection" download_id=collection.id  in_cart=collection.in_cart %}</div>
                     <a href='{{ collection.url }}' class='list-item col-xs-11'>
                 <span class='badge alert-info right-badge'
                       style='margin-top:10px'>{{ collection.piece_count }} Pieces, {{ collection.movement_count }} Movements</span>

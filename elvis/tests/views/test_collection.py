@@ -18,7 +18,7 @@ class CollectionViewTestCase(ElvisTestSetup, APITestCase):
         collection = Collection.objects.filter(public=True)[0]
         response = self.client.get("/collection/{0}/".format(collection.id))
         self.assertEqual(response.status_code, status.HTTP_200_OK)
-        self.assertEqual(response.data['item_id'], collection.id)
+        self.assertEqual(response.data['id'], collection.id)
 
     def test_get_private_detail(self):
         collection = Collection.objects.filter(public=False)[0]
@@ -30,7 +30,7 @@ class CollectionViewTestCase(ElvisTestSetup, APITestCase):
         self.client.login(username='creatoruser', password='test')
         response = self.client.get("/collection/{0}/".format(collection.id))
         self.assertEqual(response.status_code, status.HTTP_200_OK)
-        self.assertEqual(response.data['item_id'], collection.id)
+        self.assertEqual(response.data['id'], collection.id)
         self.client.logout()
 
     def test_get_download_cart_not_allowed(self):

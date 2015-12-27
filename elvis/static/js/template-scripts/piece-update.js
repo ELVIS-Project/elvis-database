@@ -373,7 +373,7 @@ $(document).ready(function ($)
         {
             mov_table.dynamicTable('addRow', true);
             var row = mov_table.find("#_existingmov" + (i + 1));
-            row.attr('name',oldPiece['movements'][i]['item_id'] );
+            row.attr('name',oldPiece['movements'][i]['id'] );
             row.css('background-color', '#E8E8E8');
             var $title = mov_table.find("#_existingmov_title_" + (i + 1));
             var $instruments = mov_table.find("#_existingmov" + (i + 1) + "_instrumentation");
@@ -574,7 +574,7 @@ $(document).ready(function ($)
             // Find the old movement in the oldPiece.
             for (var j = 0; j < oldPiece['movements'].length; j++)
             {
-                if (oldPiece['movements'][j]['item_id'] === id)
+                if (oldPiece['movements'][j]['id'] === id)
                 {
                     oldMov = oldPiece['movements'][j];
                     break

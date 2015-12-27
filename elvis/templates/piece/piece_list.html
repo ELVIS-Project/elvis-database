@@ -34,7 +34,7 @@
             {% include "paginate.html" with content=content %}
             {% for piece in content.results %}
                 <div class="list-row row-eq-height">
-                    <div class='col-xs-1 list-add'>{% include "includes/download-badge-inc.html" with download_type="elvis_piece" download_item_id=piece.item_id in_cart=piece.in_cart %}</div>
+                    <div class='col-xs-1 list-add'>{% include "includes/download-badge-inc.html" with download_type="elvis_piece" download_id=piece.id in_cart=piece.in_cart %}</div>
                     <a href='{{ piece.url }}' class='list-item col-xs-11'>
                         {% if piece.movement_count > 0 %}<span style="float:right;"><span
                                 class="label label-default">{{ piece.movement_count }} movement{{ piece.movement_count | pluralize }}</span></span> {% endif %}

@@ -37,7 +37,7 @@
     <div class="page-header">
         <h2> {{ content.title }}
         <span class="pull-right">
-            {% include "includes/download-button-inc.html" with download_type="elvis_movement" download_item_id=content.item_id title="Add to Downloads" in_cart=content.in_cart%}
+            {% include "includes/download-button-inc.html" with download_type="elvis_movement" download_id=content.id title="Add to Downloads" in_cart=content.in_cart%}
         </span></h2>
         <p>
             <span class="label label-primary">Movement</span> - Created by {{ content.uploader.username }}

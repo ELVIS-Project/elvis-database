@@ -18,4 +18,4 @@ class ComposerViewTestCase(ElvisTestSetup, APITestCase):
         composer = Composer.objects.first()
         response = self.client.get("/composer/{0}/".format(composer.id))
         self.assertEqual(response.status_code, status.HTTP_200_OK)
-        self.assertEqual(response.data['item_id'], composer.id)
+        self.assertEqual(response.data['id'], composer.id)

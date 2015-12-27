@@ -20,7 +20,7 @@
                     $.ajax({
                         type: "post",
                         url: "/pieces/",
-                        data: {'delete': {{ content.item_id }}},
+                        data: {'delete': {{ content.id }}},
                         success: function (data)
                         {
                             console.log("Deleted {{ content.title }}");
@@ -42,7 +42,7 @@
                     <button type="button" class="btn btn-default" id="delete-button">Delete</button>
                     <a href="{{ content.url }}update/" class="btn btn-default" id="update-button">Update</a>
                 {% endif %}
-                {% include "includes/download-button-inc.html" with download_type="elvis_piece" download_item_id=content.item_id title="Add to Downloads" in_cart=content.in_cart %}
+                {% include "includes/download-button-inc.html" with download_type="elvis_piece" download_id=content.id title="Add to Downloads" in_cart=content.in_cart %}
 
             </span>
         </h2>
@@ -175,7 +175,7 @@
                 {% for movement in content.movements %}
                     <tr>
                         <td class="text-center">
-                            {% include "includes/download-badge-inc.html" with download_type="elvis_movement" download_item_id=movement.item_id title="Add to Downloads" in_cart=movement.in_cart %}
+                            {% include "includes/download-badge-inc.html" with download_type="elvis_movement" download_id=movement.id title="Add to Downloads" in_cart=movement.in_cart %}
                         </td>
                         <td>
                             <a href="{{ movement.url }}">{{ movement.title }}</a>
