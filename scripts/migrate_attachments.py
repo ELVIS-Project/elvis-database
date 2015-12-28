@@ -56,6 +56,8 @@ def rename_files_to_ascii():
 Nukes the solr database and re-indexes everything. Someday I'm sure
 this will be useful again.
 """
+
+
 def reindex_all():
     from elvis.models.collection import Collection
     from elvis.models.composer import Composer
@@ -79,46 +81,52 @@ def reindex_all():
 
     print("Indexing collections...")
     for c in Collection.objects.all():
-        c.save()
+        c.solr_index(commit=False, solrconn=solrconn)
+    solrconn.commit()
 
     print("Indexing composers...")
     for c in Composer.objects.all():
-        c.save()
+        c.solr_index(commit=False, solrconn=solrconn)
+    solrconn.commit()
 
     print("Indexing genres...")
     for g in Genre.objects.all():
-        g.save()
+        g.solr_index(commit=False)
+    solrconn.commit()
 
     print("Indexing instrument voices...")
     for i in InstrumentVoice.objects.all():
-        i.save()
+        i.solr_index(commit=False, solrconn=solrconn)
+    solrconn.commit()
 
     print("Indexing languages...")
     for l in Language.objects.all():
-        l.save()
+        l.solr_index(commit=False, solrconn=solrconn)
+    solrconn.commit()
 
     print("Indexing locations...")
     for l in Location.objects.all():
-        l.save()
+        l.solr_index(commit=False, solrconn=solrconn)
+    solrconn.commit()
 
     print("Indexing sources...")
     for s in Source.objects.all():
-        s.save()
+        s.solr_index(commit=False, solrconn=solrconn)
+    solrconn.commit()
 
     print("Indexing tags...")
     for t in Tag.objects.all():
-        t.save()
+        t.solr_index(commit=False, solrconn=solrconn)
+    solrconn.commit()
 
     print("Indexing pieces...")
     for p in Piece.objects.all():
-        p.solr_index(commit=False)
-
+        p.solr_index(commit=False, solrconn=solrconn)
     solrconn.commit()
 
     print("Indexing movements...")
     for m in Movement.objects.all():
-        m.solr_index(commit=False)
-
+        m.solr_index(commit=False, solrconn=solrconn)
     solrconn.commit()
 
     from elvis.elvis.tasks import rebuild_suggester_dicts

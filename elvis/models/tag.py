@@ -14,8 +14,7 @@ class Tag(ElvisModel):
         tag = self
 
         return {'type': 'elvis_tag',
-                'id': str(uuid.uuid4()),
-                'item_id': int(tag.id),
+                'id': int(tag.id),
                 'name': tag.title,
                 'tags': tag.title,
                 'tags_searchable': tag.title}

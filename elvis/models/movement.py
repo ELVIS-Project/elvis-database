@@ -118,8 +118,7 @@ class Movement(ElvisModel):
             d2 = None
 
         return {'type': 'elvis_movement',
-                'id': str(uuid.uuid4()),
-                'item_id': int(movement.id),
+                'id': int(movement.id),
                 'title': movement.title,
                 'composition_start_date': d1,
                 'composition_end_date': d2,

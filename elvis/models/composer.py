@@ -44,8 +44,7 @@ class Composer(ElvisModel):
             death = None
 
         return {'type': 'elvis_composer',
-                'id': str(uuid.uuid4()),
-                'item_id': int(composer.id),
+                'id': int(composer.id),
                 'name': composer.name,
                 'birth_date': birth,
                 'death_date': death,

@@ -8,6 +8,7 @@ from elvis.models.elvis_model import ElvisModel
 
 
 class Collection(ElvisModel):
+
     class Meta:
         ordering = ["title"]
         verbose_name_plural = "collections"
@@ -42,8 +43,7 @@ class Collection(ElvisModel):
             creator_name = None
 
         return {'type': 'elvis_collection',
-                'id': str(uuid.uuid4()),
-                'item_id': int(collection.id),
+                'id': int(collection.id),
                 'title': collection.title,
                 'created': collection.created,
                 'updated': collection.updated,

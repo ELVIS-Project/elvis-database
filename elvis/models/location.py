@@ -15,8 +15,7 @@ class Location(ElvisModel):
         location = self
 
         return {'type': 'elvis_location',
-                'id': str(uuid.uuid4()),
-                'item_id': int(location.id),
+                'id': int(location.id),
                 'name': location.name,
                 'locations_searchable': location.name,
                 'created': location.created,

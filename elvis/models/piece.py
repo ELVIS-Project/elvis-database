@@ -125,8 +125,7 @@ class Piece(ElvisModel):
             d2 = None
 
         return {'type': 'elvis_piece',
-                'id': str(uuid.uuid4()),
-                'item_id': int(piece.id),
+                'id': int(piece.id),
                 'title': piece.title,
                 'composition_start_date': d1,
                 'composition_end_date': d2,

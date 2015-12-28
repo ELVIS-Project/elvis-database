@@ -214,22 +214,22 @@ $(document).ready(function ($)
 
                 $results.append("<div class='row search-result-row row-eq-height'>" +
                     "<div class='col-xs-1 search-result-add' id='result-list-add" + key + "'><div id='add" + key + "'></div></div>" +
-                    "<a href='/composer/" + entry['item_id'] + "' id='result-list-item" + key + "' class='search-result-item col-xs-11'>" +
+                    "<a href='/composer/" + entry['id'] + "' id='result-list-item" + key + "' class='search-result-item col-xs-11'>" +
                     "<span class='label label-default right-label'>Composer</span><h4>" + entry['name'] + "</h4>" +
                     "<p class='list-group-item-text'>" + birthday + "-" + death + "</p>" +
                     "</a></div>");
-                create_download_form("elvis_composer", entry['item_id'], "add" + key);
+                create_download_form("elvis_composer", entry['id'], "add" + key);
                 continue;
             }
             if (entry['type'] === "elvis_collection")
             {
                 $results.append("<div class='row search-result-row row-eq-height'>" +
                     "<div class='col-xs-1 search-result-add' id='result-list-add" + key + "'><div id='add" + key + "'></div></div>" +
-                    "<a href='/collection/" + entry['item_id'] + "' id='result-list-item" + key + "' class='search-result-item col-xs-11'>" +
+                    "<a href='/collection/" + entry['id'] + "' id='result-list-item" + key + "' class='search-result-item col-xs-11'>" +
                     "<span class='label label-info right-label' style='margin-top:10px'>Collection</span><h4>" + entry['title'] + "</h4>" +
                     "<p class='list-group-item-text'>Created By: " + entry['creator_name'] + " on " + entry['created'].substring(0, 10) + "</p>" +
                     "</a></div>");
-                create_download_form("elvis_collection", entry['item_id'], "add" + key);
+                create_download_form("elvis_collection", entry['id'], "add" + key);
                 continue;
             }
             if (entry['type'] === "elvis_movement")
@@ -241,7 +241,7 @@ $(document).ready(function ($)
 
                 var result = "<div class='row search-result-row row-eq-height'>" +
                     "<div class='col-xs-1 search-result-add' id='result-list-add" + key + "'><div id='add" + key + "'></div></div>" +
-                    "<a href='/movement/" + entry['item_id'] + "' id='result-list-item" + key + "' class='search-result-item col-xs-11'>" +
+                    "<a href='/movement/" + entry['id'] + "' id='result-list-item" + key + "' class='search-result-item col-xs-11'>" +
                     "<span class='label label-primary right-label'>Movement</span><h4>" + entry['title'] + "</h4>";
                 if (entry['parent_piece_name'] !== undefined)
                 {
@@ -255,7 +255,7 @@ $(document).ready(function ($)
                 }
                 result += "</a></div>";
                 $results.append(result);
-                create_download_form("elvis_movement", entry['item_id'], "add" + key);
+                create_download_form("elvis_movement", entry['id'], "add" + key);
                 continue;
             }
             if (entry['type'] === "elvis_piece")
@@ -266,7 +266,7 @@ $(document).ready(function ($)
                     var end_date = "Unknown";
                 var result = "<div class='row search-result-row row-eq-height'>" +
                     "<div class='col-xs-1 search-result-add' id='result-list-add" + key + "'><div id='add" + key + "'></div></div>" +
-                    "<a href='/piece/" + entry['item_id'] + "' id='result-list-item" + key + "' class='search-result-item col-xs-11'>" +
+                    "<a href='/piece/" + entry['id'] + "' id='result-list-item" + key + "' class='search-result-item col-xs-11'>" +
                     "<span class='label label-success right-label'>Piece</span><h4> " + entry['title'] + "</h4>" +
                     "<p class='list-group-item-text'> Composer: " + entry['composer_name'] + "</p>" +
                     "<p class='list-group-item-text'> Date: " + end_date + "</p>";
@@ -276,7 +276,7 @@ $(document).ready(function ($)
                 }
                 result += "</a></div>";
                 $results.append(result);
-                create_download_form("elvis_piece", entry['item_id'], "add" + key);
+                create_download_form("elvis_piece", entry['id'], "add" + key);
                 continue;
             }
         }

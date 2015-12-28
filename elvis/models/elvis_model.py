@@ -1,4 +1,5 @@
 import solr
+import uuid
 
 from django.db import models
 from django.contrib.auth.models import User
@@ -9,6 +10,7 @@ class ElvisModel(models.Model):
     """ A super class for the common functionality of
     most models on the project."""
     title = models.CharField(max_length=255, default="NOTITLE_ERROR")
+    uuid = models.UUIDField(default=uuid.uuid4, unique=True)
     creator = models.ForeignKey(User, blank=True, null=True)
     created = models.DateTimeField(auto_now_add=True, blank=True, null=True)
     updated = models.DateTimeField(auto_now=True, blank=True, null=True)
@@ -55,10 +57,12 @@ class ElvisModel(models.Model):
         :param kwargs:
             commit: True to commit right away. False for batch updates.
         """
-        self.solr_delete(commit=False)
-
         solr_dict = self.solr_dict()
-        solrconn = solr.SolrConnection(settings.SOLR_SERVER)
+        solr_dict['uuid'] = str(self.uuid)
+        if kwargs.get('solrconn'):
+            solrconn = kwargs.get('solrconn')
+        else:
+            solrconn = solr.SolrConnection(settings.SOLR_SERVER)
         solrconn.add(**solr_dict)
 
         if kwargs.get('commit', True):
@@ -69,18 +73,13 @@ class ElvisModel(models.Model):
         :param kwargs:
             commit: True to commit right away. False for batch updates.
         """
-        solr_dict = self.solr_dict()
-        item_id = solr_dict['item_id']
-        type = solr_dict['type']
 
         solrconn = solr.SolrConnection(settings.SOLR_SERVER)
-        record = solrconn.query("item_id:{0} AND type:{1}".format(item_id, type))
+        solrconn.delete_query("uuid:{0}".format(str(self.uuid)))
 
-        if record and record.results:
-            for i, v in enumerate(record.results):
-                solrconn.delete(record.results[i]['id'])
-            if kwargs.get('commit', True):
-                solrconn.commit()
+        if kwargs.get('commit', True):
+            solrconn.commit()
+
 
     def __str__(self):
         return self.title

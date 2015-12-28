@@ -68,7 +68,7 @@
         regular fields are stored as strings for faceting purposes... with the exception of tags -->
 
         <!-- LM General fields -->
-        <field name="id" type="string" indexed="true" stored="true"
+        <field name="id" type="int" indexed="true" stored="true"
                required="true"/>
         <field name="type" type="string" indexed="true" stored="true"/>
         <field name="text" type="text_general" indexed="true" stored="false"
@@ -167,13 +167,15 @@
         <field name="approved" type="boolean" indexed="true" stored="true"/>
         <field name="_version_" type="long" indexed="true" stored="true"/>
 
+        <field name="uuid" type="string" indexed="true" stored="true" required="true" multiValued="false"/>
+
     </fields>
 
 
     <!-- Field to use to determine and enforce document uniqueness.
          Unless this field is marked with required="false", it will be a required field
       -->
-    <uniqueKey>id</uniqueKey>
+    <uniqueKey>uuid</uniqueKey>
 
     <!-- DEPRECATED: The defaultSearchField is consulted by various query parsers when
      parsing a query string that isn't explicit about the field.  Machine (non-user)

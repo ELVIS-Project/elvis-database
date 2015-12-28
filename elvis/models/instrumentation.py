@@ -15,8 +15,7 @@ class InstrumentVoice(ElvisModel):
         instrument_voice = self
 
         return {'type': 'elvis_instrument_voice',
-                'id': str(uuid.uuid4()),
-                'item_id': int(instrument_voice.id),
+                'id': int(instrument_voice.id),
                 'name': instrument_voice.name,
                 'instruments_voices_searchable': instrument_voice.name,
                 'created': instrument_voice.created,

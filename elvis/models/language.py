@@ -15,8 +15,7 @@ class Language(ElvisModel):
         language = self
 
         return {'type': 'elvis_language',
-                'id': str(uuid.uuid4()),
-                'item_id': int(language.id),
+                'id': int(language.id),
                 'name': language.name,
                 'languages_searchable': language.name,
                 'created': language.created,

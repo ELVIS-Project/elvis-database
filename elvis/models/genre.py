@@ -15,8 +15,7 @@ class Genre(ElvisModel):
         genre = self
 
         return {'type': 'elvis_genre',
-                'id': str(uuid.uuid4()),
-                'item_id': int(genre.id),
+                'id': int(genre.id),
                 'name': genre.name,
                 'genres_searchable': genre.name,
                 'created': genre.created,

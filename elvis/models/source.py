@@ -15,8 +15,7 @@ class Source(ElvisModel):
         source = self
 
         return {'type': 'elvis_source',
-                'id': str(uuid.uuid4()),
-                'item_id': int(source.id),
+                'id': int(source.id),
                 'title': source.name,
                 'sources_searchable': source.name,
                 'created': source.created,
