@@ -54,19 +54,19 @@ urlpatterns += format_suffix_patterns(
         url(r'^download-cart/$', DownloadCart.as_view(), name="download-cart"),
 
 
-        url(r'^pieces/upload/$', PieceCreate.as_view(), name="piece-create"),
-        url(r'^pieces/$', PieceList.as_view(), name="piece-list"),
-        url(r'^piece/(?P<pk>[0-9]+)/$', PieceDetail.as_view(), name="piece-detail"),
-        url(r'^piece/(?P<pk>[0-9]+)/update/$', PieceUpdate.as_view(), name="piece-update"),
+        url(r'^pieces/upload/$', PieceCreate.as_view(), name="piece-create", kwargs={'model': "Piece"}),
+        url(r'^pieces/$', PieceList.as_view(), name="piece-list", kwargs={'model': "Piece"}),
+        url(r'^piece/(?P<pk>[0-9]+)/$', PieceDetail.as_view(), name="piece-detail", kwargs={'model': "Piece"}),
+        url(r'^piece/(?P<pk>[0-9]+)/update/$', PieceUpdate.as_view(), name="piece-update", kwargs={'model': "Piece"}),
 
-        url(r'^collections/$', CollectionList.as_view(), name="collection-list"),
-        url(r'^collection/(?P<pk>[0-9]+)/$', CollectionDetail.as_view(), name="collection-detail"),
+        url(r'^collections/$', CollectionList.as_view(), name="collection-list", kwargs={'model': "Collection"}),
+        url(r'^collection/(?P<pk>[0-9]+)/$', CollectionDetail.as_view(), name="collection-detail", kwargs={'model': "Collection"}),
 
-        url(r'^composers/$', ComposerList.as_view(), name="composer-list"),
-        url(r'^composer/(?P<pk>[0-9]+)/$', ComposerDetail.as_view(), name="composer-detail"),
+        url(r'^composers/$', ComposerList.as_view(), name="composer-list", kwargs={'model': "Composer"}),
+        url(r'^composer/(?P<pk>[0-9]+)/$', ComposerDetail.as_view(), name="composer-detail", kwargs={'model': "Composer"}),
 
-        url(r'^movements/$', MovementList.as_view(), name="movement-list"),
-        url(r'^movement/(?P<pk>[0-9]+)/$', MovementDetail.as_view(), name="movement-detail"),
+        url(r'^movements/$', MovementList.as_view(), name="movement-list", kwargs={'model': "Movement"}),
+        url(r'^movement/(?P<pk>[0-9]+)/$', MovementDetail.as_view(), name="movement-detail", kwargs={'model': "Movement"}),
 
         url(r'^about/$', about, name='about'),
 
