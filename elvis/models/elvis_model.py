@@ -6,6 +6,8 @@ from django.conf import settings
 
 
 class ElvisModel(models.Model):
+    """ A super class for the common functionality of
+    most models on the project."""
     title = models.CharField(max_length=255, default="NOTITLE_ERROR")
     creator = models.ForeignKey(User, blank=True, null=True)
     created = models.DateTimeField(auto_now_add=True, blank=True, null=True)

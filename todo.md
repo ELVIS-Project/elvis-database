@@ -9,6 +9,9 @@
    of attachments, it should be much easier to implement directories
    and metadata files in the zip (also, real progress bar using the 
    celery meta like on misirlou would be sweet).
+5. Write super class for common view functionality. All list views
+   should inherit from a wrapper of ListAPIView which implements
+   sorting and filtering with query parameters.
    
 Once the above are done, it would make sense to write better unit
 tests, and brainstorm/prioritize new feature additions.
