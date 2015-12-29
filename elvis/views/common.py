@@ -3,7 +3,6 @@ from rest_framework import generics
 from rest_framework.exceptions import PermissionDenied
 from django.db.models import Q
 from elvis.models import Collection
-
 from django.db.models.loading import get_model
 
 
@@ -12,8 +11,21 @@ This should make it easier to add/update security measures or
 features to all views at once."""
 
 
-class ElvisDetailView(generics.RetrieveDestroyAPIView):
+class ElvisDetailView(generics.RetrieveUpdateDestroyAPIView):
     permission_classes = (permissions.IsAuthenticatedOrReadOnly,)
+
+    def is_authorized(self, request, *args, **kwargs):
+        model = get_model('elvis', kwargs['model'])
+        obj = model.objects.get(id=kwargs['pk'])
+        user = self.request.user
+
+        if user.is_superuser or obj.creator == user:
+            return {'can_edit': True, 'can_view': True}
+
+        if not obj.__dict__.get('public', True):
+            return {'can_edit': False, 'can_view': False}
+        else:
+            return {'can_edit': False, 'can_view': True}
 
     """
     Default GET behaviour across detail views implements
@@ -21,55 +33,36 @@ class ElvisDetailView(generics.RetrieveDestroyAPIView):
     which is used in template rendering.
     """
     def get(self, request, *args, **kwargs):
-        model = get_model('elvis', kwargs['model'])
-        obj = model.objects.get(id=kwargs['pk'])
-        user = self.request.user
-
-        # if the object has a public field, its set to false, and the current
-        # user is not the owner of the object, raise PermissionDenied
-        if not obj.__dict__.get('public', True) \
-                and not (obj.creator == user or user.is_superuser):
+        auth = self.is_authorized(request, *args, **kwargs)
+        if not auth['can_view']:
             raise PermissionDenied
 
         response = super().get(request, *args, **kwargs)
-        if obj.creator == user or user.is_superuser:
-            response.data['can_edit'] = True
-        else:
-            response.data['can_edit'] = False
+        response.data['can_edit'] = auth['can_edit']
         return response
 
     """
-    Default DELETE behaviour across detail views is to
+    Default DELETE/PATCH behaviour across detail views is to
     check if the user is allowed to edit the object,
     and raise a PermissionDenied exception if not.
     """
     def delete(self, request, *args, **kwargs):
-        model = get_model('elvis', kwargs['model'])
-        obj = model.objects.get(id=kwargs['pk'])
-        user = self.request.user
-        if not(obj.creator == user or user.is_superuser):
+        auth = self.is_authorized(request, *args, **kwargs)
+        if not auth['can_edit']:
             raise PermissionDenied
         else:
             return super().delete(request, args, kwargs)
 
-
-class ElvisModifyView(generics.RetrieveUpdateDestroyAPIView):
-    permission_classes = (permissions.IsAuthenticatedOrReadOnly,)
-
-    """
-    Default dispatch (all http verbs) behaviour across modification
-    view is to raise a PermissionDenied exception if the user
-    is not allowed to edit the object.
-    """
-    def dispatch(self, request, *args, **kwargs):
-        model = get_model('elvis', kwargs['model'])
-        obj = model.objects.get(id=kwargs['pk'])
-        user = self.request.user
-
-        if not (obj.creator == user or user.is_superuser):
+    def patch(self, request, *args, **kwargs):
+        auth = self.is_authorized(request, *args, **kwargs)
+        if not auth['can_edit']:
             raise PermissionDenied
-        return super().dispatch(request, *args, **kwargs)
+        else:
+            return super().patch(request, args, kwargs)
 
+    def get_queryset(self):
+        model = get_model('elvis', self.kwargs['model'])
+        return model.objects.all()
 
 class ElvisListCreateView(generics.ListCreateAPIView):
     permission_classes = (permissions.IsAuthenticatedOrReadOnly,)
