@@ -18,9 +18,8 @@
                 $("#confirm-delete-button").click(function (event)
                 {
                     $.ajax({
-                        type: "post",
-                        url: "/pieces/",
-                        data: {'delete': {{ content.id }}},
+                        type: "delete",
+                        url: "/piece/{{ content.id }}",
                         success: function (data)
                         {
                             console.log("Deleted {{ content.title }}");
@@ -38,7 +37,7 @@
     <div class="page-header">
         <h2>{{ content.title }}
             <span class="pull-right">
-                {% if user.id == content.uploader.pk or user.is_superuser %}
+                {% if content.can_edit %}
                     <button type="button" class="btn btn-default" id="delete-button">Delete</button>
                     <a href="{{ content.url }}update/" class="btn btn-default" id="update-button">Update</a>
                 {% endif %}

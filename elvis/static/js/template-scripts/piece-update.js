@@ -156,41 +156,40 @@ $(document).ready(function ($)
 
         var formData = new FormData(this);
         formData.append('changes', JSON.stringify(changes));
+
         $.ajax({
-            type: "post",
-            url: window.location.href,
+            type: "patch",
+            url: "/piece/" + oldPiece['id'],
             data: formData,
             processData: false,
             contentType: false,
             success: function (data)
             {
-                if (data['errors'] === undefined)
-                {
-                    $base_modal_header.html("<h4 class='modal-title'>Done!</h4>");
-                    $base_modal_body.html("<p>Piece succesfuly updated!</p>");
-                    $base_modal_footer.html('.modal-footer').html( "<a href='"+ window.location.href + "' class='btn btn-default' id='success-refresh'>Refresh Page</a>" +
-                        "<a href='" + data['url'] + "' class='btn btn-default' id='goto-piece'>Go to Piece</a>");
+                $base_modal_header.html("<h4 class='modal-title'>Done!</h4>");
+                $base_modal_body.html("<p>Piece succesfuly updated!</p>");
+                $base_modal_footer.html('.modal-footer').html( "<a href='"+ window.location.href + "' class='btn btn-default' id='success-refresh'>Refresh Page</a>" +
+                    "<a href='" + data['url'] + "' class='btn btn-default' id='goto-piece'>Go to Piece</a>");
+            },
+            error: function (data)
+            {
+                if (data['responseJSON'] == undefined || data['responseJSON']['errors'] === undefined) {
+                    $base_modal_header.html("<h4 class='modal-title'>Server Error<h4>");
+                    $base_modal_body.html("<p>An error occurred while updating this piece. Please try again, or, if the error persists, " +
+                        "<a href='mailto:elvisdatabase@gmail.com?Subject=Upload%20Error'>contact us</a></p>");
+                    $base_modal_footer.html("<button type='button' class='btn btn-default' data-dismiss='modal'>Close</button>");
                 }
                 else
                 {
-                    var errors = createErrorString(data);
+                    var errors = createErrorString(data['responseJSON']);
                     $base_modal_header.html("<h4 class='modal-title'>Form Error<h4>");
                     $base_modal_body.html("<p>Your submission has the following errors: <br>" + errors + "</p>");
                     $base_modal_footer.html("<button id='close-and-goto-button' type='button' class='btn btn-default' data-dismiss='modal'>Close</button>");
                     $("#close-and-goto-button").click(function(){
                         $('html, body').animate({
-                            scrollTop: $(".validation-error").offset().top
+                            scrollTop: $(".validation-error").offset().top - 10
                         }, 500);
                     })
                 }
-
-            },
-            error: function (data)
-            {
-                $base_modal_header.html("<h4 class='modal-title'>Server Error<h4>");
-                $base_modal_body.html("<p>An error occurred while updating this piece. Please try again, or, if the error persists, " +
-                    "<a href='mailto:elvisdatabase@gmail.com?Subject=Upload%20Error'>contact us</a></p>");
-                $base_modal_footer.html("<button type='button' class='btn btn-default' data-dismiss='modal'>Close</button>");
             }
         })
     });
@@ -480,7 +479,7 @@ $(document).ready(function ($)
         {
             for (var i = 0; i < jlist.length; i++)
             {
-                result += jlist[i].name + "; "
+                result += jlist[i].title + "; "
             }
         }
         return result
@@ -580,6 +579,7 @@ $(document).ready(function ($)
                     break
                 }
             }
+
 
             //Compare the old to the new, and record differences in a modifications dict.
             var key = 0;
