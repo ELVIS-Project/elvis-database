@@ -44,7 +44,7 @@ class CachedMinHyperlinkedModelSerializer(serializers.HyperlinkedModelSerializer
 class AttachmentMinSerializer(serializers.HyperlinkedModelSerializer):
     class Meta:
         model = Attachment
-        fields = ("file_name", "extension", "url")
+        fields = ("file_name", "url")
 
 
 class ComposerMinSerializer(serializers.HyperlinkedModelSerializer):
@@ -68,7 +68,7 @@ class MovementMinSerializer(serializers.HyperlinkedModelSerializer):
 class CollectionMinSerializer(serializers.HyperlinkedModelSerializer):
     class Meta:
         model = Collection
-        fields = ('title', 'url', 'id')
+        fields = ('title', 'url', 'id', 'public')
 
 
 class GenreMinSerializer(serializers.ModelSerializer):
@@ -111,6 +111,12 @@ class UserMinSerializer(serializers.HyperlinkedModelSerializer):
     class Meta:
         model = User
         fields = ('name', 'username', 'id')
+
+
+class AttachmentEmbedSerializer(serializers.HyperlinkedModelSerializer):
+    class Meta:
+        model = Attachment
+        fields = ("file_name", "extension", "url", "source")
 
 
 class MovementEmbedSerializer(serializers.HyperlinkedModelSerializer):
@@ -179,34 +185,16 @@ class ComposerFullSerializer(serializers.HyperlinkedModelSerializer):
 
     class Meta:
         model = Composer
-        fields = ("url", "id", "name", "birth_date", "death_date",
-                  "pieces", "free_movements", "free_movements_count",
-                  "created", "updated")
 
 
 class CollectionFullSerializer(serializers.HyperlinkedModelSerializer):
+
     creator = serializers.CharField(source='creator.username')
     pieces = PieceEmbedSerializer(many=True)
     movements = MovementEmbedSerializer(many=True)
 
     class Meta:
         model = Collection
-
-
-class PieceFullSerializer(serializers.HyperlinkedModelSerializer):
-    composer = ComposerMinSerializer()
-    tags = TagMinSerializer(many=True)
-    genres = GenreMinSerializer(many=True)
-    instruments_voices = InstrumentVoiceMinSerializer(many=True)
-    languages = LanguageMinSerializer(many=True)
-    locations = LocationMinSerializer(many=True)
-    collections = CollectionMinSerializer(many=True)
-    attachments = AttachmentMinSerializer(many=True)
-    uploader = serializers.CharField(source='creator.username')
-    movements = MovementListSerializer(many=True)
-
-    class Meta:
-        model = Piece
 
 
 class MovementFullSerializer(serializers.HyperlinkedModelSerializer):
@@ -216,13 +204,30 @@ class MovementFullSerializer(serializers.HyperlinkedModelSerializer):
     instruments_voices = InstrumentVoiceMinSerializer(many=True)
     languages = LanguageMinSerializer(many=True)
     locations = LocationMinSerializer(many=True)
+    sources = SourceMinSerializer(many=True)
     collections = CollectionMinSerializer(many=True)
-    attachments = AttachmentMinSerializer(many=True)
+    attachments = AttachmentEmbedSerializer(many=True)
     uploader = serializers.CharField(source='creator.username')
 
     class Meta:
-        model = Movement
+        model = Piece
 
+
+class PieceFullSerializer(serializers.HyperlinkedModelSerializer):
+    composer = ComposerListSerializer()
+    tags = TagMinSerializer(many=True)
+    genres = GenreMinSerializer(many=True)
+    instruments_voices = InstrumentVoiceMinSerializer(many=True)
+    languages = LanguageMinSerializer(many=True)
+    locations = LocationMinSerializer(many=True)
+    sources = SourceMinSerializer(many=True)
+    collections = CollectionMinSerializer(many=True)
+    attachments = AttachmentEmbedSerializer(many=True)
+    uploader = serializers.CharField(source='creator.username')
+    movements = MovementFullSerializer(many=True)
+
+    class Meta:
+        model = Piece
 
 
 class UserFullSerializer(serializers.HyperlinkedModelSerializer):
