@@ -116,7 +116,7 @@ class UserMinSerializer(serializers.HyperlinkedModelSerializer):
 class AttachmentEmbedSerializer(serializers.HyperlinkedModelSerializer):
     class Meta:
         model = Attachment
-        fields = ("file_name", "extension", "url", "source")
+        fields = ("id", "file_name", "extension", "url", "source")
 
 
 class MovementEmbedSerializer(serializers.HyperlinkedModelSerializer):
@@ -188,7 +188,7 @@ class ComposerFullSerializer(serializers.HyperlinkedModelSerializer):
 
 
 class CollectionFullSerializer(serializers.HyperlinkedModelSerializer):
-
+    id = serializers.IntegerField()
     creator = serializers.CharField(source='creator.username')
     pieces = PieceEmbedSerializer(many=True)
     movements = MovementEmbedSerializer(many=True)
@@ -198,6 +198,7 @@ class CollectionFullSerializer(serializers.HyperlinkedModelSerializer):
 
 
 class MovementFullSerializer(serializers.HyperlinkedModelSerializer):
+    id = serializers.IntegerField()
     composer = ComposerMinSerializer()
     tags = TagMinSerializer(many=True)
     genres = GenreMinSerializer(many=True)
@@ -207,13 +208,14 @@ class MovementFullSerializer(serializers.HyperlinkedModelSerializer):
     sources = SourceMinSerializer(many=True)
     collections = CollectionMinSerializer(many=True)
     attachments = AttachmentEmbedSerializer(many=True)
-    uploader = serializers.CharField(source='creator.username')
+    creator = serializers.CharField(source='creator.username')
 
     class Meta:
         model = Piece
 
 
 class PieceFullSerializer(serializers.HyperlinkedModelSerializer):
+    id = serializers.IntegerField()
     composer = ComposerListSerializer()
     tags = TagMinSerializer(many=True)
     genres = GenreMinSerializer(many=True)
@@ -223,7 +225,7 @@ class PieceFullSerializer(serializers.HyperlinkedModelSerializer):
     sources = SourceMinSerializer(many=True)
     collections = CollectionMinSerializer(many=True)
     attachments = AttachmentEmbedSerializer(many=True)
-    uploader = serializers.CharField(source='creator.username')
+    creator = serializers.CharField(source='creator.username')
     movements = MovementFullSerializer(many=True)
 
     class Meta:
@@ -231,6 +233,7 @@ class PieceFullSerializer(serializers.HyperlinkedModelSerializer):
 
 
 class UserFullSerializer(serializers.HyperlinkedModelSerializer):
+    id = serializers.IntegerField()
     full_name = serializers.SerializerMethodField()
     pieces = PieceListSerializer(many=True)
     movements = MovementListSerializer(many=True)
