@@ -7,8 +7,9 @@ from elvis.models import Collection
 from django.db.models.loading import get_model
 
 
-class ElvisList(generics.ListCreateAPIView):
-    permission_classes = (permissions.IsAuthenticatedOrReadOnly,)
+"""Common behaviour for most views on the site are defined here.
+This should make it easier to add/update security measures or
+features to all views at once."""
 
 
 class ElvisDetailView(generics.RetrieveDestroyAPIView):
@@ -23,6 +24,12 @@ class ElvisDetailView(generics.RetrieveDestroyAPIView):
         model = get_model('elvis', kwargs['model'])
         obj = model.objects.get(id=kwargs['pk'])
         user = self.request.user
+
+        # if the object has a public field, its set to false, and the current
+        # user is not the owner of the object, raise PermissionDenied
+        if not obj.__dict__.get('public', True) \
+                and not (obj.creator == user or user.is_superuser):
+            raise PermissionDenied
 
         response = super().get(request, *args, **kwargs)
         if obj.creator == user or user.is_superuser:
