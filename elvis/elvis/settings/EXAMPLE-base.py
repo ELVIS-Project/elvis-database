@@ -46,7 +46,7 @@ ROOT_URLCONF = 'elvis.elvis.urls'
 WSGI_APPLICATION = 'elvis.elvis.wsgi.application'
 SITE_ID = 1
 
-PREREQ_APPS = [
+INSTALLED_APPS = (
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
@@ -58,9 +58,9 @@ PREREQ_APPS = [
     'rest_framework',
     'rest_framework.authtoken',
     'django_extensions',
-]
-PROJECT_APPS = ['elvis']
-INSTALLED_APPS = PREREQ_APPS + PROJECT_APPS
+    'elvis',
+)
+
 MIDDLEWARE_CLASSES = (
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
@@ -70,8 +70,7 @@ MIDDLEWARE_CLASSES = (
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
     'django.contrib.flatpages.middleware.FlatpageFallbackMiddleware',
 )
-
-TEMPLATE_CONTEXT_PROCESSORS = [
+TEMPLATE_CONTEXT_PROCESSORS = (
     "django.contrib.auth.context_processors.auth",
     "django.template.context_processors.debug",
     "django.template.context_processors.i18n",
@@ -79,8 +78,8 @@ TEMPLATE_CONTEXT_PROCESSORS = [
     "django.template.context_processors.static",
     "django.template.context_processors.tz",
     "django.contrib.messages.context_processors.messages",
-    "django.core.context_processors.request"
-]
+    "django.core.context_processors.request",
+)
 
 SESSION_ENGINE = "django.contrib.sessions.backends.cached_db"
 
