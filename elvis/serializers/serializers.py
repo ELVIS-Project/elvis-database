@@ -191,8 +191,6 @@ class CollectionFullSerializer(serializers.HyperlinkedModelSerializer):
 
     class Meta:
         model = Collection
-        fields = ('url', 'id', 'title', 'creator', 'pieces', 'movements',
-                  'piece_count', 'movement_count')
 
 
 class PieceFullSerializer(serializers.HyperlinkedModelSerializer):
@@ -209,9 +207,6 @@ class PieceFullSerializer(serializers.HyperlinkedModelSerializer):
 
     class Meta:
         model = Piece
-        fields = ('url', 'id', 'composer', 'tags', 'genres', 'collections',
-                  'instruments_voices', 'title', 'languages', 'locations',
-                  'attachments', 'uploader', 'movements')
 
 
 class MovementFullSerializer(serializers.HyperlinkedModelSerializer):
@@ -226,10 +221,8 @@ class MovementFullSerializer(serializers.HyperlinkedModelSerializer):
     uploader = serializers.CharField(source='creator.username')
 
     class Meta:
-        model = Piece
-        fields = ('url', 'id', 'title', 'composer', 'tags', 'genres',
-                  'collections', 'instruments_voices', 'languages',
-                  'locations', 'attachments', 'uploader')
+        model = Movement
+
 
 
 class UserFullSerializer(serializers.HyperlinkedModelSerializer):
