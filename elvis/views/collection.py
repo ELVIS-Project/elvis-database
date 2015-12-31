@@ -1,13 +1,9 @@
 import json
 import datetime
 import pytz
-from rest_framework.exceptions import PermissionDenied
-from rest_framework.exceptions import NotAuthenticated
-from rest_framework.exceptions import MethodNotAllowed
 
-from rest_framework.renderers import JSONRenderer
-from rest_framework.response import Response
-from rest_framework import status
+
+from rest_framework.renderers import JSONRenderer, BrowsableAPIRenderer
 from elvis.forms.create import CollectionForm
 from django.views.decorators.csrf import csrf_protect
 from django.utils.decorators import method_decorator
@@ -30,7 +26,7 @@ class CollectionDetailHTMLRenderer(CustomHTMLRenderer):
 class CollectionList(ElvisListCreateView):
     model = Collection
     serializer_class = CollectionListSerializer
-    renderer_classes = (JSONRenderer, CollectionListHTMLRenderer)
+    renderer_classes = (CollectionListHTMLRenderer, JSONRenderer, BrowsableAPIRenderer)
 
     @method_decorator(csrf_protect)
     def post(self, request, *args, **kwargs):
@@ -67,7 +63,7 @@ class CollectionList(ElvisListCreateView):
 class CollectionDetail(ElvisDetailView):
     model = Collection
     serializer_class = CollectionFullSerializer
-    renderer_classes = (JSONRenderer, CollectionDetailHTMLRenderer)
+    renderer_classes = (CollectionDetailHTMLRenderer, JSONRenderer, BrowsableAPIRenderer)
     queryset = Collection.objects.all()
 
 
