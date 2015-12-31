@@ -1,10 +1,9 @@
-from rest_framework import generics
-from rest_framework import permissions
-from rest_framework.renderers import JSONRenderer
+from rest_framework.renderers import JSONRenderer, BrowsableAPIRenderer
 
 from elvis.renderers.custom_html_renderer import CustomHTMLRenderer
 from elvis.serializers import MovementFullSerializer, MovementListSerializer
 from elvis.models.movement import Movement
+from elvis.views.common import ElvisListCreateView, ElvisDetailView
 
 
 class MovementListHTMLRenderer(CustomHTMLRenderer):
@@ -15,20 +14,13 @@ class MovementDetailHTMLRenderer(CustomHTMLRenderer):
     template_name = "movement/movement_detail.html"
 
 
-class MovementList(generics.ListCreateAPIView):
+class MovementList(ElvisListCreateView):
     model = Movement
-    permission_classes = (permissions.IsAuthenticatedOrReadOnly,)
     serializer_class = MovementListSerializer
-    renderer_classes = (JSONRenderer, MovementListHTMLRenderer)
-    paginate_by = 20
-    paginate_by_param = 'page_size'
-    max_paginate_by = 100
-    queryset = Movement.objects.all()
+    renderer_classes = (MovementListHTMLRenderer, JSONRenderer, BrowsableAPIRenderer)
 
 
-class MovementDetail(generics.RetrieveUpdateDestroyAPIView):
+class MovementDetail(ElvisDetailView):
     model = Movement
-    permission_classes = (permissions.IsAuthenticatedOrReadOnly,)
     serializer_class = MovementFullSerializer
-    renderer_classes = (JSONRenderer, MovementDetailHTMLRenderer)
-    queryset = Movement.objects.all()
+    renderer_classes = (MovementDetailHTMLRenderer, JSONRenderer, BrowsableAPIRenderer)
