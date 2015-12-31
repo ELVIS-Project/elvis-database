@@ -24,9 +24,9 @@
             $("#private-button").click(function (event)
             {
                 $.ajax({
-                    type: "post",
-                    url: "/collections/",
-                    data: {action: 'make-private', id: {{ content.id }}},
+                    type: "patch",
+                    url: "/collection/{{ content.id }}",
+                    data: {'public': false},
                     success: function (data)
                     {
                         console.log("Made {{ content.title }} private.");
@@ -38,9 +38,9 @@
             $("#public-button").click(function (event)
             {
                 $.ajax({
-                    type: "post",
-                    url: "/collections/",
-                    data: {action: 'make-public', id: {{ content.id }}},
+                    type: "patch",
+                    url: "/collection/{{ content.id }}",
+                    data: {'public': true},
                     success: function (data)
                     {
                         console.log("Made {{ content.title }} public.");
@@ -60,9 +60,8 @@
                 $("#confirm-delete-button").click(function (event)
                 {
                     $.ajax({
-                        type: "post",
-                        url: "/collections/",
-                        data: {action: 'delete', id: {{ content.id }}},
+                        type: "delete",
+                        url: "/collection/{{ content.id }}",
                         success: function (data)
                         {
                             console.log("Deleted {{ content.title }}");

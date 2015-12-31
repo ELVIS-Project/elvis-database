@@ -193,6 +193,12 @@ class CollectionFullSerializer(serializers.HyperlinkedModelSerializer):
     pieces = PieceEmbedSerializer(many=True)
     movements = MovementEmbedSerializer(many=True)
 
+    def update(self, instance, validated_data):
+        if 'public' in validated_data:
+            instance.public = validated_data.get('public')
+        instance.save()
+        return instance
+
     class Meta:
         model = Collection
 
