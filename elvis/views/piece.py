@@ -65,7 +65,7 @@ class PieceUpdate(generics.RetrieveAPIView):
 
 class PieceList(ElvisListCreateView):
     serializer_class = PieceListSerializer
-    renderer_classes = (JSONRenderer, PieceListHTMLRenderer)
+    renderer_classes = (PieceListHTMLRenderer, JSONRenderer, BrowsableAPIRenderer)
 
     def post(self, request, *args, **kwargs):
         return piece_create(request, *args, **kwargs)
