@@ -13,18 +13,16 @@
 
     <!-- Okay this plugin is the boss -->
     <script type="text/javascript">
-        $(document).ready(function ()
-        {
+        $(document).ready(function () {
 
             $("#collection-table").tablesorter({
                 headers: {0: {sorter: false}, 1: {sorter: false}},
                 textExtraction: "complex",
-                sortList: [[3,0],[5,0]]
+                sortList: [[3, 0], [5, 0]]
             });
 
 
-            $(".remove-row").click(function (event)
-            {
+            $(".remove-row").click(function (event) {
                 var id = $(event.target).parents('tr').children()[1].textContent;
                 var item_type = $(event.target).parents('tr').children()[5].textContent.split(/\n/)[0];
                 item_type = "elvis_" + item_type.toLowerCase();
@@ -32,12 +30,14 @@
                 $.ajax({
                     type: "post",
                     url: "/download-cart/",
-                    data: {'action': "remove", 'id': id, 'item_type': item_type},
-                    success: function (data)
-                    {
+                    data: {
+                        'action': "remove",
+                        'id': id,
+                        'item_type': item_type
+                    },
+                    success: function (data) {
                         var $collection_count = $("#collection-count");
-                        $collection_count.fadeOut(100, function ()
-                        {
+                        $collection_count.fadeOut(100, function () {
                             $collection_count.text("(" + data.count + ")");
                         });
                         $collection_count.fadeIn(100);
@@ -45,23 +45,19 @@
                 })
             });
 
-            $("#open-clear-modal").click(function()
-            {
+            $("#open-clear-modal").click(function () {
                 $("#clear-modal").modal("show");
             });
 
-            $("#clear-collection").click(function ()
-            {
+            $("#clear-collection").click(function () {
                 $("#collection-table").find("tbody").empty();
                 $.ajax({
                     type: "post",
                     url: "/download-cart/",
                     data: {'clear-collection': true},
-                    success: function (data)
-                    {
+                    success: function (data) {
                         var $collection_count = $("#collection-count");
-                        $collection_count.fadeOut(100, function ()
-                        {
+                        $collection_count.fadeOut(100, function () {
                             $collection_count.text("(0)");
                         });
                         $collection_count.fadeIn(100);
@@ -69,16 +65,28 @@
                 })
             });
 
-            $("#save-collection").click(function ()
-            {
+            $("#save-collection").click(function () {
                 $('#save_modal').modal('show');
             });
 
-            $("#open-download-modal").click(function()
-            {
+            $("#open-download-modal").click(function () {
                 $("#download-modal").modal("show");
             });
 
+            $("#confirm-download").click(function () {
+                var selection = $("#filefilt").val();
+                if (selection === null)
+                    selection = ["all"];
+                $.ajax({
+                    type: "get",
+                    url: "/downloading/",
+                    data: {'extensions': selection},
+                    success: function (data) {
+                        console.log(data);
+                    }
+                });
+
+            })
         });
     </script>
 
@@ -163,7 +171,7 @@
                     <p>Most pieces have multiple file formats associated with them. Which formats would you like to download?</p>
                     <div class="col-md-4">
                         <label class="asearch-label" for="filefilt">File types</label><br>
-                        <select class="selectpicker" data-width="100%" data-title="All files" id="filefilt" multiple>
+                        <select class="selectpicker" data-width="100%" data-title="All files" id="filefilt"  multiple>
                             <option value=".mei"> .mei</option>
                             <option value=".xml"> .xml</option>
                             <option value=".midi"> .midi</option>
@@ -181,7 +189,7 @@
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
-
+                    <button type="button" class="btn btn-default" id="confirm-download">Download</button>
                 </div>
             </div>
 

@@ -1,12 +1,13 @@
-
 import urllib.request, urllib.parse, urllib.error
 import os
-import time
 import shutil
-import uuid
 import datetime
-import zipfile
+import json
+import unicodedata
+import tempfile
 
+from elvis.models import Movement, Piece
+from elvis.serializers import MovementFullSerializer, PieceFullSerializer
 from django.conf import settings
 from .celery import app
 
@@ -18,55 +19,114 @@ def rebuild_suggester_dicts():
         urllib.request.urlopen(url)
 
 @app.task(name='elvis.elvis.zip_files')
-def zip_files(paths, username):
-    # Start with status at 0 - so jQuery has something to do
-    i = 0
-    total = len(paths)
-    percent = round((i/float(total)) * 100)
-    zip_files.update_state(state='PROGRESS', meta={'curr': i, 'total': total, 'percent': percent})
-
-    # Create unique dummy folder in user_downloads using uuid
-    dummy_folder = str(uuid.uuid4())
-    # User's download folder
-    dummy_root_dir = os.path.join(settings.MEDIA_ROOT, 'user_downloads', username)
-    # The path to this particular unique folder with the files
-    dummy_path = os.path.join(dummy_root_dir, dummy_folder)
-
-    if not os.path.exists(dummy_path):
-        os.makedirs(dummy_path)
-
-    # create name of zipped file
-    zip_name = "{0}-{1}-ElvisDB.zip".format(datetime.datetime.utcnow().strftime("%y-%m-%d-T(%H-%M-%S)-"), username)
-
-    # Create zip archive iteratively by copying first, then adding to archive file
-    # Change dir to the path
-    os.chdir(dummy_path)
-    # Zip the file to that directory
-    archive_file = zipfile.ZipFile(zip_name, 'a')
-
-    for item in paths:
-        # tokenise to remove the actual file name from path name
-        file_name = os.path.basename(item)
-        shutil.copy2(item, os.path.join(dummy_path, file_name))
-        archive_file.write(file_name)
-        i += 1
-        percent = int(float(i) * 100.0 / float(total))
-        zip_files.update_state(state='PROGRESS', meta={'curr': i, 'total': total, 'percent': percent})
-
-    archive_file.close()
-    zip_files.update_state(state='PROGRESS', meta={'curr': total, 'total': total, 'percent': 100})
-    # Path to the archive file
-    zip_path = os.path.join(dummy_path.replace(settings.MEDIA_ROOT, ""), zip_name)
-    delete_zip_file.apply_async(args=[dummy_path], countdown=600)
-
-    return {"path": zip_path, "percent" : 100}
+def zip_files(request, extensions):
+    with tempfile.TemporaryDirectory() as tempdir:
+        zipper = CartZipper(tempdir, request, extensions)
+    zipped_file = zipper.zip_files()
+    return zipped_file
 
 @app.task(name='elvis.elvis.delete_zip_file')
 def delete_zip_file(path):
     shutil.rmtree(path)
 
-def int_round(num):
-    if (num > 0):
-        return int(num+.5)
-    else:
-        return int(num-.5)
+
+class CartZipper:
+    """ A class for zipping up a file based on the cart held in the users
+    session.
+    """
+    def __init__(self, tempdir, request, extensions):
+        self.request = request
+        self.cart = request.session.get("cart", {})
+        self.extensions = extensions
+        self.tempdir = tempdir
+
+    def zip_files(self):
+        archive_name = "ElvisDownload{0}".format(datetime.datetime.utcnow().strftime("-%H-%M-%S"))
+        os.chdir(self.tempdir)
+        root_dir_name = os.path.join(self.tempdir, archive_name)
+        os.mkdir(root_dir_name)
+        extensions = set(self.extensions)
+
+        cart_keys = [k for k in self.cart.keys() if k.startswith("P") or k.startswith("M")]
+        cart_keys.sort(reverse=True)
+        cart_set = set(cart_keys)
+        for k in cart_keys:
+            if k.startswith("P") and k in cart_set:
+                self.add_piece(k[2:], cart_set, root_dir_name, extensions)
+            if k.startswith("M") and k in cart_set:
+                self.add_mov(k[2:], cart_set, root_dir_name, extensions)
+
+        zipped_file = shutil.make_archive(archive_name, "zip", root_dir=root_dir_name)
+        dest = os.path.join(settings.MEDIA_ROOT, "user_downloads", archive_name)
+        shutil.move(zipped_file, dest)
+        return os.path.join(settings.MEDIA_URL, "user_downloads", archive_name)
+
+    def add_piece(self, id, cart_set, root_dir, extensions):
+        piece = Piece.objects.filter(id=id)
+        if not piece:
+            return False
+        piece = piece[0]
+        comp_name = self.normalize_name(piece.composer.name)
+        comp_dir = os.path.join(root_dir, comp_name)
+        if not os.path.exists(comp_dir):
+            os.mkdir(comp_dir)
+        piece_name = self.normalize_name(piece.title)
+        piece_dir = os.path.join(comp_dir, piece_name)
+        if not os.path.exists(piece_dir):
+            os.mkdir(piece_dir)
+
+        with open(os.path.join(piece_dir, "meta"), 'w') as meta:
+            piece_meta = PieceFullSerializer(piece, context={'request': self.request})
+            meta.write(json.dumps(piece_meta.data, indent=4, separators=(',', ': ')))
+
+        self.add_attachments(piece, piece_dir, extensions)
+        cart_set.discard("P-" + str(piece.id))
+
+        for mov in piece.movements.all():
+            mov_name = self.normalize_name(mov.title)
+            mov_dir = os.path.join(piece_dir, mov_name)
+            if not os.path.exists(mov_dir):
+                os.mkdir(mov_dir)
+            with open(os.path.join(mov_dir, "meta"), 'w') as meta:
+                mov_meta = MovementFullSerializer(mov, context={'request': self.request})
+                meta.write(json.dumps(mov_meta.data, indent=4, separators=(',', ': ')))
+            self.add_attachments(mov, mov_dir, extensions)
+            cart_set.discard("M-" + str(mov.id))
+
+    def add_mov(self, id, cart_set, root_dir, extensions):
+        mov = Movement.objects.filter(id=id)
+        if not mov:
+            return False
+        mov = mov[0]
+        comp_name = self.normalize_name(mov.composer.name)
+        comp_dir = os.path.join(root_dir, comp_name)
+        if not os.path.exists(comp_dir):
+            os.mkdir(comp_dir)
+        mov_name = self.normalize_name(mov.title)
+        mov_dir = os.path.join(comp_dir, mov_name)
+        if not os.path.exists(mov_dir):
+            os.mkdir(mov_dir)
+
+        with open(os.path.join(mov_dir, "meta"), 'w') as meta:
+            mov_meta = MovementFullSerializer(mov, context={'request': self.request})
+            meta.write(json.dumps(mov_meta.data, indent=4, separators=(',', ': ')))
+
+        self.add_attachments(mov, mov_dir, extensions)
+        cart_set.discard("M-" + str(mov.id))
+
+    def add_attachments(self, parent, target_dir, extensions):
+        import shutil
+
+        if "all" in extensions:
+            for att in parent.attachments.all():
+                shutil.copy(att.attachment.path, target_dir)
+        else:
+            for att in parent.attachments.all():
+                ext = att.extension
+                if ext in extensions:
+                    shutil.copy(att.attachment.path, target_dir)
+
+    def normalize_name(self, name):
+        name = name.replace('/', '-').replace(' ', '_')
+        name = unicodedata.normalize("NFKD", name)
+        return name
