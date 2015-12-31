@@ -1,61 +1,19 @@
-{% extends "base.html" %}
+{% extends  "base/base_list.html"%}
 
 {% block extra_hd %}
     <title>Collections</title>
-    <script>
-        $(document).ready(function ($)
-        {
-            creatorQuery();
-
-            function creatorQuery()
-            {
-                var qstr = window.location.search.replace("?", "");
-                var qstr_params = $.parseParams(qstr);
-                if (qstr_params['creator'])
-                {
-                    $("#page-header").text(qstr_params['creator'] + "'s Collections")
-                }
-                else
-                {
-                    $("#page-header").text("Collections")
-                }
-            }
-        })
-    </script>
+    {{ block.super }}
 {% endblock %}
 
-{% block page_content %}
-    <div class="page-header">
-        <h2 id="page-header"></h2>
-    </div>
-    <div class="row">
-        <div class="col-md-12">
-            {% include "paginate.html" with content=content %}
-            {% for collection in content.results %}
-                <div class="list-row row-eq-height">
-                    <div class='col-xs-1 list-add'>{% include "includes/download-badge-inc.html" with download_type="elvis_collection" download_id=collection.id  in_cart=collection.in_cart %}</div>
-                    <a href='{{ collection.url }}' class='list-item col-xs-11'>
-                <span class='badge alert-info right-badge'
-                      style='margin-top:10px'>{{ collection.piece_count }} Pieces, {{ collection.movement_count }} Movements</span>
-                        <h4>{{ collection.title }}</h4>
+{% block header %}
+    Collections
+{% endblock %}
 
-                        <p class='list-group-item-text'>
-                            <small>Created by {{ collection.creator.full_name }}
-                                on {{ collection.created }}</small>
-                            <br>
-                            {{ collection.comment | default_if_none:"No Comment" | truncatechars:100 }}
-                        </p>
-                    </a>
-                </div>
-
-            {% endfor %}
-            {% if not content.results %}
-                <div class="text-center"><h4>There's nothing here!</h4></div>
-            {% endif %}
-
-            {% include "paginate.html" with content=content %}
-        </div>
-    </div>
-
-
+{% block list_content %}
+    {% for c in content.results %}
+        {% include "base/base_list_item.html" with url=c.url title=c.title p_count=c.piece_count m_count=c.movement_count creator=c.creator %}
+    {% endfor %}
+    {% if not content.results %}
+        <div class="text-center"><h4>There's nothing here!</h4></div>
+    {% endif %}
 {% endblock %}

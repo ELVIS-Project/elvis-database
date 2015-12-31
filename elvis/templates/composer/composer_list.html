@@ -1,41 +1,19 @@
-{% extends "base.html" %}
+{% extends  "base/base_list.html"%}
 
 {% block extra_hd %}
     <title>Composers</title>
+    {{ block.super }}
 {% endblock %}
 
-{% block page_content %}
-    <div class="page-header">
-        <h2>Composers
-            <small>({{ content.count }})</small>
-        </h2>
-    </div>
-    {% include "paginate.html" with content=content %}
+{% block header %}
+    Composers
+{% endblock %}
 
-    <div class="row">
-        <div class="col-md-12">
-            {% for composer in content.results %}
-                <div class="list-row row-eq-height">
-                    <div class='col-xs-1 list-add'>{% include "includes/download-badge-inc.html" with download_type="elvis_composer" download_id=composer.id in_cart=composer.in_cart %}</div>
-                    <a href='{{ composer.url }}' class='list-item col-xs-11'>
-                <span class='badge alert-info right-badge'
-                      style='margin-top:10px'>{{ composer.piece_count }} Pieces, {{ composer.movement_count }} Movements</span>
-                        <h4>{{ composer.name }}</h4>
-
-                        <p class='list-group-item-text'>
-                            <small>{% if not composer.birth_date %} (Unknown) {% else %} (
-                                {{ composer.birth_date }}&ndash;
-                                {{ composer.death_date }}) {% endif %}</small>
-                            <br>
-                        </p>
-                    </a>
-                </div>
-
-            {% endfor %}
-            {% include "paginate.html" with content=content %}
-        </div>
-    </div>
-
-
-
+{% block list_content %}
+    {% for c in content.results %}
+        {% include "base/base_list_item.html" with url=c.url title=c.name date1=c.birth_date date2=c.death_date m_count=c.movement_count p_count=c.piece_count %}
+    {% endfor %}
+    {% if not content.results %}
+        <div class="text-center"><h4>There's nothing here!</h4></div>
+    {% endif %}
 {% endblock %}

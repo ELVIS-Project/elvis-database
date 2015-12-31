@@ -1,0 +1,28 @@
+<div class="list-row row-eq-height">
+    <div class='col-xs-1 list-add'></div>
+    <a href='{{ url }}' class='list-item col-xs-11'>
+        {% if p_count or m_count %}
+        <span class='badge alert-info right-badge' style='margin-top:10px'>
+            {% if p_count and m_count %}
+                {{ p_count }} Piece{{ p_count|pluralize }}, {{ m_count }} Movements
+            {% else %}
+                {% if p_count %} {{ p_count }} Piece{{ p_count|pluralize }} {% endif %}
+                {% if m_count %} {{ m_count }} Movement{{ m_count|pluralize }} {% endif %}
+            {% endif %}
+        </span>
+        {% endif %}
+
+        <h4>{{ title }}</h4>
+        <p class='list-group-item-text'>
+            <small>
+                {% if composer %} Composed by {{ composer }} in {{ date2 }}
+                {% elif creator %} Created by {{ creator }}
+                {% elif small_text %} {{ small_text }}
+                {% elif date1 or date2 %} {{ date1 }}-{{ date2 }}
+                {% endif %}
+            </small>
+            <br>
+            {{ body}}
+        </p>
+    </a>
+</div>

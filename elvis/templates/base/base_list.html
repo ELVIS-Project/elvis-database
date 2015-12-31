@@ -1,0 +1,40 @@
+{% extends "base.html" %}
+
+{% block extra_hd %}
+    <script>
+        $(document).ready(function ($)
+        {
+            creatorQuery();
+
+            function creatorQuery()
+            {
+                var qstr = window.location.search.replace("?", "");
+                var qstr_params = $.parseParams(qstr);
+                if (qstr_params['creator'])
+                {
+                    var creator_name =qstr_params['creator'];
+                    if (creator_name.slice(-1) === "s")
+                        var possessive_name = creator_name + "' ";
+                    else
+                        var possessive_name = creator_name + "'s ";
+                    $("#page-header").prepend(possessive_name)
+                }
+            }
+
+        })
+    </script>
+{% endblock %}
+
+{% block page_content %}
+    <div class="page-header">
+        <h2 id="page-header">{% block header %}{% endblock %}</h2>
+    </div>
+    <div class="row">
+        <div class="col-md-12">
+            {% include "paginate.html" with content=content %}
+            {% block list_content %}
+            {% endblock %}
+            {% include "paginate.html" with content=content %}
+        </div>
+    </div>
+{% endblock %}

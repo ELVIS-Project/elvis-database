@@ -167,9 +167,11 @@ class ComposerListSerializer(serializers.HyperlinkedModelSerializer):
 
 
 class CollectionListSerializer(serializers.HyperlinkedModelSerializer):
+    creator = serializers.ReadOnlyField(source="creator.username")
+
     class Meta:
         model = Collection
-        fields = ('title', 'url', 'id', 'piece_count', 'movement_count')
+        fields = ('title', 'url', 'id', 'piece_count', 'movement_count', 'creator')
 
 
 class AttachmentFullSerializer(serializers.HyperlinkedModelSerializer):
