@@ -33,7 +33,7 @@ def zip_files(cart, extensions, username):
 
 @app.task(name='elvis.delete_zip_file')
 def delete_zip_file(path):
-    shutil.rmtree(path)
+    os.remove(path)
 
 
 class CartZipper:
@@ -66,17 +66,20 @@ class CartZipper:
             if k.startswith("M") and k in cart_set:
                 self.add_mov(k[2:], cart_set, root_dir_name, extensions)
                 self.counter += 1
-            done_pct = (self.counter/self.total)*100
+            done_pct = int((self.counter/self.total)*100)
             task.update_state(meta={"progress": done_pct})
 
         zipped_file = shutil.make_archive(archive_name, "zip", root_dir=root_dir_name)
+        udownload_dir = os.path.join(settings.MEDIA_ROOT, "user_downloads", self.username)
+        if not os.path.exists(udownload_dir):
+            os.mkdir(udownload_dir)
         dest = os.path.join(settings.MEDIA_ROOT, "user_downloads", self.username, archive_name)
         shutil.move(zipped_file, dest)
         delete_zip_file.apply_async(args=[dest], countdown=600)
         return os.path.join(settings.MEDIA_URL, "user_downloads", self.username, archive_name)
 
     def add_piece(self, id, cart_set, root_dir, extensions):
-        piece = Piece.objects.filter(id=id)
+        piece = Piece.objects.filter(uuid=id)
         if not piece:
             return False
         piece = piece[0]
@@ -108,7 +111,7 @@ class CartZipper:
             cart_set.discard("M-" + str(mov.id))
 
     def add_mov(self, id, cart_set, root_dir, extensions):
-        mov = Movement.objects.filter(id=id)
+        mov = Movement.objects.filter(uuid=id)
         if not mov:
             return False
         mov = mov[0]

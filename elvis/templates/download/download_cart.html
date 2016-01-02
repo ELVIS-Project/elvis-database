@@ -84,12 +84,23 @@
                     success: function (data) {
                         console.log(data);
                         var status = poll_status(data['task']);
-                        debugger;
+                        var path;
                         while(!status['ready'])
                         {
-                            status = poll_status(data['task'])
+                            status = setTimeout(poll_status(data['task']), 1000);
+                            if (status['ready'] === "FAILED")
+                            {
+                                path = window.location;
+                                status['ready'] = true;
+                                break;
+                            }
+                            if (status['ready'] === true)
+                            {
+                                path = status['path'];
+                                break;
+                            }
                         }
-                        window.location = status['path'];
+                        window.location = path;
                     }
                 });
             });
@@ -103,6 +114,10 @@
                     success: function (data) {
                         console.log(data);
                         result = data;
+                    },
+                    error: function(data)
+                    {
+                        result = data
                     }
                 });
                 return result;

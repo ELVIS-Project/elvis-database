@@ -61,12 +61,13 @@ class DownloadCart(generics.GenericAPIView):
         :param request: The request object (for serialization)
         :return: A serialized dict representing the Piece.
         """
-        p = cache.get("cart-" + pid)
+        p_uuid = pid[2:]
+        p = cache.get("EMB-" + p_uuid)
         if p:
             return p
-        tmp = Piece.objects.get(id=pid[2:])
+        tmp = Piece.objects.get(uuid=p_uuid)
         p = PieceEmbedSerializer(tmp, context={'request': request}).data
-        cache.set("cart-" + pid, p, timeout=None)
+        cache.set("EMB-" + p_uuid, p, timeout=None)
         return p
 
     def retrieve_movement(self, mid, request):
@@ -76,12 +77,13 @@ class DownloadCart(generics.GenericAPIView):
         :param request: The request object (for serialization)
         :return: A serialized dict representing the Movement.
         """
-        m = cache.get("cart-" + mid)
+        m_uuid = mid[2:]
+        m = cache.get("EMB-" + m_uuid)
         if m:
             return m
-        tmp = Movement.objects.get(id=mid[2:])
+        tmp = Movement.objects.get(uuid=m_uuid)
         m = MovementEmbedSerializer(tmp, context={'request': request}).data
-        cache.set("cart-" + mid, m, timeout=None)
+        cache.set("EMB-" + m_uuid, m, timeout=None)
         return m
 
 
@@ -162,22 +164,22 @@ class DownloadCart(generics.GenericAPIView):
             cart["P-" + item['id']] = True
         elif elvis_type == "elvis_collection":
             cart["COL-" + item['id']] = True
-            coll = Collection.objects.filter(id=item['id'])[0]
+            coll = Collection.objects.filter(uuid=item['id'])[0]
             for piece in coll.pieces.all():
-                cart["P-" + str(piece.id)] = True
+                cart["P-" + str(piece.uuid)] = True
             for mov in coll.movements.all():
                 parent = mov.piece
-                if not parent or not cart.get("P-" + str(parent.id)):
-                    cart["M-" + str(mov.id)] = True
+                if not parent or not cart.get("P-" + str(parent.uuid)):
+                    cart["M-" + str(mov.uuid)] = True
         elif elvis_type == "elvis_composer":
             cart["COM-" + item['id']] = True
-            comp = Composer.objects.filter(id=item['id'])[0]
+            comp = Composer.objects.filter(uuid=item['id'])[0]
             for piece in comp.pieces.all():
-                cart["P-" + str(piece.id)] = True
+                cart["P-" + str(piece.uuid)] = True
             for mov in comp.movements.all():
                 parent = mov.piece
-                if not parent or not cart.get("P-" + str(parent.id)):
-                    cart["M-" + str(mov.id)] = True
+                if not parent or not cart.get("P-" + str(parent.uuid)):
+                    cart["M-" + str(mov.uuid)] = True
 
     def remove_item(self, item, cart):
         elvis_type = item.get('item_type')
@@ -187,37 +189,38 @@ class DownloadCart(generics.GenericAPIView):
             cart.pop("P-" + item['id'], None)
         elif elvis_type == "elvis_collection":
             cart.pop("COL-" + item['id'], None)
-            coll = Collection.objects.filter(id=item['id'])[0]
+            coll = Collection.objects.filter(uuid=item['id'])[0]
             for piece in coll.pieces.all():
-                cart.pop("P-" + str(piece.id), None)
+                cart.pop("P-" + str(piece.uuid), None)
             for mov in coll.movements.all():
-                cart.pop("M-" + str(mov.id), None)
+                cart.pop("M-" + str(mov.uuid), None)
         elif elvis_type == "elvis_composer":
             cart.pop("COM-" + item['id'], None)
-            comp = Composer.objects.filter(id=item['id'])[0]
+            comp = Composer.objects.filter(uuid=item['id'])[0]
             for piece in comp.pieces.all():
-                cart.pop("P-" + str(piece.id), None)
+                cart.pop("P-" + str(piece.uuid), None)
             for mov in comp.movements.all():
-                cart.pop("M-" + str(mov.id), None)
+                cart.pop("M-" + str(mov.uuid), None)
+
 
 class Downloading(generics.GenericAPIView):
     permission_classes = (permissions.IsAuthenticated,)
     renderer_classes = (JSONRenderer, DownloadingHTMLRenderer)
 
     def get(self, request, *args, **kwargs):
-        """ A view to report the progress to the user """
         if request.GET.get('task'):
-            try:
-                task_id = request.GET['task']
-                task = AsyncResult(task_id)
-                if task.ready():
-                    return Response(
-                        {'ready': task.ready(), 'state': task.status, 'path': task.result, 'info': task.info})
-                else:
-                    meta = task._get_task_meta()
-                    return Response({'ready': task.ready(), 'state': task.status, 'progress': meta.get('progress')})
-            except Exception:
-                return Response({'state': "FAILED"}, status=status.HTTP_400_BAD_REQUEST)
+            task_id = request.GET['task']
+            task = AsyncResult(task_id)
+            if task.state == "PENDING":
+                return Response({'ready': task.ready(), 'progress': 0})
+            elif task.state == "SUCCESS":
+                return Response({'ready': task.ready(), 'progress': 100, 'path': task.result})
+            elif task.state == "FAILED":
+                return Response({'ready': "FAILED"}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+            else:
+                meta = task._get_task_meta()
+                progress = meta.get('result', {}).get('progress', 0)
+                return Response({'ready': task.ready(), 'progress': progress})
 
         if request.GET.get('extensions[]'):
             extensions = request.GET.getlist('extensions[]')
