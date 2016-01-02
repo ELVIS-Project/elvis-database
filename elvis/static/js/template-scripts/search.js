@@ -218,7 +218,7 @@ $(document).ready(function ($)
                     "<span class='label label-default right-label'>Composer</span><h4>" + entry['name'] + "</h4>" +
                     "<p class='list-group-item-text'>" + birthday + "-" + death + "</p>" +
                     "</a></div>");
-                create_download_form("elvis_composer", entry['id'], "add" + key);
+                create_download_form("elvis_composer", entry['uuid'], "add" + key);
                 continue;
             }
             if (entry['type'] === "elvis_collection")
@@ -229,7 +229,7 @@ $(document).ready(function ($)
                     "<span class='label label-info right-label' style='margin-top:10px'>Collection</span><h4>" + entry['title'] + "</h4>" +
                     "<p class='list-group-item-text'>Created By: " + entry['creator_name'] + " on " + entry['created'].substring(0, 10) + "</p>" +
                     "</a></div>");
-                create_download_form("elvis_collection", entry['id'], "add" + key);
+                create_download_form("elvis_collection", entry['uuid'], "add" + key);
                 continue;
             }
             if (entry['type'] === "elvis_movement")
@@ -255,7 +255,7 @@ $(document).ready(function ($)
                 }
                 result += "</a></div>";
                 $results.append(result);
-                create_download_form("elvis_movement", entry['id'], "add" + key);
+                create_download_form("elvis_movement", entry['uuid'], "add" + key);
                 continue;
             }
             if (entry['type'] === "elvis_piece")
@@ -276,7 +276,7 @@ $(document).ready(function ($)
                 }
                 result += "</a></div>";
                 $results.append(result);
-                create_download_form("elvis_piece", entry['id'], "add" + key);
+                create_download_form("elvis_piece", entry['uuid'], "add" + key);
                 continue;
             }
         }

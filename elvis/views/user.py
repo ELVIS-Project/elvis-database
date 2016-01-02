@@ -134,28 +134,28 @@ def save_cart(sender, request, user, **kwargs):
         if key.startswith("M"):
             m_id = key[2:]
             try:
-                mov = Movement.objects.get(id=m_id)
+                mov = Movement.objects.get(uuid=m_id)
             except ObjectDoesNotExist:
                 continue
             movements.append(mov)
         elif key.startswith("P"):
             p_id = key[2:]
             try:
-                p = Piece.objects.get(id=p_id)
+                p = Piece.objects.get(uuid=p_id)
             except ObjectDoesNotExist:
                 continue
             pieces.append(p)
         elif key.startswith("COL"):
             col_id = key[4:]
             try:
-                col = Collection.objects.get(id=col_id)
+                col = Collection.objects.get(uuid=col_id)
             except ObjectDoesNotExist:
                 continue
             collections.append(col)
         elif key.startswith("COM"):
             com_id = key[4:]
             try:
-                com = Composer.objects.get(id=com_id)
+                com = Composer.objects.get(uuid=com_id)
             except ObjectDoesNotExist:
                 continue
             composers.append(com)
@@ -176,8 +176,8 @@ def save_cart(sender, request, user, **kwargs):
 def load_cart(sender, request, user, **kwargs):
     user_download = request.user.downloads.first()
     cart = {}
-    cart.update({"M-" + str(k.id): True for k in user_download.collection_movements.all()})
-    cart.update({"P-" + str(k.id): True for k in user_download.collection_pieces.all()})
-    cart.update({"COL-" + str(k.id): True for k in user_download.collection_collections.all()})
-    cart.update({"COM-" + str(k.id): True for k in user_download.collection_composers.all()})
+    cart.update({"M-" + str(k.uuid): True for k in user_download.collection_movements.all()})
+    cart.update({"P-" + str(k.uuid): True for k in user_download.collection_pieces.all()})
+    cart.update({"COL-" + str(k.uuid): True for k in user_download.collection_collections.all()})
+    cart.update({"COM-" + str(k.uuid): True for k in user_download.collection_composers.all()})
     request.session['cart'] = cart

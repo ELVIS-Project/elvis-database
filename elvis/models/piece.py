@@ -150,7 +150,6 @@ class Piece(ElvisModel):
 @receiver(post_save, sender=Piece)
 def save_listener(sender, instance, created, **kwargs):
     instance.solr_index(commit=True)
-    cache.expire("cart-P-" + str(instance.id), timeout=0)
 
 @receiver(pre_delete, sender=Piece)
 def attachment_delete(sender, instance, **kwargs):
@@ -160,4 +159,3 @@ def attachment_delete(sender, instance, **kwargs):
 @receiver(post_delete, sender=Piece)
 def delete_listener(sender, instance, **kwargs):
     instance.solr_delete(commit=True)
-    cache.expire("cart-P-" + str(instance.id), timeout=0)

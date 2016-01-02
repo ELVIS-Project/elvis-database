@@ -4,6 +4,9 @@ import uuid
 from django.db import models
 from django.contrib.auth.models import User
 from django.conf import settings
+from django.dispatch import receiver
+from django.db.models.signals import post_save, post_delete, pre_delete
+from django.core.cache import cache
 
 
 class ElvisModel(models.Model):
@@ -85,3 +88,11 @@ class ElvisModel(models.Model):
         return self.title
 
 
+@receiver([post_save, pre_delete], sender=ElvisModel)
+def cache_expire(sender, instance, created, **kwargs):
+    import pdb
+    pdb.set_trace()
+    cache_levels = ["MIN-", "EMB-", "LIST-"]
+    str_uuid = str(instance.uuid)
+    for prefix in cache_levels:
+        cache.delete(prefix + str_uuid)
