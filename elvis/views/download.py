@@ -1,21 +1,23 @@
+import json
+
+from celery.result import AsyncResult
+from django.core.cache import cache
+from django.http import HttpResponse
+from django.utils.decorators import method_decorator
+from django.views.decorators.csrf import csrf_protect
+from elvis import tasks
+from elvis.models.collection import Collection
+from elvis.models.composer import Composer
+from elvis.models.movement import Movement
+from elvis.models.piece import Piece
+from elvis.renderers.custom_html_renderer import CustomHTMLRenderer
+from elvis.serializers import PieceEmbedSerializer, MovementEmbedSerializer
 from rest_framework import generics
 from rest_framework import permissions
 from rest_framework import status
 from rest_framework.renderers import JSONRenderer
 from rest_framework.response import Response
-from django.utils.decorators import method_decorator
-from django.views.decorators.csrf import csrf_protect
-from django.http import HttpResponse, HttpResponseRedirect
-from celery.result import AsyncResult
-from elvis.elvis import tasks
-from elvis.renderers.custom_html_renderer import CustomHTMLRenderer
-from elvis.serializers import PieceEmbedSerializer, MovementEmbedSerializer
-from elvis.models.piece import Piece
-from elvis.models.movement import Movement
-from elvis.models.collection import Collection
-from elvis.models.composer import Composer
-from django.core.cache import cache
-import json
+import uuid
 
 class DownloadListHTMLRenderer(CustomHTMLRenderer):
     template_name = "download/download_list.html"
@@ -204,21 +206,25 @@ class Downloading(generics.GenericAPIView):
 
     def get(self, request, *args, **kwargs):
         """ A view to report the progress to the user """
-        if request.GET.get('format') == 'json' and request.GET.get('task'):
+        if request.GET.get('task'):
             try:
                 task_id = request.GET['task']
                 task = AsyncResult(task_id)
                 if task.ready():
                     return Response(
-                        {'ready': task.ready(), 'state': task.status, 'path': task.result['path'], 'info': task.info})
+                        {'ready': task.ready(), 'state': task.status, 'path': task.result, 'info': task.info})
                 else:
-                    return Response({'ready': task.ready(), 'state': task.status, 'info': task.info})
+                    meta = task._get_task_meta()
+                    return Response({'ready': task.ready(), 'state': task.status, 'progress': meta.get('progress')})
             except Exception:
                 return Response({'state': "FAILED"}, status=status.HTTP_400_BAD_REQUEST)
 
         if request.GET.get('extensions[]'):
             extensions = request.GET.getlist('extensions[]')
-            tasks.zip_files(request, extensions)
+            cart = request.session.get("cart", {})
+            task_id = str(uuid.uuid4())
+            tasks.zip_files.apply_async(args=[cart, extensions, request.user.username], task_id=task_id)
+            return Response({"task": task_id}, status=status.HTTP_200_OK)
 
 
         return Response(status=status.HTTP_200_OK)
