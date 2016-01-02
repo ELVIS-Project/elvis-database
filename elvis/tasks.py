@@ -1,3 +1,4 @@
+
 import datetime
 import json
 import unicodedata
@@ -14,7 +15,7 @@ from elvis.models import Movement, Piece
 from elvis.serializers import MovementFullSerializer, PieceFullSerializer
 
 
-@app.task(name='elvis.elvis.rebuild_suggesters')
+@app.task(name='elvis.rebuild_suggesters')
 def rebuild_suggester_dicts():
     """Rebuild all suggester dictionaries in Solr"""
     for d in settings.SUGGEST_DICTS:
