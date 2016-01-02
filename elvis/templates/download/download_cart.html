@@ -83,10 +83,30 @@
                     data: {'extensions': selection},
                     success: function (data) {
                         console.log(data);
+                        var status = poll_status(data['task']);
+                        debugger;
+                        while(!status['ready'])
+                        {
+                            status = poll_status(data['task'])
+                        }
+                        window.location = status['path'];
                     }
                 });
+            });
 
-            })
+            function poll_status(id) {
+                var result;
+                $.ajax({
+                    type: "get",
+                    url: "/downloading/?task=" + id,
+                    async: false,
+                    success: function (data) {
+                        console.log(data);
+                        result = data;
+                    }
+                });
+                return result;
+            }
         });
     </script>
 

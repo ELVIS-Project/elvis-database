@@ -219,12 +219,12 @@ class MovementFullSerializer(serializers.HyperlinkedModelSerializer):
     creator = serializers.CharField(source='creator.username')
 
     class Meta:
-        model = Piece
+        model = Movement
 
 
 class PieceFullSerializer(serializers.HyperlinkedModelSerializer):
     id = serializers.IntegerField()
-    composer = ComposerListSerializer()
+    composer = ComposerMinSerializer()
     tags = TagMinSerializer(many=True)
     genres = GenreMinSerializer(many=True)
     instruments_voices = InstrumentVoiceMinSerializer(many=True)
