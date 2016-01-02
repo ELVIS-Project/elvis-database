@@ -18,7 +18,7 @@ from celery import schedules
 
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 import os
-BASE_DIR = os.path.abspath('./elvis')
+BASE_DIR = os.path.abspath('./')
 
 # Automatically adjust settings to be suitable or insuitable for proudction environments
 # CRA: I used this to help...
@@ -42,8 +42,8 @@ with open('/etc/elvis_secretkey.txt') as f:
 
 # Application Definition
 # ======================
-ROOT_URLCONF = 'elvis.elvis.urls'
-WSGI_APPLICATION = 'elvis.elvis.wsgi.application'
+ROOT_URLCONF = 'elvis.urls'
+WSGI_APPLICATION = 'elvis.wsgi.application'
 SITE_ID = 1
 
 INSTALLED_APPS = (

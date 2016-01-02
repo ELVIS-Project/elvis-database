@@ -1,10 +1,9 @@
-from django.contrib import admin
-from django.conf import settings
-import shutil
 import os
-
-from elvis.elvis.tasks import rebuild_suggester_dicts
+import shutil
+from django.conf import settings
+from django.contrib import admin
 from elvis.models import *
+from elvis.tasks import rebuild_suggester_dicts
 
 # summary of available actions: actions = [reindex_in_solr, delete_in_solr]
 

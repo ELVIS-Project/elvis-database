@@ -1,15 +1,18 @@
-import urllib.request, urllib.parse, urllib.error
-import os
-import shutil
 import datetime
 import json
 import unicodedata
-import tempfile
+import urllib.error
+import urllib.parse
+import urllib.request
 
+import os
+import shutil
+import tempfile
+from django.conf import settings
+from elvis.celery import app
 from elvis.models import Movement, Piece
 from elvis.serializers import MovementFullSerializer, PieceFullSerializer
-from django.conf import settings
-from .celery import app
+
 
 @app.task(name='elvis.elvis.rebuild_suggesters')
 def rebuild_suggester_dicts():
@@ -18,14 +21,14 @@ def rebuild_suggester_dicts():
         url = settings.SOLR_SERVER + "/suggest/?suggest.dictionary={0}&suggest.reload=true".format(d)
         urllib.request.urlopen(url)
 
-@app.task(name='elvis.elvis.zip_files')
+@app.task(name='elvis.zip_files')
 def zip_files(request, extensions):
     with tempfile.TemporaryDirectory() as tempdir:
         zipper = CartZipper(tempdir, request, extensions)
     zipped_file = zipper.zip_files()
     return zipped_file
 
-@app.task(name='elvis.elvis.delete_zip_file')
+@app.task(name='elvis.delete_zip_file')
 def delete_zip_file(path):
     shutil.rmtree(path)
 

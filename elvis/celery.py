@@ -1,5 +1,4 @@
 
-
 import os
 
 from celery import Celery
@@ -9,7 +8,7 @@ from django.conf import settings
 # from the virtualenv used to run the django project.
 
 # set the default Django settings module for the 'celery' program.
-os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'elvis.settings.base')
+os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'elvis.settings')
 
 app = Celery('elvis', broker=settings.BROKER_URL, backend=settings.CELERY_RESULT_BACKEND, include=['elvis.tasks'])
 

@@ -18,5 +18,5 @@ env_3
 dump.rdb
 #Local file ignores
 solr/solr/collection1/conf/solrconfig.xml
-elvis/elvis/settings/base.py
-elvis/elvis/wsgi.py
+elvis/settings.py
+elvis/wsgi.py
