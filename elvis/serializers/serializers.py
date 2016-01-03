@@ -47,17 +47,17 @@ class CachedMinHyperlinkedModelSerializer(serializers.HyperlinkedModelSerializer
         emb_check = cache.get("EMB-" + str_uuid)
         if emb_check:
             min = {k: v for k, v in emb_check.items() if k in self.fields.keys()}
-            cache.set("MIN-" + str_uuid, min, timeout=None)
+            cache.set("MIN-" + str_uuid, min)
             return min
 
         list_check = cache.get("LIST-" + str_uuid)
         if list_check:
             min = {k: v for k, v in list_check.items() if k in self.fields.keys()}
-            cache.set("MIN-" + str_uuid, min, timeout=None)
+            cache.set("MIN-" + str_uuid, min)
             return min
 
         result = super().to_representation(instance)
-        cache.set("MIN-" + str_uuid, result, timeout=None)
+        cache.set("MIN-" + str_uuid, result)
         return result
 
 
@@ -69,7 +69,7 @@ class CachedMinModelSerializer(serializers.ModelSerializer):
         if cache_check:
             return cache_check
         result = super().to_representation(instance)
-        cache.set("MIN-" + str_uuid, result, timeout=None)
+        cache.set("MIN-" + str_uuid, result)
         return result
 
 
@@ -81,7 +81,7 @@ class CachedListHyperlinkedModelSerializer(serializers.HyperlinkedModelSerialize
         if cache_check:
             return cache_check
         result = super().to_representation(instance)
-        cache.set("LIST-" + str_uuid, result, timeout=None)
+        cache.set("LIST-" + str_uuid, result)
         return result
 
 
@@ -93,7 +93,7 @@ class CachedEmbedHyperlinkedModelSerializer(serializers.HyperlinkedModelSerializ
         if cache_check:
             return cache_check
         result = super().to_representation(instance)
-        cache.set("EMB-" + str_uuid, result, timeout=None)
+        cache.set("EMB-" + str_uuid, result)
         return result
 
 

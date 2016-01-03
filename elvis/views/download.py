@@ -67,7 +67,7 @@ class DownloadCart(generics.GenericAPIView):
             return p
         tmp = Piece.objects.get(uuid=p_uuid)
         p = PieceEmbedSerializer(tmp, context={'request': request}).data
-        cache.set("EMB-" + p_uuid, p, timeout=None)
+        cache.set("EMB-" + p_uuid, p)
         return p
 
     def retrieve_movement(self, mid, request):
@@ -83,7 +83,7 @@ class DownloadCart(generics.GenericAPIView):
             return m
         tmp = Movement.objects.get(uuid=m_uuid)
         m = MovementEmbedSerializer(tmp, context={'request': request}).data
-        cache.set("EMB-" + m_uuid, m, timeout=None)
+        cache.set("EMB-" + m_uuid, m)
         return m
 
 
