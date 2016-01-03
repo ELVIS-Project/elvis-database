@@ -19,19 +19,11 @@
     <script type='text/javascript' src="{% static "bootstrap/js/bootstrap.min.js" %}"></script>
     <script type='text/javascript' src="{% static "js/elvis-scripts/cartButtonScript.min.js" %}"></script>
 
-
     <link rel="icon" href="{% static "favicon.ico" %}">
 
     {% block extra_hd %}
     {% endblock %}
 
-    <script type="text/javascript">
-        $(document).ready(function ($)
-        {
-            // initialize the download manager script
-            cartButtonRefresh();
-        })
-    </script>
 </head>
 
 <div class="modal fade" id="base-modal" data-backdrop="static" data-keyboard="false">

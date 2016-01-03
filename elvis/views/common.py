@@ -3,7 +3,7 @@ from rest_framework import generics
 from rest_framework.exceptions import PermissionDenied
 from django.db.models import Q
 from elvis.models import Collection
-from django.db.models.loading import get_model
+from django.apps import apps
 
 
 """Common behaviour for most views on the site are defined here.
@@ -19,7 +19,7 @@ class ElvisDetailView(generics.RetrieveUpdateDestroyAPIView):
         the object in question.
         :return: A dict with'can_view' and 'can_edit' keys.
         """
-        model = get_model('elvis', kwargs['model'])
+        model = apps.get_model('elvis', kwargs['model'])
         obj = model.objects.get(id=kwargs['pk'])
         user = self.request.user
 
@@ -75,18 +75,16 @@ class ElvisDetailView(generics.RetrieveUpdateDestroyAPIView):
     """This just saves one from having to define the queryset
     in every single view"""
     def get_queryset(self):
-        model = get_model('elvis', self.kwargs['model'])
+        model = apps.get_model('elvis', self.kwargs['model'])
         return model.objects.all()
 
 
 class ElvisListCreateView(generics.ListCreateAPIView):
-    permission_classes = (permissions.IsAuthenticatedOrReadOnly,)
     paginate_by = 20
-    paginate_by_param = 'page_size'
-    max_paginate_by = 100
+    permission_classes = (permissions.AllowAny, )
 
     def get_queryset(self):
-        model = get_model('elvis', self.kwargs['model'])
+        model = apps.get_model('elvis', self.kwargs['model'])
         user = self.request.user
         Qlist = []
 

@@ -18,7 +18,7 @@ from elvis.views.movement import MovementList, MovementDetail
 from elvis.views.composer import ComposerList, ComposerDetail
 from elvis.views.collection import CollectionList, CollectionDetail
 from django.contrib.auth import views as auth_views
-
+import django.views.static
 # Uncomment the next two lines to enable the admin:
 from django.contrib import admin
 admin.autodiscover()
@@ -26,8 +26,7 @@ admin.autodiscover()
 media_path = os.path.realpath('media/attachments/')
 urlpatterns = []
 
-urlpatterns += format_suffix_patterns(
-    patterns('',
+urlpatterns.extend([
         url(r'^$', home, name='home'),
 
         url(r'^search/$', SearchView.as_view(), name="search-view"),
@@ -74,24 +73,15 @@ urlpatterns += format_suffix_patterns(
 
         url(r'^suggest/$', solr_suggest),
 
-        (r'^media/(?P<path>.*)$', 'django.views.static.serve', {'document_root': settings.MEDIA_ROOT}),
-    )
+        url(r'^media/(?P<path>.*)$', django.views.static.serve, {'document_root': settings.MEDIA_ROOT}),
+        ]
 )
 
 # Serving static files
-
-# Media stuff
-urlpatterns += patterns('', 
-    url(r'^media/(?P<path>.*)$', 'django.views.static.serve', {'document_root': settings.MEDIA_ROOT}),
-    )
-
 urlpatterns += static.static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)
-
 urlpatterns += staticfiles_urlpatterns()
 
 
 # Only add admin if it's enabled
 if 'django.contrib.admin' in settings.INSTALLED_APPS:
-    urlpatterns += patterns('',
-        url(r'^admin/', include(admin.site.urls)),
-    )
+    urlpatterns.append(url(r'^admin/', include(admin.site.urls)))
