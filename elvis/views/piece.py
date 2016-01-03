@@ -12,7 +12,7 @@ from elvis.models.piece import Piece
 from elvis.models.movement import Movement
 from elvis.models.attachment import Attachment
 from elvis.forms import PieceForm
-from elvis.elvis.tasks import rebuild_suggester_dicts
+from elvis.tasks import rebuild_suggester_dicts
 from elvis.views.views import abstract_model_factory
 from elvis.views.views import handle_dynamic_file_table
 from elvis.views.views import Cleanup
