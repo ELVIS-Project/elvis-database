@@ -168,7 +168,7 @@ def save_cart(sender, request, user, **kwargs):
     user_download.collection_collections.clear()
     user_download.collection_collections.add(*collections)
     user_download.collection_composers.clear()
-    user_download.collection_collections.add(*composers)
+    user_download.collection_composers.add(*composers)
     user_download.save()
 
 
