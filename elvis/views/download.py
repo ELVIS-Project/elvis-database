@@ -111,7 +111,7 @@ class DownloadCart(generics.GenericAPIView):
                     results.append({'id': item['id'], 'in_cart': False})
                 continue
             if item['type'] == "elvis_movement":
-                piece = Movement.objects.get(pk=item['id']).piece
+                piece = Movement.objects.get(uuid=item['id']).piece
                 if piece and cart.get("P-" + item['id']):
                     results.append({'id': item['id'], 'in_cart': 'Piece'})
                 elif cart.get("M-" + item['id']):
@@ -211,16 +211,16 @@ class Downloading(generics.GenericAPIView):
         if request.GET.get('task'):
             task_id = request.GET['task']
             task = AsyncResult(task_id)
-            if task.state == "PENDING":
-                return Response({'ready': task.ready(), 'progress': 0})
-            elif task.state == "SUCCESS":
-                return Response({'ready': task.ready(), 'progress': 100, 'path': task.result})
-            elif task.state == "FAILED":
-                return Response({'ready': "FAILED"}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+            if task.status == "PENDING":
+                return Response({'ready': task.ready(), 'status': task.status, 'progress': 0})
+            elif task.status == "SUCCESS":
+                return Response({'ready': task.ready(), 'status': "SUCCESS", 'progress': 100, 'path': task.result})
+            elif task.state == "FAILURE":
+                return Response({'ready': task.ready(), 'status': "FAILURE"}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
             else:
                 meta = task._get_task_meta()
                 progress = meta.get('result', {}).get('progress', 0)
-                return Response({'ready': task.ready(), 'progress': progress})
+                return Response({'ready': task.ready(), 'progress': progress, 'status': "PROGRESS"})
 
         if request.GET.get('extensions[]'):
             extensions = request.GET.getlist('extensions[]')
