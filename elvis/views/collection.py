@@ -8,11 +8,12 @@ from elvis.forms.create import CollectionForm
 from django.views.decorators.csrf import csrf_protect
 from django.utils.decorators import method_decorator
 from django.http import HttpResponseRedirect, HttpResponse
+from django.core.exceptions import ObjectDoesNotExist
 
 from elvis.renderers.custom_html_renderer import CustomHTMLRenderer
 from elvis.serializers import CollectionFullSerializer, CollectionListSerializer
 from elvis.views.common import ElvisListCreateView, ElvisDetailView
-from elvis.models.collection import Collection
+from elvis.models import Collection, Piece, Movement
 
 
 class CollectionListHTMLRenderer(CustomHTMLRenderer):
@@ -50,11 +51,20 @@ class CollectionList(ElvisListCreateView):
         else:
             new_collection.public = False
 
-        user_download = request.user.downloads.all()[0]
-        for piece in user_download.collection_pieces.all():
-            piece.collections.add(new_collection)
-        for movement in user_download.collection_movements.all():
-            movement.collections.add(new_collection)
+        cart = request.session.get('cart', {})
+        for key in cart:
+            if key.startswith("P"):
+                try:
+                    tmp = Piece.objects.get(uuid=key[2:])
+                except ObjectDoesNotExist:
+                    continue
+                new_collection.pieces.add(tmp)
+            if key.startswith("M"):
+                try:
+                    tmp = Movement.objects.get(uuid=key[2:])
+                except ObjectDoesNotExist:
+                    continue
+                new_collection.movements.add(tmp)
 
         new_collection.save()
         return HttpResponseRedirect("/collection/{0}".format(new_collection.id))
