@@ -416,21 +416,18 @@ body
     padding-bottom: 100px; /* Height of the footer element */
 }
 
-.row-elvis-content
+.row-elvis-content, .row-elvis-navbar
+
 {
-    padding-top:15px;
     padding-left:15px;
     padding-right:15px;
     max-width: 1500px;
     margin: 0 auto;
 }
 
-.row-elvis-navbar
+.row-elvis-content
 {
-    padding-left:0px;
-    padding-right:0px;
-    max-width: 1500px;
-    margin: 0 auto;
+    padding-top:15px;
 }
 
 #footer
