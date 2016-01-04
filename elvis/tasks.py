@@ -69,7 +69,7 @@ class CartZipper:
             done_pct = int((self.counter/self.total)*100)
             task.update_state(meta={"progress": done_pct})
 
-        zipped_file = shutil.make_archive(archive_name, "zip", root_dir=root_dir_name)
+        zipped_file = shutil.make_archive(archive_name, "zip", root_dir=self.tempdir, base_dir=archive_name)
         udownload_dir = os.path.join(settings.MEDIA_ROOT, "user_downloads", self.username)
         if not os.path.exists(udownload_dir):
             os.mkdir(udownload_dir)
