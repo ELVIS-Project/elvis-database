@@ -100,7 +100,7 @@ class CachedEmbedHyperlinkedModelSerializer(serializers.HyperlinkedModelSerializ
 class AttachmentMinSerializer(CachedMinHyperlinkedModelSerializer):
     class Meta:
         model = Attachment
-        fields = ("file_name", "url")
+        fields = ("file_name", "url", "extension")
 
 
 class ComposerMinSerializer(CachedMinHyperlinkedModelSerializer):

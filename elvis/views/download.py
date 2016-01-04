@@ -17,6 +17,7 @@ from rest_framework import permissions
 from rest_framework import status
 from rest_framework.renderers import JSONRenderer
 from rest_framework.response import Response
+from collections import defaultdict
 import uuid
 
 class DownloadListHTMLRenderer(CustomHTMLRenderer):
@@ -47,14 +48,19 @@ class DownloadCart(generics.GenericAPIView):
     def make_cart_response(self, request):
         cart = request.session.get('cart', {})
         data = {"pieces": [], "movements": []}
+        ext_count = defaultdict(int)
         for key in cart.keys():
             if key.startswith("P"):
-                data['pieces'].append(self.retrieve_piece(key, request))
+                data['pieces'].append(self._retrieve_piece(key, request, ext_count))
             if key.startswith("M"):
-                data['movements'].append(self.retrieve_movement(key, request))
+                data['movements'].append(self._retrieve_movement(key, request, ext_count))
+
+        ext_list = [{"extension":k, 'count':v} for k,v in ext_count.items() if k is not "total"]
+        data['extension_counts'] = ext_list
+        data['attachment_count'] = ext_count['total']
         return data
 
-    def retrieve_piece(self, pid, request):
+    def _retrieve_piece(self, pid, request, exts):
         """Use cache to speed up retrieving use cart contents.
 
         :param pid: The id stored in the session for carts (P-[numbers])
@@ -63,14 +69,23 @@ class DownloadCart(generics.GenericAPIView):
         """
         p_uuid = pid[2:]
         p = cache.get("EMB-" + p_uuid)
-        if p:
-            return p
-        tmp = Piece.objects.get(uuid=p_uuid)
-        p = PieceEmbedSerializer(tmp, context={'request': request}).data
-        cache.set("EMB-" + p_uuid, p)
+        if not p:
+            tmp = Piece.objects.get(uuid=p_uuid)
+            p = PieceEmbedSerializer(tmp, context={'request': request}).data
+            cache.set("EMB-" + p_uuid, p)
+
+        for a in p['attachments']:
+            exts[a['extension']] += 1
+            exts['total'] += 1
+
+        for m in p['movements']:
+            for a in m['attachments']:
+                exts[a['extension']] += 1
+                exts['total'] += 1
+
         return p
 
-    def retrieve_movement(self, mid, request):
+    def _retrieve_movement(self, mid, request, exts):
         """Use cache to speed up retrieving use cart contents.
 
         :param pid: The id stored in the session for carts (M-[numbers])
@@ -79,11 +94,15 @@ class DownloadCart(generics.GenericAPIView):
         """
         m_uuid = mid[2:]
         m = cache.get("EMB-" + m_uuid)
-        if m:
-            return m
-        tmp = Movement.objects.get(uuid=m_uuid)
-        m = MovementEmbedSerializer(tmp, context={'request': request}).data
-        cache.set("EMB-" + m_uuid, m)
+        if not m:
+            tmp = Movement.objects.get(uuid=m_uuid)
+            m = MovementEmbedSerializer(tmp, context={'request': request}).data
+            cache.set("EMB-" + m_uuid, m)
+
+        for a in m['attachments']:
+            exts[a['extension']] += 1
+            exts['total'] += 1
+
         return m
 
 

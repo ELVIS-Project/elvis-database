@@ -90,6 +90,7 @@
                     data: {'extensions': selection},
                     success: function (data) {
                         console.log(data);
+                        $("#progress-bar-div").slideDown();
                         task_id = data['task'];
                         poll_interval = setInterval(poll_status, 500, task_id);
                     }
@@ -116,13 +117,15 @@
                         progress_bar(data);
                         if(data['ready'] === true)
                         {
-                            clearInterval(poll_interval)
+                            clearInterval(poll_interval);
+                            window.location = data['path'];
                         }
                     },
                     error: function(data)
                     {
                         console.log(data);
-                        clearInterval(poll_interval)
+                        clearInterval(poll_interval);
+                        $("#download-modal-body").html("Error zipping cart!")
                     }
                 });
             }
@@ -143,8 +146,7 @@
 
 {% block page_content %}
     <!-- Save Modal -->
-    <div class="modal fade" id="save_modal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel"
-         aria-hidden="true">
+    <div class="modal fade" id="save_modal" data-backdrop="static" role="dialog">
     <label id="myModalLabel">Are you sure you want to clear collection?</label>
         <div class="modal-dialog">
             <div class="modal-content">
@@ -206,7 +208,7 @@
     </div>
 </div>
 
-    <div id="download-modal" class="modal fade" role="dialog">
+    <div id="download-modal" class="modal fade" data-backdrop="static" role="dialog">
         <div class="modal-dialog">
             <!-- Modal content-->
             <div class="modal-content">
@@ -214,30 +216,22 @@
                     <button type="button" class="close" data-dismiss="modal">&times;</button>
                     <h3 class="modal-title">Choose Files</h3>
                 </div>
-                <div class="modal-body">
+                <div class="modal-body" id="download-modal-body">
                     <p>Most pieces have multiple file formats associated with them. Which formats would you like to download?</p>
-                    <div class="col-md-4">
-                        <label class="asearch-label" for="filefilt">File types</label><br>
-                        <select class="selectpicker" data-width="100%" data-title="All files" id="filefilt"  multiple>
-                            <option value=".mei"> .mei</option>
-                            <option value=".xml"> .xml</option>
-                            <option value=".midi"> .midi</option>
-                            <option value=".mid"> .mid</option>
-                            <option value=".pdf"> .pdf</option>
-                            <option value=".mxl"> .mxl</option>
-                            <option value=".krn"> .krn</option>
-                            <option value=".md"> .md</option>
-                            <option value=".nwc"> .nwc</option>
-                            <option value=".tntxt"> .tntxt</option>
-                            <option value=".capx"> .capx</option>
-                            <option value=".abc"> .abc</option>
-                        </select>
+                    <div class="row">
+                    <div class="col-sm-8 col-sm-offset-2">
+                    <select class="selectpicker" data-width="100%" data-title="All files" id="filefilt" multiple>
+                        {% for att in content.extension_counts|dictsort:"extension" %}
+                            <option value="{{ att.extension }}" data-content="{{ att.extension }} <span class='badge pull-right'>{{ att.count }}</span>"></option>
+                        {% endfor %}
+                    </select>
                     </div>
-                    <div class="progress progress-striped">
-                        <div class="progress-bar progress-bar-info active" id="progress" style="width:0%"></div>
                     </div>
                 </div>
                 <div class="modal-footer">
+                    <div class="progress progress-striped" hidden="hidden" id="progress-bar-div">
+                        <div class="progress-bar progress-bar-info active" id="progress" style="width:0%"></div>
+                    </div>
                     <button type="button" class="btn btn-default" id="cancel-download" data-dismiss="modal">Cancel</button>
                     <button type="button" class="btn btn-default" id="confirm-download">Download</button>
                 </div>
