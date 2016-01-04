@@ -83,16 +83,21 @@ class ElvisModel(models.Model):
         if kwargs.get('commit', True):
             solrconn.commit()
 
+    def cache_expire(self):
+        cache_levels = ["MIN-", "EMB-", "LIST-"]
+        str_uuid = str(self.uuid)
+        for prefix in cache_levels:
+            cache.delete(prefix + str_uuid)
+
+    def save(self, force_insert=False, force_update=False, using=None,
+             update_fields=None):
+        self.cache_expire()
+        super().save(force_insert, force_update, using, update_fields)
+
+    def delete(self, using=None, keep_parents=False):
+        self.cache_expire()
+        super().delete(using, keep_parents)
 
     def __str__(self):
         return self.title
 
-
-@receiver([post_save, pre_delete], sender=ElvisModel)
-def cache_expire(sender, instance, created, **kwargs):
-    import pdb
-    pdb.set_trace()
-    cache_levels = ["MIN-", "EMB-", "LIST-"]
-    str_uuid = str(instance.uuid)
-    for prefix in cache_levels:
-        cache.delete(prefix + str_uuid)
