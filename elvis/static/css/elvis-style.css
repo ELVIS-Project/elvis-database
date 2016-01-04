@@ -412,7 +412,14 @@ body
 
 #content
 {
+    margin-top: 40px;
     padding-bottom: 100px; /* Height of the footer element */
+}
+
+.row-elvis-content
+{
+    padding-left:15px;
+    padding-right:15px;
 }
 
 #footer
@@ -498,9 +505,7 @@ th.header:hover {
 
     background-repeat: repeat-x;
 }
-#content-container {
-    padding-top: 25px;
-}
+
 #elvis-navbar {
     margin-bottom:0px;
 }
