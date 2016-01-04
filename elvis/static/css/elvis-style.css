@@ -418,8 +418,19 @@ body
 
 .row-elvis-content
 {
+    padding-top:15px;
     padding-left:15px;
     padding-right:15px;
+    max-width: 1500px;
+    margin: 0 auto;
+}
+
+.row-elvis-navbar
+{
+    padding-left:0px;
+    padding-right:0px;
+    max-width: 1500px;
+    margin: 0 auto;
 }
 
 #footer
