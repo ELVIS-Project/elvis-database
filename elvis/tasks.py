@@ -49,7 +49,7 @@ class CartZipper:
         self.total = 0
 
     def zip_files(self, task):
-        archive_name = "ElvisDownload{0}".format(datetime.datetime.utcnow().strftime("-%H-%M-%S"))
+        archive_name = "{0}ElvisDownload".format(datetime.datetime.utcnow().strftime("%Y-%m-%d-(%H-%M-%S)-"))
         os.chdir(self.tempdir)
         root_dir_name = os.path.join(self.tempdir, archive_name)
         os.mkdir(root_dir_name)
