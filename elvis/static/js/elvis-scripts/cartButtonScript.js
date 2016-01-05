@@ -2,6 +2,8 @@ var type = null;
 var action = null;
 var $button = null;
 var cart_timeout = null;
+var items = null;
+var $forms = null;
 
 function cartButtonRefresh()
 {
@@ -13,6 +15,7 @@ function cartButtonRefresh()
         event.stopImmediatePropagation();
 
         $button = $(this);
+        $button.tooltip('hide');
         if ($button.hasClass('disabled'))
         {
             $button.blur();
@@ -54,59 +57,18 @@ function cartButtonRefresh()
         $.ajax({
             type: "post",
             url: "/download-cart/",
-            data: $(event.target).parents(".recursive-patch-download-form").serialize(),
+            data: $button.parents(".recursive-patch-download-form").serialize(),
             success: function (data)
             {
                 clearTimeout(cart_timeout);
                 $base_modal.modal('hide');
-                debugger;
                 $collection_count.fadeOut(100, function ()
                 {
                     $collection_count.text("(" + data.count + ")");
                 });
                 $collection_count.fadeIn(100);
-
-                if (action === 'add')
-                {
-                    $button.fadeOut(100, function ()
-                    {
-                        $button.blur()
-                            .tooltip('hide')
-                            .attr({'data-original-title': 'Remove From Downloads'})
-                            .tooltip('fixTitle')
-                            .removeClass('btn-success')
-                            .addClass('btn-danger');
-                        $($button.siblings("[name='action']")).val('remove');
-                        if (type === 'badge')
-                            $button.html("<span class='glyphicon glyphicon-minus'></span>");
-                        else
-                        {
-                            $button.html("Remove from Downloads");
-                            location.reload();
-                        }
-                    }).fadeIn(100)
-                }
-                else
-                {
-                    $button.fadeOut(100, function ()
-                    {
-                        $button.blur()
-                            .tooltip('hide')
-                            .attr({'data-original-title': 'Add to Downloads'})
-                            .tooltip('fixTitle')
-                            .removeClass('btn-danger')
-                            .addClass('btn-success');
-                        $($button.siblings("[name='action']")).val('add');
-                        if (type === 'badge')
-                            $button.html("<span class='glyphicon glyphicon-plus'></span>");
-                        else
-                        {
-                            $button.html("Add to Downloads");
-                            location.reload();
-                        }
-
-                    }).fadeIn(100)
-                }
+                redraw_cart_buttons();
+                cartButtonRefresh();
             },
             error: function (data)
             {
@@ -114,21 +76,67 @@ function cartButtonRefresh()
                 $base_modal_body.html("<p>Something went wrong and your cart was not modified!</p>");
                 $base_modal_footer.html("<button type='button' class='btn btn-default' data-dismiss='modal'>Close</button>");
             }
-        })
+        });
     });
 }
+
 function init_cart_buttons()
 {
+    $forms = $(".recursive-patch-download-form");
+    if (items === null)
+        items = build_item_dict($forms);
 
-    var $forms = $(".recursive-patch-download-form");
-    var items = [];
+    $.ajax({
+        url: "/download-cart/",
+        data: {check_in_cart: JSON.stringify(items)},
+        async: false,
+        success: function (data)
+        {
+            var keys = Object.keys(data);
+            for (var i = 0; i < keys.length; i++)
+            {
+                var key = keys[i];
+                if (items[key]['button_type'] == "button")
+                    draw_button(data[key], items[key]["$elem"]);
+                else
+                    draw_badge(data[key], items[key]["$elem"]);
+            }
+        }
+    });
+    cartButtonRefresh()
+}
+
+function redraw_cart_buttons()
+{
+    $.ajax({
+        url: "/download-cart/",
+        data: {check_in_cart: JSON.stringify(items)},
+        async: false,
+        success: function (data)
+        {
+            var keys = Object.keys(data);
+            for (var i = 0; i < keys.length; i++)
+            {
+                var key = keys[i];
+                if (items[key]['button_type'] == "button")
+                    draw_button(data[key], items[key]["$elem"]);
+                else
+                    draw_badge(data[key], items[key]["$elem"]);
+            }
+        }
+    });
+}
+
+function build_item_dict($forms)
+{
+    items = {};
     for (var i = 0; i < $forms.size(); i++)
     {
         var form_children = $forms[i].children;
-        var item_type = null, item_id = null;
+        var item_type = null, item_id = null, button_type = null;
         for (var j in form_children)
         {
-            if(item_type !== null && item_id !== null)
+            if(item_type !== null && item_id !== null && button_type !== null)
                 break;
 
             var child = form_children[j];
@@ -141,35 +149,54 @@ function init_cart_buttons()
             {
                 item_id = child.value;
             }
-        }
-        items.push({"type": item_type, "id": item_id, "num": i});
-    }
-    $.ajax({
-        url: "/download-cart/",
-        data: {check_in_cart: JSON.stringify(items)},
-        async: false,
-        success: function (data)
-        {
-            console.log(data);
-            for (var i = 0; i < $forms.size(); i++)
+            if (child.name === "button_type")
             {
-                if (data[i]['in_cart'] === "Piece")
-                {
-                    $($forms[i]).prepend('<button type="button" class="btn btn-mini btn-info disabled" data-container="body" data-toggle="tooltip" data-placement="top" title="Movement in Downloads under parent Piece. Remove Piece to modify."><span class="glyphicon glyphicon-lock"> </span> </button>');
-                    continue;
-                }
-                if (data[i]['in_cart'] === true)
-                {
-                    $($forms[i].children[2]).val("remove");
-                    $($forms[i]).prepend('<button type="button" class="btn btn-mini btn-danger cart-badge" data-container="body" data-toggle="tooltip" data-placement="top" title="Remove from Downloads"><span class="glyphicon glyphicon-minus"> </span> </button>');
-                    continue
-                }
-                if (data[i]['in_cart'] === false)
-                {
-                    $($forms[i]).prepend('<button type="button" class="btn btn-mini btn-success cart-badge" data-container="body" data-toggle="tooltip" data-placement="top" title="Add to Downloads"><span class="glyphicon glyphicon-plus"> </span> </button> ');
-                }
+                button_type = child.value;
             }
         }
-    });
-    cartButtonRefresh()
+        items[item_id] = {"type": item_type, "button_type": button_type, "$elem": $($forms[i])};
+    }
+    return items
+}
+
+function draw_button(data, element)
+{
+    var $elem = $(element);
+    $elem.children(":button").remove();
+    if (data['in_cart'] === true)
+    {
+        $elem.children("[name=action]").val("remove");
+        $elem.prepend('<button type="button" class="btn btn-danger cart-button">Remove from Downloads </button>');
+    }
+    else if (data['in_cart'] === false)
+    {
+        $elem.children("[name=action]").val("add");
+        $elem.prepend('<button type="button" class="btn btn-success cart-button">Add to Downloads </button>');
+    }
+}
+
+function draw_badge(data, element)
+{
+    var $elem = $(element);
+    $elem.children(":button").remove();
+    var new_button = "", new_action = "";
+
+    if (data['in_cart'] === "Piece")
+    {
+        new_button = '<button type="button" class="btn btn-mini btn-info disabled cart-badge" data-container="body" data-toggle="tooltip" data-placement="top" title="In cart under piece."><span class="glyphicon glyphicon-lock"> </span> </button>'
+        new_action = "add"
+    }
+    else if (data['in_cart'] === true)
+    {
+        new_button =  '<button type="button" class="btn btn-mini btn-danger cart-badge" data-container="body" data-toggle="tooltip" data-placement="top" title="Remove from Downloads"><span class="glyphicon glyphicon-minus"> </span> </button>';
+        new_action = "remove"
+    }
+    else if (data['in_cart'] === false)
+    {
+        new_button = '<button type="button" class="btn btn-mini btn-success cart-badge" data-container="body" data-toggle="tooltip" data-placement="top" title="Add to Downloads"><span class="glyphicon glyphicon-plus"> </span> </button> ';
+        new_action = "add"
+    }
+
+    $elem.prepend(new_button);
+    $elem.children("[name=action]").val(new_action);
 }

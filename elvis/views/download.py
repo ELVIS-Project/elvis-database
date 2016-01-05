@@ -76,8 +76,9 @@ class DownloadCart(generics.GenericAPIView):
         p_uuid = pid[2:]
         p = cache.get("EMB-" + p_uuid)
         if not p:
-            tmp = self._try_get(request, Piece, pid)
+            tmp = self._try_get(Piece, p_uuid)
             if not tmp:
+                del(request.session['cart'][pid])
                 return None
             p = PieceEmbedSerializer(tmp, context={'request': request}).data
             cache.set("EMB-" + p_uuid, p)
@@ -103,8 +104,9 @@ class DownloadCart(generics.GenericAPIView):
         m_uuid = mid[2:]
         m = cache.get("EMB-" + m_uuid)
         if not m:
-            tmp = self._try_get(request, Movement, mid)
+            tmp = self._try_get(Movement, m_uuid)
             if not tmp:
+                del(request.session['cart'][mid])
                 return None
             m = MovementEmbedSerializer(tmp, context={'request': request}).data
             cache.set("EMB-" + m_uuid, m)
@@ -115,50 +117,51 @@ class DownloadCart(generics.GenericAPIView):
 
         return m
 
-    def _try_get(self, request, model, obj_id):
-        """ Tries to get an object out of the database. If the item has been
-        deleted, deletes the item from the cart."""
+    def _try_get(self, model, obj_id):
+        """ Tries to get an object out of the database. Returns None if
+        the object no longer exists. It is the caller's responsibility to
+        handle this situation."""
         tmp = None
         try:
-            tmp = model.objects.get(uuid=obj_id[2:])
+            tmp = model.objects.get(uuid=obj_id)
         except ObjectDoesNotExist:
-            del(request.session['cart'][obj_id])
+            pass
         return tmp
 
     def _check_in_cart(self, request):
-        item_list = json.loads(request.GET['check_in_cart'])
+        items = json.loads(request.GET['check_in_cart'])
         cart = request.session.get('cart', {})
-        results = []
-        for item in item_list:
-            if item['type'] == "elvis_composer":
-                if cart.get("COM-" + item['id']):
-                    results.append({'id': item['id'], 'in_cart': True})
+        results = {}
+        for key in items.keys():
+            if items[key]['type'] == "elvis_composer":
+                if cart.get("COM-" + key):
+                    results[key] = ({'id': key, 'in_cart': True})
                 else:
-                    results.append({'id': item['id'], 'in_cart': False})
+                    results[key] = ({'id': key, 'in_cart': False})
                 continue
-            if item['type'] == "elvis_collection":
-                if cart.get("COL-" + item['id']):
-                    results.append({'id': item['id'], 'in_cart': True})
+            if items[key]['type'] == "elvis_collection":
+                if cart.get("COL-" + key):
+                    results[key] = ({'id': key, 'in_cart': True})
                 else:
-                    results.append({'id': item['id'], 'in_cart': False})
+                    results[key] = ({'id': key, 'in_cart': False})
                 continue
-            if item['type'] == "elvis_piece":
-                if cart.get("P-" + item['id']):
-                    results.append({'id': item['id'], 'in_cart': True})
+            if items[key]['type'] == "elvis_piece":
+                if cart.get("P-" + key):
+                    results[key] = ({'id': key, 'in_cart': True})
                 else:
-                    results.append({'id': item['id'], 'in_cart': False})
+                    results[key] = ({'id': key, 'in_cart': False})
                 continue
-            if item['type'] == "elvis_movement":
-                try:
-                    piece = Movement.objects.get(uuid=item['id']).piece
-                except ObjectDoesNotExist:
-                    piece = None
-                if piece and cart.get("P-" + item['id']):
-                    results.append({'id': item['id'], 'in_cart': 'Piece'})
-                elif cart.get("M-" + item['id']):
-                    results.append({'id': item['id'], 'in_cart': True})
+            if items[key]['type'] == "elvis_movement":
+                mov = self._try_get(Movement, key)
+                piece = mov.piece if mov else None
+                if piece and cart.get("P-" + str(piece.uuid)):
+                    results[key] = ({'id': key, 'in_cart': 'Piece'})
+                    continue
+                if cart.get("M-" + key):
+                    results[key] = ({'id': key, 'in_cart': True})
+                    continue
                 else:
-                    results.append({'id': item['id'], 'in_cart': False})
+                    results[key] = ({'id': key, 'in_cart': False})
         return results
 
     @method_decorator(csrf_protect)
@@ -181,40 +184,47 @@ class DownloadCart(generics.GenericAPIView):
         cart = request.session.get('cart', {})
         items = request.POST.get('items', [])
         for item in items:
+            item_type = item.get('item_type')
+            item_uuid = item.get('id')
             action = item.get('action')
             if action == 'add':
-                self.add_item(item, cart)
+                self.add_item(item_type, item_uuid, cart)
             if action == 'remove':
-                self.remove_item(item, cart)
+                self.remove_item(item_type, item_uuid, cart)
 
+        item_type = request.POST.get('item_type')
+        item_uuid = request.POST.get('id')
         action = request.POST.get('action')
         if action == 'add':
-            self.add_item(request.POST, cart)
-        elif action == 'remove':
-            self.remove_item(request.POST, cart)
+            self.add_item(item_type, item_uuid, cart)
+        if action == 'remove':
+            self.remove_item(item_type, item_uuid, cart)
 
         request.session['cart'] = cart
         jresults = json.dumps({'count': len(cart)})
         return HttpResponse(content=jresults, content_type="json")
 
-    def add_item(self, item, cart):
-        elvis_type = item.get('item_type')
-        if elvis_type == "elvis_movement":
-            cart["M-" + item['id']] = True
-        elif elvis_type == "elvis_piece":
-            cart["P-" + item['id']] = True
-        elif elvis_type == "elvis_collection":
-            cart["COL-" + item['id']] = True
-            coll = Collection.objects.filter(uuid=item['id'])[0]
+    def add_item(self, item_type, item_uuid, cart):
+        if item_type == "elvis_movement":
+            cart["M-" + item_uuid] = True
+        elif item_type == "elvis_piece":
+            cart["P-" + item_uuid] = True
+            piece = self._try_get(Piece, item_uuid)
+            if piece:
+                for mov in piece.movements.all():
+                    self.remove_item("elvis_movement", str(mov.uuid), cart)
+        elif item_type == "elvis_collection":
+            cart["COL-" + item_uuid] = True
+            coll = Collection.objects.filter(uuid=item_uuid)[0]
             for piece in coll.pieces.all():
                 cart["P-" + str(piece.uuid)] = True
             for mov in coll.movements.all():
                 parent = mov.piece
                 if not parent or not cart.get("P-" + str(parent.uuid)):
                     cart["M-" + str(mov.uuid)] = True
-        elif elvis_type == "elvis_composer":
-            cart["COM-" + item['id']] = True
-            comp = Composer.objects.filter(uuid=item['id'])[0]
+        elif item_type == "elvis_composer":
+            cart["COM-" + item_uuid] = True
+            comp = Composer.objects.filter(uuid=item_uuid)[0]
             for piece in comp.pieces.all():
                 cart["P-" + str(piece.uuid)] = True
             for mov in comp.movements.all():
@@ -222,22 +232,25 @@ class DownloadCart(generics.GenericAPIView):
                 if not parent or not cart.get("P-" + str(parent.uuid)):
                     cart["M-" + str(mov.uuid)] = True
 
-    def remove_item(self, item, cart):
-        elvis_type = item.get('item_type')
-        if elvis_type == "elvis_movement":
-            cart.pop("M-" + item['id'], None)
-        elif elvis_type == "elvis_piece":
-            cart.pop("P-" + item['id'], None)
-        elif elvis_type == "elvis_collection":
-            cart.pop("COL-" + item['id'], None)
-            coll = Collection.objects.filter(uuid=item['id'])[0]
+    def remove_item(self, item_type, item_uuid, cart):
+        if item_type == "elvis_movement":
+            cart.pop("M-" + item_uuid, None)
+        elif item_type == "elvis_piece":
+            cart.pop("P-" + item_uuid, None)
+            piece = self._try_get(Piece, item_uuid)
+            if piece:
+                for mov in piece.movements.all():
+                    self.remove_item("elvis_movement", str(mov.uuid), cart)
+        elif item_type == "elvis_collection":
+            cart.pop("COL-" + item_uuid, None)
+            coll = Collection.objects.filter(uuid=item_uuid)[0]
             for piece in coll.pieces.all():
                 cart.pop("P-" + str(piece.uuid), None)
             for mov in coll.movements.all():
                 cart.pop("M-" + str(mov.uuid), None)
-        elif elvis_type == "elvis_composer":
-            cart.pop("COM-" + item['id'], None)
-            comp = Composer.objects.filter(uuid=item['id'])[0]
+        elif item_type == "elvis_composer":
+            cart.pop("COM-" + item_uuid, None)
+            comp = Composer.objects.filter(uuid=item_uuid)[0]
             for piece in comp.pieces.all():
                 cart.pop("P-" + str(piece.uuid), None)
             for mov in comp.movements.all():

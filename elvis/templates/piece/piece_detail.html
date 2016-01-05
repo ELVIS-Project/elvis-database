@@ -32,6 +32,10 @@
     <h1>{{ content.title }}</h1><hr>
 {% endblock %}
 
+{% block detail_buttons %}
+    {% include "base/download-badge.html" with id=content.uuid type="elvis_piece" button_type="button"%}
+{% endblock %}
+
 {% block detail_tab_content %}
 
     <div class="row">
