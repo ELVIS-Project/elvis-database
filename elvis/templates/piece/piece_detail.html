@@ -143,7 +143,7 @@
             <small>({{ content.movements | length }})</small>
         </h3>
         {% for m in content.movements %}
-            {% include "base/list_item_compact.html" with url=m.url title=m.title %}
+            {% include "base/list_item_compact.html" with url=m.url title=m.title id=m.uuid type="elvis_movement" %}
         {% endfor %}
     {% endif %}
 

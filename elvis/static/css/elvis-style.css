@@ -210,7 +210,7 @@ html, body
 
 .list-item-compact
 {
-    padding: 3px 3px 3px 0px;
+    padding: 3px 3px 3px 3px;
 }
 
 .search-result-item:hover,
@@ -230,11 +230,17 @@ html, body
     text-decoration: none;
 }
 
-.search-result-add, .list-add
+.search-result-add, .list-add, .list-add-compact
 {
     text-align: center;
     padding-top: 20px;
     border-right: 0px;
+    min-width:64px;
+}
+
+.list-add-compact
+{
+    padding-top: 11px;
 }
 
 .form-control.search

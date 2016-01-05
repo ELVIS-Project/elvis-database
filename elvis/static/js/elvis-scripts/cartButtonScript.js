@@ -2,19 +2,10 @@ var type = null;
 var action = null;
 var $button = null;
 var cart_timeout = null;
-var $base_modal = $("#base-modal");
-var $base_modal_header = $("#base-modal-header");
-var $base_modal_body = $("#base-modal-body");
-var $base_modal_footer = $("#base-modal-footer");
-var $collection_count = $("#collection-count");
 
 function cartButtonRefresh()
 {
-    $base_modal = $("#base-modal");
-    $base_modal_header = $("#base-modal-header");
-    $base_modal_body = $("#base-modal-body");
-    $base_modal_footer = $("#base-modal-footer");
-    $collection_count = $("#collection-count");
+    var $collection_count = $("#collection-count");
 
     $(".cart-badge, .cart-button").off('click').tooltip().on("click", function (event)
     {
@@ -60,7 +51,6 @@ function cartButtonRefresh()
                 $base_modal.modal('show');
             }, 1000);
         }
-
         $.ajax({
             type: "post",
             url: "/download-cart/",
@@ -69,6 +59,7 @@ function cartButtonRefresh()
             {
                 clearTimeout(cart_timeout);
                 $base_modal.modal('hide');
+                debugger;
                 $collection_count.fadeOut(100, function ()
                 {
                     $collection_count.text("(" + data.count + ")");
@@ -125,4 +116,60 @@ function cartButtonRefresh()
             }
         })
     });
+}
+function init_cart_buttons()
+{
+
+    var $forms = $(".recursive-patch-download-form");
+    var items = [];
+    for (var i = 0; i < $forms.size(); i++)
+    {
+        var form_children = $forms[i].children;
+        var item_type = null, item_id = null;
+        for (var j in form_children)
+        {
+            if(item_type !== null && item_id !== null)
+                break;
+
+            var child = form_children[j];
+            if (child.name === "item_type")
+            {
+                item_type = child.value;
+                continue;
+            }
+            if (child.name === "id")
+            {
+                item_id = child.value;
+            }
+        }
+        items.push({"type": item_type, "id": item_id, "num": i});
+    }
+    $.ajax({
+        url: "/download-cart/",
+        data: {check_in_cart: JSON.stringify(items)},
+        async: false,
+        success: function (data)
+        {
+            console.log(data);
+            for (var i = 0; i < $forms.size(); i++)
+            {
+                if (data[i]['in_cart'] === "Piece")
+                {
+                    $($forms[i]).prepend('<button type="button" class="btn btn-mini btn-info disabled" data-container="body" data-toggle="tooltip" data-placement="top" title="Movement in Downloads under parent Piece. Remove Piece to modify."><span class="glyphicon glyphicon-lock"> </span> </button>');
+                    continue;
+                }
+                if (data[i]['in_cart'] === true)
+                {
+                    $($forms[i].children[2]).val("remove");
+                    $($forms[i]).prepend('<button type="button" class="btn btn-mini btn-danger cart-badge" data-container="body" data-toggle="tooltip" data-placement="top" title="Remove from Downloads"><span class="glyphicon glyphicon-minus"> </span> </button>');
+                    continue
+                }
+                if (data[i]['in_cart'] === false)
+                {
+                    $($forms[i]).prepend('<button type="button" class="btn btn-mini btn-success cart-badge" data-container="body" data-toggle="tooltip" data-placement="top" title="Add to Downloads"><span class="glyphicon glyphicon-plus"> </span> </button> ');
+                }
+            }
+        }
+    });
+    cartButtonRefresh()
 }

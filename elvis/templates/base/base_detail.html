@@ -7,6 +7,7 @@
         $(document).ready(function ($)
         {
             $("#rendered-comment").html(markdown.toHTML($("#hidden-comment").text()));
+            init_cart_buttons();
         });
     </script>
 {% endblock %}
@@ -17,7 +18,7 @@
 
     <div class="row">
         <div class="col-sm-3">
-            <div class="well well-sm">
+            <div class="well well-sm" id="sidebar" >
                 <ul class="nav nav-pills nav-stacked">
                         <li class="active"><a href="#detail_tab" data-toggle="pill">Details</a></li>
                         <li class="disabled"><a href="" data-toggle="pill">Discussion</a></li>
@@ -30,6 +31,7 @@
                 <button class="btn btn-success" style="width:100%">Add to Cart</button>
             {% endblock %}
         </div>
+        <div class="col-sm-3"></div>
 
         <div class="col-sm-9">
             <div class="tab-content">

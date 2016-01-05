@@ -1,6 +1,14 @@
 
 <div class="list-row-compact row-eq-height">
-    <div class='col-xs-1 list-add'></div>
+    <div class='col-xs-1 list-add-compact'>
+        {% if id %}
+        <form class="recursive-patch-download-form" action="/download-cart/" method="post">
+            <input type="hidden" name="item_type"  value="{{ type }}" />
+            <input type="hidden" name="id"  value="{{ id }}" />
+            <input type="hidden" name="action" value="add" />
+        </form>
+        {% endif %}
+    </div>
     <a href='{{ url }}' class='list-item-compact col-xs-11'>
         {% if p_count or m_count %}
             <span class='badge alert-info right-badge' style='margin-top:10px'>
