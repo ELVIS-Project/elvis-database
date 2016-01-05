@@ -28,7 +28,7 @@
 <div class="page-header">
     <h2>{{ content.name }} <small>({{ content.birth_date }}&ndash;{{ content.death_date }})</small>
         <span class="pull-right">
-            {% include "base/download-button.html" with download_type="elvis_composer" download_id=content.id title="Add to Downloads" in_cart=content.in_cart%}
+            {% include "base/download-badge.html" with download_type="elvis_composer" download_id=content.id title="Add to Downloads" in_cart=content.in_cart%}
         </span>
     </h2>
 </div>
