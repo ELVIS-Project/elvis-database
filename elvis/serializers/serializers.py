@@ -36,6 +36,7 @@ The serializers are named using the following pattern:
 
 
 class URLNormalizingCacher():
+    """Standardizes the normalization of urls for caching"""
     def _url_normalizer(self, obj):
         if not obj.get('url'):
             return obj
