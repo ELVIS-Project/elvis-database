@@ -19,6 +19,7 @@ from rest_framework.renderers import JSONRenderer
 from rest_framework.response import Response
 from collections import defaultdict
 import uuid
+from django.core.exceptions import ObjectDoesNotExist
 
 class DownloadListHTMLRenderer(CustomHTMLRenderer):
     template_name = "download/download_list.html"
@@ -47,13 +48,18 @@ class DownloadCart(generics.GenericAPIView):
 
     def make_cart_response(self, request):
         cart = request.session.get('cart', {})
+        cart_copy = cart.copy()
         data = {"pieces": [], "movements": []}
         ext_count = defaultdict(int)
-        for key in cart.keys():
+        for key in cart_copy.keys():
             if key.startswith("P"):
-                data['pieces'].append(self._retrieve_piece(key, request, ext_count))
+                tmp = self._retrieve_piece(key, request, ext_count)
+                if tmp:
+                    data['pieces'].append(tmp)
             if key.startswith("M"):
-                data['movements'].append(self._retrieve_movement(key, request, ext_count))
+                tmp = self._retrieve_movement(key, request, ext_count)
+                if tmp:
+                    data['movements'].append(tmp)
 
         ext_list = [{"extension":k, 'count':v} for k,v in ext_count.items() if k is not "total"]
         data['extension_counts'] = ext_list
@@ -70,7 +76,9 @@ class DownloadCart(generics.GenericAPIView):
         p_uuid = pid[2:]
         p = cache.get("EMB-" + p_uuid)
         if not p:
-            tmp = Piece.objects.get(uuid=p_uuid)
+            tmp = self._try_get(request, Piece, pid)
+            if not tmp:
+                return None
             p = PieceEmbedSerializer(tmp, context={'request': request}).data
             cache.set("EMB-" + p_uuid, p)
 
@@ -95,7 +103,9 @@ class DownloadCart(generics.GenericAPIView):
         m_uuid = mid[2:]
         m = cache.get("EMB-" + m_uuid)
         if not m:
-            tmp = Movement.objects.get(uuid=m_uuid)
+            tmp = self._try_get(request, Movement, mid)
+            if not tmp:
+                return None
             m = MovementEmbedSerializer(tmp, context={'request': request}).data
             cache.set("EMB-" + m_uuid, m)
 
@@ -105,6 +115,15 @@ class DownloadCart(generics.GenericAPIView):
 
         return m
 
+    def _try_get(self, request, model, obj_id):
+        """ Tries to get an object out of the database. If the item has been
+        deleted, deletes the item from the cart."""
+        tmp = None
+        try:
+            tmp = model.objects.get(uuid=obj_id[2:])
+        except ObjectDoesNotExist:
+            del(request.session['cart'][obj_id])
+        return tmp
 
     def _check_in_cart(self, request):
         item_list = json.loads(request.GET['check_in_cart'])
@@ -130,7 +149,10 @@ class DownloadCart(generics.GenericAPIView):
                     results.append({'id': item['id'], 'in_cart': False})
                 continue
             if item['type'] == "elvis_movement":
-                piece = Movement.objects.get(uuid=item['id']).piece
+                try:
+                    piece = Movement.objects.get(uuid=item['id']).piece
+                except ObjectDoesNotExist:
+                    piece = None
                 if piece and cart.get("P-" + item['id']):
                     results.append({'id': item['id'], 'in_cart': 'Piece'})
                 elif cart.get("M-" + item['id']):
