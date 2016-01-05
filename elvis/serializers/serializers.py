@@ -98,9 +98,10 @@ class CachedEmbedHyperlinkedModelSerializer(serializers.HyperlinkedModelSerializ
 
 
 class AttachmentMinSerializer(CachedMinHyperlinkedModelSerializer):
+    title = serializers.CharField(source="file_name")
     class Meta:
         model = Attachment
-        fields = ("file_name", "url", "extension")
+        fields = ("title", "url", "extension")
 
 
 class ComposerMinSerializer(CachedMinHyperlinkedModelSerializer):
@@ -170,9 +171,11 @@ class TagMinSerializer(CachedMinModelSerializer):
 
 
 class AttachmentEmbedSerializer(CachedEmbedHyperlinkedModelSerializer):
+    title = serializers.CharField(source="file_name")
+
     class Meta:
         model = Attachment
-        fields = ("id", "file_name", "extension", "url", "source")
+        fields = ("id", "title", "extension", "url", "source")
 
 
 class MovementEmbedSerializer(CachedEmbedHyperlinkedModelSerializer):
@@ -231,9 +234,10 @@ class CollectionListSerializer(CachedListHyperlinkedModelSerializer):
 
 
 class AttachmentFullSerializer(serializers.HyperlinkedModelSerializer):
+    title = serializers.CharField(source="file_name")
     class Meta:
         model = Attachment
-        fields = ("file_name", "extension", "id", 'source', "url", "created",
+        fields = ("title", "extension", "id", 'source', "url", "created",
                   "updated", "uploader", "attachment")
 
 

@@ -20,6 +20,14 @@
     <script type='text/javascript' src="{% static "js/elvis-scripts/cartButtonScript.min.js" %}"></script>
 
     <link rel="icon" href="{% static "favicon.ico" %}">
+    <script>
+        $(document).ready(function ($) {
+            $base_modal_header = $("#base-modal-header");
+            $base_modal_body = $("#base-modal-body");
+            $base_modal_footer = $("#base-modal-footer");
+            $base_modal = $("#base-modal");
+        });
+    </script>
 
     {% block extra_hd %}
     {% endblock %}

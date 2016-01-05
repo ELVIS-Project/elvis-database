@@ -131,9 +131,6 @@ html, body
 
 .tab-content
 {
-    border-left: 1px solid #ddd;
-    border-right: 1px solid #ddd;
-    border-bottom: 1px solid #ddd;
     padding: 10px;
 }
 
@@ -185,7 +182,7 @@ html, body
     min-height: 100px;
 }
 
-.list-row
+.list-row, .list-row-compact
 {
     border-style: solid;
     border-width: 1px;
@@ -194,28 +191,26 @@ html, body
     min-height: 80px;
 }
 
-.search-result-row:first-child, .list-row:first-child
+.list-row-compact
 {
-    border-top-left-radius: 4px;
-    border-top-right-radius: 4px;
-}
+    min-height: 30px;
 
-.search-result-row:last-child, .list-row:last-child
-{
-    border-bottom-left-radius: 4px;
-    border-bottom-right-radius: 4px;
 }
-
-.search-result-row:hover, .list-row:hover
+.search-result-row:hover, .list-row:hover, .list-row-compact:hover
 {
     background-color: #f5f5f5;
 }
 
-.search-result-item, .list-item
+.search-result-item, .list-item, .list-item-compact
 {
     color: #555;
     text-decoration: none;
     padding: 10px 10px 10px 0px;
+}
+
+.list-item-compact
+{
+    padding: 3px 3px 3px 0px;
 }
 
 .search-result-item:hover,
@@ -225,7 +220,11 @@ html, body
 .list-item:hover,
 .list-item:active,
 .list-item:visited,
-.list-item:link
+.list-item:link,
+.list-item-compact:hover,
+.list-item-compact:active,
+.list-item-compact:visited,
+.list-item-compact:link
 {
     color: #555;
     text-decoration: none;
@@ -421,7 +420,7 @@ body
 {
     padding-left:15px;
     padding-right:15px;
-    max-width: 1500px;
+    max-width: 1200px;
     margin: 0 auto;
 }
 
