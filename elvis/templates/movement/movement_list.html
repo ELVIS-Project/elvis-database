@@ -11,7 +11,7 @@
 
 {% block list_content %}
     {% for c in content.results %}
-        {% include "base/base_list_item.html" with url=c.url title=c.title composer=c.composer.title date2=c.composition_end_date%}
+        {% include "base/list_item.html" with url=c.url title=c.title composer=c.composer.title date2=c.composition_end_date%}
     {% endfor %}
     {% if not content.results %}
         <div class="text-center"><h4>There's nothing here!</h4></div>
