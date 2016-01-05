@@ -1,6 +1,5 @@
 import datetime
-import uuid
-from os import path
+
 
 from django.db import models
 from django.dispatch import receiver
@@ -150,6 +149,7 @@ class Piece(ElvisModel):
 @receiver(post_save, sender=Piece)
 def save_listener(sender, instance, created, **kwargs):
     instance.solr_index(commit=True)
+
 
 @receiver(pre_delete, sender=Piece)
 def attachment_delete(sender, instance, **kwargs):
