@@ -1,0 +1,8 @@
+<form class="recursive-patch-download-form" action="/download-cart/" method="post">
+    <button type="button" class="btn cart-button" data-container="body" data-toggle="tooltip"
+            data-placement="top">Add to Downloads
+    </button>
+    <input type="hidden" name="item_type" value="{{ download_type }}"/>
+    <input type="hidden" name="id" value="{{ download_id }}"/>
+    <input type="hidden" name="action" value="add"/>
+</form>
