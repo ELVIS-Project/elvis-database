@@ -1,66 +1,45 @@
-{% extends "base.html" %}
+{% extends "base/base_detail.html" %}
 
 {% block extra_hd %}
     <title>{{ content.title }}</title>
-    {% load staticfiles %}
-    <script type='text/javascript' src="{% static "bootstrap/plugins/markdown.min.js" %}"></script>
+    {{ block.super }}
     <script>
-        $(document).ready(function ($)
-        {
-            $("#delete-button").click(function (event)
-            {
+        $(document).ready(function ($) {
+
+            $("#delete-button").click(function (event) {
                 $base_modal_header.html("<h4 class='modal-title'>Confirm Deletion.</h4>");
                 $base_modal_body.html("<p>Are you sure you want to delete this piece?</p>");
                 $base_modal_footer.html('<button type="button" class="btn btn-default" data-dismiss="modal">No</button>' +
                         '<button id="confirm-delete-button" type="button" class="btn btn-danger" data-dismiss="modal">' +
                         '<span class="glyphicon glyphicon-remove"></span>Yes</button>');
                 $base_modal.modal('show');
-                $("#confirm-delete-button").click(function (event)
-                {
+                $("#confirm-delete-button").click(function (event) {
                     $.ajax({
                         type: "delete",
-                        url: "/piece/{{ content.id }}",
-                        success: function (data)
-                        {
+                        url: window.location.href,
+                        success: function (data) {
                             console.log("Deleted {{ content.title }}");
-                            document.location.href = '/pieces/?creator={{ user.username }}';
+                            document.location.href = '/pieces/?creator={{ request.user.username }}';
                         }
                     })
                 });
             });
-            $("#rendered-comment").html(markdown.toHTML($("#hidden-comment").text()))
-        })
+        });
     </script>
 {% endblock %}
 
-{% block page_content %}
-    <div class="page-header">
-        <h2>{{ content.title }}
-            <span class="pull-right">
-                {% if content.can_edit %}
-                    <button type="button" class="btn btn-default" id="delete-button">Delete</button>
-                    <a href="{{ content.url }}update/" class="btn btn-default" id="update-button">Update</a>
-                {% endif %}
-                {% include "includes/download-button-inc.html" with download_type="elvis_piece" download_id=content.id title="Add to Downloads" in_cart=content.in_cart %}
+{% block detail_header %}
+    <h1>{{ content.title }}</h1><hr>
+{% endblock %}
 
-            </span>
-        </h2>
-        <p>
-            <span class="label label-success">Piece</span> - Created
-            by {{ content.uploader.username }}
-            on {{ content.created | date:"d F Y" }}. Last updated
-            on {{ content.updated | date:"d F Y" }}.
-        </p>
-    </div>
-
-
+{% block detail_tab_content %}
 
     <div class="row">
         <div class="col-xs-6">
             <dl class="dl-horizontal">
                 <dt>Composer</dt>
                 <dd>
-                    <a href="{{ content.composer.url }}">{{ content.composer.name }}</a>
+                    <a href="{{ content.composer.url }}">{{ content.composer.title }}</a>
                 </dd>
                 <dt>Date of Composition</dt>
                 {% if content.composition_start_date  == content.composition_end_date %}
@@ -77,7 +56,7 @@
                 <dt>Genre{{ content.genres|length|pluralize }}</dt>
                 <dd>
                     {% for genre in content.genres %}
-                        {{ genre.name }}{% if not forloop.last %},&nbsp;
+                        {{ genre.title }}{% if not forloop.last %},&nbsp;
                         {% endif %}
                     {% empty %}
                         Unknown
@@ -87,7 +66,7 @@
                     Voice{{ content.instruments_voices|length|pluralize }}</dt>
                 <dd>
                     {% for instrument in content.instruments_voices %}
-                        {{ instrument.name }}{% if not forloop.last %},&nbsp;
+                        {{ instrument.title }}{% if not forloop.last %},&nbsp;
                         {% endif %}
                     {% empty %}
                         Unknown
@@ -111,7 +90,7 @@
                 <dt>Place of Origin</dt>
                 <dd>
                     {% for place in content.locations %}
-                        {{ place.name }}{% if not forloop.last %},&nbsp;
+                        {{ place.title }}{% if not forloop.last %},&nbsp;
                         {% endif %}
                     {% empty %}
                         Unknown
@@ -120,7 +99,7 @@
                 <dt>Language{{ content.languages|length|pluralize }}</dt>
                 <dd>
                     {% for language in content.languages %}
-                        {{ language.name }}{% if not forloop.last %},&nbsp;
+                        {{ language.title }}{% if not forloop.last %},&nbsp;
                         {% endif %}
                     {% empty %}
                         Unknown
@@ -129,7 +108,7 @@
                 <dt>Source{{ content.languages|length|pluralize }}</dt>
                 <dd>
                     {% for source in content.sources %}
-                        {{ source.name }}{% if not forloop.last %},&nbsp;
+                        {{ source.title }}{% if not forloop.last %},&nbsp;
                         {% endif %}
                     {% empty %}
                         Unknown
@@ -144,7 +123,7 @@
                     <dd>
                         {% for tag in content.tags %}
                             <a href="{{ tag.url }}"
-                               class="label label-primary rounded">{{ tag.name }} </a>
+                               class="label label-primary rounded">{{ tag.title }} </a>
                             &nbsp;
                         {% endfor %}
                     </dd>
@@ -154,62 +133,27 @@
     </div>
 
     {% if content.comment %}
+        <h3>Comment</h3>
         <div id="hidden-comment" hidden="hidden">{{ content.comment }}</div>
         <div id='rendered-comment' class="well"></div>
     {% endif %}
 
     {% if content.movements %}
-        <div class="col-md-12">
-            <h3>Movements
-                <small>({{ content.movements | length }})</small>
-            </h3>
-            <table class="table table-condensed">
-                <thead>
-                <tr>
-                    <th width="5%"></th>
-                    <th>Title</th>
-                </tr>
-                </thead>
-                <tbody>
-                {% for movement in content.movements %}
-                    <tr>
-                        <td class="text-center">
-                            {% include "includes/download-badge-inc.html" with download_type="elvis_movement" download_id=movement.id title="Add to Downloads" in_cart=movement.in_cart %}
-                        </td>
-                        <td>
-                            <a href="{{ movement.url }}">{{ movement.title }}</a>
-                        </td>
-                    </tr>
-                {% endfor %}
-                </tbody>
-            </table>
-        </div>
+        <h3>Movements
+            <small>({{ content.movements | length }})</small>
+        </h3>
+        {% for m in content.movements %}
+            {% include "base/list_item_compact.html" with url=m.url title=m.title %}
+        {% endfor %}
     {% endif %}
-    
+
     {% if content.attachments and user.is_authenticated %}
-            <div class="col-md-12">
-                <h3>Available Attachments</h3>
-                <table class="table table-condensed">
-                    <thead>
-                    <tr>
-                        <th width="5%"></th>
-                        <th width="60%">Title</th>
-                        <th>Source</th>
-                    </tr>
-                    </thead>
-                    <tbody>
-                    {% for attachment in content.attachments %}
-                        <tr>
-                            <td></td>
-                            <td>
-                                <a href="{{ attachment.url }}">{{ attachment.file_name | default:"Download" }}</a>
-                            </td>
-                            <td>{{ attachment.source }}</td>
-                        </tr>
-                    {% endfor %}
-                    </tbody>
-                </table>
-            </div>
+        <h3>Attachments
+            <small>({{ content.attachments | length }})</small>
+        </h3>
+        {% for a in content.attachments %}
+            {% include "base/list_item_compact.html"  with url=a.url title=a.title%}
+        {% endfor %}
     {% endif %}
 
 

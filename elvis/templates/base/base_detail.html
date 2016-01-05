@@ -1,0 +1,59 @@
+{% extends "base.html" %}
+
+{% block extra_hd %}
+    {% load staticfiles %}
+    <script type='text/javascript' src="{% static "bootstrap/plugins/markdown.min.js" %}"></script>
+    <script>
+        $(document).ready(function ($)
+        {
+            $("#rendered-comment").html(markdown.toHTML($("#hidden-comment").text()));
+        });
+    </script>
+{% endblock %}
+
+{% block page_content %}
+    {% block detail_header %}
+    {% endblock %}
+
+    <div class="row">
+        <div class="col-sm-3">
+            <div class="well well-sm">
+                <ul class="nav nav-pills nav-stacked">
+                        <li class="active"><a href="#detail_tab" data-toggle="pill">Details</a></li>
+                        <li class="disabled"><a href="" data-toggle="pill">Discussion</a></li>
+                        {% if content.can_edit %}
+                            <li><a href="#options_tab" data-toggle="pill">Options</a></li>
+                        {% endif %}
+                </ul>
+            </div>
+            {% block detail_buttons%}
+                <button class="btn btn-success" style="width:100%">Add to Cart</button>
+            {% endblock %}
+        </div>
+
+        <div class="col-sm-9">
+            <div class="tab-content">
+                <div id="detail_tab" class="tab-pane in active fade">
+                    {% block detail_tab_content %}
+                    {% endblock %}
+                </div>
+
+                <div id="discussion_tab" class="tab-pane fade">
+                    {% block discussion_tab_content %}
+                    {% endblock %}
+                </div>
+
+                {% if content.can_edit %}
+                    <div id="options_tab" class="tab-pane fade">
+                        {% block options_tab_content %}
+                            {% if content.can_edit %}
+                                <button type="button" class="btn btn-default" id="delete-button">Delete</button>
+                                <a href="{{ content.url }}update/" class="btn btn-default" id="update-button">Update</a>
+                            {% endif %}
+                        {% endblock %}
+                    </div>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+{% endblock %}
