@@ -67,8 +67,7 @@ function cartButtonRefresh()
                     $collection_count.text("(" + data.count + ")");
                 });
                 $collection_count.fadeIn(100);
-                redraw_cart_buttons();
-                cartButtonRefresh();
+                init_cart_buttons()
             },
             error: function (data)
             {
@@ -82,14 +81,15 @@ function cartButtonRefresh()
 
 function init_cart_buttons()
 {
-    $forms = $(".recursive-patch-download-form");
+    if ($forms === null)
+        $forms = $(".recursive-patch-download-form");
     if (items === null)
         items = build_item_dict($forms);
+    debugger;
 
     $.ajax({
         url: "/download-cart/",
         data: {check_in_cart: JSON.stringify(items)},
-        async: false,
         success: function (data)
         {
             var keys = Object.keys(data);
@@ -101,28 +101,7 @@ function init_cart_buttons()
                 else
                     draw_badge(data[key], items[key]["$elem"]);
             }
-        }
-    });
-    cartButtonRefresh()
-}
-
-function redraw_cart_buttons()
-{
-    $.ajax({
-        url: "/download-cart/",
-        data: {check_in_cart: JSON.stringify(items)},
-        async: false,
-        success: function (data)
-        {
-            var keys = Object.keys(data);
-            for (var i = 0; i < keys.length; i++)
-            {
-                var key = keys[i];
-                if (items[key]['button_type'] == "button")
-                    draw_button(data[key], items[key]["$elem"]);
-                else
-                    draw_badge(data[key], items[key]["$elem"]);
-            }
+            cartButtonRefresh()
         }
     });
 }
