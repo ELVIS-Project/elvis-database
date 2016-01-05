@@ -12,6 +12,7 @@ from elvis.models.location import Location
 from elvis.models.source import Source
 from elvis.models.tag import Tag
 from django.core.cache import cache
+from urllib.parse import urlparse
 
 """This file contains interdependent serializers which are combined
 in order to form function specific serialization. The intent is
@@ -34,7 +35,19 @@ The serializers are named using the following pattern:
         up from the smaller and cached serializers."""
 
 
-class CachedMinHyperlinkedModelSerializer(serializers.HyperlinkedModelSerializer):
+class URLNormalizingCacher():
+    def _url_normalizer(self, obj):
+        if not obj.get('url'):
+            return obj
+        ul = urlparse(obj['url'])
+        obj['url'] = "{0}://{1}{2}".format(ul.scheme, ul.netloc, ul.path)
+        return obj
+
+    def cache_set(self, cache_id, obj):
+        cache.set(cache_id, self._url_normalizer(obj))
+
+
+class CachedMinHyperlinkedModelSerializer(serializers.HyperlinkedModelSerializer, URLNormalizingCacher):
     """The smallest cached serializer, for requests at the MIN level. Will not
     only check for MIN representations in cache, but also EMB and LIST, as
     MIN is a subset of these levels and can be constructed from them."""
@@ -47,21 +60,21 @@ class CachedMinHyperlinkedModelSerializer(serializers.HyperlinkedModelSerializer
         emb_check = cache.get("EMB-" + str_uuid)
         if emb_check:
             min = {k: v for k, v in emb_check.items() if k in self.fields.keys()}
-            cache.set("MIN-" + str_uuid, min)
+            self.cache_set("MIN-" + str_uuid, min)
             return min
 
         list_check = cache.get("LIST-" + str_uuid)
         if list_check:
             min = {k: v for k, v in list_check.items() if k in self.fields.keys()}
-            cache.set("MIN-" + str_uuid, min)
+            self.cache_set("MIN-" + str_uuid, min)
             return min
 
         result = super().to_representation(instance)
-        cache.set("MIN-" + str_uuid, result)
+        self.cache_set("MIN-" + str_uuid, result)
         return result
 
 
-class CachedMinModelSerializer(serializers.ModelSerializer):
+class CachedMinModelSerializer(serializers.ModelSerializer, URLNormalizingCacher):
     """Same as above, only for those models without associated views."""
     def to_representation(self, instance):
         str_uuid = str(instance.uuid)
@@ -69,11 +82,11 @@ class CachedMinModelSerializer(serializers.ModelSerializer):
         if cache_check:
             return cache_check
         result = super().to_representation(instance)
-        cache.set("MIN-" + str_uuid, result)
+        self.cache_set("MIN-" + str_uuid, result)
         return result
 
 
-class CachedListHyperlinkedModelSerializer(serializers.HyperlinkedModelSerializer):
+class CachedListHyperlinkedModelSerializer(serializers.HyperlinkedModelSerializer, URLNormalizingCacher):
     """A cached serializer for the LIST level of serialization"""
     def to_representation(self, instance):
         str_uuid = str(instance.uuid)
@@ -81,11 +94,11 @@ class CachedListHyperlinkedModelSerializer(serializers.HyperlinkedModelSerialize
         if cache_check:
             return cache_check
         result = super().to_representation(instance)
-        cache.set("LIST-" + str_uuid, result)
+        self.cache_set("LIST-" + str_uuid, result)
         return result
 
 
-class CachedEmbedHyperlinkedModelSerializer(serializers.HyperlinkedModelSerializer):
+class CachedEmbedHyperlinkedModelSerializer(serializers.HyperlinkedModelSerializer, URLNormalizingCacher):
     """A cached serializer for the EMB level of serialization"""
     def to_representation(self, instance):
         str_uuid = str(instance.uuid)
@@ -93,9 +106,8 @@ class CachedEmbedHyperlinkedModelSerializer(serializers.HyperlinkedModelSerializ
         if cache_check:
             return cache_check
         result = super().to_representation(instance)
-        cache.set("EMB-" + str_uuid, result)
+        self.cache_set("EMB-" + str_uuid, result)
         return result
-
 
 class AttachmentMinSerializer(CachedMinHyperlinkedModelSerializer):
     title = serializers.CharField(source="file_name")
@@ -175,7 +187,7 @@ class AttachmentEmbedSerializer(CachedEmbedHyperlinkedModelSerializer):
 
     class Meta:
         model = Attachment
-        fields = ("id", "title", "extension", "url", "source")
+        fields = ("id", "title", "extension", "url", "source", "uuid")
 
 
 class MovementEmbedSerializer(CachedEmbedHyperlinkedModelSerializer):
@@ -186,7 +198,7 @@ class MovementEmbedSerializer(CachedEmbedHyperlinkedModelSerializer):
     class Meta:
         model = Movement
         fields = ('title', 'url', 'id', 'attachments', 'composition_end_date',
-                  'piece')
+                  'piece', "uuid")
 
 
 class PieceEmbedSerializer(CachedEmbedHyperlinkedModelSerializer):
@@ -197,7 +209,8 @@ class PieceEmbedSerializer(CachedEmbedHyperlinkedModelSerializer):
     class Meta:
         model = Piece
         fields = ('title', 'url', 'id', 'composer', 'movements',
-                  'movement_count', 'composition_end_date', 'attachments')
+                  'movement_count', 'composition_end_date', 'attachments',
+                  "uuid")
 
 
 class PieceListSerializer(CachedListHyperlinkedModelSerializer):
@@ -207,7 +220,7 @@ class PieceListSerializer(CachedListHyperlinkedModelSerializer):
     class Meta:
         model = Piece
         fields = ('title', 'url', 'id', 'composer',
-                  'movement_count', 'composition_end_date')
+                  'movement_count', 'composition_end_date', "uuid")
 
 
 class MovementListSerializer(CachedListHyperlinkedModelSerializer):
@@ -215,14 +228,15 @@ class MovementListSerializer(CachedListHyperlinkedModelSerializer):
 
     class Meta:
         model = Movement
-        fields = ('title', 'url', 'id', 'composer', 'composition_end_date')
+        fields = ('title', 'url', 'id', 'composer', 'composition_end_date',
+                  "uuid")
 
 
 class ComposerListSerializer(CachedListHyperlinkedModelSerializer):
     class Meta:
         model = Composer
         fields = ('name', 'url', 'id', 'birth_date', 'death_date',
-                  'piece_count', 'movement_count')
+                  'piece_count', 'movement_count', "uuid")
 
 
 class CollectionListSerializer(CachedListHyperlinkedModelSerializer):
@@ -230,7 +244,8 @@ class CollectionListSerializer(CachedListHyperlinkedModelSerializer):
 
     class Meta:
         model = Collection
-        fields = ('title', 'url', 'id', 'piece_count', 'movement_count', 'creator')
+        fields = ('title', 'url', 'id', 'piece_count', 'movement_count',
+                  'creator', "uuid")
 
 
 class AttachmentFullSerializer(serializers.HyperlinkedModelSerializer):
