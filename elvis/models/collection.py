@@ -32,6 +32,10 @@ class Collection(ElvisModel):
         return self.movements.filter(piece=None)
 
     @property
+    def cart_id(self):
+        return "COL-" + str(self.uuid)
+
+    @property
     def free_movements_count(self):
         return self.movements.filter(piece=None).count()
 

@@ -39,6 +39,10 @@ class Movement(ElvisModel):
         return " ".join([t.name for t in self.tags.all()])
 
     @property
+    def cart_id(self):
+        return "M-" + str(self.uuid)
+
+    @property
     def file_formats(self):
         format_list = []
         for att in self.attachments.all():

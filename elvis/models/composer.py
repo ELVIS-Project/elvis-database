@@ -32,6 +32,10 @@ class Composer(ElvisModel):
     def free_movements_count(self):
         return self.movements.filter(piece=None).count()
 
+    @property
+    def cart_id(self):
+        return "COM-" + str(self.uuid)
+
     def solr_dict(self):
         composer = self
         if composer.birth_date:
