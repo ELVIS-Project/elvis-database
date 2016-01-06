@@ -47,6 +47,16 @@ class URLNormalizingCacher():
     def cache_set(self, cache_id, obj):
         cache.set(cache_id, self._url_normalizer(obj))
 
+    def cart_appender(self, result, instance):
+        if instance.__class__ not in [Piece, Movement, Composer, Collection]:
+            return result
+        request = self.context.get('request', {})
+        if not request:
+            return result
+        cart = request.session.get('cart', {})
+        result['in_cart'] = cart.get(instance.cart_id, False)
+        return result
+
 
 class CachedMinHyperlinkedModelSerializer(serializers.HyperlinkedModelSerializer, URLNormalizingCacher):
     """The smallest cached serializer, for requests at the MIN level. Will not
@@ -93,10 +103,10 @@ class CachedListHyperlinkedModelSerializer(serializers.HyperlinkedModelSerialize
         str_uuid = str(instance.uuid)
         cache_check = cache.get("LIST-" + str_uuid)
         if cache_check:
-            return cache_check
+            return self.cart_appender(cache_check, instance)
         result = super().to_representation(instance)
         self.cache_set("LIST-" + str_uuid, result)
-        return result
+        return self.cart_appender(result, instance)
 
 
 class CachedEmbedHyperlinkedModelSerializer(serializers.HyperlinkedModelSerializer, URLNormalizingCacher):
@@ -105,10 +115,17 @@ class CachedEmbedHyperlinkedModelSerializer(serializers.HyperlinkedModelSerializ
         str_uuid = str(instance.uuid)
         cache_check = cache.get("EMB-" + str_uuid)
         if cache_check:
-            return cache_check
+            return self.cart_appender(cache_check, instance)
         result = super().to_representation(instance)
         self.cache_set("EMB-" + str_uuid, result)
-        return result
+        return self.cart_appender(result, instance)
+
+
+class CartCheckFullHyperlinkedModelSerializer(serializers.HyperlinkedModelSerializer, URLNormalizingCacher):
+    def to_representation(self, instance):
+        result = super().to_representation(instance)
+        return self.cart_appender(result, instance)
+
 
 class AttachmentMinSerializer(CachedMinHyperlinkedModelSerializer):
     title = serializers.CharField(source="file_name")
@@ -257,7 +274,7 @@ class AttachmentFullSerializer(serializers.HyperlinkedModelSerializer):
                   "updated", "uploader", "attachment")
 
 
-class ComposerFullSerializer(serializers.HyperlinkedModelSerializer):
+class ComposerFullSerializer(CartCheckFullHyperlinkedModelSerializer):
     pieces = PieceListSerializer(many=True)
     free_movements = MovementEmbedSerializer(many=True)
 
@@ -265,7 +282,7 @@ class ComposerFullSerializer(serializers.HyperlinkedModelSerializer):
         model = Composer
 
 
-class CollectionFullSerializer(serializers.HyperlinkedModelSerializer):
+class CollectionFullSerializer(CartCheckFullHyperlinkedModelSerializer):
     id = serializers.IntegerField()
     creator = serializers.CharField(source='creator.username')
     pieces = PieceEmbedSerializer(many=True)
@@ -281,7 +298,7 @@ class CollectionFullSerializer(serializers.HyperlinkedModelSerializer):
         model = Collection
 
 
-class MovementFullSerializer(serializers.HyperlinkedModelSerializer):
+class MovementFullSerializer(CartCheckFullHyperlinkedModelSerializer):
     id = serializers.IntegerField()
     composer = ComposerMinSerializer()
     tags = TagMinSerializer(many=True)
@@ -298,7 +315,7 @@ class MovementFullSerializer(serializers.HyperlinkedModelSerializer):
         model = Movement
 
 
-class PieceFullSerializer(serializers.HyperlinkedModelSerializer):
+class PieceFullSerializer(CartCheckFullHyperlinkedModelSerializer):
     id = serializers.IntegerField()
     composer = ComposerMinSerializer()
     tags = TagMinSerializer(many=True)
@@ -310,7 +327,7 @@ class PieceFullSerializer(serializers.HyperlinkedModelSerializer):
     collections = CollectionMinSerializer(many=True)
     attachments = AttachmentEmbedSerializer(many=True)
     creator = serializers.CharField(source='creator.username')
-    movements = MovementFullSerializer(many=True)
+    movements = MovementListSerializer(many=True)
 
     class Meta:
         model = Piece
