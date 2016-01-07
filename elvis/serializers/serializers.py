@@ -48,13 +48,23 @@ class URLNormalizingCacher():
         cache.set(cache_id, self._url_normalizer(obj))
 
     def cart_appender(self, result, instance):
-        if instance.__class__ not in [Piece, Movement, Composer, Collection]:
+        if instance.__class__ in [Piece, Movement, Composer, Collection]:
+            pass
+        else:
             return result
+
         request = self.context.get('request', {})
         if not request:
             return result
+
         cart = request.session.get('cart', {})
-        result['in_cart'] = cart.get(instance.cart_id, False)
+        if instance.__class__ is not Movement:
+            result['in_cart'] = cart.get(instance.cart_id, False)
+        else:
+            if cart.get(instance.cart_id, False):
+                result['in_cart'] = True
+            if cart.get(instance.parent_cart_id, False):
+                result['in_cart'] = "piece"
         return result
 
 

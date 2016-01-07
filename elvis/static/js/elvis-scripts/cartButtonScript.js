@@ -34,7 +34,6 @@ function cartButtonRefresh()
             action = 'add';
         else
             action = 'remove';
-
         $.ajax({
             type: "post",
             url: "/download-cart/",
@@ -63,6 +62,7 @@ function cartButtonRefresh()
 
 function init_cart_buttons()
 {
+    debugger;
     if ($forms === null)
         $forms = $(".recursive-patch-download-form");
     if (items === null)
@@ -80,8 +80,10 @@ function init_cart_buttons()
                 {
                     var key = keys[i];
                     var back = data[key]['in_cart'];
-                    if (data[key]['in_cart'] === items[key]['in_cart'])
+
+                    if (back === items[key]['in_cart'])
                         continue;
+
                     items[key]['in_cart'] = back;
                     light_items[key]['in_cart'] = back;
                     if (items[key]['button_type'] == "button")
@@ -105,16 +107,24 @@ function build_item_dict($forms)
             "button_type": fields[0].value,
             "type": fields[1].value,
             "$elem": $($forms[i]),
-            "in_cart": "init"
+            "in_cart": str_to_bool(fields[3].value)
         };
         light_items[fields[2].value] = {
             "type": fields[1].value,
-            "in_cart": "init"
-        }
+            "in_cart": str_to_bool(fields[3].value)
+        };
     }
     return items
 }
 
+function str_to_bool(str)
+{
+    if (str.toLowerCase() === "true")
+    {
+        return true
+    }
+    return false
+}
 
 function draw_button(data, element)
 {
@@ -123,12 +133,12 @@ function draw_button(data, element)
     if (data['in_cart'] === true)
     {
         $elem.children("[name=action]").val("remove");
-        $elem.prepend('<button type="button" class="btn btn-danger cart-button">Remove from Downloads </button>');
+        $elem.append('<button type="button" class="btn btn-danger cart-button">Remove from Downloads </button>');
     }
     else if (data['in_cart'] === false)
     {
         $elem.children("[name=action]").val("add");
-        $elem.prepend('<button type="button" class="btn btn-success cart-button">Add to Downloads </button>');
+        $elem.append('<button type="button" class="btn btn-success cart-button">Add to Downloads </button>');
     }
 }
 
@@ -154,6 +164,6 @@ function draw_badge(data, element)
         new_action = "add"
     }
 
-    $elem.prepend(new_button);
+    $elem.append(new_button);
     $elem.children("[name=action]").val(new_action);
 }

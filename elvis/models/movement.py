@@ -43,6 +43,13 @@ class Movement(ElvisModel):
         return "M-" + str(self.uuid)
 
     @property
+    def parent_cart_id(self):
+        if self.piece:
+            return "P-" + str(self.piece.uuid)
+        else:
+            return ""
+
+    @property
     def file_formats(self):
         format_list = []
         for att in self.attachments.all():

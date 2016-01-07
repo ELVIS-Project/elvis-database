@@ -134,35 +134,24 @@ class DownloadCart(generics.GenericAPIView):
         results = {}
         for key in items.keys():
             if items[key]['type'] == "elvis_composer":
-                if cart.get("COM-" + key):
-                    results[key] = ({'id': key, 'in_cart': True})
-                else:
-                    results[key] = ({'id': key, 'in_cart': False})
-                continue
-            if items[key]['type'] == "elvis_collection":
-                if cart.get("COL-" + key):
-                    results[key] = ({'id': key, 'in_cart': True})
-                else:
-                    results[key] = ({'id': key, 'in_cart': False})
-                continue
-            if items[key]['type'] == "elvis_piece":
-                if cart.get("P-" + key):
-                    results[key] = ({'id': key, 'in_cart': True})
-                else:
-                    results[key] = ({'id': key, 'in_cart': False})
-                continue
-            if items[key]['type'] == "elvis_movement":
+                back = cart.get("COM-" + key, False)
+            elif items[key]['type'] == "elvis_collection":
+                back = cart.get("COL-" + key, False)
+            elif items[key]['type'] == "elvis_piece":
+                back = cart.get("P-" + key, False)
+            elif items[key]['type'] == "elvis_movement":
                 mov = self._try_get(Movement, key)
                 piece = mov.piece if mov else None
                 if piece and cart.get("P-" + str(piece.uuid)):
-                    results[key] = ({'id': key, 'in_cart': 'Piece'})
-                    continue
-                if cart.get("M-" + key):
-                    results[key] = ({'id': key, 'in_cart': True})
-                    continue
+                    back = "Piece"
                 else:
-                    results[key] = ({'id': key, 'in_cart': False})
+                    back = cart.get("M-" + key, False)
+            front = items[key]['in_cart']
+            if front == back:
+                continue
+            results[key] = {"in_cart": back}
         return results
+
 
     @method_decorator(csrf_protect)
     def post(self, request, *args, **kwargs):
