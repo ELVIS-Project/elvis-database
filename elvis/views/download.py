@@ -141,8 +141,7 @@ class DownloadCart(generics.GenericAPIView):
                 back = cart.get("P-" + key, False)
             elif items[key]['type'] == "elvis_movement":
                 mov = self._try_get(Movement, key)
-                piece = mov.piece if mov else None
-                if piece and cart.get("P-" + str(piece.uuid)):
+                if mov and cart.get(mov.parent_cart_id, False):
                     back = "Piece"
                 else:
                     back = cart.get("M-" + key, False)
