@@ -17,6 +17,7 @@ from elvis.views.user import UserDetail, UserAccount, UserUpdate
 from elvis.views.movement import MovementList, MovementDetail
 from elvis.views.composer import ComposerList, ComposerDetail
 from elvis.views.collection import CollectionList, CollectionDetail
+from elvis.views.media import MediaServeView
 from django.contrib.auth import views as auth_views
 import django.views.static
 # Uncomment the next two lines to enable the admin:
@@ -73,7 +74,7 @@ urlpatterns.extend([
 
         url(r'^suggest/$', solr_suggest),
 
-        url(r'^media/(?P<path>.*)$', django.views.static.serve, {'document_root': settings.MEDIA_ROOT}),
+        url(r'^media/(?P<pk>.*)$', MediaServeView.as_view(), name="media"),
         ]
 )
 

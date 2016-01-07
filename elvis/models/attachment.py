@@ -60,8 +60,7 @@ class Attachment(ElvisModel):
 
     @property
     def url(self):
-        path = os.path.relpath(self.attachment.path, settings.MEDIA_ROOT)
-        url = os.path.join(settings.MEDIA_URL, path)
+        url = os.path.join(settings.MEDIA_URL, str(self.uuid))
         return url
 
     def attach_file(self, file_path, file_name, parent, **kwargs):
