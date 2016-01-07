@@ -7,7 +7,6 @@ does not always play nice with unicode in filenames.
 def rename_files_to_ascii():
     import os.path
     import unicodedata
-    from django.core.files import File
     path_err = 0
     val_err = 0
     open_err = 0
@@ -129,5 +128,5 @@ def reindex_all():
         m.solr_index(commit=False, solrconn=solrconn)
     solrconn.commit()
 
-    from elvis.elvis.tasks import rebuild_suggester_dicts
+    from elvis.tasks import rebuild_suggester_dicts
     rebuild_suggester_dicts()
