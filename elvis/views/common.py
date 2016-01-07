@@ -85,7 +85,7 @@ class ElvisListCreateView(generics.ListCreateAPIView):
 
     def get_queryset(self):
         model = apps.get_model('elvis', self.kwargs['model'])
-        user = self.request.user
+        user = None if self.request.user.is_anonymous() else self.request.user
         Qlist = []
 
         creator = self.request.GET.get('creator')
