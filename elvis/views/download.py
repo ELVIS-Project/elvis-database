@@ -129,6 +129,8 @@ class DownloadCart(generics.GenericAPIView):
         return tmp
 
     def _check_in_cart(self, request):
+        if request.user.is_anonymous:
+            return {}
         items = json.loads(request.GET['check_in_cart'])
         cart = request.session.get('cart', {})
         results = {}

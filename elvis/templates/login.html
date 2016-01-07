@@ -23,7 +23,7 @@
 
 <div class="container">
     {% if request.GET.error == "download" %}
-    <div class="alert alert-info text-center" role="alert">You must log in to create a download cart!</div>
+    <div class="alert alert-info text-center" role="alert">You must log in to use the download cart!</div>
     {% elif request.GET.error == "upload" %}
     <div class="alert alert-info text-center" role="alert">You must log in to upload new pieces!</div>
     {% endif %}

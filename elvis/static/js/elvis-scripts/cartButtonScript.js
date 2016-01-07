@@ -60,9 +60,16 @@ function cartButtonRefresh()
     });
 }
 
+function redirect_to_login()
+{
+    $(".cart-badge, .cart-button").off('click').tooltip().on("click", function (event)
+    {
+        window.location = "/login/?error=download";
+    });
+}
+
 function init_cart_buttons()
 {
-    debugger;
     if ($forms === null)
         $forms = $(".recursive-patch-download-form");
     if (items === null)
@@ -93,6 +100,10 @@ function init_cart_buttons()
                 }
             }
             cartButtonRefresh()
+        },
+        error: function (data)
+        {
+            redirect_to_login();
         }
     });
 }
