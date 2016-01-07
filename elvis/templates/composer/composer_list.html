@@ -11,7 +11,7 @@
 
 {% block list_content %}
     {% for c in content.results %}
-        {% include "base/list_item.html" with url=c.url title=c.name date1=c.birth_date date2=c.death_date m_count=c.movement_count p_count=c.piece_count type="elvis_composer" id=c.uuid %}
+        {% include "base/list_item.html" with url=c.url title=c.name date1=c.birth_date date2=c.death_date m_count=c.movement_count p_count=c.piece_count type="elvis_composer" id=c.uuid in_cart=c.in_cart%}
     {% endfor %}
     {% if not content.results %}
         <div class="text-center"><h4>There's nothing here!</h4></div>
