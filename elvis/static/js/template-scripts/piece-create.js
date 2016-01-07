@@ -119,25 +119,27 @@ $(document).ready(function ($)
                     $base_modal_footer.html('.modal-footer').html( " <button type='button' class='btn btn-default' data-dismiss='modal'>Close</button>" +
                         "<a href='" + data['url'] + "' class='btn btn-default' id='goto-piece'>Go to Piece</a>");
                 }
+            },
+            error: function (data)
+            {
+                if (data['responseJSON'] == undefined || data['responseJSON']['errors'] === undefined) {
+                    $base_modal_header.html("<h4 class='modal-title'>Server Error<h4>");
+                    $base_modal_body.html("<p>An error occurred while updating this piece. Please try again, or, if the error persists, " +
+                        "<a href='mailto:elvisdatabase@gmail.com?Subject=Upload%20Error'>contact us</a></p>");
+                    $base_modal_footer.html("<button type='button' class='btn btn-default' data-dismiss='modal'>Close</button>");
+                }
                 else
                 {
-                    var errors = createErrorString(data);
+                    var errors = createErrorString(data['responseJSON']);
                     $base_modal_header.html("<h4 class='modal-title'>Form Error<h4>");
                     $base_modal_body.html("<p>Your submission has the following errors: <br>" + errors + "</p>");
                     $base_modal_footer.html("<button id='close-and-goto-button' type='button' class='btn btn-default' data-dismiss='modal'>Close</button>");
                     $("#close-and-goto-button").click(function(){
                         $('html, body').animate({
-                            scrollTop: $(".validation-error").offset().top
+                            scrollTop: $(".validation-error").offset().top - 10
                         }, 500);
                     })
                 }
-            },
-            error: function(data)
-            {
-                $base_modal_header.html("<h4 class='modal-title'>Server Error<h4>");
-                $base_modal_body.html("<p>An error occurred while uploading your file. Please try again, or, if the error persists, " +
-                    "<a href='mailto:elvisdatabase@gmail.com?Subject=Upload%20Error'>contact us</a></p>");
-                $base_modal_footer.html("<button type='button' class='btn btn-default' data-dismiss='modal'>Close</button>");
             }
         })
     });

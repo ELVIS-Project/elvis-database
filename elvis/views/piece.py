@@ -75,7 +75,7 @@ def piece_create(request, *args, **kwargs):
     form = validateDynamicForm(request, PieceForm(request.POST))
     if not form.is_valid():
         # Form errors are rendered for user on the front end.
-        data = {'errors': form.errors}
+        data = json.dumps({'errors': form.errors})
         return HttpResponse(content=data, content_type="application/json", status=status.HTTP_400_BAD_REQUEST)
 
     clean = Cleanup()
