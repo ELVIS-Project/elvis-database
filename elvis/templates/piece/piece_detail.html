@@ -33,7 +33,7 @@
 {% endblock %}
 
 {% block detail_buttons %}
-    {% include "base/download-badge.html" with id=content.uuid type="elvis_piece" button_type="button"%}
+    {% include "base/download-badge.html" with id=content.uuid type="elvis_piece" button_type="button" in_cart=content.in_cart%}
 {% endblock %}
 
 {% block detail_tab_content %}
@@ -147,7 +147,7 @@
             <small>({{ content.movements | length }})</small>
         </h3>
         {% for m in content.movements %}
-            {% include "base/list_item_compact.html" with url=m.url title=m.title id=m.uuid type="elvis_movement" %}
+            {% include "base/list_item_compact.html" with url=m.url title=m.title id=m.uuid type="elvis_movement" in_cart=m.in_cart%}
         {% endfor %}
     {% endif %}
 

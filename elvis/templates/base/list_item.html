@@ -1,6 +1,10 @@
 
 <div class="list-row row-eq-height">
-    <div class='col-xs-1 list-add'></div>
+    <div class='col-xs-1 list-add'>
+        {% if id %}
+            {% include "base/download-badge.html" with type=type id=id in_cart=in_cart%}
+        {% endif %}
+    </div>
     <a href='{{ url }}' class='list-item col-xs-11'>
         {% if p_count or m_count %}
         <span class='badge alert-info right-badge' style='margin-top:10px'>
