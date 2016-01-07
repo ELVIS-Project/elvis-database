@@ -38,7 +38,7 @@ The serializers are named using the following pattern:
 class URLNormalizingCacher():
     """Standardizes the normalization of urls for caching"""
     def _url_normalizer(self, obj):
-        if not obj.get('url'):
+        if not obj.get('url') or obj['url'].startswith("/media"):
             return obj
         ul = urlparse(obj['url'])
         obj['url'] = "{0}://{1}{2}".format(ul.scheme, ul.netloc, ul.path)
@@ -276,7 +276,7 @@ class CollectionListSerializer(CachedListHyperlinkedModelSerializer):
                   'creator', "uuid")
 
 
-class AttachmentFullSerializer(serializers.HyperlinkedModelSerializer):
+class AttachmentFullSerializer(CartCheckFullHyperlinkedModelSerializer):
     title = serializers.CharField(source="file_name")
     class Meta:
         model = Attachment
