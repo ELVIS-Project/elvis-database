@@ -73,10 +73,10 @@ class CartZipper:
         udownload_dir = os.path.join(settings.MEDIA_ROOT, "user_downloads", self.username)
         if not os.path.exists(udownload_dir):
             os.mkdir(udownload_dir)
-        dest = os.path.join(settings.MEDIA_ROOT, "user_downloads", self.username, archive_name)
+        dest = os.path.join(settings.MEDIA_ROOT, "user_downloads", self.username, archive_name + ".zip")
         shutil.move(zipped_file, dest)
         delete_zip_file.apply_async(args=[dest], countdown=600)
-        return os.path.join(settings.MEDIA_URL, "user_downloads", self.username, archive_name)
+        return os.path.join(settings.MEDIA_URL, "user_downloads", self.username, archive_name +".zip")
 
     def add_piece(self, id, cart_set, root_dir, extensions):
         piece = Piece.objects.filter(uuid=id)
