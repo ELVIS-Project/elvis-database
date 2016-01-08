@@ -10,6 +10,6 @@ class MediaServeView(generics.RetrieveAPIView):
 
         att = Attachment.objects.get(uuid=kwargs.get('pk'))
         if att:
-            resp = HttpResponse(att.attachment.path, content_type='application/force-download')
+            resp = HttpResponse(att.attachment, content_type='application/force-download')
             resp['Content-Disposition'] = 'attachment; filename=%s' % att.title
             return resp
