@@ -21,16 +21,9 @@ from collections import defaultdict
 import uuid
 from django.core.exceptions import ObjectDoesNotExist
 
-class DownloadListHTMLRenderer(CustomHTMLRenderer):
-    template_name = "download/download_list.html"
-
 
 class DownloadCartHTMLRenderer(CustomHTMLRenderer):
     template_name = "download/download_cart.html"
-
-
-class DownloadingHTMLRenderer(CustomHTMLRenderer):
-    template_name = "download/downloading.html"
 
 
 class DownloadCart(generics.GenericAPIView):
@@ -247,7 +240,6 @@ class DownloadCart(generics.GenericAPIView):
 
 class Downloading(generics.GenericAPIView):
     permission_classes = (permissions.IsAuthenticated,)
-    renderer_classes = (JSONRenderer, DownloadingHTMLRenderer)
 
     def get(self, request, *args, **kwargs):
         if request.GET.get('task'):
