@@ -2,10 +2,15 @@
 <div class="list-row-compact row-eq-height">
     <div class='col-xs-1 list-add-compact'>
         {% if id %}
-            {% include "base/download-badge.html" with type=type id=id %}
+            {% include "base/download-badge.html" with type=type id=id in_cart=in_cart%}
+        {% endif %}
+        {% if attachment %}
+            <span class="glyphicon glyphicon-file"> </span>
         {% endif %}
     </div>
-    <a href='{{ url }}' class='list-item-compact col-xs-11'>
+
+    <a href='{{ url }}'
+       class='list-item-compact col-xs-11'>
         {% if p_count or m_count %}
             <span class='badge alert-info right-badge' style='margin-top:10px'>
             {% if p_count and m_count %}
@@ -17,6 +22,6 @@
         </span>
         {% endif %}
 
-        <h4>{{ title }}</h4>
+        <h5>{{ title }}</h5>
     </a>
 </div>

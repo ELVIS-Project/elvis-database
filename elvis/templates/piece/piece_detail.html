@@ -151,15 +151,12 @@
         {% endfor %}
     {% endif %}
 
-    {% if content.attachments and user.is_authenticated %}
+    {% if content.attachments %}
         <h3>Attachments
             <small>({{ content.attachments | length }})</small>
         </h3>
         {% for a in content.attachments %}
-            {% include "base/list_item_compact.html"  with url=a.url title=a.title%}
+            {% include "base/list_item_compact.html"  with url=a.url title=a.title attachment=True %}
         {% endfor %}
     {% endif %}
-
-
-
 {% endblock %}
