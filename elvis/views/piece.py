@@ -222,6 +222,7 @@ def piece_update(request, *args, **kwargs):
     data = json.dumps({'success': True, 'id': piece.id, 'url': "/piece/{0}".format(piece.id)})
     return HttpResponse(data, content_type="json")
 
+
 def handle_related_models(object_list, parent, clean, **kwargs):
     """ Create/find and attach all related models for a piece.
     :param object_list: The list of objects to create/find, and which
@@ -255,7 +256,8 @@ def handle_related_models(object_list, parent, clean, **kwargs):
         if field == "collections":
             user = kwargs.pop('user', None)
             try:
-                collection_list = abstract_model_factory(item.get('value'), "Collection", clean,
+                collection_list = abstract_model_factory(item.get('value'),
+                                                         "Collection", clean,
                                                          creator=user)
                 for x in collection_list:
                     parent.collections.add(x)
@@ -351,6 +353,6 @@ def validateDynamicForm(request, form):
     file_source_list = [x for x in list(request.POST.keys()) if x.startswith('files_source')]
     for source in file_source_list:
         if request.FILES.get(source.replace('source', 'files')) and not request.POST.get(source):
-            form.add_error(None, [source, "Files require a source!"])
+            form.add_error(None, [source, "Files require a source!<br>"])
             
     return form
