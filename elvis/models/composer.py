@@ -36,6 +36,16 @@ class Composer(ElvisModel):
     def cart_id(self):
         return "COM-" + str(self.uuid)
 
+    @property
+    def shortened_title(self):
+        comma_split = self.title.split(',')
+        space_split = self.title.split()[1:]
+        new_name = comma_split[0]
+        for n in space_split:
+            if n[0].isupper():
+                new_name += " {0}.".format(n[0])
+        return new_name
+
     def solr_dict(self):
         composer = self
         if composer.birth_date:

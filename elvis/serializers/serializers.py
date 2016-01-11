@@ -145,6 +145,7 @@ class AttachmentMinSerializer(CachedMinHyperlinkedModelSerializer):
 
 
 class ComposerMinSerializer(CachedMinHyperlinkedModelSerializer):
+    title = serializers.CharField(source="shortened_title")
     class Meta:
         model = Composer
         fields = ('title', 'url', 'id')
@@ -296,7 +297,7 @@ class CollectionFullSerializer(CartCheckFullHyperlinkedModelSerializer):
     id = serializers.IntegerField()
     creator = serializers.CharField(source='creator.username')
     pieces = PieceEmbedSerializer(many=True)
-    movements = MovementEmbedSerializer(many=True)
+    movements = MovementListSerializer(many=True)
 
     def update(self, instance, validated_data):
         if 'public' in validated_data:
