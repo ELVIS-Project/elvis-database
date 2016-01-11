@@ -23,33 +23,8 @@ from elvis.renderers.custom_html_renderer import CustomHTMLRenderer
 from elvis.forms import UserForm, UserChangeForm
 
 
-class UserListHTMLRenderer(CustomHTMLRenderer):
-    template_name = "user/user_list.html"
-
-
-class UserDetailHTMLRenderer(CustomHTMLRenderer):
-    template_name = "user/user_detail.html"
-
 class UserAccountHTMLRenderer(CustomHTMLRenderer):
     template_name = "user/user_account.html"
-
-
-class UserList(generics.ListCreateAPIView):
-    model = User
-    permission_classes = (permissions.IsAuthenticatedOrReadOnly,)
-    serializer_class = UserFullSerializer
-    renderer_classes = (JSONRenderer, UserListHTMLRenderer)
-    paginate_by = 10
-    paginate_by_param = 'page_size'
-    max_paginate_by = 100
-
-
-class UserDetail(generics.RetrieveUpdateDestroyAPIView):
-    model = User
-    permission_classes = (permissions.IsAuthenticatedOrReadOnly,)
-    serializer_class = UserFullSerializer
-    renderer_classes = (JSONRenderer, UserDetailHTMLRenderer)
-    queryset = User.objects.all()
 
 
 class UserAccount(generics.CreateAPIView):

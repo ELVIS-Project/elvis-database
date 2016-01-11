@@ -13,7 +13,7 @@ from elvis.views.auth import LoginFormView, logout_view
 from elvis.views.search import SearchView
 from elvis.views.download import DownloadCart, Downloading
 from elvis.views.piece import PieceList, PieceDetail, PieceCreate, PieceUpdate
-from elvis.views.user import UserDetail, UserAccount, UserUpdate
+from elvis.views.user import UserAccount, UserUpdate
 from elvis.views.movement import MovementList, MovementDetail
 from elvis.views.composer import ComposerList, ComposerDetail
 from elvis.views.collection import CollectionList, CollectionDetail
@@ -32,8 +32,6 @@ urlpatterns.extend([
 
         url(r'^search/$', SearchView.as_view(), name="search-view"),
 
-        #url(r'^users/$', UserList.as_view(), name="user-list"),
-        url(r'^user/(?P<pk>[0-9]+)/$', UserDetail.as_view(), name="user-detail"),
         url(r'^account/$', UserAccount.as_view(), name="user-account"),
         url(r'^register/$', UserAccount.as_view(), name="user-account"),
         url(r'^account/update/$', UserUpdate.as_view(), name="user-update"),
