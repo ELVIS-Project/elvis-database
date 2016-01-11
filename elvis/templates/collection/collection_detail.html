@@ -73,7 +73,7 @@
 {% endblock %}
 
 {% block detail_header %}
-    <h1>{{ content.title }} <small>({{ content.birth_date }}&ndash;{{ content.death_date }})</small></h1>
+    <h1>{{ content.title }} <small>Created by {{ content.creator }}</small></h1>
 {% endblock %}
 
 {% block detail_buttons %}
@@ -93,7 +93,7 @@
             <tr>
                 <th width="5%">Add</th>
                 <th width="30%">Title</th>
-                <th width="30%">Composer</th>
+                <th width="15%">Composer</th>
                 <th width="15%">Movements</th>
                 <th width="10%">Date</th>
             </tr>
@@ -103,7 +103,7 @@
                 <tr>
                     <td>{% include "base/download-badge.html" with type="elvis_piece" id=piece.uuid in_cart=piece.in_cart %}</td>
                     <td><a href="{{ piece.url }}">{{ piece.title }}</a></td>
-                    <td><a href="{{ piece.composer.url }}">{{ piece.composer.title}}</a></td>
+                    <td><a href="{{ piece.composer.url }}">{{ piece.composer.shortened_title}}</a></td>
                     <td>{% if piece.movement_count %}<span class="label label-primary">{{ piece.movement_count }} movement{{  piece.movement_count | pluralize }} </span></a>{% else %}<span class="label label-default">No movements</span>{% endif %}</td>
                     <td width="10%">{{ piece.composition_end_date }}</td>
                 </tr>
@@ -119,8 +119,8 @@
                 <col class="text-center" style="width: 5%;">
                 <col hidden="hidden">
                 <col style="width: 30%;">
-                <col style="width: 20%;">
-                <col style="width: 25%;">
+                <col style="width: 15%;">
+                <col style="width: 15%;">
                 <col style="width: 10%;">
             </colgroup>
             <thead >
@@ -137,7 +137,7 @@
                 <tr>
                     <td>{% include "base/download-badge.html" with type="elvis_movement" id=mov.uuid in_cart=mov.in_cart %}</td>
                     <td><a href="{{ mov.url }}">{{ mov.title }}</a> </td>
-                    <td><a href="{{ mov.composer.url }}">{{ mov.composer.title}}</a></td>
+                    <td><a href="{{ mov.composer.url }}">{{ mov.composer.shortened_title}}</a></td>
                     <td>{% if mov.piece %}<a href="{{ mov.piece.url }}"><span class="label label-success">{{ mov.piece.title }}</span></a>{% else %}<span class="label label-default">No piece</span>{% endif %}</td>
                     <td>{{ mov.composition_end_date }}</td>
                 </tr>
