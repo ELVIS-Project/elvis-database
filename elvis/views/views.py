@@ -25,6 +25,7 @@ from elvis.models import InstrumentVoice
 from elvis.models import Tag
 from urllib.parse import unquote
 
+
 class Cleanup:
     """Keep track of created objects during an attempt to create a new
     piece. """
@@ -272,8 +273,6 @@ def handle_dynamic_file_table(request, parent, cleanup=Cleanup()):
             new_mov.locations.add(location)
         for source in parent.sources.all():
             new_mov.sources.add(source)
-        for collection in parent.collections.all():
-            new_mov.collections.add(collection)
 
         if mov_instrumentation_string:
             mov_instrumentation = abstract_model_factory(mov_instrumentation_string,
