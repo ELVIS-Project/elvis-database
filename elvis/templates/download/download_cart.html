@@ -30,8 +30,11 @@
 
             $(".remove-row").click(function (event) {
                 var id = $(event.target).parents('tr').children()[1].textContent;
-                var item_type = $(event.target).parents('tr').children()[5].textContent.split(/\n/)[0];
-                item_type = "elvis_" + item_type.toLowerCase();
+                var item_type = $(event.target).parents('tr').children()[5].textContent;
+                if (item_type[0] == "M")
+                    item_type = "elvis_movement";
+                else
+                    item_type = "elvis_piece";
                 $(event.target).parents('tr').remove();
                 $.ajax({
                     type: "post",
@@ -263,8 +266,8 @@
             <colgroup>
                 <col class="text-center" style="width: 10%;">
                 <col hidden="hidden">
-                <col style="width: 30%;">
-                <col style="width: 20%;">
+                <col style="width: 40%;">
+                <col style="width: 15%;">
                 <col style="width: 16%;">
                 <col style="width: 20%;">
             </colgroup>
@@ -287,12 +290,10 @@
                                 class="glyphicon glyphicon-remove"></span></button>
                         </div>
                     </td>
-                    <td style="display: none;">{{ piece.id }}</td>
+                    <td style="display: none;">{{ piece.uuid }}</td>
                     <td><a href="{{ piece.url }}">{{ piece.title }}</a></td>
                     <td><a href="{{ piece.composer.url }}">{{ piece.composer.shortened_title }}</a></td>
-                    <td>{% if piece.composition_start_date  == piece.composition_end_date %}
-                        {{ piece.composition_end_date }}{% else %}{{ piece.composition_start_date }}-
-                        {{ piece.composition_end_date }}{% endif %}</td>
+                    <td>{{ piece.composition_end_date  }}</td>
                     <td><span class="label label-success">Piece</span>{% if piece.movement_count %}<br>
                         <span class="label label-default">+ {{ piece.movement_count}} movement{{ piece.movement_count|pluralize }}</span> {% endif %}</td>
 
@@ -306,13 +307,11 @@
                                 class="glyphicon glyphicon-remove"></span></button>
                         </div>
                     </td>
-                    <td style="display: none;">{{ movement.id }}</td>
+                    <td style="display: none;">{{ movement.uuid }}</td>
                     <td><a href="{{ movement.url }}">{{ movement.title }}</a></td>
                     <td><a href="{{ movement.composer.url }}">{{ movement.composer.shortened_title }}</a></td>
-                    <td>{% if movement.composition_start_date  == movement.composition_end_date %}
-                        {{ movement.composition_start_date }}{% else %}{{ movement.composition_start_date }}
-                        -{{ movement.composition_end_date  }}{% endif %}</td>
-                    <td><span class="label label-primary">Movement</span><br><span class="label label-default">{{ movement.piece.title }}</span></td>
+                    <td>{{ movement.composition_end_date  }}</td>
+                    <td><span class="label label-primary">Movement</span><br><span class="label label-default">{{ movement.piece.title|truncatechars:30 }}</span></td>
                 </tr>
             {% endfor %}
             </tbody>
