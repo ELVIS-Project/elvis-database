@@ -1,0 +1,12 @@
+{% if form.errors.items %}
+    {% for field, errors in form.errors.items %}
+    <div class="row vertical-align">
+        <div class="col-sm-1 col-sm-offset-1"><span class="glyphicon glyphicon-exclamation-sign" aria-hidden="true" style="color:#be1931; font-size: 225%"></span></div>
+        <div class="col-sm-9 col-sm-offset-1">
+            {% for error in errors %}
+                <span class="help-block">{{error}}</span>
+            {% endfor %}
+        </div>
+    </div>
+    {% endfor %}
+{% endif %}

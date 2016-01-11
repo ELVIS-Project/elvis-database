@@ -1,0 +1,43 @@
+{% extends "base.html" %}
+
+{% block extra_hd %}
+<script type="text/javascript">
+    $(document).ready(function ($)
+    {
+        // initialize the download manager script
+        $.cookie('test_cookie', 'cookie_value', { path: '/' });
+        if ($.cookie('test_cookie') == 'cookie_value')
+        {
+            $('#login-submit').attr('class', 'btn btn-lg btn-primary btn-block');
+            $.cookie("test_cookie", null, { path: '/' });
+        }
+        else
+        {
+            //window.alert("You don't have cookies enabled... this site requires the use of cookies.");
+            $('#login-submit').attr('class', 'btn btn-lg btn-primary btn-block disabled');
+            $('#login-submit').tooltip('show');
+        }
+    });
+</script>
+{% endblock %}
+
+{% block page_content %}
+    {% if request.GET.error == "download" %}
+        <div class="alert alert-info text-center" role="alert">You must log in to use the download cart!</div>
+    {% elif request.GET.error == "upload" %}
+        <div class="alert alert-info text-center" role="alert">You must log in to upload new pieces!</div>
+    {% endif %}
+
+    <div class="row">
+        <div class="col-xs-12 col-md-6 col-md-offset-3">
+            <div class="account-wall">
+                {% block account_wall_content %}
+                {% endblock %}
+            </div>
+        </div>
+    </div>
+    <div class="text-center"><br>
+        {% block under_wall_content %}
+        {% endblock %}
+    </div>
+{% endblock %}

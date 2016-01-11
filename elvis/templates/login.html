@@ -1,61 +1,23 @@
-{% extends "base.html" %}
+{% extends "base/base_account.html" %}
 
-{% block page_content %}
+{% block extra_hd %}
+    {{ block.super }}
+    <title>Login</title>
+{% endblock %}
 
-<script type="text/javascript">  
-    $(document).ready(function ($) 
-    {
-        // initialize the download manager script
-        $.cookie('test_cookie', 'cookie_value', { path: '/' });
-        if ($.cookie('test_cookie') == 'cookie_value') 
-        {
-            $('#login-submit').attr('class', 'btn btn-lg btn-primary btn-block');
-            $.cookie("test_cookie", null, { path: '/' });
-        }
-        else
-        {
-            //window.alert("You don't have cookies enabled... this site requires the use of cookies.");
-            $('#login-submit').attr('class', 'btn btn-lg btn-primary btn-block disabled');
-            $('#login-submit').tooltip('show');
-        }
-    });
-</script>
+{% block account_wall_content %}
+    <h2 class="text-center">Login to your account</h2><br>
+    {% include "base/account_error_list.html" with form=form %}
 
-<div class="container">
-    {% if request.GET.error == "download" %}
-    <div class="alert alert-info text-center" role="alert">You must log in to use the download cart!</div>
-    {% elif request.GET.error == "upload" %}
-    <div class="alert alert-info text-center" role="alert">You must log in to upload new pieces!</div>
-    {% endif %}
-    <div class="row">
-        <div class="col-xs-12 col-sm-6 col-sm-offset-3 col-lg-4 col-lg-offset-4">
-            <div class="account-wall">
-                <h2 class="text-center">Login to your account</h2><br>
-                {% if form.errors.items %}
-                    {% for field, errors in form.errors.items %}
-                        <div class="row vertical-align">
-                            <div class="col-sm-1 col-sm-offset-1"><span class="glyphicon glyphicon-exclamation-sign" aria-hidden="true" style="color:#be1931; font-size: 225%"></span></div>
-                            <div class="col-sm-9 col-sm-offset-1">
-                                {% for error in errors %}
-                                    <span class="help-block">{{error}}</span>
-                                {% endfor %}
-                            </div>
-                        </div>
-                    {% endfor %}
-                {% endif %}
-                <form class="form-signin" method="post" action="/login/"> {% csrf_token %}
-                    <input name='username' type="text" class="form-control top" placeholder="Username" required autofocus>
-                    <input name='password' type="password" class="form-control bot" placeholder="Password" required>
-                    <br>
-                    <button class="btn btn-lg btn-primary btn-block" id="login-submit" data-toggle="tooltip" data-container="body" data-placement="right" data-html='true' title="You haven't enabled cookies... this site requires cookies.">
-                        Sign in</button>
-                </form>
-            </div>
-        <div class="text-center"><br>
-            <a href="/register/">Create an account</a> - <a href="/password/reset" class="text-center">Forgot your password?</a>
-        </div>
-        </div>
-    </div>
-</div>
+    <form class="form-signin" method="post" action="/login/"> {% csrf_token %}
+        <input name='username' type="text" class="form-control top" placeholder="Username" required autofocus>
+        <input name='password' type="password" class="form-control bot" placeholder="Password" required>
+        <br>
+        <button class="btn btn-lg btn-primary btn-block" id="login-submit" data-toggle="tooltip" data-container="body" data-placement="right" data-html='true' title="You haven't enabled cookies... this site requires cookies.">
+            Sign in</button>
+    </form>
+{% endblock %}
 
+{% block under_wall_content %}
+    <a href="/register/">Create an account</a> - <a href="/password/reset" class="text-center">Forgot your password?</a>
 {% endblock %}
