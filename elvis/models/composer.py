@@ -39,8 +39,12 @@ class Composer(ElvisModel):
     @property
     def shortened_title(self):
         comma_split = self.title.split(',')
-        space_split = self.title.split()[1:]
-        new_name = comma_split[0]
+        space_split = self.title.split()
+        if len(comma_split) == 1:
+            new_name = space_split[0]
+        else:
+            new_name = comma_split[0]
+        space_split = space_split[1:]
         for n in space_split:
             if n[0].isupper():
                 new_name += " {0}.".format(n[0])

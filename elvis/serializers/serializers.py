@@ -145,10 +145,9 @@ class AttachmentMinSerializer(CachedMinHyperlinkedModelSerializer):
 
 
 class ComposerMinSerializer(CachedMinHyperlinkedModelSerializer):
-    title = serializers.CharField(source="shortened_title")
     class Meta:
         model = Composer
-        fields = ('title', 'url', 'id')
+        fields = ('title', 'shortened_title', 'url', 'id')
 
 
 class PieceMinSerializer(CachedMinHyperlinkedModelSerializer):
@@ -220,14 +219,14 @@ class AttachmentEmbedSerializer(CachedEmbedHyperlinkedModelSerializer):
 
 
 class MovementEmbedSerializer(CachedEmbedHyperlinkedModelSerializer):
-    composition_end_date = serializers.IntegerField()
+    composer = ComposerMinSerializer()
     attachments = AttachmentMinSerializer(many=True)
     piece = PieceMinSerializer()
 
     class Meta:
         model = Movement
         fields = ('title', 'url', 'id', 'attachments', 'composition_end_date',
-                  'piece', "uuid")
+                  'piece', "uuid", 'composer')
 
 
 class PieceEmbedSerializer(CachedEmbedHyperlinkedModelSerializer):

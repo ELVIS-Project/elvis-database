@@ -289,7 +289,7 @@
                     </td>
                     <td style="display: none;">{{ piece.id }}</td>
                     <td><a href="{{ piece.url }}">{{ piece.title }}</a></td>
-                    <td><a href="{{ piece.composer.url }}">{{ piece.composer.name }}</a></td>
+                    <td><a href="{{ piece.composer.url }}">{{ piece.composer.shortened_title }}</a></td>
                     <td>{% if piece.composition_start_date  == piece.composition_end_date %}
                         {{ piece.composition_end_date }}{% else %}{{ piece.composition_start_date }}-
                         {{ piece.composition_end_date }}{% endif %}</td>
@@ -308,7 +308,7 @@
                     </td>
                     <td style="display: none;">{{ movement.id }}</td>
                     <td><a href="{{ movement.url }}">{{ movement.title }}</a></td>
-                    <td><a href="{{ movement.composer.url }}">{{ movement.composer.name }}</a></td>
+                    <td><a href="{{ movement.composer.url }}">{{ movement.composer.shortened_title }}</a></td>
                     <td>{% if movement.composition_start_date  == movement.composition_end_date %}
                         {{ movement.composition_start_date }}{% else %}{{ movement.composition_start_date }}
                         -{{ movement.composition_end_date  }}{% endif %}</td>
