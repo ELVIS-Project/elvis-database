@@ -136,7 +136,7 @@ $(document).ready(function ($)
                     $base_modal_footer.html("<button id='close-and-goto-button' type='button' class='btn btn-default' data-dismiss='modal'>Close</button>");
                     $("#close-and-goto-button").click(function(){
                         $('html, body').animate({
-                            scrollTop: $(".validation-error").offset().top - 10
+                            scrollTop: $(".validation-error").offset().top - 70
                         }, 500);
                     })
                 }
@@ -216,7 +216,7 @@ $(document).ready(function ($)
                     {
                         var path = file_val.split("\\");
                         var file_name = path[path.length-1];
-                        errors += "<strong>File</strong><em> "+file_name+"</em> requires a source.";
+                        errors += "<strong>File</strong><em> "+file_name+"</em> requires a source.<br>";
                         $("#"+id).css('border-color', '#FF9494').addClass('validation-error');
                     }
                 }

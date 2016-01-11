@@ -186,7 +186,7 @@ $(document).ready(function ($)
                     $base_modal_footer.html("<button id='close-and-goto-button' type='button' class='btn btn-default' data-dismiss='modal'>Close</button>");
                     $("#close-and-goto-button").click(function(){
                         $('html, body').animate({
-                            scrollTop: $(".validation-error").offset().top - 10
+                            scrollTop: $(".validation-error").offset().top - 70
                         }, 500);
                     })
                 }
