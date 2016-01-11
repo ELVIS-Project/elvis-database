@@ -282,7 +282,7 @@ $(document).ready(function ($)
         }
         drawPageLinks(results);
         drawFacets(results);
-        draw_download_buttons();
+        init_cart_buttons(true);
     }
 
     //Draw the paginators at the bottom of the page.
