@@ -2,7 +2,6 @@ import datetime
 import json
 
 import pytz
-from django.views.decorators.csrf import csrf_protect
 from rest_framework import generics
 from rest_framework import status
 from rest_framework.renderers import JSONRenderer, BrowsableAPIRenderer
@@ -11,7 +10,7 @@ from elvis.renderers.custom_html_renderer import CustomHTMLRenderer
 from elvis.models.piece import Piece
 from elvis.models.movement import Movement
 from elvis.models.attachment import Attachment
-from elvis.forms import PieceForm
+from elvis.forms.create import PieceForm, validate_dynamic_piece_form
 from elvis.tasks import rebuild_suggester_dicts
 from elvis.views.views import abstract_model_factory
 from elvis.views.views import handle_dynamic_file_table
@@ -72,7 +71,7 @@ class PieceList(ElvisListCreateView):
 
 
 def piece_create(request, *args, **kwargs):
-    form = validateDynamicForm(request, PieceForm(request.POST))
+    form = validate_dynamic_piece_form(request, PieceForm(request.POST))
     if not form.is_valid():
         # Form errors are rendered for user on the front end.
         data = json.dumps({'errors': form.errors})
@@ -108,7 +107,7 @@ def piece_create(request, *args, **kwargs):
 def piece_update(request, *args, **kwargs):
     # Update a piece based on a dict of changes in request.POST['changes']
     patch_data = request.data
-    form = validateDynamicForm(request, PieceForm(patch_data))
+    form = validate_dynamic_piece_form(request, PieceForm(patch_data))
     if not form.is_valid():
         # Form errors are rendered for user on the front end. Collection
         # validation errors are ignored, as these cannot be modified from
@@ -342,17 +341,3 @@ def handle_related_models(object_list, parent, clean, **kwargs):
     data = json.dumps({'success': True, 'id': parent.id,
                        'url': "/piece/{0}".format(parent.id)})
     return HttpResponse(data, content_type="json")
-
-def validateDynamicForm(request, form):
-    form.is_valid()
-    movement_title_list = [x for x in list(request.POST.keys()) if x.startswith('_existingmov_title_')]
-    for mov in movement_title_list:
-        if not request.POST.get(mov):
-            form.add_error(None, [mov, "Movements require a title."])
-
-    file_source_list = [x for x in list(request.POST.keys()) if x.startswith('files_source')]
-    for source in file_source_list:
-        if request.FILES.get(source.replace('source', 'files')) and not request.POST.get(source):
-            form.add_error(None, [source, "Files require a source!<br>"])
-            
-    return form
