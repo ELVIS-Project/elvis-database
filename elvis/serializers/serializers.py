@@ -338,7 +338,7 @@ class PieceFullSerializer(CartCheckFullHyperlinkedModelSerializer):
     collections = CollectionMinSerializer(many=True)
     attachments = AttachmentEmbedSerializer(many=True)
     creator = serializers.CharField(source='creator.username')
-    movements = MovementListSerializer(many=True)
+    movements = MovementFullSerializer(many=True)
 
     class Meta:
         model = Piece

@@ -361,7 +361,7 @@ $(document).ready(function ($)
             var row = file_table.find("#_existingfiles" + (fc));
             row.attr('name', oldPiece['attachments'][i]['id']);
             row.css('background-color', '#E8E8E8');
-            $file.attr("href", oldPiece['attachments'][i]['attachment']).text(oldPiece['attachments'][i]['file_name']);
+            $file.attr("href", oldPiece['attachments'][i]['attachment']).text(oldPiece['attachments'][i]['title']);
             $source.val(oldPiece['attachments'][i]['source']);
             oldPiece['attachments'][i]['parent'] = "piece";
 
@@ -407,7 +407,7 @@ $(document).ready(function ($)
                 var $source = file_table.find("#_existingfiles_source_" + (fc));
                 var row = file_table.find("#_existingfiles" + (fc));
                 row.attr('name', oldPiece['movements'][i]['attachments'][j]['id']);
-                $file.attr("href", oldPiece['movements'][i]['attachments'][j]['attachment']).text(oldPiece['movements'][i]['attachments'][j]['file_name']);
+                $file.attr("href", oldPiece['movements'][i]['attachments'][j]['attachment']).text(oldPiece['movements'][i]['attachments'][j]['title']);
                 $source.val(oldPiece['movements'][i]['attachments'][j]['source']);
                 $attach.selectpicker('val', "_existingmov_title_" + (i + 1));
                 oldPiece['movements'][i]['attachments'][j]['parent'] = "_existingmov_title_" + (i + 1);
