@@ -180,6 +180,7 @@
                     </div>
                     <div class="modal-footer">
                         <div class="text-right">
+                            <button type="button" class="btn btn-default" data-dismiss="modal">Cancel </button>
                             <button type='submit' id='collection-submit' class='btn btn-success'>Submit<span
                                     class='glyphicon glyphicon-chevron-right'></span></button>
                         </div>
@@ -266,9 +267,9 @@
             <colgroup>
                 <col class="text-center" style="width: 10%;">
                 <col hidden="hidden">
-                <col style="width: 40%;">
+                <col style="width: 50%;"    >
                 <col style="width: 15%;">
-                <col style="width: 16%;">
+                <col style="width: 10%;">
                 <col style="width: 20%;">
             </colgroup>
             <thead id="table-head">
@@ -318,6 +319,6 @@
         </table>
 
     {% else %}
-        <div class="text-center">Nothing added yet to your collection!</div>
+        <div class="text-center">Nothing in cart!</div>
     {% endif %}
 {% endblock %}
