@@ -159,7 +159,7 @@ $(document).ready(function ($)
 
         $.ajax({
             type: "patch",
-            url: "/piece/" + oldPiece['id'],
+            url: "/piece/" + oldPiece['id'] +"/",
             data: formData,
             processData: false,
             contentType: false,
@@ -302,7 +302,7 @@ $(document).ready(function ($)
     function fillPieceForm()
     {
         $("#title").val(oldPiece['title']);
-        oldPiece['composer'] = oldPiece['composer'].name;
+        oldPiece['composer'] = oldPiece['composer'].title;
         $("#composer").val(oldPiece['composer']);
         $("#comment").val(oldPiece['comment']);
         $("#composition_start_date").val(oldPiece['composition_start_date']);
