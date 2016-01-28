@@ -150,7 +150,8 @@ class Movement(ElvisModel):
 @receiver(post_save, sender=Movement)
 def save_listener(sender, instance, created, **kwargs):
     instance.solr_index(commit=True)
-
+    for a in instance.attachments.all():
+        a.auto_rename()
 
 @receiver(pre_delete, sender=Movement)
 def attachment_delete(sender, instance, **kwargs):

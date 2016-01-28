@@ -50,6 +50,21 @@ class Composer(ElvisModel):
                 new_name += " {0}.".format(n[0])
         return new_name
 
+    def rename(self, new_name):
+        """Rename composer and all files associated with it.
+        A compose WILL NOT rename files associated with it if you simply
+        change its name/title attribute, as there could be thousands of files
+        associated with each composer, it would be incredibly inconvenient to
+        have to check if all should be renamed every time a composer is saved."""
+        self.title = new_name
+        self.save()
+        for p in self.pieces.all():
+            for a in p.attachments.all():
+                a.auto_rename()
+        for m in self.movements.all():
+            for a in m.attachments.all():
+                a.auto_rename()
+
     def solr_dict(self):
         composer = self
         if composer.birth_date:
