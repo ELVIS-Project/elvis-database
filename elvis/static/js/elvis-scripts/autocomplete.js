@@ -13,6 +13,10 @@
  */
 function autocomplete(inputField, suggestionField, dictionary, multiple)
 {
+    // A timeout to delay requests
+    var requestTimeout = undefined;
+    // 0.25 second delay for timeout
+    var timeoutDelay = 250;
     var menuActive = -1;
     var menuSize = -1;
     var isInit = true;
@@ -118,48 +122,56 @@ function autocomplete(inputField, suggestionField, dictionary, multiple)
             //Sends the query to /suggest/ and prints the results to the suggestion-menu
             if ((gotResults || isInit) && query.length > 2)
             {
-                $.ajax({
-                    url: "/suggest/",
-                    data: {q: query, d: dictionary},
-                    success: function (data)
-                    {
-                        $suggestionMenu.html("");
-                        menuSize = data.length;
-                        menuActive = -1;
-
-                        if (menuSize === 1 && query === chosenSuggestion)
-                        {
-                            return false;
-                        }
-
-                        if (isInit && menuSize !== 0)
-                            isInit = false;
-
-                        if (menuSize > 0)
-                            gotResults = true;
-                        else
-                            gotResults = false;
-
-                        var suggestions = "";
-                        for (var i = 0; i < data.length; i++)
-                        {
-                            if (i === menuActive)
+                // Clear an existing timeout
+                window.clearTimeout(requestTimeout);
+                // Set a new timeout
+                requestTimeout = window.setTimeout(
+                    function() {
+                        $.ajax({
+                            url: "/suggest/",
+                            data: {q: query, d: dictionary},
+                            success: function (data)
                             {
-                                suggestions += "<li class='list-group-item active suggestion-element' id='suggestion-item" + i + "'>" + data[i]['name'] + "</li>";
-                            }
-                            else
-                            {
-                                suggestions += "<li class='list-group-item suggestion-element' id='suggestion-item" + i + "'>" + data[i]['name'] + "</li>";
-                            }
-                        }
+                                $suggestionMenu.html("");
+                                menuSize = data.length;
+                                menuActive = -1;
 
-                        $suggestionMenu.html("<ul class='listgroup suggestion-menu' style='width:" + input_width + "px'>" + suggestions + "</ul>");
-                        $suggestionListItems = $suggestionMenu.children().children();
-                        selectedSuggestion = $suggestionListItems.eq(menuActive).text();
+                                if (menuSize === 1 && query === chosenSuggestion)
+                                {
+                                    return false;
+                                }
+
+                                if (isInit && menuSize !== 0)
+                                    isInit = false;
+
+                                if (menuSize > 0)
+                                    gotResults = true;
+                                else
+                                    gotResults = false;
+
+                                var suggestions = "";
+                                for (var i = 0; i < data.length; i++)
+                                {
+                                    if (i === menuActive)
+                                    {
+                                        suggestions += "<li class='list-group-item active suggestion-element' id='suggestion-item" + i + "'>" + data[i]['name'] + "</li>";
+                                    }
+                                    else
+                                    {
+                                        suggestions += "<li class='list-group-item suggestion-element' id='suggestion-item" + i + "'>" + data[i]['name'] + "</li>";
+                                    }
+                                }
+
+                                $suggestionMenu.html("<ul class='listgroup suggestion-menu' style='width:" + input_width + "px'>" + suggestions + "</ul>");
+                                $suggestionListItems = $suggestionMenu.children().children();
+                                selectedSuggestion = $suggestionListItems.eq(menuActive).text();
+                            },
+                            dataType: "json"
+
+                        });
                     },
-                    dataType: "json"
-
-                });
+                    timeoutDelay
+                );
             }
             else
             {
