@@ -18,8 +18,7 @@
                         type: "delete",
                         url: window.location.href,
                         success: function (data) {
-                            console.log("Deleted {{ content.title }}");
-                            document.location.href = '/pieces/?creator={{ request.user.username }}';
+                            document.location.href = '/pieces/mine/';
                         }
                     })
                 });

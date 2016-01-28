@@ -70,6 +70,15 @@ class PieceList(ElvisListCreateView):
         return piece_create(request, *args, **kwargs)
 
 
+class MyPieces(generics.RetrieveAPIView):
+    """Simply redirects to the piece list with a creator query"""
+    def get(self, request, *args, **kwargs):
+        if request.user.is_authenticated:
+            username = request.user.username
+            return HttpResponseRedirect("/pieces/?creator={0}".format(username))
+        return HttpResponseRedirect("/login")
+
+
 def piece_create(request, *args, **kwargs):
     form = validate_dynamic_piece_form(request, PieceForm(request.POST))
     if not form.is_valid():

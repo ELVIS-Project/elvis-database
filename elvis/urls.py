@@ -12,7 +12,7 @@ from elvis.views.views import solr_suggest
 from elvis.views.auth import LoginFormView, logout_view
 from elvis.views.search import SearchView
 from elvis.views.download import DownloadCart, Downloading
-from elvis.views.piece import PieceList, PieceDetail, PieceCreate, PieceUpdate
+from elvis.views.piece import PieceList, PieceDetail, PieceCreate, PieceUpdate, MyPieces
 from elvis.views.user import UserAccount, UserUpdate
 from elvis.views.movement import MovementList, MovementDetail
 from elvis.views.composer import ComposerList, ComposerDetail
@@ -56,6 +56,7 @@ urlpatterns.extend([
         url(r'^pieces/$', PieceList.as_view(), name="piece-list", kwargs={'model': "Piece"}),
         url(r'^piece/(?P<pk>[0-9]+)/$', PieceDetail.as_view(), name="piece-detail", kwargs={'model': "Piece"}),
         url(r'^piece/(?P<pk>[0-9]+)/update/$', PieceUpdate.as_view(), name="piece-update", kwargs={'model': "Piece"}),
+        url(r'^pieces/mine$', MyPieces.as_view(), name="my-pieces", kwargs={'model': "Piece"}),
 
         url(r'^collections/$', CollectionList.as_view(), name="collection-list", kwargs={'model': "Collection"}),
         url(r'^collection/(?P<pk>[0-9]+)/$', CollectionDetail.as_view(), name="collection-detail", kwargs={'model': "Collection"}),

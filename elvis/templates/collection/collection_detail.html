@@ -27,7 +27,6 @@
                     data: {'public': false},
                     success: function (data)
                     {
-                        console.log("Made {{ content.title }} private.");
                         location.reload();
                     }
                 })
@@ -41,7 +40,6 @@
                     data: {'public': true},
                     success: function (data)
                     {
-                        console.log("Made {{ content.title }} public.");
                         location.reload();
                     }
                 })
