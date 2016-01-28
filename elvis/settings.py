@@ -20,12 +20,8 @@ from celery import schedules
 import os
 BASE_DIR = os.path.abspath('./')
 
-# Automatically adjust settings to be suitable or insuitable for proudction environments
-# CRA: I used this to help...
-#      https://docs.djangoproject.com/en/1.6/howto/deployment/checklist/
-# SECURITY WARNING: keep the secret key used in production secret!
-# SECURITY WARNING: don't run with debug turned on in production!
-
+# SETTING_TYPE can be LOCAL, DEV, PROD, or STAGE
+SETTING_TYPE = "LOCAL"
 DEBUG = False
 
 
@@ -34,10 +30,12 @@ DEBUG = False
 
 ALLOWED_HOSTS = ['database.elvisproject.ca', 'db-devel.elvisproject.ca']
 
-#TODO Write email settings for password recover feature after depoloyment.
 
-with open('/etc/elvis_secretkey.txt') as f:
-    SECRET_KEY = f.read().strip()
+if os.path.exists('/etc/elvis_secretkey.txt'):
+    with open('/etc/elvis_secretkey.txt') as f:
+        SECRET_KEY = f.read().strip()
+else:
+    SECRET_KEY = "ASASkjdhsakud233q"
 
 
 # Application Definition
@@ -69,17 +67,34 @@ MIDDLEWARE_CLASSES = (
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
     'django.contrib.flatpages.middleware.FlatpageFallbackMiddleware',
+    'django.middleware.security.SecurityMiddleware',
 )
-TEMPLATE_CONTEXT_PROCESSORS = (
-    "django.contrib.auth.context_processors.auth",
-    "django.template.context_processors.debug",
-    "django.template.context_processors.i18n",
-    "django.template.context_processors.media",
-    "django.template.context_processors.static",
-    "django.template.context_processors.tz",
-    "django.contrib.messages.context_processors.messages",
-    "django.core.context_processors.request",
-)
+
+REST_FRAMEWORK = {
+    'DEFAULT_PAGINATION_CLASS': 'rest_framework.pagination.PageNumberPagination',
+    'PAGE_SIZE': 100
+}
+
+TEMPLATES = [
+    {
+        'BACKEND': 'django.template.backends.django.DjangoTemplates',
+        'DIRS': ['templates'],
+        'APP_DIRS': True,
+        'OPTIONS': {
+            'context_processors':
+                [
+                    "django.contrib.auth.context_processors.auth",
+                    "django.template.context_processors.debug",
+                    "django.template.context_processors.i18n",
+                    "django.template.context_processors.media",
+                    "django.template.context_processors.static",
+                    "django.template.context_processors.tz",
+                    "django.contrib.messages.context_processors.messages",
+                    "django.template.context_processors.request",
+                ]
+        },
+    },
+]
 
 SESSION_ENGINE = "django.contrib.sessions.backends.cached_db"
 
@@ -119,14 +134,15 @@ CACHES = {
 # ======================
 BROKER_URL = 'django://'
 
-DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.postgresql_psycopg2',
-        'NAME': 'elvis2',
-        'USER': 'elvisdatabase',
-        'PASSWORD': '5115C67O2v3GN31T49Md'
-        }
-}
+if SETTING_TYPE != "LOCAL":
+    DATABASES = {
+        'default': {
+            'ENGINE': 'django.db.backends.postgresql_psycopg2',
+            'NAME': 'elvis_{0}'.format(SETTING_TYPE.lower()),
+            'USER': 'elvisdatabase',
+            'PASSWORD': '5115C67O2v3GN31T49Md'
+            }
+    }
 
 # Email Settings
 # ==============
@@ -134,15 +150,21 @@ EMAIL_USE_TLS = True
 EMAIL_HOST = 'smtp.gmail.com'
 EMAIL_PORT = 587
 EMAIL_HOST_USER = 'elvisdatabase@gmail.com'
-with open('/etc/elvis_emailpass.txt') as f:
-    EMAIL_HOST_PASSWORD = f.read().strip()
+if os.path.exists('/etc/elvis_emailpass.txt'):
+    with open('/etc/elvis_emailpass.txt') as f:
+        EMAIL_HOST_PASSWORD = f.read().strip()
+else:
+    EMAIL_HOST_PASSWORD = ""
 
 # Captcha Settings
 # ================
 RECAPTCHA_PUBLIC_KEY = "6LfV4gsTAAAAAGK8vA-O2RrABlIb_XbNywrxJrTS"
 
-with open('/etc/elvis_captchakey.txt') as f:
-    RECAPTCHA_PRIVATE_KEY = f.read().strip()
+if os.path.exists('/etc/elvis_captchakey.txt'):
+    with open('/etc/elvis_captchakey.txt') as f:
+        RECAPTCHA_PRIVATE_KEY = f.read().strip()
+else:
+    RECAPTCHA_PRIVATE_KEY = ""
 
 # Internationalization
 # ====================
@@ -158,11 +180,11 @@ USE_TZ = True
 # CRA: we used to have composer images and user profile images; if we need
 #      them back, check commit dc8f8afe75b7137440c6488483566b8e2c366379
 MEDIA_URL = '/media/'
-MEDIA_ROOT = '/srv/webapps/elvis-database/media_root/'
+MEDIA_ROOT = os.path.join(BASE_DIR, "media_root")
 
 
 STATIC_URL = '/static/'
-STATIC_ROOT = '/srv/webapps/elvis-database/static_root/'
+STATIC_ROOT = os.path.join(BASE_DIR, "static_root")
 
 
 # Solr Settings
@@ -200,13 +222,7 @@ CELERY_RESULT_BACKEND = 'rpc://'
 CELERY_TASK_SERIALIZER = 'json'
 CELERY_RESULT_SERIALIZER = 'json'
 CELERY_ACCEPT_CONTENT = ['json']
-# See documentation for crontab settings
-CELERYBEAT_SCHEDULE = {
-    'clean_zip_files': {
-        'task': 'elvis.celery.clean_zip_files',
-        'schedule': schedules.crontab(minute=0, hour=0)
-    },
-    }
+
 
 # Elvis Web App Settings
 # ======================
@@ -222,7 +238,7 @@ LOGGING = {
         'file': {
             'level': 'DEBUG',
             'class': 'logging.FileHandler',
-            'filename': '/srv/webapps/elvis-database/debug.log',
+            'filename': '/srv/webapps/elvis-database/elvis_{0}.log'.format(SETTING_TYPE.lower())
         },
     },
     'loggers': {
@@ -233,3 +249,9 @@ LOGGING = {
         },
     },
 }
+
+if SETTING_TYPE == "LOCAL":
+    try:
+        from elvis.local_settings import *
+    except ImportError:
+        pass
