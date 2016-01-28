@@ -4,8 +4,7 @@ from rest_framework.exceptions import PermissionDenied
 from django.db.models import Q
 from elvis.models import Collection
 from django.apps import apps
-from django.views.decorators.csrf import csrf_protect
-from django.utils.decorators import method_decorator
+
 
 
 """Common behaviour for most views on the site are defined here.
@@ -15,10 +14,6 @@ features to all views at once."""
 
 class ElvisDetailView(generics.RetrieveUpdateDestroyAPIView):
     permission_classes = (permissions.IsAuthenticatedOrReadOnly,)
-
-    @method_decorator(csrf_protect)
-    def dispatch(self, *args, **kwargs):
-        return super().dispatch(*args, **kwargs)
 
     def is_authorized(self, request, *args, **kwargs):
         """Given a request, determine user's permissions in regards to
@@ -89,7 +84,6 @@ class ElvisListCreateView(generics.ListCreateAPIView):
     paginate_by = 20
     permission_classes = (permissions.AllowAny, )
 
-    @method_decorator(csrf_protect)
     def dispatch(self, *args, **kwargs):
         return super().dispatch(*args, **kwargs)
 
