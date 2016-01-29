@@ -4,10 +4,23 @@ from django.conf import settings
 
 
 def normalize_name(name):
-    """Remove and replace illegal chars in file names"""
-    new_name = re.sub(r"((,| |/) *)", '-', name)
+    """
+    Sanitize and normalize file names.
+    :param name:
+    :return:
+    """
+    new_name = sanitize_name(name)
     new_name = unicodedata.normalize('NFKD', new_name).encode('ascii', 'ignore')
     return new_name.decode('utf-8')
+
+
+def sanitize_name(name):
+    """
+    Remove illegal characters from file names.
+    :param name:
+    :return:
+    """
+    return re.sub(r"[^\w.]+", "-", name)
 
 
 def split_ext(name):
