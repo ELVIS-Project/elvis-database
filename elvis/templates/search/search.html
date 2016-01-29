@@ -1,17 +1,16 @@
 {% extends "base.html" %}
 {% block extra_hd %}
-
     {% load staticfiles %}
-    <script type='text/javascript' src="{% static "js/elvis-scripts/downloadBadge.js" %}"></script>
-    <script type='text/javascript' src="{% static "js/elvis-scripts/autocomplete.min.js" %}"></script>
-    <script type='text/javascript' src="{% static "bootstrap/plugins/bootstrap-select.min.js" %}"></script>
-    <script type='text/javascript' src="{% static "js/template-scripts/search.min.js" %}"></script>
+    {% load compress %}
+    {% compress js %}
+    <script type='text/javascript' src="{% static "js/elvis-scripts/autocomplete.js" %}"></script>
+    <script type='text/javascript' src="{% static "bootstrap/plugins/bootstrap-select.js" %}"></script>
+    <script type='text/javascript' src="{% static "js/template-scripts/search.js" %}"></script>
+    {% endcompress %}
+    {% compress css %}
     <link href="{% static "bootstrap/plugins/bootstrap-select.css" %}" rel="stylesheet" media="screen"/>
-
-
-
+    {% endcompress %}
     <title>Search</title>
-
 {% endblock %}
 
 {% block page_content %}

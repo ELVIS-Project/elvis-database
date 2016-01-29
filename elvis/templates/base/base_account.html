@@ -1,6 +1,8 @@
 {% extends "base.html" %}
 
 {% block extra_hd %}
+{% load compress %}
+{% compress js %}
 <script type="text/javascript">
     $(document).ready(function ($)
     {
@@ -19,6 +21,7 @@
         }
     });
 </script>
+{% endcompress %}
 {% endblock %}
 
 {% block page_content %}

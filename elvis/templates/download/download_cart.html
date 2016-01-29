@@ -3,14 +3,20 @@
 
 {% block extra_hd %}
     {% load staticfiles %}
+    {% load compress %}
+    {% compress js %}
     <script type='text/javascript' src="{% static "bootstrap/plugins/bootstrap-markdown.js" %}"></script>
     <script type='text/javascript' src="{% static "js/jquery.tablesorter.js" %}"></script>
+        <script type='text/javascript' src="{% static "bootstrap/plugins/bootstrap-select.min.js" %}"></script>
+    {% endcompress %}
+    {% compress css %}
     <link href="{% static "bootstrap/plugins/bootstrap-markdown.min.css" %}" rel="stylesheet" media="screen"/>
-    <script type='text/javascript' src="{% static "bootstrap/plugins/bootstrap-select.min.js" %}"></script>
     <link href="{% static "bootstrap/plugins/bootstrap-select.css" %}" rel="stylesheet" media="screen"/>
+    {% endcompress %}
 
     <title>Download Cart</title>
 
+    {% compress js %}
     <!-- Okay this plugin is the boss -->
     <script type="text/javascript">
 
@@ -139,9 +145,8 @@
             }
 
         });
-
-
     </script>
+    {% endcompress %}
 
 
 

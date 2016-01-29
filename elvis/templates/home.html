@@ -2,7 +2,9 @@
 
 {% block extra_hd %}
     {% load staticfiles %}
-    <script type='text/javascript' src="{% static "js/elvis-scripts/autocomplete.min.js" %}"></script>
+    {% load compress %}
+    {% compress js %}
+    <script type='text/javascript' src="{% static "js/elvis-scripts/autocomplete.js" %}"></script>
     <script>
         $(document).ready(function ($)
         {
@@ -11,9 +13,9 @@
                 if (event.which === 13)
                     $("#general-search-form").submit()
             })
-        })
-
+        });
     </script>
+    {% endcompress %}
 
     <title>Elvis Database</title>
 {% endblock %}

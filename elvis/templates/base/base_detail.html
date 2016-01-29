@@ -11,6 +11,8 @@ in order to include the script to render comments and initialize cart buttons.
 {% block extra_hd %}
     {% load staticfiles %}
     <title>{{ content.title }}</title>
+    {% load compress %}
+    {% compress js %}
     <script type='text/javascript' src="{% static "bootstrap/plugins/markdown.min.js" %}"></script>
     <script>
         $(document).ready(function ($)
@@ -19,6 +21,7 @@ in order to include the script to render comments and initialize cart buttons.
             init_cart_buttons();
         });
     </script>
+    {% endcompress %}
 {% endblock %}
 
 {% block page_content %}
