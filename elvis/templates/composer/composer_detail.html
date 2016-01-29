@@ -4,23 +4,26 @@
     <title>{{ content.title }}</title>
     {{ block.super }}
     {% load staticfiles %}
+    {% load compress %}
+    {% compress js %}
     <script type='text/javascript' src="{% static "js/jquery.tablesorter.js" %}"></script>
-        <script>
-            $(document).ready(function ($)
-            {
-                $("#piece-table").tablesorter({
-                    headers: {0: {sorter: false}},
-                    textExtraction: "complex",
-                    sortList: [[2, 0]]
-                });
+    <script>
+        $(document).ready(function ($)
+        {
+            $("#piece-table").tablesorter({
+                headers: {0: {sorter: false}},
+                textExtraction: "complex",
+                sortList: [[2, 0]]
+            });
 
-                $("#mov-table").tablesorter({
-                    headers: {0: {sorter: false}},
-                    textExtraction: "complex",
-                    sortList: [[2, 0]]
-                });
-            })
-        </script>
+            $("#mov-table").tablesorter({
+                headers: {0: {sorter: false}},
+                textExtraction: "complex",
+                sortList: [[2, 0]]
+            });
+        })
+    </script>
+    {% endcompress %}
     {% endblock %}
 
 {% block detail_header %}
