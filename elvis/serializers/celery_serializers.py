@@ -46,14 +46,22 @@ class TagMinSerializer(serializers.ModelSerializer):
         model = Tag
         fields = ('title', )
 
+
 class AttachmentEmbedSerializer(serializers.ModelSerializer):
     class Meta:
         model = Attachment
         fields = ("file_name", "extension",  "source")
 
 
+class PieceMinSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Piece
+        fields = ('title', )
+
+
 class MovementFullSerializer(serializers.ModelSerializer):
     composer = ComposerMinSerializer()
+    piece = PieceMinSerializer()
     tags = TagMinSerializer(many=True)
     genres = GenreMinSerializer(many=True)
     instruments_voices = InstrumentVoiceMinSerializer(many=True)
@@ -67,7 +75,7 @@ class MovementFullSerializer(serializers.ModelSerializer):
         model = Movement
         fields = ("title", "composer", "genres", "instruments_voices",
                   "languages", "locations", "sources", "attachments",
-                  "creator", "religiosity", "vocalization", "tags")
+                  "creator", "religiosity", "vocalization", "tags", "piece")
 
 
 class PieceFullSerializer(serializers.ModelSerializer):

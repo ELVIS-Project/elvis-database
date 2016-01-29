@@ -1,12 +1,12 @@
 import os
 import shutil
-import unicodedata
-import re
+
 
 from django.db import models
 from django.conf import settings
 from elvis.models.elvis_model import ElvisModel
 from django.core.files.base import File
+import elvis.helpers.name_normalizer as NameNormalizer
 
 
 def upload_path(instance, filename):
@@ -75,7 +75,7 @@ class Attachment(ElvisModel):
                                             "file" + str(i),
                                             file_name.rsplit('.')[-1])
         #replace unicode in string with normalized chars
-        new_name = self.sanitize_name(new_name)
+        new_name = self.normalize_name(new_name)
 
         old_path = os.path.join(file_path, file_name)
         new_path = os.path.join(file_path, new_name)
@@ -102,8 +102,15 @@ class Attachment(ElvisModel):
         parent = None
         if self.pieces.all():
             parent = self.pieces.first()
+            parent_str = parent.title.strip()
         elif self.movements.all():
             parent = self.movements.first()
+            mov = parent
+            if mov.piece:
+                piece_str = mov.piece.title.strip()
+                parent_str = piece_str + "_" + mov.title.strip()
+            else:
+                parent_str = mov.title.strip()
         else:
             print("{0} is an orphan and will be deleted".format(self.title))
             self.delete()
@@ -122,11 +129,11 @@ class Attachment(ElvisModel):
         (path, current_name) = os.path.split(old_path)
         (current_file_name, current_extension) = os.path.splitext(current_name)
 
-        new_name = "{0}_{1}_{2}{3}".format(parent.title.strip(),
+        new_name = "{0}_{1}_{2}{3}".format(parent_str,
                                            parent.composer.name.strip(),
                                            "file" + str(i),
                                            current_extension)
-        new_name = self.sanitize_name(new_name)
+        new_name = self.normalize_name(new_name)
 
         # Return now if there's no work to do.
         if self.file_name == new_name:
@@ -146,7 +153,5 @@ class Attachment(ElvisModel):
     def __unicode__(self):
         return "{0}".format(self.attachment)
 
-    def sanitize_name(self, name):
-        new_name = re.sub(r"((,| |/) *)", '-', name)
-        new_name = unicodedata.normalize('NFKD', new_name).encode('ascii', 'ignore')
-        return new_name.decode('utf-8')
+    def normalize_name(self, name):
+        return NameNormalizer.normalize_name(name)
