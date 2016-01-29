@@ -1,5 +1,6 @@
 import re
 import unicodedata
+import hashlib
 from django.conf import settings
 
 
@@ -20,7 +21,13 @@ def sanitize_name(name):
     :param name:
     :return:
     """
-    return re.sub(r"[^\w.]+", "-", name)
+    output = re.sub(r"[^\w.]+", "-", name)
+    # Remove leading and trailing dashes
+    output = output.strip('-')
+    if len(output) < 3:
+        # Handle edge case where the string is empty
+        return hashlib.sha1(name.encode()).hexdigest()[0:5]
+    return output
 
 
 def split_ext(name):

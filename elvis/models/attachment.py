@@ -70,8 +70,8 @@ class Attachment(ElvisModel):
         i = str(i) if i else ""
         source = kwargs.get('source', None)
 
-        new_name = "{0}_{1}_{2}.{3}".format(parent.title.strip(),
-                                            parent.composer.name.strip(),
+        new_name = "{0}_{1}_{2}.{3}".format(NameNormalizer.sanitize_name(parent.title.strip()),
+                                            NameNormalizer.sanitize_name(parent.composer.name.strip()),
                                             "file" + str(i),
                                             file_name.rsplit('.')[-1])
         #replace unicode in string with normalized chars
@@ -129,8 +129,8 @@ class Attachment(ElvisModel):
         (path, current_name) = os.path.split(old_path)
         (current_file_name, current_extension) = os.path.splitext(current_name)
 
-        new_name = "{0}_{1}_{2}{3}".format(parent_str,
-                                           parent.composer.name.strip(),
+        new_name = "{0}_{1}_{2}{3}".format(NameNormalizer.sanitize_name(parent_str),
+                                           NameNormalizer.sanitize_name(parent.composer.name.strip()),
                                            "file" + str(i),
                                            current_extension)
         new_name = self.normalize_name(new_name)
