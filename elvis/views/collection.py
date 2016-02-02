@@ -2,7 +2,9 @@ import json
 import datetime
 import pytz
 
-
+from rest_framework import generics
+from rest_framework import status
+from rest_framework.response import Response
 from rest_framework.renderers import JSONRenderer, BrowsableAPIRenderer
 from elvis.forms.create import CollectionForm
 from django.views.decorators.csrf import csrf_protect
@@ -22,6 +24,10 @@ class CollectionListHTMLRenderer(CustomHTMLRenderer):
 
 class CollectionDetailHTMLRenderer(CustomHTMLRenderer):
     template_name = "collection/collection_detail.html"
+
+
+class CollectionCreateHTMLRenderer(CustomHTMLRenderer):
+    template_name = "collection/collection_create.html"
 
 
 class CollectionList(ElvisListCreateView):
@@ -76,4 +82,11 @@ class CollectionDetail(ElvisDetailView):
     renderer_classes = (CollectionDetailHTMLRenderer, JSONRenderer, BrowsableAPIRenderer)
     queryset = Collection.objects.all()
 
+class CollectionCreate(generics.RetrieveAPIView):
+    renderer_classes = (CollectionCreateHTMLRenderer, JSONRenderer, BrowsableAPIRenderer)
 
+    def get(self, request, *args, **kwargs):
+        if request.user.is_authenticated():
+            return Response(status=status.HTTP_200_OK)
+        else:
+            return HttpResponseRedirect('/login/?error=upload')
