@@ -227,7 +227,8 @@ CELERY_ACCEPT_CONTENT = ['json']
 
 # Elvis Web App Settings
 # ======================
-ELVIS_EXTENSIONS = ['.xml', '.mxl', '.krn', '.md', '.nwc', '.tntxt', '.capx', '.abc', '.mid', '.midi', '.pdf', '.mei']
+ELVIS_EXTENSIONS = ['.xml', '.mxl', '.krn', '.md', '.nwc', '.tntxt', '.capx',
+                    '.abc', '.mid', '.midi', '.pdf', '.mei', '.ma', '.md2', '.json']
 ELVIS_BAD_PREFIX = ['.', '..', '_', '__']
 SUGGEST_DICTS = ['composerSuggest', 'pieceSuggest', 'collectionSuggest', 'languageSuggest', 'genreSuggest', 'locationSuggest', 'sourceSuggest', 'instrumentSuggest', 'tagSuggest']
 
