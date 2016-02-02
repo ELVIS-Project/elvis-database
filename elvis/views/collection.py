@@ -57,20 +57,22 @@ class CollectionList(ElvisListCreateView):
         else:
             new_collection.public = False
 
-        cart = request.session.get('cart', {})
-        for key in cart:
-            if key.startswith("P"):
-                try:
-                    tmp = Piece.objects.get(uuid=key[2:])
-                except ObjectDoesNotExist:
-                    continue
-                new_collection.pieces.add(tmp)
-            if key.startswith("M"):
-                try:
-                    tmp = Movement.objects.get(uuid=key[2:])
-                except ObjectDoesNotExist:
-                    continue
-                new_collection.movements.add(tmp)
+        # If the collection is not empty, populate it from
+        if not clean_form["initialize_empty"]:
+            cart = request.session.get('cart', {})
+            for key in cart:
+                if key.startswith("P"):
+                    try:
+                        tmp = Piece.objects.get(uuid=key[2:])
+                    except ObjectDoesNotExist:
+                        continue
+                    new_collection.pieces.add(tmp)
+                if key.startswith("M"):
+                    try:
+                        tmp = Movement.objects.get(uuid=key[2:])
+                    except ObjectDoesNotExist:
+                        continue
+                    new_collection.movements.add(tmp)
 
         new_collection.save()
         return HttpResponseRedirect("/collection/{0}".format(new_collection.id))
@@ -81,6 +83,7 @@ class CollectionDetail(ElvisDetailView):
     serializer_class = CollectionFullSerializer
     renderer_classes = (CollectionDetailHTMLRenderer, JSONRenderer, BrowsableAPIRenderer)
     queryset = Collection.objects.all()
+
 
 class CollectionCreate(generics.RetrieveAPIView):
     renderer_classes = (CollectionCreateHTMLRenderer, JSONRenderer, BrowsableAPIRenderer)
