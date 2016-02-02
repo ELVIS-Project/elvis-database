@@ -9,6 +9,10 @@
     Collections
 {% endblock %}
 
+{% block header-right %}
+<p><a class="btn btn-default" href="/collection/create/" role="button">Create New Collection</a></p>
+{% endblock %}
+
 {% block list_content %}
     {% for c in content.results %}
         {% include "base/list_item.html" with url=c.url title=c.title p_count=c.piece_count m_count=c.movement_count creator=c.creator type="elvis_collection" id=c.uuid in_cart=c.in_cart %}

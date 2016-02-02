@@ -30,7 +30,15 @@
 {% endblock %}
 
 {% block page_content %}
-    <h1 id="page-header">{% block header %}{% endblock %}</h1><hr>
+    <div class="row">
+        <div class="col-md-8">
+            <h1 id="page-header">{% block header %}{% endblock %}</h1>
+        </div>
+        <div class="col-md-4 text-right">
+            {% block header-right %}{% endblock %}
+        </div>
+    </div>
+    <hr>
     <div class="row">
         <div class="col-md-12">
             {% block list_content %}
