@@ -12,6 +12,23 @@
         <div id="title_suggestion_menu" class="suggestion-div"></div>
         <div id="title_error"></div>
         <br/>
+
+        <div class="row">
+            <div class="col-md-12" data-toggle="popover" data-placement="top" data-trigger="hover focus" data-html='true' title="<b>Religious Nature</b><span class='label label-primary pull-right'>Required</span>"
+                 data-content="This field is required because for many repertories it is useful to search, sort, and group all sacred pieces at once, or all secular pieces. If your piece does not easily fall into the sacred or secular categories, you may choose the 'Uncategorized' option.">
+                <div class="btn-group btn-group-justified form-inline radio" id="religiosity" data-toggle="buttons">
+                    <label class="btn btn-default upload-2button">
+                        <input type="radio" name="permission" value="Public" aria-label="Religious Nature"> Public
+                    </label>
+                    <label class="btn btn-default upload-2button">
+                        <input type="radio" name="permission" value="Private" aria-label="Religious Nature">Private
+                    </label>
+                </div>
+                <div id="permission_error"></div>
+            </div>
+        </div>
+        <br/>
+
         <div class="form-group">
             <textarea class="form-control upload-input-field" rows="7" name="comment" id="comment" data-provide="markdown" style="resize:vertical"
                       placeholder="Comments..." aria-label="Comments"></textarea>
