@@ -121,13 +121,17 @@
         <div class="footer">
             <div class="row text-muted text-center">
                 <hr>
-                <a href="http://mcgill.ca" target="_blank">McGill University</a> |
-                <a href="http://www.mcgill.ca/music/" target="_blank">Schulich School of Music</a> |
-                <a href="http://www.cirmmt.org" target="_blank">CIRMMT</a> |
-                <a href="http://simssa.ca" target="_blank">SIMSSA</a> |
-                <a href="http://elvisproject.ca" target="_blank">ELVIS Project</a> |
-                <a href="/contact" target="_blank">Contact</a> <br>
-                {% now "Y" %}
+                <ul class="menu">
+                    <li class="first"><a href="http://mcgill.ca" target="_blank">McGill University</a></li>
+                    <li><a href="http://www.mcgill.ca/music/" target="_blank">Schulich School of Music</a></li>
+                    <li><a href="http://www.cirmmt.org" target="_blank">CIRMMT</a></li>
+                    <li><a href="http://simssa.ca" target="_blank">SIMSSA</a></li>
+                    <li><a href="http://elvisproject.ca" target="_blank">ELVIS Project</a></li>
+                    <li class="last"><a href="/contact" target="_blank">Contact</a></li>
+                </ul>
+                <div class="date">
+                    <p>{% now "Y" %}</p>
+                </div>
             </div>
         </div>
     </div>

@@ -445,6 +445,26 @@ body
     left: 0;
 }
 
+#footer .menu {
+    padding: 0;
+}
+
+#footer .menu {
+    /* font-size 0 required to avoid extra spaces between <li>'s */
+    font-size: 0;
+}
+
+#footer .menu li {
+    display: inline;
+    border-left: 1px solid #777777;
+    padding: 0 0.5em 0 0.5em;
+    font-size: 14px;
+}
+
+#footer .menu li.first {
+    border-left: none;
+}
+
 .collapse.in
 {
     height: auto !important;
