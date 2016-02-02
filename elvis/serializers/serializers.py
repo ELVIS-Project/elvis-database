@@ -35,19 +35,61 @@ The serializers are named using the following pattern:
         up from the smaller and cached serializers."""
 
 
-class URLNormalizingCacher():
-    """Standardizes the normalization of urls for caching"""
+class URLNormalizingCacherMixin:
+    """Mixin which provides methods for normalizing urls, setting entries
+    in the serialization cache, and appending user specific data to
+    serialization results.
+
+    Must be mixed in with a rest_framework.serializer
+    """
+
     def _url_normalizer(self, obj):
+        """Normalizes a url by removing query params.
+
+        Warning: Modifies obj param.
+
+        :param obj: Some dict with a 'url' key.
+        :return: The obj passed in with it's url normalized.
+        """
         if not obj.get('url') or obj['url'].startswith("/media"):
             return obj
         ul = urlparse(obj['url'])
         obj['url'] = "{0}://{1}{2}".format(ul.scheme, ul.netloc, ul.path)
         return obj
 
-    def cache_set(self, cache_id, obj):
-        cache.set(cache_id, self._url_normalizer(obj))
+    def cache_set(self, cache_id, result):
+        """Normalize url then set cache_id:result in cache
 
-    def cart_appender(self, result, instance):
+        Warning: Modifies result param.
+
+        :param cache_id: The key for the cache entry.
+        :param result: Dict of serialized object, to be cached.
+        """
+
+        cache.set(cache_id, self._url_normalizer(result))
+
+    def user_specific_data_appender(self, result, instance):
+        """Append user specific data to serialization responses.
+
+        Warning: Modifies result param.
+
+        :param result: Dict of serialized object.
+        :param instance: Object that was serialized to result.
+        :return: The result dict passed in, user specific data added.
+        """
+        result = self._in_cart_appender(result, instance)
+        result = self._permission_appender(result, instance)
+        return result
+
+    def _in_cart_appender(self, result, instance):
+        """Append in_cart bool specific to requesting user.
+
+        Warning: Modifies result param.
+
+        :param result: Dict of serialized object.
+        :param instance: Object that was serialized to result.
+        :return: result param with in_cart key added.
+        """
         if instance.__class__ in [Piece, Movement, Composer, Collection]:
             pass
         else:
@@ -67,11 +109,40 @@ class URLNormalizingCacher():
                 result['in_cart'] = "piece"
         return result
 
+    def _permission_appender(self, result, instance):
+        """Append can_edit and can_view bools specific to requesting user.
 
-class CachedMinHyperlinkedModelSerializer(serializers.HyperlinkedModelSerializer, URLNormalizingCacher):
+        Warning: Modifies result param.
+
+        :param result: Dict of serialized object.
+        :param instance: Object that was serialized to result.
+        :return: result with can_edit and can_view keys added.
+        """
+        request = self.context.get('request', {})
+        if not request:
+            return result
+        user = request.user
+
+        if user.is_superuser or instance.creator == user:
+            perms = {'can_edit': True, 'can_view': True}
+        elif not instance.__dict__.get('public', True):
+            perms = {'can_edit': False, 'can_view': False}
+        else:
+            perms = {'can_edit': False, 'can_view': True}
+
+        result.update(perms)
+        return result
+
+
+class CachedMinHyperlinkedModelSerializer(serializers.HyperlinkedModelSerializer, URLNormalizingCacherMixin):
     """The smallest cached serializer, for requests at the MIN level. Will not
     only check for MIN representations in cache, but also EMB and LIST, as
-    MIN is a subset of these levels and can be constructed from them."""
+    MIN is a subset of these levels and can be constructed from them.
+
+    Does not append user specific data to response, as min-level serialization
+    should not be used in situations when the user's relationship to the
+    object is relevant.
+    """
     def to_representation(self, instance):
         str_uuid = str(instance.uuid)
         min_check = cache.get("MIN-" + str_uuid)
@@ -95,7 +166,7 @@ class CachedMinHyperlinkedModelSerializer(serializers.HyperlinkedModelSerializer
         return result
 
 
-class CachedMinModelSerializer(serializers.ModelSerializer, URLNormalizingCacher):
+class CachedMinModelSerializer(serializers.ModelSerializer, URLNormalizingCacherMixin):
     """Same as above, only for those models without associated views."""
     def to_representation(self, instance):
         str_uuid = str(instance.uuid)
@@ -107,34 +178,34 @@ class CachedMinModelSerializer(serializers.ModelSerializer, URLNormalizingCacher
         return result
 
 
-class CachedListHyperlinkedModelSerializer(serializers.HyperlinkedModelSerializer, URLNormalizingCacher):
+class CachedListHyperlinkedModelSerializer(serializers.HyperlinkedModelSerializer, URLNormalizingCacherMixin):
     """A cached serializer for the LIST level of serialization"""
     def to_representation(self, instance):
         str_uuid = str(instance.uuid)
         cache_check = cache.get("LIST-" + str_uuid)
         if cache_check:
-            return self.cart_appender(cache_check, instance)
+            return self.user_specific_data_appender(cache_check, instance)
         result = super().to_representation(instance)
         self.cache_set("LIST-" + str_uuid, result)
-        return self.cart_appender(result, instance)
+        return self.user_specific_data_appender(result, instance)
 
 
-class CachedEmbedHyperlinkedModelSerializer(serializers.HyperlinkedModelSerializer, URLNormalizingCacher):
+class CachedEmbedHyperlinkedModelSerializer(serializers.HyperlinkedModelSerializer, URLNormalizingCacherMixin):
     """A cached serializer for the EMB level of serialization"""
     def to_representation(self, instance):
         str_uuid = str(instance.uuid)
         cache_check = cache.get("EMB-" + str_uuid)
         if cache_check:
-            return self.cart_appender(cache_check, instance)
+            return self.user_specific_data_appender(cache_check, instance)
         result = super().to_representation(instance)
         self.cache_set("EMB-" + str_uuid, result)
-        return self.cart_appender(result, instance)
+        return self.user_specific_data_appender(result, instance)
 
 
-class CartCheckFullHyperlinkedModelSerializer(serializers.HyperlinkedModelSerializer, URLNormalizingCacher):
+class CartCheckFullHyperlinkedModelSerializer(serializers.HyperlinkedModelSerializer, URLNormalizingCacherMixin):
     def to_representation(self, instance):
         result = super().to_representation(instance)
-        return self.cart_appender(result, instance)
+        return self.user_specific_data_appender(result, instance)
 
 
 class AttachmentMinSerializer(CachedMinHyperlinkedModelSerializer):

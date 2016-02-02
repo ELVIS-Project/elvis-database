@@ -42,7 +42,7 @@ class PieceDetail(ElvisDetailView):
     renderer_classes = (PieceDetailHTMLRenderer, JSONRenderer, BrowsableAPIRenderer)
 
     def patch(self, request, *args, **kwargs):
-        if self.is_authorized(request, *args, **kwargs)['can_edit']:
+        if self.determine_perms(request, *args, **kwargs)['can_edit']:
             return piece_update(request, *args, **kwargs)
 
 

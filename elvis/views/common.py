@@ -15,14 +15,14 @@ features to all views at once."""
 class ElvisDetailView(generics.RetrieveUpdateDestroyAPIView):
     permission_classes = (permissions.IsAuthenticatedOrReadOnly,)
 
-    def is_authorized(self, request, *args, **kwargs):
+    def determine_perms(self, request, *args, **kwargs):
         """Given a request, determine user's permissions in regards to
         the object in question.
         :return: A dict with'can_view' and 'can_edit' keys.
         """
+        user = self.request.user
         model = apps.get_model('elvis', kwargs['model'])
         obj = model.objects.get(id=kwargs['pk'])
-        user = self.request.user
 
         if user.is_superuser or obj.creator == user:
             return {'can_edit': True, 'can_view': True}
@@ -35,14 +35,14 @@ class ElvisDetailView(generics.RetrieveUpdateDestroyAPIView):
     def if_can_edit(self, request, *args, **kwargs):
         """Utility function which raises a PermissionDenied error if the
         user can not edit the object in question."""
-        if self.is_authorized(self, request, *args, **kwargs)['can_edit']:
+        if self.determine_perms(self, request, *args, **kwargs)['can_edit']:
             return
         raise PermissionDenied
 
     def if_can_view(self, request, *args, **kwargs):
         """Utility function which raises a PermissionDenied error if the
         user can not view the object in question."""
-        if self.is_authorized(self, request, *args, **kwargs)['can_view']:
+        if self.determine_perms(self, request, *args, **kwargs)['can_view']:
             return
         raise PermissionDenied
 
@@ -50,12 +50,9 @@ class ElvisDetailView(generics.RetrieveUpdateDestroyAPIView):
     a check to see if the user is allowed to edit the object,
     which is used in template rendering."""
     def get(self, request, *args, **kwargs):
-        auth = self.is_authorized(request, *args, **kwargs)
-        if not auth['can_view']:
-            raise PermissionDenied
-
         response = super().get(request, *args, **kwargs)
-        response.data['can_edit'] = auth['can_edit']
+        if not response.data['can_view']:
+            raise PermissionDenied
         return response
 
     """Default DELETE/PATCH/PUT behaviour across detail views is to
