@@ -4,8 +4,6 @@
 solr/target/*
 solr/logs/*
 solr/suggestions*
-elvis_env/*
-elvis_virtualenv
 .env
 .DS_Store
 dumps
@@ -15,8 +13,10 @@ static_root/*
 pom.xml
 *.iml
 env_3
-
+dump.rdb
 #Local file ignores
 solr/solr/collection1/conf/solrconfig.xml
-elvis/elvis/settings/base.py
-elvis/elvis/wsgi.py
+elvis/local_settings.py
+elvis/wsgi.py
+solr/elvis_dev/data
+solr/elvis_test/data

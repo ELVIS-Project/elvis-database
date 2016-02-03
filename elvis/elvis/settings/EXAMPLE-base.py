@@ -136,7 +136,7 @@ STATIC_ROOT = '/srv/webapps/elvis-database/static_root/'
 # Solr Settings
 # =============
 
-SOLR_SERVER = "http://localhost:8080/elvis-solr"
+SOLR_SERVER = "http://localhost:8983/solr/elvis_{}".format(SETTING_TYPE.lower())
 
 SEARCH_FILTERS_DICT = {
     'fcp': 'elvis_composer',
