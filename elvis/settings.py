@@ -20,9 +20,13 @@ from celery import schedules
 import os
 BASE_DIR = os.path.abspath('./')
 
+import re
 SETTING_CONFIGS = ['dev', 'prod', 'stage']
+
 for c in SETTING_CONFIGS:
-    if '/' + c + '/' in BASE_DIR:
+    reg = r'/{}[/$]?'.format(c)
+    regexp = re.compile(reg)
+    if regexp.search(BASE_DIR) is not None:
         SETTING_TYPE = c
         break
 else:
