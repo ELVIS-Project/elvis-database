@@ -20,10 +20,18 @@ from celery import schedules
 import os
 BASE_DIR = os.path.abspath('./')
 
-# SETTING_TYPE can be LOCAL, DEV, PROD, or STAGE
-SETTING_TYPE = "LOCAL"
-DEBUG = False
+SETTING_CONFIGS = ['dev', 'prod', 'stage']
+for c in SETTING_CONFIGS:
+    if '/' + c + '/' in BASE_DIR:
+        SETTING_TYPE = c
+        break
+else:
+    SETTING_TYPE = "local"
 
+if SETTING_TYPE in ['dev', 'local']:
+    DEBUG = True
+else:
+    DEBUG = False
 
 # Simple Settings
 # ===============
@@ -135,11 +143,11 @@ CACHES = {
 # ======================
 BROKER_URL = 'django://'
 
-if SETTING_TYPE != "LOCAL":
+if SETTING_TYPE != "local":
     DATABASES = {
         'default': {
             'ENGINE': 'django.db.backends.postgresql_psycopg2',
-            'NAME': 'elvis_{0}'.format(SETTING_TYPE.lower()),
+            'NAME': 'elvis_{0}'.format(SETTING_TYPE),
             'USER': 'elvisdatabase',
             'PASSWORD': '5115C67O2v3GN31T49Md'
             }
@@ -181,17 +189,17 @@ USE_TZ = True
 # CRA: we used to have composer images and user profile images; if we need
 #      them back, check commit dc8f8afe75b7137440c6488483566b8e2c366379
 MEDIA_URL = '/media/'
-MEDIA_ROOT = os.path.join(BASE_DIR, "media_root")
+MEDIA_ROOT = "/srv/webapps/elvisdb_media/{}/".format(SETTING_TYPE)
 
 
 STATIC_URL = '/static/'
-STATIC_ROOT = os.path.join(BASE_DIR, "static_root")
+STATIC_ROOT = "/srv/webapps/elvisdb_static/{}/".format(SETTING_TYPE)
 
 
 # Solr Settings
 # =============
 
-SOLR_SERVER = "http://localhost:8983/solr/elvis_{}".format(SETTING_TYPE.lower())
+SOLR_SERVER = "http://localhost:8983/solr/elvis_{}".format(SETTING_TYPE)
 
 SEARCH_FILTERS_DICT = {
     'fcp': 'elvis_composer',
@@ -240,7 +248,7 @@ LOGGING = {
         'file': {
             'level': 'DEBUG',
             'class': 'logging.FileHandler',
-            'filename': '/srv/webapps/elvis-database/elvis_{0}.log'.format(SETTING_TYPE.lower())
+            'filename': '/srv/webapps/elvis-database/elvis_{0}.log'.format(SETTING_TYPE)
         },
     },
     'loggers': {
@@ -252,7 +260,7 @@ LOGGING = {
     },
 }
 
-if SETTING_TYPE == "LOCAL":
+if SETTING_TYPE == "local":
     try:
         from elvis.local_settings import *
     except ImportError:
