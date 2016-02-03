@@ -4,8 +4,6 @@
 solr/target/*
 solr/logs/*
 solr/suggestions*
-elvis_env/*
-elvis_virtualenv
 .env
 .DS_Store
 dumps
@@ -20,3 +18,5 @@ dump.rdb
 solr/solr/collection1/conf/solrconfig.xml
 elvis/local_settings.py
 elvis/wsgi.py
+solr/elvis_dev/data
+solr/elvis_test/data
