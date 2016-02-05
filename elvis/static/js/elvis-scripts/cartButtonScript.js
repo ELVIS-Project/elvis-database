@@ -81,6 +81,7 @@ function init_cart_buttons(force_redraw)
 
     $.ajax({
         url: "/download-cart/",
+        type: "POST",
         data: {check_in_cart: JSON.stringify(light_items)},
         success: function (data)
         {
