@@ -199,6 +199,16 @@ MEDIA_ROOT = "/srv/webapps/elvisdb_media/{}/".format(SETTING_TYPE)
 STATIC_URL = '/static/'
 STATIC_ROOT = "/srv/webapps/elvisdb_static/{}/".format(SETTING_TYPE)
 
+if SETTING_TYPE in ["dev", "local"]:
+    COMPRESS_ENABLED = False
+else:
+    COMPRESS_ENABLED = True
+STATICFILES_FINDERS = (
+    'django.contrib.staticfiles.finders.FileSystemFinder',
+    'django.contrib.staticfiles.finders.AppDirectoriesFinder',
+    "compressor.finders.CompressorFinder"
+)
+
 
 # Solr Settings
 # =============
