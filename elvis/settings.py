@@ -111,13 +111,26 @@ TEMPLATES = [
 
 SESSION_ENGINE = "django.contrib.sessions.backends.cached_db"
 
-# This is only a dummy cache so the site won't break. You should enable one
-# of the others.
-CACHES = {
-    'default': {
-        'BACKEND': 'django.core.cache.backends.dummy.DummyCache',
+if SETTING_TYPE != "local":
+    db_alloc = {"prod": 1, "stage": 2, "dev": 3}
+    CACHES = {
+        'default': {
+            'BACKEND': 'django_redis.cache.RedisCache',
+            'LOCATION': '/var/run/redis/redis.sock',
+            "OPTIONS": {
+                "DB": db_alloc[SETTING_TYPE],
+                "CLIENT_CLASS": "django_redis.client.DefaultClient",
+            },
+            "TIMEOUT": None
+        },
     }
-}
+else:
+    CACHES = {
+        'default': {
+            'BACKEND': 'django.core.cache.backends.dummy.DummyCache',
+        }
+    }
+
 # Decide which kind of cache you would like to use:
 #
 # This is way faster, but requires you install redis and django-redis.
