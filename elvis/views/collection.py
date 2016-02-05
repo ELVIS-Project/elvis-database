@@ -41,7 +41,6 @@ class CollectionList(ElvisListCreateView):
 
     def create(self, request, *args, **kwargs):
         form = CollectionForm(request.POST)
-
         if not form.is_valid():
             data = json.dumps({"errors": form.errors})
             return HttpResponse(data, content_type="json")
@@ -56,26 +55,42 @@ class CollectionList(ElvisListCreateView):
             new_collection.public = True
         else:
             new_collection.public = False
-
         # If the collection is not empty, populate it from
         if not clean_form["initialize_empty"]:
-            cart = request.session.get('cart', {})
-            for key in cart:
-                if key.startswith("P"):
-                    try:
-                        tmp = Piece.objects.get(uuid=key[2:])
-                    except ObjectDoesNotExist:
-                        continue
-                    new_collection.pieces.add(tmp)
-                if key.startswith("M"):
-                    try:
-                        tmp = Movement.objects.get(uuid=key[2:])
-                    except ObjectDoesNotExist:
-                        continue
-                    new_collection.movements.add(tmp)
-
+            # Grab the pieces and movements from the cart
+            pieces, movements = self.get_cart_pieces_and_movements(request)
+            # Add the pieces and movements to the collection
+            for piece in pieces:
+                new_collection.pieces.add(piece)
+            for movement in movements:
+                new_collection.movements.add(movement)
         new_collection.save()
         return HttpResponseRedirect("/collection/{0}".format(new_collection.id))
+
+    @staticmethod
+    def get_cart_pieces_and_movements(request):
+        """
+        Get the pieces and movements currently in the cart.
+        :param request:
+        :return: Pieces and movements lists
+        """
+        pieces = []
+        movements = []
+        cart = request.session.get("cart", {})
+        for key in cart:
+            if key.startswith("P"):
+                try:
+                    tmp = Piece.objects.get(uuid=key[2:])
+                except ObjectDoesNotExist:
+                    continue
+                pieces.append(tmp)
+            if key.startswith("M"):
+                try:
+                    tmp = Movement.objects.get(uuid=key[2:])
+                except ObjectDoesNotExist:
+                    continue
+                movements.append(tmp)
+        return pieces, movements
 
 
 class CollectionDetail(ElvisDetailView):
