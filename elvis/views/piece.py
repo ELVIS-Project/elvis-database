@@ -1,5 +1,5 @@
 import datetime
-import json
+import ujson as json
 
 import pytz
 from rest_framework import generics
