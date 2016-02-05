@@ -1,5 +1,5 @@
 import datetime
-import json
+import ujson as json
 import urllib.error
 import urllib.parse
 import urllib.request

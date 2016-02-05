@@ -1,4 +1,4 @@
-import json
+import ujson as json
 
 from celery.result import AsyncResult
 from django.core.cache import cache
@@ -31,11 +31,6 @@ class DownloadCart(generics.GenericAPIView):
     renderer_classes = (JSONRenderer, DownloadCartHTMLRenderer)
 
     def get(self, request, *args, **kwargs):
-        if 'check_in_cart' in request.GET:
-            results = self._check_in_cart(request)
-            jresults = json.dumps(results)
-            return HttpResponse(jresults, content_type="application/json")
-
         data = self.make_cart_response(request)
         return Response(data, *args, **kwargs)
 
@@ -60,11 +55,14 @@ class DownloadCart(generics.GenericAPIView):
         return data
 
     def _retrieve_piece(self, pid, request, exts):
-        """Use cache to speed up retrieving use cart contents.
+        """Use cache to speed up retrieving user cart contents.
 
-        :param pid: The id stored in the session for carts (P-[numbers])
+        Warning: If the item no longer exists in the database, the uuid
+        will be removed from the user's cart and None returned.
+
+        :param pid: The id stored in the session for carts (P-[uuid])
         :param request: The request object (for serialization)
-        :return: A serialized dict representing the Piece.
+        :return: A serialized dict representing the Piece or None.
         """
         p_uuid = pid[2:]
         p = cache.get("EMB-" + p_uuid)
@@ -74,7 +72,6 @@ class DownloadCart(generics.GenericAPIView):
                 del(request.session['cart'][pid])
                 return None
             p = PieceEmbedSerializer(tmp, context={'request': request}).data
-            cache.set("EMB-" + p_uuid, p)
 
         for a in p['attachments']:
             exts[a['extension']] += 1
@@ -88,11 +85,14 @@ class DownloadCart(generics.GenericAPIView):
         return p
 
     def _retrieve_movement(self, mid, request, exts):
-        """Use cache to speed up retrieving use cart contents.
+        """Use cache to speed up retrieving user cart contents.
 
-        :param pid: The id stored in the session for carts (M-[numbers])
-        :param request: The request object (for serialization)
-        :return: A serialized dict representing the Movement.
+        Warning: If the item no longer exists in the database, the uuid
+        will be removed from the user's cart and None returned.
+
+        :param mid: The id stored in the session for carts (M-[uuid]).
+        :param request: The request object (for serialization).
+        :return: A serialized dict representing the Movement or None.
         """
         m_uuid = mid[2:]
         m = cache.get("EMB-" + m_uuid)
@@ -102,7 +102,6 @@ class DownloadCart(generics.GenericAPIView):
                 del(request.session['cart'][mid])
                 return None
             m = MovementEmbedSerializer(tmp, context={'request': request}).data
-            cache.set("EMB-" + m_uuid, m)
 
         for a in m['attachments']:
             exts[a['extension']] += 1
@@ -111,9 +110,15 @@ class DownloadCart(generics.GenericAPIView):
         return m
 
     def _try_get(self, model, obj_id):
-        """ Tries to get an object out of the database. Returns None if
-        the object no longer exists. It is the caller's responsibility to
-        handle this situation."""
+        """ Try to get an object out of the database.
+
+        Returns None if the object no longer exists.
+        It is the caller's responsibility to handle this situation.
+
+        :param model: An elvis model to query on.
+        :param obj_id: The uuid of the object to find.
+        :return: The object or None.
+        """
         tmp = None
         try:
             tmp = model.objects.get(uuid=obj_id)
@@ -121,9 +126,16 @@ class DownloadCart(generics.GenericAPIView):
             pass
         return tmp
 
-    def _check_in_cart(self, request):
-        items = json.loads(request.GET['check_in_cart'])
-        cart = request.session.get('cart', {})
+    def _check_in_cart(self, cart, items):
+        """Create dict of differences between frontend/backend cart.
+
+        :param cart: The user's cart stored in request.session['cart'].
+        :param items: A dict of item's with the following format:
+        {[uuid]:{'type': 'elvis_[type]', 'in_cart': bool}
+        :return: A dict in the same format (minus 'type' key as it is
+        unnecessary) of only the pieces who's 'in_cart' status is different.
+        """
+
         results = {}
         for key in items.keys():
             if items[key]['type'] == "elvis_composer":
@@ -158,6 +170,12 @@ class DownloadCart(generics.GenericAPIView):
             request.session.pop('cart', None)
             jresults = json.dumps({'count': 0})
             return HttpResponse(content=jresults, content_type="json")
+        elif 'check_in_cart' in request.POST:
+            cart = request.session.get('cart', {})
+            items = json.loads(request.POST['check_in_cart'])
+            results = self._check_in_cart(cart, items)
+            jresults = json.dumps(results)
+            return HttpResponse(jresults, content_type="application/json")
         else:
             return self.update_cart(request)
 

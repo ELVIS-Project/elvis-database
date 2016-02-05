@@ -1,5 +1,5 @@
 import datetime
-import json
+import ujson as json
 import urllib.request, urllib.parse, urllib.error
 import zipfile
 import uuid

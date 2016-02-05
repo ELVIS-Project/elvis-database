@@ -34,5 +34,6 @@ simplegeneric==0.8.1
 six==1.10.0
 solrpy3==0.1
 traitlets==4.0.0
+ujson==1.35
 Werkzeug==0.11.3
 wheel==0.26.0
