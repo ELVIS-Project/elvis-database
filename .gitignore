@@ -20,3 +20,4 @@ elvis/local_settings.py
 elvis/wsgi.py
 solr/elvis_dev/data
 solr/elvis_test/data
+start.sh
