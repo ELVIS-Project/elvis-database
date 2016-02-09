@@ -10,7 +10,7 @@ from django.contrib.staticfiles.urls import staticfiles_urlpatterns
 from elvis.views.main import home, about, contact
 from elvis.views.views import solr_suggest
 from elvis.views.auth import LoginFormView, logout_view
-from elvis.views.search import SearchView
+from elvis.views.search import SearchView, SearchAndAddToCartView
 from elvis.views.download import DownloadCart, Downloading
 from elvis.views.piece import PieceList, PieceDetail, PieceCreate, PieceUpdate, MyPieces
 from elvis.views.user import UserAccount, UserUpdate
@@ -32,6 +32,7 @@ urlpatterns.extend([
         url(r'^$', home, name='home'),
 
         url(r'^search/$', SearchView.as_view(), name="search-view"),
+        url(r'^search/add-to-cart/$', SearchAndAddToCartView.as_view(), name="search-and-add-to-cart-view"),
 
         url(r'^account/$', UserAccount.as_view(), name="user-account"),
         url(r'^register/$', UserAccount.as_view(), name="user-account"),

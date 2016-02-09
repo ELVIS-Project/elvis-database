@@ -6,8 +6,8 @@ from django.conf import settings
 
 from elvis.renderers.custom_html_renderer import CustomHTMLRenderer
 from elvis.helpers.solrsearch import SolrSearch
-
 from elvis.helpers import paginate
+from elvis.views.download import add_item
 
 
 class SearchViewHTMLRenderer(CustomHTMLRenderer):
@@ -123,5 +123,42 @@ class SearchView(generics.GenericAPIView):
         return Response(result, status=status.HTTP_200_OK)
 
 
-class SearchAndAddToCartView():
-    pass
+class SearchAndAddToCartView(SearchView):
+    renderer_classes = (JSONRenderer,)
+
+    def get(self, request, *args, **kwargs):
+        """
+        Constructs a SolrSearch object using the search request; specifically,
+        it parses and prepares the query and assigns it to s
+        note: Filters, sorts, and other modifiers to solr search are
+        handled in the helper script solrsearch.py
+        :param request:
+        :param args:
+        :param kwargs:
+        :return:
+        """
+        # Grab the cart
+        cart = request.session.get('cart', {})
+        # Set up the Solr connection
+        s = SolrSearch(request)
+        facets = s.facets(facet_fields=['type',
+                                        'composer_name',
+                                        'tags',
+                                        'parent_collection_names',
+                                        'number_of_voices'])
+        facets.facet_counts['facet_fields'] = parse_facets(facets)
+        search_results = s.search()
+        # Paginate results
+        paginator = paginate.SolrPaginator(search_results)
+        # Loop through the result pages and add everything to the cart
+        total = 0
+        for page_number in range(paginator.num_pages):
+            results = paginator.page(page_number + 1).result
+            # Get the items from the page
+            for search_object in results:
+                print("adding {0}".format(search_object["uuid"]))
+                add_item(search_object["type"], search_object["uuid"], cart)
+                total += 1
+        # Save the modified cart
+        request.session['cart'] = cart
+        return Response("{0} items added to cart.".format(total), status=status.HTTP_200_OK)
