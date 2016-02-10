@@ -1,11 +1,6 @@
 import datetime
 
-
 from django.db import models
-from django.dispatch import receiver
-from django.db.models.signals import post_save, post_delete, pre_delete
-from django.core.cache import cache
-
 from elvis.models.elvis_model import ElvisModel
 
 
@@ -45,10 +40,6 @@ class Piece(ElvisModel):
     @property
     def tagged_as(self):
         return " ".join([t.name for t in self.tags.all()])
-
-    @property
-    def cart_id(self):
-        return "P-" + str(self.uuid)
 
     @property
     def file_formats(self):
@@ -148,19 +139,3 @@ class Piece(ElvisModel):
                 'file_formats': piece.file_formats,
                 'pieces_searchable': piece.title,
                 'attached_files': file_paths}
-
-
-@receiver(post_save, sender=Piece)
-def save_listener(sender, instance, created, **kwargs):
-    instance.solr_index(commit=True)
-    for a in instance.attachments.all():
-        a.auto_rename()
-
-@receiver(pre_delete, sender=Piece)
-def attachment_delete(sender, instance, **kwargs):
-    for a in instance.attachments.all():
-        a.delete()
-
-@receiver(post_delete, sender=Piece)
-def delete_listener(sender, instance, **kwargs):
-    instance.solr_delete(commit=True)

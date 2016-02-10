@@ -4,16 +4,19 @@ import uuid
 from django.db import models
 from django.contrib.auth.models import User
 from django.conf import settings
-from django.dispatch import receiver
-from django.db.models.signals import post_save, post_delete, pre_delete
 from django.core.cache import cache
+from django.utils.functional import cached_property
+
+
+cart_code = {"Piece": "P", "Movement": "M",
+             "Collection": "COL", "Composer": "COM"}
 
 
 class ElvisModel(models.Model):
     """ A super class for the common functionality of
     most models on the project."""
     title = models.CharField(max_length=255, default="NOTITLE_ERROR")
-    uuid = models.UUIDField(default=uuid.uuid4, unique=True)
+    uuid = models.UUIDField(default=uuid.uuid4, unique=True, db_index=True)
     creator = models.ForeignKey(User, blank=True, null=True)
     created = models.DateTimeField(auto_now_add=True, blank=True, null=True)
     updated = models.DateTimeField(auto_now=True, blank=True, null=True)
@@ -48,6 +51,11 @@ class ElvisModel(models.Model):
     @uploader.deleter
     def uploader(self):
         self.uploader.delete()
+
+    @cached_property
+    def cart_id(self):
+        code = cart_code.get(self.__class__.__name__)
+        return "{}-{}".format(code, str(self.uuid))
 
     def solr_dict(self):
         """ A method to be over-ridden in children which returns the dict
@@ -90,13 +98,72 @@ class ElvisModel(models.Model):
             cache.delete(prefix + str_uuid)
 
     def save(self, force_insert=False, force_update=False, using=None,
-             update_fields=None):
+             update_fields=None, **kwargs):
+        """Handle attachments, caching, and solr_indexing on save.
+
+        Will expire the cache entry, rename the attachments, and commit
+        the changes to solr by default. See kwargs for options.
+
+        :param kwargs:
+            -ignore_solr: Do not contact solr in any way.
+            -commit_solr: Defaults to true. If False, the changes will
+            be sent so solr, but will not be committed (this is much faster
+            when doing bulk changes). Otherwise, commit the change.
+        """
         self.cache_expire()
         super().save(force_insert, force_update, using, update_fields)
 
-    def delete(self, using=None, keep_parents=False):
+        cls = self.__class__.__name__
+        if cls == "Movement":
+            for a in self.attachments.all():
+                a.auto_rename(**kwargs)
+
+        if cls == "Piece":
+            for a in self.attachments.all():
+                a.auto_rename(**kwargs)
+            for m in self.movements.all():
+                m.save(**kwargs)
+
+        if kwargs.get("ignore_solr"):
+            pass
+        elif kwargs.get("commit_solr", True):
+            self.solr_index(commit=True)
+        else:
+            self.solr_index(commit=False)
+
+    def delete(self, using=None, keep_parents=False, **kwargs):
+        """Handle attachments, caching, and solr_indexing on delete.
+
+        Will expire the cache entry, delete the attachments, and commit
+        the changes to solr by default. See kwargs for options.
+
+        :param kwargs:
+            -ignore_solr: Do not contact solr in any way.
+            -commit_solr: Defaults to true. If False, the changes will
+            be sent so solr, but will not be committed (this is much faster
+            when doing bulk changes). Otherwise, commit the change.
+        """
         self.cache_expire()
+
+        cls = self.__class__.__name__
+        if cls == "Piece":
+            for a in self.attachments.all():
+                a.delete(**kwargs)
+            for m in self.movements.all():
+                m.delete(**kwargs)
+
+        if cls == "Movement":
+            for a in self.attachments.all():
+                a.delete(**kwargs)
+
         super().delete(using, keep_parents)
+
+        if kwargs.get("ignore_solr"):
+            pass
+        elif kwargs.get("commit_solr", True):
+            self.solr_delete(commit=True)
+        else:
+            self.solr_delete(commit=False)
 
     def __str__(self):
         return self.title

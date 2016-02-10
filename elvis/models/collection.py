@@ -1,9 +1,4 @@
-import uuid
-
 from django.db import models
-from django.dispatch import receiver
-from django.db.models.signals import post_save, post_delete
-
 from elvis.models.elvis_model import ElvisModel
 
 
@@ -32,10 +27,6 @@ class Collection(ElvisModel):
         return self.movements.filter(piece=None)
 
     @property
-    def cart_id(self):
-        return "COL-" + str(self.uuid)
-
-    @property
     def free_movements_count(self):
         return self.movements.filter(piece=None).count()
 
@@ -54,13 +45,3 @@ class Collection(ElvisModel):
                 'comment': collection.comment,
                 'creator_name': creator_name,
                 'collections_searchable': collection.title}
-
-
-@receiver(post_save, sender=Collection)
-def save_listener(sender, instance, created, **kwargs):
-    instance.solr_index(commit=True)
-
-
-@receiver(post_delete, sender=Collection)
-def delete_listener(sender, instance, **kwargs):
-    instance.solr_delete(commit=True)

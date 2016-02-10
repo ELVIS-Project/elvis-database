@@ -1,10 +1,6 @@
 import datetime
-import uuid
 
 from django.db import models
-from django.dispatch import receiver
-from django.db.models.signals import post_save, post_delete
-
 from elvis.models.elvis_model import ElvisModel
 
 
@@ -31,10 +27,6 @@ class Composer(ElvisModel):
     @property
     def free_movements_count(self):
         return self.movements.filter(piece=None).count()
-
-    @property
-    def cart_id(self):
-        return "COM-" + str(self.uuid)
 
     @property
     def shortened_title(self):
@@ -85,12 +77,3 @@ class Composer(ElvisModel):
                 'updated': composer.updated,
                 'composers_searchable': composer.name}
 
-
-@receiver(post_save, sender=Composer)
-def save_listener(sender, instance, created, **kwargs):
-    instance.solr_index(commit=True)
-
-
-@receiver(post_delete, sender=Composer)
-def delete_listener(sender, instance, **kwargs):
-    instance.solr_delete(commit=True)

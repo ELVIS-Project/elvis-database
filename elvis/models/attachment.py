@@ -65,6 +65,15 @@ class Attachment(ElvisModel):
         url = os.path.join(settings.MEDIA_URL, str(self.uuid))
         return url
 
+    def solr_dict(self):
+        return {}
+
+    def solr_index(self, **kwargs):
+        pass
+
+    def solr_delete(self, **kwargs):
+        pass
+
     def attach_file(self, file_path, file_name, parent, **kwargs):
         i = kwargs.get('number', None)
         i = str(i) if i else ""
@@ -96,8 +105,7 @@ class Attachment(ElvisModel):
             shutil.rmtree(self.attachment_path)
         super(Attachment, self).delete(*args, **kwargs)
 
-
-    def auto_rename(self):
+    def auto_rename(self, **kwargs):
         """Determine the correct name for the file, then rename it if necessary"""
         parent = None
         if self.pieces.all():
@@ -144,7 +152,7 @@ class Attachment(ElvisModel):
             file_content = File(dest)
             self.attachment.save(new_name, file_content)
         self.title = self.file_name
-        self.save()
+        self.save(**kwargs)
 
         # Delete old file
         os.remove(old_path)
