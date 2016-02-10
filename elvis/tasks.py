@@ -213,7 +213,7 @@ class CartZipper:
             print("Can't dump metadata for {0}".format(model.__class__.__name__))
 
         with open(os.path.join(path, "meta"), "a") as metafile:
-            metafile.write(json.dumps(metadump.data, indent=4, separators=(',', ': ')))
+            metafile.write(json.dumps(metadump.data, indent=4))
             metafile.write("\n")
 
     def _normalize_name(self, name):
