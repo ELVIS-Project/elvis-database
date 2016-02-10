@@ -27,7 +27,7 @@
     {% endblock %}
 
 {% block detail_header %}
-    <h1>{{ content.title }} <small>({{ content.birth_date }}&ndash;{{ content.death_date }})</small></h1>
+    <h1>{{ content.title }} <small>{% if content.birth_data or content.death_date %}({{ content.birth_date }}&ndash;{{ content.death_date }}){% else %}(None){% endif %}</small></h1>
 {% endblock %}
 
 {% block detail_buttons %}

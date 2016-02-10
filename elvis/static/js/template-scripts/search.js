@@ -219,21 +219,32 @@ $(document).ready(function ($)
             var entry = results['object_list'][key];
             if (entry['type'] === "elvis_composer")
             {
+                // The string for an unknown date
+                const UNKNOWN = "Unknown";
+
                 if (entry['birth_date'])
                     var birthday = entry['birth_date'].slice(0, 4);
                 else
-                    birthday = "Unknown";
+                    birthday = UNKNOWN;
 
                 if (entry['death_date'])
                     var death = entry['death_date'].slice(0, 4);
                 else
-                    death = "Unknown";
+                    death = UNKNOWN;
+
+                // If birthday and deathday are unknown, we just print "unknown"
+                if (birthday == UNKNOWN && death == UNKNOWN) {
+                    var lifeString = UNKNOWN;
+                } else {
+                    // We know either the birth or death
+                    lifeString = birthday + "-" + death;
+                }
 
                 $results.append("<div class='row search-result-row row-eq-height'>" +
                     "<div class='col-xs-1 search-result-add' id='result-list-add" + key + "'><div id='add" + key + "'></div></div>" +
                     "<a href='/composer/" + entry['id'] + "' id='result-list-item" + key + "' class='search-result-item col-xs-11'>" +
                     "<span class='label label-default right-label'>Composer</span><h4>" + entry['name'] + "</h4>" +
-                    "<p class='list-group-item-text'>" + birthday + "-" + death + "</p>" +
+                    "<p class='list-group-item-text'>" + lifeString + "</p>" +
                     "</a></div>");
                 create_download_form("elvis_composer", entry['uuid'], "add" + key);
                 continue;
