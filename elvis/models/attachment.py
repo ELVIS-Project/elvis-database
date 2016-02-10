@@ -97,6 +97,9 @@ class Attachment(ElvisModel):
             file_content = File(dest)
             self.attachment.save(new_name, file_content)
 
+        splt = self.attachment.name.split('attachments')
+        self.attachment.name = "attachments" + splt[-1]
+
         self.title = self.file_name
         self.save()
 
@@ -133,7 +136,7 @@ class Attachment(ElvisModel):
                 i += 1
 
         # Find current file extension.
-        old_path = self.attachment.name
+        old_path = os.path.join(settings.MEDIA_ROOT, self.attachment.name)
         (path, current_name) = os.path.split(old_path)
         (current_file_name, current_extension) = os.path.splitext(current_name)
 
@@ -142,20 +145,18 @@ class Attachment(ElvisModel):
                                            "file" + str(i),
                                            current_extension)
         new_name = self.normalize_name(new_name)
+        new_path = os.path.join(path, new_name)
 
         # Return now if there's no work to do.
         if self.file_name == new_name:
             return
 
-        # Point the attachment to the new file
-        with open(old_path, 'rb+') as dest:
-            file_content = File(dest)
-            self.attachment.save(new_name, file_content)
-        self.title = self.file_name
-        self.save(**kwargs)
+        shutil.move(old_path, new_path)
 
-        # Delete old file
-        os.remove(old_path)
+        # Point the attachment to the new file
+        old_rel_path, old_name = os.path.split(self.attachment.name)
+        self.attachment.name = os.path.join(old_rel_path, new_name)
+        self.save(**kwargs)
         return
 
     def __unicode__(self):
