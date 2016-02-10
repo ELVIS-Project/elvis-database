@@ -26,24 +26,3 @@ are referenced.
 In IPython (manage.py shell_plus) you can type '%cpaste' to easily copy
 these in.
 """
-
-
-def fill_new_field(apps, schema_editor):
-    """Save each movement's parent cart-id in a col in the DB"""
-    print("Saving parent_cart_id's for movements.")
-    i = 0
-    total = str(Movement.objects.count())
-    msg = "Applying to movement {}/" + total
-    for m in Movement.objects.all():
-        print(msg.format(str(i)))
-        i += 1
-        p = m.piece
-        if p and not m.parent_cart_id:
-            m.parent_cart_id = "P-" + str(p.uuid)
-            m.save(commit_solr=False)
-
-for a in Attachment.objects.all():
-    """Save new relative paths for movements."""
-    rel_path = a.attachment.name.split("media_root")[-1][1:]
-    a.attachment.name = rel_path
-    a.save()
