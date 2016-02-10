@@ -177,6 +177,22 @@ $(document).ready(function ($)
     //Write the results of a query to the page (including drawing paginators and facets)
     function drawResults(results)
     {
+        // Code to handle the "add to cart" button
+        var $addAllToCartButton = $("#add-all-to-cart");
+        $addAllToCartButton.removeAttr("disabled");
+        $addAllToCartButton.click(function(event) {
+            $.ajax({
+                url: "/search/add-to-cart/?" + results["query"],
+                success: function(result) {
+                    // Redraw the add to cart buttons
+                    draw_download_buttons();
+                    cartButtonRefresh();
+                }
+            });
+            // Disable the button
+            $addAllToCartButton.attr({"disabled": "disabled"})
+        });
+
         var $results = $("#search-results-list");
         $results.html("");
         $("#page-links").html("");

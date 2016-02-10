@@ -157,7 +157,6 @@ class SearchAndAddToCartView(SearchView):
             results = paginator.page(page_number + 1).result
             # Get the items from the page
             for search_object in results:
-                print("adding {0}".format(search_object["uuid"]))
                 add_item(search_object["type"], search_object["uuid"], cart)
                 total += 1
         # Save the modified cart
