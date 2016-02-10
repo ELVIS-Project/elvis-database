@@ -72,6 +72,7 @@ def get_page_number(request):
 
 
 def format_search_result(result, facets, paginator, request):
+    result["query"] = request.GET.urlencode()
     result['object_list'] = [item.__dict__ for item in result['object_list']]
     result['paginator'] = result['paginator'].__dict__
     result['paginator'].pop('query', None)
