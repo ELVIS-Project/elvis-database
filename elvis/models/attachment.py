@@ -62,7 +62,7 @@ class Attachment(ElvisModel):
 
     @property
     def url(self):
-        url = os.path.join(settings.MEDIA_URL, str(self.uuid))
+        url = os.path.join(settings.MEDIA_URL, str(self.attachment.name))
         return url
 
     def solr_dict(self):
