@@ -18,9 +18,10 @@ from celery import schedules
 
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 import os
+import re
+
 BASE_DIR = os.path.abspath('./')
 
-import re
 SETTING_CONFIGS = ['dev', 'prod', 'stage']
 
 for c in SETTING_CONFIGS:
