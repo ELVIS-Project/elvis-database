@@ -1,3 +1,4 @@
+from django.contrib.auth.models import User
 from django.db import models
 from elvis.models.elvis_model import ElvisModel
 
@@ -10,6 +11,9 @@ class Collection(ElvisModel):
         app_label = "elvis"
 
     public = models.NullBooleanField(blank=True)
+    moderators = models.ManyToManyField(User,
+                                        blank=True,
+                                        related_name="moderates")
 
     def __unicode__(self):
         return "{0}".format(self.title)
