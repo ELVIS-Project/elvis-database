@@ -220,7 +220,6 @@ def handle_attachments(request, parent, cleanup, file_field, file_source):
     for att in results:
         parent.attachments.add(att)
 
-    parent.save()
     shutil.rmtree(upload_path)
     return results
 
@@ -354,13 +353,13 @@ def handle_dynamic_file_table(request, parent, cleanup=Cleanup()):
             attachments.extend(handle_attachments(request, mov, cleanup, "files_files_" + num,
                                                   request.POST.get('files_source_' + num)))
 
-    parent.save()
     results.extend(attachments)
     return results
 
 
 def abstract_model_factory(object_name, object_type, cleanup=Cleanup(), **kwargs):
     """Find or create models from user-inputted text.
+
     :param object_name: Name or list of names of models to be found/created.
     :param object_type: Type of model(s) to find/create.
     :param cleanup: Cleanup object.

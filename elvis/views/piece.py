@@ -94,7 +94,7 @@ def piece_create(request, *args, **kwargs):
                       updated=datetime.datetime.now(pytz.utc))
     clean.list.append({"object": new_piece, "isNew": True})
     try:
-        new_piece.save()
+        new_piece.save(ignore_solr=True)
     except:
         clean.cleanup()
         raise
@@ -107,6 +107,7 @@ def piece_create(request, *args, **kwargs):
                           death_date=clean_form['composer_death_date'])
 
     handle_dynamic_file_table(request, new_piece, clean)
+    new_piece.save()
     rebuild_suggester_dicts.delay()
     data = json.dumps({'success': True, 'id': new_piece.id,
                        'url': "/piece/{0}".format(new_piece.id)})
@@ -226,7 +227,8 @@ def piece_update(request, *args, **kwargs):
             if mov:
                 mov.delete()
 
-
+    piece.save()
+    rebuild_suggester_dicts.delay()
     data = json.dumps({'success': True, 'id': piece.id, 'url': "/piece/{0}".format(piece.id)})
     return HttpResponse(data, content_type="json")
 
@@ -241,7 +243,6 @@ def handle_related_models(object_list, parent, clean, **kwargs):
             creator: the creator of the piece, taken from request.user
             birth_date: The birth-date of a composer object
             death_date: The death-date of a composer object
-    :return:
     """
     for item in object_list:
         field = item.get('id')
@@ -345,8 +346,3 @@ def handle_related_models(object_list, parent, clean, **kwargs):
             parent.composition_end_date = int(item.get('value'))
         if field == "comment":
             parent.comment = item.get('value')
-    parent.save()
-    rebuild_suggester_dicts.delay()
-    data = json.dumps({'success': True, 'id': parent.id,
-                       'url': "/piece/{0}".format(parent.id)})
-    return HttpResponse(data, content_type="json")
