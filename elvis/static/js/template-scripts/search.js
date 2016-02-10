@@ -185,8 +185,9 @@ $(document).ready(function ($)
                 url: "/search/add-to-cart/?" + results["query"],
                 success: function(result) {
                     // Redraw the add to cart buttons
-                    draw_download_buttons();
-                    cartButtonRefresh();
+                    //draw_download_buttons();
+                    //cartButtonRefresh();
+                    init_cart_buttons(true);
                 }
             });
             // Disable the button
