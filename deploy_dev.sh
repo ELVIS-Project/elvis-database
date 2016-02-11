@@ -10,3 +10,10 @@ virtualenv -p python3 ../dev_deploy/.env
 source ../dev_deploy/.env/bin/activate
 pip install -r ../dev_deploy/requirements.txt
 
+# Perform Django management tasks
+python ../dev_deploy/manage.py collectstatic --noinput
+python ../dev_deploy/manage.py migrate --noinput
+
+# Switch the directory names
+mv "../dev" "../dev_old_$(date +%s)"
+mv "../dev_deploy" "../dev"
