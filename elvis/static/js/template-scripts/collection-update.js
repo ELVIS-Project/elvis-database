@@ -55,7 +55,8 @@ $(document).ready(function ($) {
     function populateForm(collection) {
         titleField.val(collection["title"]);
         commentField.val(collection["comment"]);
-        if (collection["public"]) {
+
+        if (collection["public"] == true) {
             // Mark the public box checked
             permissionField.public.prop("checked", true);
             permissionField.public.parent().addClass("active");
@@ -77,10 +78,16 @@ $(document).ready(function ($) {
      * @returns {{title: *, comment: *, public: *}}
      */
     function getFormValues() {
+        if (permissionField.public.prop("checked")) {
+            var permission = "Public";
+        } else {
+            permission = "Private";
+        }
+
         return {
             "title": titleField.val(),
             "comment": commentField.val(),
-            "public": permissionField.public.prop("checked")
+            "permission": permission
         };
     }
 });

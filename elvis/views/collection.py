@@ -130,20 +130,26 @@ class CollectionUpdate(generics.RetrieveAPIView):
 
 
 def collection_update(request, *args, **kwargs):
-    patch_data = request.data
+    """
+    Given a PATCH request, update a collection.
 
+    :param request:
+    :param args:
+    :param kwargs:
+    :return:
+    """
+    patch_data = request.data
     # Extract form data and validate
     form = CollectionForm(patch_data)
     if not form.is_valid():
         data = json.dumps({"errors": form.errors})
         return HttpResponse(content=data, content_type="application/json", status=status.HTTP_400_BAD_REQUEST)
-
+    # Update the collection
     collection = Collection.objects.get(id=int(kwargs['pk']))
-
     collection.title = patch_data["title"]
-    collection.public = patch_data["public"]
+    collection.public = patch_data["permission"] == "Public"
     collection.comment = patch_data["comment"]
-
     collection.save()
+    # Prepare a response
     data = json.dumps({'success': True, 'id': collection.id, 'url': "/collection/{0}".format(collection.id)})
     return HttpResponse(data, content_type="json")
