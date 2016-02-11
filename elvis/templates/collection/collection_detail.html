@@ -152,13 +152,5 @@
     <button type="button" class="btn btn-default"
             id="delete-button">Delete
     </button>
-    {% if content.public %}
-        <button type="button" class="btn btn-default"
-                id="private-button">Make Private
-        </button>
-    {% else %}
-        <button type="button" class="btn btn-default"
-                id="public-button">Make Public
-        </button>
-    {% endif %}
+    <a href="{{ content.url }}update/" class="btn btn-default">Update</a>
 {% endblock %}

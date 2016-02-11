@@ -30,6 +30,10 @@ class CollectionCreateHTMLRenderer(CustomHTMLRenderer):
     template_name = "collection/collection_create.html"
 
 
+class CollectionUpdateHTMLRenderer(CustomHTMLRenderer):
+    template_name = "collection/collection_update.html"
+
+
 class CollectionList(ElvisListCreateView):
     model = Collection
     serializer_class = CollectionListSerializer
@@ -97,7 +101,16 @@ class CollectionDetail(ElvisDetailView):
     model = Collection
     serializer_class = CollectionFullSerializer
     renderer_classes = (CollectionDetailHTMLRenderer, JSONRenderer, BrowsableAPIRenderer)
-    queryset = Collection.objects.all()
+    # queryset = Collection.objects.all()
+
+    def patch(self, request, *args, **kwargs):
+        if self.determine_perms(request, *args, **kwargs)['can_edit']:
+            return collection_update(request, *args, **kwargs)
+        else:
+            return HttpResponse(
+                content="User does not have permission to edit collection.",
+                content_type="application/json",
+                status=status.HTTP_403_FORBIDDEN)
 
 
 class CollectionCreate(generics.RetrieveAPIView):
@@ -108,3 +121,29 @@ class CollectionCreate(generics.RetrieveAPIView):
             return Response(status=status.HTTP_200_OK)
         else:
             return HttpResponseRedirect('/login/?error=upload')
+
+
+class CollectionUpdate(generics.RetrieveAPIView):
+    serializer_class = CollectionFullSerializer
+    renderer_classes = (CollectionUpdateHTMLRenderer, JSONRenderer, BrowsableAPIRenderer)
+    queryset = Collection.objects.all()
+
+
+def collection_update(request, *args, **kwargs):
+    patch_data = request.data
+
+    # Extract form data and validate
+    form = CollectionForm(patch_data)
+    if not form.is_valid():
+        data = json.dumps({"errors": form.errors})
+        return HttpResponse(content=data, content_type="application/json", status=status.HTTP_400_BAD_REQUEST)
+
+    collection = Collection.objects.get(id=int(kwargs['pk']))
+
+    collection.title = patch_data["title"]
+    collection.public = patch_data["public"]
+    collection.comment = patch_data["comment"]
+
+    collection.save()
+    data = json.dumps({'success': True, 'id': collection.id, 'url': "/collection/{0}".format(collection.id)})
+    return HttpResponse(data, content_type="json")
