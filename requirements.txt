@@ -12,6 +12,7 @@ django-redis==4.3.0
 djangorestframework==3.3.2
 funcsigs==0.4
 gnureadline==6.3.3
+gunicorn==19.4.5
 ipython==4.0.1
 ipython-genutils==0.1.0
 kombu==3.0.32
