@@ -11,9 +11,9 @@ class Collection(ElvisModel):
         app_label = "elvis"
 
     public = models.NullBooleanField(blank=True)
-    moderators = models.ManyToManyField(User,
+    curators = models.ManyToManyField(User,
                                         blank=True,
-                                        related_name="moderates")
+                                        related_name="curates")
 
     def __unicode__(self):
         return "{0}".format(self.title)
