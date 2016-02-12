@@ -16,3 +16,9 @@ pip install -r ../dev/requirements.txt
 # Perform Django management tasks
 python ../dev/manage.py collectstatic --noinput
 python ../dev/manage.py migrate --noinput
+
+# Restart supervisor processes
+sudo supervisorctl restart elvis-db-dev
+sudo supervisorctl restart elvis-celery-dev
+
+echo "Elvis DB Dev Deployment Complete"
