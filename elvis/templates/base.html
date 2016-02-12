@@ -23,7 +23,8 @@
     <script type='text/javascript' src="{% static "js/elvis-scripts/cartButtonScript.js" %}"></script>
     <script>
         $(document).ready(function ($) {
-            $base_modal_header = $("#base-modal-header");
+            $base_modal_title = $("#base-modal-title");
+            $base_modal_close_btn = $("#base-modal-close-btn");
             $base_modal_body = $("#base-modal-body");
             $base_modal_footer = $("#base-modal-footer");
             $base_modal = $("#base-modal");
@@ -38,8 +39,9 @@
 <div class="modal fade" id="base-modal" data-backdrop="static" data-keyboard="false">
     <div class="modal-dialog">
         <div class="modal-content">
-            <div class="modal-header" id="base-modal-header">
-                <h4 class="modal-title">Modal title</h4>
+            <div class="modal-header">
+                <button type="button" hidden="hidden" class="close" id="base-modal-close-btn" data-dismiss="modal">&times;</button>
+                <h4 class="modal-title" id="base-modal-title">Modal title</h4>
             </div>
             <div class="modal-body" id="base-modal-body">
             </div>
