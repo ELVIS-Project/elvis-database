@@ -1,23 +1,16 @@
 *.pyc
 *.sqlite3
 .idea
-solr/target/*
-solr/logs/*
-solr/suggestions*
 .env
 .DS_Store
 dumps
-elvis/media/
 media_root/*
 static_root/*
 pom.xml
 *.iml
-env_3
 dump.rdb
 #Local file ignores
-solr/solr/collection1/conf/solrconfig.xml
 elvis/local_settings.py
-elvis/wsgi.py
 solr/elvis_dev/data
 solr/elvis_test/data
 start.sh
