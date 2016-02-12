@@ -2,7 +2,7 @@
 
 # Virtual env path
 VIRTUAL_ENV=/srv/webapps/elvisdb/dev/.env
-PROJECT_PATH=/srv/webapps/elvisdb/dev/.env/elvis
+PROJECT_PATH=/srv/webapps/elvisdb/dev
 # Activate
 source ${VIRTUAL_ENV}/bin/activate
 # Move to project directory
