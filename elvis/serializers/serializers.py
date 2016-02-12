@@ -334,7 +334,7 @@ class MovementListSerializer(CachedListHyperlinkedModelSerializer):
 class ComposerListSerializer(CachedListHyperlinkedModelSerializer):
     class Meta:
         model = Composer
-        fields = ('name', 'url', 'id', 'birth_date', 'death_date',
+        fields = ('title', 'url', 'id', 'birth_date', 'death_date',
                   'piece_count', 'movement_count', "uuid")
 
 
