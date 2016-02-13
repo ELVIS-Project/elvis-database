@@ -236,13 +236,13 @@ class MovementMinSerializer(CachedMinHyperlinkedModelSerializer):
 class CollectionMinSerializer(CachedMinHyperlinkedModelSerializer):
     class Meta:
         model = Collection
-        fields = ('title', 'url', 'id', 'public')
+        fields = ('title', 'url', 'id', 'public', 'curators')
 
 
-class UserMinSerializer(CachedMinHyperlinkedModelSerializer):
+class UserMinSerializer(serializers.HyperlinkedModelSerializer):
     class Meta:
         model = User
-        fields = ('name', 'username', 'id')
+        fields = ('username', 'id', 'last_name', 'first_name')
 
 
 class GenreMinSerializer(CachedMinModelSerializer):
@@ -368,6 +368,7 @@ class CollectionFullSerializer(CartCheckFullHyperlinkedModelSerializer):
     creator = serializers.CharField(source='creator.username')
     pieces = PieceEmbedSerializer(many=True)
     movements = MovementListSerializer(many=True)
+    curators = UserMinSerializer(many=True, read_only=True)
 
     def update(self, instance, validated_data):
         if 'public' in validated_data:

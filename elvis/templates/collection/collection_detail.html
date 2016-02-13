@@ -87,6 +87,26 @@
         <div id='rendered-comment' class="well"></div>
     {% endif %}
 
+    {% if content.curators %}
+        <h3>Curators ({{ content.curators | length }})</h3>
+        <table class="table">
+            <thead>
+                <tr>
+                    <th>Username</th>
+                    <th>Name</th>
+                </tr>
+            </thead>
+            <tbody>
+            {% for curator in content.curators %}
+                <tr>
+                    <td>{{ curator.username }}</td>
+                    <td>{{ curator.last_name }}, {{ curator.first_name }}</td>
+                </tr>
+            {% endfor %}
+            </tbody>
+        </table>
+    {% endif %}
+
     {% if content.pieces %}
         <h3>Pieces ({{ content.pieces | length }})</h3>
         <table class="table" id="piece-table">
