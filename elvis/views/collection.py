@@ -112,6 +112,22 @@ class CollectionDetail(ElvisDetailView):
                 content_type="application/json",
                 status=status.HTTP_403_FORBIDDEN)
 
+    def determine_perms(self, request, *args, **kwargs):
+        """
+        Collections have curations, which introduces unique
+        permission considerations.
+
+        :param args:
+        :param kwargs:
+        :return:
+        """
+        if Collection.objects.get(id=kwargs['pk']).user_is_curator(request.user):
+            # The user is a curator, so they can view and edit
+            return {"can_edit": True, "can_view": True}
+        else:
+            # The default inherited permission system
+            return super().determine_perms(request, *args, **kwargs)
+
 
 class CollectionCreate(generics.RetrieveAPIView):
     renderer_classes = (CollectionCreateHTMLRenderer, JSONRenderer, BrowsableAPIRenderer)
