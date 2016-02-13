@@ -34,6 +34,10 @@ class Collection(ElvisModel):
     def free_movements_count(self):
         return self.movements.filter(piece=None).count()
 
+    @property
+    def user_is_curator(self, user):
+        return user in self.curators
+
     def solr_dict(self):
         collection = self
         if collection.creator:
