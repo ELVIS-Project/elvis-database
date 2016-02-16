@@ -89,14 +89,28 @@
             });
 
             $("#confirm-download").click(function () {
-                var selection = $("#filefilt").val();
-                if (selection === null)
-                    selection = ["all"];
+                /**
+                 * Get the file extensions that are currently checked.
+                 *
+                 * @returns {Array}
+                 */
+                var getFileExtensions = function() {
+                    var fileExtensions = [];
+                    $('input[name="file-extension-selector"]:checked').each(function(index){
+                        fileExtensions.push($(this).val());
+                    });
+                    // Handle empty case
+                    if (fileExtensions.length === 0) {
+                        fileExtensions.push("all");
+                    }
+                    return fileExtensions;
+                };
+
                 $.ajax({
                     type: "get",
                     url: "/downloading/",
                     async: false,
-                    data: {'extensions': selection},
+                    data: {'extensions': getFileExtensions()},
                     success: function (data) {
                         console.log(data);
                         $("#progress-bar-div").slideDown();
@@ -226,14 +240,20 @@
                     <h3 class="modal-title">Choose Files</h3>
                 </div>
                 <div class="modal-body" id="download-modal-body">
-                    <p>Most pieces have multiple file formats associated with them. Which formats would you like to download?</p>
+                    <h3>File Formats</h3>
+                    <p>Most pieces have multiple file formats associated with them.</p>
+                    <p>Which formats would you like to download?</p>
                     <div class="row">
-                    <div class="col-sm-8 col-sm-offset-2">
-                    <select class="selectpicker" data-width="100%" data-title="All files" id="filefilt" multiple>
-                        {% for att in content.extension_counts|dictsort:"extension" %}
-                            <option value="{{ att.extension }}" data-content="{{ att.extension }} <span class='badge pull-right'>{{ att.count }}</span>"></option>
-                        {% endfor %}
-                    </select>
+                        <div class="col-sm-8 col-sm-offset-2">
+                            {% for att in content.extension_counts|dictsort:"extension" %}
+                            <div class="checkbox">
+                                <label>
+                                    <input type="checkbox" name="file-extension-selector" value="{{ att.extension }}" checked>
+                                    {{ att.extension }} <span class='badge'>{{ att.count }}</span>
+                                </label>
+                            </div>
+                            {% endfor %}
+                        </div>
                     </div>
                     <hr/>
                     <h3>Directory Structure</h3>
