@@ -276,7 +276,7 @@ LOGGING = {
         'file': {
             'level': 'DEBUG',
             'class': 'logging.FileHandler',
-            'filename': '/srv/webapps/elvisdb_logs/django_elvis_{0}.log'.format(SETTING_TYPE)
+            'filename': '/srv/webapps/elvisdb_logs/{0}/django_elvis.log'.format(SETTING_TYPE)
         },
     },
     'loggers': {
