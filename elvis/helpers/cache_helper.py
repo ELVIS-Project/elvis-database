@@ -228,17 +228,17 @@ class ElvisCart:
         obj, cart_id, item_id, model = self._parse_item(item)
         self.cart[cart_id] = True
 
-        # Add the Movement and return.
-        if model == Movement:
-            self.cart[cart_id] = True
-            self.request.session.modified = True
-            return
-
         # Get the object if it's not found yet.
         if not obj:
             obj = try_get(cart_id, model)
             if not obj:
                 return
+
+        # Add the Movement if it's Piece is not already there.
+        if model == Movement:
+            if not self.cart.get(obj.parent_cart_id):
+                self.cart[cart_id] = True
+            return
 
         # Deal with objects with nesting properly.
         if model == Piece:
