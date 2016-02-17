@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 
 # Save a backup
-mv "../dev" "../dev_old_$(date +%s)"
+mv "../dev" "../old/dev_$(date +%s)"
 
 # Clone the repo
 git clone -b dev git@github.com:ELVIS-Project/elvis-database.git ../dev
