@@ -121,7 +121,7 @@ class CollectionDetail(ElvisDetailView):
         :param kwargs:
         :return:
         """
-        if Collection.objects.get(id=kwargs['pk']).user_is_curator(request.user):
+        if request.user in Collection.objects.get(id=kwargs['pk']).curators.all():
             # The user is a curator, so they can view and edit
             return {"can_edit": True, "can_view": True}
         else:
