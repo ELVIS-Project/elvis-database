@@ -29,13 +29,13 @@ def _check_in_cart(cart, items):
     """
     results = {}
     for key in items.keys():
-        if items[key]['type'] == "elvis_composer":
+        if items[key]['item_type'] == "elvis_composer":
             back = cart.get("COM-" + key, False)
-        elif items[key]['type'] == "elvis_collection":
+        elif items[key]['item_type'] == "elvis_collection":
             back = cart.get("COL-" + key, False)
-        elif items[key]['type'] == "elvis_piece":
+        elif items[key]['item_type'] == "elvis_piece":
             back = cart.get("P-" + key, False)
-        elif items[key]['type'] == "elvis_movement":
+        elif items[key]['item_type'] == "elvis_movement":
             mov = try_get(key, Movement)
             if mov and cart.get(mov.parent_cart_id, False):
                 back = "Piece"

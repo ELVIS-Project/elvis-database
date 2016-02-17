@@ -120,12 +120,12 @@ function build_item_dict($forms)
         var fields = $forms[i].children;
         items[fields[2].value] = {
             "button_type": fields[0].value,
-            "type": fields[1].value,
+            "item_type": fields[1].value,
             "$elem": $($forms[i]),
             "in_cart": str_to_bool(fields[3].value)
         };
         light_items[fields[2].value] = {
-            "type": fields[1].value,
+            "item_type": fields[1].value,
             "in_cart": str_to_bool(fields[3].value)
         };
     }
