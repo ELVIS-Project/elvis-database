@@ -3,7 +3,7 @@ var action = null;
 var $button = null;
 var cart_timeout = null;
 var items = null;
-var light_items = {};
+var light_items = [];
 var $forms = null;
 
 function cartButtonRefresh()
@@ -94,9 +94,8 @@ function init_cart_buttons(force_redraw)
                     var back = data[key]['in_cart'];
                     if (back === items[key]['in_cart'] && !force_redraw)
                         continue;
-
                     items[key]['in_cart'] = back;
-                    light_items[key]['in_cart'] = back;
+                    light_items[items[key]['index']]['in_cart'] = back;
                     if (items[key]['button_type'] == "button")
                         draw_button(data[key], items[key]["$elem"]);
                     else
@@ -120,14 +119,16 @@ function build_item_dict($forms)
         var fields = $forms[i].children;
         items[fields[2].value] = {
             "button_type": fields[0].value,
-            "type": fields[1].value,
+            "item_type": fields[1].value,
             "$elem": $($forms[i]),
-            "in_cart": str_to_bool(fields[3].value)
+            "in_cart": str_to_bool(fields[3].value),
+            "index": i
         };
-        light_items[fields[2].value] = {
-            "type": fields[1].value,
+        light_items.push({
+            "id": fields[2].value,
+            "item_type": fields[1].value,
             "in_cart": str_to_bool(fields[3].value)
-        };
+        });
     }
     return items
 }
