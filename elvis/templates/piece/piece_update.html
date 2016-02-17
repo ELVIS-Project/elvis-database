@@ -6,26 +6,31 @@
 {% block extra_hd %}
 
     {% load staticfiles %}
+    {% load compress %}
+    {% compress js %}
     <script type='text/javascript' src="{% static "bootstrap/plugins/bootstrap-filestyle.min.js" %}"></script>
     <script type='text/javascript' src="{% static "bootstrap/plugins/bootstrap-select.min.js" %}"></script>
     <script type='text/javascript' src="{% static "bootstrap/plugins/markdown.min.js" %}"></script>
     <script type='text/javascript' src="{% static "bootstrap/plugins/bootstrap-markdown.js" %}"></script>
-    <script type='text/javascript' src="{% static "js/elvis-scripts/autocomplete.min.js" %}"></script>
-    <script type='text/javascript' src="{% static "js/elvis-scripts/updateDynamicFileTable.min.js" %}"></script>
-    <script type='text/javascript' src="{% static "js/template-scripts/piece-update.min.js" %}"></script>
+    <script type='text/javascript' src="{% static "js/elvis-scripts/autocomplete.js" %}"></script>
+    <script type='text/javascript' src="{% static "js/elvis-scripts/updateDynamicFileTable.js" %}"></script>
+    <script type='text/javascript' src="{% static "js/template-scripts/piece-update.js" %}"></script>
+    {% endcompress %}
+    {% compress css %}
     <link href="{% static "bootstrap/plugins/bootstrap-select.css" %}" rel="stylesheet" media="screen"/>
     <link href="{% static "bootstrap/plugins/bootstrap-markdown.min.css" %}" rel="stylesheet" media="screen"/>
+    {% endcompress %}
 
     <title>Update a Piece</title>
 
 {% endblock %}
 
-{% block wrap %}
+{% block page_content %}
     <div class="page-header">
         <h2>Update <em>{{ content.title }}</em> by {{ content.composer.name }}
         </h2>
     </div>
 
-{% include "includes/piece-create-form.html" %}
+{% include "base/piece-create-form.html" %}
 
 {% endblock %}

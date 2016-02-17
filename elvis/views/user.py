@@ -1,54 +1,35 @@
+import urllib.request, urllib.error, urllib.parse
+
 from django.contrib.auth.models import User
 from django.contrib.auth import authenticate, login
+from django.http import HttpResponseRedirect
+from django.db.models import ObjectDoesNotExist
+from django.utils.decorators import method_decorator
+from django.views.decorators.csrf import csrf_protect
+from django.conf import settings
+from django.dispatch import receiver
+from django.contrib.auth.signals import user_logged_in, user_logged_out
+from django.shortcuts import render
 from rest_framework import generics
 from rest_framework import permissions
 from rest_framework.renderers import JSONRenderer
 
-from elvis.serializers.user import UserSerializer
+from elvis.serializers import UserFullSerializer
+from elvis.models.movement import Movement
+from elvis.models.composer import Composer
+from elvis.models.collection import Collection
+from elvis.models.piece import Piece
 from elvis.renderers.custom_html_renderer import CustomHTMLRenderer
 from elvis.forms import UserForm, UserChangeForm
-from django.http import HttpResponse, HttpResponseRedirect
 
-from django.utils.decorators import method_decorator
-from django.views.decorators.csrf import csrf_protect
-import urllib.request, urllib.error, urllib.parse
-import urllib.request, urllib.parse, urllib.error
-from django.conf import settings
-
-from django.shortcuts import render
-
-class UserListHTMLRenderer(CustomHTMLRenderer):
-    template_name = "user/user_list.html"
-
-
-class UserDetailHTMLRenderer(CustomHTMLRenderer):
-    template_name = "user/user_detail.html"
 
 class UserAccountHTMLRenderer(CustomHTMLRenderer):
     template_name = "user/user_account.html"
 
 
-class UserList(generics.ListCreateAPIView):
-    model = User
-    permission_classes = (permissions.IsAuthenticatedOrReadOnly,)
-    serializer_class = UserSerializer
-    renderer_classes = (JSONRenderer, UserListHTMLRenderer)
-    paginate_by = 10
-    paginate_by_param = 'page_size'
-    max_paginate_by = 100
-
-
-class UserDetail(generics.RetrieveUpdateDestroyAPIView):
-    model = User
-    permission_classes = (permissions.IsAuthenticatedOrReadOnly,)
-    serializer_class = UserSerializer
-    renderer_classes = (JSONRenderer, UserDetailHTMLRenderer)
-    queryset = User.objects.all()
-
-
 class UserAccount(generics.CreateAPIView):
     model = User
-    serializer_class = UserSerializer
+    serializer_class = UserFullSerializer
     renderer_classes = (JSONRenderer, UserAccountHTMLRenderer)
     
     def get(self, request, *args, **kwargs):
@@ -106,7 +87,7 @@ class UserAccount(generics.CreateAPIView):
 
 class UserUpdate(generics.CreateAPIView):
     model = User
-    serializer_class = UserSerializer
+    serializer_class = UserFullSerializer
     renderer_classes = (JSONRenderer, UserAccountHTMLRenderer)
 
     def get(self, request, *args, **kwargs):
@@ -115,3 +96,63 @@ class UserUpdate(generics.CreateAPIView):
         else:
             return render(request, "user/user_update.html")
 
+
+@receiver(user_logged_out)
+def save_cart(sender, request, user, **kwargs):
+    cart = request.session.get('cart', {})
+    pieces = []
+    movements = []
+    collections = []
+    composers = []
+
+    for key in cart.keys():
+        if key.startswith("M"):
+            m_id = key[2:]
+            try:
+                mov = Movement.objects.get(uuid=m_id)
+            except ObjectDoesNotExist:
+                continue
+            movements.append(mov)
+        elif key.startswith("P"):
+            p_id = key[2:]
+            try:
+                p = Piece.objects.get(uuid=p_id)
+            except ObjectDoesNotExist:
+                continue
+            pieces.append(p)
+        elif key.startswith("COL"):
+            col_id = key[4:]
+            try:
+                col = Collection.objects.get(uuid=col_id)
+            except ObjectDoesNotExist:
+                continue
+            collections.append(col)
+        elif key.startswith("COM"):
+            com_id = key[4:]
+            try:
+                com = Composer.objects.get(uuid=com_id)
+            except ObjectDoesNotExist:
+                continue
+            composers.append(com)
+
+    user_download = request.user.downloads.first()
+    user_download.collection_movements.clear()
+    user_download.collection_movements.add(*movements)
+    user_download.collection_pieces.clear()
+    user_download.collection_pieces.add(*pieces)
+    user_download.collection_collections.clear()
+    user_download.collection_collections.add(*collections)
+    user_download.collection_composers.clear()
+    user_download.collection_composers.add(*composers)
+    user_download.save()
+
+
+@receiver(user_logged_in)
+def load_cart(sender, request, user, **kwargs):
+    user_download = request.user.downloads.first()
+    cart = {}
+    cart.update({"M-" + str(k.uuid): True for k in user_download.collection_movements.all()})
+    cart.update({"P-" + str(k.uuid): True for k in user_download.collection_pieces.all()})
+    cart.update({"COL-" + str(k.uuid): True for k in user_download.collection_collections.all()})
+    cart.update({"COM-" + str(k.uuid): True for k in user_download.collection_composers.all()})
+    request.session['cart'] = cart

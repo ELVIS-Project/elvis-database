@@ -1,20 +1,19 @@
 {% extends "base.html" %}
 {% block extra_hd %}
-
     {% load staticfiles %}
-    <script type='text/javascript' src="{% static "js/elvis-scripts/downloadBadge.js" %}"></script>
-    <script type='text/javascript' src="{% static "js/elvis-scripts/autocomplete.min.js" %}"></script>
-    <script type='text/javascript' src="{% static "bootstrap/plugins/bootstrap-select.min.js" %}"></script>
-    <script type='text/javascript' src="{% static "js/template-scripts/search.min.js" %}"></script>
+    {% load compress %}
+    {% compress js %}
+    <script type='text/javascript' src="{% static "js/elvis-scripts/autocomplete.js" %}"></script>
+    <script type='text/javascript' src="{% static "bootstrap/plugins/bootstrap-select.js" %}"></script>
+    <script type='text/javascript' src="{% static "js/template-scripts/search.js" %}"></script>
+    {% endcompress %}
+    {% compress css %}
     <link href="{% static "bootstrap/plugins/bootstrap-select.css" %}" rel="stylesheet" media="screen"/>
-
-
-
+    {% endcompress %}
     <title>Search</title>
-
 {% endblock %}
 
-{% block wrap %}
+{% block page_content %}
     <div class="page-header">
         <h2>Search the Database</h2>
     </div>
@@ -136,7 +135,7 @@
                                 <label class="asearch-label" for="religiosityfilt">Religious nature</label><br>
                                 <select class="selectpicker" data-width="100%" id="religiosityfilt" data-title="Any kind">
                                     <option value="">Any kind</option>
-                                    <option data-divider="true"></option>
+                                    <option data-divider="true">...</option>
                                     <option>Secular</option>
                                     <option>Sacred</option>
                                 </select>
@@ -145,7 +144,7 @@
                                 <label class="asearch-label" for="religiosityfilt">Voice types</label><br>
                                 <select class="selectpicker" data-width="100%" id="vocalizationfilt" data-title="Any kind">
                                     <option value="">Any kind</option>
-                                    <option data-divider="true"></option>
+                                    <option data-divider="true">...</option>
                                     <option>Vocal</option>
                                     <option>Instrumental</option>
                                     <option>Mixed</option>
@@ -211,7 +210,7 @@
                     <p> <code>NOT Gloria</code> will return everything without the world 'Gloria' in it.<br>
                         <code>Bach OR Josquin</code> will return both items with 'Bach' and items with 'Josquin'.<br>
                         <code>Bach AND Josquin</code> will probably return nothing, as this will return <em>only</em> items that have 'Bach' and 'Josquin' in them.<br>
-                        <code>G Minor AND NOT(Gloria OR Sanctus)</code> will only return items tagged with 'G Minor' and which are <em>also</em> not tagged with either 'Gloria' or 'Sanctus'</code>
+                        <code>G Minor AND NOT(Gloria OR Sanctus)</code> will only return items tagged with 'G Minor' and which are <em>also</em> not tagged with either 'Gloria' or 'Sanctus'
                     </p>
 
                 </div>
@@ -223,7 +222,16 @@
     <div id="result-page" hidden="hidden">
         <div class="row" id="result-heading" hidden="hidden">
             <div class="col-sm-9" style="padding-left:0px">
-                <h3>Results <small id="result-count"></small></h3>
+                <div class="row">
+                    <div class="col-xs-6">
+                        <h3>Results <small><span id="result-count"></span></small></h3>
+                    </div>
+                    <div class="col-xs-6">
+                        <p class="text-right">
+                            <button type="button" id="add-all-to-cart" class="btn btn-default btn-sm">Add All to Cart</button>
+                        </p>
+                    </div>
+                </div>
             </div>
             <div class="col-sm-3" style="padding-left:0px">
                 <h3>Filter Your Search</h3>

@@ -1,29 +1,24 @@
 import datetime
-import json
-from rest_framework.exceptions import PermissionDenied
-from rest_framework.exceptions import NotAuthenticated
+import ujson as json
 
 import pytz
-from django.views.decorators.csrf import csrf_protect
-from django.contrib.auth.models import User
 from rest_framework import generics
 from rest_framework import status
-from rest_framework import permissions
-from rest_framework.renderers import JSONRenderer
+from rest_framework.renderers import JSONRenderer, BrowsableAPIRenderer
 from rest_framework.response import Response
 from elvis.renderers.custom_html_renderer import CustomHTMLRenderer
-from elvis.serializers.piece import PieceSerializer, PieceListSerializer
 from elvis.models.piece import Piece
 from elvis.models.movement import Movement
 from elvis.models.attachment import Attachment
-from elvis.forms import PieceForm
-from elvis.elvis.tasks import rebuild_suggester_dicts
+from elvis.forms.create import PieceForm, validate_dynamic_piece_form
+from elvis.tasks import rebuild_suggester_dicts
 from elvis.views.views import abstract_model_factory
 from elvis.views.views import handle_dynamic_file_table
 from elvis.views.views import Cleanup
-from django.utils.decorators import method_decorator
+from elvis.views.common import ElvisDetailView, ElvisListCreateView
 from django.http import HttpResponse
 from django.http import HttpResponseRedirect
+from elvis.serializers import PieceFullSerializer, PieceListSerializer
 
 
 class PieceListHTMLRenderer(CustomHTMLRenderer):
@@ -42,49 +37,17 @@ class PieceUpdateHTMLRenderer(CustomHTMLRenderer):
     template_name = "piece/piece_update.html"
 
 
+class PieceDetail(ElvisDetailView):
+    serializer_class = PieceFullSerializer
+    renderer_classes = (PieceDetailHTMLRenderer, JSONRenderer, BrowsableAPIRenderer)
 
-class PieceDetail(generics.RetrieveUpdateDestroyAPIView):
-    model = Piece
-    permission_classes = (permissions.IsAuthenticatedOrReadOnly,)
-    serializer_class = PieceSerializer
-    renderer_classes = (JSONRenderer, PieceDetailHTMLRenderer)
-    queryset = Piece.objects.all()
-
-    def get(self, request, *args, **kwargs):
-        user = self.request.user
-        if user.is_anonymous():
-            return super(PieceDetail, self).get(self, request)
-
-        response = super(PieceDetail, self).get(self, request)
-        user_download = request.user.downloads.all()[0]
-
-        if user_download.collection_pieces.filter(pk=response.data['item_id']):
-            response.data['in_cart'] = True
-            for i in range(len(response.data['movements'])):
-                response.data['movements'][i]['in_cart'] = 'Piece'
-        else:
-            response.data['in_cart'] = False
-            for i in range(len(response.data['movements'])):
-                mov_pk = response.data['movements'][i]['item_id']
-                if user_download.collection_movements.filter(pk=mov_pk):
-                    response.data['movements'][i]['in_cart'] = True
-                else:
-                    response.data['movements'][i]['in_cart'] = False
-
-        piece = Piece.objects.get(pk=response.data['item_id'])
-
-        if piece.creator == user:
-            response.data['can_edit'] = True
-
-        return response
+    def patch(self, request, *args, **kwargs):
+        if self.determine_perms(request, *args, **kwargs)['can_edit']:
+            return piece_update(request, *args, **kwargs)
 
 
-class PieceCreate(generics.GenericAPIView):
-    model = Piece
-    permission_classes = (permissions.IsAuthenticatedOrReadOnly,)
-    serializer_class = PieceSerializer
-    renderer_classes = (JSONRenderer, PieceCreateHTMLRenderer)
-    queryset = Piece.objects.all()
+class PieceCreate(generics.RetrieveAPIView):
+    renderer_classes = (PieceCreateHTMLRenderer, JSONRenderer, BrowsableAPIRenderer)
 
     def get(self, request, *args, **kwargs):
         if request.user.is_authenticated():
@@ -93,83 +56,35 @@ class PieceCreate(generics.GenericAPIView):
             return HttpResponseRedirect('/login/?error=upload')
 
 
-class PieceUpdate(generics.RetrieveUpdateDestroyAPIView):
-    model = Piece
-    permission_classes = (permissions.IsAuthenticatedOrReadOnly,)
-    serializer_class = PieceSerializer
-    renderer_classes = (JSONRenderer, PieceUpdateHTMLRenderer)
+class PieceUpdate(generics.RetrieveAPIView):
+    serializer_class = PieceFullSerializer
+    renderer_classes = (PieceUpdateHTMLRenderer, JSONRenderer, BrowsableAPIRenderer)
     queryset = Piece.objects.all()
 
-    def get(self, request, *args, **kwargs):
-        piece = Piece.objects.get(pk=int(kwargs['pk']))
-        if not (request.user == piece.creator or request.user.is_superuser):
-            raise PermissionDenied
-        return super(PieceUpdate, self).get(self, request, *args, **kwargs)
 
-    @method_decorator(csrf_protect)
-    def post(self, request, *args, **kwargs):
-        if 'delete' in request.POST:
-            piece = Piece.objects.get(id=request.POST['delete'])
-            if not (request.user == piece.creator or request.user.is_superuser):
-                raise PermissionDenied
-            piece.delete()
-            return Response(status=status.HTTP_202_ACCEPTED)
-        return update(request, *args, **kwargs)
-
-class PieceList(generics.ListCreateAPIView):
-    model = Piece
-    permission_classes = (permissions.IsAuthenticatedOrReadOnly,)
+class PieceList(ElvisListCreateView):
     serializer_class = PieceListSerializer
-    renderer_classes = (JSONRenderer, PieceListHTMLRenderer)
-    paginate_by = 20
-    paginate_by_param = 'page_size'
-    max_paginate_by = 100
-    queryset = Piece.objects.all()
+    renderer_classes = (PieceListHTMLRenderer, JSONRenderer, BrowsableAPIRenderer)
 
-    def get_queryset(self):
-        query = self.request.GET.get('creator', None)
-        if query:
-            return Piece.objects.filter(creator__username=query)
-        else:
-            return Piece.objects.all()
-
-    # Inserting a flag that specifies if the piece is currently in the users' cart
-    def get(self, request, *args, **kwargs):
-        user = self.request.user
-        if user.is_anonymous():
-            return super(PieceList, self).get(self, request)
-
-        response = super(PieceList, self).get(self, request)
-        user_download = request.user.downloads.all()[0]
-        for i in range(len(response.data['results'])):
-            piece_pk = response.data['results'][i]['item_id']
-            if user_download.collection_pieces.filter(pk=piece_pk):
-                response.data['results'][i]['in_cart'] = True
-            else:
-                response.data['results'][i]['in_cart'] = False
-        return response
-
-    @method_decorator(csrf_protect)
     def post(self, request, *args, **kwargs):
-        if 'delete' in request.POST:
-            piece = Piece.objects.get(id=request.POST['delete'])
-            if not (request.user == piece.creator or request.user.is_superuser):
-                raise PermissionDenied
-            piece.delete()
-            return Response(status=status.HTTP_202_ACCEPTED)
-        else:
-            return create(request, *args, **kwargs)
+        return piece_create(request, *args, **kwargs)
 
-def create(request, *args, **kwargs):
-    if not request.user.is_active:
-        # Only active users may upload pieces.
-        return NotAuthenticated
 
-    form = validateDynamicForm(request, PieceForm(request.POST))
+class MyPieces(generics.RetrieveAPIView):
+    """Simply redirects to the piece list with a creator query"""
+    def get(self, request, *args, **kwargs):
+        if request.user.is_authenticated:
+            username = request.user.username
+            return HttpResponseRedirect("/pieces/?creator={0}".format(username))
+        return HttpResponseRedirect("/login")
+
+
+def piece_create(request, *args, **kwargs):
+    form = validate_dynamic_piece_form(request, PieceForm(request.POST))
     if not form.is_valid():
         # Form errors are rendered for user on the front end.
         data = json.dumps({'errors': form.errors})
-        return HttpResponse(data, content_type="json")
+        return HttpResponse(content=data, content_type="application/json", status=status.HTTP_400_BAD_REQUEST)
 
     clean = Cleanup()
     clean_form = form.cleaned_data
@@ -179,7 +94,7 @@ def create(request, *args, **kwargs):
                       updated=datetime.datetime.now(pytz.utc))
     clean.list.append({"object": new_piece, "isNew": True})
     try:
-        new_piece.save()
+        new_piece.save(ignore_solr=True)
     except:
         clean.cleanup()
         raise
@@ -192,19 +107,17 @@ def create(request, *args, **kwargs):
                           death_date=clean_form['composer_death_date'])
 
     handle_dynamic_file_table(request, new_piece, clean)
+    new_piece.save()
     rebuild_suggester_dicts.delay()
     data = json.dumps({'success': True, 'id': new_piece.id,
                        'url': "/piece/{0}".format(new_piece.id)})
-    return HttpResponse(data, content_type="json", status=status.HTTP_201_CREATED)
+    return HttpResponse(data, content_type="application/json", status=status.HTTP_201_CREATED)
 
-def update(request, *args, **kwargs):
+
+def piece_update(request, *args, **kwargs):
     # Update a piece based on a dict of changes in request.POST['changes']
-
-    piece = Piece.objects.get(pk=int(kwargs['pk']))
-    if not (request.user == piece.creator or request.user.is_superuser):
-        raise PermissionDenied
-    
-    form = validateDynamicForm(request, PieceForm(request.POST))
+    patch_data = request.data
+    form = validate_dynamic_piece_form(request, PieceForm(patch_data))
     if not form.is_valid():
         # Form errors are rendered for user on the front end. Collection
         # validation errors are ignored, as these cannot be modified from
@@ -213,11 +126,11 @@ def update(request, *args, **kwargs):
             del form.errors['collections']
         if form.errors:
             data = json.dumps({"errors": form.errors})
-            return HttpResponse(data, content_type="json")
+            return HttpResponse(content=data, content_type="application/json", status=status.HTTP_400_BAD_REQUEST)
 
     clean = Cleanup()
-    piece = Piece.objects.get(pk=int(kwargs['pk']))
-    change = json.loads(request.POST.get('changes'))
+    piece = Piece.objects.get(id=int(kwargs['pk']))
+    change = json.loads(patch_data['changes'])
 
     """
     Creating new movements must occur before old movements are deleted,
@@ -230,7 +143,7 @@ def update(request, *args, **kwargs):
     modify_movements = [x for x in change['modify'] if x['type'] == "M"]
     if modify_movements:
         for item in modify_movements:
-            mov = Movement.objects.filter(pk=item['id'])
+            mov = Movement.objects.filter(id=item['id'])
             if not mov:
                 break
             mov = mov[0]
@@ -314,9 +227,11 @@ def update(request, *args, **kwargs):
             if mov:
                 mov.delete()
 
-
+    piece.save()
+    rebuild_suggester_dicts.delay()
     data = json.dumps({'success': True, 'id': piece.id, 'url': "/piece/{0}".format(piece.id)})
     return HttpResponse(data, content_type="json")
+
 
 def handle_related_models(object_list, parent, clean, **kwargs):
     """ Create/find and attach all related models for a piece.
@@ -328,7 +243,6 @@ def handle_related_models(object_list, parent, clean, **kwargs):
             creator: the creator of the piece, taken from request.user
             birth_date: The birth-date of a composer object
             death_date: The death-date of a composer object
-    :return:
     """
     for item in object_list:
         field = item.get('id')
@@ -351,7 +265,8 @@ def handle_related_models(object_list, parent, clean, **kwargs):
         if field == "collections":
             user = kwargs.pop('user', None)
             try:
-                collection_list = abstract_model_factory(item.get('value'), "Collection", clean,
+                collection_list = abstract_model_factory(item.get('value'),
+                                                         "Collection", clean,
                                                          creator=user)
                 for x in collection_list:
                     parent.collections.add(x)
@@ -431,22 +346,3 @@ def handle_related_models(object_list, parent, clean, **kwargs):
             parent.composition_end_date = int(item.get('value'))
         if field == "comment":
             parent.comment = item.get('value')
-    parent.save()
-    rebuild_suggester_dicts.delay()
-    data = json.dumps({'success': True, 'id': parent.id,
-                       'url': "/piece/{0}".format(parent.id)})
-    return HttpResponse(data, content_type="json")
-
-def validateDynamicForm(request, form):
-    form.is_valid()
-    movement_title_list = [x for x in list(request.POST.keys()) if x.startswith('_existingmov_title_')]
-    for mov in movement_title_list:
-        if not request.POST.get(mov):
-            form.add_error(None, [mov, "Movements require a title."])
-
-    file_source_list = [x for x in list(request.POST.keys()) if x.startswith('files_source')]
-    for source in file_source_list:
-        if request.FILES.get(source.replace('source', 'files')) and not request.POST.get(source):
-            form.add_error(None, [source, "Files require a source!"])
-            
-    return form

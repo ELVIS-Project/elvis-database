@@ -1,6 +1,8 @@
 from django.conf import settings
 import re
 import solr
+
+
 class SolrSearch(object):
     """ 
         This class is a helper class for translating between query parameters in a GET
@@ -68,6 +70,8 @@ class SolrSearch(object):
         general_query = []
 
         for k in list(qdict.keys()):
+            # it would be way more efficient to try calling the keys individually
+            # rather than iterating over them.
             # Filter Parameters
             if k == 'titlefilt':
                 title_filt = "title_searchable:({0})".format(self.parse_bool(qdict[k]))

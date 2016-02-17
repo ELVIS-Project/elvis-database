@@ -1,0 +1,27 @@
+
+<div class="list-row-compact row-eq-height">
+    <div class='col-xs-1 list-add-compact'>
+        {% if id %}
+            {% include "base/download-badge.html" with type=type id=id in_cart=in_cart%}
+        {% endif %}
+        {% if attachment %}
+            <span class="glyphicon glyphicon-file"> </span>
+        {% endif %}
+    </div>
+
+    <a href='{{ url }}'
+       class='list-item-compact col-xs-11'>
+        {% if p_count or m_count %}
+            <span class='badge alert-info right-badge' style='margin-top:10px'>
+            {% if p_count and m_count %}
+                {{ p_count }} Piece{{ p_count|pluralize }}, {{ m_count }} Movements
+            {% else %}
+                {% if p_count %} {{ p_count }} Piece{{ p_count|pluralize }} {% endif %}
+                {% if m_count %} {{ m_count }} Movement{{ m_count|pluralize }} {% endif %}
+            {% endif %}
+        </span>
+        {% endif %}
+
+        <h5>{{ title }}</h5>
+    </a>
+</div>

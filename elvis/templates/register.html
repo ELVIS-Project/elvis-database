@@ -1,6 +1,8 @@
 {% extends "base.html" %}
 {% block extra_hd %}
-<script src='https://www.google.com/recaptcha/api.js'></script>
+{% load compress %}
+    <script src='https://www.google.com/recaptcha/api.js'></script>
+    {% compress css %}
 <style>
     .captcha {
         text-align: center;
@@ -9,9 +11,11 @@
         display: inline-block;
     }
 </style>
+    {% endcompress %}
 {% endblock %}
-{% block wrap %}
+{% block page_content %}
 
+{% compress js %}
 <script type="text/javascript">
     $(document).ready(function ($)
     {
@@ -30,6 +34,7 @@
         }
     });
 </script>
+{% endcompress %}
 
 <div class="container">
     <div class="row">

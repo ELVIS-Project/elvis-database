@@ -1,33 +1,19 @@
-{% extends "base.html" %}
+{% extends "base/base_account.html" %}
 
-{% block wrap %}
-    <div class="container">
-        <div class="row">
-            <div class="col-xs-12 col-sm-6 col-sm-offset-3 col-lg-4 col-lg-offset-4">
-                <div class="account-wall">
-                    <h2 class="text-center">Update Account</h2><br>
-                    {% if form.errors.items %}
-                        {% for field, errors in form.errors.items %}
-                            <div class="row vertical-align">
-                                <div class="col-sm-1 col-sm-offset-1"><span class="glyphicon glyphicon-exclamation-sign" aria-hidden="true" style="color:#be1931; font-size: 225%"></span></div>
-                                <div class="col-sm-9 col-sm-offset-1">
-                                    {% for error in errors %}
-                                        <span class="help-block">{{error}}</span>
-                                    {% endfor %}
-                                </div>
-                            </div>
-                        {% endfor %}
-                    {% endif %}
-                    <form class="form-signin" method="post" action="/account/"> {% csrf_token %}
-                        <input name='email' id="email" type="text" class="form-control" placeholder="Email"> <br>
-                        <input name='first_name' id="first_name" type="text" class="form-control top" placeholder="First Name">
-                        <input name='last_name' id="last_name" type="text" class="form-control bot" placeholder="Last Name">
-                        <br><br>
-                        <button class="btn btn-lg btn-primary btn-block" id="login-submit">Update</button>
-                    </form>
-                </div>
-            </div>
-        </div>
-    </div>
+{% block extra_hd %}
+    {{ block.super }}
+    <title>Update</title>
+{% endblock %}
 
+{% block account_wall_content %}
+    <h2 class="text-center">Update Account</h2><br>
+    {% include "base/account_error_list.html" with form=form %}
+
+    <form class="form-signin" method="post" action="/account/"> {% csrf_token %}
+        <input name='email' id="email" type="text" class="form-control" placeholder="Email"> <br>
+        <input name='first_name' id="first_name" type="text" class="form-control top" placeholder="First Name">
+        <input name='last_name' id="last_name" type="text" class="form-control bot" placeholder="Last Name">
+        <br><br>
+        <button class="btn btn-lg btn-primary btn-block" id="login-submit">Update</button>
+    </form>
 {% endblock %}

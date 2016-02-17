@@ -1,12 +1,7 @@
 import datetime
-import uuid
-from os import path
 
 from django.db import models
-from django.dispatch import receiver
-from django.db.models.signals import post_save, post_delete, pre_delete
-
-from elvis.models.main import ElvisModel
+from elvis.models.elvis_model import ElvisModel
 
 
 class Piece(ElvisModel):
@@ -50,12 +45,12 @@ class Piece(ElvisModel):
     def file_formats(self):
         format_list = []
         for att in self.attachments.all():
-            ext = path.splitext(att.file_name)[1]
+            ext = att.extension
             if ext not in format_list:
                 format_list.append(ext)
         for mov in self.movements.all():
             for att in mov.attachments.all():
-                ext = path.splitext(att.file_name)[1]
+                ext = att.extension
                 if ext not in format_list:
                     format_list.append(ext)
         return format_list
@@ -124,8 +119,7 @@ class Piece(ElvisModel):
             d2 = None
 
         return {'type': 'elvis_piece',
-                'id': str(uuid.uuid4()),
-                'item_id': int(piece.id),
+                'id': int(piece.id),
                 'title': piece.title,
                 'composition_start_date': d1,
                 'composition_end_date': d2,
@@ -145,19 +139,3 @@ class Piece(ElvisModel):
                 'file_formats': piece.file_formats,
                 'pieces_searchable': piece.title,
                 'attached_files': file_paths}
-
-
-@receiver(post_save, sender=Piece)
-def save_listener(sender, instance, created, **kwargs):
-    instance.solr_index(commit=True)
-
-
-@receiver(pre_delete, sender=Piece)
-def attachment_delete(sender, instance, **kwargs):
-    for a in instance.attachments.all():
-        a.delete()
-
-
-@receiver(post_delete, sender=Piece)
-def delete_listener(sender, instance, **kwargs):
-    instance.solr_delete(commit=True)

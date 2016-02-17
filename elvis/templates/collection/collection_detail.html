@@ -1,11 +1,11 @@
-{% extends "base.html" %}
+{% extends "base/base_detail.html" %}
 
 {% block extra_hd %}
+    {{ block.super }}
     {% load staticfiles %}
-    <script type='text/javascript' src="{% static "bootstrap/plugins/markdown.min.js" %}"></script>
+    {% load compress %}
+    {% compress js %}
     <script type='text/javascript' src="{% static "js/jquery.tablesorter.js" %}"></script>
-
-    <title>{{ content.title }}</title>
     <script>
         $(document).ready(function ($)
         {
@@ -24,12 +24,11 @@
             $("#private-button").click(function (event)
             {
                 $.ajax({
-                    type: "post",
-                    url: "/collections/",
-                    data: {action: 'make-private', id: {{ content.item_id }}},
+                    type: "patch",
+                    url: "/collection/{{ content.id }}",
+                    data: {'public': false},
                     success: function (data)
                     {
-                        console.log("Made {{ content.title }} private.");
                         location.reload();
                     }
                 })
@@ -38,12 +37,11 @@
             $("#public-button").click(function (event)
             {
                 $.ajax({
-                    type: "post",
-                    url: "/collections/",
-                    data: {action: 'make-public', id: {{ content.item_id }}},
+                    type: "patch",
+                    url: "/collection/{{ content.id }}",
+                    data: {'public': true},
                     success: function (data)
                     {
-                        console.log("Made {{ content.title }} public.");
                         location.reload();
                     }
                 })
@@ -60,9 +58,8 @@
                 $("#confirm-delete-button").click(function (event)
                 {
                     $.ajax({
-                        type: "post",
-                        url: "/collections/",
-                        data: {action: 'delete', id: {{ content.item_id }}},
+                        type: "delete",
+                        url: "/collection/{{ content.id }}",
                         success: function (data)
                         {
                             console.log("Deleted {{ content.title }}");
@@ -71,45 +68,43 @@
                     })
                 })
             });
-            $("#rendered-comment").html(markdown.toHTML($("#hidden-comment").text()))
         });
     </script>
+    {% endcompress %}
 {% endblock %}
 
-{% block wrap %}
-    <div class="page-header">
-        <h2>{{ content.title }}
-            <small>{{ content.pieces | length }}
-                Pieces, {{ content.movements | length }} Movements
-            </small>
-            <span class="pull-right">
-                {% if user.id == content.creator.pk  or user.is_superuser %}
-                    <button type="button" class="btn btn-default"
-                            id="delete-button">Delete
-                    </button>
-                    {% if content.public %}
-                        <button type="button" class="btn btn-default"
-                                id="private-button">Make Private
-                        </button>
-                    {% else %}
-                        <button type="button" class="btn btn-default"
-                                id="public-button">Make Public
-                        </button>
-                    {% endif %}
-                {% endif %}
-                {% include "includes/download-button-inc.html" with download_type="elvis_collection" download_item_id=content.item_id title="Add to Downloads" in_cart=content.in_cart %}
-            </span>
-        </h2>
+{% block detail_header %}
+    <h1>{{ content.title }} <small>Created by {{ content.creator }}</small></h1>
+{% endblock %}
 
+{% block detail_buttons %}
+    {% include "base/download-badge.html" with id=content.uuid type="elvis_collection" button_type="button" in_cart=content.in_cart%}
+{% endblock %}
 
-        <p>Created by {{ content.creator.full_name }}
-                on {{ content.created | date:"d F Y, f a" }}<br> Last
-                updated {{ content.updated | date:"d F Y, f a" }}</p>
-    </div>
-
+{% block detail_tab_content %}
     {% if content.comment %}
         <div id="hidden-comment" hidden="hidden">{{ content.comment }}</div>
         <div id='rendered-comment' class="well"></div>
+    {% endif %}
+
+    {% if content.curators %}
+        <h3>Curators ({{ content.curators | length }})</h3>
+        <table class="table">
+            <thead>
+                <tr>
+                    <th>Username</th>
+                    <th>Name</th>
+                </tr>
+            </thead>
+            <tbody>
+            {% for curator in content.curators %}
+                <tr>
+                    <td>{{ curator.username }}</td>
+                    <td>{{ curator.last_name }}, {{ curator.first_name }}</td>
+                </tr>
+            {% endfor %}
+            </tbody>
+        </table>
     {% endif %}
 
     {% if content.pieces %}
@@ -119,18 +114,18 @@
             <tr>
                 <th width="5%">Add</th>
                 <th width="30%">Title</th>
-                <th width="20%">Composer</th>
-                <th width="25%">Movements</th>
+                <th width="15%">Composer</th>
+                <th width="15%">Movements</th>
                 <th width="10%">Date</th>
             </tr>
             </thead>
             <tbody>
             {% for piece in content.pieces %}
                 <tr>
-                    <td>{% include "includes/download-badge-inc.html" with download_type="elvis_piece" download_item_id=piece.item_id title="Add to Downloads" in_cart=piece.in_cart %}</td>
+                    <td>{% include "base/download-badge.html" with type="elvis_piece" id=piece.uuid in_cart=piece.in_cart %}</td>
                     <td><a href="{{ piece.url }}">{{ piece.title }}</a></td>
-                    <td><a href="{{ piece.composer.url }}">{{ piece.composer.name}}</a></td>
-                    <td>{% if piece.movement_count %}<span class="label label-primary">{{ piece.movement_count }} movement{{  piece.movement_count | pluralize }} included</span></a>{% else %}<span class="label label-default">No movements</span>{% endif %}</td>
+                    <td><a href="{{ piece.composer.url }}">{{ piece.composer.shortened_title}}</a></td>
+                    <td>{% if piece.movement_count %}<span class="label label-primary">{{ piece.movement_count }} movement{{  piece.movement_count | pluralize }} </span></a>{% else %}<span class="label label-default">No movements</span>{% endif %}</td>
                     <td width="10%">{{ piece.composition_end_date }}</td>
                 </tr>
             {% endfor %}
@@ -145,8 +140,8 @@
                 <col class="text-center" style="width: 5%;">
                 <col hidden="hidden">
                 <col style="width: 30%;">
-                <col style="width: 20%;">
-                <col style="width: 25%;">
+                <col style="width: 15%;">
+                <col style="width: 15%;">
                 <col style="width: 10%;">
             </colgroup>
             <thead >
@@ -161,9 +156,9 @@
             <tbody>
             {% for mov in content.movements %}
                 <tr>
-                    <td>{% include "includes/download-badge-inc.html" with download_type="elvis_movement" download_item_id=mov.item_id title="Add to Downloads" in_cart=mov.in_cart %}</td>
+                    <td>{% include "base/download-badge.html" with type="elvis_movement" id=mov.uuid in_cart=mov.in_cart %}</td>
                     <td><a href="{{ mov.url }}">{{ mov.title }}</a> </td>
-                    <td><a href="{{ mov.composer.url }}">{{ mov.composer.name}}</a></td>
+                    <td><a href="{{ mov.composer.url }}">{{ mov.composer.shortened_title}}</a></td>
                     <td>{% if mov.piece %}<a href="{{ mov.piece.url }}"><span class="label label-success">{{ mov.piece.title }}</span></a>{% else %}<span class="label label-default">No piece</span>{% endif %}</td>
                     <td>{{ mov.composition_end_date }}</td>
                 </tr>
@@ -171,5 +166,11 @@
             </tbody>
         </table>
     {% endif %}
+{% endblock %}
 
+{% block options_tab_content %}
+    <button type="button" class="btn btn-default"
+            id="delete-button">Delete
+    </button>
+    <a href="{{ content.url }}update/" class="btn btn-default">Update</a>
 {% endblock %}

@@ -1,12 +1,7 @@
 import datetime
-import uuid
-from os import path
 
 from django.db import models
-from django.dispatch import receiver
-from django.db.models.signals import post_save, post_delete, pre_delete
-
-from elvis.models.main import ElvisModel
+from elvis.models.elvis_model import ElvisModel
 
 
 class Movement(ElvisModel):
@@ -30,6 +25,7 @@ class Movement(ElvisModel):
     attachments = models.ManyToManyField("elvis.Attachment", blank=True, related_name="movements")
     religiosity = models.CharField(max_length=50, default="Unknown")
     vocalization = models.CharField(max_length=50, default="Unknown")
+    parent_cart_id = models.CharField(max_length=50, null=True)
 
     @property
     def attached_files(self):
@@ -42,10 +38,17 @@ class Movement(ElvisModel):
         return " ".join([t.name for t in self.tags.all()])
 
     @property
+    def get_parent_cart_id(self):
+        if self.piece:
+            return "P-" + str(self.piece.uuid)
+        else:
+            return ""
+
+    @property
     def file_formats(self):
         format_list = []
         for att in self.attachments.all():
-            ext = path.splitext(att.file_name)[1]
+            ext = att.extension
             if ext not in format_list:
                 format_list.append(ext)
         return format_list
@@ -117,8 +120,7 @@ class Movement(ElvisModel):
             d2 = None
 
         return {'type': 'elvis_movement',
-                'id': str(uuid.uuid4()),
-                'item_id': int(movement.id),
+                'id': int(movement.id),
                 'title': movement.title,
                 'composition_start_date': d1,
                 'composition_end_date': d2,
@@ -138,19 +140,3 @@ class Movement(ElvisModel):
                 'vocalization': movement.vocalization,
                 'file_formats': movement.file_formats,
                 'attached_files': file_paths}
-
-
-@receiver(post_save, sender=Movement)
-def save_listener(sender, instance, created, **kwargs):
-    instance.solr_index(commit=True)
-
-
-@receiver(pre_delete, sender=Movement)
-def attachment_delete(sender, instance, **kwargs):
-    for a in instance.attachments.all():
-        a.delete()
-
-
-@receiver(post_delete, sender=Movement)
-def delete_listener(sender, instance, **kwargs):
-    instance.solr_delete(commit=True)

@@ -24,5 +24,5 @@ class CustomHTMLRenderer(TemplateHTMLRenderer):
             template = self.resolve_template(template_names)
 
         context = self.resolve_context({'content': data}, request, response)
-        return template.render(context)
+        return template.render(context, request=request)
 

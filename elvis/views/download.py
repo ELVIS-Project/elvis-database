@@ -1,405 +1,161 @@
-# LM: TODO lots of cleaning up; make modular methods
-import json
-import os
-from rest_framework import generics
-from rest_framework import permissions
-from rest_framework import status
-from rest_framework.renderers import JSONRenderer
-from rest_framework.response import Response
-from rest_framework.views import APIView
+import ujson as json
+import uuid
+
+from celery.result import AsyncResult
+from django.http import HttpResponse
 from django.utils.decorators import method_decorator
 from django.views.decorators.csrf import csrf_protect
-from django.conf import settings
-from django.core.exceptions import ObjectDoesNotExist
-from django.http import HttpResponse, HttpResponseRedirect
-from celery.result import AsyncResult
-from elvis.elvis import tasks
+from elvis import tasks
 from elvis.renderers.custom_html_renderer import CustomHTMLRenderer
-from elvis.serializers.download import DownloadSerializer, DownloadingSerializer
-from elvis.helpers.solrsearch import SolrSearch
-from elvis.models.download import Download
-from elvis.models.piece import Piece
-from elvis.models.movement import Movement
-from elvis.models.attachment import Attachment
-from elvis.models.collection import Collection
-from elvis.models.tag import Tag
-from elvis.models.composer import Composer
+from rest_framework import generics, permissions, status
+from rest_framework.renderers import JSONRenderer
+from rest_framework.response import Response
+from elvis.helpers.cache_helper import *
 
 
-class DownloadListHTMLRenderer(CustomHTMLRenderer):
-    template_name = "download/download_list.html"
+class DownloadCartHTMLRenderer(CustomHTMLRenderer):
+    template_name = "download/download_cart.html"
 
 
-class DownloadDetailHTMLRenderer(CustomHTMLRenderer):
-    template_name = "download/download.html"
-
-
-class DownloadingHTMLRenderer(CustomHTMLRenderer):
-    template_name = "download/downloading.html"
-
-
-class DownloadList(generics.ListCreateAPIView):
-    model = Download
-    permission_classes = (permissions.IsAuthenticatedOrReadOnly,)
-    serializer_class = DownloadSerializer
-    renderer_classes = (JSONRenderer, DownloadListHTMLRenderer)
-
-    def get_queryset(self):
-        user = self.request.user
-        return Download.objects.filter(user=user)
-
-
-class DownloadDetail(generics.RetrieveUpdateAPIView):
-    model = Download
+class DownloadCart(generics.GenericAPIView):
     permission_classes = (permissions.IsAuthenticated,)
-    serializer_class = DownloadSerializer
-    renderer_classes = (JSONRenderer, DownloadDetailHTMLRenderer)
-
-    def get_object(self):
-        user = self.request.user
-        try:
-            obj = Download.objects.filter(user=user).latest("created")
-            return obj
-        except ObjectDoesNotExist:
-            return None
+    renderer_classes = (JSONRenderer, DownloadCartHTMLRenderer)
 
     def get(self, request, *args, **kwargs):
-        if 'check_in_cart' in request.GET:
-            results = self._check_in_cart(request)
-            jresults = json.dumps(results)
-            return HttpResponse(jresults, content_type="application/json")
-
-        return self.retrieve(request, *args, **kwargs)
-
-    def _check_in_cart(self, request):
-        user_download = request.user.downloads.all()[0]
-        item_list = json.loads(request.GET['check_in_cart'])
-        results = []
-        for item in item_list:
-            if item['type'] == "elvis_composer":
-                if user_download.collection_composers.filter(pk=item['id']):
-                    results.append({'id': item['id'], 'in_cart': True})
-                else:
-                    results.append({'id': item['id'], 'in_cart': False})
-                continue
-            if item['type'] == "elvis_collection":
-                if user_download.collection_collections.filter(pk=item['id']):
-                    results.append({'id': item['id'], 'in_cart': True})
-                else:
-                    results.append({'id': item['id'], 'in_cart': False})
-                continue
-            if item['type'] == "elvis_piece":
-                if user_download.collection_pieces.filter(pk=item['id']):
-                    results.append({'id': item['id'], 'in_cart': True})
-                else:
-                    results.append({'id': item['id'], 'in_cart': False})
-                continue
-            if item['type'] == "elvis_movement":
-                piece = Movement.objects.get(pk=item['id']).piece
-                if piece and user_download.collection_pieces.filter(pk=piece.id):
-                    results.append({'id': item['id'], 'in_cart': 'Piece'})
-                elif user_download.collection_movements.filter(pk=item['id']):
-                    results.append({'id': item['id'], 'in_cart': True})
-                else:
-                    results.append({'id': item['id'], 'in_cart': False})
-        return results
-
-    def patch(self, request, *args, **kwargs):
-        itype = request.DATA.get("type", None)
-        item_id = request.DATA.get('item_id', None)
-
-        if itype not in ('piece', 'movement'):
-            return Response({'message': "You must supply either piece or movement"}, status=status.HTTP_400_BAD_REQUEST)
-
-        if itype == 'piece':
-            obj = Piece.objects.get(pk=item_id)
-        elif itype == 'movement':
-            obj = Movement.objects.get(pk=item_id)
-
-        if not obj:
-            return Response({'message': "The item with id {0} was not found".format(item_id)},
-                            status=status.HTTP_404_NOT_FOUND)
-
-        dlobj = self.get_object()
-
-        for attachment in obj.attachments.all():
-            dlobj.attachments.add(attachment)
-
-        d = DownloadSerializer(dlobj).data
-        return Response(d)
-
-    # Recursively add object to users download
-    def _download_adder(self, item, user_download):
-        if item.__class__.__name__ == "Collection":
-            for piece in item.pieces.all():
-                self._download_adder(piece, user_download)
-            for movement in item.movements.all():
-                self._download_adder(movement, user_download)
-            user_download.collection_collections.add(item)
-        if item.__class__.__name__ == "Composer":
-            for piece in item.pieces.all():
-                self._download_adder(piece, user_download)
-            for movement in item.movements.all():
-                self._download_adder(movement, user_download)
-                user_download.collection_composers.add(item)
-        if item.__class__.__name__ == "Piece":
-            for att in item.attachments.all():
-                user_download.attachments.add(att)
-            user_download.collection_pieces.add(item)
-            for mov in item.movements.all():
-                for att in mov.attachments.all():
-                    user_download.attachments.add(att)
-        if item.__class__.__name__ == "Movement":
-            if item.piece not in user_download.collection_pieces.all():
-                user_download.collection_movements.add(item)
-                for att in item.attachments.all():
-                    user_download.attachments.add(att)
-
-    # Recursively remove object to users download
-    def _download_remover(self, item, user_download):
-        if item.__class__.__name__ == "Collection":
-            for piece in item.pieces.all():
-                self._download_remover(piece, user_download)
-            for movement in item.movements.all():
-                self._download_remover(movement, user_download)
-            user_download.collection_collections.remove(item)
-        if item.__class__.__name__ == "Composer":
-            for piece in item.pieces.all():
-                self._download_remover(piece, user_download)
-            for movement in item.movements.all():
-                self._download_remover(movement, user_download)
-            user_download.collection_composers.remove(item)
-        if item.__class__.__name__ == "Piece":
-            for att in item.attachments.all():
-                user_download.attachments.remove(att)
-            user_download.collection_pieces.remove(item)
-        if item.__class__.__name__ == "Movement":
-            user_download.collection_movements.remove(item)
-            for att in item.attachments.all():
-                user_download.attachments.remove(att)
-
-    # Choose the right model based on request, again to help recursive-patching
-    def _type_selector(self, item_type, item_id, user_download, action):
-        if item_type == "elvis_movement":
-            item = Movement.objects.filter(pk=item_id)[0]
-        elif item_type == "elvis_piece":
-            item = Piece.objects.filter(pk=item_id)[0]
-        elif item_type == "elvis_composer":
-            item = Composer.objects.filter(pk=item_id)[0]
-        elif item_type == "elvis_collection":
-            item = Collection.objects.filter(pk=item_id)[0]
-        elif item_type == "elvis_tag":
-            item = Tag.objects.filter(pk=item_id)[0]
-        else:
-            raise TypeError("Item type '" + item_type + "' passed not found in database.")
-
-        if action == 'add':
-            self._download_adder(item, user_download)
-        if action == 'remove':
-            self._download_remover(item, user_download)
-
-
-    # Recursive version of the flat-downloads
-    def _recursive_patch_downloads(self, request):
-        if not request.user.is_authenticated:
-            raise Http404
-        user_download = request.user.downloads.all()[0]
-        item_type = request.POST.getlist('item_type')
-        item_id = request.POST.getlist('item_id')
-        action = request.POST.get('action')
-        for i in range(len(item_type)):
-            self._type_selector(item_type[i], item_id[i], user_download, action)
-
-        user_download.save()
-        jresults = json.dumps({'count': user_download.cart_size})
-        return HttpResponse(content=jresults, content_type="json")
+        """Serialize the items in the cart using the cache."""
+        cart = ElvisCart(request)
+        data = cart.serialize_cart_items(exts=True)
+        return Response(data, *args, **kwargs)
 
     @method_decorator(csrf_protect)
-    def post(self, request, *args, **kwargs):
-        user_download = request.user.downloads.all()[0]
+    def post(self, request):
+        """Preforms a number of cart-related functions.
+
+        :param request: A django request. The action to take will be determined
+        by the presences of a key at the top level of the POST dict.
+        :return: A json response with the number of items in the cart.
+        """
+
+        cart = ElvisCart(request)
 
         if 'clear-collection' in request.POST:
-            user_download.attachments.clear()
-            user_download.collection_movements.clear()
-            user_download.collection_pieces.clear()
-            user_download.collection_collections.clear()
-            user_download.collection_composers.clear()
-            user_download.save()
-            jresults = json.dumps({'count': user_download.cart_size})
-            return HttpResponse(content=jresults, content_type="json")
-
-        elif 'clear-attachments' in request.POST:
-            user_download.attachments.clear()
-            user_download.save()
-            jresults = json.dumps({'count': user_download.cart_size})
-            return HttpResponse(content=jresults, content_type="json")
-
-        elif 'remove' in request.POST:
-            type = request.POST.get('type')
-            id = int(request.POST.get('id'))
-            if type == "Piece":
-                rem = Piece.objects.get(id=id)
-                user_download.collection_pieces.remove(rem)
-            else:
-                rem = Movement.objects.get(id=id)
-                user_download.collection_movements.remove(rem)
-            user_download.save()
-            jresults = json.dumps({'count': user_download.cart_size})
-            return HttpResponse(content=jresults, content_type="json")
+            cart.clear()
+            cart.save()
+            jresults = json.dumps({'count': 0})
+            return HttpResponse(content=jresults, content_type="application/json")
+        elif 'check_in_cart' in request.POST:
+            items = json.loads(request.POST['check_in_cart'])
+            results = self._check_in_cart(cart, items)
+            jresults = json.dumps(results)
+            return HttpResponse(jresults, content_type="application/json")
         else:
-            return self._recursive_patch_downloads(request)
+            items = request.POST.get('items', [request.POST.dict()])
+            return self._update_cart(cart, items)
+
+    def _update_cart(self, cart, items):
+        """Process a request to update the cart in some way.
+
+        :param request: A django request, with updates which follow this API:
+
+            {'action': ['remove'|'add'],
+             'item_type': 'elvis_'['piece'|'movement'|'collection'|'composer'],
+             }
+
+        Or, if multiple updates are being sent, a list of updates in the
+        preceding format may be sent in as 'items'.
+
+        :return: JSON response with new number of items in cart.
+        """
+        for item in items:
+            action = item.get('action')
+            if action == 'add':
+                cart.add_item(item)
+            if action == 'remove':
+                cart.remove_item(item)
+        jresults = json.dumps({'count': len(cart)})
+        cart.save()
+        return HttpResponse(content=jresults, content_type="json")
+
+    def _check_in_cart(self, cart, items):
+        """Create dict of differences between frontend/backend cart.
+
+        :param cart: The user's cart stored in request.session['cart'].
+        :param items: A list of item's with the following format:
+        [{'item_type': 'elvis_[type]', 'in_cart': bool, 'id':[uuid]}]
+        :return: A dict in the same format (minus 'type' key as it is
+        unnecessary) of only the pieces who's 'in_cart' status is different.
+        """
+        results = {}
+        for item in items:
+            if item['item_type'] == "elvis_movement":
+                mov = try_get(item['id'], Movement)
+                if mov and mov.parent_cart_id in cart:
+                    back = "Piece"
+                else:
+                    back = item in cart
+            else:
+                back = item in cart
+            front = item['in_cart']
+            if front == back:
+                continue
+            results[item['id']] = {"in_cart": back}
+        return results
 
 
-# LM: New view 2, was original view but updated with post-only view below
-class Downloading(APIView):
+class Downloading(generics.GenericAPIView):
+    """Create and report on status of cart-zipping tasks."""
     permission_classes = (permissions.IsAuthenticated,)
-    serializer_class = DownloadingSerializer
-    renderer_classes = (JSONRenderer, DownloadingHTMLRenderer)
-
-    # LM: Things needed:
-    # 1. Parse request to extract path to all requested files
-    # 2. Create subprocess - Celery
-    # 3. Get files and copy into dummy directory
-    # 4. Zip directory
-    # 5. Track subprocess
-    # 6. Serve
-    # 7. Remove dummy directory and zipped file - do this daily
 
     def get(self, request, *args, **kwargs):
-        """ A view to report the progress to the user """
-        if request.GET.get('format') == 'json' and request.GET.get('task'):
-            try:
-                task_id = request.GET['task']
-                task = AsyncResult(task_id)
-                if task.ready():
-                    return Response(
-                        {'ready': task.ready(), 'state': task.status, 'path': task.result['path'], 'info': task.info})
-                else:
-                    return Response({'ready': task.ready(), 'state': task.status, 'info': task.info})
-            except Exception:
-                return Response({'state': "FAILED"}, status=status.HTTP_400_BAD_REQUEST)
+        """Start or report on a cart-zipping task.
+
+        This method is expecting one of two possible query parameters:
+            task=[uuid]: Return information on the status of a
+            cart zipping task, including a path to download the zip
+            if it is done.
+
+            extensions[]: Start a new cart-zipping task for the requesting
+            user. Return a task_id, which can be used in the above query.
+        """
+        if request.GET.get('task'):
+            task_id = request.GET['task']
+            task = AsyncResult(task_id)
+
+            if task.status == "PENDING":
+                return Response({'ready': task.ready(),
+                                 'status': task.status,
+                                 'progress': 0})
+
+            elif task.status == "SUCCESS":
+                return Response({'ready': task.ready(),
+                                 'status': "SUCCESS",
+                                 'progress': 100,
+                                 'path': task.result})
+
+            elif task.state == "FAILURE":
+                server_error = status.HTTP_500_INTERNAL_SERVER_ERROR
+                return Response({'ready': task.ready(),
+                                 'status': "FAILURE"}, status=server_error)
+
+            else:
+                meta = task._get_task_meta()
+                progress = meta.get('result', {}).get('progress', 0)
+                return Response({'ready': task.ready(),
+                                 'progress': progress,
+                                 'status': "PROGRESS"})
+
+        if request.GET.get('extensions[]'):
+            extensions = request.GET.getlist('extensions[]')
+            make_dirs = request.GET.get('make_dirs')
+            if make_dirs == 'false':
+                make_dirs = False
+            else:
+                make_dirs = True
+                
+            cart = request.session.get("cart", {})
+            task_id = str(uuid.uuid4())
+            tasks.zip_files.apply_async(args=[cart, extensions, request.user.username, make_dirs], task_id=task_id)
+            return Response({"task": task_id}, status=status.HTTP_200_OK)
 
         return Response(status=status.HTTP_200_OK)
 
-    @method_decorator(csrf_protect)
-    def post(self, request, *args, **kwargs):
-        # Download selected
-        if 'download-all' in request.POST:
-            # get attachment ids 
-            a_ids = request.POST.getlist('a_ids')
-
-            items = []
-            for a_id in a_ids:
-                a_object = Attachment.objects.filter(pk=a_id).all()[0]
-                a_path = os.path.join(a_object.attachment_path, a_object.file_name)
-
-                items.append(a_path)
-
-            # get checked extensions, add in equivalent extensions
-            extensions = request.POST.getlist('extension')
-
-            others_check = False
-
-            if '.midi' in extensions:
-                extensions.append('.mid')
-            if '.xml' in extensions:
-                extensions.append('.mxl')
-            if 'OTHERS' in extensions:
-                others_check = True
-
-
-            # If user checks all exts except .abc, he would expect everything else but .abc
-            # -> need a list of everything that could have been left unchecked
-            # EDIT IF download.html IS CHANGED
-            default_exts = ['.mei', '.xml', '.midi', '.pdf', '.krn', '.mid', '.mxl']
-
-            # Check for two conditions. Either:
-            # 1) requested file is in selected extensions
-            # 2) file is not in available extensions (i.e. its extension was not rejected) and OTHERS was checked
-            files = []
-            for item in items:
-                fileName, fileExt = os.path.splitext(item)
-                if ((fileExt in extensions) or ((not (fileExt in default_exts)) and others_check)):
-                    files.append(item)
-
-            # Call celery tasks with our parsed files
-            zip_task = tasks.zip_files.delay(files, request.user.username)
-
-            return HttpResponseRedirect('?task=' + zip_task.id)
-
-        # Remove selected
-        elif 'remove-selected' in request.POST:
-            # get ids
-            a_ids = request.POST.getlist('a_ids')
-            # get user
-            user_download = request.user.downloads.all()[0]
-            # get extensions
-            extensions = request.POST.getlist('extension')
-
-            # do the extensions thing above
-            others_check = False
-
-            if '.midi' in extensions:
-                extensions.append('.mid')
-            if '.xml' in extensions:
-                extensions.append('.mxl')
-            if 'OTHERS' in extensions:
-                others_check = True
-
-            default_exts = ['.mei', '.xml', '.midi', '.pdf', '.krn', '.mid', '.mxl']
-
-            for a_id in a_ids:
-                a_object = Attachment.objects.filter(pk=a_id).all()[0]
-                fileName, fileExt = os.path.splitext(a_object.file_name)
-                if ((fileExt in extensions) or ((not (fileExt in default_exts)) and others_check)):
-                    user_download.attachments.remove(a_object)
-
-            return HttpResponseRedirect('/downloads/')
-
-        # Optimize user downloads to contain the best file format for elvis
-        elif 'select-elvis' in request.POST:
-            user_download = request.user.downloads.all()[0]
-
-            # Do this for all the attachments in the user's downloads cart
-            for a_object in user_download.attachments.all():
-                try:
-                    parent_p = a_object.pieces.all()[0]
-                    ranked_remover(parent_p, user_download)
-                except Exception as e:
-                    parent_p = None
-                try:
-                    parent_m = a_object.movements.all()[0]
-                    ranked_remover(parent_m, user_download)
-                except Exception as e:
-                    parent_m = None
-
-            return HttpResponseRedirect('/downloads/')
-
-
-def ranked_remover(parent, user_download):
-    # Create a ranking for the attachments based on ELVIS_EXTENSIONS
-    # Find the best sibling attachment to keep
-    # Remove the sibling if its file type isn't supported
-    # Else, add it to the ranking list in the right location 
-    ranking_list = [None] * len(settings.ELVIS_EXTENSIONS)
-    for sibling_a in parent.attachments.all():
-        fileName, fileExt = os.path.splitext(sibling_a.file_name)
-        if not fileExt in settings.ELVIS_EXTENSIONS:
-            user_download.attachments.remove(sibling_a)
-        else:
-            # To handle repeat file types... which there shouldnt be
-            try:
-                ranking_list.insert(settings.ELVIS_EXTENSIONS.index(fileExt), sibling_a)
-            except Exception:
-                ranking_list.append(sibling_a)
-    # Now, go through the ranking list and insert the first sibling attachment into the user's downloads.
-    # Remove all the other sibling attachments
-    chosen_a_file = False
-    for sibling_a in ranking_list:
-        if sibling_a is None:
-            continue
-        elif chosen_a_file is False:
-            chosen_a_file = True
-            user_download.attachments.add(sibling_a)
-        else:
-            user_download.attachments.remove(sibling_a)

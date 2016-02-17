@@ -31,7 +31,7 @@ class CollectionViewTestCase(ElvisTestSetup, APITestCase):
         piece = Piece.objects.first()
         response = self.client.get("/piece/{0}/".format(piece.id))
         self.assertEqual(response.status_code, status.HTTP_200_OK)
-        self.assertEqual(response.data['item_id'], piece.id)
+        self.assertEqual(response.data['id'], piece.id)
 
     def test_get_update_not_allowed(self):
         piece = Piece.objects.first()

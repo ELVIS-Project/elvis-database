@@ -156,41 +156,40 @@ $(document).ready(function ($)
 
         var formData = new FormData(this);
         formData.append('changes', JSON.stringify(changes));
+
         $.ajax({
-            type: "post",
-            url: window.location.href,
+            type: "patch",
+            url: "/piece/" + oldPiece['id'] +"/",
             data: formData,
             processData: false,
             contentType: false,
             success: function (data)
             {
-                if (data['errors'] === undefined)
-                {
-                    $base_modal_header.html("<h4 class='modal-title'>Done!</h4>");
-                    $base_modal_body.html("<p>Piece succesfuly updated!</p>");
-                    $base_modal_footer.html('.modal-footer').html( "<a href='"+ window.location.href + "' class='btn btn-default' id='success-refresh'>Refresh Page</a>" +
-                        "<a href='" + data['url'] + "' class='btn btn-default' id='goto-piece'>Go to Piece</a>");
+                $base_modal_header.html("<h4 class='modal-title'>Done!</h4>");
+                $base_modal_body.html("<p>Piece succesfuly updated!</p>");
+                $base_modal_footer.html('.modal-footer').html( "<a href='"+ window.location.href + "' class='btn btn-default' id='success-refresh'>Refresh Page</a>" +
+                    "<a href='" + data['url'] + "' class='btn btn-default' id='goto-piece'>Go to Piece</a>");
+            },
+            error: function (data)
+            {
+                if (data['responseJSON'] == undefined || data['responseJSON']['errors'] === undefined) {
+                    $base_modal_header.html("<h4 class='modal-title'>Server Error<h4>");
+                    $base_modal_body.html("<p>An error occurred while updating this piece. Please try again, or, if the error persists, " +
+                        "<a href='mailto:elvisdatabase@gmail.com?Subject=Upload%20Error'>contact us</a></p>");
+                    $base_modal_footer.html("<button type='button' class='btn btn-default' data-dismiss='modal'>Close</button>");
                 }
                 else
                 {
-                    var errors = createErrorString(data);
+                    var errors = createErrorString(data['responseJSON']);
                     $base_modal_header.html("<h4 class='modal-title'>Form Error<h4>");
                     $base_modal_body.html("<p>Your submission has the following errors: <br>" + errors + "</p>");
                     $base_modal_footer.html("<button id='close-and-goto-button' type='button' class='btn btn-default' data-dismiss='modal'>Close</button>");
                     $("#close-and-goto-button").click(function(){
                         $('html, body').animate({
-                            scrollTop: $(".validation-error").offset().top
+                            scrollTop: $(".validation-error").offset().top - 70
                         }, 500);
                     })
                 }
-
-            },
-            error: function (data)
-            {
-                $base_modal_header.html("<h4 class='modal-title'>Server Error<h4>");
-                $base_modal_body.html("<p>An error occurred while updating this piece. Please try again, or, if the error persists, " +
-                    "<a href='mailto:elvisdatabase@gmail.com?Subject=Upload%20Error'>contact us</a></p>");
-                $base_modal_footer.html("<button type='button' class='btn btn-default' data-dismiss='modal'>Close</button>");
             }
         })
     });
@@ -303,7 +302,7 @@ $(document).ready(function ($)
     function fillPieceForm()
     {
         $("#title").val(oldPiece['title']);
-        oldPiece['composer'] = oldPiece['composer'].name;
+        oldPiece['composer'] = oldPiece['composer'].title;
         $("#composer").val(oldPiece['composer']);
         $("#comment").val(oldPiece['comment']);
         $("#composition_start_date").val(oldPiece['composition_start_date']);
@@ -362,7 +361,7 @@ $(document).ready(function ($)
             var row = file_table.find("#_existingfiles" + (fc));
             row.attr('name', oldPiece['attachments'][i]['id']);
             row.css('background-color', '#E8E8E8');
-            $file.attr("href", oldPiece['attachments'][i]['attachment']).text(oldPiece['attachments'][i]['file_name']);
+            $file.attr("href", oldPiece['attachments'][i]['attachment']).text(oldPiece['attachments'][i]['title']);
             $source.val(oldPiece['attachments'][i]['source']);
             oldPiece['attachments'][i]['parent'] = "piece";
 
@@ -373,7 +372,7 @@ $(document).ready(function ($)
         {
             mov_table.dynamicTable('addRow', true);
             var row = mov_table.find("#_existingmov" + (i + 1));
-            row.attr('name',oldPiece['movements'][i]['item_id'] );
+            row.attr('name',oldPiece['movements'][i]['id'] );
             row.css('background-color', '#E8E8E8');
             var $title = mov_table.find("#_existingmov_title_" + (i + 1));
             var $instruments = mov_table.find("#_existingmov" + (i + 1) + "_instrumentation");
@@ -408,7 +407,7 @@ $(document).ready(function ($)
                 var $source = file_table.find("#_existingfiles_source_" + (fc));
                 var row = file_table.find("#_existingfiles" + (fc));
                 row.attr('name', oldPiece['movements'][i]['attachments'][j]['id']);
-                $file.attr("href", oldPiece['movements'][i]['attachments'][j]['attachment']).text(oldPiece['movements'][i]['attachments'][j]['file_name']);
+                $file.attr("href", oldPiece['movements'][i]['attachments'][j]['attachment']).text(oldPiece['movements'][i]['attachments'][j]['title']);
                 $source.val(oldPiece['movements'][i]['attachments'][j]['source']);
                 $attach.selectpicker('val', "_existingmov_title_" + (i + 1));
                 oldPiece['movements'][i]['attachments'][j]['parent'] = "_existingmov_title_" + (i + 1);
@@ -480,7 +479,7 @@ $(document).ready(function ($)
         {
             for (var i = 0; i < jlist.length; i++)
             {
-                result += jlist[i].name + "; "
+                result += jlist[i].title + "; "
             }
         }
         return result
@@ -574,12 +573,13 @@ $(document).ready(function ($)
             // Find the old movement in the oldPiece.
             for (var j = 0; j < oldPiece['movements'].length; j++)
             {
-                if (oldPiece['movements'][j]['item_id'] === id)
+                if (oldPiece['movements'][j]['id'] === id)
                 {
                     oldMov = oldPiece['movements'][j];
                     break
                 }
             }
+
 
             //Compare the old to the new, and record differences in a modifications dict.
             var key = 0;

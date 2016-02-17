@@ -1,15 +1,17 @@
 import os
 import shutil
-import unicodedata
+
 
 from django.db import models
 from django.conf import settings
-from elvis.models.main import ElvisModel
+from elvis.models.elvis_model import ElvisModel
 from django.core.files.base import File
+import elvis.helpers.name_normalizer as NameNormalizer
 
 
 def upload_path(instance, filename):
     return os.path.join(instance.attachment_path, filename)
+
 
 class Attachment(ElvisModel):
     """
@@ -44,6 +46,11 @@ class Attachment(ElvisModel):
     source = models.CharField(blank=True, null=True, max_length=200)
 
     @property
+    def extension(self):
+        title, ext = os.path.splitext(self.file_name)
+        return ext
+
+    @property
     def file_name(self):
         return os.path.basename(self.attachment.name)
 
@@ -55,24 +62,29 @@ class Attachment(ElvisModel):
 
     @property
     def url(self):
-        path = os.path.relpath(self.attachment.path, settings.MEDIA_ROOT)
-        url = os.path.join(settings.MEDIA_URL, path)
+        url = os.path.join(settings.MEDIA_URL, str(self.attachment.name))
         return url
+
+    def solr_dict(self):
+        return {}
+
+    def solr_index(self, **kwargs):
+        pass
+
+    def solr_delete(self, **kwargs):
+        pass
 
     def attach_file(self, file_path, file_name, parent, **kwargs):
         i = kwargs.get('number', None)
         i = str(i) if i else ""
         source = kwargs.get('source', None)
 
-        new_name = "{0}_{1}_{2}.{3}".format(parent.title.strip(),
-                                            parent.composer.name.strip(),
+        new_name = "{0}_{1}_{2}.{3}".format(NameNormalizer.sanitize_name(parent.title.strip()),
+                                            NameNormalizer.sanitize_name(parent.composer.name.strip()),
                                             "file" + str(i),
                                             file_name.rsplit('.')[-1])
         #replace unicode in string with normalized chars
-        new_name = new_name.replace('/', '-')
-        new_name = new_name.replace(' ', '-')
-        new_name = unicodedata.normalize('NFKD', new_name).encode('ascii', 'ignore')
-        new_name = new_name.decode('utf-8')
+        new_name = self.normalize_name(new_name)
 
         old_path = os.path.join(file_path, file_name)
         new_path = os.path.join(file_path, new_name)
@@ -85,24 +97,70 @@ class Attachment(ElvisModel):
             file_content = File(dest)
             self.attachment.save(new_name, file_content)
 
+        splt = self.attachment.name.split('attachments')
+        self.attachment.name = "attachments" + splt[-1]
+
+        self.title = self.file_name
+        self.save()
+
     def delete(self, *args, **kwargs):
         if os.path.exists(self.attachment_path):
             shutil.rmtree(self.attachment_path)
         super(Attachment, self).delete(*args, **kwargs)
 
-    def rename(self, new_filename, *args, **kwargs):
-        try:
-            new_filename.encode('ascii')
-        except UnicodeEncodeError:
-            raise UnicodeError("No unicode allowed in file names.")
+    def auto_rename(self, **kwargs):
+        """Determine the correct name for the file, then rename it if necessary"""
+        parent = None
+        if self.pieces.all():
+            parent = self.pieces.first()
+            parent_str = parent.title.strip()
+        elif self.movements.all():
+            parent = self.movements.first()
+            mov = parent
+            if mov.piece:
+                piece_str = mov.piece.title.strip()
+                parent_str = piece_str + "_" + mov.title.strip()
+            else:
+                parent_str = mov.title.strip()
+        else:
+            print("{0} is an orphan and will be deleted".format(self.title))
+            self.delete()
+            return
 
-        (path, current_name) = os.path.split(self.attachment.name)
+        # Find position in parent attachments for an index in the name.
+        i = 1
+        for a in parent.attachments.all():
+            if a == self:
+                break
+            else:
+                i += 1
+
+        # Find current file extension.
+        old_path = os.path.join(settings.MEDIA_ROOT, self.attachment.name)
+        (path, current_name) = os.path.split(old_path)
         (current_file_name, current_extension) = os.path.splitext(current_name)
-        new_filename += current_extension
-        new_path = os.path.join(path, new_filename)
-        shutil.move(self.attachment.name, new_path)
-        self.attachment.name = new_path
-        self.save()
+
+        new_name = "{0}_{1}_{2}{3}".format(NameNormalizer.sanitize_name(parent_str),
+                                           NameNormalizer.sanitize_name(parent.composer.name.strip()),
+                                           "file" + str(i),
+                                           current_extension)
+        new_name = self.normalize_name(new_name)
+        new_path = os.path.join(path, new_name)
+
+        # Return now if there's no work to do.
+        if self.file_name == new_name:
+            return
+
+        shutil.move(old_path, new_path)
+
+        # Point the attachment to the new file
+        old_rel_path, old_name = os.path.split(self.attachment.name)
+        self.attachment.name = os.path.join(old_rel_path, new_name)
+        self.save(**kwargs)
+        return
 
     def __unicode__(self):
         return "{0}".format(self.attachment)
+
+    def normalize_name(self, name):
+        return NameNormalizer.normalize_name(name)

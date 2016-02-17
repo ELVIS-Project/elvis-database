@@ -1,0 +1,189 @@
+{% extends "base.html" %}
+
+
+{% block extra_hd %}
+    {% load staticfiles %}
+    {% load compress %}
+    {% compress js %}
+    <script type='text/javascript' src="{% static "bootstrap/plugins/bootstrap-markdown.js" %}"></script>
+    <script type='text/javascript' src="{% static "js/jquery.tablesorter.js" %}"></script>
+        <script type='text/javascript' src="{% static "bootstrap/plugins/bootstrap-select.min.js" %}"></script>
+        <script type='text/javascript' src="{% static "js/template-scripts/download-cart.js" %}"></script>
+    {% endcompress %}
+    {% compress css %}
+    <link href="{% static "bootstrap/plugins/bootstrap-markdown.min.css" %}" rel="stylesheet" media="screen"/>
+    <link href="{% static "bootstrap/plugins/bootstrap-select.css" %}" rel="stylesheet" media="screen"/>
+    {% endcompress %}
+
+    <title>Download Cart</title>
+{% endblock %}
+
+{% block page_content %}
+    <div class="modal fade" id="save_modal" data-backdrop="static" role="dialog">
+    <label id="myModalLabel">Are you sure you want to clear collection?</label>
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <form action="/collections/" method="post" id="new-collection-form" enctype="multipart/form-data">
+                    {% csrf_token %}
+                    <div class="modal-header">
+                        <h4 class="modal-title">Save Collection</h4>
+                    </div>
+                    <div class="modal-body">
+                        <div class="input-group">
+                            <span class="input-group-addon">Collection Title</span>
+                            <input type="text" id="title" name="title" autocomplete="off" class="form-control"
+                                   placeholder="My Great Collection">
+                        </div>
+                        <div class="btn-group btn-group-justified form-inline radio" id="permission"
+                             data-toggle="buttons">
+                            <label class="btn btn-default">
+                                <input type="radio" name="permission" value="Public"> Public
+                            </label>
+                            <label class="btn btn-default active">
+                                <input type="radio" name="permission" value="Private"> Private
+                            </label>
+                        </div>
+                    </div>
+                    <div class="form-group" style="padding-left:18px; padding-right: 18px">
+                        <textarea class="form-control" data-provide="markdown" rows="7" name="comment" id="comment"
+                                  style="resize:vertical" placeholder="Comments..."></textarea>
+                    </div>
+                    <div class="modal-footer">
+                        <div class="text-right">
+                            <button type="button" class="btn btn-default" data-dismiss="modal">Cancel </button>
+                            <button type='submit' id='collection-submit' class='btn btn-success'>Submit<span
+                                    class='glyphicon glyphicon-chevron-right'></span></button>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <div id="download-modal" class="modal fade" data-backdrop="static" role="dialog">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal">&times;</button>
+                    <h3 class="modal-title">Choose Files</h3>
+                </div>
+                <div class="modal-body" id="download-modal-body">
+                    <h3>File Formats</h3>
+                    <p>Most pieces have multiple file formats associated with them.</p>
+                    <p>Which formats would you like to download?</p>
+                    <div class="row">
+                        <div class="col-sm-8 col-sm-offset-2">
+                            {% for att in content.extension_counts|dictsort:"extension" %}
+                            <div class="checkbox">
+                                <label>
+                                    <input type="checkbox" name="file-extension-selector" value="{{ att.extension }}" checked>
+                                    {{ att.extension }} <span class='badge'>{{ att.count }}</span>
+                                </label>
+                            </div>
+                            {% empty %}
+                                <p class="text-danger">The pieces in your cart do not have any files attached to them.  No files will be included.</p>
+                            {% endfor %}
+                        </div>
+                    </div>
+                    <hr/>
+                    <h3>Directory Structure</h3>
+                    <p>Would you like your <code>.zip</code> file to have a flat structure, or would you like pieces to be organized in directories?</p>
+                    <div class="row">
+                        <div class="col-sm-8 col-sm-offset-2">
+                        <select class="form-control" name="make_dirs">
+                            <option value="flat">Flat (default)</option>
+                            <option value="directories">Directories</option>
+                        </select>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <div class="progress progress-striped" hidden="hidden" id="progress-bar-div">
+                        <div class="progress-bar progress-bar-info active" id="progress" style="width:0%"></div>
+                    </div>
+                    <button type="button" class="btn btn-default" id="cancel-download" data-dismiss="modal">Cancel</button>
+                    <button type="button" class="btn btn-default" id="confirm-download">Download</button>
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+    <div class="page-header">
+        <h2>Your Cart
+            <span class="pull-right">
+                <button id="open-clear-modal" type="button" class="btn btn-danger">
+                    <span class="glyphicon glyphicon-remove"></span> Clear Cart
+                </button>
+                <button id="save-collection" name="save-collection" type="button" class="btn btn-primary">
+                    <span class="glyphicon glyphicon-floppy-disk"></span> Save as Collection
+                </button>
+                <button id="open-download-modal" name="download-collection" class="btn btn-info">
+                    <span class="glyphicon glyphicon-download"></span>  Download
+                </button>
+            </span>
+        </h2>
+    </div>
+
+    {% if content.pieces or content.movements %}
+        <span class="help-block">These are the pieces and movements in your cart. You may save this cart as a collection,
+        modify it, or proceed to the download screen.</span>
+        <table class="table" id="collection-table">
+            <colgroup>
+                <col class="text-center" style="width: 10%;">
+                <col hidden="hidden">
+                <col style="width: 50%;"    >
+                <col style="width: 15%;">
+                <col style="width: 10%;">
+                <col style="width: 20%;">
+            </colgroup>
+            <thead id="table-head">
+            <tr>
+                <th class="text-center">Remove</th>
+                <th hidden="hidden">ID</th>
+                <th>Title</th>
+                <th>Composer</th>
+                <th>Date</th>
+                <th>Type</th>
+            </tr>
+            </thead>
+            <tbody>
+            {% for piece in content.pieces %}
+                <tr>
+                    <td class="text-center">
+                        <div style="min-height:36px">
+                        <button type="button" class="btn btn-sm remove-row" name="remove-item"><span
+                                class="glyphicon glyphicon-remove"></span></button>
+                        </div>
+                    </td>
+                    <td style="display: none;">{{ piece.uuid }}</td>
+                    <td><a href="{{ piece.url }}">{{ piece.title }}</a></td>
+                    <td><a href="{{ piece.composer.url }}">{{ piece.composer.shortened_title }}</a></td>
+                    <td>{{ piece.composition_end_date  }}</td>
+                    <td><span class="label label-success">Piece</span>{% if piece.movement_count %}<br>
+                        <span class="label label-default">+ {{ piece.movement_count}} movement{{ piece.movement_count|pluralize }}</span> {% endif %}</td>
+
+                </tr>
+            {% endfor %}
+            {% for movement in content.movements %}
+                <tr>
+                    <td class="text-center">
+                        <div style="min-height:36px">
+                        <button type="button" class="btn btn-sm remove-row" name="remove-item"><span
+                                class="glyphicon glyphicon-remove"></span></button>
+                        </div>
+                    </td>
+                    <td style="display: none;">{{ movement.uuid }}</td>
+                    <td><a href="{{ movement.url }}">{{ movement.title }}</a></td>
+                    <td><a href="{{ movement.composer.url }}">{{ movement.composer.shortened_title }}</a></td>
+                    <td>{{ movement.composition_end_date  }}</td>
+                    <td><span class="label label-primary">Movement</span><br><span class="label label-default">{{ movement.piece.title|truncatechars:30 }}</span></td>
+                </tr>
+            {% endfor %}
+            </tbody>
+        </table>
+
+    {% else %}
+        <div class="text-center">Nothing in cart!</div>
+    {% endif %}
+{% endblock %}

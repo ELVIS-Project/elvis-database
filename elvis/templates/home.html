@@ -2,7 +2,9 @@
 
 {% block extra_hd %}
     {% load staticfiles %}
-    <script type='text/javascript' src="{% static "js/elvis-scripts/autocomplete.min.js" %}"></script>
+    {% load compress %}
+    {% compress js %}
+    <script type='text/javascript' src="{% static "js/elvis-scripts/autocomplete.js" %}"></script>
     <script>
         $(document).ready(function ($)
         {
@@ -11,9 +13,9 @@
                 if (event.which === 13)
                     $("#general-search-form").submit()
             })
-        })
-
+        });
     </script>
+    {% endcompress %}
 
     <title>Elvis Database</title>
 {% endblock %}
@@ -25,8 +27,8 @@
                     <label for="search-input" hidden="hidden">General Search Keyword</label>
 
                     <div class="col-xs-10 col-xs-offset-1 col-md-8 col-md-offset-2 col-lg-6 col-lg-offset-3">
-                        <img src="{{ STATIC_URL }}/img/elvis1.png" height="150px" style="margin-bottom:30px; padding-right:20px">
-                                                <div style="margin: auto; max-width:600px; min-width:430px">
+                        <img src="{{ STATIC_URL }}/img/elvis1.png" height="150" style="margin-bottom:55px; padding-right:20px" alt="ELVIS Database">
+                        <div style="margin: auto; max-width:600px; min-width:430px">
                             <div class="input-group">
                                 <input type="text" class="form-control input-lg" id='search-input' autocomplete="off" name='q'/>
                             <span class="input-group-btn">
@@ -44,7 +46,7 @@
         </div>
     </div>
 {% endblock %}
-{% block wrap %}
+{% block page_content %}
     <div class="row" id="home-nav" style="text-align: center">
         <div class="col-sm-4">
             <div style="margin-left:40px; margin-right:40px">

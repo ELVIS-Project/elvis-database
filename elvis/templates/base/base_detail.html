@@ -1,0 +1,69 @@
+{% extends "base.html" %}
+
+{% comment %}
+Basic detail view layout is defined in this file. Each detail view extends
+this file, and is responsible for filling in the detail_header, detail_buttons,
+detail_tab_content, discussion_tab_content, and options_tab_content.
+If extra_hd is overriden in a template, it should include {{ block.super }},
+in order to include the script to render comments and initialize cart buttons.
+{% endcomment %}
+
+{% block extra_hd %}
+    {% load staticfiles %}
+    <title>{{ content.title }}</title>
+    {% load compress %}
+    {% compress js %}
+    <script type='text/javascript' src="{% static "bootstrap/plugins/markdown.min.js" %}"></script>
+    <script>
+        $(document).ready(function ($)
+        {
+            $("#rendered-comment").html(markdown.toHTML($("#hidden-comment").text()));
+            init_cart_buttons();
+        });
+    </script>
+    {% endcompress %}
+{% endblock %}
+
+{% block page_content %}
+    {% block detail_header %}
+        <h1>{{ content.title }}</h1>
+    {% endblock %}
+    <hr>
+
+    <div class="row">
+        <div class="col-sm-3">
+            <div class="well well-sm" id="sidebar" >
+                <ul class="nav nav-pills nav-stacked">
+                        <li class="active"><a href="#detail_tab" data-toggle="pill">Details</a></li>
+                        <li class="disabled"><a href="" data-toggle="pill">Discussion</a></li>
+                        {% if content.can_edit %}
+                            <li><a href="#options_tab" data-toggle="pill">Options</a></li>
+                        {% endif %}
+                </ul>
+            </div>
+            {% block detail_buttons %}
+            {% endblock %}
+        </div>
+        <div class="col-sm-9">
+            <div class="tab-content">
+                <div id="detail_tab" class="tab-pane in active fade">
+                    {% block detail_tab_content %}
+                    {% endblock %}
+                </div>
+
+                <div id="discussion_tab" class="tab-pane fade">
+                    {% block discussion_tab_content %}
+                    {% endblock %}
+                </div>
+
+                {% if content.can_edit %}
+                    <div id="options_tab" class="tab-pane fade">
+                        {% block options_tab_content %}
+                        No options exist for this object.
+                        {% endblock %}
+                    </div>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+{% endblock %}

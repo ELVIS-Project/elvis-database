@@ -10,35 +10,39 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="description" content="">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
+    <link rel="icon" href="{% static "favicon.ico" %}">
+    {%  load compress %}
+    {% compress css %}
     <link href="{% static "bootstrap/css/bootstrap.min.css" %}" rel="stylesheet" media="screen">
     <link href="{% static "css/elvis-style.css" %}" rel="stylesheet" media="screen">
-
+    {% endcompress %}
+    {% compress js %}
     <script type='text/javascript' src="{% static "js/jquery-1.11.3.min.js" %}"></script>
     <script type='text/javascript' src="{% static "js/plugins.js" %}"></script>
     <script type='text/javascript' src="{% static "bootstrap/js/bootstrap.min.js" %}"></script>
-    <script type='text/javascript' src="{% static "js/elvis-scripts/cartButtonScript.min.js" %}"></script>
-
-
-    <link rel="icon" href="{% static "favicon.ico" %}">
-
+    <script type='text/javascript' src="{% static "js/elvis-scripts/cartButtonScript.js" %}"></script>
+    <script>
+        $(document).ready(function ($) {
+            $base_modal_header = $("#base-modal-header");
+            $base_modal_title = $("#base-modal-title");
+            $base_modal_close_btn = $("#base-modal-close-btn");
+            $base_modal_body = $("#base-modal-body");
+            $base_modal_footer = $("#base-modal-footer");
+            $base_modal = $("#base-modal");
+        });
+    </script>
+    {% endcompress %}
     {% block extra_hd %}
     {% endblock %}
-
-    <script type="text/javascript">
-        $(document).ready(function ($)
-        {
-            // initialize the download manager script
-            cartButtonRefresh();
-        })
-    </script>
 </head>
+<body>
 
 <div class="modal fade" id="base-modal" data-backdrop="static" data-keyboard="false">
     <div class="modal-dialog">
         <div class="modal-content">
             <div class="modal-header" id="base-modal-header">
-                <h4 class="modal-title">Modal title</h4>
+                <button type="button" hidden="hidden" class="close" id="base-modal-close-btn" data-dismiss="modal">&times;</button>
+                <h4 class="modal-title" id="base-modal-title">Modal title</h4>
             </div>
             <div class="modal-body" id="base-modal-body">
             </div>
@@ -48,16 +52,17 @@
     </div>
 </div>
 
-<body>
 
 <div id="wrapper">
-    <nav class="navbar navbar-default" style="margin-bottom:0px">
+    <nav class="navbar navbar-default navbar-fixed-top" style="margin-bottom:0px">
+    <div class="row row-elvis-navbar">
+    <div class="col-sm-10 col-sm-offset-1">
         <div class="navbar-header">
-            <a class="navbar-brand" href="/">ELVIS Database</a>
-            <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#homeNavbar"><span
+            <a class="navbar-brand" href="/" style="padding-left:0px">ELVIS Database</a>
+            <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#homeNavbar" style="margin-right: 0px"><span
                     class="icon-bar"></span><span class="icon-bar"></span><span class="icon-bar"></span></button>
         </div>
-        <div class="navbar-collapse collapse" id="homeNavbar">
+        <div class="navbar-collapse collapse" id="homeNavbar" style="padding-right: 15px">
             <ul class="nav navbar-nav">
                 <li><a href="/about">About</a></li>
                 <li><a href="/search">Search</a></li>
@@ -71,19 +76,25 @@
                     </ul>
                 </li>
                 {% if user.is_authenticated %}
-                    <li><a href="/pieces/upload">Upload</a></li>
+                    <li class="dropdown">
+                        <a href="#" class="dropdown-toggle" data-toggle="dropdown">Create <span class="caret"></span></a>
+                        <ul class="dropdown-menu">
+                            <li><a href="/pieces/upload">Upload Piece</a></li>
+                            <li><a href="/collection/create">Create Empty Collection</a></li>
+                        </ul>
+                    </li>
                 {% endif %}
             </ul>
             {% if user.is_authenticated %}
-                <ul class="nav navbar-nav navbar-right">
+                <ul class="nav navbar-nav navbar-right" >
                     <li>
-                        <a href="/download/cart/">
-                            Download Cart
-                            <span id="collection-count">({{ user.downloads.all.first.cart_size }})</span>
+                        <a href="/download-cart/">
+                            <span id="collection-count">({% if request.session.cart %}{{ request.session.cart | length}}{% else %}0{% endif %})</span>
+                            <span  class="glyphicon glyphicon-align-center glyphicon-shopping-cart"></span>
                         </a>
                     </li>
                     <li class="dropdown">
-                        <a href="#" class="dropdown-toggle" data-toggle="dropdown">Account<span class="caret"></span></a>
+                        <a href="#" class="dropdown-toggle" data-toggle="dropdown" style="padding-right: 0px">Account<span class="caret"></span></a>
                         <ul class="dropdown-menu">
                             <li><a href="/account">Profile</a></li>
                             <li class="divider"></li>
@@ -101,31 +112,35 @@
                 </ul>
             {% endif %}
         </div>
+    </div>
+    </div>
     </nav>
     {% block full-header %}
     {% endblock %}
     <div id="content">
-        <div class="container" id="content-container">
-            <div class="row">
-                <div class="col-12" style="padding-left:20px; padding-right:20px">
-                    {% block wrap %}
-                    {% endblock %}
-                </div>
+        <div class="row row-elvis-content">
+            <div class="col-sm-10 col-sm-offset-1">
+                {% block page_content %}
+                {% endblock %}
             </div>
         </div>
     </div>
 
     <div id="footer">
         <div class="footer">
-            <div class="row text-muted text-center">
+            <div class="text-muted text-center">
                 <hr>
-                <a href="http://mcgill.ca" target="_blank">McGill University</a> |
-                <a href="http://www.mcgill.ca/music/" target="_blank">Schulich School of Music</a> |
-                <a href="http://www.cirmmt.org" target="_blank">CIRMMT</a> |
-                <a href="http://simssa.ca" target="_blank">SIMSSA</a> |
-                <a href="http://elvisproject.ca" target="_blank">ELVIS Project</a> |
-                <a href="/contact" target="_blank">Contact</a> <br>
-                2015
+                <ul class="menu">
+                    <li class="first"><a href="http://mcgill.ca" target="_blank">McGill University</a></li>
+                    <li><a href="http://www.mcgill.ca/music/" target="_blank">Schulich School of Music</a></li>
+                    <li><a href="http://www.cirmmt.org" target="_blank">CIRMMT</a></li>
+                    <li><a href="http://simssa.ca" target="_blank">SIMSSA</a></li>
+                    <li><a href="http://elvisproject.ca" target="_blank">ELVIS Project</a></li>
+                    <li class="last"><a href="/contact" target="_blank">Contact</a></li>
+                </ul>
+                <div class="date">
+                    <p>Last Updated: {% now "Y" %}</p>
+                </div>
             </div>
         </div>
     </div>

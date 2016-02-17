@@ -1,0 +1,36 @@
+<form class="recursive-patch-download-form" action="/download-cart/" method="post">
+    <input type="hidden" name="button_type" value={{ button_type|default:"badge" }}>
+    <input type="hidden" name="item_type"  value="{{ type }}" />
+    <input type="hidden" name="id"  value="{{ id }}" />
+
+    {% if in_cart == True %}
+        <input type="hidden" name="in_cart" value="true" />
+        <input type="hidden" name="action" value="remove" />
+        {% if button_type|default_if_none:"badge" == "badge" %}
+            <button type="button" class="btn btn-mini btn-danger cart-badge" data-container="body" data-toggle="tooltip" data-placement="top" title="" data-original-title="Remove from Downloads"><span class="glyphicon glyphicon-minus"> </span> </button>
+        {% else %}
+            <button type="button" class="btn btn-danger cart-button">Remove from Cart</button>
+        {% endif %}
+
+    {% elif in_cart == "piece" %}
+        <input type="hidden" name="in_cart" value="true" />
+        <input type="hidden" name="action" value="remove" />
+        {% if button_type|default_if_none:"badge" == "badge" %}
+            <button type="button" class="btn btn-mini btn-info cart-badge disabled" data-container="body" data-toggle="tooltip" data-placement="top" title="" data-original-title="Locked in by Piece."><span class="glyphicon glyphicon-lock"> </span> </button>
+        {% else %}
+            <button type="button" class="btn btn-info disabled">Locked in by Piece.</button>
+        {% endif %}
+        
+    {% elif not in_cart|default_if_none:True %}
+        <input type="hidden" name="in_cart" value="false" />
+        <input type="hidden" name="action" value="add" />
+        {% if button_type|default_if_none:"badge" == "badge" %}
+            <button type="button" class="btn btn-mini btn-success cart-badge" data-container="body" data-toggle="tooltip" data-placement="top" title="" data-original-title="Add to Downloads"><span class="glyphicon glyphicon-plus"> </span> </button>
+        {% else %}
+            <button type="button" class="btn btn-success cart-button">Add to Cart</button>
+        {% endif %}
+    {% else %}
+        <input type="hidden" name="in_cart" value="init" />
+        <input type="hidden" name="action" value="add" />
+    {% endif %}
+</form>

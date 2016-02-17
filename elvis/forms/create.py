@@ -1,6 +1,13 @@
 from django import forms
 
+
 class PieceForm(forms.Form):
+    """Validate piece upload form.
+
+     This form can only validate the static fields (i.e. check that
+     required fields are there). For this reason, when this form is used
+     in views/piece, it is first passed to validate_dynamic_piece_form().
+    """
     # Basic Fields
     title = forms.CharField()
     composer = forms.CharField()
@@ -36,7 +43,29 @@ class PieceForm(forms.Form):
             self.add_error("languages", forms.ValidationError("Language is required for vocal/mixed pieces."))
 
 
+def validate_dynamic_piece_form(request, form):
+    """Validate the dynamic and static fields on the piece create form.
+    :param request: The relevant django request object.
+    :param form: a PieceForm
+    :return: a validated PieceForm.
+    """
+    form.is_valid()
+    movement_title_list = [x for x in list(request.POST.keys()) if x.startswith('_existingmov_title_')]
+    for mov in movement_title_list:
+        if not request.POST.get(mov):
+            form.add_error(None, [mov, "Movements require a title."])
+
+    file_source_list = [x for x in list(request.POST.keys()) if x.startswith('files_source')]
+    for source in file_source_list:
+        if request.FILES.get(source.replace('source', 'files')) and not request.POST.get(source):
+            form.add_error(None, [source, "Files require a source!<br>"])
+
+    return form
+
+
 class CollectionForm(forms.Form):
+    """Validates a new collection form."""
     title = forms.CharField()
     permission = forms.CharField(required=False)
     comment = forms.CharField(required=False)
+    initialize_empty = forms.BooleanField(required=False)

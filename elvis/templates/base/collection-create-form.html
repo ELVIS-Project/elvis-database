@@ -1,0 +1,43 @@
+<form action="/collections/" method="post" id="new-collection-form" enctype="multipart/form-data">{% csrf_token %}
+    <div class="input-group" id="title-group"
+         data-toggle="popover" data-placement="top" data-trigger="hover focus"
+         data-html='true'
+         title="<b>Title</b><span class='label label-primary pull-right'>Required</span>"
+         data-content="Note: Duplicate titles will produce duplicate collections in the database.">
+        <span class="input-group-addon">
+            <strong>Title</strong>
+        </span>
+        <input type="text" id="title" name="title" autocomplete="off" class="form-control upload-input-field"
+        placeholder="My Collection" aria-label="Title">
+    </div>
+    <div id="title_suggestion_menu" class="suggestion-div"></div>
+    <div id="title_error"></div>
+    <br/>
+
+    <div class="row">
+        <div class="col-md-12" data-toggle="popover" data-placement="top" data-trigger="hover focus" data-html='true' title="<b>Permission</b><span class='label label-warning pull-right'>Optional</span>"
+             data-content="Choose whether or not your collection is visible to the public.">
+            <div class="btn-group btn-group-justified form-inline radio" id="permission" data-toggle="buttons">
+                <label class="btn btn-default upload-2button">
+                    <input type="radio" name="permission" value="Public" aria-label="Permission"> Public
+                </label>
+                <label class="btn btn-default upload-2button">
+                    <input type="radio" name="permission" value="Private" aria-label="Permission">Private
+                </label>
+            </div>
+            <div id="permission_error"></div>
+        </div>
+    </div>
+    <br/>
+
+    <div class="form-group">
+        <textarea class="form-control upload-input-field" rows="7" name="comment" id="comment" data-provide="markdown" style="resize:vertical"
+                  placeholder="Comments..." aria-label="Comments"></textarea>
+    </div>
+    <br/>
+    <input type="hidden" name="initialize_empty" value="True"/>
+    <div class="text-right">
+        <button type='submit' id='piece-submit' class='btn btn-success'>Submit</button>
+    </div>
+    <br>
+</form>

@@ -1,139 +1,17 @@
-{% extends "base.html" %}
+{% extends "base/base_detail.html" %}
 
 {% block extra_hd %}
     <title>{{ content.title }}</title>
-    {% load staticfiles %}
-    <script type='text/javascript' src="{% static "bootstrap/plugins/markdown.min.js" %}"></script>
-    <script>
-        $(document).ready(function ($)
-        {
-            var $add_movement = $('#add-movement');
-            $add_movement.on("click", function (event)
-            {
-                event.preventDefault();
-                event.stopImmediatePropagation();
-                $.ajax({
-                    type: "post",
-                    url: "/downloads/",
-                    data: $(event.target).parents(".recursive-patch-download-form").serialize(),
-                    success: function (data)
-                    {
-                        var $collection_count = $("#collection-count");
-                        $collection_count.fadeOut(100, function ()
-                        {
-                            $collection_count.text("(" + data.count + ")");
-                        });
-                        $collection_count.fadeIn(100);
-                    }
-                })
-            });
-            $add_movement.val(window.location.href);
-            $("#rendered-comment").html(markdown.toHTML($("#hidden-comment").text()))
-        })
-    </script>
+    {{ block.super }}
 {% endblock %}
 
-{% block wrap %}
-    <div class="page-header">
-        <h2> {{ content.title }}
-        <span class="pull-right">
-            {% include "includes/download-button-inc.html" with download_type="elvis_movement" download_item_id=content.item_id title="Add to Downloads" in_cart=content.in_cart%}
-        </span></h2>
-        <p>
-            <span class="label label-primary">Movement</span> - Created by {{ content.uploader.username }}
-            on {{ content.created | date:"d F Y" }}. Last updated on {{ content.updated | date:"d F Y" }}.
-            {% if content.piece %}
-                <br>Part of <a href="{{ content.piece.url }}">{{ content.piece.title }}</a>
-            {% endif %}
-        </p>
-    </div>
+{% block detail_buttons %}
+    {% include "base/download-badge.html" with id=content.uuid type="elvis_movement" button_type="button" in_cart=content.in_cart%}
+{% endblock %}
 
-    <div class="row">
-        <div class="col-sm-6">
-            <dl class="dl-horizontal">
-                <dt>Composer</dt>
-                <dd><a href="{{ content.composer.url }}">{{ content.composer.name }}</a></dd>
-                <dt>Date of Composition</dt>
-                {% if content.composition_start_date  == content.composition_end_date %}
-                    <dd>{{ content.composition_start_date }}</dd>
-                {% elif content.composition_start_date %}
-                    <dd>{{ content.composition_start_date }}-{{ content.composition_end_date }} </dd>
-                {% else %}
-                    <dd>{{ content.composition_end_date }}</dd>
-                {% endif %}
-                <dt>Number of voices</dt>
-                <dd>
-                    {{ content.number_of_voices }}
-                </dd>
-                <dt>Genre{{ content.genres|length|pluralize }}</dt>
-                <dd>
-                    {% for genre in content.genres %}
-                        {{ genre.name }}{% if not forloop.last %},&nbsp;{% endif %}
-                    {% empty %}
-                        Unknown
-                    {% endfor %}
-                </dd>
-                <dt>Instrument Voice{{ content.instruments_voices|length|pluralize }}</dt>
-                <dd>
-                    {% for instrument in content.instruments_voices %}
-                        {{ instrument.name }}{% if not forloop.last %},&nbsp;{% endif %}
-                    {% empty %}
-                        Unknown
-                    {% endfor %}
-                </dd>
-                {% if content.collections %}
-                    <dt>Collection{{ content.collections|length|pluralize }}
-                    <dd>
-                        {% for collection in content.collections %}
-                            {% if collection.public %}
-                                <a href="{{ collection.url }}">{{ collection.title }}</a>
-                            {% endif %}
-                        {% endfor %}
-                    </dd>
-                {% endif %}
-            </dl>
-        </div>
-        <div class="col-sm-6">
-            <dl class='dl-horizontal'>
-                <dt>Place of Origin</dt>
-                <dd>
-                    {% for place in content.locations %}
-                        {{ place.name }}{% if not forloop.last %},&nbsp;{% endif %}
-                    {% empty %}
-                        Unknown
-                    {% endfor %}
-                </dd>
-                <dt>Language{{ content.languages|length|pluralize }}</dt>
-                <dd>
-                    {% for language in content.languages %}
-                        {{ language.name }}{% if not forloop.last %},&nbsp;{% endif %}
-                    {% empty %}
-                        Unknown
-                    {% endfor %}
-                </dd>
-                <dt>Source{{ content.languages|length|pluralize }}</dt>
-                <dd>
-                    {% for source in content.sources %}
-                        {{ source.name }}{% if not forloop.last %},&nbsp;{% endif %}
-                    {% empty %}
-                        Unknown
-                    {% endfor %}
-                </dd>
-                <dt>Religiosity</dt>
-                <dd>{{ content.religiosity }}</dd>
-                <dt>Voice Type</dt>
-                <dd>{{ content.vocalization }}</dd>
-                {% if content.tags %}
-                    <dt>Tag{{ content.tags.count|length|pluralize }}</dt>
-                    <dd>
-                        {% for tag in content.tags %}
-                            <a href="{{ tag.url }}" class="label label-primary rounded">{{ tag.name }} </a> &nbsp;
-                        {% endfor %}
-                    </dd>
-                {% endif %}
-            </dl>
-        </div>
-    </div>
+{% block detail_tab_content %}
+
+    {% include "base/detail_printout.html" %}
 
     {% if content.comment %}
         <div id="hidden-comment" hidden="hidden">{{ content.comment }}</div>
@@ -141,26 +19,12 @@
     {% endif %}
 
     {% if content.attachments %}
-            <h3>Available Attachments</h3>
-            <table class="table table-condensed">
-                <thead>
-                <tr>
-                    <th width="5%" style="text-align:center"></th>
-                    <th width="60%">Title</th>
-                    <th>Source</th>
-                </tr>
-                </thead>
-                <tbody>
-                {% for attachment in content.attachments %}
-                    <tr>
-                        <td></td>
-                        <td><a href="{{ attachment.attachment }}">{{ attachment.file_name | default:"Download" }}</a>
-                        </td>
-                        <td>{{ attachment.source }}</td>
-                    </tr>
-                {% endfor %}
-                </tbody>
-            </table>
+        <h3>Attachments
+            <small>({{ content.attachments | length }})</small>
+        </h3>
+        {% for a in content.attachments %}
+            {% include "base/list_item_compact.html"  with url=a.url title=a.title attachment=True %}
+        {% endfor %}
     {% endif %}
 
 {% endblock %}
