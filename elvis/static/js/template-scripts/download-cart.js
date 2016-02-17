@@ -95,11 +95,15 @@ $(document).ready(function () {
             }
             return fileExtensions;
         };
+
         $.ajax({
             type: "get",
             url: "/downloading/",
             async: false,
-            data: {'extensions': getFileExtensions()},
+            data: {
+                'extensions': getFileExtensions(),
+                'make_dirs': $('select[name="make_dirs"]').val() === "directories"
+            },
             success: function (data) {
                 console.log(data);
                 $progress_div.slideDown();
