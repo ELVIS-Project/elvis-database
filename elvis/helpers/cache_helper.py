@@ -226,7 +226,6 @@ class ElvisCart:
 
         # Determine the type of item and set up.
         obj, cart_id, item_id, model = self._parse_item(item)
-        self.cart[cart_id] = True
 
         # Get the object if it's not found yet.
         if not obj:
@@ -235,10 +234,10 @@ class ElvisCart:
                 return
 
         # Add the Movement if it's Piece is not already there.
-        if model == Movement:
-            if not self.cart.get(obj.parent_cart_id):
-                self.cart[cart_id] = True
+        if model == Movement and self.cart.get(obj.parent_cart_id):
             return
+        else:
+            self.cart[cart_id] = True
 
         # Deal with objects with nesting properly.
         if model == Piece:
@@ -248,9 +247,8 @@ class ElvisCart:
             for piece in obj.pieces.all():
                 parsed = Item(piece, piece.cart_id, str(piece.uuid), Piece)
                 self.add_item(parsed)
-            for mov in obj.movements.all():
-                if not self.cart.get(mov.parent_cart_id):
-                    self.cart[mov.cart_id] = True
+            for mov in obj.free_movements.all():
+                self.cart[mov.cart_id] = True
 
     def remove_item(self, item):
         """Remove some item (and its nested items) from the cart.
@@ -283,7 +281,7 @@ class ElvisCart:
             for piece in obj.pieces.all():
                 parsed = Item(piece, piece.cart_id, str(piece.uuid), Piece)
                 self.remove_item(parsed)
-            for mov in obj.movements.all():
+            for mov in obj.free_movements.all():
                 self.cart.pop(mov.cart_id, None)
 
     def save(self):
