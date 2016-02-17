@@ -1,26 +1,27 @@
 #!/usr/bin/env bash
 
+ENV="dev"
 BASE_DIR="/srv/webapps/elvisdb"
 
 # Save a backup
-mv "${BASE_DIR}/dev" "${BASE_DIR}/old/dev_$(date +%s)"
+mv "${BASE_DIR}/${ENV}" "${BASE_DIR}/old/${ENV}_$(date +%s)"
 
 # Clone the repo
-git clone -b dev git@github.com:ELVIS-Project/elvis-database.git ${BASE_DIR}/dev
+git clone -b dev git@github.com:ELVIS-Project/elvis-database.git ${BASE_DIR}/${ENV}
 
 # Set up the virtualenv
-virtualenv -p python3 ${BASE_DIR}/dev/.env
+virtualenv -p python3 ${BASE_DIR}/${ENV}/.env
 
 # Install requirements
-source ${BASE_DIR}/dev/.env/bin/activate
-pip install -r ${BASE_DIR}/dev/requirements.txt
+source ${BASE_DIR}/${ENV}/.env/bin/activate
+pip install -r ${BASE_DIR}/${ENV}/requirements.txt
 
 # Perform Django management tasks
-python ${BASE_DIR}/dev/manage.py collectstatic --noinput
-python ${BASE_DIR}/dev/manage.py migrate --noinput
+python ${BASE_DIR}/${ENV}/manage.py collectstatic --noinput
+python ${BASE_DIR}/${ENV}/manage.py migrate --noinput
 
 # Restart supervisor processes
-sudo supervisorctl restart elvis-db-dev
-sudo supervisorctl restart elvis-celery-dev
+sudo supervisorctl restart elvis-db-${ENV}
+sudo supervisorctl restart elvis-celery-${ENV}
 
-echo "Elvis DB Dev Deployment Complete"
+echo "Elvis DB ${ENV} Deployment Complete"
