@@ -79,14 +79,27 @@ $(document).ready(function () {
     });
 
     $("#confirm-download").click(function () {
-        var selection = $("#filefilt").val();
-        if (selection === null)
-            selection = ["all"];
+        /**
+         * Get the file extensions that are currently checked.
+         *
+         * @returns {Array}
+         */
+        var getFileExtensions = function() {
+            var fileExtensions = [];
+            $('input[name="file-extension-selector"]:checked').each(function(index){
+                fileExtensions.push($(this).val());
+            });
+            // Handle empty case
+            if (fileExtensions.length === 0) {
+                fileExtensions.push("all");
+            }
+            return fileExtensions;
+        };
         $.ajax({
             type: "get",
             url: "/downloading/",
             async: false,
-            data: {'extensions': selection},
+            data: {'extensions': getFileExtensions()},
             success: function (data) {
                 console.log(data);
                 $progress_div.slideDown();
