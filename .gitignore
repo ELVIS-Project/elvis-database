@@ -1,12 +1,6 @@
 *.pyc
 *.sqlite3
 .idea
-<<<<<<< HEAD
-=======
-solr/target/*
-solr/logs/*
-solr/suggestions*
->>>>>>> refs/heads/master
 .env
 .DS_Store
 dumps
@@ -14,20 +8,9 @@ media_root/*
 static_root/*
 pom.xml
 *.iml
-<<<<<<< HEAD
 dump.rdb
 #Local file ignores
 elvis/local_settings.py
 solr/elvis_dev/data
 solr/elvis_test/data
 start.sh
-=======
-env_3
-dump.rdb
-#Local file ignores
-solr/solr/collection1/conf/solrconfig.xml
-elvis/local_settings.py
-elvis/wsgi.py
-solr/elvis_dev/data
-solr/elvis_test/data
->>>>>>> refs/heads/master
