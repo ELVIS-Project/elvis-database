@@ -80,6 +80,8 @@
                                     {{ att.extension }} <span class='badge'>{{ att.count }}</span>
                                 </label>
                             </div>
+                            {% empty %}
+                                <p class="text-danger">The pieces in your cart do not have any files attached to them.  No files will be included.</p>
                             {% endfor %}
                         </div>
                     </div>
