@@ -149,7 +149,7 @@ def save_cart(sender, request, user, **kwargs):
 
 @receiver(user_logged_in)
 def load_cart(sender, request, user, **kwargs):
-    user_download = request.user.downloads.first()
+    user_download = user.downloads.first()
     cart = {}
     cart.update({"M-" + str(k.uuid): True for k in user_download.collection_movements.all()})
     cart.update({"P-" + str(k.uuid): True for k in user_download.collection_pieces.all()})
