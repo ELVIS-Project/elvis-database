@@ -4,6 +4,21 @@ from django.test import Client
 from model_mommy import mommy
 
 
+# Some user accounts to use for testing
+real_user = {
+    'username': 'testuser',
+    'password': 'test'
+}
+fake_user = {
+    'username': 'fake',
+    'password': 'fake'
+}
+creator_user = {
+    'username': 'creatoruser',
+    'password': 'test'
+}
+
+
 class ElvisTestSetup(object):
     def url(self, obj):
         model_name = obj.__class__.__name__.lower()
@@ -20,6 +35,6 @@ class ElvisTestSetup(object):
         self.test_private_collection = mommy.make('elvis.Collection', public=False, creator=self.creator_user)
 
     def setUp_user(self):
-        self.test_user = User.objects.create_user(username='testuser', password='test')
-        self.creator_user = User.objects.create_user(username='creatoruser', password='test')
+        self.test_user = User.objects.create_user(username=real_user['username'], password=real_user['password'])
+        self.creator_user = User.objects.create_user(username=creator_user['username'], password=creator_user['password'])
         self.super_user = User.objects.create_superuser(username='superuser', email='a@g.com', password='test')
