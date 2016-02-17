@@ -7,7 +7,7 @@ from django.conf import settings
 from elvis.renderers.custom_html_renderer import CustomHTMLRenderer
 from elvis.helpers.solrsearch import SolrSearch
 from elvis.helpers import paginate
-from elvis.views.download import add_item
+from elvis.helpers.cache_helper import ElvisCart
 
 
 class SearchViewHTMLRenderer(CustomHTMLRenderer):
@@ -153,12 +153,14 @@ class SearchAndAddToCartView(SearchView):
         paginator = paginate.SolrPaginator(search_results)
         # Loop through the result pages and add everything to the cart
         total = 0
+        cart = ElvisCart(request)
         for page_number in range(paginator.num_pages):
             results = paginator.page(page_number + 1).result
             # Get the items from the page
             for search_object in results:
-                add_item(search_object["type"], search_object["uuid"], cart)
+                cart.add_item({'item_type':search_object["type"],
+                               'id': search_object["uuid"]})
                 total += 1
         # Save the modified cart
-        request.session['cart'] = cart
-        return Response("{0} items added to cart.".format(total), status=status.HTTP_200_OK)
+        cart.save()
+        return Response({"count": len(cart)}, status=status.HTTP_200_OK)
