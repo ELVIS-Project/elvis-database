@@ -24,4 +24,8 @@ python ${BASE_DIR}/${ENV}/manage.py migrate --noinput
 sudo supervisorctl restart elvis-db-${ENV}
 sudo supervisorctl restart elvis-celery-${ENV}
 
+# Permissions
+chown $USER:elvisDB ${BASE_DIR}/${ENV}
+chmod 775 ${BASE_DIR}/${ENV}
+
 echo "Elvis DB ${ENV} Deployment Complete"
