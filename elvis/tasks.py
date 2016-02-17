@@ -23,10 +23,10 @@ def rebuild_suggester_dicts():
 
 
 @app.task(name='elvis.zip_files')
-def zip_files(cart, extensions, username):
+def zip_files(cart, extensions, username, make_dirs):
     with tempfile.TemporaryDirectory() as tempdir:
-        zipper = CartZipper(tempdir, cart, extensions, username, make_dirs=False)
-        zipped_file = zipper.zip_files(zip_files)
+        zipper = CartZipper(tempdir, cart, extensions, username)
+        zipped_file = zipper.zip_files(zip_files, make_dirs)
     return zipped_file
 
 
@@ -36,14 +36,12 @@ def delete_zip_file(path):
 
 
 class CartZipper:
-    def __init__(self, tempdir, cart, extensions, username, **kwargs):
+    def __init__(self, tempdir, cart, extensions, username):
         """
         :param tempdir: Path to temporary directory where zipping should happen.
         :param cart: Dictionary of user's cart content (from session)
         :param extensions: Extensions the user is interested in downloading.
         :param username: Name of user cart is being zipped for
-        :param kwargs:
-            -- make_dirs: Bool to make either a hierarchical or flat zipfile.
         """
         self.cart = cart
         self.extensions = set(extensions)
@@ -51,15 +49,17 @@ class CartZipper:
         self.username = self._normalize_name(username)
         self.counter = 0
         self.total = 0
-        self.dir_hierarchy = kwargs.get("make_dirs", True)
+        self.dir_hierarchy = False
         self.root_dir_name = ""
 
-    def zip_files(self, task):
+    def zip_files(self, task, make_dirs):
         """Make the zip file.
 
         :param task: The celery task object. For updating progress.
+        :param make_dirs: Bool to toggle hierarchical zip file.
         :return: Path to the zipped file.
         """
+        self.dir_hierarchy = make_dirs
         archive_name = "ElvisDownload-{0}".format(datetime.datetime.utcnow().strftime("%Y%m%d-%H%M%S"))
         os.chdir(self.tempdir)
         root_dir_name = os.path.join(self.tempdir, archive_name)

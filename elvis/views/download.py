@@ -146,9 +146,10 @@ class Downloading(generics.GenericAPIView):
 
         if request.GET.get('extensions[]'):
             extensions = request.GET.getlist('extensions[]')
+            make_dirs = request.GET.get('make_dirs', False)
             cart = request.session.get("cart", {})
             task_id = str(uuid.uuid4())
-            tasks.zip_files.apply_async(args=[cart, extensions, request.user.username], task_id=task_id)
+            tasks.zip_files.apply_async(args=[cart, extensions, request.user.username, make_dirs], task_id=task_id)
             return Response({"task": task_id}, status=status.HTTP_200_OK)
 
         return Response(status=status.HTTP_200_OK)
