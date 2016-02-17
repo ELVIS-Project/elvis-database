@@ -19,6 +19,30 @@
 {% endblock %}
 
 {% block page_content %}
+    <div class="modal fade" id="add_to_collection_modal" data-backdrop="static" role="dialog">
+        <label id="myModalLabel">Are you sure you want to clear collection?</label>
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <form action="/collections/" method="post" id="new-collection-form" enctype="multipart/form-data">
+                    {% csrf_token %}
+                    <div class="modal-header">
+                        <h4 class="modal-title">Add to Existing Collection</h4>
+                    </div>
+                    <div class="modal-body">
+                        <p>Feature coming soon...</p>
+                    </div>
+                    <div class="modal-footer">
+                        <div class="text-right">
+                            <button type="button" class="btn btn-default" data-dismiss="modal">Cancel </button>
+                            <button type='submit' id='add-collection-submit' class='btn btn-success'>Submit<span
+                                    class='glyphicon glyphicon-chevron-right'></span></button>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
     <div class="modal fade" id="save_modal" data-backdrop="static" role="dialog">
     <label id="myModalLabel">Are you sure you want to clear collection?</label>
         <div class="modal-dialog">
@@ -26,7 +50,7 @@
                 <form action="/collections/" method="post" id="new-collection-form" enctype="multipart/form-data">
                     {% csrf_token %}
                     <div class="modal-header">
-                        <h4 class="modal-title">Save Collection</h4>
+                        <h4 class="modal-title">Save New Collection</h4>
                     </div>
                     <div class="modal-body">
                         <div class="input-group">
@@ -115,8 +139,11 @@
                 <button id="open-clear-modal" type="button" class="btn btn-danger">
                     <span class="glyphicon glyphicon-remove"></span> Clear Cart
                 </button>
+                <button id="add-to-collection" name="add-to-collection" type="button" class="btn btn-primary">
+                    <span class="glyphicon glyphicon-plus-sign"></span> Add to Existing Collection
+                </button>
                 <button id="save-collection" name="save-collection" type="button" class="btn btn-primary">
-                    <span class="glyphicon glyphicon-floppy-disk"></span> Save as Collection
+                    <span class="glyphicon glyphicon-floppy-disk"></span> Save as New Collection
                 </button>
                 <button id="open-download-modal" name="download-collection" class="btn btn-info">
                     <span class="glyphicon glyphicon-download"></span>  Download
