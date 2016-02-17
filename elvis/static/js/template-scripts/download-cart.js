@@ -67,7 +67,9 @@ $(document).ready(function () {
         $base_modal.modal("show");
     });
 
-
+    $("#add-to-collection").click(function() {
+        $('#add_to_collection_modal').modal('show');
+    });
 
     $("#save-collection").click(function () {
         $('#save_modal').modal('show');
