@@ -148,9 +148,14 @@ class ElvisCart:
 
         Can test on a cart_id (str), on a dict (with keys 'id'
         and 'item_type') or on an object with a cart_id.
+
+        Note: Does not test if a movement't parent piece is in the cart,
+        this is left up to the caller to check separately if they desire.
         """
         obj, cart_id, item_id, model = self._parse_item(item)
 
+        if not cart_id:
+            return False
         if self.cart.get(cart_id, False):
             return True
         else:
@@ -169,6 +174,8 @@ class ElvisCart:
             -An ElvisModel
         """
         obj = None
+        if not item:
+            return Item(None,None,None,None)
         if isinstance(item, Item):
             return item
         elif isinstance(item, str):
