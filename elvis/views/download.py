@@ -89,7 +89,7 @@ class DownloadCart(generics.GenericAPIView):
         for item in items:
             if item['item_type'] == "elvis_movement":
                 mov = try_get(item['id'], Movement)
-                if mov and mov.parent_cart_id in cart:
+                if mov.parent_cart_id in cart:
                     back = "Piece"
                 else:
                     back = item in cart
