@@ -152,8 +152,6 @@ def collection_update(request, *args, **kwargs):
     :return:
     """
     patch_data = request.data
-    import pdb
-    pdb.set_trace()
     # Extract form data and validate
     form = CollectionForm(patch_data)
     if not form.is_valid():
