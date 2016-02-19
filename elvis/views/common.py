@@ -6,7 +6,6 @@ from elvis.models import Collection
 from django.apps import apps
 
 
-
 """Common behaviour for most views on the site are defined here.
 This should make it easier to add/update security measures or
 features to all views at once."""
@@ -50,10 +49,19 @@ class ElvisDetailView(generics.RetrieveUpdateDestroyAPIView):
     a check to see if the user is allowed to edit the object,
     which is used in template rendering."""
     def get(self, request, *args, **kwargs):
-        response = super().get(request, *args, **kwargs)
-        if not response.data['can_view']:
+        values = set(self.request.GET.getlist('values[]'))
+        resp = super().get(request, *args, **kwargs)
+        if not resp.data['can_view']:
             raise PermissionDenied
-        return response
+
+        if not values:
+            return resp
+
+        # Filter for requested values.
+        data = resp.data
+        new_data = {k: data.get(k) for k in values}
+        resp.data = new_data
+        return resp
 
     """Default DELETE/PATCH/PUT behaviour across detail views is to
     check if the user is allowed to edit the object,
@@ -82,6 +90,16 @@ class ElvisListCreateView(generics.ListCreateAPIView):
 
     def dispatch(self, *args, **kwargs):
         return super().dispatch(*args, **kwargs)
+
+    def get(self, request, *args, **kwargs):
+        values = set(self.request.GET.getlist('values[]'))
+        resp = super().get(self, request, *args, **kwargs)
+        if not values:
+            return resp
+        data = resp.data.get('results')
+        for i, item in enumerate(data):
+            data[i] = {k: item.get(k) for k in values}
+        return resp
 
     def get_queryset(self):
         model = apps.get_model('elvis', self.kwargs['model'])
