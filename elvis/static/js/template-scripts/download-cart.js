@@ -4,6 +4,7 @@ $(document).ready(function () {
     var $progress = $("#progress");
     var $progress_div = $("#progress-bar-div");
 
+    var cart;
 
     $("#collection-table").tablesorter({
         headers: {0: {sorter: false}, 1: {sorter: false}},
@@ -38,6 +39,39 @@ $(document).ready(function () {
         })
     });
 
+    $("#add-collection-submit").click(function(event) {
+        event.preventDefault();
+        console.log(cart);
+        // Get the movements and pieces from the cart
+        var pieces = cart["pieces"].map(function(piece) { return piece.id; });
+        var movements = cart["movements"].map(function(movement) { return movement.id});
+
+        console.log(pieces, movements);
+
+        var collectionId = $('input[name="collection_id"]:checked').val();
+
+        if (collectionId) {
+            $.ajax({
+                type: "PATCH",
+                url: "/collection/" + collectionId + "/add/",
+                processData: false,
+                contentType: "application/json",
+                data: JSON.stringify({
+                    'piece_ids': pieces,
+                    'movement_ids': movements
+                }),
+                success: function(data) {
+                    console.log("success!");
+                    // Redirect to the collection
+                    window.location.replace("/collection/" + collectionId + "/");
+                },
+                error: function(data) {
+                    console.log("error: ", data);
+                }
+            });
+        }
+    });
+
     $("#open-clear-modal").click(function () {
         $base_modal_title.html("Confirm clear");
         $base_modal_close_btn.show();
@@ -68,6 +102,35 @@ $(document).ready(function () {
     });
 
     $("#add-to-collection").click(function() {
+        var submitButton = $("#add-collection-submit");
+        // Disable the submit button until we have the data
+        submitButton.attr("disabled", "disabled");
+
+        // Fill up the collection list
+        var collectionList = $("#add_to_collection_modal").find(".modal-body");
+        console.log(collectionList);
+        collectionList.empty();
+        $.ajax({
+            url: "/collections/mine/",
+            dataType: "json",
+            success: function(data) {
+                console.log(data);
+                data["results"].forEach(function(result) {
+                    collectionList.append('<div class="radio"><label><input type="radio" name="collection_id" value="' + result["id"] + '" />' + result["title"] + '</label></div>');
+                });
+            }
+        });
+
+        $.ajax({
+            url: "/download-cart/",
+            success: function(data) {
+                // Save the cart
+                cart = data;
+                // Enable the submit button
+                submitButton.removeAttr("disabled");
+            }
+        });
+        // Display the modal
         $('#add_to_collection_modal').modal('show');
     });
 

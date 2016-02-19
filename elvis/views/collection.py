@@ -145,8 +145,8 @@ class CollectionAddElements(CollectionDetail):
                                                         piece_ids,
                                                         movement_ids)
             return HttpResponse(
-                content="Pieces added to collection.",
-                content_type="application/json",
+                # content="Pieces added to collection.",
+                # content_type="application/json",
                 status=status.HTTP_200_OK)
         else:
             return HttpResponse(
@@ -213,3 +213,12 @@ def collection_update(request, *args, **kwargs):
     # Prepare a response
     data = json.dumps({'success': True, 'id': collection.id, 'url': "/collection/{0}".format(collection.id)})
     return HttpResponse(data, content_type="json")
+
+
+class MyCollections(generics.RetrieveAPIView):
+    """Simply redirects to the collection list with a creator query"""
+    def get(self, request, *args, **kwargs):
+        if request.user.is_authenticated:
+            username = request.user.username
+            return HttpResponseRedirect("/collections/?creator={0}".format(username))
+        return HttpResponseRedirect("/login")
