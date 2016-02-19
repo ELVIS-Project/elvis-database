@@ -129,6 +129,53 @@ class CollectionDetail(ElvisDetailView):
             return super().determine_perms(request, *args, **kwargs)
 
 
+class CollectionAddElements(CollectionDetail):
+    def patch(self, request, *args, **kwargs):
+        """
+        If the user has permission to edit the collection, add the specified pieces
+        to the specified collection.
+
+        :param request:
+        :param args:
+        :param kwargs:
+        :return:
+        """
+        if self.determine_perms(request, *args, **kwargs)['can_edit']:
+            piece_ids = request.data.get("piece_ids")
+            movement_ids = request.data.get("movement_ids")
+            # Add the pieces to the collection
+            self.add_pieces_and_movements_to_collection(int(kwargs['pk']),
+                                                        piece_ids,
+                                                        movement_ids)
+            return HttpResponse(
+                content="Pieces added to collection.",
+                content_type="application/json",
+                status=status.HTTP_200_OK)
+        else:
+            return HttpResponse(
+                content="User does not have permission to edit collection.",
+                content_type="application/json",
+                status=status.HTTP_403_FORBIDDEN)
+
+    @staticmethod
+    def add_pieces_and_movements_to_collection(collection_id, piece_ids, movement_ids):
+        """
+        Add movements and pieces to a collection
+
+        :param collection_id:
+        :param piece_ids:
+        :param movement_ids:
+        :return:
+        """
+        collection = Collection.objects.get(id=collection_id)
+        for piece_id in piece_ids:
+            piece = Piece.objects.get(id=piece_id)
+            piece.collections.add(collection)
+        for movement_id in movement_ids:
+            movement = Movement.objects.get(id=movement_id)
+            movement.collections.add(collection)
+
+
 class CollectionCreate(generics.RetrieveAPIView):
     renderer_classes = (CollectionCreateHTMLRenderer, JSONRenderer, BrowsableAPIRenderer)
 
