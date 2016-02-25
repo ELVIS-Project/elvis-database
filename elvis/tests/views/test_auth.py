@@ -23,6 +23,10 @@ class AuthViewTestCase(ElvisTestSetup, APITestCase):
                                        password=fake_user['password'])
         self.assertFalse(can_log_in)
 
+    def test_login_page_200(self):
+        response = self.client.get("/login/")
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+
     def test_login(self):
         response = self.client.post('/login/', real_user)
         self.assertEqual(response.status_code, status.HTTP_302_FOUND)

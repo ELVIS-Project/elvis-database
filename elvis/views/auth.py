@@ -27,8 +27,4 @@ def logout_view(request):
     Logs out the current user.
     """
     logout(request)
-    next = request.GET.get('next', None)
-    if next:
-        return redirect(next)
-    else:
-        return redirect('/')
+    return redirect('/')
