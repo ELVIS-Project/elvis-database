@@ -48,7 +48,8 @@ class CollectionList(ElvisListCreateView):
         form = CollectionForm(request.POST)
         if not form.is_valid():
             data = json.dumps({"errors": form.errors})
-            return HttpResponse(data, content_type="json")
+            return HttpResponse(data, content_type="json",
+                                status=status.HTTP_400_BAD_REQUEST)
         clean_form = form.cleaned_data
         new_collection = Collection(title=clean_form['title'],
                                     comment=clean_form['comment'],
