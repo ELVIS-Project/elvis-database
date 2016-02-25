@@ -15,3 +15,6 @@ solr/elvis_dev/data
 solr/elvis_test/data
 solr/elvis_prod/data
 start.sh
+
+/.coverage
+/htmlcov
