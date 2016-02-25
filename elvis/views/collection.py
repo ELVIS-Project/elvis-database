@@ -11,6 +11,7 @@ from django.views.decorators.csrf import csrf_protect
 from django.utils.decorators import method_decorator
 from django.http import HttpResponseRedirect, HttpResponse
 from django.core.exceptions import ObjectDoesNotExist
+from rest_framework.exceptions import PermissionDenied
 
 from elvis.renderers.custom_html_renderer import CustomHTMLRenderer
 from elvis.serializers import CollectionFullSerializer, CollectionListSerializer
@@ -101,27 +102,23 @@ class CollectionDetail(ElvisDetailView):
     model = Collection
     serializer_class = CollectionFullSerializer
     renderer_classes = (CollectionDetailHTMLRenderer, JSONRenderer, BrowsableAPIRenderer)
-    # queryset = Collection.objects.all()
 
     def patch(self, request, *args, **kwargs):
         if self.determine_perms(request, *args, **kwargs)['can_edit']:
             return collection_update(request, *args, **kwargs)
         else:
-            return HttpResponse(
-                content="User does not have permission to edit collection.",
-                content_type="application/json",
-                status=status.HTTP_403_FORBIDDEN)
+            raise PermissionDenied
 
     def determine_perms(self, request, *args, **kwargs):
         """
-        Collections have curations, which introduces unique
+        Collections have curators, which introduces unique
         permission considerations.
 
         :param args:
         :param kwargs:
         :return:
         """
-        if request.user in Collection.objects.get(id=kwargs['pk']).curators.all():
+        if hasattr(request, "user") and request.user in Collection.objects.get(id=kwargs['pk']).curators.all():
             # The user is a curator, so they can view and edit
             return {"can_edit": True, "can_view": True}
         else:
