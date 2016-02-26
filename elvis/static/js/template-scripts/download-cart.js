@@ -47,7 +47,7 @@ $(document).ready(function () {
             "<button id='clear-collection' type='button' class='btn btn-danger' data-dismiss='modal'>",
             "<span class='glyphicon glyphicon-remove'></span> Yes",
             "</button>"];
-        $base_modal_footer.html(footer.join());
+        $base_modal_footer.html(footer.join(''));
 
         $("#clear-collection").click(function () {
             $("#collection-table").find("tbody").empty();
