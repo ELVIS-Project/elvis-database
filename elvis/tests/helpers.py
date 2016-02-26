@@ -1,8 +1,7 @@
-from django.conf import settings
 from django.contrib.auth.models import User
 from django.test import Client
 from model_mommy import mommy
-
+from django.test import modify_settings
 
 # Some user accounts to use for testing
 real_user = {
@@ -19,6 +18,7 @@ creator_user = {
 }
 
 
+@modify_settings(SOLR_SERVER="http://localhost:8983/solr/elvis_test")
 class ElvisTestSetup(object):
     def url(self, obj):
         model_name = obj.__class__.__name__.lower()
