@@ -151,6 +151,14 @@ class CartZipper:
         comp_dir = os.path.join(root_dir, comp_name)
         comp_dir = self._make_and_get_dir(comp_dir)
 
+        # If a movement is part of a piece, include the piece name
+        movement = Movement.objects.get(id=mov.id)
+        piece = movement.piece
+        if piece:
+            piece_name = self._normalize_name(movement.piece.name)
+            comp_dir = os.path.join(comp_dir, piece_name)
+            comp_dir = self._make_and_get_dir(comp_dir)
+
         mov_name = self._normalize_name(mov.title)
         mov_dir = os.path.join(comp_dir, mov_name)
         mov_dir = self._make_and_get_dir(mov_dir)
