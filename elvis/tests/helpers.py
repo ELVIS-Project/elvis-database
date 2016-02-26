@@ -1,7 +1,8 @@
 from django.contrib.auth.models import User
 from django.test import Client
 from model_mommy import mommy
-from django.test import modify_settings
+from django.test import override_settings
+from rest_framework.test import APITestCase
 
 # Some user accounts to use for testing
 real_user = {
@@ -18,8 +19,8 @@ creator_user = {
 }
 
 
-@modify_settings(SOLR_SERVER="http://localhost:8983/solr/elvis_test")
-class ElvisTestSetup(object):
+@override_settings(SOLR_SERVER="http://localhost:8983/solr/elvis_test")
+class ElvisTestSetup(APITestCase):
     def url(self, obj):
         model_name = obj.__class__.__name__.lower()
         return "http://localhost:8000/{0}/{1}".format(model_name, obj.id)
