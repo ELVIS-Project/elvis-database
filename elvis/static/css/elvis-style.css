@@ -579,3 +579,36 @@ code
 {
     width:100%
 }
+
+.label-composer {
+    background-color: #337ab7;
+}
+.label-composer[href]:hover,
+.label-composer[href]:focus {
+    background-color: #286090;
+}
+
+.label-piece{
+    background-color: #5cb85c;
+}
+.label-piece[href]:hover,
+.label-piece[href]:focus {
+    background-color: #449d44;
+}
+
+.label-movement{
+    background-color: #31b0d5;
+}
+.label-movement[href]:hover,
+.label-movement[href]:focus {
+    background-color: #309dc0;
+}
+
+.label-tag {
+    background-color: #777;
+}
+.label-tag[href]:hover,
+.label-tag[href]:focus {
+    background-color: #5e5e5e;
+}
+
