@@ -86,7 +86,7 @@
                 <dt>Tag{{ content.tags.count|length|pluralize }}</dt>
                 <dd>
                     {% for tag in content.tags %}
-                        <a href="{{ tag.url }}"
+                        <a href="/search/?tagfilt={{ tag.title }}"
                            class="label label-primary rounded">{{ tag.title }} </a>
                         &nbsp;
                     {% endfor %}
