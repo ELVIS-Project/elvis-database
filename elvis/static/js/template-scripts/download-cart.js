@@ -53,7 +53,7 @@ $(document).ready(function () {
         if (collectionId) {
             $.ajax({
                 type: "PATCH",
-                url: "/collection/" + collectionId + "/add/",
+                url: "/collection/" + collectionId + "/elements/",
                 processData: false,
                 contentType: "application/json",
                 data: JSON.stringify({

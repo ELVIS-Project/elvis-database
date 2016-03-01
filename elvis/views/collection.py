@@ -126,7 +126,7 @@ class CollectionDetail(ElvisDetailView):
             return super().determine_perms(request, *args, **kwargs)
 
 
-class CollectionAddElements(CollectionDetail):
+class CollectionElements(CollectionDetail):
     def patch(self, request, *args, **kwargs):
         """
         If the user has permission to edit the collection, add the specified pieces
@@ -153,6 +153,56 @@ class CollectionAddElements(CollectionDetail):
                 content="User does not have permission to edit collection.",
                 content_type="application/json",
                 status=status.HTTP_403_FORBIDDEN)
+
+    def delete(self, request, *args, **kwargs):
+        """
+        If the user has permission to edit the collection, remove the specified
+        pieces from the collection.
+
+        :param request:
+        :param args:
+        :param kwargs:
+        :return:
+        """
+        if self.determine_perms(request, *args, **kwargs)["can_edit"]:
+            piece_ids = request.data.get("piece")
+            movement_ids = request.data.get("movement")
+            # Remove the members from the collection
+            self.remove_pieces_and_movements_from_collection(int(kwargs['pk']),
+                                                             piece_ids,
+                                                             movement_ids)
+            return HttpResponse(
+                content="{0} removed from collection {1}.".format(piece_ids, int(kwargs['pk'])),
+                content_type="application/json",
+                status=status.HTTP_200_OK
+            )
+        else:
+            return HttpResponse(
+                content="User does not have permission to edit collection.",
+                content_type="application/json",
+                status=status.HTTP_403_FORBIDDEN)
+
+    @staticmethod
+    def remove_pieces_and_movements_from_collection(collection_id, piece_ids, movement_ids):
+        """
+        Remove movements and pieces from a collection.
+
+        :param collection_id:
+        :param piece_ids:
+        :param movement_ids:
+        :return:
+        """
+        collection = Collection.objects.get(id=collection_id)
+        print(piece_ids)
+        print(movement_ids)
+        if piece_ids:
+            for piece_id in piece_ids:
+                piece = Piece.objects.get(id=piece_id)
+                piece.collections.remove(collection)
+        if movement_ids:
+            for movement_id in movement_ids:
+                movement = Movement.objects.get(id=movement_id)
+                movement.collections.remove(collection)
 
     @staticmethod
     def add_pieces_and_movements_to_collection(collection_id, piece_ids, movement_ids):
