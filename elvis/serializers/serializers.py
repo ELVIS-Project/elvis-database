@@ -334,8 +334,8 @@ class MovementListSerializer(CachedListHyperlinkedModelSerializer):
 class ComposerListSerializer(CachedListHyperlinkedModelSerializer):
     class Meta:
         model = Composer
-        fields = ('title', 'url', 'id', 'birth_date', 'death_date',
-                  'piece_count', 'movement_count', "uuid")
+        fields = ('title', 'shortened_title', 'url', 'id', 'birth_date',
+                  'death_date', 'piece_count', 'movement_count', "uuid")
 
 
 class CollectionListSerializer(CachedListHyperlinkedModelSerializer):
@@ -358,6 +358,7 @@ class AttachmentFullSerializer(CartCheckFullHyperlinkedModelSerializer):
 class ComposerFullSerializer(CartCheckFullHyperlinkedModelSerializer):
     pieces = PieceListSerializer(many=True)
     free_movements = MovementEmbedSerializer(many=True)
+    shortened_title = serializers.CharField(max_length=200)
 
     class Meta:
         model = Composer
