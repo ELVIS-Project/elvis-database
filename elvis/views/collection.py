@@ -165,8 +165,8 @@ class CollectionElements(CollectionDetail):
         :return:
         """
         if self.determine_perms(request, *args, **kwargs)["can_edit"]:
-            piece_ids = request.data.get("piece")
-            movement_ids = request.data.get("movement")
+            piece_ids = request.data.get("piece_ids")
+            movement_ids = request.data.get("movement_ids")
             # Remove the members from the collection
             self.remove_pieces_and_movements_from_collection(int(kwargs['pk']),
                                                              piece_ids,
