@@ -135,13 +135,14 @@ function build_item_dict($forms)
 
 function str_to_bool(str)
 {
-    if (str.toLowerCase() === "true")
+    if (str === "true")
     {
         return true
     }
-    else if (str.toLowerCase() === "init")
+
+    else if (str === "piece")
     {
-        return "init"
+        return "piece"
     }
     return false
 }
@@ -168,9 +169,9 @@ function draw_badge(data, element)
     $elem.children(":button").remove();
     var new_button = "", new_action = "";
 
-    if (data['in_cart'] === "Piece")
+    if (data['in_cart'] === "piece")
     {
-        new_button = '<button type="button" class="btn btn-mini btn-info disabled cart-badge" data-container="body" data-toggle="tooltip" data-placement="top" title="In cart under piece."><span class="glyphicon glyphicon-lock"> </span> </button>'
+        new_button = '<button type="button" class="btn btn-mini btn-danger disabled cart-badge" data-container="body" data-toggle="tooltip" data-placement="top" title="In cart under piece."><span class="glyphicon glyphicon-lock"> </span> </button>'
         new_action = "add"
     }
     else if (data['in_cart'] === true)
