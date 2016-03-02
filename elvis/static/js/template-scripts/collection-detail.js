@@ -12,32 +12,6 @@ $(document).ready(function ($)
         sortList: [[2,0]]
     });
 
-    $("#private-button").click(function (event)
-    {
-        $.ajax({
-            type: "patch",
-            url: window.location.href,
-            data: {'public': false},
-            success: function (data)
-            {
-                location.reload();
-            }
-        })
-    });
-
-    $("#public-button").click(function (event)
-    {
-        $.ajax({
-            type: "patch",
-            url: window.location.href,
-            data: {'public': true},
-            success: function (data)
-            {
-                location.reload();
-            }
-        })
-    });
-
     $("#delete-button").click(function (event)
     {
         $base_modal_header.html("<h4 class='modal-title'>Confirm Deletion.</h4>");
