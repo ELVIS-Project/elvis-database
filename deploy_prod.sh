@@ -31,4 +31,4 @@ sudo supervisorctl restart elvis-celery-${ENV}
 chown $USER:elvisDB ${BASE_DIR}/${ENV}
 chmod 775 ${BASE_DIR}/${ENV}
 
-echo "Elvis DB ${ENV} Deployment Complete\n"
+printf "Elvis DB ${ENV} Deployment Complete\n"
