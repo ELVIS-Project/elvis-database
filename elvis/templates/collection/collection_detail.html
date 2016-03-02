@@ -112,16 +112,33 @@
     </button>
     <a href="{{ content.url }}update/" class="btn btn-default">Update</a>
     <hr />
-    {% if content.pieces %}
-    <h3>Remove Collection Pieces</h3>
+    {% if content.pieces or content.movements %}
+    <h3>Remove Collection Elements</h3>
     <form>
+    <h4>Pieces</h4>
+    <ul class="list-group">
     {% for piece in content.pieces %}
-        <p>
+        <li class="list-group-item">
             <label>
                 <input name="remove-piece" value="{{ piece.id }}" type="checkbox"> {{ piece.title }} - {{ piece.composer.shortened_title }}
             </label>
-        </p>
+        </li>
+    {% empty %}
+        <li class="list-group-item">None</li>
     {% endfor %}
+    </ul>
+    <h4>Movements</h4>
+    <ul class="list-group">
+    {% for movement in content.movements %}
+        <li class="list-group-item">
+            <label>
+                <input name="remove-movement" value="{{ movement.id }}" type="checkbox"> {{ movement.title }} - {{ movement.composer.shortened_title }}
+            </label>
+        </li>
+    {% empty %}
+        <li class="list-group-item">None</li>
+    {% endfor %}
+    </ul>
     <button type="submit" id="remove-member-button" class="btn btn-danger">Remove</button>
     </form>
     {% endif %}
