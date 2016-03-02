@@ -154,6 +154,13 @@ $(document).ready(function () {
     function update_progress_bar(data)
     {
         $progress.css("width", data['progress'] + "%");
+
+        if (data["counter"] && data["total"]) {
+            $progress.text(data["counter"] + " / " + data["total"] + " ZIPPED");
+
+        } else {
+            $progress.text(data["status"]);
+        }
         if (data['progress'] === 100)
         {
             $progress_div.removeClass('progress-striped');
