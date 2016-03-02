@@ -1,3 +1,5 @@
+import json
+
 from django.test.client import MULTIPART_CONTENT
 from rest_framework.test import APITestCase
 from rest_framework import status
@@ -124,10 +126,10 @@ class CollectionViewTestCase(ElvisTestSetup, APITestCase):
         collection = response.data
         # Now, we will try to update the collection
         response = self.client.patch("/collection/{0}/".format(collection["id"]),
-         data={
+         data=json.dumps({
             "title": "the new title",
             "comment": "the new comment!!!"
-        })
+        }), content_type="application/json")
         # print(response.data)
         self.assertEqual(response.status_code, status.HTTP_200_OK)
 
