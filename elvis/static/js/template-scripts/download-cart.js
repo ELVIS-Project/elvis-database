@@ -102,22 +102,29 @@ $(document).ready(function () {
     });
 
     $("#add-to-collection").click(function() {
-        var submitButton = $("#add-collection-submit");
+        var $submitButton = $("#add-collection-submit"),
+            $addToCollectionModal = $("#add_to_collection_modal");
+
         // Disable the submit button until we have the data
-        submitButton.attr("disabled", "disabled");
+        $submitButton.attr("disabled", "disabled");
 
         // Fill up the collection list
-        var collectionList = $("#add_to_collection_modal").find(".modal-body");
-        console.log(collectionList);
-        collectionList.empty();
+        var ownedCollectionList = $addToCollectionModal.find(".owned-collection-list");
+
         $.ajax({
             url: "/collections/mine/",
             dataType: "json",
             success: function(data) {
+                ownedCollectionList.empty();
                 console.log(data);
                 data["results"].forEach(function(result) {
-                    collectionList.append('<div class="radio"><label><input type="radio" name="collection_id" value="' + result["id"] + '" />' + result["title"] + '</label></div>');
+                    ownedCollectionList.append('<div class="radio"><label><input type="radio" name="collection_id" value="' + result["id"] + '" />' + result["title"] + '</label></div>');
                 });
+            },
+            error: function(data) {
+                console.log(data);
+                ownedCollectionList.empty();
+                ownedCollectionList.append("<p>Error loading collections.</p>");
             }
         });
 
@@ -127,11 +134,11 @@ $(document).ready(function () {
                 // Save the cart
                 cart = data;
                 // Enable the submit button
-                submitButton.removeAttr("disabled");
+                $submitButton.removeAttr("disabled");
             }
         });
         // Display the modal
-        $('#add_to_collection_modal').modal('show');
+        $addToCollectionModal.modal('show');
     });
 
     $("#save-collection").click(function () {
