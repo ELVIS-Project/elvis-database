@@ -5,6 +5,17 @@
     {{ block.super }}
 {% endblock %}
 
+{% block detail_header %}
+    <h2>{{ content.title }}</h2>
+    <a href="{{ content.composer.url }}" class="label label-composer">{{ content.composer.title }}</a>
+    {% if content.piece %}
+        <span class="glyphicon glyphicon-chevron-right" aria-hidden="true"></span>
+        <a href="{{ content.piece.url }}" class="label label-piece">{{ content.piece.title }}</a>
+    {% endif %}
+    <span class="glyphicon glyphicon-chevron-right" aria-hidden="true"></span>
+    <a href="{{ content.url }}" class="label label-movement">{{ content.title }}</a>
+{% endblock %}
+
 {% block detail_buttons %}
     {% include "base/download-badge.html" with id=content.uuid type="elvis_movement" button_type="button" in_cart=content.in_cart%}
 {% endblock %}

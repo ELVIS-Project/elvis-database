@@ -139,9 +139,9 @@
                 <button id="open-clear-modal" type="button" class="btn btn-danger">
                     <span class="glyphicon glyphicon-remove"></span> Clear Cart
                 </button>
-                <button id="add-to-collection" name="add-to-collection" type="button" class="btn btn-primary">
-                    <span class="glyphicon glyphicon-plus-sign"></span> Add to Existing Collection
-                </button>
+{#                <button id="add-to-collection" name="add-to-collection" type="button" class="btn btn-primary">#}
+{#                    <span class="glyphicon glyphicon-plus-sign"></span> Add to Existing Collection#}
+{#                </button>#}
                 <button id="save-collection" name="save-collection" type="button" class="btn btn-primary">
                     <span class="glyphicon glyphicon-floppy-disk"></span> Save as New Collection
                 </button>
@@ -187,8 +187,8 @@
                     <td><a href="{{ piece.url }}">{{ piece.title }}</a></td>
                     <td><a href="{{ piece.composer.url }}">{{ piece.composer.shortened_title }}</a></td>
                     <td>{{ piece.composition_end_date  }}</td>
-                    <td><span class="label label-success">Piece</span>{% if piece.movement_count %}<br>
-                        <span class="label label-default">+ {{ piece.movement_count}} movement{{ piece.movement_count|pluralize }}</span> {% endif %}</td>
+                    <td><span class="label label-piece">Piece</span>{% if piece.movement_count %}<br>
+                        <span class="label label-movement">+ {{ piece.movement_count}} movement{{ piece.movement_count|pluralize }}</span> {% endif %}</td>
 
                 </tr>
             {% endfor %}
@@ -204,7 +204,8 @@
                     <td><a href="{{ movement.url }}">{{ movement.title }}</a></td>
                     <td><a href="{{ movement.composer.url }}">{{ movement.composer.shortened_title }}</a></td>
                     <td>{{ movement.composition_end_date  }}</td>
-                    <td><span class="label label-primary">Movement</span><br><span class="label label-default">{{ movement.piece.title|truncatechars:30 }}</span></td>
+                    <td><span class="label label-movement">Movement</span><br>
+                        <a href="{{ movement.piece.url }}" class="label label-piece">{{ movement.piece.title|truncatechars:30 }}</a></td>
                 </tr>
             {% endfor %}
             </tbody>

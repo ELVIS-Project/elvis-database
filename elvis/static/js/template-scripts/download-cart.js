@@ -47,7 +47,7 @@ $(document).ready(function () {
             "<button id='clear-collection' type='button' class='btn btn-danger' data-dismiss='modal'>",
             "<span class='glyphicon glyphicon-remove'></span> Yes",
             "</button>"];
-        $base_modal_footer.html(footer.join());
+        $base_modal_footer.html(footer.join(''));
 
         $("#clear-collection").click(function () {
             $("#collection-table").find("tbody").empty();
@@ -154,6 +154,13 @@ $(document).ready(function () {
     function update_progress_bar(data)
     {
         $progress.css("width", data['progress'] + "%");
+
+        if (data["counter"] && data["total"]) {
+            $progress.text(data["counter"] + " / " + data["total"] + " ZIPPED");
+
+        } else {
+            $progress.text(data["status"]);
+        }
         if (data['progress'] === 100)
         {
             $progress_div.removeClass('progress-striped');

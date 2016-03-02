@@ -90,7 +90,7 @@ class DownloadCart(generics.GenericAPIView):
             if item['item_type'] == "elvis_movement":
                 mov = try_get(item['id'], Movement)
                 if mov.parent_cart_id in cart:
-                    back = "Piece"
+                    back = "piece"
                 else:
                     back = item in cart
             else:
@@ -139,10 +139,12 @@ class Downloading(generics.GenericAPIView):
 
             else:
                 meta = task._get_task_meta()
-                progress = meta.get('result', {}).get('progress', 0)
+                result_meta = meta.get('result', {})
                 return Response({'ready': task.ready(),
-                                 'progress': progress,
-                                 'status': "PROGRESS"})
+                                 'progress': result_meta.get('progress', 0),
+                                 'status': "PROGRESS",
+                                 "counter": result_meta.get('counter', 0),
+                                 "total": result_meta.get('total', 0)})
 
         if request.GET.get('extensions[]'):
             extensions = request.GET.getlist('extensions[]')

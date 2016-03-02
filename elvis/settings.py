@@ -19,6 +19,7 @@ from celery import schedules
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 import os
 import re
+from kombu import Exchange, Queue
 
 BASE_DIR = os.path.abspath('./')
 
@@ -259,14 +260,19 @@ CELERY_RESULT_BACKEND = 'rpc://'
 CELERY_TASK_SERIALIZER = 'json'
 CELERY_RESULT_SERIALIZER = 'json'
 CELERY_ACCEPT_CONTENT = ['json']
-
+CELERY_QUEUE_DICT = {'queue': 'elvis-{}'.format(SETTING_TYPE)}
+CELERY_ROUTES = {'elvis.zip_files': CELERY_QUEUE_DICT,
+                 'elvis.delete_zip_file': CELERY_QUEUE_DICT,
+                 'elvis.rebuild_suggesters': CELERY_QUEUE_DICT}
 
 # Elvis Web App Settings
 # ======================
 ELVIS_EXTENSIONS = ['.xml', '.mxl', '.krn', '.md', '.nwc', '.tntxt', '.capx',
                     '.abc', '.mid', '.midi', '.pdf', '.mei', '.ma', '.md2', '.json']
 ELVIS_BAD_PREFIX = ['.', '..', '_', '__']
-SUGGEST_DICTS = ['composerSuggest', 'pieceSuggest', 'collectionSuggest', 'languageSuggest', 'genreSuggest', 'locationSuggest', 'sourceSuggest', 'instrumentSuggest', 'tagSuggest']
+SUGGEST_DICTS = ['composerSuggest', 'pieceSuggest', 'collectionSuggest',
+                 'languageSuggest', 'genreSuggest', 'locationSuggest',
+                 'sourceSuggest', 'instrumentSuggest', 'tagSuggest']
 
 
 LOGGING = {

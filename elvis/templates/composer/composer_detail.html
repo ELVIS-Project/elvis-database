@@ -13,13 +13,13 @@
             $("#piece-table").tablesorter({
                 headers: {0: {sorter: false}},
                 textExtraction: "complex",
-                sortList: [[2, 0]]
+                sortList: [[1, 0]]
             });
 
             $("#mov-table").tablesorter({
                 headers: {0: {sorter: false}},
                 textExtraction: "complex",
-                sortList: [[2, 0]]
+                sortList: [[1, 0]]
             });
         })
     </script>
@@ -51,7 +51,7 @@
             <tr>
                 <td>{% include "base/download-badge.html" with type="elvis_piece" id=piece.uuid in_cart=piece.in_cart %}</td>
                 <td><a href="{{ piece.url }}">{{ piece.title }}</a></td>
-                <td>{% if piece.movement_count %}<span class="label label-info"> {{ piece.movement_count }} movement{{  piece.movement_count | pluralize }}</span> {% else %}<span class="label label-default">0 movements</span>{% endif %}</td>
+                <td>{% if piece.movement_count %}<span class="label label-movement"> {{ piece.movement_count }} movement{{  piece.movement_count | pluralize }}</span> {% else %}<span class="label label-default">0 movements</span>{% endif %}</td>
                 <td width="10%">{{ piece.composition_end_date }}</td>
             </tr>
         {% endfor %}

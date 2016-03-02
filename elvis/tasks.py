@@ -78,7 +78,7 @@ class CartZipper:
                 self._add_mov(k[2:], cart_set, root_dir_name)
                 self.counter += 1
             done_pct = int((self.counter/self.total)*100)
-            task.update_state(meta={"progress": done_pct})
+            task.update_state(meta={"progress": done_pct, "counter": self.counter, "total": self.total})
 
         zipped_file = shutil.make_archive(archive_name, "zip", root_dir=self.tempdir, base_dir=archive_name)
         udownload_dir = os.path.join(settings.MEDIA_ROOT, "user_downloads", self.username)
@@ -150,6 +150,14 @@ class CartZipper:
         comp_name = self._normalize_name(mov.composer.name)
         comp_dir = os.path.join(root_dir, comp_name)
         comp_dir = self._make_and_get_dir(comp_dir)
+
+        # If a movement is part of a piece, include the piece name
+        movement = Movement.objects.get(id=mov.id)
+        piece = movement.piece
+        if piece:
+            piece_name = self._normalize_name(movement.piece.name)
+            comp_dir = os.path.join(comp_dir, piece_name)
+            comp_dir = self._make_and_get_dir(comp_dir)
 
         mov_name = self._normalize_name(mov.title)
         mov_dir = os.path.join(comp_dir, mov_name)

@@ -32,6 +32,12 @@
     {% include "base/download-badge.html" with id=content.uuid type="elvis_piece" button_type="button" in_cart=content.in_cart%}
 {% endblock %}
 
+{% block detail_header %}
+    <h2>{{ content.title }}</h2>
+    <a href="{{ content.composer.url }}" class="label label-composer">{{ content.composer.title }}</a>
+    <span class="glyphicon glyphicon-chevron-right" aria-hidden="true"></span>
+    <a href="{{ content.url }}" class="label label-piece">{{ content.title }}</a>
+{% endblock %}
 {% block detail_tab_content %}
 
     {% include "base/detail_printout.html" %}

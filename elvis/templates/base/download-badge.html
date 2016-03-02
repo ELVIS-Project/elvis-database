@@ -13,12 +13,12 @@
         {% endif %}
 
     {% elif in_cart == "piece" %}
-        <input type="hidden" name="in_cart" value="true" />
+        <input type="hidden" name="in_cart" value="piece" />
         <input type="hidden" name="action" value="remove" />
         {% if button_type|default_if_none:"badge" == "badge" %}
-            <button type="button" class="btn btn-mini btn-info cart-badge disabled" data-container="body" data-toggle="tooltip" data-placement="top" title="" data-original-title="Locked in by Piece."><span class="glyphicon glyphicon-lock"> </span> </button>
+            <button type="button" class="btn btn-mini btn-danger cart-badge disabled" data-container="body" data-toggle="tooltip" data-placement="top" title="" data-original-title="Locked in by Piece."><span class="glyphicon glyphicon-lock"> </span> </button>
         {% else %}
-            <button type="button" class="btn btn-info disabled">Locked in by Piece.</button>
+            <button type="button" class="btn btn-danger disabled cart-button">Locked in by Piece.</button>
         {% endif %}
         
     {% elif not in_cart|default_if_none:True %}

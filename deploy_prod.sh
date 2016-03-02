@@ -20,6 +20,9 @@ pip install -r ${BASE_DIR}/${ENV}/requirements.txt
 python ${BASE_DIR}/${ENV}/manage.py collectstatic --noinput
 python ${BASE_DIR}/${ENV}/manage.py migrate --noinput
 
+# Clear the Cache
+python ${BASE_DIR}/${ENV}/manage.py clear_cache
+
 # Restart supervisor processes
 sudo supervisorctl restart elvis-db-${ENV}
 sudo supervisorctl restart elvis-celery-${ENV}
@@ -28,4 +31,4 @@ sudo supervisorctl restart elvis-celery-${ENV}
 chown $USER:elvisDB ${BASE_DIR}/${ENV}
 chmod 775 ${BASE_DIR}/${ENV}
 
-echo "Elvis DB ${ENV} Deployment Complete"
+printf "Elvis DB ${ENV} Deployment Complete\n"
