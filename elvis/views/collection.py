@@ -160,9 +160,12 @@ def collection_update(request, *args, **kwargs):
         return HttpResponse(content=data, content_type="application/json", status=status.HTTP_400_BAD_REQUEST)
     # Update the collection
     collection = Collection.objects.get(id=int(kwargs['pk']))
-    collection.title = patch_data["title"]
-    collection.public = patch_data["permission"] == "Public"
-    collection.comment = patch_data["comment"]
+    if "title" in patch_data:
+        collection.title = patch_data["title"]
+    if "permission" in patch_data:
+        collection.public = patch_data["permission"] == "Public"
+    if "comment" in patch_data:
+        collection.comment = patch_data["comment"]
     collection.save()
     # Prepare a response
     data = json.dumps({'success': True, 'id': collection.id, 'url': "/collection/{0}".format(collection.id)})
