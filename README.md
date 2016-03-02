@@ -1,4 +1,4 @@
-elvis-site
+ELVIS Database
 ==========
 
 The Django Elvis Web Application
