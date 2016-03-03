@@ -20,6 +20,13 @@ class Collection(ElvisModel):
     def __unicode__(self):
         return "{0}".format(self.title)
 
+    def __contains__(self, item):
+        item_type = type(item)
+        if item_type in [Piece, Movement]:
+            return self in item.collections.all()
+        else:
+            raise Exception("Collections can only contain Pieces and Movements.")
+
     @property
     def piece_count(self):
         return self.pieces.all().count()
@@ -91,7 +98,7 @@ class Collection(ElvisModel):
         :param movement:
         :return:
         """
-        if movement.piece and movement.piece.collections.get(uuid=self.uuid):
+        if movement.piece and movement.piece in self:
             # The movement's piece is already in the collection, so do nothing.
             return
         else:
