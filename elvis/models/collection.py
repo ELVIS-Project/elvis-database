@@ -21,6 +21,10 @@ class Collection(ElvisModel):
         return "{0}".format(self.title)
 
     def __contains__(self, item):
+        # Handle breaking edge case
+        if item is None:
+            return False
+        # Handle normal case
         item_type = type(item)
         if item_type in [Piece, Movement]:
             return self in item.collections.all()
