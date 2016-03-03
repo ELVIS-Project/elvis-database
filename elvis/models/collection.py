@@ -86,7 +86,7 @@ class Collection(ElvisModel):
         self.pieces.add(piece)
         # Remove any of the piece's movements
         for movement in piece.movements.all():
-            self.__remove_movement(movement)
+            self.remove(movement)
 
     def __add_movement(self, movement):
         """
