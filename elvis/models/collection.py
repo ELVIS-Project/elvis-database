@@ -17,7 +17,7 @@ class Collection(ElvisModel):
                                         blank=True,
                                         related_name="curates")
 
-    def __unicode__(self):
+    def __str__(self):
         return "{0}".format(self.title)
 
     def __contains__(self, item):
