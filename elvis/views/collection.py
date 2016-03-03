@@ -202,11 +202,11 @@ class CollectionElements(CollectionDetail):
         if piece_ids:
             for piece_id in piece_ids:
                 piece = Piece.objects.get(id=piece_id)
-                piece.collections.remove(collection)
+                collection.remove(piece)
         if movement_ids:
             for movement_id in movement_ids:
                 movement = Movement.objects.get(id=movement_id)
-                movement.collections.remove(collection)
+                collection.remove(movement)
 
     @staticmethod
     def add_pieces_and_movements_to_collection(collection_id, piece_ids, movement_ids):
@@ -221,10 +221,10 @@ class CollectionElements(CollectionDetail):
         collection = Collection.objects.get(id=collection_id)
         for piece_id in piece_ids:
             piece = Piece.objects.get(id=piece_id)
-            piece.collections.add(collection)
+            collection.add(piece)
         for movement_id in movement_ids:
             movement = Movement.objects.get(id=movement_id)
-            movement.collections.add(collection)
+            collection.add(movement)
 
 
 class CollectionCreate(generics.RetrieveAPIView):
