@@ -91,7 +91,10 @@ class Collection(ElvisModel):
         :param movement:
         :return:
         """
-        if not movement.piece.collections.get(uuid=self.uuid):
+        if movement.piece and movement.piece.collections.get(uuid=self.uuid):
+            # The movement's piece is already in the collection, so do nothing.
+            return
+        else:
             movement.collections.add(self)
 
     def __remove_movement(self, movement):
