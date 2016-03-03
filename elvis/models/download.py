@@ -33,4 +33,3 @@ def create_user_download(sender, instance, created, **kwargs):
         Download.objects.create(user=instance)
 
 post_save.connect(create_user_download, sender=User)
-
