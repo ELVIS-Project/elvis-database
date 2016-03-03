@@ -20,6 +20,19 @@ class Collection(ElvisModel):
     def __unicode__(self):
         return "{0}".format(self.title)
 
+    def __contains__(self, item):
+        # Handle breaking edge case
+        if item is None:
+            return False
+        # Handle normal case
+        item_type = type(item)
+        if item_type is Piece:
+            return item in self.pieces.all()
+        if item_type is Movement:
+            return item in self.movements.all()
+        else:
+            raise Exception("Collections can only contain Pieces and Movements.")
+
     @property
     def piece_count(self):
         return self.pieces.all().count()
@@ -58,9 +71,9 @@ class Collection(ElvisModel):
         """
         item_type = type(item)
         if item_type is Piece:
-            self.__remove_piece(item)
+            self.pieces.remove(item)
         elif item_type is Movement:
-            self.__remove_movement(item)
+            self.movements.remove(item)
 
     def __add_piece(self, piece):
         """
@@ -70,19 +83,10 @@ class Collection(ElvisModel):
         :return:
         """
         # Add the piece to the collection
-        piece.collections.add(self)
+        self.pieces.add(piece)
         # Remove any of the piece's movements
-        for movement in Movement.objects.filter(piece=piece):
+        for movement in piece.movements.all():
             self.__remove_movement(movement)
-
-    def __remove_piece(self, piece):
-        """
-        Remove a piece from the collection.
-
-        :param piece:
-        :return:
-        """
-        piece.collections.remove(self)
 
     def __add_movement(self, movement):
         """
@@ -91,17 +95,11 @@ class Collection(ElvisModel):
         :param movement:
         :return:
         """
-        if not movement.piece.collections.get(uuid=self.uuid):
+        if movement.piece and movement.piece in self:
+            # The movement's piece is already in the collection, so do nothing.
+            return
+        else:
             movement.collections.add(self)
-
-    def __remove_movement(self, movement):
-        """
-        Remove a movement from the collection.
-
-        :param movement:
-        :return:
-        """
-        movement.collections.remove(self)
 
     def solr_dict(self):
         collection = self
