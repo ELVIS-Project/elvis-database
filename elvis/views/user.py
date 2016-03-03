@@ -149,7 +149,16 @@ def save_cart(sender, request, user, **kwargs):
 
 @receiver(user_logged_in)
 def load_cart(sender, request, user, **kwargs):
-    user_download = request.user.downloads.first()
+    """
+    Cart gets dumped to or loaded from database when a user logs in or logs out.
+
+    :param sender:
+    :param request:
+    :param user:
+    :param kwargs:
+    :return:
+    """
+    user_download = user.downloads.first()
     cart = {}
     cart.update({"M-" + str(k.uuid): True for k in user_download.collection_movements.all()})
     cart.update({"P-" + str(k.uuid): True for k in user_download.collection_pieces.all()})

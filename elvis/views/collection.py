@@ -48,7 +48,8 @@ class CollectionList(ElvisListCreateView):
         form = CollectionForm(request.POST)
         if not form.is_valid():
             data = json.dumps({"errors": form.errors})
-            return HttpResponse(data, content_type="json")
+            return HttpResponse(data, content_type="json",
+                                status=status.HTTP_400_BAD_REQUEST)
         clean_form = form.cleaned_data
         new_collection = Collection(title=clean_form['title'],
                                     comment=clean_form['comment'],
@@ -60,16 +61,19 @@ class CollectionList(ElvisListCreateView):
             new_collection.public = True
         else:
             new_collection.public = False
+        # Save the new collection
+        new_collection.save()
+
         # If the collection is not empty, populate it from
         if not clean_form["initialize_empty"]:
             # Grab the pieces and movements from the cart
             pieces, movements = self.get_cart_pieces_and_movements(request)
             # Add the pieces and movements to the collection
             for piece in pieces:
-                new_collection.pieces.add(piece)
+                new_collection.add(piece)
             for movement in movements:
-                new_collection.movements.add(movement)
-        new_collection.save()
+                new_collection.add(movement)
+
         return HttpResponseRedirect("/collection/{0}".format(new_collection.id))
 
     @staticmethod
@@ -256,9 +260,12 @@ def collection_update(request, *args, **kwargs):
         return HttpResponse(content=data, content_type="application/json", status=status.HTTP_400_BAD_REQUEST)
     # Update the collection
     collection = Collection.objects.get(id=int(kwargs['pk']))
-    collection.title = patch_data["title"]
-    collection.public = patch_data["permission"] == "Public"
-    collection.comment = patch_data["comment"]
+    if "title" in patch_data:
+        collection.title = patch_data["title"]
+    if "permission" in patch_data:
+        collection.public = patch_data["permission"] == "Public"
+    if "comment" in patch_data:
+        collection.comment = patch_data["comment"]
     collection.save()
     # Prepare a response
     data = json.dumps({'success': True, 'id': collection.id, 'url': "/collection/{0}".format(collection.id)})

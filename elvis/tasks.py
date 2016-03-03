@@ -78,7 +78,7 @@ class CartZipper:
                 self._add_mov(k[2:], cart_set, root_dir_name)
                 self.counter += 1
             done_pct = int((self.counter/self.total)*100)
-            task.update_state(meta={"progress": done_pct})
+            task.update_state(meta={"progress": done_pct, "counter": self.counter, "total": self.total})
 
         zipped_file = shutil.make_archive(archive_name, "zip", root_dir=self.tempdir, base_dir=archive_name)
         udownload_dir = os.path.join(settings.MEDIA_ROOT, "user_downloads", self.username)
