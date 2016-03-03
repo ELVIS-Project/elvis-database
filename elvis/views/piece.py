@@ -284,7 +284,7 @@ def handle_related_models(object_list, parent, clean, **kwargs):
                                                          "Collection", clean,
                                                          creator=user)
                 for x in collection_list:
-                    parent.collections.add(x)
+                    x.add(parent)
                 continue
             except:
                 clean.cleanup()

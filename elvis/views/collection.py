@@ -61,16 +61,19 @@ class CollectionList(ElvisListCreateView):
             new_collection.public = True
         else:
             new_collection.public = False
+        # Save the new collection
+        new_collection.save()
+
         # If the collection is not empty, populate it from
         if not clean_form["initialize_empty"]:
             # Grab the pieces and movements from the cart
             pieces, movements = self.get_cart_pieces_and_movements(request)
             # Add the pieces and movements to the collection
             for piece in pieces:
-                new_collection.pieces.add(piece)
+                new_collection.add(piece)
             for movement in movements:
-                new_collection.movements.add(movement)
-        new_collection.save()
+                new_collection.add(movement)
+
         return HttpResponseRedirect("/collection/{0}".format(new_collection.id))
 
     @staticmethod
