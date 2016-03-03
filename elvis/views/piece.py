@@ -4,6 +4,7 @@ import ujson as json
 import pytz
 from rest_framework import generics
 from rest_framework import status
+from rest_framework.exceptions import MethodNotAllowed
 from rest_framework.renderers import JSONRenderer, BrowsableAPIRenderer
 from rest_framework.response import Response
 from elvis.renderers.custom_html_renderer import CustomHTMLRenderer
@@ -56,10 +57,24 @@ class PieceCreate(generics.RetrieveAPIView):
             return HttpResponseRedirect('/login/?error=upload')
 
 
-class PieceUpdate(generics.RetrieveAPIView):
+class PieceUpdate(ElvisDetailView):
     serializer_class = PieceFullSerializer
     renderer_classes = (PieceUpdateHTMLRenderer, JSONRenderer, BrowsableAPIRenderer)
     queryset = Piece.objects.all()
+
+    def get(self, request, *args, **kwargs):
+        # Make sure that the user can actually edit this Piece
+        self.if_can_edit(request, *args, **kwargs)
+        return super(PieceUpdate, self).get(request, *args, **kwargs)
+
+    def delete(self, request, *args, **kwargs):
+        raise MethodNotAllowed
+
+    def patch(self, request, *args, **kwargs):
+        raise MethodNotAllowed
+
+    def put(self, request, *args, **kwargs):
+        raise MethodNotAllowed
 
 
 class PieceList(ElvisListCreateView):

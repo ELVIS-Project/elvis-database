@@ -33,12 +33,12 @@ class CollectionViewTestCase(ElvisTestSetup, APITestCase):
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         self.assertEqual(response.data['id'], piece.id)
 
-    # def test_get_update_not_allowed(self):
-    #     piece = Piece.objects.first()
-    #     self.client.login(username='testuser', password='test')
-    #     response = self.client.get("/piece/{0}/update/".format(piece.id))
-    #     self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
-    #     self.client.logout()
+    def test_get_update_not_allowed(self):
+        piece = Piece.objects.first()
+        self.client.login(username='testuser', password='test')
+        response = self.client.get("/piece/{0}/update/".format(piece.id))
+        self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
+        self.client.logout()
 
     def test_get_update_allowed(self):
         piece = Piece.objects.first()
@@ -144,88 +144,90 @@ class CollectionViewTestCase(ElvisTestSetup, APITestCase):
         self.assertEqual(tag_count, Tag.objects.all().count() - 1)
         self.client.logout()
 
-    # def test_post_create_piece_create_movement(self):
-    #     self.client.login(username='testuser', password='test')
-    #     movement_count = Movement.objects.all().count()
-    #     response = self.client.post("/pieces/", {'title': 'Mov Create Test',
-    #                                              'composer': self.test_composer,
-    #                                              'composition_start_date': 1600,
-    #                                              'composition_end_date': 1605,
-    #                                              'collections': 'New Collection',
-    #                                              'number_of_voices': 3,
-    #                                              'genres': 'New Genre',
-    #                                              'locations': 'New Location',
-    #                                              'languages': 'New Language',
-    #                                              'sources': 'New Source',
-    #                                              'instruments_voices': 'New Instrument',
-    #                                              'comment': "New Comment",
-    #                                              'religiosity': 'Secular',
-    #                                              'vocalization': 'Vocal',
-    #                                              'tags': 'New Tag',
-    #                                              'mov_title_1': 'Mov Create Test'})
-    #     piece = Piece.objects.get(title='Mov Create Test')
-    #     mov = Movement.objects.get(title='Mov Create Test')
-    #     self.assertEqual(response.status_code, status.HTTP_201_CREATED)
-    #     self.assertEqual(piece, mov.piece)
-    #     self.assertEqual(piece.composer, mov.composer)
-    #     self.assertEqual(piece.composition_start_date, mov.composition_start_date)
-    #     self.assertEqual(piece.composition_end_date, mov.composition_end_date)
-    #     self.assertEqual(list(piece.collections.all()), list(mov.collections.all()))
-    #     self.assertEqual(piece.number_of_voices, mov.number_of_voices)
-    #     self.assertEqual(list(piece.genres.all()), list(mov.genres.all()))
-    #     self.assertEqual(list(piece.locations.all()), list(mov.locations.all()))
-    #     self.assertEqual(list(piece.languages.all()), list(mov.languages.all()))
-    #     self.assertEqual(list(piece.sources.all()), list(mov.sources.all()))
-    #     self.assertEqual(list(piece.instruments_voices.all()), list(mov.instruments_voices.all()))
-    #     self.assertEqual(piece.religiosity, mov.religiosity)
-    #     self.assertEqual(piece.vocalization, mov.vocalization)
-    #     self.assertEqual(list(piece.tags.all()), list(mov.tags.all()))
-    #     self.client.logout()
-    #
-    # def test_post_create_piece_create_movement_with_overrides(self):
-    #     self.client.login(username='testuser', password='test')
-    #     movement_count = Movement.objects.all().count()
-    #     response = self.client.post("/pieces/", {'title': 'Mov Override Test',
-    #                                              'composer': self.test_composer,
-    #                                              'composition_start_date': 1600,
-    #                                              'composition_end_date': 1605,
-    #                                              'collections': 'New Collection',
-    #                                              'number_of_voices': 3,
-    #                                              'genres': 'New Genre',
-    #                                              'locations': 'New Location',
-    #                                              'languages': 'New Language',
-    #                                              'sources': 'New Source',
-    #                                              'instruments_voices': 'New Instrument',
-    #                                              'comment': "New Comment",
-    #                                              'religiosity': 'Secular',
-    #                                              'vocalization': 'Vocal',
-    #                                              'tags': 'New Tag',
-    #                                              'mov_title_1': 'Mov Override Test',
-    #                                              'mov1_instrumentation': 'Other Instrument',
-    #                                              'mov1_number_of_voices': 4,
-    #                                              'mov1_free_tags': 'Other Tag',
-    #                                              'mov1_vocalization': 'Mixed',
-    #                                              'mov1_comment': 'Other Comment'
-    #                                              })
-    #     piece = Piece.objects.get(title='Mov Override Test')
-    #     mov = Movement.objects.get(title='Mov Override Test')
-    #     self.assertEqual(response.status_code, status.HTTP_201_CREATED)
-    #     self.assertEqual(piece, mov.piece)
-    #     self.assertEqual(piece.composer, mov.composer)
-    #     self.assertEqual(piece.composition_start_date, mov.composition_start_date)
-    #     self.assertEqual(piece.composition_end_date, mov.composition_end_date)
-    #     self.assertEqual(list(piece.collections.all()), list(mov.collections.all()))
-    #     self.assertEqual(list(piece.genres.all()), list(mov.genres.all()))
-    #     self.assertEqual(list(piece.locations.all()), list(mov.locations.all()))
-    #     self.assertEqual(list(piece.languages.all()), list(mov.languages.all()))
-    #     self.assertEqual(list(piece.sources.all()), list(mov.sources.all()))
-    #     self.assertEqual(piece.religiosity, mov.religiosity)
-    #
-    #     self.assertNotEqual(piece.comment, mov.comment)
-    #     self.assertNotEqual(piece.vocalization, mov.vocalization)
-    #     self.assertNotEqual(piece.number_of_voices, mov.number_of_voices)
-    #     self.assertEqual(mov.instruments_voices.all().count(), 1)
-    #     self.assertEqual(mov.instruments_voices.all()[0].name, 'Other Instrument')
-    #     self.assertEqual(mov.tags.all().count(), 1)
-    #     self.assertEqual(mov.tags.all()[0].name, 'Other Tag')
-    #     self.client.logout()
+    def test_post_create_piece_create_movement(self):
+        self.client.login(username='testuser', password='test')
+        response = self.client.post("/pieces/",
+                                    {'title': 'Piece Mov Create Test',
+                                     'composer': self.test_composer,
+                                     'composition_start_date': 1600,
+                                     'composition_end_date': 1605,
+                                     'collections': 'New Collection',
+                                     'number_of_voices': 3,
+                                     'genres': 'New Genre',
+                                     'locations': 'New Location',
+                                     'languages': 'New Language',
+                                     'sources': 'New Source',
+                                     'instruments_voices': 'New Instrument',
+                                     'comment': "New Comment",
+                                     'religiosity': 'Secular',
+                                     'vocalization': 'Vocal',
+                                     'tags': 'New Tag',
+                                     'mov_title_1': 'Mov Create Test'})
+        piece = Piece.objects.get(title='Piece Mov Create Test')
+        mov = Movement.objects.get(title='Mov Create Test')
+        self.assertEqual(response.status_code, status.HTTP_201_CREATED)
+        self.assertEqual(piece, mov.piece)
+        self.assertEqual(piece.composer, mov.composer)
+        self.assertEqual(piece.composition_start_date, mov.composition_start_date)
+        self.assertEqual(piece.composition_end_date, mov.composition_end_date)
+        self.assertEqual(len(list(piece.collections.all())), 1)
+        self.assertEqual(len(list(mov.collections.all())), 0)
+        self.assertEqual(piece.number_of_voices, mov.number_of_voices)
+        self.assertEqual(list(piece.genres.all()), list(mov.genres.all()))
+        self.assertEqual(list(piece.locations.all()), list(mov.locations.all()))
+        self.assertEqual(list(piece.languages.all()), list(mov.languages.all()))
+        self.assertEqual(list(piece.sources.all()), list(mov.sources.all()))
+        self.assertEqual(list(piece.instruments_voices.all()), list(mov.instruments_voices.all()))
+        self.assertEqual(piece.religiosity, mov.religiosity)
+        self.assertEqual(piece.vocalization, mov.vocalization)
+        self.assertEqual(list(piece.tags.all()), list(mov.tags.all()))
+        self.client.logout()
+
+    def test_post_create_piece_create_movement_with_overrides(self):
+        self.client.login(username='testuser', password='test')
+        response = self.client.post("/pieces/",
+                                    {'title': 'Mov Override Test',
+                                     'composer': self.test_composer,
+                                     'composition_start_date': 1600,
+                                     'composition_end_date': 1605,
+                                     'collections': 'New Collection',
+                                     'number_of_voices': 3,
+                                     'genres': 'New Genre',
+                                     'locations': 'New Location',
+                                     'languages': 'New Language',
+                                     'sources': 'New Source',
+                                     'instruments_voices': 'New Instrument',
+                                     'comment': "New Comment",
+                                     'religiosity': 'Secular',
+                                     'vocalization': 'Vocal',
+                                     'tags': 'New Tag',
+                                     'mov_title_1': 'Mov Override Test',
+                                     'mov1_instrumentation': 'Other Instrument',
+                                     'mov1_number_of_voices': 4,
+                                     'mov1_free_tags': 'Other Tag',
+                                     'mov1_vocalization': 'Mixed',
+                                     'mov1_comment': 'Other Comment'
+                                     })
+        piece = Piece.objects.get(title='Mov Override Test')
+        mov = Movement.objects.get(title='Mov Override Test')
+        self.assertEqual(response.status_code, status.HTTP_201_CREATED)
+        self.assertEqual(piece, mov.piece)
+        self.assertEqual(piece.composer, mov.composer)
+        self.assertEqual(piece.composition_start_date, mov.composition_start_date)
+        self.assertEqual(piece.composition_end_date, mov.composition_end_date)
+        self.assertEqual(len(list(piece.collections.all())), 1)
+        self.assertEqual(len(list(mov.collections.all())), 0)
+        self.assertEqual(list(piece.genres.all()), list(mov.genres.all()))
+        self.assertEqual(list(piece.locations.all()), list(mov.locations.all()))
+        self.assertEqual(list(piece.languages.all()), list(mov.languages.all()))
+        self.assertEqual(list(piece.sources.all()), list(mov.sources.all()))
+        self.assertEqual(piece.religiosity, mov.religiosity)
+
+        self.assertNotEqual(piece.comment, mov.comment)
+        self.assertNotEqual(piece.vocalization, mov.vocalization)
+        self.assertNotEqual(piece.number_of_voices, mov.number_of_voices)
+        self.assertEqual(mov.instruments_voices.all().count(), 1)
+        self.assertEqual(mov.instruments_voices.all()[0].name, 'Other Instrument')
+        self.assertEqual(mov.tags.all().count(), 1)
+        self.assertEqual(mov.tags.all()[0].name, 'Other Tag')
+        self.client.logout()

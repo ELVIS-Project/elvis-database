@@ -73,15 +73,23 @@ class CollectionViewTestCase(ElvisTestSetup, APITestCase):
     def update_collection_allowed(self):
         collection = Collection.objects.filter(public=False)[0]
         self.client.login(username='creatoruser', password='test')
-        response = self.client.post('/collections/', {'action': 'make-public', 'id': collection.id})
+        response = self.client.post('/collections/', {'action': 'make-public',
+                                                      'id': collection.id})
         self.assertEqual(response.status_code, status.HTTP_202_ACCEPTED)
-        response = self.client.post('/collections/', {'action': 'make-private', 'id': collection.id})
+        response = self.client.post('/collections/', {'action': 'make-private',
+                                                      'id': collection.id})
         self.assertEqual(response.status_code, status.HTTP_202_ACCEPTED)
-        response = self.client.post('/collections/', {'action': 'nonesense', 'id': collection.id})
-        self.assertEqual(response.status_code, status.HTTP_405_METHOD_NOT_ALLOWED)
-        response = self.client.post('/collections/', {'action': 'delete', 'id': collection.id})
+        response = self.client.post('/collections/', {'action': 'nonesense',
+                                                      'id': collection.id})
+        self.assertEqual(response.status_code,
+                         status.HTTP_405_METHOD_NOT_ALLOWED)
+        response = self.client.post('/collections/', {'action': 'delete',
+                                                      'id': collection.id})
         self.assertEqual(response.status_code, status.HTTP_202_ACCEPTED)
-        response = self.client.post('/collections/', {'title': 'Test', 'comment': 'Test', 'creator': self.creator_user})
+        response = self.client.post('/collections/',
+                                    {'title': 'Test',
+                                     'comment': 'Test',
+                                     'creator': self.creator_user})
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         self.client.logout()
 
@@ -132,7 +140,6 @@ class CollectionViewTestCase(ElvisTestSetup, APITestCase):
         }), content_type="application/json")
         # print(response.data)
         self.assertEqual(response.status_code, status.HTTP_200_OK)
-
 
     def test_collection_create_page(self):
         """
