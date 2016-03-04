@@ -17,7 +17,7 @@ class Collection(ElvisModel):
                                         blank=True,
                                         related_name="curates")
 
-    def __unicode__(self):
+    def __str__(self):
         return "{0}".format(self.title)
 
     def __contains__(self, item):
@@ -25,10 +25,9 @@ class Collection(ElvisModel):
         if item is None:
             return False
         # Handle normal case
-        item_type = type(item)
-        if item_type is Piece:
+        if isinstance(item, Piece):
             return item in self.pieces.all()
-        if item_type is Movement:
+        elif isinstance(item, Movement):
             return item in self.movements.all()
         else:
             raise Exception("Collections can only contain Pieces and Movements.")
@@ -56,10 +55,9 @@ class Collection(ElvisModel):
         :param item: Piece or Movement
         :return:
         """
-        item_type = type(item)
-        if item_type is Piece:
+        if isinstance(item, Piece):
             self.__add_piece(item)
-        elif item_type is Movement:
+        elif isinstance(item, Movement):
             self.__add_movement(item)
 
     def remove(self, item):
@@ -69,10 +67,9 @@ class Collection(ElvisModel):
         :param item:
         :return:
         """
-        item_type = type(item)
-        if item_type is Piece:
+        if isinstance(item, Piece):
             self.pieces.remove(item)
-        elif item_type is Movement:
+        elif isinstance(item, Movement):
             self.movements.remove(item)
 
     def __add_piece(self, piece):
@@ -86,7 +83,7 @@ class Collection(ElvisModel):
         self.pieces.add(piece)
         # Remove any of the piece's movements
         for movement in piece.movements.all():
-            self.__remove_movement(movement)
+            self.remove(movement)
 
     def __add_movement(self, movement):
         """
