@@ -25,10 +25,9 @@ class Collection(ElvisModel):
         if item is None:
             return False
         # Handle normal case
-        item_type = type(item)
-        if item_type is Piece:
+        if isinstance(item, Piece):
             return item in self.pieces.all()
-        if item_type is Movement:
+        elif isinstance(item, Movement):
             return item in self.movements.all()
         else:
             raise Exception("Collections can only contain Pieces and Movements.")
@@ -56,10 +55,9 @@ class Collection(ElvisModel):
         :param item: Piece or Movement
         :return:
         """
-        item_type = type(item)
-        if item_type is Piece:
+        if isinstance(item, Piece):
             self.__add_piece(item)
-        elif item_type is Movement:
+        elif isinstance(item, Movement):
             self.__add_movement(item)
 
     def remove(self, item):
@@ -69,10 +67,9 @@ class Collection(ElvisModel):
         :param item:
         :return:
         """
-        item_type = type(item)
-        if item_type is Piece:
+        if isinstance(item, Piece):
             self.pieces.remove(item)
-        elif item_type is Movement:
+        elif isinstance(item, Movement):
             self.movements.remove(item)
 
     def __add_piece(self, piece):
