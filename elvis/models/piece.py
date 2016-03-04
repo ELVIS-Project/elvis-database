@@ -32,12 +32,6 @@ class Piece(ElvisModel):
         return self.movements.all().count()
 
     @property
-    def attached_files(self):
-        if not self.attachments.all():
-            return 'none'
-        return " ".join([a.description for a in self.attachments.all()])
-
-    @property
     def tagged_as(self):
         return " ".join([t.name for t in self.tags.all()])
 
