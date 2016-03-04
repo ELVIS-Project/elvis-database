@@ -53,7 +53,7 @@ class Movement(ElvisModel):
                 format_list.append(ext)
         return format_list
 
-    def __unicode__(self):
+    def __str__(self):
         return "{0}".format(self.title)
 
     def movement_collections(self):

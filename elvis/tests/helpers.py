@@ -21,6 +21,9 @@ creator_user = {
 
 @override_settings(SOLR_SERVER="http://localhost:8983/solr/elvis_test")
 class ElvisTestSetup(APITestCase):
+
+    uuid_regexp = r"P-[a-z0-9]{8}-[a-z0-9]{4}-[a-z0-9]{4}-[a-z0-9]{4}-[a-z0-9]{12}"
+
     def url(self, obj):
         model_name = obj.__class__.__name__.lower()
         return "http://localhost:8000/{0}/{1}".format(model_name, obj.id)
