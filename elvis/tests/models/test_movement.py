@@ -64,30 +64,6 @@ class MovementTestCase(ElvisTestSetup, APITestCase):
     def test_unicode(self):
         self.assertEqual(str(self.m), "This is the movement title")
 
-    def test_sources(self):
-        self.assertEqual(self.m.movement_sources(), "")
-        # Add Source 1
-        self.m.sources.add(self.source1)
-        self.assertEqual(self.m.movement_sources(), "Source 1")
-        # Add Source 2
-        self.m.sources.add(self.source2)
-        self.assertEqual(self.m.movement_sources(), "Source 1 Source 2")
-        # Remove all
-        self.m.sources.clear()
-        self.assertEqual(self.m.movement_sources(), "")
-
-    def test_genres(self):
-        self.assertEqual(self.m.movement_genres(), "")
-        # Add Genre 1
-        self.m.genres.add(self.genre1)
-        self.assertEqual(self.m.movement_genres(), "Genre 1")
-        # Add Genre 2
-        self.m.genres.add(self.genre2)
-        self.assertEqual(self.m.movement_genres(), "Genre 1 Genre 2")
-        # Remove all
-        self.m.genres.clear()
-        self.assertEqual(self.m.movement_genres(), "")
-
     def test_get_parent_cart_id(self):
         # No piece
         self.assertEqual(self.m.get_parent_cart_id, "")

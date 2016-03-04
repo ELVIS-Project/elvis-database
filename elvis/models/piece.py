@@ -1,71 +1,26 @@
 import datetime
 
 from django.db import models
-from elvis.models.elvis_model import ElvisModel
+from elvis.models.composition import AbstractComposition
 
 
-class Piece(ElvisModel):
+class Piece(AbstractComposition):
     class Meta:
         app_label = "elvis"
         ordering = ["title"]
-
-    collections = models.ManyToManyField("elvis.Collection", blank=True, related_name="pieces")
-    composer = models.ForeignKey("elvis.Composer", db_index=True, blank=True, null=True, related_name="pieces")
-    composition_start_date = models.IntegerField(blank=True, null=True)
-    composition_end_date = models.IntegerField(blank=True, null=True)
-    number_of_voices = models.IntegerField(blank=True, null=True)
-    tags = models.ManyToManyField("elvis.Tag", blank=True, related_name="pieces")
-    genres = models.ManyToManyField("elvis.Genre", blank=True, related_name="pieces")
-    instruments_voices = models.ManyToManyField("elvis.InstrumentVoice", blank=True, related_name="pieces")
-    languages = models.ManyToManyField("elvis.Language", blank=True, related_name="pieces")
-    locations = models.ManyToManyField("elvis.Location", blank=True, related_name="pieces")
-    sources = models.ManyToManyField("elvis.Source", blank=True, related_name="pieces")
-    attachments = models.ManyToManyField("elvis.Attachment", blank=True, related_name="pieces")
-    religiosity = models.CharField(max_length=50, default="Unknown")
-    vocalization = models.CharField(max_length=50, default="Unknown")
-
-    def number_of_movements(self):
-        return len(self.movements.all())
 
     @property
     def movement_count(self):
         return self.movements.all().count()
 
     @property
-    def tagged_as(self):
-        return " ".join([t.name for t in self.tags.all()])
-
-    @property
     def file_formats(self):
-        format_list = []
-        for att in self.attachments.all():
-            ext = att.extension
-            if ext not in format_list:
-                format_list.append(ext)
+        # Get our own formats
+        format_list = super().file_formats
+        # Append the formats of our movements
         for mov in self.movements.all():
-            for att in mov.attachments.all():
-                ext = att.extension
-                if ext not in format_list:
-                    format_list.append(ext)
+            format_list.extend(mov.file_formats)
         return format_list
-
-    def piece_collections(self):
-        return " ".join([collection.title if collection.public else "" for collection in self.collections.all()])
-
-    def piece_genres(self):
-        return " ".join([genre.name for genre in self.genres.all()])
-
-    def piece_instruments_voices(self):
-        return " ".join([instrument_voice.name for instrument_voice in self.instruments_voices.all()])
-
-    def piece_languages(self):
-        return " ".join([language.name for language in self.languages.all()])
-
-    def piece_locations(self):
-        return " ".join([location.name for location in self.locations.all()])
-
-    def piece_sources(self):
-        return " ".join([source.name for source in self.sources.all()])
 
     def solr_dict(self):
         piece = self
