@@ -3,6 +3,11 @@
 ENV="prod"
 BASE_DIR="/srv/webapps/elvisdb"
 
+# Dump the database
+source ${BASE_DIR}/${ENV}/.env/bin/activate
+python ${BASE_DIR}/${ENV}/manage.py dumpdata > ${BASE_DIR}/${ENV}/database_$(date +%s).json
+deactivate
+
 # Save a backup
 mv "${BASE_DIR}/${ENV}" "${BASE_DIR}/old/${ENV}_$(date +%s)"
 
