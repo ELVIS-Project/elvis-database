@@ -1,7 +1,7 @@
 import ujson as json
 import datetime
 import pytz
-
+from django.contrib.auth.models import User
 from rest_framework import generics
 from rest_framework import status
 from rest_framework.response import Response
@@ -128,6 +128,70 @@ class CollectionDetail(ElvisDetailView):
         else:
             # The default inherited permission system
             return super().determine_perms(request, *args, **kwargs)
+
+
+class CollectionCurators(CollectionDetail):
+    def post(self, request, *args, **kwargs):
+        """
+        If the user has permission to edit the collection, add the specified pieces
+        to the specified collection.
+
+        :param request:
+        :param args:
+        :param kwargs:
+        :return:
+        """
+        if self.determine_perms(request, *args, **kwargs)['can_edit']:
+            username = request.data.get("username")
+            try:
+                user = User.objects.get(username=username)
+            except ObjectDoesNotExist:
+                return HttpResponse(
+                    content="User {0} does not exist.".format(username),
+                    status=status.HTTP_400_BAD_REQUEST)
+
+            collection = Collection.objects.get(id=int(kwargs['pk']))
+            collection.add_curator(user)
+            return HttpResponse(
+                content="Curator added to collection.",
+                content_type="application/json",
+                status=status.HTTP_200_OK)
+        else:
+            raise PermissionDenied
+
+    def delete(self, request, *args, **kwargs):
+        """
+        If the user has permission to edit the collection, remove the specified
+        pieces from the collection.
+
+        :param request:
+        :param args:
+        :param kwargs:
+        :return:
+        """
+        if self.determine_perms(request, *args, **kwargs)["can_edit"]:
+            usernames = request.data.get("usernames")
+            if not usernames:
+                return HttpResponse(
+                    content="Please provide some usernames.",
+                    status=status.HTTP_400_BAD_REQUEST
+                )
+            collection = Collection.objects.get(id=int(kwargs['pk']))
+            for username in usernames:
+                try:
+                    user = User.objects.get(username=username)
+                except ObjectDoesNotExist:
+                    # User doesn't exist, so keep going.
+                    continue
+                collection.remove_curator(user)
+
+            return HttpResponse(
+                content="{0} removed from collection {1}.".format(usernames, collection.title),
+                content_type="application/json",
+                status=status.HTTP_200_OK
+            )
+        else:
+            raise PermissionDenied
 
 
 class CollectionElements(CollectionDetail):

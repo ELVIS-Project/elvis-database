@@ -13,7 +13,7 @@ from elvis.views.user import UserAccount, UserUpdate, UserList
 from elvis.views.movement import MovementList, MovementDetail
 from elvis.views.composer import ComposerList, ComposerDetail
 from elvis.views.collection import CollectionList, CollectionDetail, \
-        CollectionCreate, CollectionUpdate, CollectionElements, MyCollections
+        CollectionCreate, CollectionUpdate, CollectionElements, CollectionCurators, MyCollections
 from elvis.views.media import MediaServeView
 from django.contrib.auth import views as auth_views
 
@@ -61,6 +61,7 @@ urlpatterns.extend([
         url(r'^collection/create/', CollectionCreate.as_view(), name="collection-create", kwargs={'model': "Collection"}),
         url(r'^collection/(?P<pk>[0-9]+)/update/$', CollectionUpdate.as_view(), name="collection-update", kwargs={'model': "Collection"}),
         url(r'^collection/(?P<pk>[0-9]+)/elements/$', CollectionElements.as_view(), name="collection-elements", kwargs={'model': "Collection"}),
+        url(r'^collection/(?P<pk>[0-9]+)/curators/$', CollectionCurators.as_view(), name="collection-curators", kwargs={'model': "Collection"}),
         url(r'^collections/mine/$', MyCollections.as_view(), name="my-collections", kwargs={'model': "Collection"}),
 
         url(r'^composers/$', ComposerList.as_view(), name="composer-list", kwargs={'model': "Composer"}),

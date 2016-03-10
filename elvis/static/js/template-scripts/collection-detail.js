@@ -86,4 +86,73 @@ $(document).ready(function ($)
             $base_modal.modal('show');
         }
     });
+
+    $('form[name="add-curator"]').submit(function(event) {
+        event.preventDefault();
+        // Grab the username
+        var userName = event.target[0].value;
+        var errorMessage = event.target.children[3];
+        console.log(event);
+        // Hit the API
+        var url = window.location.href + "curators/";
+        $.ajax({
+            url: url,
+            headers: {
+                'Accept': 'application/json',
+                'Content-Type': 'application/json'
+            },
+            type: "post",
+            data: JSON.stringify({
+                username: userName
+            }),
+            dataType: 'json',
+            success: function(data) {
+                console.log("success:", data);
+                // Refresh the page
+                document.location.href = window.location.href;
+            },
+            error: function (data) {
+                console.log("error:", data);
+                console.log(errorMessage);
+                errorMessage.innerHTML = data.responseText;
+            }
+        });
+    });
+
+    $('form[name="remove-curator"]').submit(function(event) {
+        event.preventDefault();
+
+        var usernames = [];
+        // Get the usernames
+        $('input[name="remove-curator"]:checked').map(function() {
+            usernames.push($(this).val());
+        });
+
+        if (usernames.length > 0) {
+            var url = window.location.href + "curators/";
+            // Some things were checked!
+            $.ajax({
+                url: url,
+                headers: {
+                    'Accept': 'application/json',
+                    'Content-Type': 'application/json'
+                },
+                type: "delete",
+                data: JSON.stringify({
+                    usernames: usernames
+                }),
+                dataType: 'json',
+                success: function(data) {
+                    console.log("success:", data);
+                    //// Refresh the page
+                    //document.location.href = window.location.href;
+                },
+                error: function (data) {
+                    console.log("error:", data);
+                    //console.log(errorMessage);
+                    //errorMessage.innerHTML = data.responseText;
+                }
+            });
+        }
+    });
 });

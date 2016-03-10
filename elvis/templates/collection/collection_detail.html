@@ -155,7 +155,27 @@
                 </form>
             </div>
             <div role="tabpanel" class="tab-pane" id="options-manage-curators">
-                Feature Coming Soon...
+                <h3>Add Curators</h3>
+                <form name="add-curator">
+                    <label>Username:</label>
+                    <input name="user-name"/>
+                    <button type="submit" class="btn btn-default">Add</button>
+                    <p class="text-danger"></p>
+                </form>
+                <h3>Remove Curators</h3>
+                <form name="remove-curator">
+                    <ul class="list-group">
+                    {% for curator in content.curators %}
+                        <li class="list-group-item">
+                            <input name="remove-curator" value="{{ curator.username }}" type="checkbox">
+                            {{ curator.last_name }}, {{ curator.first_name }} <small>{{ curator.username }}</small>
+                        </li>
+                    {% empty %}
+                        <p>None</p>
+                    {% endfor %}
+                    </ul>
+                    <button type="submit" class="btn btn-danger">Remove</button>
+                </form>
             </div>
         </div>
     </div>

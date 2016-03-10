@@ -98,6 +98,24 @@ class Collection(ElvisModel):
         else:
             movement.collections.add(self)
 
+    def add_curator(self, user):
+        """
+        Add a curator to the collection.  A curator cannot be the owner.
+
+        :param user:
+        :return:
+        """
+        if user != self.creator:
+            self.curators.add(user)
+
+    def remove_curator(self, user):
+        """
+        Remove a curator from the collection.
+        :param user:
+        :return:
+        """
+        self.curators.remove(user)
+
     def solr_dict(self):
         collection = self
         if collection.creator:
