@@ -106,40 +106,58 @@
 {% endblock %}
 
 {% block options_tab_content %}
-    <h3>Modify Collection Metadata</h3>
-    <button type="button" class="btn btn-default"
-            id="delete-button">Delete
-    </button>
-    <a href="{{ content.url }}update/" class="btn btn-default">Update</a>
-    <hr />
-    {% if content.pieces or content.movements %}
-    <h3>Remove Collection Elements</h3>
-    <form>
-    <h4>Pieces</h4>
-    <ul class="list-group">
-    {% for piece in content.pieces %}
-        <li class="list-group-item">
-            <label>
-                <input name="remove-piece" value="{{ piece.id }}" type="checkbox"> {{ piece.title }} - {{ piece.composer.shortened_title }}
-            </label>
-        </li>
-    {% empty %}
-        <li class="list-group-item">None</li>
-    {% endfor %}
-    </ul>
-    <h4>Movements</h4>
-    <ul class="list-group">
-    {% for movement in content.movements %}
-        <li class="list-group-item">
-            <label>
-                <input name="remove-movement" value="{{ movement.id }}" type="checkbox"> {{ movement.title }} - {{ movement.composer.shortened_title }}
-            </label>
-        </li>
-    {% empty %}
-        <li class="list-group-item">None</li>
-    {% endfor %}
-    </ul>
-    <button type="submit" id="remove-member-button" class="btn btn-danger">Remove</button>
-    </form>
-    {% endif %}
+    <div>
+
+        <!-- Nav tabs -->
+        <ul class="nav nav-tabs" role="tablist">
+            <li role="presentation" class="active"><a href="#options-metadata" aria-controls="home" role="tab" data-toggle="tab">Metadata</a></li>
+            <li role="presentation"><a href="#options-remove-elements" aria-controls="profile" role="tab" data-toggle="tab">Remove Elements</a></li>
+            <li role="presentation"><a href="#options-manage-curators" aria-controls="messages" role="tab" data-toggle="tab">Manage Curators</a></li>
+        </ul>
+
+        <!-- Tab panes -->
+        <div class="tab-content">
+            <div role="tabpanel" class="tab-pane active" id="options-metadata">
+                <h3>Modify Collection Metadata</h3>
+                <button type="button" class="btn btn-default"
+                        id="delete-button">Delete
+                </button>
+                <a href="{{ content.url }}update/" class="btn btn-default">Update</a>
+            </div>
+            <div role="tabpanel" class="tab-pane" id="options-remove-elements">
+                <h3>Remove Collection Elements</h3>
+                <form>
+                    <h4>Pieces</h4>
+                    <ul class="list-group">
+                        {% for piece in content.pieces %}
+                            <li class="list-group-item">
+                                <label>
+                                    <input name="remove-piece" value="{{ piece.id }}" type="checkbox"> {{ piece.title }} - {{ piece.composer.shortened_title }}
+                                </label>
+                            </li>
+                            {% empty %}
+                            <li class="list-group-item">None</li>
+                        {% endfor %}
+                    </ul>
+                    <h4>Movements</h4>
+                    <ul class="list-group">
+                        {% for movement in content.movements %}
+                            <li class="list-group-item">
+                                <label>
+                                    <input name="remove-movement" value="{{ movement.id }}" type="checkbox"> {{ movement.title }} - {{ movement.composer.shortened_title }}
+                                </label>
+                            </li>
+                            {% empty %}
+                            <li class="list-group-item">None</li>
+                        {% endfor %}
+                    </ul>
+                    <button type="submit" id="remove-member-button" class="btn btn-danger">Remove</button>
+                </form>
+            </div>
+            <div role="tabpanel" class="tab-pane" id="options-manage-curators">
+                Feature Coming Soon...
+            </div>
+        </div>
+    </div>
+
 {% endblock %}
