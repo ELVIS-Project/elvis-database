@@ -50,6 +50,13 @@ class CommonPublicViewTestCase(ElvisTestSetup, APITestCase):
         response = self.client.get("/account/")
         self.assertEqual(response.status_code, status.HTTP_200_OK)
 
+    def test_account_logged_in(self):
+        self.client.login(username=real_user['username'],
+                          password=real_user['password'])
+        response = self.client.get("/account/")
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.client.logout()
+
     def test_account_update(self):
         response = self.client.get("/account/update/")
         self.assertEqual(response.status_code, status.HTTP_200_OK)
