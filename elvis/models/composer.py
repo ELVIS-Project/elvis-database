@@ -76,4 +76,3 @@ class Composer(ElvisModel):
                 'created': composer.created,
                 'updated': composer.updated,
                 'composers_searchable': composer.name}
-

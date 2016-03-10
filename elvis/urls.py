@@ -1,11 +1,7 @@
-from django.conf.urls import patterns, include, url, static
-from django.conf import settings
-
 import os
-
-from rest_framework.urlpatterns import format_suffix_patterns
+from django.conf import settings
+from django.conf.urls import include, url, static
 from django.contrib.staticfiles.urls import staticfiles_urlpatterns
-
 # temporary views for these pages
 from elvis.views.main import home, about, contact
 from elvis.views.views import solr_suggest
@@ -13,14 +9,14 @@ from elvis.views.auth import LoginFormView, logout_view
 from elvis.views.search import SearchView, SearchAndAddToCartView
 from elvis.views.download import DownloadCart, Downloading
 from elvis.views.piece import PieceList, PieceDetail, PieceCreate, PieceUpdate, MyPieces
-from elvis.views.user import UserAccount, UserUpdate
+from elvis.views.user import UserAccount, UserUpdate, UserList
 from elvis.views.movement import MovementList, MovementDetail
 from elvis.views.composer import ComposerList, ComposerDetail
 from elvis.views.collection import CollectionList, CollectionDetail, \
         CollectionCreate, CollectionUpdate, CollectionElements, MyCollections
 from elvis.views.media import MediaServeView
 from django.contrib.auth import views as auth_views
-import django.views.static
+
 # Uncomment the next two lines to enable the admin:
 from django.contrib import admin
 admin.autodiscover()
@@ -72,6 +68,8 @@ urlpatterns.extend([
 
         url(r'^movements/$', MovementList.as_view(), name="movement-list", kwargs={'model': "Movement"}),
         url(r'^movement/(?P<pk>[0-9]+)/$', MovementDetail.as_view(), name="movement-detail", kwargs={'model': "Movement"}),
+
+        url(r'^users/$', UserList.as_view(), name="user-list", kwargs={'model': "User"}),
 
         url(r'^about/$', about, name='about'),
 

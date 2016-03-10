@@ -122,6 +122,12 @@ class CommonPublicViewTestCase(ElvisTestSetup, APITestCase):
         response = self.client.get("/composers/")
         self.assertEqual(response.status_code, status.HTTP_200_OK)
 
+    # Users
+
+    def test_users(self):
+        response = self.client.get("/users/")
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+
     # Movements
 
     def test_movements(self):

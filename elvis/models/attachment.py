@@ -1,7 +1,6 @@
 import os
 import shutil
 
-
 from django.db import models
 from django.conf import settings
 from elvis.models.elvis_model import ElvisModel
