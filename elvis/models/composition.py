@@ -1,10 +1,7 @@
-import datetime
-
 from django.db import models
-from elvis.models.elvis_model import ElvisModel
 
 
-class AbstractComposition(ElvisModel):
+class ElvisCompositionMixin(models.Model):
     class Meta:
         abstract = True
 
@@ -38,6 +35,3 @@ class AbstractComposition(ElvisModel):
     @property
     def tagged_as(self):
         return " ".join([t.name for t in self.tags.all()])
-
-    def solr_dict(self):
-        raise NotImplementedError

@@ -1,10 +1,11 @@
 import datetime
 
 from django.db import models
-from elvis.models.composition import AbstractComposition
+from elvis.models.elvis_model import ElvisModel
+from elvis.models.composition import ElvisCompositionMixin
 
 
-class Movement(AbstractComposition):
+class Movement(ElvisModel, ElvisCompositionMixin):
     class Meta:
         app_label = "elvis"
         ordering = ["position", "title"]
