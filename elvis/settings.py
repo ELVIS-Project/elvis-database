@@ -282,7 +282,7 @@ LOGGING = {
         'file': {
             'level': 'DEBUG',
             'class': 'logging.FileHandler',
-            'filename': '/srv/webapps/elvisdb_logs/{0}/django_elvis.log'.format(SETTING_TYPE)
+            'filename': '/var/log/elvisdb/{0}/django_elvis.log'.format(SETTING_TYPE)
         },
     },
     'loggers': {
@@ -299,3 +299,4 @@ if SETTING_TYPE == "local":
         from elvis.local_settings import *
     except ImportError:
         pass
+
