@@ -26,7 +26,6 @@ class Movement(ElvisModel):
     religiosity = models.CharField(max_length=50, default="Unknown")
     vocalization = models.CharField(max_length=50, default="Unknown")
     parent_cart_id = models.CharField(max_length=50, null=True)
-
     hidden = models.BooleanField(default=False)
 
     @property

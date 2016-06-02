@@ -23,7 +23,6 @@ class Piece(ElvisModel):
     attachments = models.ManyToManyField("elvis.Attachment", blank=True, related_name="pieces")
     religiosity = models.CharField(max_length=50, default="Unknown")
     vocalization = models.CharField(max_length=50, default="Unknown")
-
     hidden = models.BooleanField(default=False)
 
     def number_of_movements(self):
