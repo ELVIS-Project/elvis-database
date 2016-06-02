@@ -27,6 +27,8 @@ class Movement(ElvisModel):
     vocalization = models.CharField(max_length=50, default="Unknown")
     parent_cart_id = models.CharField(max_length=50, null=True)
 
+    hidden = models.BooleanField(default=False)
+
     @property
     def attached_files(self):
         if not self.attachments.all():

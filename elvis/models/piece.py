@@ -24,6 +24,8 @@ class Piece(ElvisModel):
     religiosity = models.CharField(max_length=50, default="Unknown")
     vocalization = models.CharField(max_length=50, default="Unknown")
 
+    hidden = models.BooleanField(default=False)
+
     def number_of_movements(self):
         return len(self.movements.all())
 

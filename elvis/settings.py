@@ -162,15 +162,15 @@ else:
 # ======================
 BROKER_URL = 'django://'
 
-if SETTING_TYPE != "local":
-    DATABASES = {
-        'default': {
-            'ENGINE': 'django.db.backends.postgresql_psycopg2',
-            'NAME': 'elvis_{0}'.format(SETTING_TYPE),
-            'USER': 'elvisdatabase',
-            'PASSWORD': '5115C67O2v3GN31T49Md'
-            }
+#if SETTING_TYPE != "local":
+DATABASES = {
+    'default': {
+        'ENGINE': 'django.db.backends.postgresql_psycopg2',
+        'NAME': 'elvis_{0}'.format(SETTING_TYPE),
+        'USER': 'elvisdatabase',
+        'PASSWORD': '5115C67O2v3GN31T49Md'
     }
+}
 
 # Email Settings
 # ==============
@@ -236,14 +236,14 @@ SEARCH_FILTERS_DICT = {
     'fm': 'elvis_movement',
     'ft': 'elvis_tag',
     'fu': 'elvis_user',
-    }
+}
 FACET_NAMES = {
     'type': "Result Type",
     'composer_name': "Composer",
     "number_of_voices": "Number of Voices",
     "tags": "Tags",
     "parent_collection_names": "Collection",
-    }
+}
 TYPE_NAMES={
     'elvis_user': "Users",
     'elvis_tag': "Tags",
@@ -251,7 +251,7 @@ TYPE_NAMES={
     'elvis_piece': "Pieces",
     'elvis_composer': "Composers",
     'elvis_collection': "Collections",
-    }
+}
 
 # Celery Settings
 # ===============
@@ -282,7 +282,8 @@ LOGGING = {
         'file': {
             'level': 'DEBUG',
             'class': 'logging.FileHandler',
-            'filename': '/var/log/elvisdb/{0}/django_elvis.log'.format(SETTING_TYPE)
+            #'filename': '/srv/webapps/elvisdb_logs/{0}/django_elvis.log'.format(SETTING_TYPE)
+            'filename': '/Users/veroniquelagace/Documents/code/elvis/elvis-database/logs/test.log'.format(SETTING_TYPE)
         },
     },
     'loggers': {

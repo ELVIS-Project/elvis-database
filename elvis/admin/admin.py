@@ -11,6 +11,7 @@ def reindex_in_solr(modeladmin, request, queryset):
     for item in queryset:
         item.save()
 
+
 def rebuild_dicts(modeladmin, request):
     rebuild_suggester_dicts()
 
@@ -40,7 +41,7 @@ class PieceInline(admin.TabularInline):
     model = Collection.pieces.through
 
 class PieceAdmin(admin.ModelAdmin):
-    list_display = ("title", "composer", "uploader", "created")
+    list_display = ("title", "composer", "uploader", "created", "hidden")
     # Other things for interest: , "attached_files", "tagged_as"
     filter_horizontal = ("tags",)
     ordering = ("-created",)
@@ -51,7 +52,7 @@ class PieceAdmin(admin.ModelAdmin):
 
 
 class MovementAdmin(admin.ModelAdmin):
-    list_display = ("title", "composer", "uploader", "created", "updated")
+    list_display = ("title", "composer", "uploader", "created", "updated", "hidden")
     # Other things for interest , "attached_files", "tagged_as"
     filter_horizontal = ("tags",)
     readonly_fields = ("attachments",)
