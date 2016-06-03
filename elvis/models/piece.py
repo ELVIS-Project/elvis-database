@@ -119,6 +119,8 @@ class Piece(ElvisModel):
         else:
             d2 = None
 
+        hidden = piece.hidden
+
         return {'type': 'elvis_piece',
                 'id': int(piece.id),
                 'title': piece.title,
@@ -139,4 +141,5 @@ class Piece(ElvisModel):
                 'vocalization': piece.vocalization,
                 'file_formats': piece.file_formats,
                 'pieces_searchable': piece.title,
-                'attached_files': file_paths}
+                'attached_files': file_paths,
+                'hidden': hidden}

@@ -120,6 +120,8 @@ class Movement(ElvisModel):
         else:
             d2 = None
 
+        hidden = movement.hidden
+
         return {'type': 'elvis_movement',
                 'id': int(movement.id),
                 'title': movement.title,
@@ -140,4 +142,5 @@ class Movement(ElvisModel):
                 'religiosity': movement.religiosity,
                 'vocalization': movement.vocalization,
                 'file_formats': movement.file_formats,
-                'attached_files': file_paths}
+                'attached_files': file_paths,
+                'hidden': hidden}
