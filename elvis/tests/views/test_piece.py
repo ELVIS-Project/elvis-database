@@ -28,10 +28,23 @@ class CollectionViewTestCase(ElvisTestSetup, APITestCase):
         self.assertEqual(response.status_code, status.HTTP_200_OK)
 
     def test_get_detail(self):
-        piece = Piece.objects.first()
+        piece = Piece.objects.filter(hidden=False)
         response = self.client.get("/piece/{0}/".format(piece.id))
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         self.assertEqual(response.data['id'], piece.id)
+
+    def test_get_hidden_detail(self):
+        piece = Piece.objects.filter(hidden=True)[0]
+        self.client.login(username='testuser', password='test')
+        response = self.client.get("/piece/{0}/".format(piece.id))
+        self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
+        self.client.logout()
+
+        self.client.login(username='creatoruser', password='test')
+        response = self.client.get("/piece/{0}/".format(piece.id))
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertEqual(response.data['id'], piece.id)
+        self.client.logout()
 
     def test_get_update_not_allowed(self):
         piece = Piece.objects.first()

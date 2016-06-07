@@ -26,7 +26,9 @@ class ElvisDetailView(generics.RetrieveUpdateDestroyAPIView):
         if user.is_superuser or obj.creator == user:
             return {'can_edit': True, 'can_view': True}
 
-        if not obj.__dict__.get('public', True) or obj.__dict__.get('hidden', True):
+        if not obj.__dict__.get('public', True):
+            return {'can_edit': False, 'can_view': False}
+        elif obj.__dict__.get('hidden', True):
             return {'can_edit': False, 'can_view': False}
         else:
             return {'can_edit': False, 'can_view': True}
