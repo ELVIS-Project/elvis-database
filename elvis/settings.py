@@ -162,15 +162,15 @@ else:
 # ======================
 BROKER_URL = 'django://'
 
-#if SETTING_TYPE != "local":
-DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.postgresql_psycopg2',
-        'NAME': 'elvis_{0}'.format(SETTING_TYPE),
-        'USER': 'elvisdatabase',
-        'PASSWORD': '5115C67O2v3GN31T49Md'
+if SETTING_TYPE != "local":
+    DATABASES = {
+        'default': {
+            'ENGINE': 'django.db.backends.postgresql_psycopg2',
+            'NAME': 'elvis_{0}'.format(SETTING_TYPE),
+            'USER': 'elvisdatabase',
+            'PASSWORD': '5115C67O2v3GN31T49Md'
+        }
     }
-}
 
 # Email Settings
 # ==============
@@ -282,8 +282,7 @@ LOGGING = {
         'file': {
             'level': 'DEBUG',
             'class': 'logging.FileHandler',
-            #'filename': '/srv/webapps/elvisdb_logs/{0}/django_elvis.log'.format(SETTING_TYPE)
-            'filename': '/Users/veroniquelagace/Documents/code/elvis/elvis-database/logs/test.log'.format(SETTING_TYPE)
+            'filename': '/srv/webapps/elvisdb_logs/{0}/django_elvis.log'.format(SETTING_TYPE)
         },
     },
     'loggers': {
