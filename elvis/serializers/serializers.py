@@ -130,7 +130,7 @@ class URLNormalizingCacherMixin:
             perms = {'can_edit': True, 'can_view': True}
         elif not instance.__dict__.get('public', True):
             perms = {'can_edit': False, 'can_view': False}
-        elif (instance.__class__.__name__ == "Piece" or instance.__class__.__name__ == "Movement") and instance.__dict__.get('hidden', True):
+        elif instance.__dict__.get('hidden', False):
             perms = {'can_edit': False, 'can_view': False}
         else:
             perms = {'can_edit': False, 'can_view': True}
