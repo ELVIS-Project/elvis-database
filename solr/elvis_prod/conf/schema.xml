@@ -16,10 +16,10 @@
  limitations under the License.
 -->
 
-<!--  
+<!--
  This is the Solr schema file. This file should be named "schema.xml" and
  should be in the conf directory under the solr home
- (i.e. ./solr/conf/schema.xml by default) 
+ (i.e. ./solr/conf/schema.xml by default)
  or located where the classloader for the Solr webapp can find it.
 
  This example schema is the recommended starting point for users.
@@ -65,7 +65,7 @@
 
     <!-- Valid attributes for fields:
      name: mandatory - the name for the field
-     type: mandatory - the name of a field type from the 
+     type: mandatory - the name of a field type from the
        <types> fieldType section
      indexed: true if this field should be indexed (searchable or sortable)
      stored: true if this field should be retrievable
@@ -88,9 +88,9 @@
        given field.
        When using MoreLikeThis, fields used for similarity should be
        stored for best performance.
-     termPositions: Store position information with the term vector.  
+     termPositions: Store position information with the term vector.
        This will increase storage costs.
-     termOffsets: Store offset information with the term vector. This 
+     termOffsets: Store offset information with the term vector. This
        will increase storage costs.
      required: The field is required.  It will throw an error if the
        value does not exist
@@ -105,14 +105,14 @@
       trailing underscores (e.g. _version_) are reserved.
    -->
 
-    <!-- In this data_driven_schema_configs configset, only three fields are pre-declared: 
+    <!-- In this data_driven_schema_configs configset, only three fields are pre-declared:
          id, _version_, and _text_.  All other fields will be type guessed and added via the
-         "add-unknown-fields-to-the-schema" update request processor chain declared 
+         "add-unknown-fields-to-the-schema" update request processor chain declared
          in solrconfig.xml.
-         
-         Note that many dynamic fields are also defined - you can use them to specify a 
+
+         Note that many dynamic fields are also defined - you can use them to specify a
          field's type via field naming conventions - see below.
-  
+
   WARNING: The _text_ catch-all field will significantly increase your index size.
            If you don't need it, consider removing it and the corresponding copyField directive.
       -->
@@ -145,6 +145,7 @@
     <field name="collections_searchable" type="string" indexed="true" stored="true"/>
     <field name="file_formats" type="string" indexed="true" stored="true" multiValued="True"/>
     <field name="attached_files" type="string" indexed="true" stored="true" multiValued="true"/>
+    <field name="hidden"  type="boolean" indexed="true" stored="true"/>
 
     <!-- LM Date fields -->
     <field name="created" type="date" indexed="true" stored="true"/>
@@ -219,11 +220,11 @@
             <filter class="solr.LowerCaseFilterFactory"/>
         </analyzer>
     </fieldType>
-    <!-- uncomment the following to ignore any fields that don't already match an existing 
-        field name or dynamic field, rather than reporting them as an error. 
-        alternately, change the type="ignored" to some other type e.g. "text" if you want 
-        unknown fields indexed and/or stored by default 
-        
+    <!-- uncomment the following to ignore any fields that don't already match an existing
+        field name or dynamic field, rather than reporting them as an error.
+        alternately, change the type="ignored" to some other type e.g. "text" if you want
+        unknown fields indexed and/or stored by default
+
         NB: use of "*" dynamic fields will disable field type guessing and adding
         unknown fields to the schema. -->
     <!--dynamicField name="*" type="ignored" multiValued="true" /-->
@@ -369,7 +370,7 @@
 
     <!-- The format for this date field is of the form 1995-12-31T23:59:59Z, and
          is a more restricted form of the canonical representation of dateTime
-         http://www.w3.org/TR/xmlschema-2/#dateTime    
+         http://www.w3.org/TR/xmlschema-2/#dateTime
          The trailing "Z" designates UTC time and is mandatory.
          Optional fractional seconds are allowed: 1995-12-31T23:59:59.999Z
          All other components are mandatory.
@@ -384,7 +385,7 @@
                NOW/DAY+6MONTHS+3DAYS
                   ... 6 months and 3 days in the future from the start of
                       the current day
-                      
+
          Consult the TrieDateField javadocs for more information.
 
          Note: For faster range queries, consider the tdate type
@@ -407,11 +408,11 @@
 
     <!-- The "RandomSortField" is not used to store or search any
          data.  You can declare fields of this type it in your schema
-         to generate pseudo-random orderings of your docs for sorting 
+         to generate pseudo-random orderings of your docs for sorting
          or function purposes.  The ordering is generated based on the field
          name and the version of the index. As long as the index version
          remains unchanged, and the same field name is reused,
-         the ordering of the docs will be consistent.  
+         the ordering of the docs will be consistent.
          If you want different psuedo-random orderings of documents,
          for the same version of the index, use a dynamicField and
          change the field name in the request.
@@ -644,7 +645,7 @@
         </analyzer>
     </fieldType>
 
-    <!-- 
+    <!--
       Example of using PathHierarchyTokenizerFactory at index time, so
       queries for paths match documents at that path, or in descendent paths
     -->
@@ -659,7 +660,7 @@
             <tokenizer class="solr.KeywordTokenizerFactory"/>
         </analyzer>
     </fieldType>
-    <!-- 
+    <!--
       Example of using PathHierarchyTokenizerFactory at query time, so
       queries for paths match documents at that path, or in ancestor paths
     -->
@@ -682,7 +683,7 @@
 
     <!-- This point type indexes the coordinates as separate fields (subFields)
       If subFieldType is defined, it references a type, and a dynamic field
-      definition is created matching *___<typename>.  Alternately, if 
+      definition is created matching *___<typename>.  Alternately, if
       subFieldSuffix is defined, that is used to create the subFields.
       Example: if subFieldType="double", then the coordinates would be
         indexed in fields myloc_0___double,myloc_1___double.
@@ -1034,7 +1035,7 @@
     <!-- Japanese using morphological analysis (see text_cjk for a configuration using bigramming)
 
          NOTE: If you want to optimize search for precision, use default operator AND in your query
-         parser config with <solrQueryParser defaultOperator="AND"/> further down in this file.  Use 
+         parser config with <solrQueryParser defaultOperator="AND"/> further down in this file.  Use
          OR if you would like to optimize for recall (default).
     -->
     <dynamicField name="*_txt_ja" type="text_ja" indexed="true" stored="true"/>

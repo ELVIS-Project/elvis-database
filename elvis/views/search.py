@@ -114,7 +114,9 @@ class SearchView(generics.GenericAPIView):
         if user.is_superuser:
             search_results = s.search()
         else:
-            search_results = s.search(fq='hidden:False')
+            s1 = s
+            s1.solr_params['fq'].append('!hidden:True')
+            search_results = s1.search()
         # Paginate results
         paginator = paginate.SolrPaginator(search_results)
         paged_results = get_paged_results(paginator, get_page_number(request))
@@ -157,7 +159,7 @@ class SearchAndAddToCartView(SearchView):
         if user.is_superuser:
             search_results = s.search()
         else:
-            search_results = s.search(fq='hidden:False')
+            search_results = s.search(fq='*:* AND !hidden:True')
             #search_results.append(s.search(fq='creator:user'))
         # Paginate results
         paginator = paginate.SolrPaginator(search_results)

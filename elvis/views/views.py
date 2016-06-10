@@ -88,9 +88,14 @@ def solr_suggest(request):
                 for i in range(min(7, len(sorted_suggestions))):
                     results.append({'name': sorted_suggestions[i]['term']})
         else:
-            url = settings.SOLR_SERVER + "/suggest/?wt=json" \
-                                         "&suggest.dictionary={0}" \
-                                         "&q={1}".format(dictionary, value)
+            if dictionary == "pieceSuggest":
+                url = settings.SOLR_SERVER + "/suggest/?wt=json" \
+                                             "&suggest.dictionary={0}" \
+                                             "&q={1}".format(dictionary, value)
+            else:
+                url = settings.SOLR_SERVER + "/suggest/?wt=json" \
+                                             "&suggest.dictionary={0}" \
+                                             "&q={1}".format(dictionary, value)
             json_string = urllib.request.urlopen(url)
             resp = json.loads((json_string.read()).decode('utf-8'))
             resp = resp['suggest']['{0}'.format(dictionary)]
