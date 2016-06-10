@@ -23,6 +23,7 @@ class Piece(ElvisModel):
     attachments = models.ManyToManyField("elvis.Attachment", blank=True, related_name="pieces")
     religiosity = models.CharField(max_length=50, default="Unknown")
     vocalization = models.CharField(max_length=50, default="Unknown")
+    hidden = models.BooleanField(default=False)
 
     def number_of_movements(self):
         return len(self.movements.all())
@@ -118,6 +119,8 @@ class Piece(ElvisModel):
         else:
             d2 = None
 
+        hidden = piece.hidden
+
         return {'type': 'elvis_piece',
                 'id': int(piece.id),
                 'title': piece.title,
@@ -138,4 +141,5 @@ class Piece(ElvisModel):
                 'vocalization': piece.vocalization,
                 'file_formats': piece.file_formats,
                 'pieces_searchable': piece.title,
-                'attached_files': file_paths}
+                'attached_files': file_paths,
+                'hidden': hidden}

@@ -2,7 +2,7 @@ from rest_framework import permissions
 from rest_framework import generics
 from rest_framework.exceptions import PermissionDenied
 from django.db.models import Q
-from elvis.models import Collection
+from elvis.models import Collection, Piece, Movement
 from django.apps import apps
 
 
@@ -27,6 +27,8 @@ class ElvisDetailView(generics.RetrieveUpdateDestroyAPIView):
             return {'can_edit': True, 'can_view': True}
 
         if not obj.__dict__.get('public', True):
+            return {'can_edit': False, 'can_view': False}
+        elif obj.__dict__.get('hidden', False):
             return {'can_edit': False, 'can_view': False}
         else:
             return {'can_edit': False, 'can_view': True}
@@ -117,6 +119,9 @@ class ElvisListCreateView(generics.ListCreateAPIView):
 
         if model == Collection:
             Qlist.append((Q(public=True) | Q(creator=user)))
+
+        if model == Piece or model == Movement:
+            Qlist.append((Q(hidden=False) | Q(creator=user)))
 
         if Qlist:
             return model.objects.filter(*Qlist)

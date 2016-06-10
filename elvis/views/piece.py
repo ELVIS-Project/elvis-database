@@ -38,6 +38,7 @@ class PieceUpdateHTMLRenderer(CustomHTMLRenderer):
 
 
 class PieceDetail(ElvisDetailView):
+    model = Piece
     serializer_class = PieceFullSerializer
     renderer_classes = (PieceDetailHTMLRenderer, JSONRenderer, BrowsableAPIRenderer)
 
@@ -63,6 +64,7 @@ class PieceUpdate(generics.RetrieveAPIView):
 
 
 class PieceList(ElvisListCreateView):
+    model = Piece
     serializer_class = PieceListSerializer
     renderer_classes = (PieceListHTMLRenderer, JSONRenderer, BrowsableAPIRenderer)
 

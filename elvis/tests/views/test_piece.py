@@ -28,10 +28,23 @@ class CollectionViewTestCase(ElvisTestSetup, APITestCase):
         self.assertEqual(response.status_code, status.HTTP_200_OK)
 
     def test_get_detail(self):
-        piece = Piece.objects.first()
+        piece = Piece.objects.filter(hidden=False).first()
         response = self.client.get("/piece/{0}/".format(piece.id))
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         self.assertEqual(response.data['id'], piece.id)
+
+    def test_get_hidden_detail(self):
+        piece = Piece.objects.filter(hidden=True)[0]
+        self.client.login(username='testuser', password='test')
+        response = self.client.get("/piece/{0}/".format(piece.id))
+        self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
+        self.client.logout()
+
+        self.client.login(username='creatoruser', password='test')
+        response = self.client.get("/piece/{0}/".format(piece.id))
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertEqual(response.data['id'], piece.id)
+        self.client.logout()
 
     def test_get_update_not_allowed(self):
         piece = Piece.objects.first()
@@ -66,7 +79,7 @@ class CollectionViewTestCase(ElvisTestSetup, APITestCase):
     def test_post_create_piece_empty_form_not_allowed(self):
         self.client.login(username='testuser', password='test')
         response = self.client.post("/pieces/")
-        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
         self.client.logout()
 
     # Test for valid form submission with all new things
@@ -170,7 +183,9 @@ class CollectionViewTestCase(ElvisTestSetup, APITestCase):
         self.assertEqual(piece.composer, mov.composer)
         self.assertEqual(piece.composition_start_date, mov.composition_start_date)
         self.assertEqual(piece.composition_end_date, mov.composition_end_date)
-        self.assertEqual(list(piece.collections.all()), list(mov.collections.all()))
+        #self.assertEqual(list(piece.collections.all()), list(mov.collections.all()))
+        self.assertEqual(len(list(piece.collections.all())), 1)
+        self.assertEqual(len(list(mov.collections.all())), 0)
         self.assertEqual(piece.number_of_voices, mov.number_of_voices)
         self.assertEqual(list(piece.genres.all()), list(mov.genres.all()))
         self.assertEqual(list(piece.locations.all()), list(mov.locations.all()))
@@ -214,7 +229,9 @@ class CollectionViewTestCase(ElvisTestSetup, APITestCase):
         self.assertEqual(piece.composer, mov.composer)
         self.assertEqual(piece.composition_start_date, mov.composition_start_date)
         self.assertEqual(piece.composition_end_date, mov.composition_end_date)
-        self.assertEqual(list(piece.collections.all()), list(mov.collections.all()))
+        #self.assertEqual(list(piece.collections.all()), list(mov.collections.all()))
+        self.assertEqual(len(list(piece.collections.all())), 1)
+        self.assertEqual(len(list(mov.collections.all())), 0)
         self.assertEqual(list(piece.genres.all()), list(mov.genres.all()))
         self.assertEqual(list(piece.locations.all()), list(mov.locations.all()))
         self.assertEqual(list(piece.languages.all()), list(mov.languages.all()))

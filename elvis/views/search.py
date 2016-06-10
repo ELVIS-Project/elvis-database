@@ -8,6 +8,7 @@ from elvis.renderers.custom_html_renderer import CustomHTMLRenderer
 from elvis.helpers.solrsearch import SolrSearch
 from elvis.helpers import paginate
 from elvis.helpers.cache_helper import ElvisCart
+from django.apps import apps
 
 
 class SearchViewHTMLRenderer(CustomHTMLRenderer):
@@ -109,7 +110,13 @@ class SearchView(generics.GenericAPIView):
 
         # The search() function belongs to SolrSearch, and simply returns the
         #  response for the aforementioned parsed and prepared query
-        search_results = s.search()
+        user = self.request.user
+        if user.is_superuser:
+            search_results = s.search()
+        else:
+            s1 = s
+            s1.solr_params['fq'].append('!hidden:True')
+            search_results = s1.search()
         # Paginate results
         paginator = paginate.SolrPaginator(search_results)
         paged_results = get_paged_results(paginator, get_page_number(request))
@@ -148,7 +155,12 @@ class SearchAndAddToCartView(SearchView):
                                         'parent_collection_names',
                                         'number_of_voices'])
         facets.facet_counts['facet_fields'] = parse_facets(facets)
-        search_results = s.search()
+        user = self.request.user
+        if user.is_superuser:
+            search_results = s.search()
+        else:
+            search_results = s.search(fq='*:* AND !hidden:True')
+            #search_results.append(s.search(fq='creator:user'))
         # Paginate results
         paginator = paginate.SolrPaginator(search_results)
         # Loop through the result pages and add everything to the cart

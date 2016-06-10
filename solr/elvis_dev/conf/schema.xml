@@ -145,6 +145,7 @@
     <field name="collections_searchable" type="string" indexed="true" stored="true"/>
     <field name="file_formats" type="string" indexed="true" stored="true" multiValued="True"/>
     <field name="attached_files" type="string" indexed="true" stored="true" multiValued="true"/>
+    <field name="hidden"  type="boolean" indexed="true" stored="true"/>
 
     <!-- LM Date fields -->
     <field name="created" type="date" indexed="true" stored="true"/>

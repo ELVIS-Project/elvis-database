@@ -26,6 +26,7 @@ class Movement(ElvisModel):
     religiosity = models.CharField(max_length=50, default="Unknown")
     vocalization = models.CharField(max_length=50, default="Unknown")
     parent_cart_id = models.CharField(max_length=50, null=True)
+    hidden = models.BooleanField(default=False)
 
     @property
     def attached_files(self):
@@ -119,6 +120,8 @@ class Movement(ElvisModel):
         else:
             d2 = None
 
+        hidden = movement.hidden
+
         return {'type': 'elvis_movement',
                 'id': int(movement.id),
                 'title': movement.title,
@@ -139,4 +142,5 @@ class Movement(ElvisModel):
                 'religiosity': movement.religiosity,
                 'vocalization': movement.vocalization,
                 'file_formats': movement.file_formats,
-                'attached_files': file_paths}
+                'attached_files': file_paths,
+                'hidden': hidden}
