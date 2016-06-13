@@ -1,4 +1,5 @@
 import datetime
+from django.db import models
 
 from elvis.models.elvis_model import ElvisModel
 from elvis.models.composition import ElvisCompositionMixin
@@ -8,6 +9,11 @@ class Piece(ElvisModel, ElvisCompositionMixin):
     class Meta:
         app_label = "elvis"
         ordering = ["title"]
+
+    hidden = models.BooleanField(default=False)
+
+    def number_of_movements(self):
+        return len(self.movements.all())
 
     @property
     def movement_count(self):
@@ -67,6 +73,8 @@ class Piece(ElvisModel, ElvisCompositionMixin):
         else:
             d2 = None
 
+        hidden = piece.hidden
+
         return {'type': 'elvis_piece',
                 'id': int(piece.id),
                 'title': piece.title,
@@ -87,4 +95,5 @@ class Piece(ElvisModel, ElvisCompositionMixin):
                 'vocalization': piece.vocalization,
                 'file_formats': piece.file_formats,
                 'pieces_searchable': piece.title,
-                'attached_files': file_paths}
+                'attached_files': file_paths,
+                'hidden': hidden}

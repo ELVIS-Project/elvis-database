@@ -13,6 +13,7 @@ class Movement(ElvisModel, ElvisCompositionMixin):
     piece = models.ForeignKey("elvis.Piece", blank=True, null=True, related_name="movements")
     position = models.IntegerField(blank=True, null=True)
     parent_cart_id = models.CharField(max_length=50, null=True)
+    hidden = models.BooleanField(default=False)
 
     @property
     def get_parent_cart_id(self):
@@ -66,6 +67,8 @@ class Movement(ElvisModel, ElvisCompositionMixin):
         else:
             d2 = None
 
+        hidden = movement.hidden
+
         return {'type': 'elvis_movement',
                 'id': int(movement.id),
                 'title': movement.title,
@@ -86,4 +89,5 @@ class Movement(ElvisModel, ElvisCompositionMixin):
                 'religiosity': movement.religiosity,
                 'vocalization': movement.vocalization,
                 'file_formats': movement.file_formats,
-                'attached_files': file_paths}
+                'attached_files': file_paths,
+                'hidden': hidden}

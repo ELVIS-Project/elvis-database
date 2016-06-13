@@ -18,7 +18,6 @@ creator_user = {
     'password': 'test'
 }
 
-
 @override_settings(SOLR_SERVER="http://localhost:8983/solr/elvis_test")
 class ElvisTestSetup(APITestCase):
 
@@ -34,7 +33,9 @@ class ElvisTestSetup(APITestCase):
     def setUp_test_models(self):
         self.test_composer = mommy.make('elvis.Composer')
         self.test_piece = mommy.make('elvis.Piece', composer=self.test_composer, uploader=self.creator_user)
+        self.test_hidden_piece = mommy.make('elvis.Piece', composer=self.test_composer, uploader=self.creator_user, hidden=True)
         self.test_movement = mommy.make('elvis.Movement', composer=self.test_composer, uploader=self.creator_user)
+        self.test_hidden_movement = mommy.make('elvis.Movement', composer=self.test_composer, uploader=self.creator_user, hidden=True)
         self.test_collection = mommy.make('elvis.Collection', public=True)
         self.test_private_collection = mommy.make('elvis.Collection', public=False, creator=self.creator_user)
 

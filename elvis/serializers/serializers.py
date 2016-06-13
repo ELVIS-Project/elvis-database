@@ -12,6 +12,7 @@ from elvis.models.location import Location
 from elvis.models.source import Source
 from elvis.models.tag import Tag
 from django.core.cache import cache
+from django.apps import apps
 from urllib.parse import urlparse
 
 """This file contains interdependent serializers which are combined
@@ -118,6 +119,8 @@ class URLNormalizingCacherMixin:
         :param instance: Object that was serialized to result.
         :return: result with can_edit and can_view keys added.
         """
+
+
         request = self.context.get('request', {})
         if not request:
             return result
@@ -127,10 +130,13 @@ class URLNormalizingCacherMixin:
             perms = {'can_edit': True, 'can_view': True}
         elif not instance.__dict__.get('public', True):
             perms = {'can_edit': False, 'can_view': False}
+        elif instance.__dict__.get('hidden', False):
+            perms = {'can_edit': False, 'can_view': False}
         else:
             perms = {'can_edit': False, 'can_view': True}
 
         result.update(perms)
+        #print(perms)
         return result
 
 
