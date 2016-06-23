@@ -25,7 +25,7 @@ class Movement(ElvisModel):
     attachments = models.ManyToManyField("elvis.Attachment", blank=True, related_name="movements")
     religiosity = models.CharField(max_length=50, default="Unknown")
     vocalization = models.CharField(max_length=50, default="Unknown")
-    parent_cart_id = models.CharField(max_length=50, null=True)
+    parent_cart_id = models.CharField(max_length=50, blank=True, null=True)
     hidden = models.BooleanField(default=False)
 
     @property
