@@ -54,6 +54,8 @@ class PieceAdmin(admin.ModelAdmin):
 
 
 class MovementAdmin(admin.ModelAdmin):
+    search_fields = ['title']
+    list_filter = ['composer', 'collections']
     list_display = ("title", "composer", "uploader", "created", "updated", "hidden")
     # Other things for interest , "attached_files", "tagged_as"
     filter_horizontal = ("tags",)
