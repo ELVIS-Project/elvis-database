@@ -43,9 +43,9 @@ class PieceInline(admin.TabularInline):
 class PieceAdmin(admin.ModelAdmin):
     list_display = ("title", "composer", "uploader", "created", "hidden")
     # Other things for interest: , "attached_files", "tagged_as"
-    filter_horizontal = ("tags",)
+    filter_horizontal = ("tags","attachments",)
     ordering = ("-created",)
-    readonly_fields = ("attachments",)
+    #readonly_fields = ("attachments",)
     actions = [reindex_in_solr]
     list_per_page = listperpage
     list_max_show_all = listmaxshowall
@@ -55,7 +55,7 @@ class MovementAdmin(admin.ModelAdmin):
     list_display = ("title", "composer", "uploader", "created", "updated", "hidden")
     # Other things for interest , "attached_files", "tagged_as"
     filter_horizontal = ("tags",)
-    readonly_fields = ("attachments",)
+    #readonly_fields = ("attachments",)
     actions = [reindex_in_solr]
     list_per_page = listperpage
     list_max_show_all = listmaxshowall
@@ -91,7 +91,7 @@ class TagHierarchyAdmin(admin.ModelAdmin):
 
 
 class AttachmentAdmin(admin.ModelAdmin):
-    list_display = ('attachment', 'pk', 'attached_to', 'file_name')
+    list_display = ('title', 'attachment', 'pk', 'attached_to', 'file_name', 'jsymbolic_db')
     list_per_page = listperpage
     list_max_show_all = listmaxshowall
 

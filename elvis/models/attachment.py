@@ -42,6 +42,12 @@ class Attachment(ElvisModel):
                             "{0:0>15}".format(self.pk))
 
     attachment = models.FileField(upload_to=upload_path, null=True, blank=True, max_length=512)
+    jsymbolic_db = models.FileField(upload_to=upload_path, null=True, blank=True)
+    jsymbolic_values_csv = models.FileField(upload_to=upload_path, null=True, blank=True)
+    jsymbolic_values_weka = models.FileField(upload_to=upload_path, null=True, blank=True)
+    jsymbolic_values_xml = models.FileField(upload_to=upload_path, null=True, blank=True)
+    jsymbolic_definitions_xml = models.FileField(upload_to=upload_path, null=True, blank=True)
+    jsymbolic_config = models.FileField(upload_to=upload_path, null=True, blank=True)
     source = models.CharField(blank=True, null=True, max_length=200)
 
     @property
@@ -100,7 +106,33 @@ class Attachment(ElvisModel):
         self.attachment.name = "attachments" + splt[-1]
 
         self.title = self.file_name
+
         self.save()
+
+    def attach_jsymbolic(self, file_path, file_name, which_file, parent):
+
+        new_path = os.path.join(file_path, file_name)
+        print(file_name)
+
+        jsymbolic_dict = {
+            0: self.jsymbolic_db,
+            1: self.jsymbolic_values_csv,
+            2: self.jsymbolic_values_weka,
+            3: self.jsymbolic_values_xml,
+            4: self.jsymbolic_definitions_xml,
+            5: self.jsymbolic_config
+
+        }
+
+        with open(new_path, 'rb+') as dest:
+            file_content = File(dest)
+            save_field = jsymbolic_dict.get(which_file)
+            save_field.save(file_name, file_content)
+
+        # splt = self.attachment.name.split('attachments')
+        # self.attachment.name = "attachments" + splt[-1]
+        self.save()
+
 
     def delete(self, *args, **kwargs):
         if os.path.exists(self.attachment_path):

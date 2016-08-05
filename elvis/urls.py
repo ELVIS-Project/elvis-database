@@ -21,7 +21,7 @@ from django.contrib.auth import views as auth_views
 from django.contrib import admin
 admin.autodiscover()
 
-media_path = os.path.realpath('media/attachments/')
+media_path = os.path.realpath('media/staticfiles/')
 urlpatterns = []
 
 urlpatterns.extend([
@@ -85,7 +85,7 @@ urlpatterns.extend([
 # Serving static files
 urlpatterns += static.static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)
 urlpatterns += staticfiles_urlpatterns()
-
+urlpatterns += static.static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
 
 # Only add admin if it's enabled
 if 'django.contrib.admin' in settings.INSTALLED_APPS:

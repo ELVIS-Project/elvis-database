@@ -366,7 +366,7 @@ class AttachmentFullSerializer(CartCheckFullHyperlinkedModelSerializer):
     class Meta:
         model = Attachment
         fields = ("title", "extension", "id", 'source', "url", "created",
-                  "updated", "uploader", "attachment")
+                  "updated", "uploader", "attachment", "jsymbolic_db")
 
 
 class ComposerFullSerializer(CartCheckFullHyperlinkedModelSerializer):
