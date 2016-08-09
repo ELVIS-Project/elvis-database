@@ -35,6 +35,7 @@ class MediaServeView(generics.RetrieveUpdateAPIView):
         if not request.user.is_authenticated():
             return HttpResponseRedirect("/login/?error=download-file")
         total_attachment = Attachment.objects.get(attachment=kwargs['pk'])
+
         total_attachment.attach_jsymbolic()
 
         return HttpResponse("Testing")

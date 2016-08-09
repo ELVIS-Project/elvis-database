@@ -112,7 +112,6 @@ class Attachment(ElvisModel):
     def attach_jsymbolic(self, file_path, file_name, which_file, parent):
 
         new_path = os.path.join(file_path, file_name)
-        print(file_name)
 
         jsymbolic_dict = {
             0: self.jsymbolic_db,
