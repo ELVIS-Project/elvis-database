@@ -78,7 +78,7 @@ $(document).ready(function ($)
         var input = $("#gsearch-input").val();
         doQuery({'q': input});
     });
-    
+
     //Search for the query parameters in the url via ajax and fill in the input fields to match the search.
     function queryQString(fadewindow)
     {
