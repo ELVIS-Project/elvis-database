@@ -35,6 +35,31 @@
         </h3>
         {% for a in content.attachments %}
             {% include "base/list_item_compact.html"  with url=a.url title=a.title attachment=True %}
+            <ul style="list-style-type:none">
+                {% if a.jsymbolic_values_xml %}
+                    <li>
+                        <a href='{{ a.jsymbolic_values_xml }}'>XML values file</a>
+                    </li>
+                {% endif %}
+                {% if a.jsymbolic_definitions_xml %}
+                    <li>
+                        <a href='{{ a.jsymbolic_definitions_xml }}'>XML definitions file</a>
+                    </li>
+                {% endif %}
+                {% if a.jsymbolic_values_csv %}
+                    <li>
+                        <a href='{{ a.jsymbolic_values_csv }}'>CSV values file</a>
+                    </li>
+                {% endif %}
+                {% if a.jsymbolic_values_weka %}
+                    <li>
+                        <a href='{{ a.jsymbolic_values_weka }}'>ARFF/Weka values file</a>
+                    </li>
+                {% endif %}
+                {% if a.jsymbolic_values_xml %}
+                    <li>Extracted features</li>
+                {% endif %}
+            </ul>
         {% endfor %}
     {% endif %}
 

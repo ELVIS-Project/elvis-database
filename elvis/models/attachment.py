@@ -70,6 +70,27 @@ class Attachment(ElvisModel):
         url = os.path.join(settings.MEDIA_URL, str(self.attachment.name))
         return url
 
+    @property
+    def jsymbolic_values_xml_url(self):
+        jsymbolic_values_xml_url = os.path.join(settings.MEDIA_URL, str(self.jsymbolic_values_xml.name))
+        return jsymbolic_values_xml_url
+
+    @property
+    def jsymbolic_definitions_xml_url(self):
+        jsymbolic_definitions_xml_url = os.path.join(settings.MEDIA_URL, str(self.jsymbolic_definitions_xml.name))
+        return jsymbolic_definitions_xml_url
+
+    @property
+    def jsymbolic_values_csv_url(self):
+        jsymbolic_values_csv_url = os.path.join(settings.MEDIA_URL, str(self.jsymbolic_definitions_xml.name))
+        return jsymbolic_values_csv_url
+
+    @property
+    def jsymbolic_values_weka_url(self):
+        jsymbolic_values_weka_url = os.path.join(settings.MEDIA_URL, str(self.jsymbolic_definitions_xml.name))
+        return jsymbolic_values_weka_url
+
+
     def solr_dict(self):
         return {}
 
@@ -109,7 +130,7 @@ class Attachment(ElvisModel):
 
         self.save()
 
-    def attach_jsymbolic(self, file_path, file_name, which_file, parent):
+    def attach_jsymbolic(self, file_path, file_name, file, which_file):
 
         new_path = os.path.join(file_path, file_name)
 
@@ -123,10 +144,12 @@ class Attachment(ElvisModel):
 
         }
 
-        with open(new_path, 'rb+') as dest:
-            file_content = File(dest)
-            save_field = jsymbolic_dict.get(which_file)
-            save_field.save(file_name, file_content)
+
+        file_content = File(file)
+        save_field = jsymbolic_dict.get(which_file)
+        save_field.save(file_name, file_content)
+
+
 
         # splt = self.attachment.name.split('attachments')
         # self.attachment.name = "attachments" + splt[-1]

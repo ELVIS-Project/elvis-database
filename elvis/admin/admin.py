@@ -91,7 +91,7 @@ class TagHierarchyAdmin(admin.ModelAdmin):
 
 
 class AttachmentAdmin(admin.ModelAdmin):
-    list_display = ('title', 'attachment', 'pk', 'attached_to', 'file_name', 'jsymbolic_db')
+    list_display = ('title', 'attachment', 'pk', 'attached_to', 'file_name', 'jsymbolic_db', 'jsymbolic_values_xml', 'jsymbolic_values_csv', "jsymbolic_values_weka")
     list_per_page = listperpage
     list_max_show_all = listmaxshowall
 

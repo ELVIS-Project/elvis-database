@@ -58,11 +58,97 @@
     {% endif %}
 
     {% if content.attachments %}
+        <div id="xmlwindow" class="modal">
+            <div id="xmlstuff" class="modal-content">
+                <span class="close">x</span>
+            </div>
+        </div>
+
         <h3>Attachments
             <small>({{ content.attachments | length }})</small>
         </h3>
         {% for a in content.attachments %}
             {% include "base/list_item_compact.html"  with url=a.url title=a.title attachment=True %}
+            <ul style="list-style-type:none">
+                {% if a.jsymbolic_values_xml %}
+                    <li>
+                        <a href='{{ a.jsymbolic_values_xml }}'>XML values file</a>
+                    </li>
+                {% endif %}
+                {% if a.jsymbolic_definitions_xml %}
+                    <li>
+                        <a href='{{ a.jsymbolic_definitions_xml }}'>XML definitions file</a>
+                    </li>
+                {% endif %}
+                {% if a.jsymbolic_values_csv %}
+                    <li>
+                        <a href='{{ a.jsymbolic_values_csv }}'>CSV values file</a>
+                    </li>
+                {% endif %}
+                {% if a.jsymbolic_values_weka %}
+                    <li>
+                        <a href='{{ a.jsymbolic_values_weka }}'>ARFF/Weka values file</a>
+                    </li>
+                {% endif %}
+                {% if a.jsymbolic_values_xml %}
+                    <li><input type="file" id="file-input" class="link" /></li>
+
+
+                    <script>
+
+                        var modal = document.getElementById('xmlwindow')
+                        var span = document.getElementsByClassName("close")[1]
+                        span.onclick = function() {
+                            modal.style.display = "none"
+                        }
+
+
+
+
+
+                        $(".link").click(function(e){
+{#                            var dataurl = $("a[href$='.xml']")#}
+{#                            var rawXML = $.get(dataurl[0])#}
+
+                            var file = e.target.files[0];
+                            if (!file) {
+                                return;
+                            }
+                            var reader = new FileReader();
+                            reader.onload = function(e) {
+                                modal.style.display = "block"
+                                $('#xmlwindow').css("height", "75px");
+                                $('#xmlwindow').css("overflow", "auto");
+                                $('#xmlwindow').css("width", "100px");
+                                var rawXML = e.target.result;
+                                // Parse it
+                                var xmlParsed = $.parseXML(rawXML);
+
+                                // find the <document> tag
+                                var xmlDoc = $(xmlParsed).find('data_set');
+
+                                // find the <row> tag
+                                var xmlRow = xmlDoc.find('feature');
+
+                                // loop over <row> tags
+                                $(xmlRow).each(function() {
+                                    // find the Col + i and append it's text to the #xmlstuff div
+                                    $('#xmlstuff').append($(this).find('name').text()).append('<br/>');
+                                    $('#xmlstuff').append($(this).find('v').text()).append('<br/>');
+
+                                });
+
+                            };
+                            reader.readAsText(file);
+
+
+
+
+                        })
+
+                    </script>
+                {% endif %}
+            </ul>
         {% endfor %}
     {% endif %}
 {% endblock %}

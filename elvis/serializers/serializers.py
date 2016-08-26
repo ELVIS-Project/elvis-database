@@ -299,7 +299,8 @@ class AttachmentEmbedSerializer(CachedEmbedHyperlinkedModelSerializer):
 
     class Meta:
         model = Attachment
-        fields = ("id", "title", "extension", "url", "source", "uuid")
+        fields = ("id", "title", "extension", "url", "source", "uuid", "jsymbolic_values_xml", "jsymbolic_definitions_xml",
+                  "jsymbolic_values_csv", "jsymbolic_values_weka")
 
 
 class MovementEmbedSerializer(CachedEmbedHyperlinkedModelSerializer):
