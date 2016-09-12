@@ -2,6 +2,8 @@ from lxml import etree
 import requests
 import json
 import pickle
+import argparse
+
 
 
 
@@ -40,7 +42,7 @@ Pushes the resulting feature files from the jsymbolic run into the appropriate p
 (entry corresponding to where the original file came from).
 TODO: figure out what is preventing uploads to what should be the proper media file location on the backend.
 """
-def push_to_elvis(results, token):
+def push_to_elvis(token):
     results = pickle.load(open('rodan_results_urls', 'rb'))
 
     for page in results:
@@ -95,10 +97,10 @@ def run_workflow(token, workflow_url, input_url):
     #     for i in json.loads(resources.text)['results']:
     #         print(i)
     #         resourcelist.append(i['url'])
-        workflow_data = {"created": "null", "updated": "null", "workflow": workflow_url, "resource_assignments":
-            {input_url: resourcelist},
+    workflow_data = {"created": "null", "updated": "null", "workflow": workflow_url, "resource_assignments":
+        {input_url: resourcelist},
                          "name": "jsymbolic_elvis", "description": "Run of Workflow jsymbolic_elvis"}
-        workflow_run = requests.post('https://rodan.simssa.ca/workflowruns/', data=json.dumps(workflow_data), headers={'Content-Type': 'application/json','Authorization': "Token "+token})
+    workflow_run = requests.post('https://rodan.simssa.ca/workflowruns/', data=json.dumps(workflow_data), headers={'Content-Type': 'application/json','Authorization': "Token "+token})
 
     json.loads(workflow_run.text)['url']
     all_results = []
@@ -134,8 +136,15 @@ if __name__ == "__main__":
 
 #note: dummy usernames and password.
 #TODO: "make usernames, passwords, project urls and workflow urls command-line enterable"
-    current_token = get_rodan_token('rodan_username', 'rodan_password')
-    midi_and_mei_urls = get_from_elvis('elvis_username', 'elvis_password')
+    # current_token = get_rodan_token('rodan_username', 'rodan_password')
+    # midi_and_mei_urls = get_from_elvis('elvis_username', 'elvis_password')
+    parser = argparse.ArgumentParser()
+    parser.add_argument("rodan_username")
+    parser.add_argument("rodan_password")
+    parser.add_argument("elvis_username")
+    parser.add_argument("elvis_password")
+    args = parser.parse_args()
+    token = get_rodan_token(args.rodan_username, args.rodan_password)
 
 
 
