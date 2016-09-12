@@ -2,9 +2,26 @@ from django.conf import settings
 import re
 import solr
 
+SOLR_FILTER_MAP = {
+    'titlefilt': 'title_searchable',
+    'namefilt': 'name_general',
+    'voicefilt': 'number_of_voices',
+    'tagfilt': 'tags',
+    'genrefilt': 'genres',
+    'instrumentfilt': 'instruments_voices',
+    'languagefilt': 'languages',
+    'sourcesfilt': 'sources',
+    'locationsfilt': 'locations',
+    'typefilt[]': 'type',
+    'typefilt': 'type',
+    'filefilt[]': 'file_formats',
+    'filefilt': 'file_formats',
+    'vocalizationfilt': 'vocalization',
+    'religiosityfilt': 'religiosity',
+}
 
 class SolrSearch(object):
-    """ 
+    """
         This class is a helper class for translating between query parameters in a GET
         request and the format needed to search in Solr.
 
@@ -12,7 +29,7 @@ class SolrSearch(object):
 
         The search method performs a search. The `parse_request` method
         is automatically called with the request object when the class is initialized. This
-        filters all the query keys and translates them to Solr. 
+        filters all the query keys and translates them to Solr.
 
         The facets method requests facets from the Solr search server.
 
@@ -73,72 +90,12 @@ class SolrSearch(object):
             # it would be way more efficient to try calling the keys individually
             # rather than iterating over them.
             # Filter Parameters
-            if k == 'titlefilt':
-                title_filt = "title_searchable:({0})".format(self.parse_bool(qdict[k]))
-                self.solr_params['fq'].append(title_filt)
-                continue
+            mapped_filter = SOLR_FILTER_MAP.get(k)
+            if mapped_filter:
+                filter_string = "{}:({})".format(mapped_filter, ' OR '.join(qdict.getlist(k)))
+                self.solr_params['fq'].append(filter_string)
 
-            if k =='namefilt':
-                name_filt = "name_general:({0})".format(self.parse_bool(qdict[k]))
-                self.solr_params['fq'].append(name_filt)
-                continue
-
-            if k =='voicefilt':
-                voice_filt = "number_of_voices:({0})".format(self.parse_bool(qdict[k]))
-                self.solr_params['fq'].append(voice_filt)
-                continue
-
-            if k =='tagfilt':
-                tag_filt = "tags:({0})".format(self.parse_bool(qdict['tagfilt']))
-                self.solr_params['fq'].append(tag_filt)
-                continue
-
-            if k =='genrefilt':
-                genre_filt = "genres:({0})".format(self.parse_bool(qdict['genrefilt']))
-                self.solr_params['fq'].append(genre_filt)
-                continue
-
-            if k =='instrumentfilt':
-                ins_filt = "instruments_voices:({0})".format(self.parse_bool(qdict['instrumentfilt']))
-                self.solr_params['fq'].append(ins_filt)
-                continue
-
-            if k =='languagefilt':
-                lan_filt = "languages:({0})".format(self.parse_bool(qdict['languagefilt']))
-                self.solr_params['fq'].append(lan_filt)
-                continue
-
-            if k =='sourcesfilt':
-                source_filt = "sources:({0})".format(self.parse_bool(qdict['sourcesfilt']))
-                self.solr_params['fq'].append(source_filt)
-                continue
-
-            if k =='locationsfilt':
-                loc_filt = "locations:({0})".format(self.parse_bool(qdict['locationsfilt']))
-                self.solr_params['fq'].append(loc_filt)
-                continue
-
-            if k =='typefilt[]':
-                type_filt = 'type: ({0})'.format(' OR '.join(qdict.getlist('typefilt[]')))
-                self.solr_params['fq'].append(type_filt)
-                continue
-
-            if k =='filefilt[]':
-                file_filt = 'file_formats: ({0})'.format(' OR '.join(qdict.getlist('filefilt[]')))
-                self.solr_params['fq'].append(file_filt)
-                continue
-
-            if k =='vocalizationfilt':
-                voc_filt = 'vocalization: ({0})'.format(' OR '.join(qdict.getlist('vocalizationfilt')))
-                self.solr_params['fq'].append(voc_filt)
-                continue
-
-            if k =='religiosityfilt':
-                rel_filt = 'religiosity: ({0})'.format(' OR '.join(qdict.getlist('religiosityfilt')))
-                self.solr_params['fq'].append(rel_filt)
-                continue
-
-            if k == 'datefiltf':
+            elif k == 'datefiltf':
                 from_date = " {0}-00-00T00:00:00Z ".format(str(int(qdict.get('datefiltf')) + 1))
                 if qdict.get('datefiltt'):
                     to_date = " {0}-00-00T00:00:00Z ".format(str(int(qdict.get('datefiltt')) + 1))
@@ -146,39 +103,32 @@ class SolrSearch(object):
                 else:
                     date_filt = "(date_general:[{0} TO *] OR date_general2:[{0} TO *])".format(from_date)
                 self.solr_params['fq'].append(date_filt)
-                continue
             elif k == 'datefiltt':
                 to_date = " {0}-00-00T00:00:00Z ".format(str(int(qdict.get('datefiltt')) + 1))
                 date_filt = "(date_general:[* TO {0}] OR date_general2:[* TO {0}])".format(to_date)
                 self.solr_params['fq'].append(date_filt)
-                continue
 
             # Query Parameters
-            if k == 'composer_name':
+            elif k == 'composer_name':
                 general_query.append('(composer_name:"{0}")'.format(qdict[k]))
-                continue
-            if k == 'type':
+            elif k == 'type':
                 general_query.append('(type:"{0}")'.format(qdict[k]))
-                continue
-            if k == 'number_of_voices':
+            elif k == 'number_of_voices':
                 general_query.append('(number_of_voices:{0})'.format(qdict[k]))
-                continue
-            if k == 'tags':
+            elif k == 'tags':
                 tag_query = 'tags:("{0}")'.format(qdict[k])
                 general_query.append(tag_query)
-                continue
-            if k == 'tags[]':
+            elif k == 'tags[]':
                 tags = qdict.getlist('tags[]')
                 tags = '" AND "'.join(tags)
                 tag_query = 'tags:("{0}")'.format(tags)
                 general_query.append(tag_query)
-                continue
 
             # Sorting
-            if k == 'sortby':
+            elif k == 'sortby':
                 self.solr_params.update({'sort': qdict.get(k)})
 
-            if k =='rows':
+            elif k =='rows':
                 self.solr_params.update({'rows': qdict.get(k)})
 
         if qdict.get('q'):
@@ -207,7 +157,7 @@ class SolrSearch(object):
 
         if bool_string.startswith('NOT'):
             bool_string = "* AND " + bool_string
-            
+
         bools = ['AND', 'OR', 'NOT', '(', ')']
         args = re.split('(AND|OR|NOT|[(]|[)])', bool_string)
         formatted_bool = []
