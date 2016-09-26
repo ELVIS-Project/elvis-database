@@ -13,6 +13,7 @@ class Movement(ElvisModel, ElvisCompositionMixin):
     piece = models.ForeignKey("elvis.Piece", blank=True, null=True, related_name="movements")
     position = models.IntegerField(blank=True, null=True)
     parent_cart_id = models.CharField(max_length=50, null=True)
+
     hidden = models.BooleanField(default=False)
 
     @property

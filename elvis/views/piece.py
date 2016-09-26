@@ -100,8 +100,9 @@ def piece_create(request, *args, **kwargs):
     form = validate_dynamic_piece_form(request, PieceForm(request.POST))
     if not form.is_valid():
         # Form errors are rendered for user on the front end.
-        data = json.dumps({'errors': form.errors})
-        return HttpResponse(content=data, content_type="application/json", status=status.HTTP_400_BAD_REQUEST)
+        errors = {f: [e.get_json_data()[0]['message']] for f, e in form.errors.items()}
+        errors = json.dumps({'errors': errors})
+        return HttpResponse(content=errors, content_type="application/json", status=status.HTTP_400_BAD_REQUEST)
 
     clean = Cleanup()
     clean_form = form.cleaned_data
@@ -142,8 +143,9 @@ def piece_update(request, *args, **kwargs):
         if form.errors.get('collections'):
             del form.errors['collections']
         if form.errors:
-            data = json.dumps({"errors": form.errors})
-            return HttpResponse(content=data, content_type="application/json", status=status.HTTP_400_BAD_REQUEST)
+            errors = {f: [e.get_json_data()[0]['message']] for f, e in form.errors.items()}
+            errors = json.dumps({'errors': errors})
+            return HttpResponse(content=errors, content_type="application/json", status=status.HTTP_400_BAD_REQUEST)
 
     clean = Cleanup()
     piece = Piece.objects.get(id=int(kwargs['pk']))
@@ -236,7 +238,7 @@ def piece_update(request, *args, **kwargs):
             att = Attachment.objects.filter(pk=item['id'])[0]
             if att:
                 att.delete()
-                
+
     delete_movements = [x for x in change['delete'] if x['type'] == "M"]
     if delete_movements:
         for item in delete_movements:
