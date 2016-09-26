@@ -18,7 +18,7 @@ creator_user = {
     'password': 'test'
 }
 
-@override_settings(SOLR_SERVER="http://localhost:8983/solr/elvis_test")
+@override_settings(SOLR_SERVER="http://localhost:8983/solr/elvisdb_test")
 class ElvisTestSetup(APITestCase):
 
     uuid_regexp = r"P-[a-z0-9]{8}-[a-z0-9]{4}-[a-z0-9]{4}-[a-z0-9]{4}-[a-z0-9]{12}"
