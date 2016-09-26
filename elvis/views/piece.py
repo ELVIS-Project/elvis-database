@@ -85,7 +85,7 @@ def piece_create(request, *args, **kwargs):
     form = validate_dynamic_piece_form(request, PieceForm(request.POST))
     if not form.is_valid():
         # Form errors are rendered for user on the front end.
-        errors = {f: e.get_json_data() for f, e in form.errors.items()}
+        errors = {f: [e.get_json_data()[0]['message']] for f, e in form.errors.items()}
         errors = json.dumps({'errors': errors})
         return HttpResponse(content=errors, content_type="application/json", status=status.HTTP_400_BAD_REQUEST)
 
