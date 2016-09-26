@@ -115,6 +115,9 @@ class ElvisCart:
     by supporting easy setting, getting, and serialization, and common
     operations on the cart.
     """
+
+    ACCEPTABLE_TYPES = ('elvis_composer', 'elvis_piece', 'elvis_movement', 'elvis_collection')
+
     def __init__(self, request):
         """Create a cart.
 
