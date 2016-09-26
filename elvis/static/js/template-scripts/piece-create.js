@@ -237,7 +237,6 @@ $(document).ready(function ($)
 
             }
         });
-        debugger;
         return errors;
     }
 });
