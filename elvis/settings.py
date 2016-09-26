@@ -1,8 +1,4 @@
 """
-
-*** THIS FILE SHOULD BE MODIFIED with your local settings, then saved as base.py ***
-
-
 Django settings for elvis project.
 
 For more information on this file, see
@@ -23,30 +19,30 @@ from kombu import Exchange, Queue
 
 BASE_DIR = os.path.abspath('./')
 
-SETTING_CONFIGS = ['dev', 'prod', 'stage']
+PRODUCTION = 0
+DEVELOPMENT = 1
+LOCAL = 2
+SETTING_TYPE = LOCAL
+assert SETTING_TYPE in [PRODUCTION, DEVELOPMENT, LOCAL], "Must choose a legal setting type."
 
-for c in SETTING_CONFIGS:
-    reg = r'/{}[/$]?'.format(c)
-    regexp = re.compile(reg)
-    if regexp.search(BASE_DIR) is not None:
-        SETTING_TYPE = c
-        break
-else:
-    SETTING_TYPE = "local"
-
-if SETTING_TYPE in ['dev', 'local']:
+if SETTING_TYPE is not PRODUCTION:
     DEBUG = True
 else:
     DEBUG = False
 
+DB_PASS_PATH = '/srv/webapps/elvisdb/config/db_pass'
+SECRET_KEY_PATH = '/srv/webapps/elvisdb/config/secret_key'
+EMAIL_PASS_PATH = '/srv/webapps/elvisdb/config/email_pass'
+RECAPTCHA_KEY_PATH = '/srv/webapps/elvisdb/config/recaptcha_priv_key'
+
 # Simple Settings
 # ===============
 
-ALLOWED_HOSTS = ['database.elvisproject.ca', 'db-devel.elvisproject.ca']
+ALLOWED_HOSTS = ['database.elvisproject.ca']
 
 
-if os.path.exists('/etc/elvis_secretkey.txt'):
-    with open('/etc/elvis_secretkey.txt') as f:
+if SETTING_TYPE is not LOCAL:
+    with open(SECRET_KEY_PATH) as f:
         SECRET_KEY = f.read().strip()
 else:
     SECRET_KEY = "ASASkjdhsakud233q"
@@ -113,14 +109,13 @@ TEMPLATES = [
 
 SESSION_ENGINE = "django.contrib.sessions.backends.cached_db"
 
-if SETTING_TYPE != "local":
-    db_alloc = {"prod": 1, "stage": 2, "dev": 3}
+if SETTING_TYPE is not LOCAL:
     CACHES = {
         'default': {
             'BACKEND': 'django_redis.cache.RedisCache',
             'LOCATION': '/var/run/redis/redis.sock',
             "OPTIONS": {
-                "DB": db_alloc[SETTING_TYPE],
+                "DB": 0,
                 "CLIENT_CLASS": "django_redis.client.DefaultClient",
             },
             "TIMEOUT": None
@@ -161,14 +156,17 @@ else:
 # Database Configuration
 # ======================
 BROKER_URL = 'django://'
+if SETTING_TYPE is not LOCAL:
+    with open(DB_PASS_PATH, 'r') as f:
+        DB_PASS = f.read().strip()
 
-if SETTING_TYPE != "local":
     DATABASES = {
         'default': {
             'ENGINE': 'django.db.backends.postgresql_psycopg2',
-            'NAME': 'elvis_{0}'.format(SETTING_TYPE),
-            'USER': 'elvisdatabase',
-            'PASSWORD': '5115C67O2v3GN31T49Md'
+            'NAME': 'elvis_database',
+            'USER': 'elvis',
+            'PASSWORD': DB_PASS,
+            'HOST': 'localhost'
         }
     }
 
@@ -178,8 +176,8 @@ EMAIL_USE_TLS = True
 EMAIL_HOST = 'smtp.gmail.com'
 EMAIL_PORT = 587
 EMAIL_HOST_USER = 'elvisdatabase@gmail.com'
-if os.path.exists('/etc/elvis_emailpass.txt'):
-    with open('/etc/elvis_emailpass.txt') as f:
+if os.path.exists(EMAIL_PASS_PATH):
+    with open(EMAIL_PASS_PATH) as f:
         EMAIL_HOST_PASSWORD = f.read().strip()
 else:
     EMAIL_HOST_PASSWORD = ""
@@ -188,8 +186,8 @@ else:
 # ================
 RECAPTCHA_PUBLIC_KEY = "6LfV4gsTAAAAAGK8vA-O2RrABlIb_XbNywrxJrTS"
 
-if os.path.exists('/etc/elvis_captchakey.txt'):
-    with open('/etc/elvis_captchakey.txt') as f:
+if os.path.exists(RECAPTCHA_KEY_PATH):
+    with open(RECAPTCHA_KEY_PATH) as f:
         RECAPTCHA_PRIVATE_KEY = f.read().strip()
 else:
     RECAPTCHA_PRIVATE_KEY = ""
@@ -208,11 +206,10 @@ USE_TZ = True
 # CRA: we used to have composer images and user profile images; if we need
 #      them back, check commit dc8f8afe75b7137440c6488483566b8e2c366379
 MEDIA_URL = '/media/'
-MEDIA_ROOT = "/srv/webapps/elvisdb_media/{}/".format(SETTING_TYPE)
-
+MEDIA_ROOT = '/srv/webapps/elvisdb/media'
 
 STATIC_URL = '/static/'
-STATIC_ROOT = "/srv/webapps/elvisdb_static/{}/".format(SETTING_TYPE)
+STATIC_ROOT = '/srv/webapps/elvisdb/static'
 
 if SETTING_TYPE in ["dev", "local"]:
     COMPRESS_ENABLED = False
@@ -228,7 +225,7 @@ STATICFILES_FINDERS = (
 # Solr Settings
 # =============
 
-SOLR_SERVER = "http://localhost:8983/solr/elvis_{}".format(SETTING_TYPE)
+SOLR_SERVER = "http://localhost:8983/solr/elvisdb"
 
 SEARCH_FILTERS_DICT = {
     'fcp': 'elvis_composer',
@@ -260,7 +257,7 @@ CELERY_RESULT_BACKEND = 'rpc://'
 CELERY_TASK_SERIALIZER = 'json'
 CELERY_RESULT_SERIALIZER = 'json'
 CELERY_ACCEPT_CONTENT = ['json']
-CELERY_QUEUE_DICT = {'queue': 'elvis-{}'.format(SETTING_TYPE)}
+CELERY_QUEUE_DICT = {'queue': 'elvis'}
 CELERY_ROUTES = {'elvis.zip_files': CELERY_QUEUE_DICT,
                  'elvis.delete_zip_file': CELERY_QUEUE_DICT,
                  'elvis.rebuild_suggesters': CELERY_QUEUE_DICT}
@@ -282,7 +279,7 @@ LOGGING = {
         'file': {
             'level': 'DEBUG',
             'class': 'logging.FileHandler',
-            'filename': '/srv/webapps/elvisdb_logs/{0}/django_elvis.log'.format(SETTING_TYPE)
+            'filename': '/var/log/elvisdb/django.log'
         },
     },
     'loggers': {
@@ -294,9 +291,10 @@ LOGGING = {
     },
 }
 
-if SETTING_TYPE == "local":
+if SETTING_TYPE is LOCAL:
     try:
         from elvis.local_settings import *
     except ImportError:
         pass
+
 
