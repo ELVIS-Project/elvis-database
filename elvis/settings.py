@@ -313,8 +313,7 @@ LOGGING = {
     },
 }
 
+# Import local setting overrides. 
 if SETTING_TYPE is LOCAL:
-    try:
+    if os.path.exists(os.path.join(BASE_DIR, 'elvis/local_settings.py')):
         from elvis.local_settings import *
-    except ImportError:
-        pass
