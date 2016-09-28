@@ -8,20 +8,37 @@ For the full list of settings and their values, see
 https://docs.djangoproject.com/en/1.6/ref/settings/
 """
 
-
-# for scheduling file removal using celery
 from celery import schedules
-
-# Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 import os
 import re
 from kombu import Exchange, Queue
 
-BASE_DIR = os.path.abspath('./')
+"""
+These are pre-defined setting levels. You set SETTING_TYPE
+to one of these in order to automatically configure settings.
 
+LOCAL:
+    * Constants can be read from this file for database password,
+    secret key, etc. No need to replicate the servers dir-structure.
+    * Debug is set to true.
+    * Overrides for any setting in this file can be specified in a an
+    optional elvis.local_settings module.
+
+DEVELOPMENT:
+    * Constants and privileged information must be read in from
+    plain text files placed in the same structure as on the server.
+    * Debug is set to true.
+    * Overrides can not be specified.
+
+PRODUCTION:
+    * Like development, but debug set to false.
+
+"""
 PRODUCTION = 0
 DEVELOPMENT = 1
 LOCAL = 2
+
+# Specify which of the above setting types you wish to use here.
 SETTING_TYPE = LOCAL
 assert SETTING_TYPE in [PRODUCTION, DEVELOPMENT, LOCAL], "Must choose a legal setting type."
 
@@ -30,6 +47,10 @@ if SETTING_TYPE is not PRODUCTION:
 else:
     DEBUG = False
 
+# Used to build up paths using the 'elvis-database' folder as the base.
+BASE_DIR = os.path.abspath('./')
+
+# The directories where the server expects to find configuration files.
 DB_PASS_PATH = '/srv/webapps/elvisdb/config/db_pass'
 SECRET_KEY_PATH = '/srv/webapps/elvisdb/config/secret_key'
 EMAIL_PASS_PATH = '/srv/webapps/elvisdb/config/email_pass'
@@ -37,7 +58,6 @@ RECAPTCHA_KEY_PATH = '/srv/webapps/elvisdb/config/recaptcha_priv_key'
 
 # Simple Settings
 # ===============
-
 ALLOWED_HOSTS = ['database.elvisproject.ca']
 
 
@@ -155,6 +175,8 @@ else:
 
 # Database Configuration
 # ======================
+
+# Define your database in elvis.local_settings if you are running locally.
 BROKER_URL = 'django://'
 if SETTING_TYPE is not LOCAL:
     with open(DB_PASS_PATH, 'r') as f:
@@ -211,7 +233,7 @@ MEDIA_ROOT = '/srv/webapps/elvisdb/media'
 STATIC_URL = '/static/'
 STATIC_ROOT = '/srv/webapps/elvisdb/static'
 
-if SETTING_TYPE in ["dev", "local"]:
+if SETTING_TYPE in [DEVELOPMENT, LOCAL]:
     COMPRESS_ENABLED = False
 else:
     COMPRESS_ENABLED = True
