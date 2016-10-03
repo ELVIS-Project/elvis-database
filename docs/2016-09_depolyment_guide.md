@@ -47,7 +47,7 @@ You can install all of the above on Ubuntu using the following command:
 ```
 sudo add-apt-repository ppa:webupd8team/java
 sudo apt-get update
-sudo apt install python3 python3-dev python-software-properties git virtualenv postgresql-client oracle-java8-installer libpq-dev  libncurses5-dev build-essential supervisor tcl nginx
+sudo apt install python3 python3-dev python-software-properties git virtualenv postgresql-contrib postgresql oracle-java8-installer libpq-dev  libncurses5-dev build-essential supervisor tcl nginx
 ```
 
 In addition to the above, you will need to install the following services manually. All of the following must be installed and running as daemons in order to support the project.
@@ -82,37 +82,54 @@ sudo mkdir -p /srv/webapps/elvisdb/{config,media,static}
 sudo chown elvisdb:elvisdb /srv/webapps/elvisdb
 ```
 
-From now on, I will refer to `/srv/webapps/elvisdb` as `$ELVISHOME`
+From now on, I will refer to `/srv/webapps/elvisdb` as `$ELVIS_HOME`
 
 *Note: on the active deployment of the production server, a file named /home/elvisdb/elvis-env.sh contains a list of these variables and their definitions.*
 
-While in `$ELVISHOME`, run the following command:
+While in `$ELVIS_HOME`, run the following command:
 ```
 git clone https://github.com/ELVIS-Project/elvis-database.git
 ```
 
-This will create a directory `$ELVISHOME/elvis-database/`. Lets go into this directory and create a python 3 virtual environment, source it, and install the project's python requirements.
+This will create a directory `$ELVIS_HOME/elvis-database/`. Lets go into this directory and create a python 3 virtual environment, source it, and install the project's python requirements.
 ```
-cd $ELVISHOME/elvis-database/
+cd $ELVIS_HOME/elvis-database/
 virtualenv --python=python3 .env
 source .env/bin/activate
 pip install -r requirements.txt
 ```
 
-Lastly, we need to change one setting in the project configuration file to make it aware that we are doing a production deployment. Open up $ELVISHOME/elvis-database/elvis/settings.py, and change the`SETTING_TYPE` variable from `LOCAL` to `PRODUCTION`.
+Lastly, we need to change one setting in the project configuration file to make it aware that we are doing a production deployment. Open up $ELVIS_HOME/elvis-database/elvis/settings.py, and change the`SETTING_TYPE` variable from `LOCAL` to `PRODUCTION`.
 
 Now the basic environment for the project is set up, we can begin connecting the various components together.
+
+## Connecting postgreSQL
+The project expects there to be a postgreSQL database called `elvis_database` owned by a user named `elvisdb` with a password stored in `$ELVIS_HOME/config/db_pass`.
+
+First, lets generate a password and save it in `$ELVIS_HOME/config/db_pass`. You can use any password you like, but a long, random one is best. You should make sure to save this password offsite. One way to generate a password:
+```
+openssl rand -base64 32 > $ELVIS_HOME/config/db_pass
+```
+
+Now is also a good time to set up a secret key for us3 by django. This key does not necessarily need to be saved anywhere else.
+```
+openssl rand -base64 32 > $ELVIS_HOME/config/secret_key
+```
+
+You will also need to supply the password for the email account used to send mail to users and the recaptcha private key and save them as `$ELVIS_HOME/config/email_pass` and `$ELVIS_HOME/config/recaptch_priv_key`. The values needed for these files can be found on the wiki (TODO: CREATE A WIKI) or on the live production server.
+
+Back to the database. Create a new role with the name `elvisdb` and the password stored in `$ELVIS_HOME/config/db_pass`. Then, create a database called `elvis_database` with the `elvisdb` role as the owner. You can easily find a step by step guide to do this online if necessary.
 
 ## Connecting Solr
 Solr can support multiple distinct search indexes running on a single server. Each index's configuration options and data is collectively called a *core*. The elvis-database git repo contains the configuration information for two cores, of which only one is needed. Solr has a home directory, which it searches for cores to load when started. In order to make solr aware of our elvis core, we need to link it in to the `$SOLR_HOME` directory.  You can find where `$SOLR_HOME` is located by running `cat /etc/default/solr.in.sh | grep SOLR_HOME`. Mine is in `/var/solr/data`. In order to link the configuration files used by elvis to solr, run the following. Creating a link is preferred to actually copying the files, as updates to the core configuration will be automatically read by solr.
 ```
-sudo ln -s $ELVISHOME/elvis-database/solr/elvisdb $SOLR_HOME
+sudo ln -s $ELVIS_HOME/elvis-database/solr/elvisdb $SOLR_HOME
 ```
 You will also need to create a data directory and allow solr to access it. To do this, we will add the solr user to the `elvisdb` group, create a data directory in the core, and give full permissions to group members on that directory.
 ```
 sudo usermod -a -G elvisdb solr
-mkdir $ELVISHOME/elvis-database/solr/elvisdb/data
-chmod 775 $ELVISHOME/elvis-database/solr/elvisdb/data
+mkdir $ELVIS_HOME/elvis-database/solr/elvisdb/data
+chmod 775 $ELVIS_HOME/elvis-database/solr/elvisdb/data
 ```
 In order to assure that everything has worked, restart solr, then run an empty search on the new core. You should get a short response with an empty array of results in it (since we haven't added anything to our index yet.)
 ```
@@ -121,17 +138,83 @@ curl localhost:8983/solr/elvisdb/select?wt=json&q=*:*
 # Short json response with empty results.
 ```
 
-## Connecting postgreSQL
-The project expects there to be a postgreSQL database called `elvis_database` owned by a user named `elvisdb` with a password stored in `$ELVISHOME/config/db_pass`.
+## Populating postgres and solr.
+By now, the major parts required to run the project are in place. We can test that postgres is hooked up by creating the tables in the database using django's management tool.
 
-First, lets generate a password and save it in `$ELVISHOME/config/db_pass`. You can use any password you like, but a long, random one is best. You should make sure to save this password offsite. One way to generate a password:
 ```
-openssl rand -base64 32 > $ELVISHOME/config/db_pass
+# If not already...
+cd $ELVIS_HOME/elvis-database
+source .env/bin/activate
+
+# Then:
+python manage.py migrate
 ```
 
-Now is also a good time to set up a secret key for us by django. This key does not necessarily need to be saved anywhere else.
+If this command fails, you will need to figure out some error in your database setup up or your `settings.py` file.
+
+You must now obtain a dump of the database and a set of it's media files. These can be found on our backup server (TODO: WIKI LINK TO BACKUP SERVER DOCS HERE), as well as on the production server.
+
+Move all the media folders (`attachments`, `user_downloads`, etc) to `$ELVIS_HOME/media/`. You also want to set all the files to have 664 permissions. You can do this with a command like `find $ELVIS_HOME/media -type f -exec chmod 644 {} \;`. Note, we can not simply run `chmod -R` on this directory tree, as we don't want to remove the executable permission from directories.
+
+You should also have a .json dump of the database available. You can load this into postgres using djangos management utility. Assuming the backup is in your home folder and named `elvis_backup.json`, run the following from `$ELVIS_HOME`.
+
 ```
-openssl rand -base64 32 > $ELVISHOME/config/secret_key
+python manage.py loaddata ~/elvis_backup.json
 ```
 
-You will also need to supply the password for the email account used to send mail to users and the recaptcha private key and save them as `$ELVISHOME/config/email_pass` and `$ELVISHOME/config/recaptch_priv_key`. The values needed for these files can be found on the wiki (TODO: CREATE A WIKI) or on the live production server.
+This should run without error if you have run the migrations mentioned directly above. 
+
+Lastly, once the `loaddata` command has finished, we can index all the data in solr using the command:
+
+```
+python manage.py reindex_all
+```
+
+Now our postgres database and solr index are filled with stuff!
+
+### Setting up supervisor 
+Before you can run anything using supervisor, you need to create the following directories, to be used by the processes supervisor will be managing.
+
+```
+# Make a directory where log files for all processes can reside.
+sudo mkdir /var/log/elvisdb
+sudo chown elvisdb:elvisdb /var/log/elvisdb
+
+# Make a directory where .pid files and sockets can reside.
+sudo mkdir /run/elvisdb
+sudo chown elvisdb:elvisdb /run/elvisdb
+```
+Supervisor is used to manage and control the execution of script files. The elvis database git repository comes with two scripts called `gunicorn_start.sh` and `celery_start.sh`, which supervisor will be responsible for running. These two scripts 'run' the project, supervisor makes sure these two scripts are always running, and nginx points internet requests at the processes started by these scripts.
+
+To tell supervisor to run these scripts, we need to create a file in supervisor's config folder. In `/etc/supervisor/conf.d`, create a file called `elvisdb.conf` with the following contents:
+```
+[program:elvisdb]
+command=/srv/webapps/elvisdb/elvis-database/gunicorn_start.sh
+user=elvisdb
+autostart=true
+autorestart=true
+stdout_logfile=/var/log/elvisdb/gunicorn.log
+redirect_stderr=true
+stdout_logfile_maxbytes=50MB
+
+[program:elvisdb-celery]
+command=/srv/webapps/elvisdb/elvis-database/celery_start.sh
+user=elvisdb
+autostart=true
+autorestart=true
+redirect_stderr=true
+stdout_logfile=/var/log/elvisdb/celery.log
+stdout_logfile_maxbytes=50MB
+killasgroup=true
+numprocs=1
+```
+Now, run the supervisor server and start both your new processes.
+```
+sudo supervisorctl
+supervisor> reload
+```
+
+That should be about it! If you look at the config file, you'll notice all we're doing is telling supervisor to run the scripts that came with the project, to automatically start them and attempt to restart them if the crash, and where to log their stdout and stderr. The only thing left to do in this section is to write an email to the supervisor devs thanking them for creating such an elegant and useful utility.
+
+## Setting up nginx
+
