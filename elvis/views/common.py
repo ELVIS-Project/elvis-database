@@ -88,7 +88,6 @@ class ElvisDetailView(generics.RetrieveUpdateDestroyAPIView):
 
 
 class ElvisListCreateView(generics.ListCreateAPIView):
-    paginate_by = 20
     permission_classes = (permissions.AllowAny, )
 
     def dispatch(self, *args, **kwargs):

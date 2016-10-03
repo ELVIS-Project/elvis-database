@@ -1,11 +1,7 @@
-from django.conf.urls import patterns, include, url, static
-from django.conf import settings
-
 import os
-
-from rest_framework.urlpatterns import format_suffix_patterns
+from django.conf import settings
+from django.conf.urls import include, url, static
 from django.contrib.staticfiles.urls import staticfiles_urlpatterns
-
 # temporary views for these pages
 from elvis.views.main import home, about, contact
 from elvis.views.views import solr_suggest
@@ -13,14 +9,14 @@ from elvis.views.auth import LoginFormView, logout_view
 from elvis.views.search import SearchView, SearchAndAddToCartView
 from elvis.views.download import DownloadCart, Downloading
 from elvis.views.piece import PieceList, PieceDetail, PieceCreate, PieceUpdate, MyPieces
-from elvis.views.user import UserAccount, UserUpdate
+from elvis.views.user import UserAccount, UserUpdate, UserList
 from elvis.views.movement import MovementList, MovementDetail
 from elvis.views.composer import ComposerList, ComposerDetail
 from elvis.views.collection import CollectionList, CollectionDetail, \
-        CollectionCreate, CollectionUpdate
+        CollectionCreate, CollectionUpdate, CollectionElements, CollectionCurators, MyCollections
 from elvis.views.media import MediaServeView
 from django.contrib.auth import views as auth_views
-import django.views.static
+
 # Uncomment the next two lines to enable the admin:
 from django.contrib import admin
 admin.autodiscover()
@@ -58,18 +54,23 @@ urlpatterns.extend([
         url(r'^pieces/$', PieceList.as_view(), name="piece-list", kwargs={'model': "Piece"}),
         url(r'^piece/(?P<pk>[0-9]+)/$', PieceDetail.as_view(), name="piece-detail", kwargs={'model': "Piece"}),
         url(r'^piece/(?P<pk>[0-9]+)/update/$', PieceUpdate.as_view(), name="piece-update", kwargs={'model': "Piece"}),
-        url(r'^pieces/mine$', MyPieces.as_view(), name="my-pieces", kwargs={'model': "Piece"}),
+        url(r'^pieces/mine/$', MyPieces.as_view(), name="my-pieces", kwargs={'model': "Piece"}),
 
         url(r'^collections/$', CollectionList.as_view(), name="collection-list", kwargs={'model': "Collection"}),
         url(r'^collection/(?P<pk>[0-9]+)/$', CollectionDetail.as_view(), name="collection-detail", kwargs={'model': "Collection"}),
         url(r'^collection/create/', CollectionCreate.as_view(), name="collection-create", kwargs={'model': "Collection"}),
         url(r'^collection/(?P<pk>[0-9]+)/update/$', CollectionUpdate.as_view(), name="collection-update", kwargs={'model': "Collection"}),
+        url(r'^collection/(?P<pk>[0-9]+)/elements/$', CollectionElements.as_view(), name="collection-elements", kwargs={'model': "Collection"}),
+        url(r'^collection/(?P<pk>[0-9]+)/curators/$', CollectionCurators.as_view(), name="collection-curators", kwargs={'model': "Collection"}),
+        url(r'^collections/mine/$', MyCollections.as_view(), name="my-collections", kwargs={'model': "Collection"}),
 
         url(r'^composers/$', ComposerList.as_view(), name="composer-list", kwargs={'model': "Composer"}),
         url(r'^composer/(?P<pk>[0-9]+)/$', ComposerDetail.as_view(), name="composer-detail", kwargs={'model': "Composer"}),
 
         url(r'^movements/$', MovementList.as_view(), name="movement-list", kwargs={'model': "Movement"}),
         url(r'^movement/(?P<pk>[0-9]+)/$', MovementDetail.as_view(), name="movement-detail", kwargs={'model': "Movement"}),
+
+        url(r'^users/$', UserList.as_view(), name="user-list", kwargs={'model': "User"}),
 
         url(r'^about/$', about, name='about'),
 

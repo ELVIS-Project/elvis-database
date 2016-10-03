@@ -1,30 +1,37 @@
-import urllib.request, urllib.error, urllib.parse
+import urllib.error
+import urllib.parse
+import urllib.request
 
-from django.contrib.auth.models import User
+from django.conf import settings
 from django.contrib.auth import authenticate, login
-from django.http import HttpResponseRedirect
+from django.contrib.auth.models import User
+from django.contrib.auth.signals import user_logged_in, user_logged_out
 from django.db.models import ObjectDoesNotExist
+from django.dispatch import receiver
+from django.http import HttpResponseRedirect
+from django.shortcuts import render
 from django.utils.decorators import method_decorator
 from django.views.decorators.csrf import csrf_protect
-from django.conf import settings
-from django.dispatch import receiver
-from django.contrib.auth.signals import user_logged_in, user_logged_out
-from django.shortcuts import render
-from rest_framework import generics
-from rest_framework import permissions
-from rest_framework.renderers import JSONRenderer
-
-from elvis.serializers import UserFullSerializer
-from elvis.models.movement import Movement
-from elvis.models.composer import Composer
+from elvis.forms import UserForm, UserChangeForm
 from elvis.models.collection import Collection
+from elvis.models.composer import Composer
+from elvis.models.movement import Movement
 from elvis.models.piece import Piece
 from elvis.renderers.custom_html_renderer import CustomHTMLRenderer
-from elvis.forms import UserForm, UserChangeForm
+from elvis.serializers import UserFullSerializer
+from elvis.serializers.serializers import UserListSerializer
+from rest_framework import generics
+from rest_framework.renderers import JSONRenderer, BrowsableAPIRenderer
 
 
 class UserAccountHTMLRenderer(CustomHTMLRenderer):
     template_name = "user/user_account.html"
+
+
+class UserList(generics.ListAPIView):
+    serializer_class = UserListSerializer
+    renderer_classes = (JSONRenderer, BrowsableAPIRenderer)
+    queryset = User.objects.all()
 
 
 class UserAccount(generics.CreateAPIView):
@@ -149,7 +156,16 @@ def save_cart(sender, request, user, **kwargs):
 
 @receiver(user_logged_in)
 def load_cart(sender, request, user, **kwargs):
-    user_download = request.user.downloads.first()
+    """
+    Cart gets dumped to or loaded from database when a user logs in or logs out.
+
+    :param sender:
+    :param request:
+    :param user:
+    :param kwargs:
+    :return:
+    """
+    user_download = user.downloads.first()
     cart = {}
     cart.update({"M-" + str(k.uuid): True for k in user_download.collection_movements.all()})
     cart.update({"P-" + str(k.uuid): True for k in user_download.collection_pieces.all()})

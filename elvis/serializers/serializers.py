@@ -245,6 +245,13 @@ class CollectionMinSerializer(CachedMinHyperlinkedModelSerializer):
         fields = ('title', 'url', 'id', 'public', 'curators')
 
 
+class UserListSerializer(serializers.HyperlinkedModelSerializer):
+    class Meta:
+        model = User
+        many = True
+        fields = ('username', 'id', 'last_name', 'first_name')
+
+
 class UserMinSerializer(serializers.HyperlinkedModelSerializer):
     class Meta:
         model = User

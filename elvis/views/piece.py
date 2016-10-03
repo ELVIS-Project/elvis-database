@@ -4,6 +4,7 @@ import ujson as json
 import pytz
 from rest_framework import generics
 from rest_framework import status
+from rest_framework.exceptions import MethodNotAllowed
 from rest_framework.renderers import JSONRenderer, BrowsableAPIRenderer
 from rest_framework.response import Response
 from elvis.renderers.custom_html_renderer import CustomHTMLRenderer
@@ -57,10 +58,24 @@ class PieceCreate(generics.RetrieveAPIView):
             return HttpResponseRedirect('/login/?error=upload')
 
 
-class PieceUpdate(generics.RetrieveAPIView):
+class PieceUpdate(ElvisDetailView):
     serializer_class = PieceFullSerializer
     renderer_classes = (PieceUpdateHTMLRenderer, JSONRenderer, BrowsableAPIRenderer)
     queryset = Piece.objects.all()
+
+    def get(self, request, *args, **kwargs):
+        # Make sure that the user can actually edit this Piece
+        self.if_can_edit(request, *args, **kwargs)
+        return super(PieceUpdate, self).get(request, *args, **kwargs)
+
+    def delete(self, request, *args, **kwargs):
+        raise MethodNotAllowed
+
+    def patch(self, request, *args, **kwargs):
+        raise MethodNotAllowed
+
+    def put(self, request, *args, **kwargs):
+        raise MethodNotAllowed
 
 
 class PieceList(ElvisListCreateView):
@@ -85,8 +100,9 @@ def piece_create(request, *args, **kwargs):
     form = validate_dynamic_piece_form(request, PieceForm(request.POST))
     if not form.is_valid():
         # Form errors are rendered for user on the front end.
-        data = json.dumps({'errors': form.errors})
-        return HttpResponse(content=data, content_type="application/json", status=status.HTTP_400_BAD_REQUEST)
+        errors = {f: [e.get_json_data()[0]['message']] for f, e in form.errors.items()}
+        errors = json.dumps({'errors': errors})
+        return HttpResponse(content=errors, content_type="application/json", status=status.HTTP_400_BAD_REQUEST)
 
     clean = Cleanup()
     clean_form = form.cleaned_data
@@ -127,8 +143,9 @@ def piece_update(request, *args, **kwargs):
         if form.errors.get('collections'):
             del form.errors['collections']
         if form.errors:
-            data = json.dumps({"errors": form.errors})
-            return HttpResponse(content=data, content_type="application/json", status=status.HTTP_400_BAD_REQUEST)
+            errors = {f: [e.get_json_data()[0]['message']] for f, e in form.errors.items()}
+            errors = json.dumps({'errors': errors})
+            return HttpResponse(content=errors, content_type="application/json", status=status.HTTP_400_BAD_REQUEST)
 
     clean = Cleanup()
     piece = Piece.objects.get(id=int(kwargs['pk']))
@@ -221,7 +238,7 @@ def piece_update(request, *args, **kwargs):
             att = Attachment.objects.filter(pk=item['id'])[0]
             if att:
                 att.delete()
-                
+
     delete_movements = [x for x in change['delete'] if x['type'] == "M"]
     if delete_movements:
         for item in delete_movements:
@@ -271,7 +288,7 @@ def handle_related_models(object_list, parent, clean, **kwargs):
                                                          "Collection", clean,
                                                          creator=user)
                 for x in collection_list:
-                    parent.collections.add(x)
+                    x.add(parent)
                 continue
             except:
                 clean.cleanup()

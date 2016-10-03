@@ -11,7 +11,7 @@ pom.xml
 dump.rdb
 #Local file ignores
 elvis/local_settings.py
-solr/elvis_dev/data
-solr/elvis_test/data
-solr/elvis_prod/data
-start.sh
+solr/**/data
+
+/.coverage
+/htmlcov

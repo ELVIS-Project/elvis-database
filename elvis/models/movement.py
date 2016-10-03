@@ -2,41 +2,19 @@ import datetime
 
 from django.db import models
 from elvis.models.elvis_model import ElvisModel
+from elvis.models.composition import ElvisCompositionMixin
 
 
-class Movement(ElvisModel):
+class Movement(ElvisModel, ElvisCompositionMixin):
     class Meta:
         app_label = "elvis"
         ordering = ["position", "title"]
 
     piece = models.ForeignKey("elvis.Piece", blank=True, null=True, related_name="movements")
     position = models.IntegerField(blank=True, null=True)
-    collections = models.ManyToManyField("elvis.Collection", blank=True, related_name="movements")
-    composer = models.ForeignKey("elvis.Composer", blank=True, null=True, related_name="movements")
-    composition_start_date = models.IntegerField(blank=True, null=True)
-    composition_end_date = models.IntegerField(blank=True, null=True)
-    number_of_voices = models.IntegerField(blank=True, null=True)
-    tags = models.ManyToManyField("elvis.Tag", blank=True, related_name="movements")
-    genres = models.ManyToManyField("elvis.Genre", blank=True, related_name="movements")
-    instruments_voices = models.ManyToManyField("elvis.InstrumentVoice", blank=True,  related_name="movements")
-    languages = models.ManyToManyField("elvis.Language", blank=True, related_name="movements")
-    locations = models.ManyToManyField("elvis.Location", blank=True, related_name="movements")
-    sources = models.ManyToManyField("elvis.Source", blank=True, related_name="movements")
-    attachments = models.ManyToManyField("elvis.Attachment", blank=True, related_name="movements")
-    religiosity = models.CharField(max_length=50, default="Unknown")
-    vocalization = models.CharField(max_length=50, default="Unknown")
-    parent_cart_id = models.CharField(max_length=50, blank=True, null=True)
+    parent_cart_id = models.CharField(max_length=50, null=True)
+
     hidden = models.BooleanField(default=False)
-
-    @property
-    def attached_files(self):
-        if not self.attachments.all():
-            return 'none'
-        return " ".join([a.description for a in self.attachments.all()])
-
-    @property
-    def tagged_as(self):
-        return " ".join([t.name for t in self.tags.all()])
 
     @property
     def get_parent_cart_id(self):
@@ -44,36 +22,6 @@ class Movement(ElvisModel):
             return "P-" + str(self.piece.uuid)
         else:
             return ""
-
-    @property
-    def file_formats(self):
-        format_list = []
-        for att in self.attachments.all():
-            ext = att.extension
-            if ext not in format_list:
-                format_list.append(ext)
-        return format_list
-
-    def __unicode__(self):
-        return "{0}".format(self.title)
-
-    def movement_collections(self):
-        return " ".join([collection.title if collection.public else "" for collection in self.collections.all()])
-
-    def movement_genres(self):
-        return " ".join([genre.name for genre in self.genres.all()])
-
-    def movement_instruments_voices(self):
-        return " ".join([instrument_voice.name for instrument_voice in self.instruments_voices.all()])
-
-    def movement_languages(self):
-        return " ".join([language.name for language in self.languages.all()])
-
-    def movement_locations(self):
-        return " ".join([location.name for location in self.locations.all()])
-
-    def movement_sources(self):
-        return " ".join([source.name for source in self.sources.all()])
 
     def solr_dict(self):
         movement = self

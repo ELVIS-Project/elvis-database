@@ -159,31 +159,30 @@ class CollectionViewTestCase(ElvisTestSetup, APITestCase):
 
     def test_post_create_piece_create_movement(self):
         self.client.login(username='testuser', password='test')
-        movement_count = Movement.objects.all().count()
-        response = self.client.post("/pieces/", {'title': 'Mov Create Test',
-                                                 'composer': self.test_composer,
-                                                 'composition_start_date': 1600,
-                                                 'composition_end_date': 1605,
-                                                 'collections': 'New Collection',
-                                                 'number_of_voices': 3,
-                                                 'genres': 'New Genre',
-                                                 'locations': 'New Location',
-                                                 'languages': 'New Language',
-                                                 'sources': 'New Source',
-                                                 'instruments_voices': 'New Instrument',
-                                                 'comment': "New Comment",
-                                                 'religiosity': 'Secular',
-                                                 'vocalization': 'Vocal',
-                                                 'tags': 'New Tag',
-                                                 'mov_title_1': 'Mov Create Test'})
-        piece = Piece.objects.get(title='Mov Create Test')
+        response = self.client.post("/pieces/",
+                                    {'title': 'Piece Mov Create Test',
+                                     'composer': self.test_composer,
+                                     'composition_start_date': 1600,
+                                     'composition_end_date': 1605,
+                                     'collections': 'New Collection',
+                                     'number_of_voices': 3,
+                                     'genres': 'New Genre',
+                                     'locations': 'New Location',
+                                     'languages': 'New Language',
+                                     'sources': 'New Source',
+                                     'instruments_voices': 'New Instrument',
+                                     'comment': "New Comment",
+                                     'religiosity': 'Secular',
+                                     'vocalization': 'Vocal',
+                                     'tags': 'New Tag',
+                                     'mov_title_1': 'Mov Create Test'})
+        piece = Piece.objects.get(title='Piece Mov Create Test')
         mov = Movement.objects.get(title='Mov Create Test')
         self.assertEqual(response.status_code, status.HTTP_201_CREATED)
         self.assertEqual(piece, mov.piece)
         self.assertEqual(piece.composer, mov.composer)
         self.assertEqual(piece.composition_start_date, mov.composition_start_date)
         self.assertEqual(piece.composition_end_date, mov.composition_end_date)
-        #self.assertEqual(list(piece.collections.all()), list(mov.collections.all()))
         self.assertEqual(len(list(piece.collections.all())), 1)
         self.assertEqual(len(list(mov.collections.all())), 0)
         self.assertEqual(piece.number_of_voices, mov.number_of_voices)
@@ -199,29 +198,29 @@ class CollectionViewTestCase(ElvisTestSetup, APITestCase):
 
     def test_post_create_piece_create_movement_with_overrides(self):
         self.client.login(username='testuser', password='test')
-        movement_count = Movement.objects.all().count()
-        response = self.client.post("/pieces/", {'title': 'Mov Override Test',
-                                                 'composer': self.test_composer,
-                                                 'composition_start_date': 1600,
-                                                 'composition_end_date': 1605,
-                                                 'collections': 'New Collection',
-                                                 'number_of_voices': 3,
-                                                 'genres': 'New Genre',
-                                                 'locations': 'New Location',
-                                                 'languages': 'New Language',
-                                                 'sources': 'New Source',
-                                                 'instruments_voices': 'New Instrument',
-                                                 'comment': "New Comment",
-                                                 'religiosity': 'Secular',
-                                                 'vocalization': 'Vocal',
-                                                 'tags': 'New Tag',
-                                                 'mov_title_1': 'Mov Override Test',
-                                                 'mov1_instrumentation': 'Other Instrument',
-                                                 'mov1_number_of_voices': 4,
-                                                 'mov1_free_tags': 'Other Tag',
-                                                 'mov1_vocalization': 'Mixed',
-                                                 'mov1_comment': 'Other Comment'
-                                                 })
+        response = self.client.post("/pieces/",
+                                    {'title': 'Mov Override Test',
+                                     'composer': self.test_composer,
+                                     'composition_start_date': 1600,
+                                     'composition_end_date': 1605,
+                                     'collections': 'New Collection',
+                                     'number_of_voices': 3,
+                                     'genres': 'New Genre',
+                                     'locations': 'New Location',
+                                     'languages': 'New Language',
+                                     'sources': 'New Source',
+                                     'instruments_voices': 'New Instrument',
+                                     'comment': "New Comment",
+                                     'religiosity': 'Secular',
+                                     'vocalization': 'Vocal',
+                                     'tags': 'New Tag',
+                                     'mov_title_1': 'Mov Override Test',
+                                     'mov1_instrumentation': 'Other Instrument',
+                                     'mov1_number_of_voices': 4,
+                                     'mov1_free_tags': 'Other Tag',
+                                     'mov1_vocalization': 'Mixed',
+                                     'mov1_comment': 'Other Comment'
+                                     })
         piece = Piece.objects.get(title='Mov Override Test')
         mov = Movement.objects.get(title='Mov Override Test')
         self.assertEqual(response.status_code, status.HTTP_201_CREATED)
@@ -229,7 +228,6 @@ class CollectionViewTestCase(ElvisTestSetup, APITestCase):
         self.assertEqual(piece.composer, mov.composer)
         self.assertEqual(piece.composition_start_date, mov.composition_start_date)
         self.assertEqual(piece.composition_end_date, mov.composition_end_date)
-        #self.assertEqual(list(piece.collections.all()), list(mov.collections.all()))
         self.assertEqual(len(list(piece.collections.all())), 1)
         self.assertEqual(len(list(mov.collections.all())), 0)
         self.assertEqual(list(piece.genres.all()), list(mov.genres.all()))
@@ -246,4 +244,3 @@ class CollectionViewTestCase(ElvisTestSetup, APITestCase):
         self.assertEqual(mov.tags.all().count(), 1)
         self.assertEqual(mov.tags.all()[0].name, 'Other Tag')
         self.client.logout()
-

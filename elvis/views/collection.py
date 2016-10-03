@@ -1,7 +1,7 @@
 import ujson as json
 import datetime
 import pytz
-
+from django.contrib.auth.models import User
 from rest_framework import generics
 from rest_framework import status
 from rest_framework.response import Response
@@ -48,7 +48,8 @@ class CollectionList(ElvisListCreateView):
         form = CollectionForm(request.POST)
         if not form.is_valid():
             data = json.dumps({"errors": form.errors})
-            return HttpResponse(data, content_type="json")
+            return HttpResponse(data, content_type="json",
+                                status=status.HTTP_400_BAD_REQUEST)
         clean_form = form.cleaned_data
         new_collection = Collection(title=clean_form['title'],
                                     comment=clean_form['comment'],
@@ -60,16 +61,19 @@ class CollectionList(ElvisListCreateView):
             new_collection.public = True
         else:
             new_collection.public = False
+        # Save the new collection
+        new_collection.save()
+
         # If the collection is not empty, populate it from
         if not clean_form["initialize_empty"]:
             # Grab the pieces and movements from the cart
             pieces, movements = self.get_cart_pieces_and_movements(request)
             # Add the pieces and movements to the collection
             for piece in pieces:
-                new_collection.pieces.add(piece)
+                new_collection.add(piece)
             for movement in movements:
-                new_collection.movements.add(movement)
-        new_collection.save()
+                new_collection.add(movement)
+
         return HttpResponseRedirect("/collection/{0}".format(new_collection.id))
 
     @staticmethod
@@ -126,6 +130,167 @@ class CollectionDetail(ElvisDetailView):
             return super().determine_perms(request, *args, **kwargs)
 
 
+class CollectionCurators(CollectionDetail):
+    def post(self, request, *args, **kwargs):
+        """
+        If the user has permission to edit the collection, add the specified pieces
+        to the specified collection.
+
+        :param request:
+        :param args:
+        :param kwargs:
+        :return:
+        """
+        if self.determine_perms(request, *args, **kwargs)['can_edit']:
+            username = request.data.get("username")
+            try:
+                user = User.objects.get(username=username)
+            except ObjectDoesNotExist:
+                return HttpResponse(
+                    content="User {0} does not exist.".format(username),
+                    status=status.HTTP_400_BAD_REQUEST)
+
+            collection = Collection.objects.get(id=int(kwargs['pk']))
+            collection.add_curator(user)
+            return HttpResponse(
+                content="Curator added to collection.",
+                content_type="application/json",
+                status=status.HTTP_200_OK)
+        else:
+            raise PermissionDenied
+
+    def delete(self, request, *args, **kwargs):
+        """
+        If the user has permission to edit the collection, remove the specified
+        pieces from the collection.
+
+        :param request:
+        :param args:
+        :param kwargs:
+        :return:
+        """
+        if self.determine_perms(request, *args, **kwargs)["can_edit"]:
+            usernames = request.data.get("usernames")
+            if not usernames:
+                return HttpResponse(
+                    content="Please provide some usernames.",
+                    status=status.HTTP_400_BAD_REQUEST
+                )
+            collection = Collection.objects.get(id=int(kwargs['pk']))
+            for username in usernames:
+                try:
+                    user = User.objects.get(username=username)
+                except ObjectDoesNotExist:
+                    # User doesn't exist, so keep going.
+                    continue
+                collection.remove_curator(user)
+
+            return HttpResponse(
+                content="{0} removed from collection {1}.".format(usernames, collection.title),
+                content_type="application/json",
+                status=status.HTTP_200_OK
+            )
+        else:
+            raise PermissionDenied
+
+
+class CollectionElements(CollectionDetail):
+    def patch(self, request, *args, **kwargs):
+        """
+        If the user has permission to edit the collection, add the specified pieces
+        to the specified collection.
+
+        :param request:
+        :param args:
+        :param kwargs:
+        :return:
+        """
+        if self.determine_perms(request, *args, **kwargs)['can_edit']:
+            piece_ids = request.data.get("piece_ids")
+            movement_ids = request.data.get("movement_ids")
+            # Add the pieces to the collection
+            self.add_pieces_and_movements_to_collection(int(kwargs['pk']),
+                                                        piece_ids,
+                                                        movement_ids)
+            return HttpResponse(
+                # content="Pieces added to collection.",
+                # content_type="application/json",
+                status=status.HTTP_200_OK)
+        else:
+            return HttpResponse(
+                content="User does not have permission to edit collection.",
+                content_type="application/json",
+                status=status.HTTP_403_FORBIDDEN)
+
+    def delete(self, request, *args, **kwargs):
+        """
+        If the user has permission to edit the collection, remove the specified
+        pieces from the collection.
+
+        :param request:
+        :param args:
+        :param kwargs:
+        :return:
+        """
+        if self.determine_perms(request, *args, **kwargs)["can_edit"]:
+            piece_ids = request.data.get("piece_ids")
+            movement_ids = request.data.get("movement_ids")
+            # Remove the members from the collection
+            self.remove_pieces_and_movements_from_collection(int(kwargs['pk']),
+                                                             piece_ids,
+                                                             movement_ids)
+            return HttpResponse(
+                content="{0} removed from collection {1}.".format(piece_ids, int(kwargs['pk'])),
+                content_type="application/json",
+                status=status.HTTP_200_OK
+            )
+        else:
+            return HttpResponse(
+                content="User does not have permission to edit collection.",
+                content_type="application/json",
+                status=status.HTTP_403_FORBIDDEN)
+
+    @staticmethod
+    def remove_pieces_and_movements_from_collection(collection_id, piece_ids, movement_ids):
+        """
+        Remove movements and pieces from a collection.
+
+        :param collection_id:
+        :param piece_ids:
+        :param movement_ids:
+        :return:
+        """
+        collection = Collection.objects.get(id=collection_id)
+        print(piece_ids)
+        print(movement_ids)
+        if piece_ids:
+            for piece_id in piece_ids:
+                piece = Piece.objects.get(id=piece_id)
+                collection.remove(piece)
+        if movement_ids:
+            for movement_id in movement_ids:
+                movement = Movement.objects.get(id=movement_id)
+                collection.remove(movement)
+
+    @staticmethod
+    def add_pieces_and_movements_to_collection(collection_id, piece_ids, movement_ids):
+        """
+        Add movements and pieces to a collection
+
+        :param collection_id:
+        :param piece_ids:
+        :param movement_ids:
+        :return:
+        """
+        collection = Collection.objects.get(id=collection_id)
+        for piece_id in piece_ids:
+            piece = Piece.objects.get(id=piece_id)
+            collection.add(piece)
+        for movement_id in movement_ids:
+            movement = Movement.objects.get(id=movement_id)
+            collection.add(movement)
+
+
 class CollectionCreate(generics.RetrieveAPIView):
     renderer_classes = (CollectionCreateHTMLRenderer, JSONRenderer, BrowsableAPIRenderer)
 
@@ -159,10 +324,22 @@ def collection_update(request, *args, **kwargs):
         return HttpResponse(content=data, content_type="application/json", status=status.HTTP_400_BAD_REQUEST)
     # Update the collection
     collection = Collection.objects.get(id=int(kwargs['pk']))
-    collection.title = patch_data["title"]
-    collection.public = patch_data["permission"] == "Public"
-    collection.comment = patch_data["comment"]
+    if "title" in patch_data:
+        collection.title = patch_data["title"]
+    if "permission" in patch_data:
+        collection.public = patch_data["permission"] == "Public"
+    if "comment" in patch_data:
+        collection.comment = patch_data["comment"]
     collection.save()
     # Prepare a response
     data = json.dumps({'success': True, 'id': collection.id, 'url': "/collection/{0}".format(collection.id)})
     return HttpResponse(data, content_type="json")
+
+
+class MyCollections(generics.RetrieveAPIView):
+    """Simply redirects to the collection list with a creator query"""
+    def get(self, request, *args, **kwargs):
+        if request.user.is_authenticated:
+            username = request.user.username
+            return HttpResponseRedirect("/collections/?creator={0}".format(username))
+        return HttpResponseRedirect("/login")

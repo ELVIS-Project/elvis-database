@@ -170,8 +170,8 @@ class SearchAndAddToCartView(SearchView):
         for page_number in range(paginator.num_pages):
             results = paginator.page(page_number + 1).result
             # Get the items from the page
-            for search_object in results:
-                cart.add_item({'item_type':search_object["type"],
+            for search_object in (r for r in results if r in ElvisCart.ACCEPTABLE_TYPES):
+                cart.add_item({'item_type': search_object["type"],
                                'id': search_object["uuid"]})
                 total += 1
         # Save the modified cart
