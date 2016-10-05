@@ -279,7 +279,7 @@ CELERY_RESULT_BACKEND = 'rpc://'
 CELERY_TASK_SERIALIZER = 'json'
 CELERY_RESULT_SERIALIZER = 'json'
 CELERY_ACCEPT_CONTENT = ['json']
-CELERY_QUEUE_DICT = {'queue': 'elvis'}
+CELERY_QUEUE_DICT = {'queue': 'elvisdb'}
 CELERY_ROUTES = {'elvis.zip_files': CELERY_QUEUE_DICT,
                  'elvis.delete_zip_file': CELERY_QUEUE_DICT,
                  'elvis.rebuild_suggesters': CELERY_QUEUE_DICT}
@@ -313,7 +313,7 @@ LOGGING = {
     },
 }
 
-# Import local setting overrides. 
+# Import local setting overrides.
 if SETTING_TYPE is LOCAL:
     if os.path.exists(os.path.join(BASE_DIR, 'elvis/local_settings.py')):
         from elvis.local_settings import *
