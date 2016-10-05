@@ -1,5 +1,5 @@
 # Initialization
-We're installing the project on a compute canada virtual machine instance with Ubuntu 16 installed. If installing on a different environment, the only real requirement is that the OS is POSIX compliant and that all the software listed in the 'Required Software' section can run on it.
+We're installing the project on a compute canada virtual machine instance with Ubuntu 16 installed. If installing on a different environment, the only real requirement is that the OS is POSIX compliant and that all the software listed in the 'Required Software' section can run on it. That said, running with Ubuntu will likely vastly simplify installing all the requirements of the project, and you will be able to follow this guide more closely.
 
 I like to set up a user responsible for running the project and having ownership over the project's files and services. This simplifies privileges and makes it easy for multiple users to administrate the project.
 
@@ -15,7 +15,7 @@ We will make a new user called `elvisdb` to run the project.
 sudo useradd --system --shell /bin/bash --home /home/elvisdb elvisdb
 ```
 
-If your system does not have nice shell defaults for new users, you might be able to grab some from the Ubuntu user (this may be very particular to Compute Canada).
+If your system does not have nice shell defaults for new users, you might be able to grab some from the `ubuntu` user (this may be very particular to Compute Canada).
 ```
 sudo cp -r /home/ubuntu/{.profile,.bashrc} /home/elvisdb
 ```
@@ -74,6 +74,8 @@ You should have installed supervisor via the ubuntu package manager in the above
 redis is an in memory key-value based cache. You can find installation instructions at http://redis.io/
 
 At the time of writing, a nice guide for installing redis is available at https://www.digitalocean.com/community/tutorials/how-to-install-and-use-redis
+
+Once redis is set up, no further configuration is necessary.
     
 # Setup
 We need to set up the deployment directory.
@@ -84,7 +86,7 @@ sudo chown elvisdb:elvisdb /srv/webapps/elvisdb
 
 From now on, I will refer to `/srv/webapps/elvisdb` as `$ELVIS_HOME`
 
-*Note: on the active deployment of the production server, a file named /home/elvisdb/elvis-env.sh contains a list of these variables and their definitions.*
+*Note: on the active deployment of the production server, a file named /home/elvisdb/elvis-env.sh contains a list of variables and their definitions which may be helpful for navigating the server.*
 
 While in `$ELVIS_HOME`, run the following command:
 ```
@@ -99,7 +101,7 @@ source .env/bin/activate
 pip install -r requirements.txt
 ```
 
-Lastly, we need to change one setting in the project configuration file to make it aware that we are doing a production deployment. Open up $ELVIS_HOME/elvis-database/elvis/settings.py, and change the`SETTING_TYPE` variable from `LOCAL` to `PRODUCTION`.
+Lastly, we need to change one setting in the project configuration file to make it aware that we are doing a production deployment. Open up `$ELVIS_HOME/elvis-database/elvis/settings.py`, and change the`SETTING_TYPE` variable from `LOCAL` to `PRODUCTION` (or to `DEVELOPMENT`, if you're sure that's what you want... read the comments in the file!).
 
 Now the basic environment for the project is set up, we can begin connecting the various components together.
 
@@ -111,7 +113,7 @@ First, lets generate a password and save it in `$ELVIS_HOME/config/db_pass`. You
 openssl rand -base64 32 > $ELVIS_HOME/config/db_pass
 ```
 
-Now is also a good time to set up a secret key for us3 by django. This key does not necessarily need to be saved anywhere else.
+Now is also a good time to set up a secret key for use by django. This key does not necessarily need to be saved anywhere else.
 ```
 openssl rand -base64 32 > $ELVIS_HOME/config/secret_key
 ```
@@ -150,9 +152,9 @@ source .env/bin/activate
 python manage.py migrate
 ```
 
-If this command fails, you will need to figure out some error in your database setup up or your `settings.py` file.
+If this command fails, you will need to figure out some error in your database setup up or your `$ELVIS_HOME/elvis-database/elvis/settings.py` file.
 
-You must now obtain a dump of the database and a set of it's media files. These can be found on our backup server (TODO: WIKI LINK TO BACKUP SERVER DOCS HERE), as well as on the production server.
+You must now obtain a dump of the database and a set of its media files. These can be found on our backup server (TODO: WIKI LINK TO BACKUP SERVER DOCS HERE), as well as on the production server.
 
 Move all the media folders (`attachments`, `user_downloads`, etc) to `$ELVIS_HOME/media/`. You also want to set all the files to have 664 permissions. You can do this with a command like `find $ELVIS_HOME/media -type f -exec chmod 644 {} \;`. Note, we can not simply run `chmod -R` on this directory tree, as we don't want to remove the executable permission from directories.
 
@@ -184,7 +186,7 @@ sudo chown elvisdb:elvisdb /var/log/elvisdb
 sudo mkdir /run/elvisdb
 sudo chown elvisdb:elvisdb /run/elvisdb
 ```
-Supervisor is used to manage and control the execution of script files. The elvis database git repository comes with two scripts called `gunicorn_start.sh` and `celery_start.sh`, which supervisor will be responsible for running. These two scripts 'run' the project, supervisor makes sure these two scripts are always running, and nginx points internet requests at the processes started by these scripts.
+Supervisor is used to manage and control the execution of script files. The elvis database git repository comes with two scripts called `gunicorn_start.sh` and `celery_start.sh`, which supervisor will be responsible for running. These two scripts 'run' the project, supervisor makes sure these two scripts are always running, and nginx points internet requests at the processes started by these scripts. You should have a look at the two scripts if you'd like to know how gunicorn and celery are configured.
 
 To tell supervisor to run these scripts, we need to create a file in supervisor's config folder. In `/etc/supervisor/conf.d`, create a file called `elvisdb.conf` with the following contents:
 ```
@@ -217,4 +219,57 @@ supervisor> reload
 That should be about it! If you look at the config file, you'll notice all we're doing is telling supervisor to run the scripts that came with the project, to automatically start them and attempt to restart them if the crash, and where to log their stdout and stderr. The only thing left to do in this section is to write an email to the supervisor devs thanking them for creating such an elegant and useful utility.
 
 ## Setting up nginx
+nginx should already be running having been installed when you downloaded all the dependencies. You can check that it is running using `sudo systemctl status nginx`. 
 
+We save site definitions in `/etc/nginx/sites-avaliable`, then make a link to the sites we wish to actually serve in `/etc/nginx/sites-enabled`.
+
+Save the following into a file called `/etc/nginx/sites-avaliable/database.elvisproject.ca`.
+```
+upstream elvisdb_server {
+  server unix:/var/run/elvisdb/elvisdb.sock fail_timeout=0;
+}
+
+server {
+    listen 80;
+    server_name database.elvisproject.ca;
+    client_max_body_size 4G;
+
+    access_log /var/log/elvisdb/nginx-access.log;
+    error_log /var/log/elvisdb/nginx-error.log;
+
+    location /static/ {
+        alias   /srv/webapps/elvisdb/static/;
+    }
+
+    location /media_serve/ {
+        internal;
+        alias /srv/webapps/elvisdb/media/;
+    }
+
+    location / {
+        proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+        proxy_set_header Host $http_host;
+        proxy_redirect off;
+        # proxy_buffering off;
+        proxy_pass http://elvisdb_server;
+    }
+}
+```
+
+This is a fairly simple config, which takes requests on port 80 and sends them to the socket opened up by gunicorn (you may have noticed the location of this socket being defined in `$ELVIS_HOME/gunicorn_start.sh`). If a static or media file is being requests, nginx will serve those straight off the file system without having to clog up a thread in the web app. Note the 'internal' keyword for the `/media_serve/` location. This means this point can only be accessed by requests that the originate from the server itself. We use this to check that a user is logged in when they access a point under `/media/`, then redirect their request to `/media_serve/`.
+Note also that encryption is not handled anywhere in this config file. We deploy the elvis database on server without a public IP. Traffic is directed to it through a routing server on the same network which handles encryption with clients.
+
+Now, link this new config file in `sites-enabled`, run a config test, and reload the nginx service if everything is ok.
+```
+> cd /etc/nginx/sites-enabled
+> sudo ln -s /etc/nginx/sites-avaliable/database.elvisproject.ca 
+> sudo service nginx configtest
+ * Testing nginx configuration
+   ...done.
+> sudo service nginx reload
+```
+
+If for whatever reason the configtest fails, you will find the errors it raised in `/var/log/nginx/error.log`. Use this output to debug your configuration!
+
+# Conclusion
+After completing these steps, you should have a fully functional elvis database deployment. You will still need to point the DNS record to the new server's IP in order to access the site online, but that is beyond the scope of this guide.
