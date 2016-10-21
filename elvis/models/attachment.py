@@ -11,6 +11,8 @@ import elvis.helpers.name_normalizer as NameNormalizer
 def upload_path(instance, filename):
     return os.path.join(instance.attachment_path, filename)
 
+class ParentResolveError(Exception):
+    pass
 
 class Attachment(ElvisModel):
     """
@@ -63,6 +65,30 @@ class Attachment(ElvisModel):
     def url(self):
         url = os.path.join(settings.MEDIA_URL, str(self.attachment.name))
         return url
+
+    @property
+    def parent(self):
+        """Determine the parent of the attachment."""
+        pieces = self.pieces.all()
+        movements = self.movements.all()
+        p_len = len(pieces)
+        m_len = len(movements)
+
+        # Handle multiple attachments.
+        if p_len >= 1 and m_len >= 1:
+            raise ParentResolveError("Attached to at least one Piece and Movement.")
+        if p_len > 1 or m_len > 1:
+            problem_model = 'Piece' if p_len > 1 else 'Movement'
+            raise ParentResolveError("Attached to more than 1 {}.".format(problem_model))
+
+        # Return valid values.
+        if p_len == 1:
+            return pieces[0]
+        if m_len == 1:
+            return movements[0]
+
+        # Or report error.
+        raise ParentResolveError("Attachment has no parent.")
 
     def solr_dict(self):
         return {}
