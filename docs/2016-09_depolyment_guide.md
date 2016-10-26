@@ -59,13 +59,14 @@ rabbitmq is a message passer used by celery. You can find installation instructi
 Solr is a fast search engine which powers the site's search feature. You can find detailed installation instructions at http://lucene.apache.org/solr/.
 
 At the time of writing, installing solr is quite straightforward:
+
 1. Download the latest binary distribution from http://lucene.apache.org/solr/mirrors-solr-latest-redir.html
 2. Assuming you downloaded the .tgz file for solr version X.Y.Z into your home directory, follow these steps to install the solr service:
 ```
 tar -xvf ~/solr-X.Y.Z.tgz
 sudo ~/solr-X.Y.Z/bin/install_solr_service.sh ~/solr-X.Y.Z.tgz
 ```
-3. You can verify the above worked by running `curl localhost:8983/solr/`. If everything is working, it will return a lengthy html response. You can also use `sudo systemctl status solr` to check the status of the new daemon.
+You can verify the above worked by running `curl localhost:8983/solr/`. If everything is working, it will return a lengthy html response. You can also use `sudo systemctl status solr` to check the status of the new daemon.
 
 ## supervisor
 You should have installed supervisor via the ubuntu package manager in the above section. In order to assure it is running, run `sudo systemctl status supervisor`. If it is not running, you may need to enable the service by running `sudo systemctl enable supervisor`. If these commands read like witchcraft, you may want to learn the [bare minimum about systemd.](https://www.digitalocean.com/community/tutorials/systemd-essentials-working-with-services-units-and-the-journal) 
@@ -216,7 +217,35 @@ sudo supervisorctl
 supervisor> reload
 ```
 
-That should be about it! If you look at the config file, you'll notice all we're doing is telling supervisor to run the scripts that came with the project, to automatically start them and attempt to restart them if the crash, and where to log their stdout and stderr. The only thing left to do in this section is to write an email to the supervisor devs thanking them for creating such an elegant and useful utility.
+That should be about it! If you look at the config file, you'll notice all we're doing is telling supervisor to run the scripts that came with the project, to automatically start them and attempt to restart them if the crash, and where to log their stdout and stderr.
+
+You may have noticed in the script files `$ELVIS_HOME/elvis-database/{celery_start.sh,gunicorn_start.sh}`, we refer to files in `/var/run/elvisdb`. This is a great place to put socket files, because `/var/run` is a temporary in-memory file system designed to look like the regular file system. Unfortunately, this means anything you put in `/var/run` will be deleted on reboot. This means our custom `elvisdb` directory in `/var/run` does not exist when we start the machine. In order to fix this, the easiest thing to do is to create an init script which will create the directory everytime the machine is booted.
+
+Create a file called `/etc/init.d/elvisdb` with the following contents:
+
+```
+#!/bin/bash
+
+### BEGIN INIT INFO
+# Provides:       elvisdb
+# Required-Start:    $local_fs $remote_fs $network $syslog $named
+# Required-Stop:     $local_fs $remote_fs $network $syslog $named
+# Default-Start:     2 3 4 5
+# Default-Stop:      0 1 6
+### END INIT INFO
+
+mkdir /var/run/elvisdb
+chown elvisdb:elvisdb /var/run/elvisdb
+```
+
+Don't worry too much about the init info here. The important part is the two last commands, which creates the needed directory and sets the elvisdb user as its owner. Run the following to set this script as a default startup service:
+
+```
+sudo chmod +x /etc/init.d/elvisdb
+sudo update-rc.d elvisdb defaults
+```
+
+This should be all you need to do to set up the supervisor managed services.
 
 ## Setting up nginx
 nginx should already be running having been installed when you downloaded all the dependencies. You can check that it is running using `sudo systemctl status nginx`. 
