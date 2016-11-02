@@ -99,6 +99,7 @@ MIDDLEWARE_CLASSES = (
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
     'django.contrib.flatpages.middleware.FlatpageFallbackMiddleware',
     'django.middleware.security.SecurityMiddleware',
+    'elvis.middleware.terms_of_service.ElvisTermsOfServiceMiddleware'
 )
 
 REST_FRAMEWORK = {
