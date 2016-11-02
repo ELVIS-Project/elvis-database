@@ -3,7 +3,7 @@ from django.conf import settings
 from django.conf.urls import include, url, static
 from django.contrib.staticfiles.urls import staticfiles_urlpatterns
 # temporary views for these pages
-from elvis.views.main import home, about, contact
+from elvis.views.main import home, about, contact, TOSPage
 from elvis.views.views import solr_suggest
 from elvis.views.auth import LoginFormView, logout_view
 from elvis.views.search import SearchView, SearchAndAddToCartView
@@ -79,6 +79,8 @@ urlpatterns.extend([
         url(r'^suggest/$', solr_suggest),
 
         url(r'^media/(?P<pk>.*)$', MediaServeView.as_view(), name="media"),
+
+        url(r'^tos/$', TOSPage.as_view(), name="tos")
         ]
 )
 

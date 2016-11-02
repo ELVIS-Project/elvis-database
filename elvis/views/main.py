@@ -1,4 +1,4 @@
-from django.shortcuts import render
+from django.shortcuts import render, redirect
 from rest_framework import generics, permissions, status
 from rest_framework.renderers import JSONRenderer
 from rest_framework.response import Response
@@ -36,14 +36,22 @@ class TOSPage(generics.GenericAPIView):
                 "code": 403
             },
             "data": {
-                "path": request.path
+                "path": request.path,
+                "accepted_tos": request.user.userprofile.accepted_tos
             }
         }
         return Response(data, status=status.HTTP_403_FORBIDDEN)
 
     def post(self, request, *args, **kwargs):
+        accepted_tos = True if request.POST.get('accepts-TOS') == 'on' else False
+        if not accepted_tos:
+            return self.get(request, *args, **kwargs)
+
         user = request.user
-        pass
+        user.userprofile.accepted_tos = accepted_tos
+        user.userprofile.save()
+        request.session['ACCEPTED_TOS'] = accepted_tos
+        return redirect('/')
 
 
 # LM Render the query page
