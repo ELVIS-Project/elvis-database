@@ -6,6 +6,7 @@ class ElvisTermsOfServiceMiddleware:
     UNPROTECTED_PATHS = {'/logout'}
 
     def process_view(self, request, view_func, view_args, view_kwarg):
+        """Redirect request to TOS page if user has not accepted yet."""
         user = request.user
         if self._should_redirect(request, user):
             final_view = TOSPage.as_view()
