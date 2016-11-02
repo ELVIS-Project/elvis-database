@@ -2,6 +2,8 @@ from django import forms
 from django.contrib.auth.models import User
 from django.contrib.auth.forms import UserCreationForm, UserChangeForm
 
+from elvis.models.user_profile import UserProfile
+
 # A simple extension of the built-in UserCreationForm
 class UserForm(UserCreationForm):
 
@@ -13,7 +15,7 @@ class UserForm(UserCreationForm):
 
     # Define available fields from the form for the user
     class Meta:
-        model = User 
+        model = User
         fields = ['username', 'email', 'password1', 'password2']
 
     # Clean data, create the user using UserCreationForm, return the new user obj for login
@@ -27,8 +29,15 @@ class UserForm(UserCreationForm):
 
         if commit:
             user.save()
+            try:
+                user_profile = UserProfile(user=user)
+                user_profile.save()
+            except:
+                user.delete()
+                raise
 
         return user
+
 
 class UserChangeForm(forms.ModelForm):
     class Meta:
