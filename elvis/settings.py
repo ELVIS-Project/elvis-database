@@ -189,8 +189,12 @@ if SETTING_TYPE is not LOCAL:
             'NAME': 'elvis_database',
             'USER': 'elvis',
             'PASSWORD': DB_PASS,
-            'HOST': 'localhost'
-        }
+            'HOST': 'localhost',
+            'TEST': {
+                'ENGINE': 'django.db.backends.sqlite3',
+                'USER': ':memory'
+            }
+        },
     }
 
 # Email Settings
