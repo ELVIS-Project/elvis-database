@@ -9,10 +9,9 @@ class ElvisTermsOfServiceMiddleware:
         """Redirect request to TOS page if user has not accepted yet."""
         user = request.user
         if self._should_redirect(request, user):
-            final_view = TOSPage.as_view()
+            return TOSPage.as_view()(request, *view_args, **view_kwarg)
         else:
-            final_view = view_func
-        return final_view(request, *view_args, **view_kwarg)
+            return None
 
     def _should_redirect(self, request, user):
         """Figure out if user should be redirected to TOS screen."""
@@ -31,5 +30,3 @@ class ElvisTermsOfServiceMiddleware:
             return False
         else:
             return True
-
-
