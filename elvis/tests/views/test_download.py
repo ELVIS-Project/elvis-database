@@ -1,15 +1,11 @@
 from rest_framework.test import APITestCase
 from rest_framework import status
 from elvis.tests.helpers import ElvisTestSetup, real_user
-from elvis.models.composer import Composer
 
 
 class DownloadViewTestCase(ElvisTestSetup, APITestCase):
     def setUp(self):
-        self.setUp_elvis()
-        self.setUp_user()
-        self.setUp_test_models()
-
+        self.setUp_users()
         self.client.login(username=real_user['username'], password=real_user['password'])
 
     def tearDown(self):

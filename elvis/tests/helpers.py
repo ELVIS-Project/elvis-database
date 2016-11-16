@@ -49,8 +49,10 @@ class ElvisTestSetup(APITestCase):
         model_name = obj.__class__.__name__.lower()
         return "http://localhost:8000/{0}/{1}".format(model_name, obj.id)
 
-    def setUp_elvis(self):
-        self.client = Client()
+    @classmethod
+    def setUpClass(cls):
+        cls.client = Client()
+        super().setUpClass()
 
     def setUp_test_models(self):
         self.test_composer = mommy.make('elvis.Composer')
@@ -61,7 +63,7 @@ class ElvisTestSetup(APITestCase):
         self.test_collection = mommy.make('elvis.Collection', public=True)
         self.test_private_collection = mommy.make('elvis.Collection', public=False, creator=self.creator_user)
 
-    def setUp_user(self):
+    def setUp_users(self):
         """Set up users for the test suite to use.
 
         Here we explicitly create UserProfiles for the users and set their

@@ -6,11 +6,7 @@ from elvis.forms import UserForm
 class UserFormTestCase(ElvisTestSetup, APITestCase):
 
     def setUp(self):
-        self.setUp_elvis()
-        self.setUp_user()
-
-    def tearDown(self):
-        pass
+        self.setUp_users()
 
     def test_save_user(self):
         form = UserForm()

@@ -6,11 +6,7 @@ from elvis.tests.helpers import ElvisTestSetup, real_user, fake_user
 class AuthViewTestCase(ElvisTestSetup, APITestCase):
 
     def setUp(self):
-        self.setUp_elvis()
-        self.setUp_user()
-
-    def tearDown(self):
-        pass
+        self.setUp_users()
 
     def test_authorized(self):
         can_log_in = self.client.login(username=real_user['username'],

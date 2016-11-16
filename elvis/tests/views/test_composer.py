@@ -1,14 +1,15 @@
 from rest_framework.test import APITestCase
 from rest_framework import status
+from model_mommy import mommy
 from elvis.tests.helpers import ElvisTestSetup
 from elvis.models.composer import Composer
+import pdb
 
 
 class ComposerViewTestCase(ElvisTestSetup, APITestCase):
+
     def setUp(self):
-        self.setUp_elvis()
-        self.setUp_user()
-        self.setUp_test_models()
+        self.test_composer = mommy.make('elvis.Composer')
 
     def test_get_list(self):
         """

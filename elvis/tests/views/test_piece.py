@@ -15,11 +15,11 @@ from elvis.tests.helpers import real_user, creator_user, super_user
 
 
 class CollectionViewTestCase(ElvisTestSetup, APITestCase):
-    def setUp(self):
-        self.setUp_elvis()
-        self.setUp_user()
-        self.setUp_test_models()
 
+    def setUp(self):
+        self.setUp_users()
+        self.setUp_test_models()
+        
     def test_get_list(self):
         response = self.client.get("/pieces/")
         self.assertEqual(response.status_code, status.HTTP_200_OK)

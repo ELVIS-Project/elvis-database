@@ -3,13 +3,16 @@ import json
 from django.test.client import MULTIPART_CONTENT
 from rest_framework.test import APITestCase
 from rest_framework import status
+from model_mommy import mommy
 from elvis.tests.helpers import ElvisTestSetup, real_user, creator_user
 from elvis.models.collection import Collection
 
 
 class CollectionViewTestCase(ElvisTestSetup, APITestCase):
     def setUp(self):
-        self.setUp_elvis()
+        self.setUp_users()
+        self.test_collection = mommy.make('elvis.Collection', public=True)
+        self.test_private_collection = mommy.make('elvis.Collection', public=False, creator=self.creator_user)
 
     def test_get_list(self):
         response = self.client.get("/collections/")

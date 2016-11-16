@@ -1,13 +1,14 @@
 from rest_framework.test import APITestCase
 from rest_framework import status
+from model_mommy import mommy
 from elvis.tests.helpers import ElvisTestSetup, real_user, creator_user
 from elvis.models.movement import Movement
 
 
 class MovementViewTestCase(ElvisTestSetup, APITestCase):
+
     def setUp(self):
-        self.setUp_elvis()
-        self.setUp_user()
+        self.setUp_users()
         self.setUp_test_models()
 
     def test_get_list(self):
