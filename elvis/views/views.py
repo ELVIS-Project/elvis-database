@@ -211,14 +211,12 @@ def handle_attachments(request, parent, cleanup, file_field, file_source):
     for f in files:
         att = Attachment()
         att.save()  # needed to create hash dir.
-        cleanup.list.append({"object": att, "isNew": True})
         att.creator = request.user
-        att.attach_file(f['path'], f['name'], parent, number=i, source=file_source)
+        parent.attachments.add(att)
+        cleanup.list.append({"object": att, "isNew": True})
+        att.attach_file(f['path'], f['name'], parent, position=i, source=file_source)
         results.append(att)
         i += 1
-
-    for att in results:
-        parent.attachments.add(att)
 
     shutil.rmtree(upload_path)
     return results

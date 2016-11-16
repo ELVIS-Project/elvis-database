@@ -124,8 +124,8 @@ def piece_create(request, *args, **kwargs):
                           user=request.user, birth_date=clean_form['composer_birth_date'],
                           death_date=clean_form['composer_death_date'])
 
-    handle_dynamic_file_table(request, new_piece, clean)
     new_piece.save()
+    handle_dynamic_file_table(request, new_piece, clean)
     rebuild_suggester_dicts.delay()
     data = json.dumps({'success': True, 'id': new_piece.id,
                        'url': "/piece/{0}".format(new_piece.id)})
