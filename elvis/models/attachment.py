@@ -9,10 +9,27 @@ import elvis.helpers.name_normalizer as NameNormalizer
 
 
 def upload_path(instance, filename):
-    return os.path.join(instance.attachment_path, filename)
+    """Calculate the path an attachment will be initially saved at.
+
+    Implementation Note: This function exists outside the Attachment model
+    but takes an Attachment as the `instance` argument. This is because this
+    function computes the default file path for any new attachment, but it must
+    use the `pk` of the instantiated attachment to compute this value. That is,
+    this allows us to define the class-default as being dependent on an instance
+    attribute.
+    """
+    return os.path.join(instance.compute_absolute_file_dir(), filename)
+
 
 class ParentResolveError(Exception):
+    """Exception raised when an Attachment's parent can not be resolved."""
     pass
+
+
+class RenameError(Exception):
+    """Exception raised when an Attachment's parent can not be resolved."""
+    pass
+
 
 class Attachment(ElvisModel):
     """
@@ -35,16 +52,11 @@ class Attachment(ElvisModel):
         app_label = "elvis"
         ordering = ['id']
 
-    @property
-    def attachment_path(self):
-        return os.path.join(settings.MEDIA_ROOT,
-                            "attachments",
-                            "{0:0>2}".format(str(self.pk)[0:2]),
-                            "{0:0>2}".format(str(self.pk)[-2:]),
-                            "{0:0>15}".format(self.pk))
-
     attachment = models.FileField(upload_to=upload_path, null=True, blank=True, max_length=512)
     source = models.CharField(blank=True, null=True, max_length=200)
+
+    def __str__(self):
+        return self.file_name
 
     @property
     def extension(self):
@@ -68,7 +80,7 @@ class Attachment(ElvisModel):
 
     @property
     def parent(self):
-        """Determine the parent of the attachment."""
+        """The Piece or Movement this Attachment is attached to."""
         pieces = self.pieces.all()
         movements = self.movements.all()
         p_len = len(pieces)
@@ -99,20 +111,26 @@ class Attachment(ElvisModel):
     def solr_delete(self, **kwargs):
         pass
 
-    def attach_file(self, file_path, file_name, parent, **kwargs):
-        i = kwargs.get('number', None)
-        i = str(i) if i else ""
-        source = kwargs.get('source', None)
+    # TODO: roll this functionality into a proper instantiation procedure.
+    def attach_file(self, file_path, file_name, position, source=None):
+        """Attaches a file to this attachment.
 
-        new_name = "{0}_{1}_{2}.{3}".format(NameNormalizer.sanitize_name(parent.title.strip()),
-                                            NameNormalizer.sanitize_name(parent.composer.name.strip()),
-                                            "file" + str(i),
-                                            file_name.rsplit('.')[-1])
-        #replace unicode in string with normalized chars
-        new_name = self.normalize_name(new_name)
+        Assumes that this Attachment object already has a parent, and
+        that this parent has a composer. Given this, it is best to create
+        attachments at the end of a piece-creating workflow.
 
+         Args:
+            file_path (str): The path up to the dir where this file is held.
+            file_name (str): The name of this file.
+            position (int): The index of this file in its parents list of files.
+            source (str): The source of the attached file.
+        """
+        new_name = self.compute_correct_file_name(position=position,
+                                                  extension="." + file_name.rsplit('.')[-1])
         old_path = os.path.join(file_path, file_name)
-        new_path = os.path.join(file_path, new_name)
+        new_path = os.path.join(self.compute_absolute_file_dir(), new_name)
+        if not os.path.exists(self.compute_absolute_file_dir()):
+            os.makedirs(self.compute_absolute_file_dir())
         os.rename(old_path, new_path)
 
         if source:
@@ -129,13 +147,83 @@ class Attachment(ElvisModel):
         self.save()
 
     def delete(self, *args, **kwargs):
-        if os.path.exists(self.attachment_path):
-            shutil.rmtree(self.attachment_path)
+        abs_path = self.compute_absolute_path()
+        if os.path.exists(abs_path):
+            os.remove(abs_path)
         super(Attachment, self).delete(*args, **kwargs)
 
+    # TODO Remove this function once correct naming is guaranteed by instantiation.
     def auto_rename(self, **kwargs):
-        """Determine the correct name for the file, then rename it if necessary"""
-        parent = None
+        """Automatically rename the file to correct representation."""
+        old_path = os.path.join(settings.MEDIA_ROOT, self.attachment.name)
+        new_path = self.compute_absolute_path()
+        shutil.move(old_path, new_path)
+
+        # Point the attachment to the new file
+        self.attachment.name = self.compute_relative_path()
+        self.save(**kwargs)
+        return
+
+    def get_index_from_parent(self):
+        """Determine which position this attachment has in it's parent's list
+        of attachments.
+
+        Returns: An int, or raises a ParentResolveError.
+        """
+        parent = self.parent
+        for position, a in enumerate(parent.attachments.all()):
+            if a.pk == self.pk:
+                return position + 1
+        raise ParentResolveError("Could not find self in parent's attachments.")
+
+    def compute_relative_file_dir(self):
+        """Generate the relative directory the attached file resides in.
+
+        Note: This function COMPUTES its result. It is not based on the ACTUAL properties
+        of some file. That is, you should use this function to compute the properties of
+        a file you need to place/name, NOT to get information about the actual file linked
+        to by this Attachment. It is a prescriptive, not descriptive result. Examine the
+        properties of the Attachment.attachment object for the actual properties of the
+        real file.
+        """
+        return os.path.join("attachments",
+                            "{0:0>2}".format(str(self.pk)[0:2]),
+                            "{0:0>2}".format(str(self.pk)[-2:]),
+                            "{0:0>15}".format(self.pk))
+
+    def compute_absolute_file_dir(self):
+        """Generate the absolute directory the attached file should reside in.
+
+        Note: This function COMPUTES its result. It is not based on the ACTUAL properties
+        of some file. That is, you should use this function to compute the properties of
+        a file you need to place/name, NOT to get information about the actual file linked
+        to by this Attachment. It is a prescriptive, not descriptive result. Examine the
+        properties of the Attachment.attachment object for the actual properties of the
+        real file.
+        """
+        return os.path.join(settings.MEDIA_ROOT, self.compute_relative_file_dir())
+
+    def compute_correct_file_name(self, position=None, extension=None):
+        """Generate the name the file should take on disk, given metadata.
+
+        Note 1: If a new Attachment is being created you must provide the position
+        and extension arguments. Otherwise, this function expects this information
+        is already available in the Attachment instance.
+
+        Note 2: This function COMPUTES its result. It is not based on the ACTUAL properties
+        of some file. That is, you should use this function to compute the properties of
+        a file you need to place/name, NOT to get information about the actual file linked
+        to by this Attachment. It is a prescriptive, not descriptive result. Examine the
+        properties of the Attachment.attachment object for the actual properties of the
+        real file.
+
+        Args:
+            position (int): The index of this Attachment's in its parent's list of files.
+            extension (str): The file extension with dot included (e.g. '.midi, '.exe')
+
+        Returns: A string with the file name the file should be saved with on disk.
+        """
+        # Generate a parent_str which contains piece and movement names.
         if self.pieces.all():
             parent = self.pieces.first()
             parent_str = parent.title.strip()
@@ -148,44 +236,46 @@ class Attachment(ElvisModel):
             else:
                 parent_str = mov.title.strip()
         else:
-            print("{0} is an orphan and will be deleted".format(self.title))
-            self.delete()
-            return
+            msg = 'Attachment "{0}" is an orphan and should be deleted'
+            raise ParentResolveError(msg.format(self.title))
 
-        # Find position in parent attachments for an index in the name.
-        i = 1
-        for a in parent.attachments.all():
-            if a == self:
-                break
-            else:
-                i += 1
-
-        # Find current file extension.
-        old_path = os.path.join(settings.MEDIA_ROOT, self.attachment.name)
-        (path, current_name) = os.path.split(old_path)
-        (current_file_name, current_extension) = os.path.splitext(current_name)
-
+        # Generate file name.
+        position = str(position) if position else self.get_index_from_parent()
+        extension = extension if extension else self.extension
         new_name = "{0}_{1}_{2}{3}".format(NameNormalizer.sanitize_name(parent_str),
                                            NameNormalizer.sanitize_name(parent.composer.name.strip()),
-                                           "file" + str(i),
-                                           current_extension)
-        new_name = self.normalize_name(new_name)
-        new_path = os.path.join(path, new_name)
+                                           "file" + str(position), extension)
+        return NameNormalizer.normalize_name(new_name)
 
-        # Return now if there's no work to do.
-        if self.file_name == new_name:
-            return
+    def compute_relative_path(self):
+        """Generate the relative path this file should take with respect to metadata.
 
-        shutil.move(old_path, new_path)
+        Note: This function COMPUTES its result. It is not based on the ACTUAL properties
+        of some file. That is, you should use this function to compute the properties of
+        a file you need to place/name, NOT to get information about the actual file linked
+        to by this Attachment. It is a prescriptive, not descriptive result. Examine the
+        properties of the Attachment.attachment object for the actual properties of the
+        real file.
 
-        # Point the attachment to the new file
-        old_rel_path, old_name = os.path.split(self.attachment.name)
-        self.attachment.name = os.path.join(old_rel_path, new_name)
-        self.save(**kwargs)
-        return
+        Returns: A string containing the relative path where this file SHOULD be saved.
+            Note, this path is relative to settings.MEDIA_ROOT.
+        """
+        file_name = self.compute_correct_file_name()
+        path = self.compute_relative_file_dir()
+        return os.path.join(path, file_name)
 
-    def __unicode__(self):
-        return "{0}".format(self.attachment)
+    def compute_absolute_path(self):
+        """Generate the absolute path this file should take with respect to metadata.
 
-    def normalize_name(self, name):
-        return NameNormalizer.normalize_name(name)
+        Note: This function COMPUTES its result. It is not based on the ACTUAL properties
+        of some file. That is, you should use this function to compute the properties of
+        a file you need to place/name, NOT to get information about the actual file linked
+        to by this Attachment. It is a prescriptive, not descriptive result. Examine the
+        properties of the Attachment.attachment object for the actual properties of the
+        real file.
+
+        Returns: A string containing the absolute path where this file SHOULD be saved.
+        """
+        file_name = self.compute_correct_file_name()
+        path = self.compute_absolute_file_dir()
+        return os.path.join(path, file_name)
