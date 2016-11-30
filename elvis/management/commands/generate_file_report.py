@@ -55,6 +55,7 @@ class Command(BaseCommand):
             res['path'] = a.attachment.path
             result['missing'].append(res)
 
+        # Create a list of dupes grouped together by hashes.
         sorted_keys = sorted(dupes.keys(), key=lambda x: -len(dupes[x]))
         for k in sorted_keys:
             dupe_dict = {'count': len(dupes[k]), 'hash': k, 'lst': []}
@@ -62,6 +63,26 @@ class Command(BaseCommand):
                 res = Command._get_att_info_dict(a)
                 dupe_dict['lst'].append(res)
             result['dupes'].append(dupe_dict)
+
+        # Eliminate any dupes from the list that are all from the same composer.
+        def is_real_dupe(dupe_lst):
+            """True if dupe spans multiple composers or has more than 10 files."""
+            if len(dupe_lst) >= 10:
+                return True
+            first_composer = dupe_lst[0]['composer']
+
+            if len(dupe_lst) > 2:
+                for d in dupe_lst:
+                    if d['composer'] != first_composer:
+                        return True
+            return False
+
+        pruned_dupes = []
+        for dupe in result['dupes']:
+            if is_real_dupe(dupe['lst']):
+                pruned_dupes.append(dupe)
+        result['dupes'] = pruned_dupes
+
         return result
 
     @staticmethod
@@ -87,3 +108,30 @@ class Command(BaseCommand):
         base['path'] = att.attachment.path
         return base
 
+    @staticmethod
+    def organize_dupes(results):
+        """Organize duplicate list as a hierarchical dict.
+
+        This function is used to make it easy to turn the report generated
+        by generate_missing_and_dupes() into an human-readable hierarchy of
+        instances that need to be replaced.
+
+        Args:
+            results: The results of generate_missing_and_dupes()
+        Returns: An  dict of dupes indexed by piece id.
+        """
+        organized_results = defaultdict(dict)
+        for duplicates in results['dupes']:
+            for dupe_instance in duplicates['lst']:
+                composer = dupe_instance.get("composer")
+                piece_title = dupe_instance.get('piece', 'NO_PIECE')
+                stripped_instance = {
+                    'att_id': dupe_instance['att_id'],
+                    'att_title': dupe_instance['path'].split('/')[-1],
+                    'movement': dupe_instance['movement']
+                }
+                if not organized_results[composer].get(piece_title):
+                    organized_results[composer][piece_title] = []
+                organized_results[composer][piece_title].append(stripped_instance)
+
+        return organized_results
