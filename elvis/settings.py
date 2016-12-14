@@ -269,6 +269,7 @@ CELERY_ROUTES = {'elvis.zip_files': CELERY_QUEUE_DICT,
 # ======================
 ELVIS_EXTENSIONS = ['.xml', '.mxl', '.krn', '.md', '.nwc', '.tntxt', '.capx',
                     '.abc', '.mid', '.midi', '.pdf', '.mei', '.ma', '.md2', '.json']
+FEATURE_EXTENSIONS = ['.csv', '.arff', '.xml']
 ELVIS_BAD_PREFIX = ['.', '..', '_', '__']
 SUGGEST_DICTS = ['composerSuggest', 'pieceSuggest', 'collectionSuggest',
                  'languageSuggest', 'genreSuggest', 'locationSuggest',

@@ -17,6 +17,20 @@ html, body
     line-height: 13px;
 }
 
+.close {
+    color: #aaa;
+    float: right;
+    font-size: 28px;
+    font-weight: bold;
+}
+
+.close:hover,
+.close:focus {
+    color: black;
+    text-decoration: none;
+    cursor: pointer;
+}
+
 #footer-hr
 {
     color: black;
@@ -25,6 +39,12 @@ html, body
 .label, .rounded
 {
     border-radius: 4px;
+}
+
+.modal{
+    height:100px;
+    overflow:auto;
+    width:100px;
 }
 
 /* Misc Templates */

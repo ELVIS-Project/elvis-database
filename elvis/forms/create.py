@@ -69,3 +69,6 @@ class CollectionForm(forms.Form):
     permission = forms.CharField(required=False)
     comment = forms.CharField(required=False)
     initialize_empty = forms.BooleanField(required=False)
+
+class JsymbolicForm(forms.Form):
+    file = forms.FileField()

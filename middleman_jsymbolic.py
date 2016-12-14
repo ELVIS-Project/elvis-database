@@ -135,7 +135,6 @@ def get_from_rodan(resource_id):
 if __name__ == "__main__":
 
 #note: dummy usernames and password.
-#TODO: "make usernames, passwords, project urls and workflow urls command-line enterable"
     # current_token = get_rodan_token('rodan_username', 'rodan_password')
     # midi_and_mei_urls = get_from_elvis('elvis_username', 'elvis_password')
     parser = argparse.ArgumentParser()
@@ -143,6 +142,7 @@ if __name__ == "__main__":
     parser.add_argument("rodan_password")
     parser.add_argument("elvis_username")
     parser.add_argument("elvis_password")
+
     args = parser.parse_args()
     token = get_rodan_token(args.rodan_username, args.rodan_password)
 
