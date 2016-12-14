@@ -1,0 +1,2604 @@
+
+Agricola, Alexander
+    In minen zin
+        In-minen-zin_Agricola-Alexander_file2.nwc
+        In-minen-zin_Agricola-Alexander_file1.mid
+    Je n'ay deuil
+        Je-n-ay-deuil_Agricola-Alexander_file2.nwc
+        Je-n-ay-deuil_Agricola-Alexander_file1.mid
+    Missa "Malheur me bat" (Agricola)
+        Missa-Malheur-me-bat-Agricola-_Gloria_Agricola-Alexander_file2.nwc
+        Missa-Malheur-me-bat-Agricola-_Kyrie_Agricola-Alexander_file2.nwc
+        Missa-Malheur-me-bat-Agricola-_Credo_Agricola-Alexander_file2.nwc
+        Missa-Malheur-me-bat-Agricola-_Sanctus_Agricola-Alexander_file1.nwc
+        Missa-Malheur-me-bat-Agricola-_Gloria_Agricola-Alexander_file1.mid
+        Missa-Malheur-me-bat-Agricola-_Kyrie_Agricola-Alexander_file1.mid
+        Missa-Malheur-me-bat-Agricola-_Credo_Agricola-Alexander_file1.mid
+        Missa-Malheur-me-bat-Agricola-_Sanctus_Agricola-Alexander_file2.mid
+        Missa-Malheur-me-bat-Agricola-_Agnus-dei_Agricola-Alexander_file2.nwc
+        Missa-Malheur-me-bat-Agricola-_Agnus-dei_Agricola-Alexander_file1.mid
+    Missa In minen zin
+        Missa-In-minen-zin_Gloria_Agricola-Alexander_file2.nwc
+        Missa-In-minen-zin_Gloria_Agricola-Alexander_file1.mid
+        Missa-In-minen-zin_Credo_Agricola-Alexander_file2.nwc
+        Missa-In-minen-zin_Credo_Agricola-Alexander_file1.mid
+        Missa-In-minen-zin_Sanctus_Agricola-Alexander_file2.nwc
+        Missa-In-minen-zin_Sanctus_Agricola-Alexander_file1.mid
+        Missa-In-minen-zin_Agnus-dei_Agricola-Alexander_file1.mid
+        Missa-In-minen-zin_Agnus-dei_Agricola-Alexander_file2.nwc
+    Missa Je ne demande
+        Missa-Je-ne-demande_Gloria_Agricola-Alexander_file2.nwc
+        Missa-Je-ne-demande_Kyrie_Agricola-Alexander_file2.nwc
+        Missa-Je-ne-demande_Credo_Agricola-Alexander_file2.nwc
+        Missa-Je-ne-demande_Sanctus_Agricola-Alexander_file2.nwc
+        Missa-Je-ne-demande_Gloria_Agricola-Alexander_file1.mid
+        Missa-Je-ne-demande_Kyrie_Agricola-Alexander_file1.mid
+        Missa-Je-ne-demande_Credo_Agricola-Alexander_file1.mid
+        Missa-Je-ne-demande_Sanctus_Agricola-Alexander_file1.mid
+        Missa-Je-ne-demande_Agnus-dei_Agricola-Alexander_file2.nwc
+        Missa-Je-ne-demande_Agnus-dei_Agricola-Alexander_file1.mid
+        Missa-Je-ne-demande_Kyrie_Agricola-Alexander_file3.MUS
+        Missa-Je-ne-demande_Gloria_Agricola-Alexander_file3.MUS
+        Missa-Je-ne-demande_Credo_Agricola-Alexander_file3.MUS
+        Missa-Je-ne-demande_Sanctus_Agricola-Alexander_file3.MUS
+    Missa Le serviteur
+        Missa-Le-serviteur_Kyrie_Agricola-Alexander_file1.mid
+        Missa-Le-serviteur_Gloria_Agricola-Alexander_file1.mid
+        Missa-Le-serviteur_Kyrie_Agricola-Alexander_file2.nwc
+        Missa-Le-serviteur_Gloria_Agricola-Alexander_file2.nwc
+    Si dedero
+        Si-dedero_Agricola-Alexander_file1.nwc
+    null
+        Gloria_Agricola-Alexander_file2.nwc
+        Kyrie_Agricola-Alexander_file2.nwc
+        Gloria_Agricola-Alexander_file1.mid
+        Kyrie_Agricola-Alexander_file1.mid
+        Sanctus_Agricola-Alexander_file2.nwc
+        Sanctus_Agricola-Alexander_file1.mid
+
+Anonymous
+    Gaude Maria
+        Gaude-Maria_Anonymous_file2.nwc
+        Gaude-Maria_Anonymous_file1.mid
+    Je ne fay plus
+        Je-ne-fay-plus_Anonymous_file2.nwc
+        Je-ne-fay-plus_Anonymous_file1.mid
+    Missa "Ma bouche rit"
+        Missa-Ma-bouche-rit-_Gloria_Anonymous_file2.nwc
+        Missa-Ma-bouche-rit-_Kyrie_Anonymous_file2.nwc
+        Missa-Ma-bouche-rit-_Credo_Anonymous_file2.nwc
+        Missa-Ma-bouche-rit-_Sanctus_Anonymous_file2.nwc
+        Missa-Ma-bouche-rit-_Gloria_Anonymous_file1.mid
+        Missa-Ma-bouche-rit-_Kyrie_Anonymous_file1.mid
+        Missa-Ma-bouche-rit-_Credo_Anonymous_file1.mid
+        Missa-Ma-bouche-rit-_Sanctus_Anonymous_file1.mid
+        Missa-Ma-bouche-rit-_Agnus-dei_Anonymous_file2.nwc
+        Missa-Ma-bouche-rit-_Agnus-dei_Anonymous_file1.mid
+    Missa "Maria zart" (Anonymous)
+        Missa-Maria-zart-Anonymous-_Gloria_Anonymous_file1.nwc
+        Missa-Maria-zart-Anonymous-_Kyrie_Anonymous_file1.nwc
+    Missa "Meditatio cordis"
+        Missa-Meditatio-cordis-_Gloria_Anonymous_file1.mid
+        Missa-Meditatio-cordis-_Credo_Anonymous_file1.mid
+        Missa-Meditatio-cordis-_Sanctus_Anonymous_file1.mid
+        Missa-Meditatio-cordis-_Sanctus_Anonymous_file2.nwc
+        Missa-Meditatio-cordis-_Gloria_Anonymous_file2.nwc
+        Missa-Meditatio-cordis-_Credo_Anonymous_file2.nwc
+        Missa-Meditatio-cordis-_Agnus-dei_Anonymous_file1.mid
+        Missa-Meditatio-cordis-_Agnus-dei_Anonymous_file2.nwc
+    Missa "O Venus bant" (anon.)
+        Missa-O-Venus-bant-anon.-_Gloria_Anonymous_file1.nwc
+        Missa-O-Venus-bant-anon.-_Gloria_Anonymous_file2.mid
+        Missa-O-Venus-bant-anon.-_Credo_Anonymous_file1.nwc
+        Missa-O-Venus-bant-anon.-_Credo_Anonymous_file2.mid
+        Missa-O-Venus-bant-anon.-_Sanctus_Anonymous_file1.nwc
+        Missa-O-Venus-bant-anon.-_Sanctus_Anonymous_file2.mid
+        Missa-O-Venus-bant-anon.-_Agnus-dei_Anonymous_file2.mid
+        Missa-O-Venus-bant-anon.-_Agnus-dei_Anonymous_file1.nwc
+    Missa "O rosa bella" (1)
+        Missa-O-rosa-bella-1-_Gloria_Anonymous_file2.nwc
+        Missa-O-rosa-bella-1-_Kyrie_Anonymous_file2.nwc
+        Missa-O-rosa-bella-1-_Credo_Anonymous_file2.nwc
+        Missa-O-rosa-bella-1-_Sanctus_Anonymous_file2.nwc
+        Missa-O-rosa-bella-1-_Gloria_Anonymous_file1.mid
+        Missa-O-rosa-bella-1-_Kyrie_Anonymous_file1.mid
+        Missa-O-rosa-bella-1-_Credo_Anonymous_file1.mid
+        Missa-O-rosa-bella-1-_Sanctus_Anonymous_file1.mid
+        Missa-O-rosa-bella-1-_Agnus-dei_Anonymous_file2.nwc
+        Missa-O-rosa-bella-1-_Agnus-dei_Anonymous_file1.mid
+    Missa "O rosa bella" (2)
+        Missa-O-rosa-bella-2-_Credo_Anonymous_file1.mid
+        Missa-O-rosa-bella-2-_Sanctus_Anonymous_file2.nwc
+        Missa-O-rosa-bella-2-_Sanctus_Anonymous_file1.mid
+        Missa-O-rosa-bella-2-_Kyrie_Anonymous_file1.mid
+        Missa-O-rosa-bella-2-_Agnus-dei_Anonymous_file2.nwc
+        Missa-O-rosa-bella-2-_Agnus-dei_Anonymous_file1.mid
+        Missa-O-rosa-bella-2-_Credo_Anonymous_file2.nwc
+        Missa-O-rosa-bella-2-_Gloria_Anonymous_file1.mid
+        Missa-O-rosa-bella-2-_Kyrie_Anonymous_file2.nwc
+        Missa-O-rosa-bella-2-_Gloria_Anonymous_file2.nwc
+    Missa "O rosa bella" (3)
+        Missa-O-rosa-bella-3-_Kyrie_Anonymous_file1.mid
+        Missa-O-rosa-bella-3-_Gloria_Anonymous_file1.mid
+        Missa-O-rosa-bella-3-_Kyrie_Anonymous_file2.nwc
+        Missa-O-rosa-bella-3-_Gloria_Anonymous_file2.nwc
+        Missa-O-rosa-bella-3-_Credo_Anonymous_file1.mid
+        Missa-O-rosa-bella-3-_Sanctus_Anonymous_file1.mid
+        Missa-O-rosa-bella-3-_Credo_Anonymous_file2.nwc
+        Missa-O-rosa-bella-3-_Sanctus_Anonymous_file2.nwc
+    Missa "Pax vobis ego sum"
+        Missa-Pax-vobis-ego-sum-_Gloria_Anonymous_file2.nwc
+        Missa-Pax-vobis-ego-sum-_Gloria_Anonymous_file1.mid
+        Missa-Pax-vobis-ego-sum-_Credo_Anonymous_file2.nwc
+        Missa-Pax-vobis-ego-sum-_Credo_Anonymous_file1.mid
+    Missa "Petite camusette"
+        Missa-Petite-camusette-_Gloria_Anonymous_file2.nwc
+        Missa-Petite-camusette-_Kyrie_Anonymous_file2.nwc
+        Missa-Petite-camusette-_Credo_Anonymous_file2.nwc
+        Missa-Petite-camusette-_Sanctus_Anonymous_file2.nwc
+        Missa-Petite-camusette-_Gloria_Anonymous_file1.mid
+        Missa-Petite-camusette-_Kyrie_Anonymous_file1.mid
+        Missa-Petite-camusette-_Credo_Anonymous_file1.mid
+        Missa-Petite-camusette-_Sanctus_Anonymous_file1.mid
+        Missa-Petite-camusette-_Agnus-dei_Anonymous_file2.nwc
+        Missa-Petite-camusette-_Agnus-dei_Anonymous_file1.mid
+    Missa "Philippi"
+        Missa-Philippi-_Gloria_Anonymous_file1.mid
+        Missa-Philippi-_Credo_Anonymous_file1.mid
+        Missa-Philippi-_Sanctus_Anonymous_file1.mid
+        Missa-Philippi-_Sanctus_Anonymous_file2.nwc
+        Missa-Philippi-_Gloria_Anonymous_file2.nwc
+        Missa-Philippi-_Credo_Anonymous_file2.nwc
+        Missa-Philippi-_Agnus-dei_Anonymous_file1.mid
+        Missa-Philippi-_Agnus-dei_Anonymous_file2.nwc
+    Missa "Pour l'amour d'une"
+        Missa-Pour-l-amour-d-une-_Gloria_Anonymous_file2.nwc
+        Missa-Pour-l-amour-d-une-_Kyrie_Anonymous_file2.nwc
+        Missa-Pour-l-amour-d-une-_Credo_Anonymous_file2.nwc
+        Missa-Pour-l-amour-d-une-_Sanctus_Anonymous_file2.nwc
+        Missa-Pour-l-amour-d-une-_Gloria_Anonymous_file1.mid
+        Missa-Pour-l-amour-d-une-_Kyrie_Anonymous_file1.mid
+        Missa-Pour-l-amour-d-une-_Credo_Anonymous_file1.mid
+        Missa-Pour-l-amour-d-une-_Sanctus_Anonymous_file1.mid
+        Missa-Pour-l-amour-d-une-_Agnus-dei_Anonymous_file2.nwc
+        Missa-Pour-l-amour-d-une-_Agnus-dei_Anonymous_file1.mid
+    Missa "Puisque mamour"
+        Missa-Puisque-m-amour-_Gloria_Anonymous_file2.nwc
+        Missa-Puisque-m-amour-_Credo_Anonymous_file2.nwc
+        Missa-Puisque-m-amour-_Sanctus_Anonymous_file2.nwc
+        Missa-Puisque-m-amour-_Gloria_Anonymous_file1.mid
+        Missa-Puisque-m-amour-_Credo_Anonymous_file1.mid
+        Missa-Puisque-m-amour-_Sanctus_Anonymous_file1.mid
+    Missa "Quant ce viendra"
+        Missa-Quant-ce-viendra-_Kyrie_Anonymous_file1.mid
+        Missa-Quant-ce-viendra-_Gloria_Anonymous_file1.mid
+        Missa-Quant-ce-viendra-_Credo_Anonymous_file1.mid
+        Missa-Quant-ce-viendra-_Credo_Anonymous_file2.nwc
+        Missa-Quant-ce-viendra-_Kyrie_Anonymous_file2.nwc
+        Missa-Quant-ce-viendra-_Gloria_Anonymous_file2.nwc
+        Missa-Quant-ce-viendra-_Sanctus_Anonymous_file1.mid
+        Missa-Quant-ce-viendra-_Sanctus_Anonymous_file2.nwc
+    Missa "Quem malignus spiritus"
+        Missa-Quem-malignus-spiritus-_Gloria_Anonymous_file2.nwc
+        Missa-Quem-malignus-spiritus-_Kyrie_Anonymous_file2.nwc
+        Missa-Quem-malignus-spiritus-_Credo_Anonymous_file2.nwc
+        Missa-Quem-malignus-spiritus-_Sanctus_Anonymous_file2.nwc
+        Missa-Quem-malignus-spiritus-_Gloria_Anonymous_file1.mid
+        Missa-Quem-malignus-spiritus-_Kyrie_Anonymous_file1.mid
+        Missa-Quem-malignus-spiritus-_Credo_Anonymous_file1.mid
+        Missa-Quem-malignus-spiritus-_Sanctus_Anonymous_file1.mid
+        Missa-Quem-malignus-spiritus-_Agnus-dei_Anonymous_file2.nwc
+        Missa-Quem-malignus-spiritus-_Agnus-dei_Anonymous_file1.mid
+    Missa "Regina celi" (Anonymous)
+        Missa-Regina-celi-Anonymous-_Gloria_Anonymous_file2.nwc
+        Missa-Regina-celi-Anonymous-_Kyrie_Anonymous_file2.nwc
+        Missa-Regina-celi-Anonymous-_Credo_Anonymous_file2.nwc
+        Missa-Regina-celi-Anonymous-_Sanctus_Anonymous_file2.nwc
+        Missa-Regina-celi-Anonymous-_Gloria_Anonymous_file1.mid
+        Missa-Regina-celi-Anonymous-_Kyrie_Anonymous_file1.mid
+        Missa-Regina-celi-Anonymous-_Credo_Anonymous_file1.mid
+        Missa-Regina-celi-Anonymous-_Sanctus_Anonymous_file1.mid
+        Missa-Regina-celi-Anonymous-_Agnus-dei_Anonymous_file2.nwc
+        Missa-Regina-celi-Anonymous-_Agnus-dei_Anonymous_file1.mid
+    Missa "Requiem eternam"
+        Missa-Requiem-eternam-_Credo_Anonymous_file2.nwc
+        Missa-Requiem-eternam-_Credo_Anonymous_file1.mid
+    Missa "Rex dabit mercedem"
+        Missa-Rex-dabit-mercedem-_Gloria_Anonymous_file2.nwc
+        Missa-Rex-dabit-mercedem-_Gloria_Anonymous_file1.mid
+        Missa-Rex-dabit-mercedem-_Credo_Anonymous_file2.nwc
+        Missa-Rex-dabit-mercedem-_Credo_Anonymous_file1.mid
+        Missa-Rex-dabit-mercedem-_Sanctus_Anonymous_file2.nwc
+        Missa-Rex-dabit-mercedem-_Sanctus_Anonymous_file1.mid
+        Missa-Rex-dabit-mercedem-_Agnus-dei_Anonymous_file1.mid
+        Missa-Rex-dabit-mercedem-_Agnus-dei_Anonymous_file2.nwc
+    Missa "Rozel im gortn"
+        Missa-Rozel-im-gortn-_Gloria_Anonymous_file2.nwc
+        Missa-Rozel-im-gortn-_Gloria_Anonymous_file1.mid
+        Missa-Rozel-im-gortn-_Credo_Anonymous_file2.nwc
+        Missa-Rozel-im-gortn-_Credo_Anonymous_file1.mid
+        Missa-Rozel-im-gortn-_Sanctus_Anonymous_file2.nwc
+        Missa-Rozel-im-gortn-_Sanctus_Anonymous_file1.mid
+        Missa-Rozel-im-gortn-_Agnus-dei_Anonymous_file1.mid
+        Missa-Rozel-im-gortn-_Agnus-dei_Anonymous_file2.nwc
+    Missa "Tant que nostre argent dura"
+        Missa-Tant-que-nostre-argent-dura-_Gloria_Anonymous_file2.nwc
+        Missa-Tant-que-nostre-argent-dura-_Kyrie_Anonymous_file2.nwc
+        Missa-Tant-que-nostre-argent-dura-_Credo_Anonymous_file1.nwc
+        Missa-Tant-que-nostre-argent-dura-_Sanctus_Anonymous_file1.nwc
+        Missa-Tant-que-nostre-argent-dura-_Gloria_Anonymous_file1.mid
+        Missa-Tant-que-nostre-argent-dura-_Kyrie_Anonymous_file1.mid
+        Missa-Tant-que-nostre-argent-dura-_Agnus-dei_Anonymous_file1.nwc
+    Missa "Te gloriosus"
+        Missa-Te-gloriosus-_Gloria_Anonymous_file1.mid
+        Missa-Te-gloriosus-_Gloria_Anonymous_file2.nwc
+    Missa "Une mousse de Biscaye" (Anonymous)
+        Missa-Une-mousse-de-Biscaye-Anonymous-_Sanctus_Anonymous_file2.nwc
+        Missa-Une-mousse-de-Biscaye-Anonymous-_Sanctus_Anonymous_file1.mid
+        Missa-Une-mousse-de-Biscaye-Anonymous-_Kyrie-1_Anonymous_file3.mid
+        Missa-Une-mousse-de-Biscaye-Anonymous-_Credo-1-Patrem-omnipotentem_Anonymous_file1.nwc
+        Missa-Une-mousse-de-Biscaye-Anonymous-_Credo-1-Patrem-omnipotentem_Anonymous_file2.nwc
+        Missa-Une-mousse-de-Biscaye-Anonymous-_Kyrie-1_Anonymous_file1.MUS
+        Missa-Une-mousse-de-Biscaye-Anonymous-_Kyrie-2_Anonymous_file1.nwc
+        Missa-Une-mousse-de-Biscaye-Anonymous-_Gloria-1_Anonymous_file1.nwc
+        Missa-Une-mousse-de-Biscaye-Anonymous-_Kyrie-1_Anonymous_file2.nwc
+        Missa-Une-mousse-de-Biscaye-Anonymous-_Christe_Anonymous_file1.nwc
+    Missa "Veterem hominem"
+        Missa-Veterem-hominem-_Gloria_Anonymous_file2.nwc
+        Missa-Veterem-hominem-_Kyrie_Anonymous_file2.nwc
+        Missa-Veterem-hominem-_Credo_Anonymous_file2.nwc
+        Missa-Veterem-hominem-_Sanctus_Anonymous_file2.nwc
+        Missa-Veterem-hominem-_Gloria_Anonymous_file1.mid
+        Missa-Veterem-hominem-_Kyrie_Anonymous_file1.mid
+        Missa-Veterem-hominem-_Credo_Anonymous_file1.mid
+        Missa-Veterem-hominem-_Sanctus_Anonymous_file1.mid
+        Missa-Veterem-hominem-_Agnus-dei_Anonymous_file2.nwc
+        Missa-Veterem-hominem-_Agnus-dei_Anonymous_file1.mid
+    Missa Ad voces pares (Sine nomine)
+        Missa-Ad-voces-pares-Sine-nomine-_Gloria_Anonymous_file2.nwc
+        Missa-Ad-voces-pares-Sine-nomine-_Kyrie_Anonymous_file2.nwc
+        Missa-Ad-voces-pares-Sine-nomine-_Credo_Anonymous_file2.nwc
+        Missa-Ad-voces-pares-Sine-nomine-_Sanctus_Anonymous_file2.nwc
+        Missa-Ad-voces-pares-Sine-nomine-_Gloria_Anonymous_file1.mid
+        Missa-Ad-voces-pares-Sine-nomine-_Kyrie_Anonymous_file1.mid
+        Missa-Ad-voces-pares-Sine-nomine-_Credo_Anonymous_file1.mid
+        Missa-Ad-voces-pares-Sine-nomine-_Sanctus_Anonymous_file1.mid
+        Missa-Ad-voces-pares-Sine-nomine-_Agnus-dei_Anonymous_file2.nwc
+        Missa-Ad-voces-pares-Sine-nomine-_Agnus-dei_Anonymous_file1.mid
+    Missa Ave maris stella
+        Missa-Ave-maris-stella_Gloria_Anonymous_file2.nwc
+        Missa-Ave-maris-stella_Kyrie_Anonymous_file2.nwc
+        Missa-Ave-maris-stella_Credo_Anonymous_file1.nwc
+        Missa-Ave-maris-stella_Sanctus_Anonymous_file1.nwc
+        Missa-Ave-maris-stella_Gloria_Anonymous_file1.mid
+        Missa-Ave-maris-stella_Kyrie_Anonymous_file1.mid
+        Missa-Ave-maris-stella_Agnus-dei_Anonymous_file1.nwc
+    Missa Beata progenies
+        Missa-Beata-progenies_Gloria_Anonymous_file1.nwc
+        Missa-Beata-progenies_Kyrie_Anonymous_file1.nwc
+        Missa-Beata-progenies_Credo_Anonymous_file1.nwc
+        Missa-Beata-progenies_Sanctus_Anonymous_file1.nwc
+        Missa-Beata-progenies_Agnus-dei_Anonymous_file1.nwc
+    Missa Caput
+        Missa-Caput_Gloria_Anonymous_file2.nwc
+        Missa-Caput_Kyrie_Anonymous_file2.nwc
+        Missa-Caput_Credo_Anonymous_file2.nwc
+        Missa-Caput_Sanctus_Anonymous_file2.nwc
+        Missa-Caput_Gloria_Anonymous_file1.mid
+        Missa-Caput_Kyrie_Anonymous_file1.mid
+        Missa-Caput_Credo_Anonymous_file1.mid
+        Missa-Caput_Sanctus_Anonymous_file1.mid
+        Missa-Caput_Agnus-dei_Anonymous_file2.nwc
+        Missa-Caput_Agnus-dei_Anonymous_file1.mid
+    Missa Christus surrexit
+        Missa-Christus-surrexit_Gloria_Anonymous_file1.mid
+        Missa-Christus-surrexit_Credo_Anonymous_file1.mid
+        Missa-Christus-surrexit_Sanctus_Anonymous_file1.mid
+        Missa-Christus-surrexit_Sanctus_Anonymous_file2.nwc
+        Missa-Christus-surrexit_Gloria_Anonymous_file2.nwc
+        Missa-Christus-surrexit_Credo_Anonymous_file2.nwc
+    Missa Crux fidelis
+        Missa-Crux-fidelis_Gloria_Anonymous_file2.nwc
+        Missa-Crux-fidelis_Agnus-dei_Anonymous_file2.nwc
+        Missa-Crux-fidelis_Kyrie_Anonymous_file2.nwc
+        Missa-Crux-fidelis_Credo_Anonymous_file2.nwc
+        Missa-Crux-fidelis_Sanctus_Anonymous_file2.nwc
+        Missa-Crux-fidelis_Gloria_Anonymous_file1.mid
+        Missa-Crux-fidelis_Kyrie_Anonymous_file1.mid
+        Missa-Crux-fidelis_Credo_Anonymous_file1.mid
+        Missa-Crux-fidelis_Sanctus_Anonymous_file1.mid
+        Missa-Crux-fidelis_Agnus-dei_Anonymous_file1.mid
+    Missa D'ung aultre amer
+        Missa-D-ung-aultre-amer_Kyrie_Anonymous_file1.mid
+        Missa-D-ung-aultre-amer_Kyrie_Anonymous_file2.nwc
+    Missa De assumptione BMV
+        Missa-De-assumptione-BMV_Gloria_Anonymous_file2.nwc
+        Missa-De-assumptione-BMV_Kyrie_Anonymous_file2.nwc
+        Missa-De-assumptione-BMV_Credo_Anonymous_file2.nwc
+        Missa-De-assumptione-BMV_Sanctus_Anonymous_file2.nwc
+        Missa-De-assumptione-BMV_Gloria_Anonymous_file1.mid
+        Missa-De-assumptione-BMV_Kyrie_Anonymous_file1.mid
+        Missa-De-assumptione-BMV_Credo_Anonymous_file1.mid
+        Missa-De-assumptione-BMV_Sanctus_Anonymous_file1.mid
+        Missa-De-assumptione-BMV_Agnus-dei_Anonymous_file2.nwc
+        Missa-De-assumptione-BMV_Agnus-dei_Anonymous_file1.mid
+    Missa De cuer je souspier
+        Missa-De-cuer-je-souspier_Kyrie_Anonymous_file1.mid
+        Missa-De-cuer-je-souspier_Gloria_Anonymous_file1.mid
+        Missa-De-cuer-je-souspier_Credo_Anonymous_file1.mid
+        Missa-De-cuer-je-souspier_Credo_Anonymous_file2.nwc
+        Missa-De-cuer-je-souspier_Kyrie_Anonymous_file2.nwc
+        Missa-De-cuer-je-souspier_Gloria_Anonymous_file2.nwc
+        Missa-De-cuer-je-souspier_Sanctus_Anonymous_file1.mid
+        Missa-De-cuer-je-souspier_Sanctus_Anonymous_file2.nwc
+        Missa-De-cuer-je-souspier_Agnus-dei_Anonymous_file2.nwc
+        Missa-De-cuer-je-souspier_Agnus-dei_Anonymous_file1.mid
+    Missa De septem doloribus
+        Missa-De-septem-doloribus_Gloria_Anonymous_file2.nwc
+        Missa-De-septem-doloribus_Kyrie_Anonymous_file2.nwc
+        Missa-De-septem-doloribus_Credo_Anonymous_file2.nwc
+        Missa-De-septem-doloribus_Sanctus_Anonymous_file2.nwc
+        Missa-De-septem-doloribus_Gloria_Anonymous_file1.mid
+        Missa-De-septem-doloribus_Kyrie_Anonymous_file1.mid
+        Missa-De-septem-doloribus_Credo_Anonymous_file1.mid
+        Missa-De-septem-doloribus_Sanctus_Anonymous_file1.mid
+        Missa-De-septem-doloribus_Agnus-dei_Anonymous_file2.nwc
+        Missa-De-septem-doloribus_Agnus-dei_Anonymous_file1.mid
+    Missa De tous biens plaine
+        Missa-De-tous-biens-plaine_Gloria_Anonymous_file2.nwc
+        Missa-De-tous-biens-plaine_Kyrie_Anonymous_file2.nwc
+        Missa-De-tous-biens-plaine_Credo_Anonymous_file2.nwc
+        Missa-De-tous-biens-plaine_Sanctus_Anonymous_file2.nwc
+        Missa-De-tous-biens-plaine_Gloria_Anonymous_file1.mid
+        Missa-De-tous-biens-plaine_Kyrie_Anonymous_file1.mid
+        Missa-De-tous-biens-plaine_Credo_Anonymous_file1.mid
+        Missa-De-tous-biens-plaine_Sanctus_Anonymous_file1.mid
+        Missa-De-tous-biens-plaine_Credo_Anonymous_file1.mid
+        Missa-De-tous-biens-plaine_Sanctus_Anonymous_file2.nwc
+        Missa-De-tous-biens-plaine_Sanctus_Anonymous_file1.mid
+        Missa-De-tous-biens-plaine_Kyrie_Anonymous_file1.mid
+        Missa-De-tous-biens-plaine_Credo_Anonymous_file2.nwc
+        Missa-De-tous-biens-plaine_Gloria_Anonymous_file1.mid
+        Missa-De-tous-biens-plaine_Kyrie_Anonymous_file2.nwc
+        Missa-De-tous-biens-plaine_Gloria_Anonymous_file2.nwc
+        Missa-De-tous-biens-plaine_Agnus-dei_Anonymous_file2.nwc
+        Missa-De-tous-biens-plaine_Agnus-dei_Anonymous_file1.mid
+    Missa Gross senen
+        Missa-Gross-senen_Gloria_Anonymous_file2.nwc
+        Missa-Gross-senen_Kyrie_Anonymous_file2.nwc
+        Missa-Gross-senen_Credo_Anonymous_file2.nwc
+        Missa-Gross-senen_Sanctus_Anonymous_file2.nwc
+        Missa-Gross-senen_Gloria_Anonymous_file1.mid
+        Missa-Gross-senen_Kyrie_Anonymous_file1.mid
+        Missa-Gross-senen_Credo_Anonymous_file1.mid
+        Missa-Gross-senen_Sanctus_Anonymous_file1.mid
+        Missa-Gross-senen_Agnus-Dei_Anonymous_file2.nwc
+        Missa-Gross-senen_Agnus-Dei_Anonymous_file1.mid
+    Missa Je ne demande
+        Missa-Je-ne-demande_Kyrie-Gloria-Credo-Sanctus-Agnus-dei_Anonymous_file2.nwc
+    Missa Le belle se siet
+        Missa-Le-belle-se-siet_Gloria_Anonymous_file2.nwc
+        Missa-Le-belle-se-siet_Kyrie_Anonymous_file2.nwc
+        Missa-Le-belle-se-siet_Credo_Anonymous_file2.nwc
+        Missa-Le-belle-se-siet_Sanctus_Anonymous_file2.nwc
+        Missa-Le-belle-se-siet_Gloria_Anonymous_file1.mid
+        Missa-Le-belle-se-siet_Kyrie_Anonymous_file1.mid
+        Missa-Le-belle-se-siet_Credo_Anonymous_file1.mid
+        Missa-Le-belle-se-siet_Sanctus_Anonymous_file1.mid
+        Missa-Le-belle-se-siet_Agnus-dei_Anonymous_file2.nwc
+        Missa-Le-belle-se-siet_Agnus-dei_Anonymous_file1.mid
+    Missa Le serviteur
+        Missa-Le-serviteur_Gloria_Anonymous_file2.nwc
+        Missa-Le-serviteur_Kyrie_Anonymous_file2.nwc
+        Missa-Le-serviteur_Credo_Anonymous_file2.nwc
+        Missa-Le-serviteur_Sanctus_Anonymous_file2.nwc
+        Missa-Le-serviteur_Gloria_Anonymous_file1.mid
+        Missa-Le-serviteur_Kyrie_Anonymous_file1.mid
+        Missa-Le-serviteur_Credo_Anonymous_file1.mid
+        Missa-Le-serviteur_Sanctus_Anonymous_file1.mid
+        Missa-Le-serviteur_Agnus-dei_Anonymous_file2.nwc
+        Missa-Le-serviteur_Agnus-dei_Anonymous_file1.mid
+        Missa-Le-serviteur_Credo_Anonymous_file1.mid
+        Missa-Le-serviteur_Sanctus_Anonymous_file2.nwc
+        Missa-Le-serviteur_Sanctus_Anonymous_file1.mid
+        Missa-Le-serviteur_Kyrie_Anonymous_file1.mid
+        Missa-Le-serviteur_Agnus-dei_Anonymous_file2.nwc
+        Missa-Le-serviteur_Agnus-dei_Anonymous_file1.mid
+        Missa-Le-serviteur_Credo_Anonymous_file2.nwc
+        Missa-Le-serviteur_Gloria_Anonymous_file1.mid
+        Missa-Le-serviteur_Kyrie_Anonymous_file2.nwc
+        Missa-Le-serviteur_Gloria_Anonymous_file2.nwc
+    Missa Sancta Maria virgo intercede
+        Missa-Sancta-Maria-virgo-intercede_Anonymous_file1.mid
+        Missa-Sancta-Maria-virgo-intercede_Anonymous_file3.nwc
+        Missa-Sancta-Maria-virgo-intercede_Anonymous_file2.MUS
+    Missa Se tu t'en marias
+        Missa-Se-tu-t-en-marias_Gloria_Anonymous_file2.nwc
+        Missa-Se-tu-t-en-marias_Gloria_Anonymous_file1.mid
+        Missa-Se-tu-t-en-marias_Credo_Anonymous_file2.nwc
+        Missa-Se-tu-t-en-marias_Credo_Anonymous_file1.mid
+        Missa-Se-tu-t-en-marias_Sanctus_Anonymous_file2.nwc
+        Missa-Se-tu-t-en-marias_Sanctus_Anonymous_file1.mid
+        Missa-Se-tu-t-en-marias_Agnus-Dei_Anonymous_file1.mid
+        Missa-Se-tu-t-en-marias_Agnus-Dei_Anonymous_file2.nwc
+    Missa Sine nomine
+        Missa-Sine-nomine_Gloria_Anonymous_file2.nwc
+        Missa-Sine-nomine_Kyrie_Anonymous_file2.nwc
+        Missa-Sine-nomine_Credo_Anonymous_file2.nwc
+        Missa-Sine-nomine_Sanctus_Anonymous_file2.nwc
+        Missa-Sine-nomine_Gloria_Anonymous_file1.mid
+        Missa-Sine-nomine_Kyrie_Anonymous_file1.mid
+        Missa-Sine-nomine_Credo_Anonymous_file1.mid
+        Missa-Sine-nomine_Sanctus_Anonymous_file1.mid
+        Missa-Sine-nomine_Agnus-Dei-1_Anonymous_file2.nwc
+        Missa-Sine-nomine_Agnus-Dei-1_Anonymous_file1.mid
+    Missa filia sub tilia
+        Missa-filia-sub-tilia_Gloria_Anonymous_file2.nwc
+        Missa-filia-sub-tilia_Kyrie_Anonymous_file2.nwc
+        Missa-filia-sub-tilia_Credo_Anonymous_file2.nwc
+        Missa-filia-sub-tilia_Sanctus_Anonymous_file2.nwc
+        Missa-filia-sub-tilia_Gloria_Anonymous_file1.mid
+        Missa-filia-sub-tilia_Kyrie_Anonymous_file1.mid
+        Missa-filia-sub-tilia_Credo_Anonymous_file1.mid
+        Missa-filia-sub-tilia_Sanctus_Anonymous_file1.mid
+        Missa-filia-sub-tilia_Agnus-dei_Anonymous_file2.nwc
+        Missa-filia-sub-tilia_Agnus-dei_Anonymous_file1.mid
+    Petite camusette
+        Petite-camusette_Anonymous_file2.nwc
+        Petite-camusette_Anonymous_file1.mid
+    Philippi
+        Philippi_Anonymous_file2.nwc
+        Philippi_Anonymous_file1.mid
+    Pour l'amour d'une
+        Pour-l-amour-d-une_Anonymous_file2.nwc
+        Pour-l-amour-d-une_Anonymous_file1.mid
+    Terriblement suis fortunée
+        Terriblement-suis-fortunee_Anonymous_file2.nwc
+        Terriblement-suis-fortunee_Anonymous_file1.mid
+
+Aulen
+    Missa Auleni
+        Missa-Auleni_Gloria_Aulen_file2.nwc
+        Missa-Auleni_Kyrie_Aulen_file2.nwc
+        Missa-Auleni_Credo_Aulen_file2.nwc
+        Missa-Auleni_Sanctus_Aulen_file2.nwc
+        Missa-Auleni_Gloria_Aulen_file1.mid
+        Missa-Auleni_Kyrie_Aulen_file1.mid
+        Missa-Auleni_Credo_Aulen_file1.mid
+        Missa-Auleni_Sanctus_Aulen_file1.mid
+        Missa-Auleni_Agnus-dei_Aulen_file2.nwc
+        Missa-Auleni_Agnus-dei_Aulen_file1.mid
+
+Barbingant
+    Der Pfauenschwanz
+        Der-Pfauenschwanz_Barbingant_file2.nwc
+        Der-Pfauenschwanz_Barbingant_file1.mid
+    Missa "Terriblement suis fortunée"
+        Missa-Terriblement-suis-fortunee-_Gloria_Barbingant_file2.nwc
+        Missa-Terriblement-suis-fortunee-_Kyrie_Barbingant_file2.nwc
+        Missa-Terriblement-suis-fortunee-_Credo_Barbingant_file2.nwc
+        Missa-Terriblement-suis-fortunee-_Sanctus_Barbingant_file2.nwc
+        Missa-Terriblement-suis-fortunee-_Gloria_Barbingant_file1.mid
+        Missa-Terriblement-suis-fortunee-_Kyrie_Barbingant_file1.mid
+        Missa-Terriblement-suis-fortunee-_Credo_Barbingant_file1.mid
+        Missa-Terriblement-suis-fortunee-_Sanctus_Barbingant_file1.mid
+        Missa-Terriblement-suis-fortunee-_Agnus-dei_Barbingant_file2.nwc
+        Missa-Terriblement-suis-fortunee-_Agnus-dei_Barbingant_file1.mid
+
+Basiron, Philippe
+    Missa "Regina celi" (Basiron)
+        Missa-Regina-celi-Basiron-_Credo_Basiron-Philippe_file1.mid
+        Missa-Regina-celi-Basiron-_Sanctus_Basiron-Philippe_file2.nwc
+        Missa-Regina-celi-Basiron-_Sanctus_Basiron-Philippe_file1.mid
+        Missa-Regina-celi-Basiron-_Kyrie_Basiron-Philippe_file1.mid
+        Missa-Regina-celi-Basiron-_Agnus-dei_Basiron-Philippe_file2.nwc
+        Missa-Regina-celi-Basiron-_Agnus-dei_Basiron-Philippe_file1.mid
+        Missa-Regina-celi-Basiron-_Credo_Basiron-Philippe_file2.nwc
+        Missa-Regina-celi-Basiron-_Gloria_Basiron-Philippe_file1.mid
+        Missa-Regina-celi-Basiron-_Kyrie_Basiron-Philippe_file2.nwc
+        Missa-Regina-celi-Basiron-_Gloria_Basiron-Philippe_file2.nwc
+
+Bedyngham, Johannes
+    Missa Dueil angoisseux
+        Missa-Dueil-angoisseux_Gloria_Bedyngham-Johannes_file2.nwc
+        Missa-Dueil-angoisseux_Kyrie_Bedyngham-Johannes_file2.nwc
+        Missa-Dueil-angoisseux_Gloria_Bedyngham-Johannes_file1.mid
+        Missa-Dueil-angoisseux_Kyrie_Bedyngham-Johannes_file1.mid
+
+Benet, John
+    Missa Jacet granum
+        Missa-Jacet-granum_Gloria_Benet-John_file2.nwc
+        Missa-Jacet-granum_Gloria_Benet-John_file1.mid
+        Missa-Jacet-granum_Sanctus_Benet-John_file2.nwc
+        Missa-Jacet-granum_Sanctus_Benet-John_file1.mid
+
+Brumel, Antoine
+    Missa "Victimae paschali"
+        Missa-Victimae-paschali-_Gloria_Brumel-Antoine_file2.nwc
+        Missa-Victimae-paschali-_Kyrie_Brumel-Antoine_file2.nwc
+        Missa-Victimae-paschali-_Credo_Brumel-Antoine_file2.nwc
+        Missa-Victimae-paschali-_Gloria_Brumel-Antoine_file1.mid
+        Missa-Victimae-paschali-_Kyrie_Brumel-Antoine_file1.mid
+        Missa-Victimae-paschali-_Credo_Brumel-Antoine_file1.mid
+        Missa-Victimae-paschali-_Agnus-dei_Brumel-Antoine_file2.nwc
+        Missa-Victimae-paschali-_Agnus-dei_Brumel-Antoine_file1.mid
+    Missa Je n'ay dueul
+        Missa-Je-n-ay-dueul_Gloria_Brumel-Antoine_file2.nwc
+        Missa-Je-n-ay-dueul_Kyrie_Brumel-Antoine_file2.nwc
+        Missa-Je-n-ay-dueul_Credo_Brumel-Antoine_file2.nwc
+        Missa-Je-n-ay-dueul_Sanctus_Brumel-Antoine_file2.nwc
+        Missa-Je-n-ay-dueul_Gloria_Brumel-Antoine_file1.mid
+        Missa-Je-n-ay-dueul_Kyrie_Brumel-Antoine_file1.mid
+        Missa-Je-n-ay-dueul_Credo_Brumel-Antoine_file1.mid
+        Missa-Je-n-ay-dueul_Sanctus_Brumel-Antoine_file1.mid
+        Missa-Je-n-ay-dueul_Agnus-dei_Brumel-Antoine_file2.nwc
+        Missa-Je-n-ay-dueul_Agnus-dei_Brumel-Antoine_file1.mid
+    Missa L'homme arme
+        Missa-L-homme-arme_Kyrie_Brumel-Antoine_file2.nwc
+        Missa-L-homme-arme_Kyrie_Brumel-Antoine_file1.mid
+
+Busnoys, Antoine
+    Joye me fuit
+        Joye-me-fuit_Busnoys-Antoine_file2.nwc
+    Missa "O crux lignum"
+        Missa-O-crux-lignum-_Gloria_Busnoys-Antoine_file2.nwc
+        Missa-O-crux-lignum-_Kyrie_Busnoys-Antoine_file2.nwc
+        Missa-O-crux-lignum-_Credo_Busnoys-Antoine_file2.nwc
+        Missa-O-crux-lignum-_Sanctus_Busnoys-Antoine_file2.nwc
+        Missa-O-crux-lignum-_Gloria_Busnoys-Antoine_file1.mid
+        Missa-O-crux-lignum-_Kyrie_Busnoys-Antoine_file1.mid
+        Missa-O-crux-lignum-_Credo_Busnoys-Antoine_file1.mid
+        Missa-O-crux-lignum-_Sanctus_Busnoys-Antoine_file1.mid
+        Missa-O-crux-lignum-_Agnus-dei_Busnoys-Antoine_file2.nwc
+        Missa-O-crux-lignum-_Agnus-dei_Busnoys-Antoine_file1.mid
+    Missa L'ardant desir
+        Missa-L-ardant-desir_Gloria_Busnoys-Antoine_file2.nwc
+        Missa-L-ardant-desir_Kyrie_Busnoys-Antoine_file2.nwc
+        Missa-L-ardant-desir_Credo_Busnoys-Antoine_file2.nwc
+        Missa-L-ardant-desir_Sanctus_Busnoys-Antoine_file2.nwc
+        Missa-L-ardant-desir_Gloria_Busnoys-Antoine_file1.mid
+        Missa-L-ardant-desir_Kyrie_Busnoys-Antoine_file1.mid
+        Missa-L-ardant-desir_Credo_Busnoys-Antoine_file1.mid
+        Missa-L-ardant-desir_Sanctus_Busnoys-Antoine_file1.mid
+        Missa-L-ardant-desir_Agnus-dei_Busnoys-Antoine_file2.nwc
+        Missa-L-ardant-desir_Agnus-dei_Busnoys-Antoine_file1.mid
+    Pour entretenir mes amours
+        Pour-entretenir-mes-amours_Busnoys-Antoine_file2.nwc
+
+Carlir, Nicole
+    Missa Salve sancta parens
+        Missa-Salve-sancta-parens_Gloria_Carlir-Nicole_file2.nwc
+        Missa-Salve-sancta-parens_Kyrie_Carlir-Nicole_file2.nwc
+        Missa-Salve-sancta-parens_Credo_Carlir-Nicole_file2.nwc
+        Missa-Salve-sancta-parens_Sanctus_Carlir-Nicole_file2.nwc
+        Missa-Salve-sancta-parens_Gloria_Carlir-Nicole_file1.mid
+        Missa-Salve-sancta-parens_Kyrie_Carlir-Nicole_file1.mid
+        Missa-Salve-sancta-parens_Credo_Carlir-Nicole_file1.mid
+        Missa-Salve-sancta-parens_Sanctus_Carlir-Nicole_file1.mid
+        Missa-Salve-sancta-parens_Agnus-Dei_Carlir-Nicole_file2.nwc
+        Missa-Salve-sancta-parens_Agnus-Dei_Carlir-Nicole_file1.mid
+
+Caron, Firminus
+    Missa "Thomas Cesus"
+        Missa-Thomas-Cesus-_Gloria_Caron-Firminus_file2.nwc
+        Missa-Thomas-Cesus-_Kyrie_Caron-Firminus_file2.nwc
+        Missa-Thomas-Cesus-_Credo_Caron-Firminus_file2.nwc
+        Missa-Thomas-Cesus-_Sanctus_Caron-Firminus_file2.nwc
+        Missa-Thomas-Cesus-_Gloria_Caron-Firminus_file1.mid
+        Missa-Thomas-Cesus-_Kyrie_Caron-Firminus_file1.mid
+        Missa-Thomas-Cesus-_Credo_Caron-Firminus_file1.mid
+        Missa-Thomas-Cesus-_Sanctus_Caron-Firminus_file1.mid
+        Missa-Thomas-Cesus-_Agnus-dei_Caron-Firminus_file2.nwc
+        Missa-Thomas-Cesus-_Agnus-dei_Caron-Firminus_file1.mid
+    Missa Clemens et benigna
+        Missa-Clemens-et-benigna_Kyrie_Caron-Firminus_file1.mid
+        Missa-Clemens-et-benigna_Gloria_Caron-Firminus_file1.mid
+        Missa-Clemens-et-benigna_Credo_Caron-Firminus_file1.mid
+        Missa-Clemens-et-benigna_Credo_Caron-Firminus_file2.nwc
+        Missa-Clemens-et-benigna_Kyrie_Caron-Firminus_file2.nwc
+        Missa-Clemens-et-benigna_Gloria_Caron-Firminus_file2.nwc
+        Missa-Clemens-et-benigna_Sanctus_Caron-Firminus_file1.mid
+        Missa-Clemens-et-benigna_Sanctus_Caron-Firminus_file2.nwc
+        Missa-Clemens-et-benigna_Agnus-dei_Caron-Firminus_file2.nwc
+        Missa-Clemens-et-benigna_Agnus-dei_Caron-Firminus_file1.mid
+    Missa L'homme arme
+        Missa-L-homme-arme_Kyrie_Caron-Firminus_file1.mid
+        Missa-L-homme-arme_Gloria_Caron-Firminus_file1.mid
+        Missa-L-homme-arme_Credo_Caron-Firminus_file1.mid
+        Missa-L-homme-arme_Credo_Caron-Firminus_file2.nwc
+        Missa-L-homme-arme_Kyrie_Caron-Firminus_file2.nwc
+        Missa-L-homme-arme_Gloria_Caron-Firminus_file2.nwc
+        Missa-L-homme-arme_Sanctus_Caron-Firminus_file1.mid
+        Missa-L-homme-arme_Sanctus_Caron-Firminus_file2.nwc
+        Missa-L-homme-arme_Agnus-dei_Caron-Firminus_file2.nwc
+        Missa-L-homme-arme_Agnus-dei_Caron-Firminus_file1.mid
+
+Compère, Loyset
+    Missa Allez regretz (Compère)
+        Missa-Allez-regretz-Compere-_Credo_Compere-Loyset_file1.mid
+        Missa-Allez-regretz-Compere-_Sanctus_Compere-Loyset_file2.nwc
+        Missa-Allez-regretz-Compere-_Sanctus_Compere-Loyset_file1.mid
+        Missa-Allez-regretz-Compere-_Kyrie_Compere-Loyset_file1.mid
+        Missa-Allez-regretz-Compere-_Agnus-dei_Compere-Loyset_file2.nwc
+        Missa-Allez-regretz-Compere-_Agnus-dei_Compere-Loyset_file1.mid
+        Missa-Allez-regretz-Compere-_Credo_Compere-Loyset_file2.nwc
+        Missa-Allez-regretz-Compere-_Gloria_Compere-Loyset_file1.mid
+        Missa-Allez-regretz-Compere-_Kyrie_Compere-Loyset_file2.nwc
+        Missa-Allez-regretz-Compere-_Gloria_Compere-Loyset_file2.nwc
+    Missa L'homme arme
+        Missa-L-homme-arme_Gloria_Compere-Loyset_file2.nwc
+        Missa-L-homme-arme_Kyrie_Compere-Loyset_file2.nwc
+        Missa-L-homme-arme_Credo_Compere-Loyset_file2.nwc
+        Missa-L-homme-arme_Sanctus_Compere-Loyset_file2.nwc
+        Missa-L-homme-arme_Gloria_Compere-Loyset_file1.mid
+        Missa-L-homme-arme_Kyrie_Compere-Loyset_file1.mid
+        Missa-L-homme-arme_Credo_Compere-Loyset_file1.mid
+        Missa-L-homme-arme_Sanctus_Compere-Loyset_file1.mid
+        Missa-L-homme-arme_Agnus-dei_Compere-Loyset_file2.nwc
+        Missa-L-homme-arme_Agnus-dei_Compere-Loyset_file1.mid
+
+Divitis, Antonius
+    Missa "Quem dicunt homines" (Divitis)
+        Missa-Quem-dicunt-homines-Divitis-_Credo_Divitis-Antonius_file1.mid
+        Missa-Quem-dicunt-homines-Divitis-_Sanctus_Divitis-Antonius_file2.nwc
+        Missa-Quem-dicunt-homines-Divitis-_Sanctus_Divitis-Antonius_file1.mid
+        Missa-Quem-dicunt-homines-Divitis-_Kyrie_Divitis-Antonius_file1.mid
+        Missa-Quem-dicunt-homines-Divitis-_Agnus-dei_Divitis-Antonius_file2.nwc
+        Missa-Quem-dicunt-homines-Divitis-_Agnus-dei_Divitis-Antonius_file1.mid
+        Missa-Quem-dicunt-homines-Divitis-_Credo_Divitis-Antonius_file2.nwc
+        Missa-Quem-dicunt-homines-Divitis-_Gloria_Divitis-Antonius_file1.mid
+        Missa-Quem-dicunt-homines-Divitis-_Kyrie_Divitis-Antonius_file2.nwc
+        Missa-Quem-dicunt-homines-Divitis-_Gloria_Divitis-Antonius_file2.nwc
+    Missa Si dedero
+        Missa-Si-dedero_Gloria_Divitis-Antonius_file2.nwc
+        Missa-Si-dedero_Kyrie_Divitis-Antonius_file2.nwc
+        Missa-Si-dedero_Credo_Divitis-Antonius_file1.nwc
+        Missa-Si-dedero_Sanctus_Divitis-Antonius_file1.nwc
+        Missa-Si-dedero_Gloria_Divitis-Antonius_file1.mid
+        Missa-Si-dedero_Kyrie_Divitis-Antonius_file1.mid
+        Missa-Si-dedero_Agnus-Dei_Divitis-Antonius_file1.nwc
+
+Domarto, Petrus de
+    Missa Spiritus almus
+        Missa-Spiritus-almus_Gloria_Domarto-Petrus-de_file2.nwc
+        Missa-Spiritus-almus_Kyrie_Domarto-Petrus-de_file2.nwc
+        Missa-Spiritus-almus_Credo_Domarto-Petrus-de_file2.nwc
+        Missa-Spiritus-almus_Sanctus_Domarto-Petrus-de_file2.nwc
+        Missa-Spiritus-almus_Gloria_Domarto-Petrus-de_file1.mid
+        Missa-Spiritus-almus_Kyrie_Domarto-Petrus-de_file1.mid
+        Missa-Spiritus-almus_Credo_Domarto-Petrus-de_file1.mid
+        Missa-Spiritus-almus_Sanctus_Domarto-Petrus-de_file1.mid
+        Missa-Spiritus-almus_Agnus-Dei_Domarto-Petrus-de_file2.nwc
+        Missa-Spiritus-almus_Agnus-Dei_Domarto-Petrus-de_file1.mid
+
+Du Fay, Guillaume
+    La belle se siet
+        La-belle-se-siet_Du-Fay-Guillaume_file2.nwc
+        La-belle-se-siet_Du-Fay-Guillaume_file1.mid
+    Missa Ecce ancilla
+        Missa-Ecce-ancilla_Gloria_Du-Fay-Guillaume_file2.nwc
+        Missa-Ecce-ancilla_Kyrie_Du-Fay-Guillaume_file2.nwc
+        Missa-Ecce-ancilla_Credo_Du-Fay-Guillaume_file2.nwc
+        Missa-Ecce-ancilla_Sanctus_Du-Fay-Guillaume_file2.nwc
+        Missa-Ecce-ancilla_Gloria_Du-Fay-Guillaume_file1.mid
+        Missa-Ecce-ancilla_Kyrie_Du-Fay-Guillaume_file1.mid
+        Missa-Ecce-ancilla_Credo_Du-Fay-Guillaume_file1.mid
+        Missa-Ecce-ancilla_Sanctus_Du-Fay-Guillaume_file1.mid
+        Missa-Ecce-ancilla_Agnus-dei_Du-Fay-Guillaume_file2.nwc
+        Missa-Ecce-ancilla_Agnus-dei_Du-Fay-Guillaume_file1.mid
+    Missa Gentil madona
+        Missa-Gentil-madona_Gloria_Du-Fay-Guillaume_file2.nwc
+        Missa-Gentil-madona_Kyrie_Du-Fay-Guillaume_file2.nwc
+        Missa-Gentil-madona_Credo_Du-Fay-Guillaume_file2.nwc
+        Missa-Gentil-madona_Sanctus_Du-Fay-Guillaume_file2.nwc
+        Missa-Gentil-madona_Gloria_Du-Fay-Guillaume_file1.mid
+        Missa-Gentil-madona_Kyrie_Du-Fay-Guillaume_file1.mid
+        Missa-Gentil-madona_Credo_Du-Fay-Guillaume_file1.mid
+        Missa-Gentil-madona_Sanctus_Du-Fay-Guillaume_file1.mid
+        Missa-Gentil-madona_Agnus-dei_Du-Fay-Guillaume_file2.nwc
+        Missa-Gentil-madona_Agnus-dei_Du-Fay-Guillaume_file1.mid
+
+Du Sart, Jean
+    Rose playsante
+        Rose-playsante_Du-Sart-Jean_file3.nwc
+        Rose-playsante_Du-Sart-Jean_file2.mid
+
+Dunstaple, John
+    Missa "Rex seculorum"
+        Missa-Rex-seculorum-_Gloria_Dunstaple-John_file2.nwc
+        Missa-Rex-seculorum-_Kyrie_Dunstaple-John_file1.nwc
+        Missa-Rex-seculorum-_Credo_Dunstaple-John_file2.nwc
+        Missa-Rex-seculorum-_Sanctus_Dunstaple-John_file2.nwc
+        Missa-Rex-seculorum-_Gloria_Dunstaple-John_file1.mid
+        Missa-Rex-seculorum-_Credo_Dunstaple-John_file1.mid
+        Missa-Rex-seculorum-_Sanctus_Dunstaple-John_file1.mid
+        Missa-Rex-seculorum-_Agnus-dei_Dunstaple-John_file2.nwc
+        Missa-Rex-seculorum-_Agnus-dei_Dunstaple-John_file1.mid
+    Missa Da gaudiorum premia
+        Missa-Da-gaudiorum-premia_Credo_Dunstaple-John_file2.nwc
+        Missa-Da-gaudiorum-premia_Credo_Dunstaple-John_file1.mid
+        Missa-Da-gaudiorum-premia_Sanctus_Dunstaple-John_file2.nwc
+        Missa-Da-gaudiorum-premia_Sanctus_Dunstaple-John_file1.mid
+    Missa Jesu Christe Fili Dei
+        Missa-Jesu-Christe-Fili-Dei_Gloria_Dunstaple-John_file2.nwc
+        Missa-Jesu-Christe-Fili-Dei_Gloria_Dunstaple-John_file1.mid
+        Missa-Jesu-Christe-Fili-Dei_Credo_Dunstaple-John_file2.nwc
+        Missa-Jesu-Christe-Fili-Dei_Credo_Dunstaple-John_file1.mid
+
+Eleganzer
+    Missa Introduxit me rex in cellam vinariam
+        Missa-Introduxit-me-rex-in-cellam-vinariam_Sanctus_Eleganzer_file2.nwc
+        Missa-Introduxit-me-rex-in-cellam-vinariam_Sanctus_Eleganzer_file1.mid
+
+Faugues, Guillaume
+    Missa Je suis en la mer
+        Missa-Je-suis-en-la-mer_Gloria_Faugues-Guillaume_file2.nwc
+        Missa-Je-suis-en-la-mer_Kyrie_Faugues-Guillaume_file2.nwc
+        Missa-Je-suis-en-la-mer_Credo_Faugues-Guillaume_file2.nwc
+        Missa-Je-suis-en-la-mer_Sanctus_Faugues-Guillaume_file2.nwc
+        Missa-Je-suis-en-la-mer_Gloria_Faugues-Guillaume_file1.mid
+        Missa-Je-suis-en-la-mer_Kyrie_Faugues-Guillaume_file1.mid
+        Missa-Je-suis-en-la-mer_Credo_Faugues-Guillaume_file1.mid
+        Missa-Je-suis-en-la-mer_Sanctus_Faugues-Guillaume_file1.mid
+        Missa-Je-suis-en-la-mer_Agnus-dei_Faugues-Guillaume_file2.nwc
+        Missa-Je-suis-en-la-mer_Agnus-dei_Faugues-Guillaume_file1.mid
+
+Frescobaldi, Girolamo
+    Canzon Prima à Due Canti, F 8.18
+        Canzon-Prima-a-Due-Canti-F-8.18_Frescobaldi-Girolamo_file2.xml
+
+Ghiselin, Johannes
+    Ghy syt die werste bovin al
+        Ghy-syt-die-werste-bovin-al_Ghiselin-Johannes_file2.nwc
+        Ghy-syt-die-werste-bovin-al_Ghiselin-Johannes_file1.mid
+    Missa "N'aray-je jamais"
+        Missa-N-aray-je-jamais-_Gloria_Ghiselin-Johannes_file2.nwc
+        Missa-N-aray-je-jamais-_Kyrie_Ghiselin-Johannes_file2.nwc
+        Missa-N-aray-je-jamais-_Credo_Ghiselin-Johannes_file2.nwc
+        Missa-N-aray-je-jamais-_Sanctus_Ghiselin-Johannes_file2.nwc
+        Missa-N-aray-je-jamais-_Gloria_Ghiselin-Johannes_file1.mid
+        Missa-N-aray-je-jamais-_Kyrie_Ghiselin-Johannes_file1.mid
+        Missa-N-aray-je-jamais-_Credo_Ghiselin-Johannes_file1.mid
+        Missa-N-aray-je-jamais-_Sanctus_Ghiselin-Johannes_file1.mid
+        Missa-N-aray-je-jamais-_Agnus-dei_Ghiselin-Johannes_file2.nwc
+        Missa-N-aray-je-jamais-_Agnus-dei_Ghiselin-Johannes_file1.mid
+    Missa Ghy syt die werste boven al
+        Missa-Ghy-syt-die-werste-boven-al_Gloria_Ghiselin-Johannes_file2.nwc
+        Missa-Ghy-syt-die-werste-boven-al_Kyrie_Ghiselin-Johannes_file2.nwc
+        Missa-Ghy-syt-die-werste-boven-al_Credo_Ghiselin-Johannes_file2.nwc
+        Missa-Ghy-syt-die-werste-boven-al_Gloria_Ghiselin-Johannes_file1.mid
+        Missa-Ghy-syt-die-werste-boven-al_Kyrie_Ghiselin-Johannes_file1.mid
+        Missa-Ghy-syt-die-werste-boven-al_Credo_Ghiselin-Johannes_file1.mid
+    Missa Gratieuse
+        Missa-Gratieuse_Gloria_Ghiselin-Johannes_file2.nwc
+        Missa-Gratieuse_Kyrie_Ghiselin-Johannes_file2.nwc
+        Missa-Gratieuse_Credo_Ghiselin-Johannes_file2.nwc
+        Missa-Gratieuse_Sanctus_Ghiselin-Johannes_file2.nwc
+        Missa-Gratieuse_Gloria_Ghiselin-Johannes_file1.mid
+        Missa-Gratieuse_Kyrie_Ghiselin-Johannes_file1.mid
+        Missa-Gratieuse_Credo_Ghiselin-Johannes_file1.mid
+        Missa-Gratieuse_Sanctus_Ghiselin-Johannes_file1.mid
+        Missa-Gratieuse_Agnus-Dei_Ghiselin-Johannes_file2.nwc
+        Missa-Gratieuse_Agnus-Dei_Ghiselin-Johannes_file1.mid
+    Missa Je n'ay dueul
+        Missa-Je-n-ay-dueul_Credo_Ghiselin-Johannes_file1.mid
+        Missa-Je-n-ay-dueul_Sanctus_Ghiselin-Johannes_file2.nwc
+        Missa-Je-n-ay-dueul_Sanctus_Ghiselin-Johannes_file1.mid
+        Missa-Je-n-ay-dueul_Kyrie_Ghiselin-Johannes_file1.mid
+        Missa-Je-n-ay-dueul_Agnus-dei_Ghiselin-Johannes_file2.nwc
+        Missa-Je-n-ay-dueul_Agnus-dei_Ghiselin-Johannes_file1.mid
+        Missa-Je-n-ay-dueul_Credo_Ghiselin-Johannes_file2.nwc
+        Missa-Je-n-ay-dueul_Gloria_Ghiselin-Johannes_file1.mid
+        Missa-Je-n-ay-dueul_Kyrie_Ghiselin-Johannes_file2.nwc
+        Missa-Je-n-ay-dueul_Gloria_Ghiselin-Johannes_file2.nwc
+    Missa La belle se siet
+        Missa-La-belle-se-siet_Kyrie_Ghiselin-Johannes_file1.mid
+        Missa-La-belle-se-siet_Gloria_Ghiselin-Johannes_file1.mid
+        Missa-La-belle-se-siet_Kyrie_Ghiselin-Johannes_file2.nwc
+        Missa-La-belle-se-siet_Gloria_Ghiselin-Johannes_file2.nwc
+        Missa-La-belle-se-siet_Credo_Ghiselin-Johannes_file1.mid
+        Missa-La-belle-se-siet_Sanctus_Ghiselin-Johannes_file1.mid
+        Missa-La-belle-se-siet_Credo_Ghiselin-Johannes_file2.nwc
+        Missa-La-belle-se-siet_Sanctus_Ghiselin-Johannes_file2.nwc
+        Missa-La-belle-se-siet_Agnus-dei_Ghiselin-Johannes_file2.nwc
+        Missa-La-belle-se-siet_Agnus-dei_Ghiselin-Johannes_file1.mid
+
+Grossin, Estienne
+    Missa "Trompetta"
+        Missa-Trompetta-_Gloria_Grossin-Estienne_file2.nwc
+        Missa-Trompetta-_Kyrie_Grossin-Estienne_file2.nwc
+        Missa-Trompetta-_Credo_Grossin-Estienne_file2.nwc
+        Missa-Trompetta-_Sanctus_Grossin-Estienne_file2.nwc
+        Missa-Trompetta-_Gloria_Grossin-Estienne_file1.mid
+        Missa-Trompetta-_Kyrie_Grossin-Estienne_file1.mid
+        Missa-Trompetta-_Credo_Grossin-Estienne_file1.mid
+        Missa-Trompetta-_Sanctus_Grossin-Estienne_file1.mid
+
+Heyns, Cornelius
+    Missa "Pour quelque paine"
+        Missa-Pour-quelque-paine-_Gloria_Heyns-Cornelius_file1.nwc
+        Missa-Pour-quelque-paine-_Kyrie_Heyns-Cornelius_file1.nwc
+        Missa-Pour-quelque-paine-_Credo_Heyns-Cornelius_file1.nwc
+        Missa-Pour-quelque-paine-_Sanctus_Heyns-Cornelius_file1.nwc
+        Missa-Pour-quelque-paine-_Agnus-dei_Heyns-Cornelius_file1.nwc
+
+Isaac, Henricus
+    Missa "Quant j'ay au coeur"
+        Missa-Quant-j-ay-au-coeur-_Gloria_Isaac-Henricus_file1.nwc
+        Missa-Quant-j-ay-au-coeur-_Kyrie_Isaac-Henricus_file1.nwc
+        Missa-Quant-j-ay-au-coeur-_Credo_Isaac-Henricus_file1.nwc
+        Missa-Quant-j-ay-au-coeur-_Sanctus_Isaac-Henricus_file1.nwc
+        Missa-Quant-j-ay-au-coeur-_Agnus-dei_Isaac-Henricus_file1.nwc
+    Missa "Une mousse de Biscaye" (Isaac)
+        Missa-Une-mousse-de-Biscaye-Isaac-_Credo-1-Patrem-omnipotentem_Isaac-Henricus_file1.nwc
+        Missa-Une-mousse-de-Biscaye-Isaac-_Kyrie-2_Isaac-Henricus_file1.nwc
+        Missa-Une-mousse-de-Biscaye-Isaac-_Gloria-1-Et-in-terra-pax_Isaac-Henricus_file1.nwc
+        Missa-Une-mousse-de-Biscaye-Isaac-_Kyrie-1_Isaac-Henricus_file1.nwc
+        Missa-Une-mousse-de-Biscaye-Isaac-_Christe_Isaac-Henricus_file1.nwc
+        Missa-Une-mousse-de-Biscaye-Isaac-_Gloria-2-Qui-tollis_Isaac-Henricus_file1.nwc
+    Missa "Wohlauf gut gsell, von hinnen"
+        Missa-Wohlauf-gut-gsell-von-hinnen-_Gloria_Isaac-Henricus_file2.nwc
+        Missa-Wohlauf-gut-gsell-von-hinnen-_Kyrie_Isaac-Henricus_file2.nwc
+        Missa-Wohlauf-gut-gsell-von-hinnen-_Credo_Isaac-Henricus_file1.nwc
+        Missa-Wohlauf-gut-gsell-von-hinnen-_Sanctus_Isaac-Henricus_file2.nwc
+        Missa-Wohlauf-gut-gsell-von-hinnen-_Gloria_Isaac-Henricus_file1.mid
+        Missa-Wohlauf-gut-gsell-von-hinnen-_Kyrie_Isaac-Henricus_file1.mid
+        Missa-Wohlauf-gut-gsell-von-hinnen-_Credo_Isaac-Henricus_file2.mid
+        Missa-Wohlauf-gut-gsell-von-hinnen-_Sanctus_Isaac-Henricus_file1.mid
+        Missa-Wohlauf-gut-gsell-von-hinnen-_Agnus-dei_Isaac-Henricus_file2.nwc
+        Missa-Wohlauf-gut-gsell-von-hinnen-_Agnus-dei_Isaac-Henricus_file1.mid
+    Missa Carminum
+        Missa-Carminum_Gloria_Isaac-Henricus_file2.nwc
+        Missa-Carminum_Kyrie_Isaac-Henricus_file2.nwc
+        Missa-Carminum_Credo_Isaac-Henricus_file2.nwc
+        Missa-Carminum_Sanctus_Isaac-Henricus_file2.nwc
+        Missa-Carminum_Gloria_Isaac-Henricus_file1.mid
+        Missa-Carminum_Kyrie_Isaac-Henricus_file1.mid
+        Missa-Carminum_Credo_Isaac-Henricus_file1.mid
+        Missa-Carminum_Sanctus_Isaac-Henricus_file1.mid
+        Missa-Carminum_Agnus-dei_Isaac-Henricus_file2.nwc
+        Missa-Carminum_Agnus-dei_Isaac-Henricus_file1.mid
+    Missa Comment peult
+        Missa-Comment-peult_Gloria_Isaac-Henricus_file3.nwc
+        Missa-Comment-peult_Kyrie_Isaac-Henricus_file3.nwc
+        Missa-Comment-peult_Credo_Isaac-Henricus_file2.nwc
+        Missa-Comment-peult_Sanctus_Isaac-Henricus_file2.nwc
+        Missa-Comment-peult_Gloria_Isaac-Henricus_file1.mid
+        Missa-Comment-peult_Kyrie_Isaac-Henricus_file1.mid
+        Missa-Comment-peult_Credo_Isaac-Henricus_file1.mid
+        Missa-Comment-peult_Sanctus_Isaac-Henricus_file1.mid
+        Missa-Comment-peult_Agnus-dei_Isaac-Henricus_file2.nwc
+        Missa-Comment-peult_Agnus-dei_Isaac-Henricus_file1.mid
+        Missa-Comment-peult_Kyrie_Isaac-Henricus_file2.MUS
+        Missa-Comment-peult_Gloria_Isaac-Henricus_file2.MUS
+    Missa Je ne fay plus
+        Missa-Je-ne-fay-plus_Gloria_Isaac-Henricus_file2.nwc
+        Missa-Je-ne-fay-plus_Kyrie_Isaac-Henricus_file2.nwc
+        Missa-Je-ne-fay-plus_Credo_Isaac-Henricus_file2.nwc
+        Missa-Je-ne-fay-plus_Sanctus_Isaac-Henricus_file2.nwc
+        Missa-Je-ne-fay-plus_Gloria_Isaac-Henricus_file1.mid
+        Missa-Je-ne-fay-plus_Kyrie_Isaac-Henricus_file1.mid
+        Missa-Je-ne-fay-plus_Credo_Isaac-Henricus_file1.mid
+        Missa-Je-ne-fay-plus_Sanctus_Isaac-Henricus_file1.mid
+    Missa Salva nos Domine
+        Missa-Salva-nos-Domine_Gloria_Isaac-Henricus_file1.nwc
+        Missa-Salva-nos-Domine_Kyrie_Isaac-Henricus_file1.nwc
+        Missa-Salva-nos-Domine_Credo_Isaac-Henricus_file2.nwc
+        Missa-Salva-nos-Domine_Sanctus_Isaac-Henricus_file2.nwc
+        Missa-Salva-nos-Domine_Gloria_Isaac-Henricus_file2.mid
+        Missa-Salva-nos-Domine_Kyrie_Isaac-Henricus_file2.mid
+        Missa-Salva-nos-Domine_Credo_Isaac-Henricus_file1.mid
+        Missa-Salva-nos-Domine_Sanctus_Isaac-Henricus_file1.mid
+        Missa-Salva-nos-Domine_Agnus-Dei_Isaac-Henricus_file2.nwc
+        Missa-Salva-nos-Domine_Agnus-Dei_Isaac-Henricus_file1.mid
+        Missa-Salva-nos-Domine_Gloria_Isaac-Henricus_file3.MUS
+        Missa-Salva-nos-Domine_Credo_Isaac-Henricus_file3.MUS
+
+Josquin Des Prez
+    Alma redemptoris mater, Ave regina celorum 
+        Alma-redemptoris-mater-Ave-regina-celorum_Josquin-Des-Prez_file5.mei
+    Ave verum corpus
+        Ave-verum-corpus_Josquin-Des-Prez_file3.xml
+        Ave-verum-corpus_Josquin-Des-Prez_file5.mei
+    Basiés moy
+        Basies-moy_Josquin-Des-Prez_file1.xml
+    Entré je suis en grant pensee
+        Entre-je-suis-en-grant-pensee_Josquin-Des-Prez_file5.mei
+    Homo quidam fecit cenam
+        Homo-quidam-fecit-cenam_Josquin-Des-Prez_file5.mei
+    Huc me sydereo
+        Huc-me-sydereo_Josquin-Des-Prez_file5.mei
+        Huc-me-sydereo_Josquin-Des-Prez_file5.mei
+    Incessament livré suis a martire
+        Incessament-livre-suis-a-martire_Josquin-Des-Prez_file4.mei
+    Je ne demande
+        Je-ne-demande_Josquin-Des-Prez_file5.mei
+    Jubilate Deo omnis terra
+        Jubilate-Deo-omnis-terra_Josquin-Des-Prez_file3.xml
+    L'homme armé
+        L-homme-arme_Josquin-Des-Prez_file5.mei
+    Lamye a tous
+        L-amye-a-tous_Josquin-Des-Prez_file4.mei
+    Magnificat quarti toni
+        Magnificat-quarti-toni_Josquin-Des-Prez_file5.mei
+    Magnificat tertii toni; Quia fecit; Fecit potentiam; Esurientes
+        Magnificat-tertii-toni-Quia-fecit-Fecit-potentiam-Esurientes_Josquin-Des-Prez_file5.mei
+    Missa "Malheur me bat" (Josquin)
+        Missa-Malheur-me-bat-Josquin_Josquin-Des-Prez_file2.nwc
+    Missa "Pange lingua"
+        Missa-Pange-lingua-_Gloria_Josquin-Des-Prez_file2.nwc
+        Missa-Pange-lingua-_Kyrie_Josquin-Des-Prez_file2.nwc
+        Missa-Pange-lingua-_Credo_Josquin-Des-Prez_file2.nwc
+        Missa-Pange-lingua-_Sanctus_Josquin-Des-Prez_file2.nwc
+        Missa-Pange-lingua-_Gloria_Josquin-Des-Prez_file1.mid
+        Missa-Pange-lingua-_Kyrie_Josquin-Des-Prez_file1.mid
+        Missa-Pange-lingua-_Credo_Josquin-Des-Prez_file1.mid
+        Missa-Pange-lingua-_Sanctus_Josquin-Des-Prez_file1.mid
+        Missa-Pange-lingua-_Agnus-dei_Josquin-Des-Prez_file2.nwc
+        Missa-Pange-lingua-_Agnus-dei_Josquin-Des-Prez_file1.mid
+    Missa "Quem dicunt homines" (Josquin)
+        Missa-Quem-dicunt-homines-Josquin-_Kyrie_Josquin-Des-Prez_file1.mid
+        Missa-Quem-dicunt-homines-Josquin-_Gloria_Josquin-Des-Prez_file1.mid
+        Missa-Quem-dicunt-homines-Josquin-_Kyrie_Josquin-Des-Prez_file2.nwc
+        Missa-Quem-dicunt-homines-Josquin-_Gloria_Josquin-Des-Prez_file2.nwc
+        Missa-Quem-dicunt-homines-Josquin-_Credo_Josquin-Des-Prez_file1.mid
+        Missa-Quem-dicunt-homines-Josquin-_Sanctus_Josquin-Des-Prez_file1.mid
+        Missa-Quem-dicunt-homines-Josquin-_Credo_Josquin-Des-Prez_file2.nwc
+        Missa-Quem-dicunt-homines-Josquin-_Sanctus_Josquin-Des-Prez_file2.nwc
+        Missa-Quem-dicunt-homines-Josquin-_Agnus-dei_Josquin-Des-Prez_file2.nwc
+        Missa-Quem-dicunt-homines-Josquin-_Agnus-dei_Josquin-Des-Prez_file1.mid
+    Missa "Rosina"
+        Missa-Rosina-_Credo_Josquin-Des-Prez_file3.nwc
+        Missa-Rosina-_Credo_Josquin-Des-Prez_file2.mid
+    Missa "Une mousse de Biscaye" (Josquin?)
+        Missa-Une-mousse-de-Biscaye-Josquin-_Kyrie-1_Josquin-Des-Prez_file3.mid
+        Missa-Une-mousse-de-Biscaye-Josquin-_Christe_Josquin-Des-Prez_file3.mid
+        Missa-Une-mousse-de-Biscaye-Josquin-_Kyrie-2_Josquin-Des-Prez_file2.mid
+        Missa-Une-mousse-de-Biscaye-Josquin-_Gloria-1-Et-in-terra-pax_Josquin-Des-Prez_file3.mid
+        Missa-Une-mousse-de-Biscaye-Josquin-_Credo-1-Patrem-omnipotentem_Josquin-Des-Prez_file1.nwc
+        Missa-Une-mousse-de-Biscaye-Josquin-_Kyrie-1_Josquin-Des-Prez_file1.MUS
+        Missa-Une-mousse-de-Biscaye-Josquin-_Christe_Josquin-Des-Prez_file1.MUS
+        Missa-Une-mousse-de-Biscaye-Josquin-_Kyrie-2_Josquin-Des-Prez_file3.nwc
+        Missa-Une-mousse-de-Biscaye-Josquin-_Kyrie-2_Josquin-Des-Prez_file1.MUS
+        Missa-Une-mousse-de-Biscaye-Josquin-_Gloria-1-Et-in-terra-pax_Josquin-Des-Prez_file2.nwc
+        Missa-Une-mousse-de-Biscaye-Josquin-_Kyrie-1_Josquin-Des-Prez_file2.nwc
+        Missa-Une-mousse-de-Biscaye-Josquin-_Christe_Josquin-Des-Prez_file2.nwc
+        Missa-Une-mousse-de-Biscaye-Josquin-_Gloria-2-Qui-tollis_Josquin-Des-Prez_file1.nwc
+        Missa-Une-mousse-de-Biscaye-Josquin-_Gloria-1-Et-in-terra-pax_Josquin-Des-Prez_file1.MUS
+    Missa "Veni sancte spiritus"
+        Missa-Veni-sancte-spiritus-_Gloria_Josquin-Des-Prez_file2.nwc
+        Missa-Veni-sancte-spiritus-_Kyrie_Josquin-Des-Prez_file2.nwc
+        Missa-Veni-sancte-spiritus-_Credo_Josquin-Des-Prez_file2.nwc
+        Missa-Veni-sancte-spiritus-_Sanctus_Josquin-Des-Prez_file2.nwc
+        Missa-Veni-sancte-spiritus-_Gloria_Josquin-Des-Prez_file1.mid
+        Missa-Veni-sancte-spiritus-_Kyrie_Josquin-Des-Prez_file1.mid
+        Missa-Veni-sancte-spiritus-_Credo_Josquin-Des-Prez_file1.mid
+        Missa-Veni-sancte-spiritus-_Sanctus_Josquin-Des-Prez_file1.mid
+        Missa-Veni-sancte-spiritus-_Agnus-dei_Josquin-Des-Prez_file2.nwc
+        Missa-Veni-sancte-spiritus-_Agnus-dei_Josquin-Des-Prez_file1.mid
+    Missa Ad fugam
+        Missa-Ad-fugam_Gloria_Josquin-Des-Prez_file2.nwc
+        Missa-Ad-fugam_Kyrie_Josquin-Des-Prez_file2.nwc
+        Missa-Ad-fugam_Credo_Josquin-Des-Prez_file2.nwc
+        Missa-Ad-fugam_Gloria_Josquin-Des-Prez_file1.mid
+        Missa-Ad-fugam_Kyrie_Josquin-Des-Prez_file1.mid
+        Missa-Ad-fugam_Credo_Josquin-Des-Prez_file1.mid
+        Missa-Ad-fugam_Sanctus_Josquin-Des-Prez_file1.mid
+        Missa-Ad-fugam_Agnus-dei_Josquin-Des-Prez_file2.nwc
+        Missa-Ad-fugam_Agnus-dei_Josquin-Des-Prez_file1.mid
+    Missa Allez regretz (Josquin)
+        Missa-Allez-regretz-Josquin-_Gloria_Josquin-Des-Prez_file2.nwc
+        Missa-Allez-regretz-Josquin-_Kyrie_Josquin-Des-Prez_file2.nwc
+        Missa-Allez-regretz-Josquin-_Credo_Josquin-Des-Prez_file2.nwc
+        Missa-Allez-regretz-Josquin-_Sanctus_Josquin-Des-Prez_file2.nwc
+        Missa-Allez-regretz-Josquin-_Gloria_Josquin-Des-Prez_file1.mid
+        Missa-Allez-regretz-Josquin-_Kyrie_Josquin-Des-Prez_file1.mid
+        Missa-Allez-regretz-Josquin-_Credo_Josquin-Des-Prez_file1.mid
+        Missa-Allez-regretz-Josquin-_Sanctus_Josquin-Des-Prez_file1.mid
+        Missa-Allez-regretz-Josquin-_Agnus-dei_Josquin-Des-Prez_file2.nwc
+        Missa-Allez-regretz-Josquin-_Agnus-dei_Josquin-Des-Prez_file1.mid
+    Missa D'ung aultre amer
+        Missa-D-ung-aultre-amer_Sanctus_Josquin-Des-Prez_file5.mei
+    Missa D'ung aultre amer/Tu lumen
+        Missa-D-ung-aultre-amer-Tu-lumen_Sanctus_Josquin-Des-Prez_file5.mei
+    Missa Da pacem
+        Missa-Da-pacem_Gloria_Josquin-Des-Prez_file2.nwc
+        Missa-Da-pacem_Kyrie_Josquin-Des-Prez_file2.nwc
+        Missa-Da-pacem_Credo_Josquin-Des-Prez_file2.nwc
+        Missa-Da-pacem_Sanctus_Josquin-Des-Prez_file2.nwc
+        Missa-Da-pacem_Gloria_Josquin-Des-Prez_file1.mid
+        Missa-Da-pacem_Kyrie_Josquin-Des-Prez_file1.mid
+        Missa-Da-pacem_Credo_Josquin-Des-Prez_file1.mid
+        Missa-Da-pacem_Sanctus_Josquin-Des-Prez_file1.mid
+        Missa-Da-pacem_Agnus-dei_Josquin-Des-Prez_file2.nwc
+        Missa-Da-pacem_Agnus-dei_Josquin-Des-Prez_file1.mid
+    Missa De beata virgine
+        Missa-De-beata-virgine_Agnus-dei_Josquin-Des-Prez_file6.xml
+    Missa De plus en plus
+        Missa-De-plus-en-plus_Credo_Josquin-Des-Prez_file3.xml
+    Missa De tous biens playne
+        Missa-De-tous-biens-playne_Credo_Josquin-Des-Prez_file5.mei
+    Missa Di dadi
+        Missa-Di-dadi_Gloria_Josquin-Des-Prez_file2.nwc
+        Missa-Di-dadi_Kyrie_Josquin-Des-Prez_file2.nwc
+        Missa-Di-dadi_Credo_Josquin-Des-Prez_file2.nwc
+        Missa-Di-dadi_Sanctus_Josquin-Des-Prez_file2.nwc
+        Missa-Di-dadi_Gloria_Josquin-Des-Prez_file1.mid
+        Missa-Di-dadi_Kyrie_Josquin-Des-Prez_file1.mid
+        Missa-Di-dadi_Credo_Josquin-Des-Prez_file1.mid
+        Missa-Di-dadi_Sanctus_Josquin-Des-Prez_file1.mid
+        Missa-Di-dadi_Agnus-dei_Josquin-Des-Prez_file2.nwc
+        Missa-Di-dadi_Agnus-dei_Josquin-Des-Prez_file1.mid
+        Missa-Di-dadi_Credo_Josquin-Des-Prez_file5.mei
+        Missa-Di-dadi_Gloria_Josquin-Des-Prez_file5.mei
+    Missa Fortuna desperata
+        Missa-Fortuna-desperata_Credo_Josquin-Des-Prez_file3.mei
+        Missa-Fortuna-desperata_Kyrie_Josquin-Des-Prez_file3.mei
+    Missa Gaudeamus
+        Missa-Gaudeamus_Sanctus-Agnus-dei_Josquin-Des-Prez_file2.nwc
+        Missa-Gaudeamus_Sanctus-Agnus-dei_Josquin-Des-Prez_file1.mid
+        Missa-Gaudeamus_Kyrie-Gloria-Credo_Josquin-Des-Prez_file2.nwc
+        Missa-Gaudeamus_Kyrie-Gloria-Credo_Josquin-Des-Prez_file1.mid
+    Missa Hercules dux Ferrariae
+        Missa-Hercules-dux-Ferrariae_Sanctus-Agnus-dei_Josquin-Des-Prez_file2.nwc
+        Missa-Hercules-dux-Ferrariae_Sanctus-Agnus-dei_Josquin-Des-Prez_file1.mid
+        Missa-Hercules-dux-Ferrariae_Kyrie-Gloria-Credo_Josquin-Des-Prez_file2.nwc
+        Missa-Hercules-dux-Ferrariae_Kyrie-Gloria-Credo_Josquin-Des-Prez_file1.mid
+    Missa L'ami Baudichon
+        Missa-L-ami-Baudichon_Agnus-dei_Josquin-Des-Prez_file3.xml
+        Missa-L-ami-Baudichon_Agnus-dei_Josquin-Des-Prez_file5.mei
+        Missa-L-ami-Baudichon_Credo_Josquin-Des-Prez_file3.xml
+        Missa-L-ami-Baudichon_Credo_Josquin-Des-Prez_file5.mei
+        Missa-L-ami-Baudichon_Gloria_Josquin-Des-Prez_file3.xml
+        Missa-L-ami-Baudichon_Sanctus_Josquin-Des-Prez_file3.xml
+        Missa-L-ami-Baudichon_Sanctus_Josquin-Des-Prez_file5.mei
+    Missa L'homme arme sexti toni
+        Missa-L-homme-arme-sexti-toni_Gloria_Josquin-Des-Prez_file2.nwc
+        Missa-L-homme-arme-sexti-toni_Kyrie_Josquin-Des-Prez_file2.nwc
+        Missa-L-homme-arme-sexti-toni_Credo_Josquin-Des-Prez_file2.nwc
+        Missa-L-homme-arme-sexti-toni_Sanctus_Josquin-Des-Prez_file1.nwc
+        Missa-L-homme-arme-sexti-toni_Agnus-dei_Josquin-Des-Prez_file2.nwc
+        Missa-L-homme-arme-sexti-toni_Credo_Josquin-Des-Prez_file1.mid
+        Missa-L-homme-arme-sexti-toni_Sanctus_Josquin-Des-Prez_file2.mid
+        Missa-L-homme-arme-sexti-toni_Kyrie_Josquin-Des-Prez_file1.mid
+        Missa-L-homme-arme-sexti-toni_Agnus-dei_Josquin-Des-Prez_file1.mid
+        Missa-L-homme-arme-sexti-toni_Gloria_Josquin-Des-Prez_file1.mid
+    Missa L'homme arme super voces musicales
+        Missa-L-homme-arme-super-voces-musicales_Gloria_Josquin-Des-Prez_file2.nwc
+        Missa-L-homme-arme-super-voces-musicales_Kyrie_Josquin-Des-Prez_file2.nwc
+        Missa-L-homme-arme-super-voces-musicales_Credo_Josquin-Des-Prez_file2.nwc
+        Missa-L-homme-arme-super-voces-musicales_Sanctus_Josquin-Des-Prez_file2.nwc
+        Missa-L-homme-arme-super-voces-musicales_Gloria_Josquin-Des-Prez_file1.mid
+        Missa-L-homme-arme-super-voces-musicales_Kyrie_Josquin-Des-Prez_file1.mid
+        Missa-L-homme-arme-super-voces-musicales_Credo_Josquin-Des-Prez_file1.mid
+        Missa-L-homme-arme-super-voces-musicales_Sanctus_Josquin-Des-Prez_file1.mid
+        Missa-L-homme-arme-super-voces-musicales_Agnus-dei_Josquin-Des-Prez_file2.nwc
+    Missa La sol fa re mi
+        Missa-La-sol-fa-re-mi_Gloria_Josquin-Des-Prez_file2.nwc
+        Missa-La-sol-fa-re-mi_Kyrie_Josquin-Des-Prez_file2.nwc
+        Missa-La-sol-fa-re-mi_Credo_Josquin-Des-Prez_file2.nwc
+        Missa-La-sol-fa-re-mi_Sanctus-Benedictus_Josquin-Des-Prez_file3.nwc
+        Missa-La-sol-fa-re-mi_Agnus-Dei_Josquin-Des-Prez_file2.nwc
+        Missa-La-sol-fa-re-mi_Credo_Josquin-Des-Prez_file5.mei
+    Missa Pange lingua
+        Missa-Pange-lingua_Agnus-dei_Josquin-Des-Prez_file3.mei
+    Mon mary ma diffamee
+        Mon-mary-m-a-diffamee_Josquin-Des-Prez_file5.mei
+    Monstra te esse matrem
+        Monstra-te-esse-matrem_Josquin-Des-Prez_file3.xml
+    O Domine Jesu Christe
+        O-Domine-Jesu-Christe_Josquin-Des-Prez_file5.mei
+    Praeter rerum seriem
+        Praeter-rerum-seriem_Josquin-Des-Prez_file5.mei
+    Proch dolor
+        Proch-dolor_Josquin-Des-Prez_file5.mei
+    Se congié prens
+        Se-congie-prens_Josquin-Des-Prez_file5.mei
+    Stabat mater
+        Stabat-mater_Josquin-Des-Prez_file5.mei
+    Tu solus qui facis mirabilia
+        Tu-solus-qui-facis-mirabilia_Josquin-Des-Prez_file5.mei
+    null
+        Cueurs-desolez_Josquin-Des-Prez_file3.xml
+
+La Rue, Pierre de
+    Cent mille regretz
+        Cent-mille-regretz_La-Rue-Pierre-de_file5.mei
+    Incessament mon povre cueur
+        Incessament-mon-povre-cueur_La-Rue-Pierre-de_file4.mei
+    Missa Assumpta est Maria
+        Missa-Assumpta-est-Maria_La-Rue-Pierre-de_file2.nwc
+    Missa De sancto Antonio
+        Missa-De-sancto-Antonio_Gloria_La-Rue-Pierre-de_file2.nwc
+        Missa-De-sancto-Antonio_Kyrie_La-Rue-Pierre-de_file2.nwc
+        Missa-De-sancto-Antonio_Credo_La-Rue-Pierre-de_file2.nwc
+        Missa-De-sancto-Antonio_Sanctus_La-Rue-Pierre-de_file2.nwc
+        Missa-De-sancto-Antonio_Gloria_La-Rue-Pierre-de_file1.mid
+        Missa-De-sancto-Antonio_Kyrie_La-Rue-Pierre-de_file1.mid
+        Missa-De-sancto-Antonio_Credo_La-Rue-Pierre-de_file1.mid
+        Missa-De-sancto-Antonio_Sanctus_La-Rue-Pierre-de_file1.mid
+        Missa-De-sancto-Antonio_Agnus-dei_La-Rue-Pierre-de_file2.nwc
+        Missa-De-sancto-Antonio_Agnus-dei_La-Rue-Pierre-de_file1.mid
+    Missa De sancto Job
+        Missa-De-sancto-Job_Gloria_La-Rue-Pierre-de_file2.nwc
+        Missa-De-sancto-Job_Kyrie_La-Rue-Pierre-de_file2.nwc
+        Missa-De-sancto-Job_Credo_La-Rue-Pierre-de_file2.nwc
+        Missa-De-sancto-Job_Sanctus_La-Rue-Pierre-de_file2.nwc
+        Missa-De-sancto-Job_Gloria_La-Rue-Pierre-de_file1.mid
+        Missa-De-sancto-Job_Kyrie_La-Rue-Pierre-de_file1.mid
+        Missa-De-sancto-Job_Credo_La-Rue-Pierre-de_file1.mid
+        Missa-De-sancto-Job_Sanctus_La-Rue-Pierre-de_file1.mid
+        Missa-De-sancto-Job_Agnus-dei_La-Rue-Pierre-de_file2.nwc
+        Missa-De-sancto-Job_Agnus-dei_La-Rue-Pierre-de_file1.mid
+    Missa De septem doloribus
+        Missa-De-septem-doloribus_Credo_La-Rue-Pierre-de_file1.mid
+        Missa-De-septem-doloribus_Sanctus_La-Rue-Pierre-de_file2.nwc
+        Missa-De-septem-doloribus_Sanctus_La-Rue-Pierre-de_file1.mid
+        Missa-De-septem-doloribus_Kyrie_La-Rue-Pierre-de_file1.mid
+        Missa-De-septem-doloribus_Agnus-dei_La-Rue-Pierre-de_file2.nwc
+        Missa-De-septem-doloribus_Agnus-dei_La-Rue-Pierre-de_file1.mid
+        Missa-De-septem-doloribus_Credo_La-Rue-Pierre-de_file2.nwc
+        Missa-De-septem-doloribus_Gloria_La-Rue-Pierre-de_file1.mid
+        Missa-De-septem-doloribus_Kyrie_La-Rue-Pierre-de_file2.nwc
+        Missa-De-septem-doloribus_Gloria_La-Rue-Pierre-de_file2.nwc
+    Missa De virginibus
+        Missa-De-virginibus_Credo_La-Rue-Pierre-de_file2.nwc
+        Missa-De-virginibus_Gloria_La-Rue-Pierre-de_file2.nwc
+        Missa-De-virginibus_Kyrie_La-Rue-Pierre-de_file2.nwc
+        Missa-De-virginibus_Sanctus_La-Rue-Pierre-de_file2.nwc
+        Missa-De-virginibus_Credo_La-Rue-Pierre-de_file1.mid
+        Missa-De-virginibus_Gloria_La-Rue-Pierre-de_file1.mid
+        Missa-De-virginibus_Kyrie_La-Rue-Pierre-de_file1.mid
+        Missa-De-virginibus_Sanctus_La-Rue-Pierre-de_file1.mid
+        Missa-De-virginibus_Agnus-Dei_La-Rue-Pierre-de_file2.nwc
+        Missa-De-virginibus_Agnus-Dei_La-Rue-Pierre-de_file1.mid
+    Missa L'homme arme 
+        Missa-L-homme-arme_Sanctus-Agnus-dei_La-Rue-Pierre-de_file2.nwc
+        Missa-L-homme-arme_Sanctus-Agnus-dei_La-Rue-Pierre-de_file1.mid
+        Missa-L-homme-arme_Kyrie-Gloria-Credo_La-Rue-Pierre-de_file2.nwc
+        Missa-L-homme-arme_Kyrie-Gloria-Credo_La-Rue-Pierre-de_file1.mid
+    null
+        Missa-Sub-tuum-presidium_La-Rue-Pierre-de_file1.nwc
+
+Martini, Johannes
+    Missa "Pfauenschwanz" (Martini)
+        Missa-Pfauenschwanz-Martini-_Gloria_Martini-Johannes_file2.nwc
+        Missa-Pfauenschwanz-Martini-_Gloria_Martini-Johannes_file1.mid
+        Missa-Pfauenschwanz-Martini-_Credo_Martini-Johannes_file1.mid
+        Missa-Pfauenschwanz-Martini-_Sanctus_Martini-Johannes_file2.nwc
+        Missa-Pfauenschwanz-Martini-_Sanctus_Martini-Johannes_file1.mid
+        Missa-Pfauenschwanz-Martini-_Kyrie_Martini-Johannes_file1.mid
+        Missa-Pfauenschwanz-Martini-_Agnus-dei_Martini-Johannes_file2.nwc
+        Missa-Pfauenschwanz-Martini-_Agnus-dei_Martini-Johannes_file1.mid
+        Missa-Pfauenschwanz-Martini-_Credo_Martini-Johannes_file2.nwc
+        Missa-Pfauenschwanz-Martini-_Kyrie_Martini-Johannes_file2.nwc
+    Missa La mort de Saint Gothard
+        Missa-La-mort-de-Saint-Gothard_Gloria_Martini-Johannes_file2.nwc
+        Missa-La-mort-de-Saint-Gothard_Kyrie_Martini-Johannes_file2.nwc
+        Missa-La-mort-de-Saint-Gothard_Credo_Martini-Johannes_file2.nwc
+        Missa-La-mort-de-Saint-Gothard_Sanctus_Martini-Johannes_file2.nwc
+        Missa-La-mort-de-Saint-Gothard_Gloria_Martini-Johannes_file1.mid
+        Missa-La-mort-de-Saint-Gothard_Kyrie_Martini-Johannes_file1.mid
+        Missa-La-mort-de-Saint-Gothard_Credo_Martini-Johannes_file1.mid
+        Missa-La-mort-de-Saint-Gothard_Sanctus_Martini-Johannes_file1.mid
+        Missa-La-mort-de-Saint-Gothard_Agnus-dei_Martini-Johannes_file2.nwc
+        Missa-La-mort-de-Saint-Gothard_Agnus-dei_Martini-Johannes_file1.mid
+
+Mouton, Jean
+    Missa "Quem dicunt homines" (Mouton)
+        Missa-Quem-dicunt-homines-Mouton-_Gloria_Mouton-Jean_file2.nwc
+        Missa-Quem-dicunt-homines-Mouton-_Kyrie_Mouton-Jean_file2.nwc
+        Missa-Quem-dicunt-homines-Mouton-_Credo_Mouton-Jean_file2.nwc
+        Missa-Quem-dicunt-homines-Mouton-_Sanctus_Mouton-Jean_file2.nwc
+        Missa-Quem-dicunt-homines-Mouton-_Gloria_Mouton-Jean_file1.mid
+        Missa-Quem-dicunt-homines-Mouton-_Kyrie_Mouton-Jean_file1.mid
+        Missa-Quem-dicunt-homines-Mouton-_Credo_Mouton-Jean_file1.mid
+        Missa-Quem-dicunt-homines-Mouton-_Sanctus_Mouton-Jean_file1.mid
+    Missa "Verbum bonum et suave"
+        Missa-Verbum-bonum-et-suave-_Gloria_Mouton-Jean_file2.nwc
+        Missa-Verbum-bonum-et-suave-_Kyrie_Mouton-Jean_file2.nwc
+        Missa-Verbum-bonum-et-suave-_Credo_Mouton-Jean_file2.nwc
+        Missa-Verbum-bonum-et-suave-_Sanctus_Mouton-Jean_file2.nwc
+        Missa-Verbum-bonum-et-suave-_Gloria_Mouton-Jean_file1.mid
+        Missa-Verbum-bonum-et-suave-_Kyrie_Mouton-Jean_file1.mid
+        Missa-Verbum-bonum-et-suave-_Credo_Mouton-Jean_file1.mid
+        Missa-Verbum-bonum-et-suave-_Sanctus_Mouton-Jean_file1.mid
+        Missa-Verbum-bonum-et-suave-_Agnus-dei_Mouton-Jean_file2.nwc
+        Missa-Verbum-bonum-et-suave-_Agnus-dei_Mouton-Jean_file1.mid
+    Missa Alleluya
+        Missa-Alleluya_Gloria_Mouton-Jean_file2.nwc
+        Missa-Alleluya_Kyrie_Mouton-Jean_file2.nwc
+        Missa-Alleluya_Credo_Mouton-Jean_file2.nwc
+        Missa-Alleluya_Sanctus_Mouton-Jean_file2.nwc
+        Missa-Alleluya_Gloria_Mouton-Jean_file1.mid
+        Missa-Alleluya_Kyrie_Mouton-Jean_file1.mid
+        Missa-Alleluya_Credo_Mouton-Jean_file1.mid
+        Missa-Alleluya_Sanctus_Mouton-Jean_file1.mid
+        Missa-Alleluya_Agnus-dei_Mouton-Jean_file2.nwc
+        Missa-Alleluya_Agnus-dei_Mouton-Jean_file1.mid
+    Missa Benedictus Dominus Deus
+        Missa-Benedictus-Dominus-Deus_Gloria_Mouton-Jean_file2.nwc
+        Missa-Benedictus-Dominus-Deus_Kyrie_Mouton-Jean_file2.nwc
+        Missa-Benedictus-Dominus-Deus_Credo_Mouton-Jean_file2.nwc
+        Missa-Benedictus-Dominus-Deus_Sanctus_Mouton-Jean_file2.nwc
+        Missa-Benedictus-Dominus-Deus_Gloria_Mouton-Jean_file1.mid
+        Missa-Benedictus-Dominus-Deus_Kyrie_Mouton-Jean_file1.mid
+        Missa-Benedictus-Dominus-Deus_Credo_Mouton-Jean_file1.mid
+        Missa-Benedictus-Dominus-Deus_Sanctus_Mouton-Jean_file1.mid
+        Missa-Benedictus-Dominus-Deus_Agnus-dei_Mouton-Jean_file2.nwc
+        Missa-Benedictus-Dominus-Deus_Agnus-dei_Mouton-Jean_file1.mid
+    Missa L'oserai je dire
+        Missa-L-oserai-je-dire_Sanctus-Agnus-dei_Mouton-Jean_file2.nwc
+        Missa-L-oserai-je-dire_Sanctus-Agnus-dei_Mouton-Jean_file1.mid
+    Sancti Dei omnes
+        Sancti-Dei-omnes_Mouton-Jean_file5.mei
+
+Obrecht, Jacob
+    Adieu mes amours
+        Adieu-mes-amours_Obrecht-Jacob_file2.nwc
+        Adieu-mes-amours_Obrecht-Jacob_file1.mid
+    Agnus dei
+        Agnus-dei_Obrecht-Jacob_file2.nwc
+        Agnus-dei_Obrecht-Jacob_file1.mid
+    Credo
+        Credo_Obrecht-Jacob_file2.nwc
+        Credo_Obrecht-Jacob_file2.nwc
+        Credo_Obrecht-Jacob_file1.mid
+        Credo_Obrecht-Jacob_file1.mid
+    Gloria
+        Gloria_Obrecht-Jacob_file2.nwc
+        Gloria_Obrecht-Jacob_file1.mid
+    Kyrie
+        Kyrie_Obrecht-Jacob_file2.nwc
+        Kyrie_Obrecht-Jacob_file1.mid
+    Missa "Maria zart"
+        Missa-Maria-zart-_Gloria_Obrecht-Jacob_file2.nwc
+        Missa-Maria-zart-_Kyrie_Obrecht-Jacob_file2.nwc
+        Missa-Maria-zart-_Sanctus_Obrecht-Jacob_file2.nwc
+        Missa-Maria-zart-_Gloria_Obrecht-Jacob_file1.mid
+        Missa-Maria-zart-_Kyrie_Obrecht-Jacob_file1.mid
+        Missa-Maria-zart-_Sanctus_Obrecht-Jacob_file1.mid
+        Missa-Maria-zart-_Agnus-dei_Obrecht-Jacob_file2.nwc
+        Missa-Maria-zart-_Agnus-dei_Obrecht-Jacob_file1.mid
+    Missa "N'aray je jamais" (Obrecht)
+        Missa-N-aray-je-jamais-Obrecht-_Credo_Obrecht-Jacob_file1.mid
+        Missa-N-aray-je-jamais-Obrecht-_Sanctus_Obrecht-Jacob_file2.nwc
+        Missa-N-aray-je-jamais-Obrecht-_Sanctus_Obrecht-Jacob_file1.mid
+        Missa-N-aray-je-jamais-Obrecht-_Kyrie_Obrecht-Jacob_file1.mid
+        Missa-N-aray-je-jamais-Obrecht-_Agnus-dei_Obrecht-Jacob_file2.nwc
+        Missa-N-aray-je-jamais-Obrecht-_Agnus-dei_Obrecht-Jacob_file1.mid
+        Missa-N-aray-je-jamais-Obrecht-_Credo_Obrecht-Jacob_file2.nwc
+        Missa-N-aray-je-jamais-Obrecht-_Gloria_Obrecht-Jacob_file1.mid
+        Missa-N-aray-je-jamais-Obrecht-_Kyrie_Obrecht-Jacob_file2.nwc
+        Missa-N-aray-je-jamais-Obrecht-_Gloria_Obrecht-Jacob_file2.nwc
+    Missa "O lumen ecclesiae" (aka Missa "O quam suavis")
+        Missa-O-lumen-ecclesiae-aka-Missa-O-quam-suavis-_Gloria_Obrecht-Jacob_file2.nwc
+        Missa-O-lumen-ecclesiae-aka-Missa-O-quam-suavis-_Kyrie_Obrecht-Jacob_file2.nwc
+        Missa-O-lumen-ecclesiae-aka-Missa-O-quam-suavis-_Credo_Obrecht-Jacob_file2.nwc
+        Missa-O-lumen-ecclesiae-aka-Missa-O-quam-suavis-_Sanctus_Obrecht-Jacob_file2.nwc
+        Missa-O-lumen-ecclesiae-aka-Missa-O-quam-suavis-_Gloria_Obrecht-Jacob_file1.mid
+        Missa-O-lumen-ecclesiae-aka-Missa-O-quam-suavis-_Kyrie_Obrecht-Jacob_file1.mid
+        Missa-O-lumen-ecclesiae-aka-Missa-O-quam-suavis-_Credo_Obrecht-Jacob_file1.mid
+        Missa-O-lumen-ecclesiae-aka-Missa-O-quam-suavis-_Sanctus_Obrecht-Jacob_file1.mid
+        Missa-O-lumen-ecclesiae-aka-Missa-O-quam-suavis-_Agnus-dei_Obrecht-Jacob_file2.nwc
+        Missa-O-lumen-ecclesiae-aka-Missa-O-quam-suavis-_Agnus-dei_Obrecht-Jacob_file1.mid
+    Missa "Petrus apostolus"
+        Missa-Petrus-apostolus-_Gloria_Obrecht-Jacob_file1.nwc
+        Missa-Petrus-apostolus-_Kyrie_Obrecht-Jacob_file1.nwc
+        Missa-Petrus-apostolus-_Credo_Obrecht-Jacob_file2.nwc
+        Missa-Petrus-apostolus-_Sanctus_Obrecht-Jacob_file2.nwc
+        Missa-Petrus-apostolus-_Gloria_Obrecht-Jacob_file2.mid
+        Missa-Petrus-apostolus-_Kyrie_Obrecht-Jacob_file2.mid
+        Missa-Petrus-apostolus-_Credo_Obrecht-Jacob_file1.mid
+        Missa-Petrus-apostolus-_Sanctus_Obrecht-Jacob_file1.mid
+        Missa-Petrus-apostolus-_Agnus-dei_Obrecht-Jacob_file2.nwc
+        Missa-Petrus-apostolus-_Agnus-dei_Obrecht-Jacob_file1.mid
+        Missa-Petrus-apostolus-_Kyrie_Obrecht-Jacob_file3.MUS
+        Missa-Petrus-apostolus-_Gloria_Obrecht-Jacob_file3.MUS
+    Missa "Pfauenschwanz" (Obrecht)
+        Missa-Pfauenschwanz-Obrecht-_Gloria_Obrecht-Jacob_file2.nwc
+        Missa-Pfauenschwanz-Obrecht-_Kyrie_Obrecht-Jacob_file2.nwc
+        Missa-Pfauenschwanz-Obrecht-_Credo_Obrecht-Jacob_file2.nwc
+        Missa-Pfauenschwanz-Obrecht-_Sanctus_Obrecht-Jacob_file2.nwc
+        Missa-Pfauenschwanz-Obrecht-_Gloria_Obrecht-Jacob_file1.mid
+        Missa-Pfauenschwanz-Obrecht-_Kyrie_Obrecht-Jacob_file1.mid
+        Missa-Pfauenschwanz-Obrecht-_Credo_Obrecht-Jacob_file1.mid
+        Missa-Pfauenschwanz-Obrecht-_Sanctus_Obrecht-Jacob_file1.mid
+        Missa-Pfauenschwanz-Obrecht-_Agnus-dei_Obrecht-Jacob_file2.nwc
+        Missa-Pfauenschwanz-Obrecht-_Agnus-dei_Obrecht-Jacob_file1.mid
+    Missa "Rose playsante"
+        Missa-Rose-playsante-_Gloria_Obrecht-Jacob_file2.nwc
+        Missa-Rose-playsante-_Kyrie_Obrecht-Jacob_file2.nwc
+        Missa-Rose-playsante-_Credo_Obrecht-Jacob_file2.nwc
+        Missa-Rose-playsante-_Sanctus_Obrecht-Jacob_file2.nwc
+        Missa-Rose-playsante-_Gloria_Obrecht-Jacob_file1.mid
+        Missa-Rose-playsante-_Kyrie_Obrecht-Jacob_file1.mid
+        Missa-Rose-playsante-_Credo_Obrecht-Jacob_file1.mid
+        Missa-Rose-playsante-_Sanctus_Obrecht-Jacob_file1.mid
+        Missa-Rose-playsante-_Agnus-dei_Obrecht-Jacob_file2.nwc
+        Missa-Rose-playsante-_Agnus-dei_Obrecht-Jacob_file1.mid
+    Missa "Veci la danse Barbari"
+        Missa-Veci-la-danse-Barbari-_Credo_Obrecht-Jacob_file2.nwc
+        Missa-Veci-la-danse-Barbari-_Credo_Obrecht-Jacob_file1.mid
+    Missa Adieu mes amours
+        Missa-Adieu-mes-amours_Gloria_Obrecht-Jacob_file2.nwc
+        Missa-Adieu-mes-amours_Kyrie_Obrecht-Jacob_file2.nwc
+        Missa-Adieu-mes-amours_Credo_Obrecht-Jacob_file2.nwc
+        Missa-Adieu-mes-amours_Sanctus_Obrecht-Jacob_file2.nwc
+        Missa-Adieu-mes-amours_Gloria_Obrecht-Jacob_file1.mid
+        Missa-Adieu-mes-amours_Kyrie_Obrecht-Jacob_file1.mid
+        Missa-Adieu-mes-amours_Credo_Obrecht-Jacob_file1.mid
+        Missa-Adieu-mes-amours_Sanctus_Obrecht-Jacob_file1.mid
+        Missa-Adieu-mes-amours_Agnus-dei_Obrecht-Jacob_file2.nwc
+        Missa-Adieu-mes-amours_Agnus-dei_Obrecht-Jacob_file1.mid
+    Missa Ave regina celorum
+        Missa-Ave-regina-celorum_Gloria_Obrecht-Jacob_file2.nwc
+        Missa-Ave-regina-celorum_Kyrie_Obrecht-Jacob_file2.nwc
+        Missa-Ave-regina-celorum_Credi_Obrecht-Jacob_file2.nwc
+        Missa-Ave-regina-celorum_Sanctus_Obrecht-Jacob_file2.nwc
+        Missa-Ave-regina-celorum_Gloria_Obrecht-Jacob_file1.mid
+        Missa-Ave-regina-celorum_Kyrie_Obrecht-Jacob_file1.mid
+        Missa-Ave-regina-celorum_Credi_Obrecht-Jacob_file1.mid
+        Missa-Ave-regina-celorum_Sanctus_Obrecht-Jacob_file1.mid
+        Missa-Ave-regina-celorum_Agnus-dei_Obrecht-Jacob_file2.nwc
+        Missa-Ave-regina-celorum_Agnus-dei_Obrecht-Jacob_file1.mid
+    Missa Beate viscera
+        Missa-Beate-viscera_Gloria_Obrecht-Jacob_file2.nwc
+        Missa-Beate-viscera_Kyrie_Obrecht-Jacob_file2.nwc
+        Missa-Beate-viscera_Credo_Obrecht-Jacob_file2.nwc
+        Missa-Beate-viscera_Sanctus_Obrecht-Jacob_file2.nwc
+        Missa-Beate-viscera_Gloria_Obrecht-Jacob_file1.mid
+        Missa-Beate-viscera_Kyrie_Obrecht-Jacob_file1.mid
+        Missa-Beate-viscera_Credo_Obrecht-Jacob_file1.mid
+        Missa-Beate-viscera_Sanctus_Obrecht-Jacob_file1.mid
+        Missa-Beate-viscera_Agnus-dei_Obrecht-Jacob_file1.nwc
+    Missa Caput
+        Missa-Caput_Kyrie_Obrecht-Jacob_file1.mid
+        Missa-Caput_Gloria_Obrecht-Jacob_file1.mid
+        Missa-Caput_Kyrie_Obrecht-Jacob_file2.nwc
+        Missa-Caput_Gloria_Obrecht-Jacob_file2.nwc
+        Missa-Caput_Credo_Obrecht-Jacob_file1.mid
+        Missa-Caput_Sanctus_Obrecht-Jacob_file1.mid
+        Missa-Caput_Credo_Obrecht-Jacob_file2.nwc
+        Missa-Caput_Sanctus_Obrecht-Jacob_file2.nwc
+        Missa-Caput_Agnus-dei_Obrecht-Jacob_file2.nwc
+        Missa-Caput_Agnus-dei_Obrecht-Jacob_file1.mid
+    Missa De sancto Donatiano
+        Missa-De-sancto-Donatiano_Gloria_Obrecht-Jacob_file2.nwc
+        Missa-De-sancto-Donatiano_Kyrie_Obrecht-Jacob_file2.nwc
+        Missa-De-sancto-Donatiano_Credo_Obrecht-Jacob_file2.nwc
+        Missa-De-sancto-Donatiano_Sanctus_Obrecht-Jacob_file2.nwc
+        Missa-De-sancto-Donatiano_Gloria_Obrecht-Jacob_file1.mid
+        Missa-De-sancto-Donatiano_Kyrie_Obrecht-Jacob_file1.mid
+        Missa-De-sancto-Donatiano_Credo_Obrecht-Jacob_file1.mid
+        Missa-De-sancto-Donatiano_Sanctus_Obrecht-Jacob_file1.mid
+        Missa-De-sancto-Donatiano_Agnus-dei_Obrecht-Jacob_file2.nwc
+        Missa-De-sancto-Donatiano_Agnus-dei_Obrecht-Jacob_file1.mid
+    Missa De sancto Johanne Baptista
+        Missa-De-sancto-Johanne-Baptista_Gloria_Obrecht-Jacob_file2.nwc
+        Missa-De-sancto-Johanne-Baptista_Kyrie_Obrecht-Jacob_file2.nwc
+        Missa-De-sancto-Johanne-Baptista_Credo_Obrecht-Jacob_file2.nwc
+        Missa-De-sancto-Johanne-Baptista_Sanctus_Obrecht-Jacob_file1.nwc
+        Missa-De-sancto-Johanne-Baptista_Gloria_Obrecht-Jacob_file1.mid
+        Missa-De-sancto-Johanne-Baptista_Kyrie_Obrecht-Jacob_file1.mid
+        Missa-De-sancto-Johanne-Baptista_Credo_Obrecht-Jacob_file1.mid
+        Missa-De-sancto-Johanne-Baptista_Sanctus_Obrecht-Jacob_file2.mid
+        Missa-De-sancto-Johanne-Baptista_Agnus-dei_Obrecht-Jacob_file2.nwc
+        Missa-De-sancto-Johanne-Baptista_Agnus-dei_Obrecht-Jacob_file1.mid
+    Missa De sancto Martino
+        Missa-De-sancto-Martino_Gloria_Obrecht-Jacob_file2.nwc
+        Missa-De-sancto-Martino_Kyrie_Obrecht-Jacob_file2.nwc
+        Missa-De-sancto-Martino_Credo_Obrecht-Jacob_file2.nwc
+        Missa-De-sancto-Martino_Sanctus_Obrecht-Jacob_file2.nwc
+        Missa-De-sancto-Martino_Gloria_Obrecht-Jacob_file1.mid
+        Missa-De-sancto-Martino_Kyrie_Obrecht-Jacob_file1.mid
+        Missa-De-sancto-Martino_Credo_Obrecht-Jacob_file1.mid
+        Missa-De-sancto-Martino_Sanctus_Obrecht-Jacob_file1.mid
+        Missa-De-sancto-Martino_Agnus-dei_Obrecht-Jacob_file2.nwc
+        Missa-De-sancto-Martino_Agnus-dei_Obrecht-Jacob_file1.mid
+    Missa De tous biens plaine
+        Missa-De-tous-biens-plaine_Gloria_Obrecht-Jacob_file1.mid
+        Missa-De-tous-biens-plaine_Gloria_Obrecht-Jacob_file2.nwc
+        Missa-De-tous-biens-plaine_Credo_Obrecht-Jacob_file1.mid
+        Missa-De-tous-biens-plaine_Sanctus_Obrecht-Jacob_file1.mid
+        Missa-De-tous-biens-plaine_Credo_Obrecht-Jacob_file2.nwc
+        Missa-De-tous-biens-plaine_Sanctus_Obrecht-Jacob_file2.nwc
+        Missa-De-tous-biens-plaine_Agnus-dei_Obrecht-Jacob_file2.nwc
+        Missa-De-tous-biens-plaine_Agnus-dei_Obrecht-Jacob_file1.mid
+    Missa Fors seulement
+        Missa-Fors-seulement_Gloria_Obrecht-Jacob_file2.nwc
+        Missa-Fors-seulement_Kyrie_Obrecht-Jacob_file2.nwc
+        Missa-Fors-seulement_Credo_Obrecht-Jacob_file2.nwc
+        Missa-Fors-seulement_Sanctus_Obrecht-Jacob_file2.nwc
+        Missa-Fors-seulement_Gloria_Obrecht-Jacob_file1.mid
+        Missa-Fors-seulement_Kyrie_Obrecht-Jacob_file1.mid
+        Missa-Fors-seulement_Credo_Obrecht-Jacob_file1.mid
+        Missa-Fors-seulement_Sanctus_Obrecht-Jacob_file1.mid
+        Missa-Fors-seulement_Agnus_Obrecht-Jacob_file2.nwc
+        Missa-Fors-seulement_Agnus_Obrecht-Jacob_file1.mid
+    Missa Je ne demande
+        Missa-Je-ne-demande_Gloria_Obrecht-Jacob_file2.nwc
+        Missa-Je-ne-demande_Kyrie_Obrecht-Jacob_file2.nwc
+        Missa-Je-ne-demande_Credo_Obrecht-Jacob_file2.nwc
+        Missa-Je-ne-demande_Sanctus_Obrecht-Jacob_file2.nwc
+        Missa-Je-ne-demande_Gloria_Obrecht-Jacob_file1.mid
+        Missa-Je-ne-demande_Kyrie_Obrecht-Jacob_file1.mid
+        Missa-Je-ne-demande_Credo_Obrecht-Jacob_file1.mid
+        Missa-Je-ne-demande_Sanctus_Obrecht-Jacob_file1.mid
+        Missa-Je-ne-demande_Agnus-dei_Obrecht-Jacob_file2.nwc
+        Missa-Je-ne-demande_Agnus-dei_Obrecht-Jacob_file1.mid
+        Missa-Je-ne-demande_Kyrie_Obrecht-Jacob_file3.MUS
+        Missa-Je-ne-demande_Gloria_Obrecht-Jacob_file3.MUS
+        Missa-Je-ne-demande_Credo_Obrecht-Jacob_file3.MUS
+        Missa-Je-ne-demande_Sanctus_Obrecht-Jacob_file3.MUS
+    Missa L'homme arme
+        Missa-L-homme-arme_Gloria_Obrecht-Jacob_file2.nwc
+        Missa-L-homme-arme_Kyrie_Obrecht-Jacob_file2.nwc
+        Missa-L-homme-arme_Credo_Obrecht-Jacob_file2.nwc
+        Missa-L-homme-arme_Sanctus_Obrecht-Jacob_file2.nwc
+        Missa-L-homme-arme_Gloria_Obrecht-Jacob_file1.mid
+        Missa-L-homme-arme_Kyrie_Obrecht-Jacob_file1.mid
+        Missa-L-homme-arme_Credo_Obrecht-Jacob_file1.mid
+        Missa-L-homme-arme_Sanctus_Obrecht-Jacob_file1.mid
+        Missa-L-homme-arme_Agnus-dei_Obrecht-Jacob_file2.nwc
+        Missa-L-homme-arme_Agnus-dei_Obrecht-Jacob_file1.mid
+    Missa Libenter gloriabor
+        Missa-Libenter-gloriabor_Gloria_Obrecht-Jacob_file2.nwc
+        Missa-Libenter-gloriabor_Kyrie_Obrecht-Jacob_file2.nwc
+        Missa-Libenter-gloriabor_Credo_Obrecht-Jacob_file2.nwc
+        Missa-Libenter-gloriabor_Sanctus_Obrecht-Jacob_file2.nwc
+        Missa-Libenter-gloriabor_Gloria_Obrecht-Jacob_file1.mid
+        Missa-Libenter-gloriabor_Kyrie_Obrecht-Jacob_file1.mid
+        Missa-Libenter-gloriabor_Credo_Obrecht-Jacob_file1.mid
+        Missa-Libenter-gloriabor_Sanctus_Obrecht-Jacob_file1.mid
+    Missa Salve diva parens
+        Missa-Salve-diva-parens_Gloria_Obrecht-Jacob_file2.nwc
+        Missa-Salve-diva-parens_Kyrie_Obrecht-Jacob_file2.nwc
+        Missa-Salve-diva-parens_Credo_Obrecht-Jacob_file2.nwc
+        Missa-Salve-diva-parens_Sanctus_Obrecht-Jacob_file2.nwc
+        Missa-Salve-diva-parens_Gloria_Obrecht-Jacob_file1.mid
+        Missa-Salve-diva-parens_Kyrie_Obrecht-Jacob_file1.mid
+        Missa-Salve-diva-parens_Credo_Obrecht-Jacob_file1.mid
+        Missa-Salve-diva-parens_Sanctus_Obrecht-Jacob_file1.mid
+        Missa-Salve-diva-parens_Agnus-Dei_Obrecht-Jacob_file2.nwc
+        Missa-Salve-diva-parens_Agnus-Dei_Obrecht-Jacob_file1.mid
+    Missa Si dedero
+        Missa-Si-dedero_Credo_Obrecht-Jacob_file1.mid
+        Missa-Si-dedero_Sanctus_Obrecht-Jacob_file2.nwc
+        Missa-Si-dedero_Sanctus_Obrecht-Jacob_file1.mid
+        Missa-Si-dedero_Kyrie_Obrecht-Jacob_file1.mid
+        Missa-Si-dedero_Agnus-Dei_Obrecht-Jacob_file2.nwc
+        Missa-Si-dedero_Agnus-Dei_Obrecht-Jacob_file1.mid
+        Missa-Si-dedero_Credo_Obrecht-Jacob_file2.nwc
+        Missa-Si-dedero_Gloria_Obrecht-Jacob_file1.mid
+        Missa-Si-dedero_Kyrie_Obrecht-Jacob_file2.nwc
+        Missa-Si-dedero_Gloria_Obrecht-Jacob_file2.nwc
+    Missa Sicut spine rosam
+        Missa-Sicut-spine-rosam_Gloria_Obrecht-Jacob_file2.nwc
+        Missa-Sicut-spine-rosam_Kyrie_Obrecht-Jacob_file2.nwc
+        Missa-Sicut-spine-rosam_Credo_Obrecht-Jacob_file2.nwc
+        Missa-Sicut-spine-rosam_Sanctus_Obrecht-Jacob_file2.nwc
+        Missa-Sicut-spine-rosam_Gloria_Obrecht-Jacob_file1.mid
+        Missa-Sicut-spine-rosam_Kyrie_Obrecht-Jacob_file1.mid
+        Missa-Sicut-spine-rosam_Credo_Obrecht-Jacob_file1.mid
+        Missa-Sicut-spine-rosam_Sanctus_Obrecht-Jacob_file1.mid
+        Missa-Sicut-spine-rosam_Agnus-Dei_Obrecht-Jacob_file2.nwc
+        Missa-Sicut-spine-rosam_Agnus-Dei_Obrecht-Jacob_file1.mid
+    Missa plurimorum carminum (1)
+        Missa-plurimorum-carminum-1-_Gloria_Obrecht-Jacob_file2.nwc
+        Missa-plurimorum-carminum-1-_Kyrie_Obrecht-Jacob_file2.nwc
+        Missa-plurimorum-carminum-1-_Credo_Obrecht-Jacob_file2.nwc
+        Missa-plurimorum-carminum-1-_Sanctus_Obrecht-Jacob_file2.nwc
+        Missa-plurimorum-carminum-1-_Gloria_Obrecht-Jacob_file1.mid
+        Missa-plurimorum-carminum-1-_Kyrie_Obrecht-Jacob_file1.mid
+        Missa-plurimorum-carminum-1-_Credo_Obrecht-Jacob_file1.mid
+        Missa-plurimorum-carminum-1-_Sanctus_Obrecht-Jacob_file1.mid
+        Missa-plurimorum-carminum-1-_Agnus-dei_Obrecht-Jacob_file1.nwc
+    Sanctus
+        Sanctus_Obrecht-Jacob_file2.nwc
+        Sanctus_Obrecht-Jacob_file1.mid
+    null
+        Agnus-dei_Obrecht-Jacob_file1.mid
+
+Ockeghem, Jean de
+    Au travail sui
+        Au-travail-sui_Ockeghem-Jean-de_file2.nwc
+        Au-travail-sui_Ockeghem-Jean-de_file1.mid
+    Ma maistresse
+        Ma-maistresse_Ockeghem-Jean-de_file2.nwc
+        Ma-maistresse_Ockeghem-Jean-de_file1.mid
+    Missa "Ma maistresse"
+        Missa-Ma-maistresse-_Gloria_Ockeghem-Jean-de_file1.nwc
+        Missa-Ma-maistresse-_Kyrie_Ockeghem-Jean-de_file1.nwc
+        Missa-Ma-maistresse-_Gloria_Ockeghem-Jean-de_file2.mid
+        Missa-Ma-maistresse-_Kyrie_Ockeghem-Jean-de_file2.mid
+    Missa Au travail suis
+        Missa-Au-travail-suis_Gloria_Ockeghem-Jean-de_file2.nwc
+        Missa-Au-travail-suis_Kyrie_Ockeghem-Jean-de_file2.nwc
+        Missa-Au-travail-suis_Credo_Ockeghem-Jean-de_file2.nwc
+        Missa-Au-travail-suis_Sanctus_Ockeghem-Jean-de_file2.nwc
+        Missa-Au-travail-suis_Gloria_Ockeghem-Jean-de_file1.mid
+        Missa-Au-travail-suis_Kyrie_Ockeghem-Jean-de_file1.mid
+        Missa-Au-travail-suis_Credo_Ockeghem-Jean-de_file1.mid
+        Missa-Au-travail-suis_Sanctus_Ockeghem-Jean-de_file1.mid
+        Missa-Au-travail-suis_Agnus-dei_Ockeghem-Jean-de_file2.nwc
+        Missa-Au-travail-suis_Agnus-dei_Ockeghem-Jean-de_file1.mid
+    Missa Caput
+        Missa-Caput_Agnus-dei_Ockeghem-Jean-de_file3.xml
+        Missa-Caput_Credo_Ockeghem-Jean-de_file3.xml
+        Missa-Caput_Gloria_Ockeghem-Jean-de_file3.xml
+        Missa-Caput_Kyrie_Ockeghem-Jean-de_file3.xml
+        Missa-Caput_Kyrie_Ockeghem-Jean-de_file5.mei
+        Missa-Caput_Credo_Ockeghem-Jean-de_file2.mid
+        Missa-Caput_Sanctus_Ockeghem-Jean-de_file2.nwc
+        Missa-Caput_Sanctus_Ockeghem-Jean-de_file1.mid
+        Missa-Caput_Kyrie_Ockeghem-Jean-de_file1.mid
+        Missa-Caput_Agnus-dei_Ockeghem-Jean-de_file2.nwc
+        Missa-Caput_Agnus-dei_Ockeghem-Jean-de_file1.mid
+        Missa-Caput_Credo_Ockeghem-Jean-de_file1.nwc
+        Missa-Caput_Gloria_Ockeghem-Jean-de_file1.mid
+        Missa-Caput_Kyrie_Ockeghem-Jean-de_file2.nwc
+        Missa-Caput_Gloria_Ockeghem-Jean-de_file2.nwc
+    Missa Caput: Sanctus 
+        Missa-Caput-Sanctus_Ockeghem-Jean-de_file3.xml
+    Missa De plus en plus
+        Missa-De-plus-en-plus_Agnus-dei_Ockeghem-Jean-de_file3.xml
+        Missa-De-plus-en-plus_Gloria_Ockeghem-Jean-de_file3.xml
+        Missa-De-plus-en-plus_Kyrie_Ockeghem-Jean-de_file3.xml
+        Missa-De-plus-en-plus_Sanctus_Ockeghem-Jean-de_file3.xml
+    Missa Fors seulement
+        Missa-Fors-seulement_Gloria_Ockeghem-Jean-de_file2.nwc
+        Missa-Fors-seulement_Credo_Ockeghem-Jean-de_file2.nwc
+        Missa-Fors-seulement_Gloria_Ockeghem-Jean-de_file1.mid
+        Missa-Fors-seulement_Kyrie_Ockeghem-Jean-de_file1.mid
+        Missa-Fors-seulement_Credo_Ockeghem-Jean-de_file1.mid
+    Missa L'homme arme
+        Missa-L-homme-arme_Gloria_Ockeghem-Jean-de_file2.nwc
+        Missa-L-homme-arme_Kyrie_Ockeghem-Jean-de_file2.nwc
+        Missa-L-homme-arme_Credo_Ockeghem-Jean-de_file2.nwc
+        Missa-L-homme-arme_Sanctus_Ockeghem-Jean-de_file2.nwc
+        Missa-L-homme-arme_Gloria_Ockeghem-Jean-de_file1.mid
+        Missa-L-homme-arme_Kyrie_Ockeghem-Jean-de_file1.mid
+        Missa-L-homme-arme_Credo_Ockeghem-Jean-de_file1.mid
+        Missa-L-homme-arme_Sanctus_Ockeghem-Jean-de_file1.mid
+        Missa-L-homme-arme_Agnus-dei_Ockeghem-Jean-de_file2.nwc
+        Missa-L-homme-arme_Agnus-dei_Ockeghem-Jean-de_file1.mid
+        Missa-L-homme-arme_Credo_Ockeghem-Jean-de_file3.xml
+        Missa-L-homme-arme_Gloria_Ockeghem-Jean-de_file3.xml
+        Missa-L-homme-arme_Kyrie_Ockeghem-Jean-de_file3.xml
+    Missa Mi mi
+        Missa-Mi-mi_Agnus-dei_Ockeghem-Jean-de_file3.xml
+        Missa-Mi-mi_Agnus-dei_Ockeghem-Jean-de_file5.mei
+        Missa-Mi-mi_Credo_Ockeghem-Jean-de_file3.xml
+        Missa-Mi-mi_Gloria_Ockeghem-Jean-de_file3.xml
+        Missa-Mi-mi_Kyrie_Ockeghem-Jean-de_file3.xml
+        Missa-Mi-mi_Sanctus_Ockeghem-Jean-de_file3.xml
+    Missa prolationum
+        Missa-prolationum_Gloria_Ockeghem-Jean-de_file2.nwc
+        Missa-prolationum_Kyrie_Ockeghem-Jean-de_file2.nwc
+        Missa-prolationum_Credo_Ockeghem-Jean-de_file2.nwc
+        Missa-prolationum_Sanctus_Ockeghem-Jean-de_file2.nwc
+        Missa-prolationum_Gloria_Ockeghem-Jean-de_file1.mid
+        Missa-prolationum_Kyrie_Ockeghem-Jean-de_file1.mid
+        Missa-prolationum_Credo_Ockeghem-Jean-de_file1.mid
+        Missa-prolationum_Sanctus_Ockeghem-Jean-de_file1.mid
+        Missa-prolationum_Agnus-dei_Ockeghem-Jean-de_file2.nwc
+        Missa-prolationum_Agnus-dei_Ockeghem-Jean-de_file1.mid
+    Quant ce viendra
+        Quant-ce-viendra_Ockeghem-Jean-de_file2.mid
+
+Palestrina, Giovanni Pierluigi da
+    Missa Ad Fugam
+        Missa-Ad-Fugam_Kyrie_Palestrina-Giovanni-Pierluigi-da_file1.krn
+        Missa-Ad-Fugam_Gloria_Palestrina-Giovanni-Pierluigi-da_file1.krn
+        Missa-Ad-Fugam_Sanctus_Palestrina-Giovanni-Pierluigi-da_file1.krn
+        Missa-Ad-Fugam_Benedictus_Palestrina-Giovanni-Pierluigi-da_file1.krn
+        Missa-Ad-Fugam_Credo_Palestrina-Giovanni-Pierluigi-da_file1.krn
+        Missa-Ad-Fugam_Agnus-Dei-1_Palestrina-Giovanni-Pierluigi-da_file1.krn
+        Missa-Ad-Fugam_Agnus-Dei-2_Palestrina-Giovanni-Pierluigi-da_file1.krn
+    Missa Ad coenam Agni
+        Missa-Ad-coenam-Agni_Kyrie-1_Palestrina-Giovanni-Pierluigi-da_file1.krn
+        Missa-Ad-coenam-Agni_Gloria_Palestrina-Giovanni-Pierluigi-da_file1.krn
+        Missa-Ad-coenam-Agni_Sanctus_Palestrina-Giovanni-Pierluigi-da_file1.krn
+        Missa-Ad-coenam-Agni_Benedictus_Palestrina-Giovanni-Pierluigi-da_file1.krn
+        Missa-Ad-coenam-Agni_Credo_Palestrina-Giovanni-Pierluigi-da_file1.krn
+        Missa-Ad-coenam-Agni_Agnus-Dei-1_Palestrina-Giovanni-Pierluigi-da_file1.krn
+        Missa-Ad-coenam-Agni_Agnus-Dei-2_Palestrina-Giovanni-Pierluigi-da_file1.krn
+        Missa-Ad-coenam-Agni_Kyrie-2_Palestrina-Giovanni-Pierluigi-da_file1.krn
+    Missa Aeterna Christi munera
+        Missa-Aeterna-Christi-munera_Kyrie_Palestrina-Giovanni-Pierluigi-da_file1.krn
+        Missa-Aeterna-Christi-munera_Gloria_Palestrina-Giovanni-Pierluigi-da_file1.krn
+        Missa-Aeterna-Christi-munera_Benedictus_Palestrina-Giovanni-Pierluigi-da_file1.krn
+        Missa-Aeterna-Christi-munera_Credo_Palestrina-Giovanni-Pierluigi-da_file1.krn
+        Missa-Aeterna-Christi-munera_Agnus-Dei-1_Palestrina-Giovanni-Pierluigi-da_file1.krn
+        Missa-Aeterna-Christi-munera_Agnus-Dei-2_Palestrina-Giovanni-Pierluigi-da_file1.krn
+    Missa Alma Redemptoris mater
+        Missa-Alma-Redemptoris-mater_Kyrie-1_Palestrina-Giovanni-Pierluigi-da_file1.krn
+        Missa-Alma-Redemptoris-mater_Gloria_Palestrina-Giovanni-Pierluigi-da_file1.krn
+        Missa-Alma-Redemptoris-mater_Sanctus_Palestrina-Giovanni-Pierluigi-da_file1.krn
+        Missa-Alma-Redemptoris-mater_Benedictus_Palestrina-Giovanni-Pierluigi-da_file1.krn
+        Missa-Alma-Redemptoris-mater_Credo_Palestrina-Giovanni-Pierluigi-da_file1.krn
+        Missa-Alma-Redemptoris-mater_Agnus-Dei-1_Palestrina-Giovanni-Pierluigi-da_file1.krn
+        Missa-Alma-Redemptoris-mater_Agnus-Dei-2_Palestrina-Giovanni-Pierluigi-da_file1.krn
+        Missa-Alma-Redemptoris-mater_Kyrie-2_Palestrina-Giovanni-Pierluigi-da_file1.krn
+    Missa Aspice Domine
+        Missa-Aspice-Domine_Kyrie-1_Palestrina-Giovanni-Pierluigi-da_file1.krn
+        Missa-Aspice-Domine_Gloria_Palestrina-Giovanni-Pierluigi-da_file1.krn
+        Missa-Aspice-Domine_Sanctus_Palestrina-Giovanni-Pierluigi-da_file1.krn
+        Missa-Aspice-Domine_Benedictus_Palestrina-Giovanni-Pierluigi-da_file1.krn
+        Missa-Aspice-Domine_Credo_Palestrina-Giovanni-Pierluigi-da_file1.krn
+        Missa-Aspice-Domine_Agnus-Dei-1_Palestrina-Giovanni-Pierluigi-da_file1.krn
+        Missa-Aspice-Domine_Agnus-Dei-2_Palestrina-Giovanni-Pierluigi-da_file1.krn
+        Missa-Aspice-Domine_Kyrie-2_Palestrina-Giovanni-Pierluigi-da_file1.krn
+    Missa Assumpta est Maria
+        Missa-Assumpta-est-Maria_Kyrie-1_Palestrina-Giovanni-Pierluigi-da_file1.krn
+        Missa-Assumpta-est-Maria_Gloria_Palestrina-Giovanni-Pierluigi-da_file1.krn
+        Missa-Assumpta-est-Maria_Sanctus_Palestrina-Giovanni-Pierluigi-da_file1.krn
+        Missa-Assumpta-est-Maria_Benedictus_Palestrina-Giovanni-Pierluigi-da_file1.krn
+        Missa-Assumpta-est-Maria_Credo_Palestrina-Giovanni-Pierluigi-da_file1.krn
+        Missa-Assumpta-est-Maria_Agnus-Dei-1_Palestrina-Giovanni-Pierluigi-da_file1.krn
+        Missa-Assumpta-est-Maria_Agnus-Dei-2_Palestrina-Giovanni-Pierluigi-da_file1.krn
+        Missa-Assumpta-est-Maria_Kyrie-2_Palestrina-Giovanni-Pierluigi-da_file1.krn
+    Missa Ave Maria (4vv, 1594)
+        Missa-Ave-Maria-4vv-1594-_Kyrie_Palestrina-Giovanni-Pierluigi-da_file1.krn
+        Missa-Ave-Maria-4vv-1594-_Gloria_Palestrina-Giovanni-Pierluigi-da_file1.krn
+        Missa-Ave-Maria-4vv-1594-_Sanctus_Palestrina-Giovanni-Pierluigi-da_file1.krn
+        Missa-Ave-Maria-4vv-1594-_Benedictus_Palestrina-Giovanni-Pierluigi-da_file1.krn
+        Missa-Ave-Maria-4vv-1594-_Credo_Palestrina-Giovanni-Pierluigi-da_file1.krn
+        Missa-Ave-Maria-4vv-1594-_Agnus-Dei-1_Palestrina-Giovanni-Pierluigi-da_file1.krn
+        Missa-Ave-Maria-4vv-1594-_Agnus-Dei-2_Palestrina-Giovanni-Pierluigi-da_file1.krn
+    Missa Ave Maria (6vv, 1596 [publ.])
+        Missa-Ave-Maria-6vv-1596-publ.-_Kyrie_Palestrina-Giovanni-Pierluigi-da_file1.krn
+        Missa-Ave-Maria-6vv-1596-publ.-_Gloria_Palestrina-Giovanni-Pierluigi-da_file1.krn
+        Missa-Ave-Maria-6vv-1596-publ.-_Sanctus_Palestrina-Giovanni-Pierluigi-da_file1.krn
+        Missa-Ave-Maria-6vv-1596-publ.-_Benedictus_Palestrina-Giovanni-Pierluigi-da_file1.krn
+        Missa-Ave-Maria-6vv-1596-publ.-_Credo_Palestrina-Giovanni-Pierluigi-da_file1.krn
+        Missa-Ave-Maria-6vv-1596-publ.-_Agnus-Dei-1_Palestrina-Giovanni-Pierluigi-da_file1.krn
+        Missa-Ave-Maria-6vv-1596-publ.-_Agnus-Dei-2_Palestrina-Giovanni-Pierluigi-da_file1.krn
+    Missa Ave regina coelorum
+        Missa-Ave-regina-coelorum_Kyrie_Palestrina-Giovanni-Pierluigi-da_file1.krn
+        Missa-Ave-regina-coelorum_Gloria_Palestrina-Giovanni-Pierluigi-da_file1.krn
+        Missa-Ave-regina-coelorum_Sanctus_Palestrina-Giovanni-Pierluigi-da_file1.krn
+        Missa-Ave-regina-coelorum_Benedictus_Palestrina-Giovanni-Pierluigi-da_file1.krn
+        Missa-Ave-regina-coelorum_Credo_Palestrina-Giovanni-Pierluigi-da_file1.krn
+        Missa-Ave-regina-coelorum_Agnus-Dei-1_Palestrina-Giovanni-Pierluigi-da_file1.krn
+        Missa-Ave-regina-coelorum_Agnus-Dei-2_Palestrina-Giovanni-Pierluigi-da_file1.krn
+    Missa Beatus Laurentius
+        Missa-Beatus-Laurentius_Kyrie_Palestrina-Giovanni-Pierluigi-da_file1.krn
+        Missa-Beatus-Laurentius_Gloria_Palestrina-Giovanni-Pierluigi-da_file1.krn
+        Missa-Beatus-Laurentius_Sanctus_Palestrina-Giovanni-Pierluigi-da_file1.krn
+        Missa-Beatus-Laurentius_Benedictus_Palestrina-Giovanni-Pierluigi-da_file1.krn
+        Missa-Beatus-Laurentius_Credo_Palestrina-Giovanni-Pierluigi-da_file1.krn
+        Missa-Beatus-Laurentius_Agnus-Dei-1_Palestrina-Giovanni-Pierluigi-da_file1.krn
+        Missa-Beatus-Laurentius_Agnus-Dei-2_Palestrina-Giovanni-Pierluigi-da_file1.krn
+    Missa Benedicta es
+        Missa-Benedicta-es_Kyrie-1_Palestrina-Giovanni-Pierluigi-da_file1.krn
+        Missa-Benedicta-es_Gloria_Palestrina-Giovanni-Pierluigi-da_file1.krn
+        Missa-Benedicta-es_Sanctus_Palestrina-Giovanni-Pierluigi-da_file1.krn
+        Missa-Benedicta-es_Benedictus_Palestrina-Giovanni-Pierluigi-da_file1.krn
+        Missa-Benedicta-es_Credo_Palestrina-Giovanni-Pierluigi-da_file1.krn
+        Missa-Benedicta-es_Agnus-Dei-1_Palestrina-Giovanni-Pierluigi-da_file1.krn
+        Missa-Benedicta-es_Agnus-Dei-2_Palestrina-Giovanni-Pierluigi-da_file1.krn
+        Missa-Benedicta-es_Kyrie-2_Palestrina-Giovanni-Pierluigi-da_file1.krn
+    Missa Brevis
+        Missa-Brevis_Kyrie_Palestrina-Giovanni-Pierluigi-da_file1.krn
+        Missa-Brevis_Gloria_Palestrina-Giovanni-Pierluigi-da_file1.krn
+        Missa-Brevis_Sanctus_Palestrina-Giovanni-Pierluigi-da_file1.krn
+        Missa-Brevis_Benedictus_Palestrina-Giovanni-Pierluigi-da_file1.krn
+        Missa-Brevis_Credo_Palestrina-Giovanni-Pierluigi-da_file1.krn
+        Missa-Brevis_Agnus-Dei-1_Palestrina-Giovanni-Pierluigi-da_file1.krn
+        Missa-Brevis_Agnus-Dei-2_Palestrina-Giovanni-Pierluigi-da_file1.krn
+    Missa Confitebor tibi
+        Missa-Confitebor-tibi_Kyrie-1_Palestrina-Giovanni-Pierluigi-da_file1.krn
+        Missa-Confitebor-tibi_Gloria_Palestrina-Giovanni-Pierluigi-da_file1.krn
+        Missa-Confitebor-tibi_Sanctus_Palestrina-Giovanni-Pierluigi-da_file1.krn
+        Missa-Confitebor-tibi_Benedictus_Palestrina-Giovanni-Pierluigi-da_file1.krn
+        Missa-Confitebor-tibi_Credo_Palestrina-Giovanni-Pierluigi-da_file1.krn
+        Missa-Confitebor-tibi_Agnus-Dei-1_Palestrina-Giovanni-Pierluigi-da_file1.krn
+        Missa-Confitebor-tibi_Agnus-Dei-2_Palestrina-Giovanni-Pierluigi-da_file1.krn
+        Missa-Confitebor-tibi_Kyrie-2_Palestrina-Giovanni-Pierluigi-da_file1.krn
+    Missa De Beata Marie Virginis 2
+        Missa-De-Beata-Marie-Virginis-2_Kyrie_Palestrina-Giovanni-Pierluigi-da_file1.krn
+        Missa-De-Beata-Marie-Virginis-2_Gloria_Palestrina-Giovanni-Pierluigi-da_file1.krn
+        Missa-De-Beata-Marie-Virginis-2_Sanctus_Palestrina-Giovanni-Pierluigi-da_file1.krn
+        Missa-De-Beata-Marie-Virginis-2_Benedictus_Palestrina-Giovanni-Pierluigi-da_file1.krn
+        Missa-De-Beata-Marie-Virginis-2_Credo_Palestrina-Giovanni-Pierluigi-da_file1.krn
+        Missa-De-Beata-Marie-Virginis-2_Agnus-Dei_Palestrina-Giovanni-Pierluigi-da_file1.krn
+    Missa De Beata Marie Virginis 3
+        Missa-De-Beata-Marie-Virginis-3_Kyrie_Palestrina-Giovanni-Pierluigi-da_file1.krn
+        Missa-De-Beata-Marie-Virginis-3_Gloria_Palestrina-Giovanni-Pierluigi-da_file1.krn
+        Missa-De-Beata-Marie-Virginis-3_Sanctus_Palestrina-Giovanni-Pierluigi-da_file1.krn
+        Missa-De-Beata-Marie-Virginis-3_Benedictus_Palestrina-Giovanni-Pierluigi-da_file1.krn
+        Missa-De-Beata-Marie-Virginis-3_Credo_Palestrina-Giovanni-Pierluigi-da_file1.krn
+        Missa-De-Beata-Marie-Virginis-3_Agnus-Dei_Palestrina-Giovanni-Pierluigi-da_file1.krn
+    Missa De Beate Marie Virginis 1
+        Missa-De-Beate-Marie-Virginis-1_Kyrie_Palestrina-Giovanni-Pierluigi-da_file1.krn
+        Missa-De-Beate-Marie-Virginis-1_Credo_Palestrina-Giovanni-Pierluigi-da_file1.krn
+        Missa-De-Beate-Marie-Virginis-1_Gloria_Palestrina-Giovanni-Pierluigi-da_file1.krn
+        Missa-De-Beate-Marie-Virginis-1_Sanctus_Palestrina-Giovanni-Pierluigi-da_file1.krn
+        Missa-De-Beate-Marie-Virginis-1_Benedictus_Palestrina-Giovanni-Pierluigi-da_file1.krn
+        Missa-De-Beate-Marie-Virginis-1_Agnus-Dei_Palestrina-Giovanni-Pierluigi-da_file1.krn
+    Missa De beata virgine
+        Missa-De-beata-virgine_Kyrie-1_Palestrina-Giovanni-Pierluigi-da_file1.krn
+        Missa-De-beata-virgine_Gloria_Palestrina-Giovanni-Pierluigi-da_file1.krn
+        Missa-De-beata-virgine_Sanctus_Palestrina-Giovanni-Pierluigi-da_file1.krn
+        Missa-De-beata-virgine_Benedictus_Palestrina-Giovanni-Pierluigi-da_file1.krn
+        Missa-De-beata-virgine_Credo_Palestrina-Giovanni-Pierluigi-da_file1.krn
+        Missa-De-beata-virgine_Agnus-Dei-1_Palestrina-Giovanni-Pierluigi-da_file1.krn
+        Missa-De-beata-virgine_Agnus-Dei-2_Palestrina-Giovanni-Pierluigi-da_file1.krn
+        Missa-De-beata-virgine_Kyrie-2_Palestrina-Giovanni-Pierluigi-da_file1.krn
+    Missa De beate virgine
+        Missa-De-beate-virgine_Kyrie_Palestrina-Giovanni-Pierluigi-da_file1.krn
+        Missa-De-beate-virgine_Gloria_Palestrina-Giovanni-Pierluigi-da_file1.krn
+        Missa-De-beate-virgine_Sanctus_Palestrina-Giovanni-Pierluigi-da_file1.krn
+        Missa-De-beate-virgine_Benedictus_Palestrina-Giovanni-Pierluigi-da_file1.krn
+        Missa-De-beate-virgine_Credo_Palestrina-Giovanni-Pierluigi-da_file1.krn
+        Missa-De-beate-virgine_Agnus-Dei-1_Palestrina-Giovanni-Pierluigi-da_file1.krn
+        Missa-De-beate-virgine_Agnus-Dei-2_Palestrina-Giovanni-Pierluigi-da_file1.krn
+    Missa De feria
+        Missa-De-feria_Kyrie_Palestrina-Giovanni-Pierluigi-da_file1.krn
+        Missa-De-feria_Sanctus_Palestrina-Giovanni-Pierluigi-da_file1.krn
+        Missa-De-feria_Benedictus_Palestrina-Giovanni-Pierluigi-da_file1.krn
+        Missa-De-feria_Agnus-Dei-1_Palestrina-Giovanni-Pierluigi-da_file1.krn
+        Missa-De-feria_Agnus-Dei-2_Palestrina-Giovanni-Pierluigi-da_file1.krn
+    Missa Descendit angelus Domini
+        Missa-Descendit-angelus-Domini_Kyrie_Palestrina-Giovanni-Pierluigi-da_file1.krn
+        Missa-Descendit-angelus-Domini_Gloria_Palestrina-Giovanni-Pierluigi-da_file1.krn
+        Missa-Descendit-angelus-Domini_Sanctus_Palestrina-Giovanni-Pierluigi-da_file1.krn
+        Missa-Descendit-angelus-Domini_Benedictus_Palestrina-Giovanni-Pierluigi-da_file1.krn
+        Missa-Descendit-angelus-Domini_Credo_Palestrina-Giovanni-Pierluigi-da_file1.krn
+        Missa-Descendit-angelus-Domini_Agnus-Dei-1_Palestrina-Giovanni-Pierluigi-da_file1.krn
+        Missa-Descendit-angelus-Domini_Agnus-Dei-2_Palestrina-Giovanni-Pierluigi-da_file1.krn
+    Missa Dies sanctificatus
+        Missa-Dies-sanctificatus_Kyrie_Palestrina-Giovanni-Pierluigi-da_file1.krn
+        Missa-Dies-sanctificatus_Gloria_Palestrina-Giovanni-Pierluigi-da_file1.krn
+        Missa-Dies-sanctificatus_Sanctus_Palestrina-Giovanni-Pierluigi-da_file1.krn
+        Missa-Dies-sanctificatus_Benedictus_Palestrina-Giovanni-Pierluigi-da_file1.krn
+        Missa-Dies-sanctificatus_Credo_Palestrina-Giovanni-Pierluigi-da_file1.krn
+        Missa-Dies-sanctificatus_Agnus-Dei-1_Palestrina-Giovanni-Pierluigi-da_file1.krn
+        Missa-Dies-sanctificatus_Agnus-Dei-2_Palestrina-Giovanni-Pierluigi-da_file1.krn
+    Missa Dilexi quoniam
+        Missa-Dilexi-quoniam_Kyrie-1_Palestrina-Giovanni-Pierluigi-da_file1.krn
+        Missa-Dilexi-quoniam_Gloria_Palestrina-Giovanni-Pierluigi-da_file1.krn
+        Missa-Dilexi-quoniam_Sanctus_Palestrina-Giovanni-Pierluigi-da_file1.krn
+        Missa-Dilexi-quoniam_Benedictus_Palestrina-Giovanni-Pierluigi-da_file1.krn
+        Missa-Dilexi-quoniam_Credo_Palestrina-Giovanni-Pierluigi-da_file1.krn
+        Missa-Dilexi-quoniam_Agnus-Dei-1_Palestrina-Giovanni-Pierluigi-da_file1.krn
+        Missa-Dilexi-quoniam_Agnus-Dei-2_Palestrina-Giovanni-Pierluigi-da_file1.krn
+        Missa-Dilexi-quoniam_Kyrie-2_Palestrina-Giovanni-Pierluigi-da_file1.krn
+    Missa Dum complerentur
+        Missa-Dum-complerentur_Kyrie-1_Palestrina-Giovanni-Pierluigi-da_file1.krn
+        Missa-Dum-complerentur_Gloria_Palestrina-Giovanni-Pierluigi-da_file1.krn
+        Missa-Dum-complerentur_Sanctus_Palestrina-Giovanni-Pierluigi-da_file1.krn
+        Missa-Dum-complerentur_Benedictus_Palestrina-Giovanni-Pierluigi-da_file1.krn
+        Missa-Dum-complerentur_Credo_Palestrina-Giovanni-Pierluigi-da_file1.krn
+        Missa-Dum-complerentur_Agnus-Dei-1_Palestrina-Giovanni-Pierluigi-da_file1.krn
+        Missa-Dum-complerentur_Agnus-Dei-2_Palestrina-Giovanni-Pierluigi-da_file1.krn
+        Missa-Dum-complerentur_Kyrie-2_Palestrina-Giovanni-Pierluigi-da_file1.krn
+    Missa Dum esset summas pontifex
+        Missa-Dum-esset-summas-pontifex_Kyrie_Palestrina-Giovanni-Pierluigi-da_file1.krn
+        Missa-Dum-esset-summas-pontifex_Gloria_Palestrina-Giovanni-Pierluigi-da_file1.krn
+        Missa-Dum-esset-summas-pontifex_Sanctus_Palestrina-Giovanni-Pierluigi-da_file1.krn
+        Missa-Dum-esset-summas-pontifex_Credo_Palestrina-Giovanni-Pierluigi-da_file1.krn
+        Missa-Dum-esset-summas-pontifex_Agnus-Dei-1_Palestrina-Giovanni-Pierluigi-da_file1.krn
+        Missa-Dum-esset-summas-pontifex_Agnus-Dei-2_Palestrina-Giovanni-Pierluigi-da_file1.krn
+    Missa Ecce ego Joannes
+        Missa-Ecce-ego-Joannes_Kyrie-1_Palestrina-Giovanni-Pierluigi-da_file1.krn
+        Missa-Ecce-ego-Joannes_Gloria_Palestrina-Giovanni-Pierluigi-da_file1.krn
+        Missa-Ecce-ego-Joannes_Sanctus_Palestrina-Giovanni-Pierluigi-da_file1.krn
+        Missa-Ecce-ego-Joannes_Credo_Palestrina-Giovanni-Pierluigi-da_file1.krn
+        Missa-Ecce-ego-Joannes_Agnus-Dei-1_Palestrina-Giovanni-Pierluigi-da_file1.krn
+        Missa-Ecce-ego-Joannes_Agnus-Dei-2_Palestrina-Giovanni-Pierluigi-da_file1.krn
+        Missa-Ecce-ego-Joannes_Kyrie-2_Palestrina-Giovanni-Pierluigi-da_file1.krn
+    Missa Ecce sacerdos magnus
+        Missa-Ecce-sacerdos-magnus_Kyrie_Palestrina-Giovanni-Pierluigi-da_file1.krn
+        Missa-Ecce-sacerdos-magnus_Gloria_Palestrina-Giovanni-Pierluigi-da_file1.krn
+        Missa-Ecce-sacerdos-magnus_Sanctus_Palestrina-Giovanni-Pierluigi-da_file1.krn
+        Missa-Ecce-sacerdos-magnus_Benedictus_Palestrina-Giovanni-Pierluigi-da_file1.krn
+        Missa-Ecce-sacerdos-magnus_Credo_Palestrina-Giovanni-Pierluigi-da_file1.krn
+        Missa-Ecce-sacerdos-magnus_Agnus-Dei-1_Palestrina-Giovanni-Pierluigi-da_file1.krn
+        Missa-Ecce-sacerdos-magnus_Agnus-Dei-2_Palestrina-Giovanni-Pierluigi-da_file1.krn
+    Missa Emendemus in melius
+        Missa-Emendemus-in-melius_Kyrie_Palestrina-Giovanni-Pierluigi-da_file1.krn
+        Missa-Emendemus-in-melius_Gloria_Palestrina-Giovanni-Pierluigi-da_file1.krn
+        Missa-Emendemus-in-melius_Sanctus_Palestrina-Giovanni-Pierluigi-da_file1.krn
+        Missa-Emendemus-in-melius_Benedictus_Palestrina-Giovanni-Pierluigi-da_file1.krn
+        Missa-Emendemus-in-melius_Credo_Palestrina-Giovanni-Pierluigi-da_file1.krn
+        Missa-Emendemus-in-melius_Agnus-Dei-1_Palestrina-Giovanni-Pierluigi-da_file1.krn
+        Missa-Emendemus-in-melius_Agnus-Dei-2_Palestrina-Giovanni-Pierluigi-da_file1.krn
+    Missa Eripe me de inimicis
+        Missa-Eripe-me-de-inimicis_Kyrie-1_Palestrina-Giovanni-Pierluigi-da_file1.krn
+        Missa-Eripe-me-de-inimicis_Gloria_Palestrina-Giovanni-Pierluigi-da_file1.krn
+        Missa-Eripe-me-de-inimicis_Sanctus_Palestrina-Giovanni-Pierluigi-da_file1.krn
+        Missa-Eripe-me-de-inimicis_Benedictus_Palestrina-Giovanni-Pierluigi-da_file1.krn
+        Missa-Eripe-me-de-inimicis_Credo_Palestrina-Giovanni-Pierluigi-da_file1.krn
+        Missa-Eripe-me-de-inimicis_Agnus-Dei-1_Palestrina-Giovanni-Pierluigi-da_file1.krn
+        Missa-Eripe-me-de-inimicis_Agnus-Dei-2_Palestrina-Giovanni-Pierluigi-da_file1.krn
+        Missa-Eripe-me-de-inimicis_Kyrie-2_Palestrina-Giovanni-Pierluigi-da_file1.krn
+    Missa Fratres ego enim accepi
+        Missa-Fratres-ego-enim-accepi_Kyrie-1_Palestrina-Giovanni-Pierluigi-da_file1.krn
+        Missa-Fratres-ego-enim-accepi_Gloria_Palestrina-Giovanni-Pierluigi-da_file1.krn
+        Missa-Fratres-ego-enim-accepi_Sanctus_Palestrina-Giovanni-Pierluigi-da_file1.krn
+        Missa-Fratres-ego-enim-accepi_Benedictus_Palestrina-Giovanni-Pierluigi-da_file1.krn
+        Missa-Fratres-ego-enim-accepi_Credo_Palestrina-Giovanni-Pierluigi-da_file1.krn
+        Missa-Fratres-ego-enim-accepi_Kyrie-2_Palestrina-Giovanni-Pierluigi-da_file1.krn
+        Missa-Fratres-ego-enim-accepi_Agnus-Dei_Palestrina-Giovanni-Pierluigi-da_file1.krn
+    Missa Gabriel Archangelus
+        Missa-Gabriel-Archangelus_Kyrie_Palestrina-Giovanni-Pierluigi-da_file1.krn
+        Missa-Gabriel-Archangelus_Gloria_Palestrina-Giovanni-Pierluigi-da_file1.krn
+        Missa-Gabriel-Archangelus_Sanctus_Palestrina-Giovanni-Pierluigi-da_file1.krn
+        Missa-Gabriel-Archangelus_Benedictus_Palestrina-Giovanni-Pierluigi-da_file1.krn
+        Missa-Gabriel-Archangelus_Credo_Palestrina-Giovanni-Pierluigi-da_file1.krn
+        Missa-Gabriel-Archangelus_Agnus-Dei-1_Palestrina-Giovanni-Pierluigi-da_file1.krn
+        Missa-Gabriel-Archangelus_Agnus-Dei-2_Palestrina-Giovanni-Pierluigi-da_file1.krn
+    Missa Già fu chi' m'ebbe cara
+        Missa-Gia-fu-chi-m-ebbe-cara_Kyrie_Palestrina-Giovanni-Pierluigi-da_file1.krn
+        Missa-Gia-fu-chi-m-ebbe-cara_Gloria_Palestrina-Giovanni-Pierluigi-da_file1.krn
+        Missa-Gia-fu-chi-m-ebbe-cara_Sanctus_Palestrina-Giovanni-Pierluigi-da_file1.krn
+        Missa-Gia-fu-chi-m-ebbe-cara_Benedictus_Palestrina-Giovanni-Pierluigi-da_file1.krn
+        Missa-Gia-fu-chi-m-ebbe-cara_Credo_Palestrina-Giovanni-Pierluigi-da_file1.krn
+        Missa-Gia-fu-chi-m-ebbe-cara_Agnus-Dei_Palestrina-Giovanni-Pierluigi-da_file1.krn
+    Missa Hodie christus natus est
+        Missa-Hodie-christus-natus-est_Kyrie-1_Palestrina-Giovanni-Pierluigi-da_file1.krn
+        Missa-Hodie-christus-natus-est_Gloria_Palestrina-Giovanni-Pierluigi-da_file1.krn
+        Missa-Hodie-christus-natus-est_Sanctus_Palestrina-Giovanni-Pierluigi-da_file1.krn
+        Missa-Hodie-christus-natus-est_Benedictus_Palestrina-Giovanni-Pierluigi-da_file1.krn
+        Missa-Hodie-christus-natus-est_Credo_Palestrina-Giovanni-Pierluigi-da_file1.krn
+        Missa-Hodie-christus-natus-est_Kyrie-2_Palestrina-Giovanni-Pierluigi-da_file1.krn
+        Missa-Hodie-christus-natus-est_Agnus-Dei_Palestrina-Giovanni-Pierluigi-da_file1.krn
+    Missa Illumina oculos meos
+        Missa-Illumina-oculos-meos_Kyrie-1_Palestrina-Giovanni-Pierluigi-da_file1.krn
+        Missa-Illumina-oculos-meos_Gloria_Palestrina-Giovanni-Pierluigi-da_file1.krn
+        Missa-Illumina-oculos-meos_Sanctus_Palestrina-Giovanni-Pierluigi-da_file1.krn
+        Missa-Illumina-oculos-meos_Benedictus_Palestrina-Giovanni-Pierluigi-da_file1.krn
+        Missa-Illumina-oculos-meos_Credo_Palestrina-Giovanni-Pierluigi-da_file1.krn
+        Missa-Illumina-oculos-meos_Agnus-Dei-1_Palestrina-Giovanni-Pierluigi-da_file1.krn
+        Missa-Illumina-oculos-meos_Agnus-Dei-2_Palestrina-Giovanni-Pierluigi-da_file1.krn
+        Missa-Illumina-oculos-meos_Kyrie-2_Palestrina-Giovanni-Pierluigi-da_file1.krn
+    Missa In duplicibus minoribus 1
+        Missa-In-duplicibus-minoribus-1_Kyrie_Palestrina-Giovanni-Pierluigi-da_file1.krn
+        Missa-In-duplicibus-minoribus-1_Gloria_Palestrina-Giovanni-Pierluigi-da_file1.krn
+        Missa-In-duplicibus-minoribus-1_Sanctus_Palestrina-Giovanni-Pierluigi-da_file1.krn
+        Missa-In-duplicibus-minoribus-1_Benedictus_Palestrina-Giovanni-Pierluigi-da_file1.krn
+        Missa-In-duplicibus-minoribus-1_Credo_Palestrina-Giovanni-Pierluigi-da_file1.krn
+        Missa-In-duplicibus-minoribus-1_Agnus-Dei_Palestrina-Giovanni-Pierluigi-da_file1.krn
+    Missa In duplicibus minoribus 2
+        Missa-In-duplicibus-minoribus-2_Kyrie_Palestrina-Giovanni-Pierluigi-da_file1.krn
+        Missa-In-duplicibus-minoribus-2_Gloria_Palestrina-Giovanni-Pierluigi-da_file1.krn
+        Missa-In-duplicibus-minoribus-2_Sanctus_Palestrina-Giovanni-Pierluigi-da_file1.krn
+        Missa-In-duplicibus-minoribus-2_Benedictus_Palestrina-Giovanni-Pierluigi-da_file1.krn
+        Missa-In-duplicibus-minoribus-2_Credo_Palestrina-Giovanni-Pierluigi-da_file1.krn
+        Missa-In-duplicibus-minoribus-2_Agnus-Dei_Palestrina-Giovanni-Pierluigi-da_file1.krn
+    Missa In festis Apostolorum (1)
+        Missa-In-festis-Apostolorum-1-_Kyrie_Palestrina-Giovanni-Pierluigi-da_file1.krn
+        Missa-In-festis-Apostolorum-1-_Gloria_Palestrina-Giovanni-Pierluigi-da_file1.krn
+        Missa-In-festis-Apostolorum-1-_Sanctus_Palestrina-Giovanni-Pierluigi-da_file1.krn
+        Missa-In-festis-Apostolorum-1-_Benedictus_Palestrina-Giovanni-Pierluigi-da_file1.krn
+        Missa-In-festis-Apostolorum-1-_Credo_Palestrina-Giovanni-Pierluigi-da_file1.krn
+        Missa-In-festis-Apostolorum-1-_Agnus-dei_Palestrina-Giovanni-Pierluigi-da_file1.krn
+    Missa In festis Apostolorum (2)
+        Missa-In-festis-Apostolorum-2-_Kyrie_Palestrina-Giovanni-Pierluigi-da_file1.krn
+        Missa-In-festis-Apostolorum-2-_Gloria_Palestrina-Giovanni-Pierluigi-da_file1.krn
+        Missa-In-festis-Apostolorum-2-_Sanctus_Palestrina-Giovanni-Pierluigi-da_file1.krn
+        Missa-In-festis-Apostolorum-2-_Credo_Palestrina-Giovanni-Pierluigi-da_file1.krn
+        Missa-In-festis-Apostolorum-2-_Agnus-dei_Palestrina-Giovanni-Pierluigi-da_file1.krn
+    Missa In illo tempore
+        Missa-In-illo-tempore_Kyrie_Palestrina-Giovanni-Pierluigi-da_file1.krn
+        Missa-In-illo-tempore_Gloria_Palestrina-Giovanni-Pierluigi-da_file1.krn
+        Missa-In-illo-tempore_Sanctus_Palestrina-Giovanni-Pierluigi-da_file1.krn
+        Missa-In-illo-tempore_Benedictus_Palestrina-Giovanni-Pierluigi-da_file1.krn
+        Missa-In-illo-tempore_Credo_Palestrina-Giovanni-Pierluigi-da_file1.krn
+        Missa-In-illo-tempore_Agnus-dei_Palestrina-Giovanni-Pierluigi-da_file1.krn
+    Missa In majoribus duplicibus
+        Missa-In-majoribus-duplicibus_Kyrie_Palestrina-Giovanni-Pierluigi-da_file1.krn
+        Missa-In-majoribus-duplicibus_Gloria_Palestrina-Giovanni-Pierluigi-da_file1.krn
+        Missa-In-majoribus-duplicibus_Sanctus_Palestrina-Giovanni-Pierluigi-da_file1.krn
+        Missa-In-majoribus-duplicibus_Benedictus_Palestrina-Giovanni-Pierluigi-da_file1.krn
+        Missa-In-majoribus-duplicibus_Credo_Palestrina-Giovanni-Pierluigi-da_file1.krn
+        Missa-In-majoribus-duplicibus_Agnus-dei-1_Palestrina-Giovanni-Pierluigi-da_file1.krn
+        Missa-In-majoribus-duplicibus_Agnus-dei-2_Palestrina-Giovanni-Pierluigi-da_file1.krn
+    Missa In minoribus duplicibus
+        Missa-In-minoribus-duplicibus_Kyrie_Palestrina-Giovanni-Pierluigi-da_file1.krn
+        Missa-In-minoribus-duplicibus_Gloria_Palestrina-Giovanni-Pierluigi-da_file1.krn
+        Missa-In-minoribus-duplicibus_Sanctus_Palestrina-Giovanni-Pierluigi-da_file1.krn
+        Missa-In-minoribus-duplicibus_Benedictus_Palestrina-Giovanni-Pierluigi-da_file1.krn
+        Missa-In-minoribus-duplicibus_Credo_Palestrina-Giovanni-Pierluigi-da_file1.krn
+        Missa-In-minoribus-duplicibus_Agnus-dei-1_Palestrina-Giovanni-Pierluigi-da_file1.krn
+        Missa-In-minoribus-duplicibus_Agnus-dei-2_Palestrina-Giovanni-Pierluigi-da_file1.krn
+    Missa In semiduplicibus majoribus (1)
+        Missa-In-semiduplicibus-majoribus-1-_Kyrie_Palestrina-Giovanni-Pierluigi-da_file1.krn
+        Missa-In-semiduplicibus-majoribus-1-_Gloria_Palestrina-Giovanni-Pierluigi-da_file1.krn
+        Missa-In-semiduplicibus-majoribus-1-_Sanctus_Palestrina-Giovanni-Pierluigi-da_file1.krn
+        Missa-In-semiduplicibus-majoribus-1-_Benedictus_Palestrina-Giovanni-Pierluigi-da_file1.krn
+        Missa-In-semiduplicibus-majoribus-1-_Credo_Palestrina-Giovanni-Pierluigi-da_file1.krn
+        Missa-In-semiduplicibus-majoribus-1-_Agnus-dei_Palestrina-Giovanni-Pierluigi-da_file1.krn
+    Missa In semiduplicibus majoribus (2)
+        Missa-In-semiduplicibus-majoribus-2-_Kyrie_Palestrina-Giovanni-Pierluigi-da_file1.krn
+        Missa-In-semiduplicibus-majoribus-2-_Gloria_Palestrina-Giovanni-Pierluigi-da_file1.krn
+        Missa-In-semiduplicibus-majoribus-2-_Sanctus_Palestrina-Giovanni-Pierluigi-da_file1.krn
+        Missa-In-semiduplicibus-majoribus-2-_Benedictus_Palestrina-Giovanni-Pierluigi-da_file1.krn
+        Missa-In-semiduplicibus-majoribus-2-_Credo_Palestrina-Giovanni-Pierluigi-da_file1.krn
+        Missa-In-semiduplicibus-majoribus-2-_Agnus-dei_Palestrina-Giovanni-Pierluigi-da_file1.krn
+    Missa In te Domine speravi (1593/4)
+        Missa-In-te-Domine-speravi-1593-4-_Kyrie_Palestrina-Giovanni-Pierluigi-da_file1.krn
+        Missa-In-te-Domine-speravi-1593-4-_Gloria_Palestrina-Giovanni-Pierluigi-da_file1.krn
+        Missa-In-te-Domine-speravi-1593-4-_Sanctus_Palestrina-Giovanni-Pierluigi-da_file1.krn
+        Missa-In-te-Domine-speravi-1593-4-_Benedictus_Palestrina-Giovanni-Pierluigi-da_file1.krn
+        Missa-In-te-Domine-speravi-1593-4-_Credo_Palestrina-Giovanni-Pierluigi-da_file1.krn
+        Missa-In-te-Domine-speravi-1593-4-_Agnus-dei-1_Palestrina-Giovanni-Pierluigi-da_file1.krn
+        Missa-In-te-Domine-speravi-1593-4-_Agnus-dei-2_Palestrina-Giovanni-Pierluigi-da_file1.krn
+    Missa In te Domine speravi (1599)
+        Missa-In-te-Domine-speravi-1599-_Kyrie-1_Palestrina-Giovanni-Pierluigi-da_file1.krn
+        Missa-In-te-Domine-speravi-1599-_Gloria_Palestrina-Giovanni-Pierluigi-da_file1.krn
+        Missa-In-te-Domine-speravi-1599-_Sanctus_Palestrina-Giovanni-Pierluigi-da_file1.krn
+        Missa-In-te-Domine-speravi-1599-_Benedictus_Palestrina-Giovanni-Pierluigi-da_file1.krn
+        Missa-In-te-Domine-speravi-1599-_Credo_Palestrina-Giovanni-Pierluigi-da_file1.krn
+        Missa-In-te-Domine-speravi-1599-_Agnus-dei-1_Palestrina-Giovanni-Pierluigi-da_file1.krn
+        Missa-In-te-Domine-speravi-1599-_Agnus-dei-2_Palestrina-Giovanni-Pierluigi-da_file1.krn
+        Missa-In-te-Domine-speravi-1599-_Kyrie-2_Palestrina-Giovanni-Pierluigi-da_file1.krn
+    Missa Inviolata
+        Missa-Inviolata_Kyrie_Palestrina-Giovanni-Pierluigi-da_file1.krn
+        Missa-Inviolata_Gloria_Palestrina-Giovanni-Pierluigi-da_file1.krn
+        Missa-Inviolata_Sanctus_Palestrina-Giovanni-Pierluigi-da_file1.krn
+        Missa-Inviolata_Benedictus_Palestrina-Giovanni-Pierluigi-da_file1.krn
+        Missa-Inviolata_Credo_Palestrina-Giovanni-Pierluigi-da_file1.krn
+        Missa-Inviolata_Agnus-dei-1_Palestrina-Giovanni-Pierluigi-da_file1.krn
+        Missa-Inviolata_Agnus-dei-2_Palestrina-Giovanni-Pierluigi-da_file1.krn
+    Missa Io mi son giovinetta (primi toni)
+        Missa-Io-mi-son-giovinetta-primi-toni-_Kyrie_Palestrina-Giovanni-Pierluigi-da_file1.krn
+        Missa-Io-mi-son-giovinetta-primi-toni-_Gloria_Palestrina-Giovanni-Pierluigi-da_file1.krn
+        Missa-Io-mi-son-giovinetta-primi-toni-_Sanctus_Palestrina-Giovanni-Pierluigi-da_file1.krn
+        Missa-Io-mi-son-giovinetta-primi-toni-_Benedictus_Palestrina-Giovanni-Pierluigi-da_file1.krn
+        Missa-Io-mi-son-giovinetta-primi-toni-_Credo_Palestrina-Giovanni-Pierluigi-da_file1.krn
+        Missa-Io-mi-son-giovinetta-primi-toni-_Agnus-dei-1_Palestrina-Giovanni-Pierluigi-da_file1.krn
+        Missa-Io-mi-son-giovinetta-primi-toni-_Agnus-dei-2_Palestrina-Giovanni-Pierluigi-da_file1.krn
+    Missa Iste confessor
+        Missa-Iste-confessor_Kyrie_Palestrina-Giovanni-Pierluigi-da_file1.krn
+        Missa-Iste-confessor_Gloria_Palestrina-Giovanni-Pierluigi-da_file1.krn
+        Missa-Iste-confessor_Sanctus_Palestrina-Giovanni-Pierluigi-da_file1.krn
+        Missa-Iste-confessor_Benedictus_Palestrina-Giovanni-Pierluigi-da_file1.krn
+        Missa-Iste-confessor_Credo_Palestrina-Giovanni-Pierluigi-da_file1.krn
+        Missa-Iste-confessor_Agnus-dei-1_Palestrina-Giovanni-Pierluigi-da_file1.krn
+        Missa-Iste-confessor_Agnus-dei-2_Palestrina-Giovanni-Pierluigi-da_file1.krn
+    Missa Jam Christus astra ascenderat
+        Missa-Jam-Christus-astra-ascenderat_Kyrie_Palestrina-Giovanni-Pierluigi-da_file1.krn
+        Missa-Jam-Christus-astra-ascenderat_Gloria_Palestrina-Giovanni-Pierluigi-da_file1.krn
+        Missa-Jam-Christus-astra-ascenderat_Sanctus_Palestrina-Giovanni-Pierluigi-da_file1.krn
+        Missa-Jam-Christus-astra-ascenderat_Benedictus_Palestrina-Giovanni-Pierluigi-da_file1.krn
+        Missa-Jam-Christus-astra-ascenderat_Credo_Palestrina-Giovanni-Pierluigi-da_file1.krn
+        Missa-Jam-Christus-astra-ascenderat_Agnus-dei-1_Palestrina-Giovanni-Pierluigi-da_file1.krn
+        Missa-Jam-Christus-astra-ascenderat_Agnus-dei-2_Palestrina-Giovanni-Pierluigi-da_file1.krn
+    Missa Je suis desheritée
+        Missa-Je-suis-desheritee_Kyrie_Palestrina-Giovanni-Pierluigi-da_file1.krn
+        Missa-Je-suis-desheritee_Gloria_Palestrina-Giovanni-Pierluigi-da_file1.krn
+        Missa-Je-suis-desheritee_Sanctus_Palestrina-Giovanni-Pierluigi-da_file1.krn
+        Missa-Je-suis-desheritee_Benedictus_Palestrina-Giovanni-Pierluigi-da_file1.krn
+        Missa-Je-suis-desheritee_Credo_Palestrina-Giovanni-Pierluigi-da_file1.krn
+        Missa-Je-suis-desheritee_Agnus-dei-1_Palestrina-Giovanni-Pierluigi-da_file1.krn
+        Missa-Je-suis-desheritee_Agnus-dei-2_Palestrina-Giovanni-Pierluigi-da_file1.krn
+    Missa Jesu, nostra redemptio
+        Missa-Jesu-nostra-redemptio_Kyrie_Palestrina-Giovanni-Pierluigi-da_file1.krn
+        Missa-Jesu-nostra-redemptio_Gloria_Palestrina-Giovanni-Pierluigi-da_file1.krn
+        Missa-Jesu-nostra-redemptio_Sanctus_Palestrina-Giovanni-Pierluigi-da_file1.krn
+        Missa-Jesu-nostra-redemptio_Benedictus_Palestrina-Giovanni-Pierluigi-da_file1.krn
+        Missa-Jesu-nostra-redemptio_Credo_Palestrina-Giovanni-Pierluigi-da_file1.krn
+        Missa-Jesu-nostra-redemptio_Agnus-dei-1_Palestrina-Giovanni-Pierluigi-da_file1.krn
+        Missa-Jesu-nostra-redemptio_Agnus-dei-2_Palestrina-Giovanni-Pierluigi-da_file1.krn
+    Missa L'homme armé (4vv, 1582)
+        Missa-L-homme-arme-4vv-1582-_Kyrie_Palestrina-Giovanni-Pierluigi-da_file1.krn
+        Missa-L-homme-arme-4vv-1582-_Gloria_Palestrina-Giovanni-Pierluigi-da_file1.krn
+        Missa-L-homme-arme-4vv-1582-_Sanctus_Palestrina-Giovanni-Pierluigi-da_file1.krn
+        Missa-L-homme-arme-4vv-1582-_Benedictus_Palestrina-Giovanni-Pierluigi-da_file1.krn
+        Missa-L-homme-arme-4vv-1582-_Credo_Palestrina-Giovanni-Pierluigi-da_file1.krn
+        Missa-L-homme-arme-4vv-1582-_Agnus-dei-1_Palestrina-Giovanni-Pierluigi-da_file1.krn
+        Missa-L-homme-arme-4vv-1582-_Agnus-dei-2_Palestrina-Giovanni-Pierluigi-da_file1.krn
+    Missa L'homme armé (5vv, 1570)
+        Missa-L-homme-arme-5vv-1570-_Kyrie_Palestrina-Giovanni-Pierluigi-da_file1.krn
+        Missa-L-homme-arme-5vv-1570-_Gloria_Palestrina-Giovanni-Pierluigi-da_file1.krn
+        Missa-L-homme-arme-5vv-1570-_Sanctus_Palestrina-Giovanni-Pierluigi-da_file1.krn
+        Missa-L-homme-arme-5vv-1570-_Benedictus_Palestrina-Giovanni-Pierluigi-da_file1.krn
+        Missa-L-homme-arme-5vv-1570-_Credo_Palestrina-Giovanni-Pierluigi-da_file1.krn
+        Missa-L-homme-arme-5vv-1570-_Agnus-dei-1_Palestrina-Giovanni-Pierluigi-da_file1.krn
+        Missa-L-homme-arme-5vv-1570-_Agnus-dei-2_Palestrina-Giovanni-Pierluigi-da_file1.krn
+    Missa Lauda Sion
+        Missa-Lauda-Sion_Kyrie_Palestrina-Giovanni-Pierluigi-da_file1.krn
+        Missa-Lauda-Sion_Gloria_Palestrina-Giovanni-Pierluigi-da_file1.krn
+        Missa-Lauda-Sion_Sanctus_Palestrina-Giovanni-Pierluigi-da_file1.krn
+        Missa-Lauda-Sion_Benedictus_Palestrina-Giovanni-Pierluigi-da_file1.krn
+        Missa-Lauda-Sion_Credo_Palestrina-Giovanni-Pierluigi-da_file1.krn
+        Missa-Lauda-Sion_Agnus-dei-1_Palestrina-Giovanni-Pierluigi-da_file1.krn
+        Missa-Lauda-Sion_Agnus-dei-2_Palestrina-Giovanni-Pierluigi-da_file1.krn
+    Missa Laudate Dominum
+        Missa-Laudate-Dominum_Kyrie-1_Palestrina-Giovanni-Pierluigi-da_file1.krn
+        Missa-Laudate-Dominum_Gloria_Palestrina-Giovanni-Pierluigi-da_file1.krn
+        Missa-Laudate-Dominum_Sanctus_Palestrina-Giovanni-Pierluigi-da_file1.krn
+        Missa-Laudate-Dominum_Benedictus_Palestrina-Giovanni-Pierluigi-da_file1.krn
+        Missa-Laudate-Dominum_Credo_Palestrina-Giovanni-Pierluigi-da_file1.krn
+        Missa-Laudate-Dominum_Agnus-dei-1_Palestrina-Giovanni-Pierluigi-da_file1.krn
+        Missa-Laudate-Dominum_Agnus-dei-2_Palestrina-Giovanni-Pierluigi-da_file1.krn
+        Missa-Laudate-Dominum_Kyrie-2_Palestrina-Giovanni-Pierluigi-da_file1.krn
+    Missa Memor esto
+        Missa-Memor-esto_Kyrie_Palestrina-Giovanni-Pierluigi-da_file1.krn
+        Missa-Memor-esto_Gloria_Palestrina-Giovanni-Pierluigi-da_file1.krn
+        Missa-Memor-esto_Sanctus_Palestrina-Giovanni-Pierluigi-da_file1.krn
+        Missa-Memor-esto_Benedictus_Palestrina-Giovanni-Pierluigi-da_file1.krn
+        Missa-Memor-esto_Credo_Palestrina-Giovanni-Pierluigi-da_file1.krn
+        Missa-Memor-esto_Agnus-dei_Palestrina-Giovanni-Pierluigi-da_file1.krn
+    Missa Nasce la gioia mia
+        Missa-Nasce-la-gioia-mia_Kyrie-1_Palestrina-Giovanni-Pierluigi-da_file1.krn
+        Missa-Nasce-la-gioia-mia_Gloria_Palestrina-Giovanni-Pierluigi-da_file1.krn
+        Missa-Nasce-la-gioia-mia_Sanctus_Palestrina-Giovanni-Pierluigi-da_file1.krn
+        Missa-Nasce-la-gioia-mia_Benedictus_Palestrina-Giovanni-Pierluigi-da_file1.krn
+        Missa-Nasce-la-gioia-mia_Credo_Palestrina-Giovanni-Pierluigi-da_file1.krn
+        Missa-Nasce-la-gioia-mia_Agnus-dei-1_Palestrina-Giovanni-Pierluigi-da_file1.krn
+        Missa-Nasce-la-gioia-mia_Agnus-dei-2_Palestrina-Giovanni-Pierluigi-da_file1.krn
+        Missa-Nasce-la-gioia-mia_Kyrie-2_Palestrina-Giovanni-Pierluigi-da_file1.krn
+    Missa Nigra sum
+        Missa-Nigra-sum_Kyrie_Palestrina-Giovanni-Pierluigi-da_file1.krn
+        Missa-Nigra-sum_Gloria_Palestrina-Giovanni-Pierluigi-da_file1.krn
+        Missa-Nigra-sum_Sanctus_Palestrina-Giovanni-Pierluigi-da_file1.krn
+        Missa-Nigra-sum_Benedictus_Palestrina-Giovanni-Pierluigi-da_file1.krn
+        Missa-Nigra-sum_Credo_Palestrina-Giovanni-Pierluigi-da_file1.krn
+        Missa-Nigra-sum_Agnus-dei-1_Palestrina-Giovanni-Pierluigi-da_file1.krn
+        Missa-Nigra-sum_Agnus-dei-2_Palestrina-Giovanni-Pierluigi-da_file1.krn
+    Missa O Regem coeli
+        Missa-O-Regem-coeli_Kyrie_Palestrina-Giovanni-Pierluigi-da_file1.krn
+        Missa-O-Regem-coeli_Gloria_Palestrina-Giovanni-Pierluigi-da_file1.krn
+        Missa-O-Regem-coeli_Sanctus_Palestrina-Giovanni-Pierluigi-da_file1.krn
+        Missa-O-Regem-coeli_Benedictus_Palestrina-Giovanni-Pierluigi-da_file1.krn
+        Missa-O-Regem-coeli_Credo_Palestrina-Giovanni-Pierluigi-da_file1.krn
+        Missa-O-Regem-coeli_Agnus-dei-1_Palestrina-Giovanni-Pierluigi-da_file1.krn
+        Missa-O-Regem-coeli_Agnus-dei-2_Palestrina-Giovanni-Pierluigi-da_file1.krn
+    Missa O Rex gloriae
+        Missa-O-Rex-gloriae_Kyrie_Palestrina-Giovanni-Pierluigi-da_file1.krn
+        Missa-O-Rex-gloriae_Gloria_Palestrina-Giovanni-Pierluigi-da_file1.krn
+        Missa-O-Rex-gloriae_Sanctus_Palestrina-Giovanni-Pierluigi-da_file1.krn
+        Missa-O-Rex-gloriae_Benedictus_Palestrina-Giovanni-Pierluigi-da_file1.krn
+        Missa-O-Rex-gloriae_Credo_Palestrina-Giovanni-Pierluigi-da_file1.krn
+        Missa-O-Rex-gloriae_Agnus-dei_Palestrina-Giovanni-Pierluigi-da_file1.krn
+    Missa O admirabile commercium
+        Missa-O-admirabile-commercium_Kyrie_Palestrina-Giovanni-Pierluigi-da_file1.krn
+        Missa-O-admirabile-commercium_Gloria_Palestrina-Giovanni-Pierluigi-da_file1.krn
+        Missa-O-admirabile-commercium_Sanctus_Palestrina-Giovanni-Pierluigi-da_file1.krn
+        Missa-O-admirabile-commercium_Benedictus_Palestrina-Giovanni-Pierluigi-da_file1.krn
+        Missa-O-admirabile-commercium_Credo_Palestrina-Giovanni-Pierluigi-da_file1.krn
+        Missa-O-admirabile-commercium_Agnus-dei-1_Palestrina-Giovanni-Pierluigi-da_file1.krn
+        Missa-O-admirabile-commercium_Agnus-dei-2_Palestrina-Giovanni-Pierluigi-da_file1.krn
+    Missa O magnum mysterium
+        Missa-O-magnum-mysterium_Kyrie-1_Palestrina-Giovanni-Pierluigi-da_file1.krn
+        Missa-O-magnum-mysterium_Gloria_Palestrina-Giovanni-Pierluigi-da_file1.krn
+        Missa-O-magnum-mysterium_Sanctus_Palestrina-Giovanni-Pierluigi-da_file1.krn
+        Missa-O-magnum-mysterium_Benedictus_Palestrina-Giovanni-Pierluigi-da_file1.krn
+        Missa-O-magnum-mysterium_Credo_Palestrina-Giovanni-Pierluigi-da_file1.krn
+        Missa-O-magnum-mysterium_Agnus-dei-1_Palestrina-Giovanni-Pierluigi-da_file1.krn
+        Missa-O-magnum-mysterium_Agnus-dei-2_Palestrina-Giovanni-Pierluigi-da_file1.krn
+        Missa-O-magnum-mysterium_Kyrie-2_Palestrina-Giovanni-Pierluigi-da_file1.krn
+    Missa O sacrum convivium
+        Missa-O-sacrum-convivium_Kyrie-1_Palestrina-Giovanni-Pierluigi-da_file1.krn
+        Missa-O-sacrum-convivium_Gloria_Palestrina-Giovanni-Pierluigi-da_file1.krn
+        Missa-O-sacrum-convivium_Sanctus_Palestrina-Giovanni-Pierluigi-da_file1.krn
+        Missa-O-sacrum-convivium_Benedictus_Palestrina-Giovanni-Pierluigi-da_file1.krn
+        Missa-O-sacrum-convivium_Credo_Palestrina-Giovanni-Pierluigi-da_file1.krn
+        Missa-O-sacrum-convivium_Agnus-dei-1_Palestrina-Giovanni-Pierluigi-da_file1.krn
+        Missa-O-sacrum-convivium_Agnus-dei-2_Palestrina-Giovanni-Pierluigi-da_file1.krn
+        Missa-O-sacrum-convivium_Kyrie-2_Palestrina-Giovanni-Pierluigi-da_file1.krn
+    Missa O virgo simul et mater
+        Missa-O-virgo-simul-et-mater_Kyrie_Palestrina-Giovanni-Pierluigi-da_file1.krn
+        Missa-O-virgo-simul-et-mater_Gloria_Palestrina-Giovanni-Pierluigi-da_file1.krn
+        Missa-O-virgo-simul-et-mater_Sanctus_Palestrina-Giovanni-Pierluigi-da_file1.krn
+        Missa-O-virgo-simul-et-mater_Benedictus_Palestrina-Giovanni-Pierluigi-da_file1.krn
+        Missa-O-virgo-simul-et-mater_Credo_Palestrina-Giovanni-Pierluigi-da_file1.krn
+        Missa-O-virgo-simul-et-mater_Agnus-dei_Palestrina-Giovanni-Pierluigi-da_file1.krn
+    Missa Octavi toni (Festum nunc celebre)
+        Missa-Octavi-toni-Festum-nunc-celebre-_Kyrie_Palestrina-Giovanni-Pierluigi-da_file1.krn
+        Missa-Octavi-toni-Festum-nunc-celebre-_Gloria_Palestrina-Giovanni-Pierluigi-da_file1.krn
+        Missa-Octavi-toni-Festum-nunc-celebre-_Sanctus_Palestrina-Giovanni-Pierluigi-da_file1.krn
+        Missa-Octavi-toni-Festum-nunc-celebre-_Benedictus_Palestrina-Giovanni-Pierluigi-da_file1.krn
+        Missa-Octavi-toni-Festum-nunc-celebre-_Credo_Palestrina-Giovanni-Pierluigi-da_file1.krn
+        Missa-Octavi-toni-Festum-nunc-celebre-_Agnus-dei-1_Palestrina-Giovanni-Pierluigi-da_file1.krn
+        Missa-Octavi-toni-Festum-nunc-celebre-_Agnus-dei-2_Palestrina-Giovanni-Pierluigi-da_file1.krn
+    Missa Panem nostrum
+        Missa-Panem-nostrum_Kyrie_Palestrina-Giovanni-Pierluigi-da_file1.krn
+        Missa-Panem-nostrum_Gloria_Palestrina-Giovanni-Pierluigi-da_file1.krn
+        Missa-Panem-nostrum_Sanctus_Palestrina-Giovanni-Pierluigi-da_file1.krn
+        Missa-Panem-nostrum_Benedictus_Palestrina-Giovanni-Pierluigi-da_file1.krn
+        Missa-Panem-nostrum_Credo_Palestrina-Giovanni-Pierluigi-da_file1.krn
+        Missa-Panem-nostrum_Agnus-dei-1_Palestrina-Giovanni-Pierluigi-da_file1.krn
+        Missa-Panem-nostrum_Agnus-dei-2_Palestrina-Giovanni-Pierluigi-da_file1.krn
+    Missa Panis quem ego dabo
+        Missa-Panis-quem-ego-dabo_Kyrie_Palestrina-Giovanni-Pierluigi-da_file1.krn
+        Missa-Panis-quem-ego-dabo_Gloria_Palestrina-Giovanni-Pierluigi-da_file1.krn
+        Missa-Panis-quem-ego-dabo_Sanctus_Palestrina-Giovanni-Pierluigi-da_file1.krn
+        Missa-Panis-quem-ego-dabo_Benedictus_Palestrina-Giovanni-Pierluigi-da_file1.krn
+        Missa-Panis-quem-ego-dabo_Credo_Palestrina-Giovanni-Pierluigi-da_file1.krn
+        Missa-Panis-quem-ego-dabo_Agnus-dei-1_Palestrina-Giovanni-Pierluigi-da_file1.krn
+        Missa-Panis-quem-ego-dabo_Agnus-dei-2_Palestrina-Giovanni-Pierluigi-da_file1.krn
+    Missa Papae Marcelli
+        Missa-Papae-Marcelli_Kyrie_Palestrina-Giovanni-Pierluigi-da_file1.krn
+        Missa-Papae-Marcelli_Gloria_Palestrina-Giovanni-Pierluigi-da_file1.krn
+        Missa-Papae-Marcelli_Sanctus_Palestrina-Giovanni-Pierluigi-da_file1.krn
+        Missa-Papae-Marcelli_Benedictus_Palestrina-Giovanni-Pierluigi-da_file1.krn
+        Missa-Papae-Marcelli_Credo_Palestrina-Giovanni-Pierluigi-da_file1.krn
+        Missa-Papae-Marcelli_Agnus-dei-1_Palestrina-Giovanni-Pierluigi-da_file1.krn
+        Missa-Papae-Marcelli_Agnus-dei-2_Palestrina-Giovanni-Pierluigi-da_file1.krn
+    Missa Pater noster
+        Missa-Pater-noster_Kyrie_Palestrina-Giovanni-Pierluigi-da_file1.krn
+        Missa-Pater-noster_Gloria_Palestrina-Giovanni-Pierluigi-da_file1.krn
+        Missa-Pater-noster_Sanctus_Palestrina-Giovanni-Pierluigi-da_file1.krn
+        Missa-Pater-noster_Benedictus_Palestrina-Giovanni-Pierluigi-da_file1.krn
+        Missa-Pater-noster_Credo_Palestrina-Giovanni-Pierluigi-da_file1.krn
+        Missa-Pater-noster_Agnus-dei-1_Palestrina-Giovanni-Pierluigi-da_file1.krn
+        Missa-Pater-noster_Agnus-dei-2_Palestrina-Giovanni-Pierluigi-da_file1.krn
+    Missa Petra sancta
+        Missa-Petra-sancta_Kyrie_Palestrina-Giovanni-Pierluigi-da_file1.krn
+        Missa-Petra-sancta_Gloria_Palestrina-Giovanni-Pierluigi-da_file1.krn
+        Missa-Petra-sancta_Sanctus_Palestrina-Giovanni-Pierluigi-da_file1.krn
+        Missa-Petra-sancta_Benedictus_Palestrina-Giovanni-Pierluigi-da_file1.krn
+        Missa-Petra-sancta_Credo_Palestrina-Giovanni-Pierluigi-da_file1.krn
+        Missa-Petra-sancta_Agnus-dei-1_Palestrina-Giovanni-Pierluigi-da_file1.krn
+        Missa-Petra-sancta_Agnus-dei-2_Palestrina-Giovanni-Pierluigi-da_file1.krn
+    Missa Primi toni
+        Missa-Primi-toni_Kyrie_Palestrina-Giovanni-Pierluigi-da_file1.krn
+        Missa-Primi-toni_Gloria_Palestrina-Giovanni-Pierluigi-da_file1.krn
+        Missa-Primi-toni_Sanctus_Palestrina-Giovanni-Pierluigi-da_file1.krn
+        Missa-Primi-toni_Benedictus_Palestrina-Giovanni-Pierluigi-da_file1.krn
+        Missa-Primi-toni_Credo_Palestrina-Giovanni-Pierluigi-da_file1.krn
+        Missa-Primi-toni_Agnus-dei-1_Palestrina-Giovanni-Pierluigi-da_file1.krn
+        Missa-Primi-toni_Agnus-dei-2_Palestrina-Giovanni-Pierluigi-da_file1.krn
+    Missa Pro defunctis
+        Missa-Pro-defunctis_Kyrie_Palestrina-Giovanni-Pierluigi-da_file1.krn
+        Missa-Pro-defunctis_Benedictus_Palestrina-Giovanni-Pierluigi-da_file1.krn
+        Missa-Pro-defunctis_Agnus-dei-1_Palestrina-Giovanni-Pierluigi-da_file1.krn
+        Missa-Pro-defunctis_Agnus-dei-2_Palestrina-Giovanni-Pierluigi-da_file1.krn
+    Missa Qual è il più grandamore
+        Missa-Qual-e-il-piu-grand-amore_Kyrie_Palestrina-Giovanni-Pierluigi-da_file1.krn
+        Missa-Qual-e-il-piu-grand-amore_Gloria_Palestrina-Giovanni-Pierluigi-da_file1.krn
+        Missa-Qual-e-il-piu-grand-amore_Sanctus_Palestrina-Giovanni-Pierluigi-da_file1.krn
+        Missa-Qual-e-il-piu-grand-amore_Benedictus_Palestrina-Giovanni-Pierluigi-da_file1.krn
+        Missa-Qual-e-il-piu-grand-amore_Credo_Palestrina-Giovanni-Pierluigi-da_file1.krn
+        Missa-Qual-e-il-piu-grand-amore_Agnus-dei-1_Palestrina-Giovanni-Pierluigi-da_file1.krn
+        Missa-Qual-e-il-piu-grand-amore_Agnus-dei-2_Palestrina-Giovanni-Pierluigi-da_file1.krn
+    Missa Quam pulchra es
+        Missa-Quam-pulchra-es_Kyrie_Palestrina-Giovanni-Pierluigi-da_file1.krn
+        Missa-Quam-pulchra-es_Gloria_Palestrina-Giovanni-Pierluigi-da_file1.krn
+        Missa-Quam-pulchra-es_Sanctus_Palestrina-Giovanni-Pierluigi-da_file1.krn
+        Missa-Quam-pulchra-es_Benedictus_Palestrina-Giovanni-Pierluigi-da_file1.krn
+        Missa-Quam-pulchra-es_Credo_Palestrina-Giovanni-Pierluigi-da_file1.krn
+        Missa-Quam-pulchra-es_Agnus-dei-1_Palestrina-Giovanni-Pierluigi-da_file1.krn
+        Missa-Quam-pulchra-es_Agnus-dei-2_Palestrina-Giovanni-Pierluigi-da_file1.krn
+    Missa Quando lieta sperai
+        Missa-Quando-lieta-sperai_Kyire_Palestrina-Giovanni-Pierluigi-da_file1.krn
+        Missa-Quando-lieta-sperai_Gloria_Palestrina-Giovanni-Pierluigi-da_file1.krn
+        Missa-Quando-lieta-sperai_Sanctus_Palestrina-Giovanni-Pierluigi-da_file1.krn
+        Missa-Quando-lieta-sperai_Benedictus_Palestrina-Giovanni-Pierluigi-da_file1.krn
+        Missa-Quando-lieta-sperai_Credo_Palestrina-Giovanni-Pierluigi-da_file1.krn
+        Missa-Quando-lieta-sperai_Agnus-dei-1_Palestrina-Giovanni-Pierluigi-da_file1.krn
+        Missa-Quando-lieta-sperai_Agnus-dei-2_Palestrina-Giovanni-Pierluigi-da_file1.krn
+    Missa Quem dicunt homines
+        Missa-Quem-dicunt-homines_Kyrie_Palestrina-Giovanni-Pierluigi-da_file1.krn
+        Missa-Quem-dicunt-homines_Gloria_Palestrina-Giovanni-Pierluigi-da_file1.krn
+        Missa-Quem-dicunt-homines_Sanctus_Palestrina-Giovanni-Pierluigi-da_file1.krn
+        Missa-Quem-dicunt-homines_Benedictus_Palestrina-Giovanni-Pierluigi-da_file1.krn
+        Missa-Quem-dicunt-homines_Credo_Palestrina-Giovanni-Pierluigi-da_file1.krn
+        Missa-Quem-dicunt-homines_Agnus-dei-1_Palestrina-Giovanni-Pierluigi-da_file1.krn
+        Missa-Quem-dicunt-homines_Agnus-dei-2_Palestrina-Giovanni-Pierluigi-da_file1.krn
+    Missa Quinti toni
+        Missa-Quinti-toni_Kyrie_Palestrina-Giovanni-Pierluigi-da_file1.krn
+        Missa-Quinti-toni_Gloria_Palestrina-Giovanni-Pierluigi-da_file1.krn
+        Missa-Quinti-toni_Sanctus_Palestrina-Giovanni-Pierluigi-da_file1.krn
+        Missa-Quinti-toni_Benedictus_Palestrina-Giovanni-Pierluigi-da_file1.krn
+        Missa-Quinti-toni_Credo_Palestrina-Giovanni-Pierluigi-da_file1.krn
+        Missa-Quinti-toni_Agnus-dei-1_Palestrina-Giovanni-Pierluigi-da_file1.krn
+        Missa-Quinti-toni_Agnus-dei-2_Palestrina-Giovanni-Pierluigi-da_file1.krn
+    Missa Regina coeli (4vv, 1601 [publ.])
+        Missa-Regina-coeli-4vv-1601-publ.-_Kyrie_Palestrina-Giovanni-Pierluigi-da_file1.krn
+        Missa-Regina-coeli-4vv-1601-publ.-_Gloria_Palestrina-Giovanni-Pierluigi-da_file1.krn
+        Missa-Regina-coeli-4vv-1601-publ.-_Sanctus_Palestrina-Giovanni-Pierluigi-da_file1.krn
+        Missa-Regina-coeli-4vv-1601-publ.-_Benedictus_Palestrina-Giovanni-Pierluigi-da_file1.krn
+        Missa-Regina-coeli-4vv-1601-publ.-_Credo_Palestrina-Giovanni-Pierluigi-da_file1.krn
+        Missa-Regina-coeli-4vv-1601-publ.-_Agnus-dei-1_Palestrina-Giovanni-Pierluigi-da_file1.krn
+        Missa-Regina-coeli-4vv-1601-publ.-_Agnus-dei-2_Palestrina-Giovanni-Pierluigi-da_file1.krn
+    Missa Regina coeli (5vv, 1600 [publ.])
+        Missa-Regina-coeli-5vv-1600-publ.-_Kyrie_Palestrina-Giovanni-Pierluigi-da_file1.krn
+        Missa-Regina-coeli-5vv-1600-publ.-_Gloria_Palestrina-Giovanni-Pierluigi-da_file1.krn
+        Missa-Regina-coeli-5vv-1600-publ.-_Sanctus_Palestrina-Giovanni-Pierluigi-da_file1.krn
+        Missa-Regina-coeli-5vv-1600-publ.-_Benedictus_Palestrina-Giovanni-Pierluigi-da_file1.krn
+        Missa-Regina-coeli-5vv-1600-publ.-_Credo_Palestrina-Giovanni-Pierluigi-da_file1.krn
+        Missa-Regina-coeli-5vv-1600-publ.-_Agnus-dei-1_Palestrina-Giovanni-Pierluigi-da_file1.krn
+        Missa-Regina-coeli-5vv-1600-publ.-_Agnus-dei-2_Palestrina-Giovanni-Pierluigi-da_file1.krn
+    Missa Repleatur os meum
+        Missa-Repleatur-os-meum_Kyrie_Palestrina-Giovanni-Pierluigi-da_file1.krn
+        Missa-Repleatur-os-meum_Gloria_Palestrina-Giovanni-Pierluigi-da_file1.krn
+        Missa-Repleatur-os-meum_Sanctus_Palestrina-Giovanni-Pierluigi-da_file1.krn
+        Missa-Repleatur-os-meum_Benedictus_Palestrina-Giovanni-Pierluigi-da_file1.krn
+        Missa-Repleatur-os-meum_Credo_Palestrina-Giovanni-Pierluigi-da_file1.krn
+        Missa-Repleatur-os-meum_Agnus-dei-1_Palestrina-Giovanni-Pierluigi-da_file1.krn
+        Missa-Repleatur-os-meum_Agnus-dei-2_Palestrina-Giovanni-Pierluigi-da_file1.krn
+    Missa Sacerdos et pontifex
+        Missa-Sacerdos-et-pontifex_Kyrie_Palestrina-Giovanni-Pierluigi-da_file1.krn
+        Missa-Sacerdos-et-pontifex_Gloria_Palestrina-Giovanni-Pierluigi-da_file1.krn
+        Missa-Sacerdos-et-pontifex_Sanctus_Palestrina-Giovanni-Pierluigi-da_file1.krn
+        Missa-Sacerdos-et-pontifex_Benedictus_Palestrina-Giovanni-Pierluigi-da_file1.krn
+        Missa-Sacerdos-et-pontifex_Credo_Palestrina-Giovanni-Pierluigi-da_file1.krn
+        Missa-Sacerdos-et-pontifex_Agnus-dei-1_Palestrina-Giovanni-Pierluigi-da_file1.krn
+        Missa-Sacerdos-et-pontifex_Agnus-dei-2_Palestrina-Giovanni-Pierluigi-da_file1.krn
+    Missa Sacerdotes Domini
+        Missa-Sacerdotes-Domini_Kyrie_Palestrina-Giovanni-Pierluigi-da_file1.krn
+        Missa-Sacerdotes-Domini_Gloria_Palestrina-Giovanni-Pierluigi-da_file1.krn
+        Missa-Sacerdotes-Domini_Sanctus_Palestrina-Giovanni-Pierluigi-da_file1.krn
+        Missa-Sacerdotes-Domini_Benedictus_Palestrina-Giovanni-Pierluigi-da_file1.krn
+        Missa-Sacerdotes-Domini_Credo_Palestrina-Giovanni-Pierluigi-da_file1.krn
+        Missa-Sacerdotes-Domini_Agnus-dei-1_Palestrina-Giovanni-Pierluigi-da_file1.krn
+    Missa Salve regina
+        Missa-Salve-regina_Kyrie-1_Palestrina-Giovanni-Pierluigi-da_file1.krn
+        Missa-Salve-regina_Gloria_Palestrina-Giovanni-Pierluigi-da_file1.krn
+        Missa-Salve-regina_Sanctus_Palestrina-Giovanni-Pierluigi-da_file1.krn
+        Missa-Salve-regina_Benedictus_Palestrina-Giovanni-Pierluigi-da_file1.krn
+        Missa-Salve-regina_Credo_Palestrina-Giovanni-Pierluigi-da_file1.krn
+        Missa-Salve-regina_Agnus-dei-1_Palestrina-Giovanni-Pierluigi-da_file1.krn
+        Missa-Salve-regina_Agnus-dei-2_Palestrina-Giovanni-Pierluigi-da_file1.krn
+        Missa-Salve-regina_Kyrie-2_Palestrina-Giovanni-Pierluigi-da_file1.krn
+    Missa Salvum me fac
+        Missa-Salvum-me-fac_Kyrie-1_Palestrina-Giovanni-Pierluigi-da_file1.krn
+        Missa-Salvum-me-fac_Gloria_Palestrina-Giovanni-Pierluigi-da_file1.krn
+        Missa-Salvum-me-fac_Sanctus_Palestrina-Giovanni-Pierluigi-da_file1.krn
+        Missa-Salvum-me-fac_Benedictus_Palestrina-Giovanni-Pierluigi-da_file1.krn
+        Missa-Salvum-me-fac_Credo_Palestrina-Giovanni-Pierluigi-da_file1.krn
+        Missa-Salvum-me-fac_Agnus-dei-1_Palestrina-Giovanni-Pierluigi-da_file1.krn
+        Missa-Salvum-me-fac_Agnus-dei-2_Palestrina-Giovanni-Pierluigi-da_file1.krn
+        Missa-Salvum-me-fac_Kyrie-2_Palestrina-Giovanni-Pierluigi-da_file1.krn
+    Missa Sanctorum meritis
+        Missa-Sanctorum-meritis_Kyrie_Palestrina-Giovanni-Pierluigi-da_file1.krn
+        Missa-Sanctorum-meritis_Gloria_Palestrina-Giovanni-Pierluigi-da_file1.krn
+        Missa-Sanctorum-meritis_Sanctus_Palestrina-Giovanni-Pierluigi-da_file1.krn
+        Missa-Sanctorum-meritis_Benedictus_Palestrina-Giovanni-Pierluigi-da_file1.krn
+        Missa-Sanctorum-meritis_Credo_Palestrina-Giovanni-Pierluigi-da_file1.krn
+        Missa-Sanctorum-meritis_Agnus-dei-1_Palestrina-Giovanni-Pierluigi-da_file1.krn
+        Missa-Sanctorum-meritis_Agnus-dei-2_Palestrina-Giovanni-Pierluigi-da_file1.krn
+    Missa Sicut lilium inter spinas
+        Missa-Sicut-lilium-inter-spinas_Kyrie_Palestrina-Giovanni-Pierluigi-da_file1.krn
+        Missa-Sicut-lilium-inter-spinas_Gloria_Palestrina-Giovanni-Pierluigi-da_file1.krn
+        Missa-Sicut-lilium-inter-spinas_Sanctus_Palestrina-Giovanni-Pierluigi-da_file1.krn
+        Missa-Sicut-lilium-inter-spinas_Benedictus_Palestrina-Giovanni-Pierluigi-da_file1.krn
+        Missa-Sicut-lilium-inter-spinas_Credo_Palestrina-Giovanni-Pierluigi-da_file1.krn
+        Missa-Sicut-lilium-inter-spinas_Agnus-dei_Palestrina-Giovanni-Pierluigi-da_file1.krn
+    Missa Sine nomine (4vv, 1567)
+        Missa-Sine-nomine-4vv-1567-_Kyrie_Palestrina-Giovanni-Pierluigi-da_file1.krn
+        Missa-Sine-nomine-4vv-1567-_Gloria_Palestrina-Giovanni-Pierluigi-da_file1.krn
+        Missa-Sine-nomine-4vv-1567-_Sanctus_Palestrina-Giovanni-Pierluigi-da_file1.krn
+        Missa-Sine-nomine-4vv-1567-_Benedictus_Palestrina-Giovanni-Pierluigi-da_file1.krn
+        Missa-Sine-nomine-4vv-1567-_Credo_Palestrina-Giovanni-Pierluigi-da_file1.krn
+        Missa-Sine-nomine-4vv-1567-_Agnus-dei-1_Palestrina-Giovanni-Pierluigi-da_file1.krn
+        Missa-Sine-nomine-4vv-1567-_Agnus-dei-2_Palestrina-Giovanni-Pierluigi-da_file1.krn
+    Missa Sine nomine (4vv, Mantuan, "voci mutati")
+        Missa-Sine-nomine-4vv-Mantuan-voci-mutati-_Kyrie_Palestrina-Giovanni-Pierluigi-da_file1.krn
+        Missa-Sine-nomine-4vv-Mantuan-voci-mutati-_Gloria_Palestrina-Giovanni-Pierluigi-da_file1.krn
+        Missa-Sine-nomine-4vv-Mantuan-voci-mutati-_Sanctus_Palestrina-Giovanni-Pierluigi-da_file1.krn
+        Missa-Sine-nomine-4vv-Mantuan-voci-mutati-_Benedictus_Palestrina-Giovanni-Pierluigi-da_file1.krn
+        Missa-Sine-nomine-4vv-Mantuan-voci-mutati-_Credo_Palestrina-Giovanni-Pierluigi-da_file1.krn
+        Missa-Sine-nomine-4vv-Mantuan-voci-mutati-_Agnus-dei_Palestrina-Giovanni-Pierluigi-da_file1.krn
+    Missa Sine nomine (5vv, 1599 [publ.])
+        Missa-Sine-nomine-5vv-1599-publ.-_Kyrie_Palestrina-Giovanni-Pierluigi-da_file1.krn
+        Missa-Sine-nomine-5vv-1599-publ.-_Gloria_Palestrina-Giovanni-Pierluigi-da_file1.krn
+        Missa-Sine-nomine-5vv-1599-publ.-_Sanctus_Palestrina-Giovanni-Pierluigi-da_file1.krn
+        Missa-Sine-nomine-5vv-1599-publ.-_Benedictus_Palestrina-Giovanni-Pierluigi-da_file1.krn
+        Missa-Sine-nomine-5vv-1599-publ.-_Credo_Palestrina-Giovanni-Pierluigi-da_file1.krn
+        Missa-Sine-nomine-5vv-1599-publ.-_Agnus-dei-1_Palestrina-Giovanni-Pierluigi-da_file1.krn
+        Missa-Sine-nomine-5vv-1599-publ.-_Agnus-dei-2_Palestrina-Giovanni-Pierluigi-da_file1.krn
+    Missa Sine nomine (6vv, 1590)
+        Missa-Sine-nomine-6vv-1590-_Kyrie-1_Palestrina-Giovanni-Pierluigi-da_file1.krn
+        Missa-Sine-nomine-6vv-1590-_Gloria_Palestrina-Giovanni-Pierluigi-da_file1.krn
+        Missa-Sine-nomine-6vv-1590-_Sanctus_Palestrina-Giovanni-Pierluigi-da_file1.krn
+        Missa-Sine-nomine-6vv-1590-_Benedictus_Palestrina-Giovanni-Pierluigi-da_file1.krn
+        Missa-Sine-nomine-6vv-1590-_Credo_Palestrina-Giovanni-Pierluigi-da_file1.krn
+        Missa-Sine-nomine-6vv-1590-_Agnus-dei-1_Palestrina-Giovanni-Pierluigi-da_file1.krn
+        Missa-Sine-nomine-6vv-1590-_Agnus-dei-2_Palestrina-Giovanni-Pierluigi-da_file1.krn
+        Missa-Sine-nomine-6vv-1590-_Kyrie-2_Palestrina-Giovanni-Pierluigi-da_file1.krn
+    Missa Spem in alium
+        Missa-Spem-in-alium_Kyrie_Palestrina-Giovanni-Pierluigi-da_file1.krn
+        Missa-Spem-in-alium_Gloria_Palestrina-Giovanni-Pierluigi-da_file1.krn
+        Missa-Spem-in-alium_Sanctus_Palestrina-Giovanni-Pierluigi-da_file1.krn
+        Missa-Spem-in-alium_Benedictus_Palestrina-Giovanni-Pierluigi-da_file1.krn
+        Missa-Spem-in-alium_Credo_Palestrina-Giovanni-Pierluigi-da_file1.krn
+        Missa-Spem-in-alium_Agnus-dei-1_Palestrina-Giovanni-Pierluigi-da_file1.krn
+        Missa-Spem-in-alium_Agnus-dei-2_Palestrina-Giovanni-Pierluigi-da_file1.krn
+    Missa Te deum laudamus
+        Missa-Te-deum-laudamus_Kyrie-1_Palestrina-Giovanni-Pierluigi-da_file1.krn
+        Missa-Te-deum-laudamus_Gloria_Palestrina-Giovanni-Pierluigi-da_file1.krn
+        Missa-Te-deum-laudamus_Sanctus_Palestrina-Giovanni-Pierluigi-da_file1.krn
+        Missa-Te-deum-laudamus_Benedictus_Palestrina-Giovanni-Pierluigi-da_file1.krn
+        Missa-Te-deum-laudamus_Credo_Palestrina-Giovanni-Pierluigi-da_file1.krn
+        Missa-Te-deum-laudamus_Kyrie-2_Palestrina-Giovanni-Pierluigi-da_file1.krn
+        Missa-Te-deum-laudamus_Agnus-dei_Palestrina-Giovanni-Pierluigi-da_file1.krn
+    Missa Tu es Petrus (1601 publ.)
+        Missa-Tu-es-Petrus-1601-publ.-_Kyrie_Palestrina-Giovanni-Pierluigi-da_file1.krn
+        Missa-Tu-es-Petrus-1601-publ.-_Gloria_Palestrina-Giovanni-Pierluigi-da_file1.krn
+        Missa-Tu-es-Petrus-1601-publ.-_Sanctus_Palestrina-Giovanni-Pierluigi-da_file1.krn
+        Missa-Tu-es-Petrus-1601-publ.-_Benedictus_Palestrina-Giovanni-Pierluigi-da_file1.krn
+        Missa-Tu-es-Petrus-1601-publ.-_Credo_Palestrina-Giovanni-Pierluigi-da_file1.krn
+        Missa-Tu-es-Petrus-1601-publ.-_Agnus-dei-1_Palestrina-Giovanni-Pierluigi-da_file1.krn
+        Missa-Tu-es-Petrus-1601-publ.-_Agnus-dei-2_Palestrina-Giovanni-Pierluigi-da_file1.krn
+    Missa Tu es Petrus (6vv, 1887 publ.)
+        Missa-Tu-es-Petrus-6vv-1887-publ.-_Kyrie-1_Palestrina-Giovanni-Pierluigi-da_file1.krn
+        Missa-Tu-es-Petrus-6vv-1887-publ.-_Gloria_Palestrina-Giovanni-Pierluigi-da_file1.krn
+        Missa-Tu-es-Petrus-6vv-1887-publ.-_Sanctus_Palestrina-Giovanni-Pierluigi-da_file1.krn
+        Missa-Tu-es-Petrus-6vv-1887-publ.-_Benedictus_Palestrina-Giovanni-Pierluigi-da_file1.krn
+        Missa-Tu-es-Petrus-6vv-1887-publ.-_Credo_Palestrina-Giovanni-Pierluigi-da_file1.krn
+        Missa-Tu-es-Petrus-6vv-1887-publ.-_Agnus-dei-1_Palestrina-Giovanni-Pierluigi-da_file1.krn
+        Missa-Tu-es-Petrus-6vv-1887-publ.-_Agnus-dei-2_Palestrina-Giovanni-Pierluigi-da_file1.krn
+        Missa-Tu-es-Petrus-6vv-1887-publ.-_Kyrie-2_Palestrina-Giovanni-Pierluigi-da_file1.krn
+    Missa Tu es pastor ovium
+        Missa-Tu-es-pastor-ovium_Kyrie-1_Palestrina-Giovanni-Pierluigi-da_file1.krn
+        Missa-Tu-es-pastor-ovium_Gloria_Palestrina-Giovanni-Pierluigi-da_file1.krn
+        Missa-Tu-es-pastor-ovium_Sanctus_Palestrina-Giovanni-Pierluigi-da_file1.krn
+        Missa-Tu-es-pastor-ovium_Benedictus_Palestrina-Giovanni-Pierluigi-da_file1.krn
+        Missa-Tu-es-pastor-ovium_Credo_Palestrina-Giovanni-Pierluigi-da_file1.krn
+        Missa-Tu-es-pastor-ovium_Agnus-dei-1_Palestrina-Giovanni-Pierluigi-da_file1.krn
+        Missa-Tu-es-pastor-ovium_Agnus-dei-2_Palestrina-Giovanni-Pierluigi-da_file1.krn
+        Missa-Tu-es-pastor-ovium_Kyrie-2_Palestrina-Giovanni-Pierluigi-da_file1.krn
+    Missa Ut re mi fa sol la
+        Missa-Ut-re-mi-fa-sol-la_Kyrie_Palestrina-Giovanni-Pierluigi-da_file1.krn
+        Missa-Ut-re-mi-fa-sol-la_Gloria_Palestrina-Giovanni-Pierluigi-da_file1.krn
+        Missa-Ut-re-mi-fa-sol-la_Sanctus_Palestrina-Giovanni-Pierluigi-da_file1.krn
+        Missa-Ut-re-mi-fa-sol-la_Benedictus_Palestrina-Giovanni-Pierluigi-da_file1.krn
+        Missa-Ut-re-mi-fa-sol-la_Credo_Palestrina-Giovanni-Pierluigi-da_file1.krn
+        Missa-Ut-re-mi-fa-sol-la_Agnus-dei-1_Palestrina-Giovanni-Pierluigi-da_file1.krn
+        Missa-Ut-re-mi-fa-sol-la_Agnus-dei-2_Palestrina-Giovanni-Pierluigi-da_file1.krn
+    Missa Veni Sancte Spiritus
+        Missa-Veni-Sancte-Spiritus_Kyrie_Palestrina-Giovanni-Pierluigi-da_file1.krn
+        Missa-Veni-Sancte-Spiritus_Gloria_Palestrina-Giovanni-Pierluigi-da_file1.krn
+        Missa-Veni-Sancte-Spiritus_Sanctus_Palestrina-Giovanni-Pierluigi-da_file1.krn
+        Missa-Veni-Sancte-Spiritus_Benedictus_Palestrina-Giovanni-Pierluigi-da_file1.krn
+        Missa-Veni-Sancte-Spiritus_Credo_Palestrina-Giovanni-Pierluigi-da_file1.krn
+        Missa-Veni-Sancte-Spiritus_Agnus-dei-1_Palestrina-Giovanni-Pierluigi-da_file1.krn
+        Missa-Veni-Sancte-Spiritus_Agnus-dei-2_Palestrina-Giovanni-Pierluigi-da_file1.krn
+    Missa Veni creator Spiritus
+        Missa-Veni-creator-Spiritus_Kyrie-1_Palestrina-Giovanni-Pierluigi-da_file1.krn
+        Missa-Veni-creator-Spiritus_Gloria_Palestrina-Giovanni-Pierluigi-da_file1.krn
+        Missa-Veni-creator-Spiritus_Sanctus_Palestrina-Giovanni-Pierluigi-da_file1.krn
+        Missa-Veni-creator-Spiritus_Benedictus_Palestrina-Giovanni-Pierluigi-da_file1.krn
+        Missa-Veni-creator-Spiritus_Credo_Palestrina-Giovanni-Pierluigi-da_file1.krn
+        Missa-Veni-creator-Spiritus_Agnus-dei-1_Palestrina-Giovanni-Pierluigi-da_file1.krn
+        Missa-Veni-creator-Spiritus_Agnus-dei-2_Palestrina-Giovanni-Pierluigi-da_file1.krn
+        Missa-Veni-creator-Spiritus_Kyrie-2_Palestrina-Giovanni-Pierluigi-da_file1.krn
+    Missa Veni sponsa Christi
+        Missa-Veni-sponsa-Christi_Kyrie_Palestrina-Giovanni-Pierluigi-da_file1.krn
+        Missa-Veni-sponsa-Christi_Gloria_Palestrina-Giovanni-Pierluigi-da_file1.krn
+        Missa-Veni-sponsa-Christi_Sanctus_Palestrina-Giovanni-Pierluigi-da_file1.krn
+        Missa-Veni-sponsa-Christi_Benedictus_Palestrina-Giovanni-Pierluigi-da_file1.krn
+        Missa-Veni-sponsa-Christi_Credo_Palestrina-Giovanni-Pierluigi-da_file1.krn
+        Missa-Veni-sponsa-Christi_Agnus-dei-1_Palestrina-Giovanni-Pierluigi-da_file1.krn
+        Missa-Veni-sponsa-Christi_Agnus-dei-2_Palestrina-Giovanni-Pierluigi-da_file1.krn
+    Missa Vestiva i colli
+        Missa-Vestiva-i-colli_Kyrie-1_Palestrina-Giovanni-Pierluigi-da_file1.krn
+        Missa-Vestiva-i-colli_Gloria_Palestrina-Giovanni-Pierluigi-da_file1.krn
+        Missa-Vestiva-i-colli_Sanctus_Palestrina-Giovanni-Pierluigi-da_file1.krn
+        Missa-Vestiva-i-colli_Benedictus_Palestrina-Giovanni-Pierluigi-da_file1.krn
+        Missa-Vestiva-i-colli_Credo_Palestrina-Giovanni-Pierluigi-da_file1.krn
+        Missa-Vestiva-i-colli_Agnus-dei-1_Palestrina-Giovanni-Pierluigi-da_file1.krn
+        Missa-Vestiva-i-colli_Agnus-dei-2_Palestrina-Giovanni-Pierluigi-da_file1.krn
+        Missa-Vestiva-i-colli_Kyrie-2_Palestrina-Giovanni-Pierluigi-da_file1.krn
+    Missa Viri Galilaei
+        Missa-Viri-Galilaei_Kyrie_Palestrina-Giovanni-Pierluigi-da_file1.krn
+        Missa-Viri-Galilaei_Gloria_Palestrina-Giovanni-Pierluigi-da_file1.krn
+        Missa-Viri-Galilaei_Sanctus_Palestrina-Giovanni-Pierluigi-da_file1.krn
+        Missa-Viri-Galilaei_Benedictus_Palestrina-Giovanni-Pierluigi-da_file1.krn
+        Missa-Viri-Galilaei_Agnus-dei-1_Palestrina-Giovanni-Pierluigi-da_file1.krn
+        Missa-Viri-Galilaei_Agnus-dei-2_Palestrina-Giovanni-Pierluigi-da_file1.krn
+    Missa Virtute magna
+        Missa-Virtute-magna_Kyrie_Palestrina-Giovanni-Pierluigi-da_file1.krn
+        Missa-Virtute-magna_Gloria_Palestrina-Giovanni-Pierluigi-da_file1.krn
+        Missa-Virtute-magna_Sanctus_Palestrina-Giovanni-Pierluigi-da_file1.krn
+        Missa-Virtute-magna_Benedictus_Palestrina-Giovanni-Pierluigi-da_file1.krn
+        Missa-Virtute-magna_Credo_Palestrina-Giovanni-Pierluigi-da_file1.krn
+        Missa-Virtute-magna_Agnus-dei-1_Palestrina-Giovanni-Pierluigi-da_file1.krn
+        Missa-Virtute-magna_Agnus-dei-2_Palestrina-Giovanni-Pierluigi-da_file1.krn
+    null
+        Kyrie_Palestrina-Giovanni-Pierluigi-da_file1.krn
+        Sanctus_Palestrina-Giovanni-Pierluigi-da_file1.krn
+        Benedictus_Palestrina-Giovanni-Pierluigi-da_file1.krn
+        Credo_Palestrina-Giovanni-Pierluigi-da_file1.krn
+        Agnus-Dei-1_Palestrina-Giovanni-Pierluigi-da_file1.krn
+        Agnus-Dei-2_Palestrina-Giovanni-Pierluigi-da_file1.krn
+
+Peñalosa, Francisco
+    Missa El ojo
+        Missa-El-ojo_Gloria_Penalosa-Francisco_file2.nwc
+        Missa-El-ojo_Kyrie_Penalosa-Francisco_file2.nwc
+        Missa-El-ojo_Credo_Penalosa-Francisco_file2.nwc
+        Missa-El-ojo_Sanctus_Penalosa-Francisco_file2.nwc
+        Missa-El-ojo_Gloria_Penalosa-Francisco_file1.mid
+        Missa-El-ojo_Kyrie_Penalosa-Francisco_file1.mid
+        Missa-El-ojo_Credo_Penalosa-Francisco_file1.mid
+        Missa-El-ojo_Sanctus_Penalosa-Francisco_file1.mid
+        Missa-El-ojo_Agnus-Dei_Penalosa-Francisco_file2.nwc
+        Missa-El-ojo_Agnus-Dei_Penalosa-Francisco_file1.mid
+
+Pipelare, Matthaeus
+    Missa "Pour entretenir mes amours"
+        Missa-Pour-entretenir-mes-amours-_Kyrie_Pipelare-Matthaeus_file1.mid
+        Missa-Pour-entretenir-mes-amours-_Gloria_Pipelare-Matthaeus_file1.mid
+        Missa-Pour-entretenir-mes-amours-_Credo_Pipelare-Matthaeus_file1.mid
+        Missa-Pour-entretenir-mes-amours-_Credo_Pipelare-Matthaeus_file2.nwc
+        Missa-Pour-entretenir-mes-amours-_Kyrie_Pipelare-Matthaeus_file2.nwc
+        Missa-Pour-entretenir-mes-amours-_Gloria_Pipelare-Matthaeus_file2.nwc
+        Missa-Pour-entretenir-mes-amours-_Sanctus_Pipelare-Matthaeus_file1.mid
+        Missa-Pour-entretenir-mes-amours-_Sanctus_Pipelare-Matthaeus_file2.nwc
+        Missa-Pour-entretenir-mes-amours-_Agnus-dei_Pipelare-Matthaeus_file2.nwc
+        Missa-Pour-entretenir-mes-amours-_Agnus-dei_Pipelare-Matthaeus_file1.mid
+    Missa De sancto Livino
+        Missa-De-sancto-Livino_Gloria_Pipelare-Matthaeus_file3.nwc
+        Missa-De-sancto-Livino_Kyrie_Pipelare-Matthaeus_file3.nwc
+        Missa-De-sancto-Livino_Credo_Pipelare-Matthaeus_file1.nwc
+        Missa-De-sancto-Livino_Sanctus_Pipelare-Matthaeus_file1.nwc
+        Missa-De-sancto-Livino_Gloria_Pipelare-Matthaeus_file1.mid
+        Missa-De-sancto-Livino_Kyrie_Pipelare-Matthaeus_file1.mid
+        Missa-De-sancto-Livino_Agnus-dei_Pipelare-Matthaeus_file2.nwc
+        Missa-De-sancto-Livino_Kyrie_Pipelare-Matthaeus_file2.MUS
+        Missa-De-sancto-Livino_Gloria_Pipelare-Matthaeus_file2.MUS
+    Missa Dicit Dominus
+        Missa-Dicit-Dominus_Gloria_Pipelare-Matthaeus_file2.nwc
+        Missa-Dicit-Dominus_Gloria_Pipelare-Matthaeus_file2.nwc
+        Missa-Dicit-Dominus_Kyrie_Pipelare-Matthaeus_file2.nwc
+        Missa-Dicit-Dominus_Kyrie_Pipelare-Matthaeus_file2.nwc
+        Missa-Dicit-Dominus_Credo_Pipelare-Matthaeus_file2.nwc
+        Missa-Dicit-Dominus_Credo_Pipelare-Matthaeus_file2.nwc
+        Missa-Dicit-Dominus_Sanctus_Pipelare-Matthaeus_file2.nwc
+        Missa-Dicit-Dominus_Sanctus_Pipelare-Matthaeus_file2.nwc
+        Missa-Dicit-Dominus_Gloria_Pipelare-Matthaeus_file1.mid
+        Missa-Dicit-Dominus_Gloria_Pipelare-Matthaeus_file1.mid
+        Missa-Dicit-Dominus_Kyrie_Pipelare-Matthaeus_file1.mid
+        Missa-Dicit-Dominus_Kyrie_Pipelare-Matthaeus_file1.mid
+        Missa-Dicit-Dominus_Credo_Pipelare-Matthaeus_file1.mid
+        Missa-Dicit-Dominus_Credo_Pipelare-Matthaeus_file1.mid
+        Missa-Dicit-Dominus_Sanctus_Pipelare-Matthaeus_file1.mid
+        Missa-Dicit-Dominus_Sanctus_Pipelare-Matthaeus_file1.mid
+        Missa-Dicit-Dominus_Agnus-dei_Pipelare-Matthaeus_file2.nwc
+        Missa-Dicit-Dominus_Agnus-Dei_Pipelare-Matthaeus_file2.nwc
+        Missa-Dicit-Dominus_Agnus-dei_Pipelare-Matthaeus_file1.mid
+        Missa-Dicit-Dominus_Agnus-Dei_Pipelare-Matthaeus_file1.mid
+    Missa Fors seulement
+        Missa-Fors-seulement_Gloria_Pipelare-Matthaeus_file2.nwc
+        Missa-Fors-seulement_Kyrie_Pipelare-Matthaeus_file2.nwc
+        Missa-Fors-seulement_Credo_Pipelare-Matthaeus_file2.nwc
+        Missa-Fors-seulement_Sanctus_Pipelare-Matthaeus_file2.nwc
+        Missa-Fors-seulement_Gloria_Pipelare-Matthaeus_file1.mid
+        Missa-Fors-seulement_Kyrie_Pipelare-Matthaeus_file1.mid
+        Missa-Fors-seulement_Credo_Pipelare-Matthaeus_file1.mid
+        Missa-Fors-seulement_Sanctus_Pipelare-Matthaeus_file1.mid
+        Missa-Fors-seulement_Agnus-dei_Pipelare-Matthaeus_file2.nwc
+        Missa-Fors-seulement_Agnus-dei_Pipelare-Matthaeus_file1.mid
+
+Plummer, John
+    Missa "Nesciens mater"
+        Missa-Nesciens-mater_Plummer-John_file1.mid
+        Missa-Nesciens-mater_Plummer-John_file2.nwc
+
+Power, Leonel
+    Missa Alma redemptoris
+        Missa-Alma-redemptoris_Gloria_Power-Leonel_file2.nwc
+        Missa-Alma-redemptoris_Gloria_Power-Leonel_file1.mid
+        Missa-Alma-redemptoris_Credo_Power-Leonel_file2.nwc
+        Missa-Alma-redemptoris_Credo_Power-Leonel_file1.mid
+        Missa-Alma-redemptoris_Sanctus_Power-Leonel_file2.nwc
+        Missa-Alma-redemptoris_Sanctus_Power-Leonel_file1.mid
+        Missa-Alma-redemptoris_Agnus-dei_Power-Leonel_file1.mid
+        Missa-Alma-redemptoris_Agnus-dei_Power-Leonel_file2.nwc
+
+Prioris, Johannes
+    Missa Allez regretz (Prioris)
+        Missa-Allez-regretz-Prioris-_Kyrie_Prioris-Johannes_file1.mid
+        Missa-Allez-regretz-Prioris-_Gloria_Prioris-Johannes_file1.mid
+        Missa-Allez-regretz-Prioris-_Kyrie_Prioris-Johannes_file2.nwc
+        Missa-Allez-regretz-Prioris-_Gloria_Prioris-Johannes_file2.nwc
+        Missa-Allez-regretz-Prioris-_Credo_Prioris-Johannes_file1.mid
+        Missa-Allez-regretz-Prioris-_Sanctus_Prioris-Johannes_file1.mid
+        Missa-Allez-regretz-Prioris-_Credo_Prioris-Johannes_file2.nwc
+        Missa-Allez-regretz-Prioris-_Sanctus_Prioris-Johannes_file2.nwc
+        Missa-Allez-regretz-Prioris-_Agnus-dei_Prioris-Johannes_file2.nwc
+        Missa-Allez-regretz-Prioris-_Agnus-dei_Prioris-Johannes_file1.mid
+
+Regis, Johannes
+    O admirabile commercium
+        O-admirabile-commercium_Regis-Johannes_file5.mei
+
+Richafort, Jean
+    Navés point veu mal assenee
+        N-aves-point-veu-mal-assenee_Richafort-Jean_file5.mei
+    Quem dicunt homines
+        Quem-dicunt-homines_Richafort-Jean_file2.nwc
+        Quem-dicunt-homines_Richafort-Jean_file1.mid
+
+Senfl, Ludwig
+    De profundis clamavi
+        De-profundis-clamavi_Senfl-Ludwig_file3.xml
+
+Severdonck, Henricus
+    Missa "Waer ist die alder liefte"
+        Missa-Waer-ist-die-alder-liefte-_Gloria_Severdonck-Henricus_file2.nwc
+        Missa-Waer-ist-die-alder-liefte-_Kyrie_Severdonck-Henricus_file2.nwc
+        Missa-Waer-ist-die-alder-liefte-_Credo_Severdonck-Henricus_file2.nwc
+        Missa-Waer-ist-die-alder-liefte-_Sanctus_Severdonck-Henricus_file2.nwc
+        Missa-Waer-ist-die-alder-liefte-_Gloria_Severdonck-Henricus_file1.mid
+        Missa-Waer-ist-die-alder-liefte-_Kyrie_Severdonck-Henricus_file1.mid
+        Missa-Waer-ist-die-alder-liefte-_Credo_Severdonck-Henricus_file1.mid
+        Missa-Waer-ist-die-alder-liefte-_Sanctus_Severdonck-Henricus_file1.mid
+        Missa-Waer-ist-die-alder-liefte-_Agnus-dei_Severdonck-Henricus_file2.nwc
+        Missa-Waer-ist-die-alder-liefte-_Agnus-dei_Severdonck-Henricus_file1.mid
+
+Thérache, Pierrequin de
+    Verbum bonum et suave
+        Verbum-bonum-et-suave_Therache-Pierrequin-de_file2.nwc
+        Verbum-bonum-et-suave_Therache-Pierrequin-de_file1.mid
+
+Touront, Johannes
+    Missa "Mon oeuil" (aka Missa "Monyel")
+        Missa-Mon-oeuil-aka-Missa-Monyel-_Gloria_Touront-Johannes_file3.nwc
+        Missa-Mon-oeuil-aka-Missa-Monyel-_Kyrie_Touront-Johannes_file2.nwc
+        Missa-Mon-oeuil-aka-Missa-Monyel-_Credo_Touront-Johannes_file2.nwc
+        Missa-Mon-oeuil-aka-Missa-Monyel-_Sanctus_Touront-Johannes_file2.nwc
+        Missa-Mon-oeuil-aka-Missa-Monyel-_Gloria_Touront-Johannes_file2.mid
+        Missa-Mon-oeuil-aka-Missa-Monyel-_Kyrie_Touront-Johannes_file1.mid
+        Missa-Mon-oeuil-aka-Missa-Monyel-_Credo_Touront-Johannes_file1.mid
+        Missa-Mon-oeuil-aka-Missa-Monyel-_Sanctus_Touront-Johannes_file1.mid
+        Missa-Mon-oeuil-aka-Missa-Monyel-_Agnus-dei_Touront-Johannes_file2.nwc
+        Missa-Mon-oeuil-aka-Missa-Monyel-_Agnus-dei_Touront-Johannes_file1.mid
+        Missa-Mon-oeuil-aka-Missa-Monyel-_Gloria_Touront-Johannes_file1.MUS
+
+Weerbeke, Gaspar van
+    Missa "Princesse damourettes"
+        Missa-Princesse-d-amourettes-_Sanctus_Weerbeke-Gaspar-van_file1.nwc
+        Missa-Princesse-d-amourettes-_Agnus-dei_Weerbeke-Gaspar-van_file1.nwc
+        Missa-Princesse-d-amourettes-_Credo-1-Patrem-omnipotentem_Weerbeke-Gaspar-van_file1.nwc
+        Missa-Princesse-d-amourettes-_Kyrie-2_Weerbeke-Gaspar-van_file1.nwc
+        Missa-Princesse-d-amourettes-_Gloria-1-Et-in-terra-pax_Weerbeke-Gaspar-van_file1.nwc
+        Missa-Princesse-d-amourettes-_Kyrie-1_Weerbeke-Gaspar-van_file1.nwc
+        Missa-Princesse-d-amourettes-_Christe_Weerbeke-Gaspar-van_file1.nwc
+        Missa-Princesse-d-amourettes-_Gloria-2-Qui-tollis_Weerbeke-Gaspar-van_file1.nwc
+    Missa Ave regina celorum
+        Missa-Ave-regina-celorum_Gloria_Weerbeke-Gaspar-van_file1.nwc
+        Missa-Ave-regina-celorum_Kyrie_Weerbeke-Gaspar-van_file1.nwc
+        Missa-Ave-regina-celorum_Credo_Weerbeke-Gaspar-van_file1.nwc
+        Missa-Ave-regina-celorum_Sanctus_Weerbeke-Gaspar-van_file1.nwc
+        Missa-Ave-regina-celorum_Agnus_Weerbeke-Gaspar-van_file1.nwc
+    Missa Et trop penser
+        Missa-Et-trop-penser_Gloria_Weerbeke-Gaspar-van_file3.nwc
+        Missa-Et-trop-penser_Kyrie_Weerbeke-Gaspar-van_file3.nwc
+        Missa-Et-trop-penser_Credo_Weerbeke-Gaspar-van_file2.nwc
+        Missa-Et-trop-penser_Sanctus_Weerbeke-Gaspar-van_file2.nwc
+        Missa-Et-trop-penser_Gloria_Weerbeke-Gaspar-van_file1.mid
+        Missa-Et-trop-penser_Kyrie_Weerbeke-Gaspar-van_file1.mid
+        Missa-Et-trop-penser_Credo_Weerbeke-Gaspar-van_file1.mid
+        Missa-Et-trop-penser_Sanctus_Weerbeke-Gaspar-van_file1.mid
+        Missa-Et-trop-penser_Agnus_Weerbeke-Gaspar-van_file3.nwc
+        Missa-Et-trop-penser_Agnus_Weerbeke-Gaspar-van_file1.mid
+        Missa-Et-trop-penser_Kyrie_Weerbeke-Gaspar-van_file2.MUS
+        Missa-Et-trop-penser_Gloria_Weerbeke-Gaspar-van_file2.MUS
+    Missa O Venus bant
+        Missa-O-Venus-bant_Gloria_Weerbeke-Gaspar-van_file1.nwc
+        Missa-O-Venus-bant_Kyrie_Weerbeke-Gaspar-van_file1.nwc
+        Missa-O-Venus-bant_Credo_Weerbeke-Gaspar-van_file1.nwc
+        Missa-O-Venus-bant_Sanctus_Weerbeke-Gaspar-van_file1.nwc
+        Missa-O-Venus-bant_Agnus_Weerbeke-Gaspar-van_file1.nwc
+    Missa Se mieulx se vient
+        Missa-Se-mieulx-se-vient_Gloria_Weerbeke-Gaspar-van_file1.nwc
+        Missa-Se-mieulx-se-vient_Kyrie_Weerbeke-Gaspar-van_file1.nwc
+        Missa-Se-mieulx-se-vient_Credo_Weerbeke-Gaspar-van_file1.nwc
+        Missa-Se-mieulx-se-vient_Sanctus_Weerbeke-Gaspar-van_file1.nwc
+        Missa-Se-mieulx-se-vient_Agnus-Dei_Weerbeke-Gaspar-van_file1.nwc
+
+Yacten
+    Missa Introduxit me rex in cellam vinariam
+        Missa-Introduxit-me-rex-in-cellam-vinariam_Credo_Yacten_file2.nwc
+        Missa-Introduxit-me-rex-in-cellam-vinariam_Credo_Yacten_file1.mid
+
+de Lisle, Simon
+    Missa "O admirabile commercium"
+        Missa-O-admirabile-commercium-_Gloria_de-Lisle-Simon_file2.nwc
+        Missa-O-admirabile-commercium-_Gloria_de-Lisle-Simon_file1.mid
+        Missa-O-admirabile-commercium-_Credo_de-Lisle-Simon_file2.nwc
+        Missa-O-admirabile-commercium-_Credo_de-Lisle-Simon_file1.mid
+        Missa-O-admirabile-commercium-_Sanctus_de-Lisle-Simon_file2.nwc
+        Missa-O-admirabile-commercium-_Sanctus_de-Lisle-Simon_file1.mid
+        Missa-O-admirabile-commercium-_Agnus-dei_de-Lisle-Simon_file1.mid
+        Missa-O-admirabile-commercium-_Agnus-dei_de-Lisle-Simon_file2.nwc
