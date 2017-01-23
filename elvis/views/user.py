@@ -97,8 +97,8 @@ class UserUpdate(generics.CreateAPIView):
 
 
 def is_valid_captcha(request):
-    # Allow registration for testing locally.
-    if settings.SETTING_TYPE == settings.LOCAL:
+    # Allow non-captcha registration on non-production sites.
+    if settings.SETTING_TYPE != settings.PRODUCTION:
         return True
 
     captcha_data = urllib.parse.urlencode({
