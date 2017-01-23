@@ -39,7 +39,7 @@ DEVELOPMENT = 1
 LOCAL = 2
 
 # Specify which of the above setting types you wish to use here.
-SETTING_TYPE = DEVELOPMENT
+SETTING_TYPE = LOCAL
 assert SETTING_TYPE in [PRODUCTION, DEVELOPMENT, LOCAL], "Must choose a legal setting type."
 
 if SETTING_TYPE is not PRODUCTION:
@@ -58,7 +58,7 @@ RECAPTCHA_KEY_PATH = '/srv/webapps/elvisdb/config/recaptcha_priv_key'
 
 # Simple Settings
 # ===============
-ALLOWED_HOSTS = ['database.elvisproject.ca']
+ALLOWED_HOSTS = ['database.elvisproject.ca', 'dev-database.elvisproject.ca']
 
 
 if SETTING_TYPE is not LOCAL:
