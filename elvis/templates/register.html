@@ -1,76 +1,46 @@
-{% extends "base.html" %}
+{% extends "base/base_account.html" %}
+
 {% block extra_hd %}
-{% load compress %}
+    {{ block.super }}
+    <title>Login</title>
+
+    {% load compress %}
     <script src='https://www.google.com/recaptcha/api.js'></script>
     {% compress css %}
-<style>
-    .captcha {
-        text-align: center;
-    }
-    .g-recaptcha {
-        display: inline-block;
-    }
-</style>
+    <style>
+        .captcha {
+            text-align: center;
+        }
+
+        .g-recaptcha {
+            display: inline-block;
+        }
+    </style>
     {% endcompress %}
+
 {% endblock %}
-{% block page_content %}
 
-{% compress js %}
-<script type="text/javascript">
-    $(document).ready(function ($)
-    {
-        // initialize the download manager script
-        $.cookie('test_cookie', 'cookie_value', { path: '/' });
-        if ($.cookie('test_cookie') == 'cookie_value')
-        {
-            $('#login-submit').attr('class', 'btn btn-lg btn-primary btn-block');
-            $.cookie("test_cookie", null, { path: '/' });
-        }
-        else
-        {
-            //window.alert("You don't have cookies enabled... this site requires the use of cookies.");
-            $('#login-submit').attr('class', 'btn btn-lg btn-primary btn-block disabled');
-            $('#login-submit').tooltip('show');
-        }
-    });
-</script>
-{% endcompress %}
+{% block account_wall_content %}
+    <h2 class="text-center">Register for an account</h2><br>
+    {% include "base/account_error_list.html" with form=form %}
 
-<div class="container">
-    <div class="row">
-        <div class="col-xs-12 col-sm-6 col-sm-offset-3 col-lg-4 col-lg-offset-4">
-            <div class="account-wall">
-                <h2 class="text-center">Create New Account</h2><br>
-                {% if form.errors.items %}
-                    {% for field, errors in form.errors.items %}
-                        <div class="row vertical-align">
-                            <div class="col-sm-1 col-sm-offset-1"><span class="glyphicon glyphicon-exclamation-sign" aria-hidden="true" style="color:#be1931; font-size: 225%"></span></div>
-                            <div class="col-sm-9 col-sm-offset-1">
-                                {% for error in errors %}
-                                    <span class="help-block">{{error}}</span>
-                                {% endfor %}
-                            </div>
-                        </div>
-                    {% endfor %}
-                {% endif %}
-                <form class="form-signin" method="post" action="/account/"> {% csrf_token %}
-                    <input name='username' id=username type="text" class="form-control top" placeholder="Username" required autofocus>
-                    <input name='email' id="email" type="text" class="form-control mid" placeholder="Email" required>
-                    <input name='password1' id='password1' type="password" class="form-control mid" placeholder="Password" required>
-                    <input name='password2' id='password2' type="password" class="form-control bot" placeholder="Password (confirm)" required>
-                    <br>
-                    <input name='first_name' id="first_name" type="text" class="form-control top" placeholder="First Name" required>
-                    <input name='last_name' id="last_name" type="text" class="form-control bot" placeholder="Last Name" required>
-                    <br>
-                    <div class="captcha">
-                    <div class="g-recaptcha" data-sitekey="6LfV4gsTAAAAAGK8vA-O2RrABlIb_XbNywrxJrTS"></div>
-                    </div>
-                    <br>
-                    <button class="btn btn-lg btn-primary btn-block" id="login-submit">Register</button>
-                </form>
-            </div>
+    <form class="form-signin" method="post" action="/account/"> {% csrf_token %}
+        <input name='username' id=username type="text" class="form-control top" placeholder="Username" required autofocus>
+        <input name='email' id="email" type="text" class="form-control mid" placeholder="Email" required>
+        <input name='password1' id='password1' type="password" class="form-control mid" placeholder="Password" required>
+        <input name='password2' id='password2' type="password" class="form-control bot" placeholder="Password (confirm)" required>
+        <br>
+        <input name='first_name' id="first_name" type="text" class="form-control top" placeholder="First Name" required>
+        <input name='last_name' id="last_name" type="text" class="form-control bot" placeholder="Last Name" required>
+        <br>
+        <div class="captcha">
+        <div class="g-recaptcha" data-sitekey="6LfV4gsTAAAAAGK8vA-O2RrABlIb_XbNywrxJrTS"></div>
         </div>
-    </div>
-</div>
+        <br>
+        <button class="btn btn-lg btn-primary btn-block" id="login-submit">Register</button>
+    </form>
+{% endblock %}
 
+{% block under_wall_content %}
+    <a href="/register/">Create an account</a> - <a href="/password/reset" class="text-center">Forgot your password?</a>
 {% endblock %}
