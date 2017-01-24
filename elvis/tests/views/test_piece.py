@@ -11,14 +11,15 @@ from elvis.models.language import Language
 from elvis.models.location import Location
 from elvis.models.source import Source
 from elvis.models.tag import Tag
+from elvis.tests.helpers import real_user, creator_user, super_user
 
 
 class CollectionViewTestCase(ElvisTestSetup, APITestCase):
-    def setUp(self):
-        self.setUp_elvis()
-        self.setUp_user()
-        self.setUp_test_models()
 
+    def setUp(self):
+        self.setUp_users()
+        self.setUp_test_models()
+        
     def test_get_list(self):
         response = self.client.get("/pieces/")
         self.assertEqual(response.status_code, status.HTTP_200_OK)
@@ -35,12 +36,12 @@ class CollectionViewTestCase(ElvisTestSetup, APITestCase):
 
     def test_get_hidden_detail(self):
         piece = Piece.objects.filter(hidden=True)[0]
-        self.client.login(username='testuser', password='test')
+        self.client.login(username=real_user['username'], password='test')
         response = self.client.get("/piece/{0}/".format(piece.id))
         self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
         self.client.logout()
 
-        self.client.login(username='creatoruser', password='test')
+        self.client.login(username=creator_user['username'], password='test')
         response = self.client.get("/piece/{0}/".format(piece.id))
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         self.assertEqual(response.data['id'], piece.id)
@@ -48,19 +49,19 @@ class CollectionViewTestCase(ElvisTestSetup, APITestCase):
 
     def test_get_update_not_allowed(self):
         piece = Piece.objects.first()
-        self.client.login(username='testuser', password='test')
+        self.client.login(username=real_user['username'], password='test')
         response = self.client.get("/piece/{0}/update/".format(piece.id))
         self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
         self.client.logout()
 
     def test_get_update_allowed(self):
         piece = Piece.objects.first()
-        self.client.login(username='creatoruser', password='test')
+        self.client.login(username=creator_user['username'], password='test')
         response = self.client.get("/piece/{0}/update/".format(piece.id))
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         self.client.logout()
 
-        self.client.login(username='superuser', password='test')
+        self.client.login(username=super_user['username'], password='test')
         response = self.client.get("/piece/{0}/update/".format(piece.id))
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         self.client.logout()
@@ -70,21 +71,21 @@ class CollectionViewTestCase(ElvisTestSetup, APITestCase):
         self.assertEqual(response.status_code, status.HTTP_302_FOUND)
 
     def test_get_upload_allowed(self):
-        self.client.login(username='creatoruser', password='test')
+        self.client.login(username=creator_user['username'], password='test')
         response = self.client.get("/pieces/upload/")
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         self.client.logout()
 
     # Test for invalid form submission
     def test_post_create_piece_empty_form_not_allowed(self):
-        self.client.login(username='testuser', password='test')
+        self.client.login(username=real_user['username'], password='test')
         response = self.client.post("/pieces/")
         self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
         self.client.logout()
 
     # Test for valid form submission with all new things
     def test_post_create_piece_new_models_no_files_no_movements(self):
-        self.client.login(username='testuser', password='test')
+        self.client.login(username=real_user['username'], password='test')
         response = self.client.post("/pieces/", {'title': 'Create Test',
                                                  'composer': 'New Composer',
                                                  'composition_start_date': 1600,
@@ -105,7 +106,7 @@ class CollectionViewTestCase(ElvisTestSetup, APITestCase):
 
     # Test for finding already existing models instead of creating new ones.
     def test_post_create_piece_new_models_no_files_no_movements_check_count(self):
-        self.client.login(username='testuser', password='test')
+        self.client.login(username=real_user['username'], password='test')
         response = self.client.post("/pieces/", {'title': 'Count Test 1',
                                                  'composer': self.test_composer,
                                                  'composition_start_date': 1600,
@@ -158,7 +159,7 @@ class CollectionViewTestCase(ElvisTestSetup, APITestCase):
         self.client.logout()
 
     def test_post_create_piece_create_movement(self):
-        self.client.login(username='testuser', password='test')
+        self.client.login(username=real_user['username'], password='test')
         response = self.client.post("/pieces/",
                                     {'title': 'Piece Mov Create Test',
                                      'composer': self.test_composer,
@@ -197,7 +198,7 @@ class CollectionViewTestCase(ElvisTestSetup, APITestCase):
         self.client.logout()
 
     def test_post_create_piece_create_movement_with_overrides(self):
-        self.client.login(username='testuser', password='test')
+        self.client.login(username=real_user['username'], password='test')
         response = self.client.post("/pieces/",
                                     {'title': 'Mov Override Test',
                                      'composer': self.test_composer,

@@ -12,6 +12,9 @@ from django.http import HttpResponseRedirect
 from django.shortcuts import render
 from django.utils.decorators import method_decorator
 from django.views.decorators.csrf import csrf_protect
+from rest_framework import generics
+from rest_framework.renderers import JSONRenderer, BrowsableAPIRenderer
+
 from elvis.forms import UserForm, UserChangeForm
 from elvis.models.collection import Collection
 from elvis.models.composer import Composer
@@ -20,8 +23,7 @@ from elvis.models.piece import Piece
 from elvis.renderers.custom_html_renderer import CustomHTMLRenderer
 from elvis.serializers import UserFullSerializer
 from elvis.serializers.serializers import UserListSerializer
-from rest_framework import generics
-from rest_framework.renderers import JSONRenderer, BrowsableAPIRenderer
+
 
 
 class UserAccountHTMLRenderer(CustomHTMLRenderer):
@@ -38,43 +40,33 @@ class UserAccount(generics.CreateAPIView):
     model = User
     serializer_class = UserFullSerializer
     renderer_classes = (JSONRenderer, UserAccountHTMLRenderer)
-    
+
     def get(self, request, *args, **kwargs):
         if request.user.is_anonymous():
             return render(request, "register.html")
         else:
             return render(request, "user/user_account.html")
-            
+
     @method_decorator(csrf_protect)
     def post(self, request, *args, **kwargs):
         user = request.user
         if user.is_anonymous():
             form = UserForm(data=request.POST)
-            if form.is_valid():
-                #Verify captcaha
-                if not request.POST['g-recaptcha-response']:
-                    form.add_error(None, "You must complete the reCaptcha to register!")
-                    return render(request, "register.html", {'form': form})
-
-                captcha_data = urllib.parse.urlencode({
-                    'secret': settings.RECAPTCHA_PRIVATE_KEY,
-                    'response': request.POST['g-recaptcha-response']})
-                captcha_data = captcha_data.encode('utf-8')
-
-                res = urllib.request.urlopen(
-                    "https://www.google.com/recaptcha/api/siteverify",
-                    captcha_data)
-                res = res.read().decode('utf-8')
-                if 'false' in res:
-                    form.add_error(None, "You are a robot!")
-                    return render(request, "register.html", {'form': form})
-
-                user = form.save()        
-                user = authenticate(username=request.POST['username'], password=request.POST['password1'])
-                login(request, user)
-                return HttpResponseRedirect("/")
-            else:
+            if not form.is_valid():
                 return render(request, "register.html", {'form': form})
+
+            if not is_captcha_completed(request):
+                form.add_error(None, "You must complete the reCaptcha to register!")
+                return render(request, "register.html", {'form': form})
+
+            if not is_valid_captcha(request):
+                form.add_error(None, "You are a robot!")
+                return render(request, "register.html", {'form': form})
+
+            form.save()
+            user = authenticate(username=request.POST['username'], password=request.POST['password1'])
+            login(request, user)
+            return HttpResponseRedirect("/")
         else:
             form = UserChangeForm(data=request.POST, instance=request.user)
             if not form.is_valid():
@@ -103,6 +95,26 @@ class UserUpdate(generics.CreateAPIView):
         else:
             return render(request, "user/user_update.html")
 
+
+def is_valid_captcha(request):
+    # Allow non-captcha registration on non-production sites.
+    if settings.SETTING_TYPE != settings.PRODUCTION:
+        return True
+
+    captcha_data = urllib.parse.urlencode({
+        'secret': settings.RECAPTCHA_PRIVATE_KEY,
+        'response': request.POST['g-recaptcha-response']})
+    captcha_data = captcha_data.encode('utf-8')
+
+    res = urllib.request.urlopen(
+        "https://www.google.com/recaptcha/api/siteverify",
+        captcha_data)
+    res = res.read().decode('utf-8')
+    return 'true' in res
+
+
+def is_captcha_completed(request):
+    return 'g-recaptcha-response' in request.POST
 
 @receiver(user_logged_out)
 def save_cart(sender, request, user, **kwargs):

@@ -3,15 +3,16 @@ import json
 from django.test.client import MULTIPART_CONTENT
 from rest_framework.test import APITestCase
 from rest_framework import status
-from elvis.tests.helpers import ElvisTestSetup
+from model_mommy import mommy
+from elvis.tests.helpers import ElvisTestSetup, real_user, creator_user
 from elvis.models.collection import Collection
 
 
 class CollectionViewTestCase(ElvisTestSetup, APITestCase):
     def setUp(self):
-        self.setUp_elvis()
-        self.setUp_user()
-        self.setUp_test_models()
+        self.setUp_users()
+        self.test_collection = mommy.make('elvis.Collection', public=True)
+        self.test_private_collection = mommy.make('elvis.Collection', public=False, creator=self.creator_user)
 
     def test_get_list(self):
         response = self.client.get("/collections/")
@@ -25,12 +26,12 @@ class CollectionViewTestCase(ElvisTestSetup, APITestCase):
 
     def test_get_private_detail(self):
         collection = Collection.objects.filter(public=False)[0]
-        self.client.login(username='testuser', password='test')
+        self.client.login(username=real_user['username'], password='test')
         response = self.client.get("/collection/{0}/".format(collection.id))
         self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
         self.client.logout()
 
-        self.client.login(username='creatoruser', password='test')
+        self.client.login(username=creator_user['username'], password='test')
         response = self.client.get("/collection/{0}/".format(collection.id))
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         self.assertEqual(response.data['id'], collection.id)
@@ -41,7 +42,7 @@ class CollectionViewTestCase(ElvisTestSetup, APITestCase):
         self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
 
     def test_get_download_cart_allowed(self):
-        self.client.login(username='testuser', password='test')
+        self.client.login(username=real_user['username'], password='test')
         response = self.client.get("/download-cart/")
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         self.client.logout()
@@ -58,7 +59,7 @@ class CollectionViewTestCase(ElvisTestSetup, APITestCase):
                                                       'id': collection.id})
         self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
 
-        self.client.login(username='testuser', password='test')
+        self.client.login(username=real_user['username'], password='test')
         response = self.client.post('/collections/', {'action': 'make-public',
                                                       'id': collection.id})
         self.assertEqual(response.status_code, status.HTTP_302_FOUND)
@@ -72,7 +73,7 @@ class CollectionViewTestCase(ElvisTestSetup, APITestCase):
 
     def update_collection_allowed(self):
         collection = Collection.objects.filter(public=False)[0]
-        self.client.login(username='creatoruser', password='test')
+        self.client.login(username=creator_user['username'], password='test')
         response = self.client.post('/collections/', {'action': 'make-public',
                                                       'id': collection.id})
         self.assertEqual(response.status_code, status.HTTP_202_ACCEPTED)
@@ -109,7 +110,7 @@ class CollectionViewTestCase(ElvisTestSetup, APITestCase):
 
         :return:
         """
-        self.client.login(username='creatoruser', password='test')
+        self.client.login(username=creator_user['username'], password='test')
         # Test a valid input
         response = self.client.post("/collections/", data={
             "title": "A am a test collection 12345",
@@ -150,6 +151,6 @@ class CollectionViewTestCase(ElvisTestSetup, APITestCase):
         # 302 because we're redirected to the login page
         self.assertEqual(response.status_code, status.HTTP_302_FOUND)
         # Now log in and try correctly
-        self.client.login(username="creatoruser", password="test")
+        self.client.login(username=creator_user['username'], password="test")
         response = self.client.get("/collection/create/")
         self.assertEqual(response.status_code, status.HTTP_200_OK)

@@ -115,8 +115,6 @@ class ElvisModel(models.Model):
 
         cls = self.__class__.__name__
         if cls == "Movement":
-            # if self.hidden:
-            #     self.solr_delete(commit=True);
             for a in self.attachments.all():
                 a.auto_rename(**kwargs)
 
@@ -124,9 +122,11 @@ class ElvisModel(models.Model):
             for a in self.attachments.all():
                 a.auto_rename(**kwargs)
             for m in self.movements.all():
+                if self.hidden:
+                    m.hidden = True
+                else:
+                    m.hidden= False
                 m.save(**kwargs)
-            # if self.hidden:
-            #     self.solr_delete(commit=True);
 
         if kwargs.get("ignore_solr"):
             pass

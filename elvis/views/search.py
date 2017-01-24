@@ -99,7 +99,14 @@ class SearchView(generics.GenericAPIView):
         :param kwargs:
         :return:
         """
+
         s = SolrSearch(request)
+        user = self.request.user
+
+        # Filter out hidden pieces and movements if the user is not super.
+        if not user.is_superuser:
+            s.solr_params['fq'].append('hidden:False')
+
         # TODO add here when facets are decided
         facets = s.facets(facet_fields=['type',
                                         'composer_name',
@@ -108,15 +115,9 @@ class SearchView(generics.GenericAPIView):
                                         'number_of_voices'])
         facets.facet_counts['facet_fields'] = parse_facets(facets)
 
-        # The search() function belongs to SolrSearch, and simply returns the
-        #  response for the aforementioned parsed and prepared query
-        user = self.request.user
-        if user.is_superuser:
-            search_results = s.search()
-        else:
-            s1 = s
-            s1.solr_params['fq'].append('!hidden:True')
-            search_results = s1.search()
+        # Do the search.
+        search_results = s.search()
+
         # Paginate results
         paginator = paginate.SolrPaginator(search_results)
         paged_results = get_paged_results(paginator, get_page_number(request))
@@ -169,8 +170,8 @@ class SearchAndAddToCartView(SearchView):
         for page_number in range(paginator.num_pages):
             results = paginator.page(page_number + 1).result
             # Get the items from the page
-            for search_object in results:
-                cart.add_item({'item_type':search_object["type"],
+            for search_object in (r for r in results if r in ElvisCart.ACCEPTABLE_TYPES):
+                cart.add_item({'item_type': search_object["type"],
                                'id': search_object["uuid"]})
                 total += 1
         # Save the modified cart

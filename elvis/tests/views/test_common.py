@@ -10,14 +10,9 @@ class CommonPublicViewTestCase(ElvisTestSetup, APITestCase):
     """
 
     def setUp(self):
-        self.setUp_elvis()
-        self.setUp_user()
-
-    def tearDown(self):
-        pass
+        self.setUp_users()
 
     # Static pages
-
     def test_home(self):
         response = self.client.get("/")
         self.assertEqual(response.status_code, status.HTTP_200_OK)

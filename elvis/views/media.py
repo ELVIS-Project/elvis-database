@@ -24,7 +24,7 @@ class MediaServeView(generics.RetrieveUpdateAPIView):
         path = kwargs.get('pk')
         response = HttpResponse()
         response['Content-Type'] = 'application/octet-stream'
-        if settings.SETTING_TYPE != "local":
+        if settings.SETTING_TYPE is not settings.LOCAL:
             response['X-Accel-Redirect'] = os.path.join("/media_serve/", path)
         else:
             local_path = os.path.join(settings.MEDIA_ROOT, path)

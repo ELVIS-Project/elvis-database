@@ -10,7 +10,7 @@ from elvis.models.composer import Composer
 class CollectionTestCase(ElvisTestSetup, APITestCase):
 
     def setUp(self):
-        self.setUp_user()
+        self.setUp_users()
 
         self.c = Collection()
         self.c.title = "This is the collection title"

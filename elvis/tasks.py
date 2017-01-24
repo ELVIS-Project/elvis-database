@@ -32,7 +32,10 @@ def zip_files(cart, extensions, username, make_dirs):
 
 @app.task(name='elvis.delete_zip_file')
 def delete_zip_file(path):
-    os.remove(path)
+    if os.path.exists(path):
+        os.remove(path)
+    else:
+        print("Attempted to remove {} but it does not exist.".format(path))
 
 
 class CartZipper:
