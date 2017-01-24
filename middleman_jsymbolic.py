@@ -3,6 +3,7 @@ import requests
 import json
 import pickle
 import argparse
+import time
 
 
 
@@ -89,18 +90,25 @@ Load up the appropriate resources into the jsymbolic workflow, then run it, logg
 TODO: re-create a proper logging mechanism
 """
 def run_workflow(token, workflow_url, input_url):
-    # resourcelist = []
-    # for pageno in range(1,json.loads(requests.get('https://rodan.simssa.ca/',
-    #                                               headers={'Authorization': "Token "+token}).text)['number_of_pages']+1):
-    #     resources = requests.get(''.format(str(pageno)),
-    #                              headers={'Authorization': "Token "+token})
-    #     for i in json.loads(resources.text)['results']:
-    #         print(i)
-    #         resourcelist.append(i['url'])
+    resourcelist = []
+    for pageno in range(1,json.loads(requests.get(input_url,
+                                                  headers={'Authorization': "Token "+token}).text)['number_of_pages']+1):
+        resources = requests.get(''.format(str(pageno)),
+                                 headers={'Authorization': "Token "+token})
+        for i in json.loads(resources.text)['results']:
+            print(i)
+            resourcelist.append(i['url'])
     workflow_data = {"created": "null", "updated": "null", "workflow": workflow_url, "resource_assignments":
-        {input_url: resourcelist},
+        {input_url: ""},
                          "name": "jsymbolic_elvis", "description": "Run of Workflow jsymbolic_elvis"}
     workflow_run = requests.post('https://rodan.simssa.ca/workflowruns/', data=json.dumps(workflow_data), headers={'Content-Type': 'application/json','Authorization': "Token "+token})
+
+    while(True):
+        time.sleep(1)
+        status = json.loads(requests.get(json.loads(workflow_run.text)['url'], headers={'Authorization': "Token "+token}).text)['results'][0]['status']
+        if status != 1:
+            break
+
 
     json.loads(workflow_run.text)['url']
     all_results = []
@@ -111,6 +119,7 @@ def run_workflow(token, workflow_url, input_url):
         all_results.append(json.loads(results.text)['results'])
     with open('rodan_results_urls', 'wb') as out_file:
         pickle.dump(all_results, out_file)
+    return all_results
 
 
 """
@@ -142,9 +151,17 @@ if __name__ == "__main__":
     parser.add_argument("rodan_password")
     parser.add_argument("elvis_username")
     parser.add_argument("elvis_password")
+    parser.add_argument("workflow_url")
 
     args = parser.parse_args()
     token = get_rodan_token(args.rodan_username, args.rodan_password)
+    elvis_urls = get_from_elvis(args.elvis_username, args.elvis_password)
+    resources = push_to_rodan(args.elvis_username, args.elvis_password)
+    workflow_results = run_workflow(token, args.workflow_url, )
+
+
+
+
 
 
 
