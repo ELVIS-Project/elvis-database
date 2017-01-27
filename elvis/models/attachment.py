@@ -53,6 +53,7 @@ class Attachment(ElvisModel):
         ordering = ['id']
 
     attachment = models.FileField(upload_to=upload_path, null=True, blank=True, max_length=512)
+    original_file_name = models.TextField(blank=True, null=True)
     source = models.CharField(blank=True, null=True, max_length=200)
 
     def __str__(self):
@@ -125,6 +126,12 @@ class Attachment(ElvisModel):
             position (int): The index of this file in its parents list of files.
             source (str): The source of the attached file.
         """
+        if self.attachment:
+            raise ValueError("Attachments must not be reused. Create a new attachment instead.")
+
+        # Record files original name if none is yet recorded.
+        if not self.original_file_name:
+            self.original_file_name = file_name
 
         # Compute the new name for the file and move it to its correct position.
         new_name = self.compute_correct_file_name(position=position,
