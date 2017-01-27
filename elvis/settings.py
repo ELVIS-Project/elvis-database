@@ -39,7 +39,7 @@ DEVELOPMENT = 1
 LOCAL = 2
 
 # Specify which of the above setting types you wish to use here.
-SETTING_TYPE = LOCAL
+SETTING_TYPE = PRODUCTION
 assert SETTING_TYPE in [PRODUCTION, DEVELOPMENT, LOCAL], "Must choose a legal setting type."
 
 if SETTING_TYPE is not PRODUCTION:
@@ -233,10 +233,10 @@ USE_TZ = True
 # CRA: we used to have composer images and user profile images; if we need
 #      them back, check commit dc8f8afe75b7137440c6488483566b8e2c366379
 MEDIA_URL = '/media/'
-MEDIA_ROOT = '/srv/webapps/elvisdb/media'
+MEDIA_ROOT = '/media/elvisdb/media'
 
 STATIC_URL = '/static/'
-STATIC_ROOT = '/srv/webapps/elvisdb/static'
+STATIC_ROOT = '/media/elvisdb/static'
 
 if SETTING_TYPE in [DEVELOPMENT, LOCAL]:
     COMPRESS_ENABLED = False
