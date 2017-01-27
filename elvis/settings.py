@@ -187,7 +187,7 @@ if SETTING_TYPE is not LOCAL:
         'default': {
             'ENGINE': 'django.db.backends.postgresql_psycopg2',
             'NAME': 'elvis_database',
-            'USER': 'elvis',
+            'USER': 'elvisdb',
             'PASSWORD': DB_PASS,
             'HOST': 'localhost',
             'TEST': {
