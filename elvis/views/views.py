@@ -214,7 +214,7 @@ def handle_attachments(request, parent, cleanup, file_field, file_source):
         att.creator = request.user
         parent.attachments.add(att)
         cleanup.list.append({"object": att, "isNew": True})
-        att.attach_file(f['path'], f['name'], parent, position=i, source=file_source)
+        att.attach_file(f['path'], f['name'], i, source=file_source)
         results.append(att)
         i += 1
 
