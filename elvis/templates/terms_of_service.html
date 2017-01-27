@@ -8,30 +8,45 @@
 {% block page_content %}
     <div class="row">
         <div class="col-xs-12 col-md-10 col-md-offset-1">
-            {% if content.data.accepted_tos %}
-                <h2>You have already accepted our terms of service.</h2>
-            {% else %}
-                <h2>You must accept our terms of service to continue.</h2>
-            {% endif %}
+
+            <h2 style="text-align:center">
+                {% if content.data.accepted_tos %}
+                    You have already accepted our terms of service.
+                {% else %}
+                    You must accept our terms of service to continue.
+                {% endif %}
+            </h2>
+
+            <br>
             <div id="TOS-text">
-            <p>
-                Lorem ipsum dolor sit amet, consectetur adipiscing elit. Mauris semper diam nisl, nec mattis leo dignissim in. Etiam a ex nec erat lacinia venenatis ut at elit. Mauris convallis dapibus purus at faucibus. Proin consequat iaculis purus quis tincidunt. Morbi a arcu at elit ultricies luctus. Praesent in justo convallis, elementum nulla nec, posuere nibh. In hac habitasse platea dictumst. Sed tempor ultrices metus, sed accumsan velit pulvinar faucibus. Donec vel ornare risus. Donec fermentum, neque at efficitur consequat, dui velit eleifend leo, ac malesuada augue risus a felis. Ut vel arcu enim. Sed feugiat lacinia eleifend. Curabitur vitae erat blandit ligula condimentum luctus ac eget orci. Integer luctus mi nunc. Donec lacinia sem sit amet lectus gravida, at elementum massa interdum. Nam aliquam dolor sed urna blandit aliquet.
-            </p>
                 <p>
-                    In order to continue using this website as an authenticated user with file-download privileges, you
-                    must accept the above. If you do not accept, you may log out and use the site anonymously. Note that
-                    anonymous users CAN NOT DOWNLOAD ANY FILES, only browse the contents of the database.
+                <h3>Fair Use.</h3> You may access and view the content on the ELVIS database (henceforth EDB) on your
+                computer or other personal device, and, unless otherwise indicated in these Terms of Use, registered
+                users are free to download and/or modify the content for educational or research purposes. Use of
+                EDB and any downloaded material or derivative works are strictly for personal, non-commercial use
+                only. Redistribution of downloaded material is strictly prohibited.
                 </p>
+                <p>
+                <h3>Content and Monitoring.</h3> The owners of EDB do not have an obligation but reserve the right to
+                monitor
+                and/or review all materials posted to EDB by registered users. Users are advised to check the
+                copyright status of materials prior to uploading. The owners of EDB are not responsible for any
+                copyrighted materials posted by users. The owners of EDB reserve the right to remove any information
+                or materials, in whole or in part, that in EDB’s discretion are objectionable or in violation of
+                this Terms of Use.
+
+                </p>
+
                 <hr>
             </div>
             {% if not content.data.accepted_tos %}
-            <div style="text-align: center">
-                <form id="TOS-form" action="/tos/" method="post">{% csrf_token %}
-                    <a type="button" class="btn btn-default" href="/logout">Logout</a>
-                    <input type="checkbox" hidden="hidden" name="accepts-TOS" checked/>
-                    <button type="submit" class="btn btn-primary" id="TOS-accept-button">I Accept</button>
-                </form>
-            </div>
+                <div style="text-align: center">
+                    <form id="TOS-form" action="/tos/" method="post">{% csrf_token %}
+                        <a type="button" class="btn btn-default" href="/logout">Logout</a>
+                        <input type="checkbox" hidden="hidden" name="accepts-TOS" checked/>
+                        <button type="submit" class="btn btn-primary" id="TOS-accept-button">I Accept</button>
+                    </form>
+                </div>
             {% endif %}
         </div>
 
