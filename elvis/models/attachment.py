@@ -125,25 +125,31 @@ class Attachment(ElvisModel):
             position (int): The index of this file in its parents list of files.
             source (str): The source of the attached file.
         """
+
+        # Compute the new name for the file and move it to its correct position.
         new_name = self.compute_correct_file_name(position=position,
                                                   extension="." + file_name.rsplit('.')[-1])
         old_path = os.path.join(file_path, file_name)
         new_path = os.path.join(self.compute_absolute_file_dir(), new_name)
         if not os.path.exists(self.compute_absolute_file_dir()):
             os.makedirs(self.compute_absolute_file_dir())
-        os.rename(old_path, new_path)
 
         if source:
             self.source = source
 
-        with open(new_path, 'rb+') as dest:
+        # Attach the file to the attachment object. Since we pass in the new_path,
+        # it will copy the file there. Then, delete the old file.
+        with open(old_path, 'rb+') as dest:
             file_content = File(dest)
-            self.attachment.save(new_name, file_content)
+            self.attachment.save(new_path, file_content)
+        os.remove(old_path)
 
+        # Save the relative directory of the new file as the attachment name.
         splt = self.attachment.name.split('attachments')
         self.attachment.name = "attachments" + splt[-1]
 
-        self.title = self.file_name
+        # Update this Attachments title with the files name.
+        self.title = new_name
         self.save()
 
     def delete(self, *args, **kwargs):
