@@ -21,3 +21,6 @@ A deployment guide is including in the docs of this repository with details as t
 
 ## Future Directions
 See GitHub issues.
+
+## Content Related Issues
+Please file content related issues at [https://github.com/ELVIS-Project/ELVIS-Database-Content](https://github.com/ELVIS-Project/ELVIS-Database-Content)
