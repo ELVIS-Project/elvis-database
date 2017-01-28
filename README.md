@@ -23,4 +23,4 @@ A deployment guide is including in the docs of this repository with details as t
 See GitHub issues.
 
 ## Content Related Issues
-Please file content related issues at [https://github.com/ELVIS-Project/ELVIS-Database-Content](https://github.com/ELVIS-Project/ELVIS-Database-Content).
+Please file content related issues at [https://github.com/ELVIS-Project/ELVIS-Database-Content](https://github.com/ELVIS-Project/ELVIS-Database-Content) (i.e. your Palestrina Mass is actually by Lassus).
