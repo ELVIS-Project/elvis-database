@@ -103,12 +103,14 @@ def run_workflow(token, workflow_url, input_url):
                          "name": "jsymbolic_elvis", "description": "Run of Workflow jsymbolic_elvis"}
     workflow_run = requests.post('https://rodan.simssa.ca/workflowruns/', data=json.dumps(workflow_data), headers={'Content-Type': 'application/json','Authorization': "Token "+token})
 
+    #wait for the workflow to be done. TODO: reinstate logging for errors (where status = -1)
     while(True):
         time.sleep(1)
         status = json.loads(requests.get(json.loads(workflow_run.text)['url'], headers={'Authorization': "Token "+token}).text)['results'][0]['status']
         if status != 1:
             break
 
+    #once the workflow is done, get the results
 
     json.loads(workflow_run.text)['url']
     all_results = []

@@ -91,7 +91,7 @@
                     </li>
                 {% endif %}
                 {% if a.jsymbolic_values_xml %}
-                    <li><input type="file" id="file-input" class="link" /></li>
+                    <li><button  id="button-input" class="btn" onclick="click()">Display feature values</button></li>
 
 
                     <script>
@@ -106,21 +106,24 @@
 
 
 
-                        $(".link").click(function(e){
-{#                            var dataurl = $("a[href$='.xml']")#}
-{#                            var rawXML = $.get(dataurl[0])#}
+                        $(".btn").click(function(a){
+                            var dataurl = $("a[href$='.xml']")
+                            var rawXML = $.get(dataurl[0])#}
 
-                            var file = e.target.files[0];
-                            if (!file) {
-                                return;
-                            }
+{#                            var file = e.target.files[0];#}
+{#                            if (!file) {#}
+{#                                return;#}
+{#                            }#}
                             var reader = new FileReader();
                             reader.onload = function(e) {
                                 modal.style.display = "block"
-                                $('#xmlwindow').css("height", "75px");
+                                $('#xmlwindow').css("height", "200px");
                                 $('#xmlwindow').css("overflow", "auto");
-                                $('#xmlwindow').css("width", "100px");
-                                var rawXML = e.target.result;
+                                $('#xmlwindow').css("width", "200px");
+                                $('#xmlwindow').css("position", "absolute");
+                                $('#xmlwindow').css("left", "50%");
+                                $('#xmlwindow').css("top", "50%");
+{#                                var rawXML = e.target.result;#}
                                 // Parse it
                                 var xmlParsed = $.parseXML(rawXML);
 
