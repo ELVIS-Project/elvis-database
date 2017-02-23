@@ -5,12 +5,17 @@ import pickle
 import argparse
 import time
 
+from requests_file import FileAdapter
+
+
+
 
 
 
 #note: the workflow to be used needs to be loaded in rodan manually before starting to use the following script
 def get_rodan_token(username, password):
-    token = requests.post('https://rodan.simssa.ca/auth/token/', data={'username': username, 'password': password})
+    token = requests.post('https://api.rodan.simssa.ca/auth/token/', data={'username': username, 'password': password})
+    print(token.text)
     return json.loads(token.text)['token']
 
 """
@@ -43,15 +48,15 @@ Pushes the resulting feature files from the jsymbolic run into the appropriate p
 (entry corresponding to where the original file came from).
 TODO: figure out what is preventing uploads to what should be the proper media file location on the backend.
 """
-def push_to_elvis(token):
+def push_to_elvis(token, elvis_username, elvis_password):
     results = pickle.load(open('rodan_results_urls', 'rb'))
 
     for page in results:
         for result in page:
             file_path = '/'.join(result['name'].split('@', 3)[:3])
-            if result['resource_type'] == 'https://rodan.simssa.ca/resourcetype/f6c9e1a1-dd34-40f1-a898-c15914aa00d3/':
+            if result['resource_type'] == 'https://api.rodan.simssa.ca/resourcetype/f6c9e1a1-dd34-40f1-a898-c15914aa00d3/':
                 file_name = ''.join((result['name'].split('@', 3)[3]+'.arff').split())
-            elif result['resource_type']== 'https://rodan.simssa.ca/resourcetype/f4ba139d-6596-4ebd-861c-1ada8c4653df/':
+            elif result['resource_type'] == 'https://api.rodan.simssa.ca/resourcetype/f4ba139d-6596-4ebd-861c-1ada8c4653df/':
                 file_name = ''.join((result['name'].split('@', 3)[3]+'.csv').split())
             else:
                 root = etree.XML(requests.get(result['resource_file'], headers={'Authorization': "Token "+token}).text)
@@ -64,7 +69,7 @@ def push_to_elvis(token):
                     print("Bad XML")
                     break
             files = {'files': requests.get(result['resource_file'], headers={'Authorization': "Token "+token}).content}
-            resp = requests.put('http://127.0.0.1:8000'+'/media/attachments/'+file_path+'/', files=files, data={'file_path':'/'+file_path+'/', 'file_name': file_name}, auth=('', ''))
+            resp = requests.put('http://127.0.0.1:8000'+'/media/attachments/'+file_path+'/', files=files, data={'file_path':'/'+file_path+'/', 'file_name': file_name}, auth=(elvis_username, elvis_password))
 
     return resp
 
@@ -79,7 +84,7 @@ def push_to_rodan(elvis_username, elvis_password, file_url_array, project_url, r
         files={'files': ('@'.join(url[0].split('/')[3:])+url[1],
                          requests.get('http://dev.database.elvisproject.ca'+url[0], auth=(elvis_username, elvis_password)))}
         resource_data={'project': project_url, 'type': resourcetype}
-        resource_upload = requests.post('https://rodan.simssa.ca/resources/', files=files, data=resource_data, headers={'Authorization': "Token "+token})
+        resource_upload = requests.post('https://api.rodan.simssa.ca/resources/', files=files, data=resource_data, headers={'Authorization': "Token "+token})
         resources.append(json.loads(resource_upload.text['url']))
     return resources
 
@@ -89,9 +94,9 @@ def push_to_rodan(elvis_username, elvis_password, file_url_array, project_url, r
 Load up the appropriate resources into the jsymbolic workflow, then run it, logging what goes wrong if it does.
 TODO: re-create a proper logging mechanism
 """
-def run_workflow(token, workflow_url, input_url):
+def run_workflow(token, workflow_url, inputport_url):
     resourcelist = []
-    for pageno in range(1,json.loads(requests.get(input_url,
+    for pageno in range(1,json.loads(requests.get(inputport_url,
                                                   headers={'Authorization': "Token "+token}).text)['number_of_pages']+1):
         resources = requests.get(''.format(str(pageno)),
                                  headers={'Authorization': "Token "+token})
@@ -99,9 +104,9 @@ def run_workflow(token, workflow_url, input_url):
             print(i)
             resourcelist.append(i['url'])
     workflow_data = {"created": "null", "updated": "null", "workflow": workflow_url, "resource_assignments":
-        {input_url: ""},
+        {inputport_url: resourcelist},
                          "name": "jsymbolic_elvis", "description": "Run of Workflow jsymbolic_elvis"}
-    workflow_run = requests.post('https://rodan.simssa.ca/workflowruns/', data=json.dumps(workflow_data), headers={'Content-Type': 'application/json','Authorization': "Token "+token})
+    workflow_run = requests.post('https://api.rodan.simssa.ca/workflowruns/', data=json.dumps(workflow_data), headers={'Content-Type': 'application/json','Authorization': "Token "+token})
 
     #wait for the workflow to be done. TODO: reinstate logging for errors (where status = -1)
     while(True):
@@ -114,9 +119,9 @@ def run_workflow(token, workflow_url, input_url):
 
     json.loads(workflow_run.text)['url']
     all_results = []
-    initial_result = requests.get("https://rodan.simssa.ca/resources/?result_of_workflow_run={0}".format(""), headers={'Authorization': "Token "+token})
+    initial_result = requests.get("https://api.rodan.simssa.ca/resources/?result_of_workflow_run={0}".format(""), headers={'Authorization': "Token "+token})
     for page in range(1, json.loads(initial_result.text)['total_pages']+1):
-        results = requests.get("https://rodan.simssa.ca/resources/?page={0}&result_of_workflow_run={1}".format(str(page),""), headers={'Authorization': "Token "+token})
+        results = requests.get("https://api.rodan.simssa.ca/resources/?page={0}&result_of_workflow_run={1}".format(str(page),""), headers={'Authorization': "Token "+token})
         print(results.text)
         all_results.append(json.loads(results.text)['results'])
     with open('rodan_results_urls', 'wb') as out_file:
@@ -128,7 +133,7 @@ def run_workflow(token, workflow_url, input_url):
 Get the results from the jsymbolic workflow run  of all the previously uploaded files
 """
 def get_from_rodan(resource_id):
-    result = requests.get('https://rodan.simssa.ca/resources/?result_of_workflow_run='+str(resource_id), headers={})
+    result = requests.get('https://api.rodan.simssa.ca/resources/?result_of_workflow_run='+str(resource_id), headers={})
     result_files = json.loads(result.text)['results']
     actual_files = []
     for results in result_files:
@@ -159,7 +164,7 @@ if __name__ == "__main__":
     token = get_rodan_token(args.rodan_username, args.rodan_password)
     elvis_urls = get_from_elvis(args.elvis_username, args.elvis_password)
     resources = push_to_rodan(args.elvis_username, args.elvis_password)
-    workflow_results = run_workflow(token, args.workflow_url, )
+    workflow_results = run_workflow(token, args.workflow_url)
 
 
 
