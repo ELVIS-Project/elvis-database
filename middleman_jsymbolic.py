@@ -23,19 +23,19 @@ Gets the urls of midi and mei files currently in the elvis database.
 """
 def get_from_elvis(username, password):
     midimei_files_urls = []
-    resp = requests.get('http://dev.database.elvisproject.ca/search/?filefilt=.midi&filefilt=.mei', auth = (username, password))
+    resp = requests.get('http://132.206.14.132/search/?filefilt=.midi&filefilt=.mei', auth = (username, password))
     pages = json.loads(resp.text)['paginator']['total_pages']
     for page in range(1,pages+1):
         print(page)
-        search = requests.get('http://dev.database.elvisproject.ca/search/?filefilt[]=.midi&filefilt[]=.mei&page='+str(page), auth = (username, password))
+        search = requests.get('http://132.206.14.132/search/?filefilt[]=.midi&filefilt[]=.mei&page='+str(page), auth = (username, password))
         for object in json.loads(search.text)['object_list']:
             if 'pieces_searchable' in object.keys():
-                piece = requests.get('http://dev.database.elvisproject.ca/piece/'+str(object['id'])+'?format=json', auth=(username, password))
+                piece = requests.get('http://132.206.14.132/piece/'+str(object['id'])+'?format=json', auth=(username, password))
                 for attachment in json.loads(piece.text)['attachments']:
                     if attachment['extension'] == ".midi" or attachment['extension'] == ".mei":
                         midimei_files_urls.append(attachment['url'])
             else:
-                movement = requests.get('http://dev.database.elvisproject.ca/movement/'+str(object['id'])+'?format=json', auth=(username, password))
+                movement = requests.get('http://132.206.14.132/movement/'+str(object['id'])+'?format=json', auth=(username, password))
                 for attachment in json.loads(movement.text)['attachments']:
                     if attachment['extension'] == ".midi" or attachment['extension'] == ".mei":
                         midimei_files_urls.append([attachment['url'], attachment['extension']])
@@ -80,9 +80,12 @@ Download the files from the provided url list  and upload them into the appropri
 """
 def push_to_rodan(elvis_username, elvis_password, file_url_array, project_url, resourcetype, token):
     resources = []
+
     for url in file_url_array:
-        files={'files': ('@'.join(url[0].split('/')[3:])+url[1],
-                         requests.get('http://dev.database.elvisproject.ca'+url[0], auth=(elvis_username, elvis_password)))}
+
+        files={'files': ('@'.join(url.split('/')[3:]),
+                         requests.get('http://132.206.14.132'+url, auth=(elvis_username, elvis_password)))}
+
         resource_data={'project': project_url, 'type': resourcetype}
         resource_upload = requests.post('https://api.rodan.simssa.ca/resources/', files=files, data=resource_data, headers={'Authorization': "Token "+token})
         resources.append(json.loads(resource_upload.text['url']))
@@ -163,7 +166,7 @@ if __name__ == "__main__":
     args = parser.parse_args()
     token = get_rodan_token(args.rodan_username, args.rodan_password)
     elvis_urls = get_from_elvis(args.elvis_username, args.elvis_password)
-    resources = push_to_rodan(args.elvis_username, args.elvis_password)
+    resources = push_to_rodan(args.elvis_username, args.elvis_password, elvis_urls, ["https://api.rodan.simssa.ca/project/c49b43a9-e60f-40fc-b604-fd42cc84dd09/","https://api.rodan.simssa.ca/resourcetype/37041509-ff21-4870-bce9-045bec057596/"], "https://api.rodan.simssa.ca/resourcetype/75120ad5-4b18-4465-a4be-e6746c25bfdf/", token)
     workflow_results = run_workflow(token, args.workflow_url)
 
 
