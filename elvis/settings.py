@@ -53,7 +53,7 @@ BASE_DIR = os.path.abspath('./')
 # The directories where the server expects to find configuration files.
 DB_PASS_PATH = '/srv/webapps/elvisdb/config/db_pass'
 SECRET_KEY_PATH = '/srv/webapps/elvisdb/config/secret_key'
-EMAIL_PASS_PATH = '/srv/webapps/elvisdb/config/email_pass'
+EMAIL_CREDS_PATH = '/srv/webapps/elvisdb/config/email_creds'
 RECAPTCHA_KEY_PATH = '/srv/webapps/elvisdb/config/recaptcha_priv_key'
 
 # Simple Settings
@@ -200,14 +200,15 @@ if SETTING_TYPE is not LOCAL:
 # Email Settings
 # ==============
 EMAIL_USE_TLS = True
-EMAIL_HOST = 'smtp.gmail.com'
+EMAIL_HOST = 'email-smtp.us-west-2.amazonaws.com'
 EMAIL_PORT = 587
-EMAIL_HOST_USER = 'elvisdatabase@gmail.com'
-if os.path.exists(EMAIL_PASS_PATH):
-    with open(EMAIL_PASS_PATH) as f:
-        EMAIL_HOST_PASSWORD = f.read().strip()
+DEFAULT_FROM_EMAIL = 'noreply.elvis@simssa.ca'
+if os.path.exists(EMAIL_CREDS_PATH):
+    with open(EMAIL_CREDS_PATH) as f:
+        EMAIL_HOST_USER, EMAIL_HOST_PASSWORD, _ = (x.strip() for x in f.read().split('\n'))
 else:
-    EMAIL_HOST_PASSWORD = ""
+    EMAIL_HOST_USER, EMAIL_HOST_PASSWORD = "", ""
+
 
 # Captcha Settings
 # ================
