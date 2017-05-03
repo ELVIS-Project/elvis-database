@@ -1,4 +1,5 @@
 from django.shortcuts import render, redirect
+from django.core.cache import cache
 from rest_framework import generics, permissions, status
 from rest_framework.renderers import JSONRenderer
 from rest_framework.response import Response
@@ -14,9 +15,23 @@ def home(request):
 
 # Render the about page
 def about(request):
-    return render(request, "about.html", {'piece_count': Piece.objects.all().count(),
-                                          'composer_count': Composer.objects.all().count(),
-                                          'movement_count': Movement.objects.all().count()})
+
+    seconds_in_week = 604800
+
+    # Count how many of these models we have, using the cache to store
+    # the values for a week.
+    model_counts = {Piece: None, Composer: None, Movement: None}
+    for model in model_counts:
+        cache_key = 'global_{}_count'.format(str(model))
+        value = cache.get(cache_key)
+        if value is None:
+            value = model.objects.count()
+            cache.set(cache_key, value, seconds_in_week)
+        model_counts[model] = value
+
+    return render(request, "about.html", {'piece_count': model_counts[Piece],
+                                          'composer_count': model_counts[Composer],
+                                          'movement_count': model_counts[Movement]})
 
 
 class TOSHTMLRenderer(CustomHTMLRenderer):
