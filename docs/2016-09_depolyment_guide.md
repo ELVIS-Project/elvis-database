@@ -155,7 +155,7 @@ python manage.py migrate
 
 If this command fails, you will need to figure out some error in your database setup up or your `$ELVIS_HOME/elvis-database/elvis/settings.py` file.
 
-You must now obtain a dump of the database and a set of its media files. These can be found on our backup server (TODO: WIKI LINK TO BACKUP SERVER DOCS HERE), as well as on the production server.
+You must now obtain a dump of the database and a set of its media files. These can be found on our [backup server](http://132.206.14.10/doku.php?id=backups:start), as well as on the production server.
 
 Move all the media folders (`attachments`, `user_downloads`, etc) to `$ELVIS_HOME/media/`. You also want to set all the files to have 664 permissions. You can do this with a command like `find $ELVIS_HOME/media -type f -exec chmod 644 {} \;`. Note, we can not simply run `chmod -R` on this directory tree, as we don't want to remove the executable permission from directories.
 
@@ -193,7 +193,6 @@ To tell supervisor to run these scripts, we need to create a file in supervisor'
 ```
 [program:elvisdb]
 command=/srv/webapps/elvisdb/elvis-database/gunicorn_start.sh
-user=elvisdb
 autostart=true
 autorestart=true
 stdout_logfile=/var/log/elvisdb/gunicorn.log
@@ -219,33 +218,6 @@ supervisor> reload
 
 That should be about it! If you look at the config file, you'll notice all we're doing is telling supervisor to run the scripts that came with the project, to automatically start them and attempt to restart them if the crash, and where to log their stdout and stderr.
 
-You may have noticed in the script files `$ELVIS_HOME/elvis-database/{celery_start.sh,gunicorn_start.sh}`, we refer to files in `/var/run/elvisdb`. This is a great place to put socket files, because `/var/run` is a temporary in-memory file system designed to look like the regular file system. Unfortunately, this means anything you put in `/var/run` will be deleted on reboot. This means our custom `elvisdb` directory in `/var/run` does not exist when we start the machine. In order to fix this, the easiest thing to do is to create an init script which will create the directory everytime the machine is booted.
-
-Create a file called `/etc/init.d/elvisdb` with the following contents:
-
-```
-#!/bin/bash
-
-### BEGIN INIT INFO
-# Provides:       elvisdb
-# Required-Start:    $local_fs $remote_fs $network $syslog $named
-# Required-Stop:     $local_fs $remote_fs $network $syslog $named
-# Default-Start:     2 3 4 5
-# Default-Stop:      0 1 6
-### END INIT INFO
-
-mkdir /var/run/elvisdb
-chown elvisdb:elvisdb /var/run/elvisdb
-```
-
-Don't worry too much about the init info here. The important part is the two last commands, which creates the needed directory and sets the elvisdb user as its owner. Run the following to set this script as a default startup service:
-
-```
-sudo chmod +x /etc/init.d/elvisdb
-sudo update-rc.d elvisdb defaults
-```
-
-This should be all you need to do to set up the supervisor managed services.
 
 ## Setting up nginx
 nginx should already be running having been installed when you downloaded all the dependencies. You can check that it is running using `sudo systemctl status nginx`. 
@@ -255,7 +227,7 @@ We save site definitions in `/etc/nginx/sites-avaliable`, then make a link to th
 Save the following into a file called `/etc/nginx/sites-avaliable/database.elvisproject.ca`.
 ```
 upstream elvisdb_server {
-  server unix:/var/run/elvisdb/elvisdb.sock fail_timeout=0;
+  server unix:/var/run/elvisdb.sock fail_timeout=0;
 }
 
 server {
