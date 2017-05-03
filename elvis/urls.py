@@ -19,6 +19,7 @@ from django.contrib.auth import views as auth_views
 
 # Uncomment the next two lines to enable the admin:
 from django.contrib import admin
+import debug_toolbar
 admin.autodiscover()
 
 media_path = os.path.realpath('media/attachments/')
@@ -26,7 +27,7 @@ urlpatterns = []
 
 urlpatterns.extend([
         url(r'^$', home, name='home'),
-
+        url(r'^__debug__/', include(debug_toolbar.urls)),
         url(r'^search/$', SearchView.as_view(), name="search-view"),
         url(r'^search/add-to-cart/$', SearchAndAddToCartView.as_view(), name="search-and-add-to-cart-view"),
 
