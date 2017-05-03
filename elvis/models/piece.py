@@ -13,11 +13,11 @@ class Piece(ElvisModel, ElvisCompositionMixin):
     hidden = models.BooleanField(default=False)
 
     def number_of_movements(self):
-        return len(self.movements.all())
+        return self.movement_count
 
     @property
     def movement_count(self):
-        return self.movements.all().count()
+        return self.movements.count()
 
     @property
     def file_formats(self):
