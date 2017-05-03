@@ -117,12 +117,18 @@ class ElvisListCreateView(generics.ListCreateAPIView):
             Qlist.append(Q(title__istartswith=startswith))
 
         if model == Collection:
-            Qlist.append((Q(public=True) | Q(creator=user)))
+            if user:
+                Qlist.append((Q(public=True) | Q(creator=user)))
+            else:
+                Qlist.append((Q(public=True)))
 
         if model == Piece or model == Movement:
-            Qlist.append((Q(hidden=False) | Q(creator=user)))
+            if user:
+                Qlist.append((Q(hidden=False) | Q(creator=user)))
+            else:
+                Qlist.append((Q(hidden=False)))
 
         if Qlist:
-            return model.objects.filter(*Qlist)
+            return model.objects.filter(*Qlist).prefetch_related()
         else:
-            return model.objects.all()
+            return model.objects.all().prefetch_related()
