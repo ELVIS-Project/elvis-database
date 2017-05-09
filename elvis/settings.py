@@ -8,10 +8,7 @@ For the full list of settings and their values, see
 https://docs.djangoproject.com/en/1.6/ref/settings/
 """
 
-from celery import schedules
 import os
-import re
-from kombu import Exchange, Queue
 
 """
 These are pre-defined setting levels. You set SETTING_TYPE
@@ -281,6 +278,15 @@ TYPE_NAMES={
     'elvis_collection': "Collections",
 }
 
+SOLR_SUGGESTORS = ['composerSuggest',
+                   'pieceSuggest',
+                   'collectionSuggest',
+                   'languageSuggest',
+                   'genreSuggest',
+                   'locationSuggest',
+                   'sourceSuggest',
+                   'instrumentSuggest',
+                   'tagSuggest']
 # Celery Settings
 # ===============
 BROKER_URL = 'amqp://'
