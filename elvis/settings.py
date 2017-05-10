@@ -278,7 +278,7 @@ TYPE_NAMES={
     'elvis_collection': "Collections",
 }
 
-SOLR_SUGGESTORS = ['composerSuggest',
+SOLR_SUGGESTERS = ['composerSuggest',
                    'pieceSuggest',
                    'collectionSuggest',
                    'languageSuggest',
