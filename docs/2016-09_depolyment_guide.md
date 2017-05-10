@@ -272,5 +272,15 @@ Now, link this new config file in `sites-enabled`, run a config test, and reload
 
 If for whatever reason the configtest fails, you will find the errors it raised in `/var/log/nginx/error.log`. Use this output to debug your configuration!
 
+# Extra: Moving data to mounted storage.
+
+After deploying the server, we had a need to move all data on the server on to externally mounted storage drive. This was to simplify the process of redeploying and making backups of all data.
+
+To see the list of external drives mounted at startup, open `/etc/fstab` in a text editor. On the elvis production server, you will notice `/dev/vdc` is mounted to `/media` at startup. This is our external drive. Here you can find all the media files for the database, as well as the data stores for postgres and solr.
+
+The solr data location can be changed simply by shutting down solr, moving the data store, and changing the key `dataDir` in `solrconfig.xml` of every solr core to point to the new location.
+
+(https://www.digitalocean.com/community/tutorials/how-to-move-a-postgresql-data-directory-to-a-new-location-on-ubuntu-16-04)[Here is a nice guide for moving the postgres data store].
+
 # Conclusion
 After completing these steps, you should have a fully functional elvis database deployment. You will still need to point the DNS record to the new server's IP in order to access the site online, but that is beyond the scope of this guide.
