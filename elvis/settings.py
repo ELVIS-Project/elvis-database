@@ -60,6 +60,7 @@ RECAPTCHA_KEY_PATH = '/srv/webapps/elvisdb/config/recaptcha_priv_key'
 # ===============
 ALLOWED_HOSTS = ['database.elvisproject.ca', 'dev-database.elvisproject.ca']
 
+INTERNAL_IPS = ['127.0.0.1']
 
 if SETTING_TYPE is not LOCAL:
     with open(SECRET_KEY_PATH) as f:
@@ -83,6 +84,7 @@ INSTALLED_APPS = (
     'django.contrib.staticfiles',
     'django.contrib.sites',
     'django.contrib.flatpages',
+    'debug_toolbar',
     'rest_framework',
     'rest_framework.authtoken',
     'django_extensions',
@@ -91,6 +93,7 @@ INSTALLED_APPS = (
 )
 
 MIDDLEWARE_CLASSES = (
+    'debug_toolbar.middleware.DebugToolbarMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
