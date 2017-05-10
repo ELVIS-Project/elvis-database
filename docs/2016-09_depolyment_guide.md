@@ -280,7 +280,7 @@ To see the list of external drives mounted at startup, open `/etc/fstab` in a te
 
 The solr data location can be changed simply by shutting down solr, moving the data store, and changing the key `dataDir` in `solrconfig.xml` of every solr core to point to the new location.
 
-[https://www.digitalocean.com/community/tutorials/how-to-move-a-postgresql-data-directory-to-a-new-location-on-ubuntu-16-04](Here is a nice guide for moving the postgres data store).
+[Here is a nice guide for moving the postgres data store](https://www.digitalocean.com/community/tutorials/how-to-move-a-postgresql-data-directory-to-a-new-location-on-ubuntu-16-04).
 
 # Conclusion
 After completing these steps, you should have a fully functional elvis database deployment. You will still need to point the DNS record to the new server's IP in order to access the site online, but that is beyond the scope of this guide.
