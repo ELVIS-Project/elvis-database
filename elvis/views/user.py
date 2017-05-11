@@ -15,7 +15,7 @@ from django.views.decorators.csrf import csrf_protect
 from rest_framework import generics
 from rest_framework.renderers import JSONRenderer, BrowsableAPIRenderer
 
-from elvis.forms import UserForm, UserChangeForm
+from elvis.forms import ElvisUserCreationForm, ElvisUserChangeForm
 from elvis.models.collection import Collection
 from elvis.models.composer import Composer
 from elvis.models.movement import Movement
@@ -23,7 +23,6 @@ from elvis.models.piece import Piece
 from elvis.renderers.custom_html_renderer import CustomHTMLRenderer
 from elvis.serializers import UserFullSerializer
 from elvis.serializers.serializers import UserListSerializer
-
 
 
 class UserAccountHTMLRenderer(CustomHTMLRenderer):
@@ -51,7 +50,7 @@ class UserAccount(generics.CreateAPIView):
     def post(self, request, *args, **kwargs):
         user = request.user
         if user.is_anonymous():
-            form = UserForm(data=request.POST)
+            form = ElvisUserCreationForm(data=request.POST)
             if not form.is_valid():
                 return render(request, "register.html", {'form': form})
 
@@ -68,19 +67,11 @@ class UserAccount(generics.CreateAPIView):
             login(request, user)
             return HttpResponseRedirect("/")
         else:
-            form = UserChangeForm(data=request.POST, instance=request.user)
+            form = ElvisUserChangeForm(data=request.POST, instance=request.user)
             if not form.is_valid():
                 return render(request, "user/user_update.html", {'form': form})
 
-            clean_form = form.cleaned_data
-            if clean_form['email']:
-                user.email = clean_form['email']
-            if clean_form['first_name']:
-                user.first_name = clean_form['first_name']
-            if clean_form['last_name']:
-                user.last_name = clean_form['last_name']
-            user.save()
-
+            form.save()
             return HttpResponseRedirect("/account")
 
 
