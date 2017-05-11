@@ -230,12 +230,13 @@ def handle_dynamic_file_table(request, parent, cleanup=Cleanup()):
     :param cleanup: Cleanup object.
     :return: List of all objects created.
     """
+    post_dict = request.POST.copy()
     results = []
     attachments = []
     files = {}
-    for item in request.POST:
-        if item.startswith("mov_title_") and request.POST[item]:
-            file_name = request.POST[item]
+    for item in post_dict:
+        if item.startswith("mov_title_") and post_dict[item]:
+            file_name = post_dict[item]
             file_num = int(re.findall(r'\d+', item)[0])
             files[file_num] = file_name
 
@@ -251,11 +252,11 @@ def handle_dynamic_file_table(request, parent, cleanup=Cleanup()):
 
     # Creating movements, then attaching files to them.
     for k in keys:
-        mov_instrumentation_string = request.POST.get('mov' + str(k) + "_instrumentation")
-        mov_number_of_voices_string = request.POST.get('mov' + str(k) + "_number_of_voices")
-        mov_free_tags_string = request.POST.get('mov' + str(k) + "_free_tags")
-        mov_vocalization = request.POST.get('mov' + str(k) + "_vocalization")
-        mov_comment = request.POST.get('mov' + str(k) + "_comment")
+        mov_instrumentation_string = post_dict.get('mov' + str(k) + "_instrumentation")
+        mov_number_of_voices_string = post_dict.get('mov' + str(k) + "_number_of_voices")
+        mov_free_tags_string = post_dict.get('mov' + str(k) + "_free_tags")
+        mov_vocalization = post_dict.get('mov' + str(k) + "_vocalization")
+        mov_comment = post_dict.get('mov' + str(k) + "_comment")
         new_mov = Movement(title=files[k], position=i,
                            composition_start_date=parent.composition_start_date,
                            composition_end_date=parent.composition_end_date,
@@ -301,16 +302,16 @@ def handle_dynamic_file_table(request, parent, cleanup=Cleanup()):
         if mov_comment:
             new_mov.comment = mov_comment
 
-        file_keys = [x for x in list(request.POST.keys()) if x.startswith('files_parent_')]
+        file_keys = [x for x in list(post_dict.keys()) if x.startswith('files_parent_')]
         file_numbers = [x.split('files_parent_')[-1] for x in file_keys if
-                        request.POST.get(x) == 'mov_title_' +str(k)]
+                        post_dict.get(x) == 'mov_title_' +str(k)]
         for num in file_numbers:
             attachments.extend(handle_attachments(request, new_mov, cleanup, "files_files_" + num,
-                                                  request.POST.get('files_source_' + num)))
-            request.POST.pop('files_source_' + num)
-            request.POST.pop('files_parent_' + num)
+                                                  post_dict.get('files_source_' + num)))
+            post_dict.pop('files_source_' + num)
+            post_dict.pop('files_parent_' + num)
             request.FILES.pop('files_files_' + num)
-        request.POST.pop('mov_title_' +str(k))
+        post_dict.pop('mov_title_' +str(k))
 
         cleanup.list.append({"object": new_mov, "isNew": True})
         new_mov.save()
@@ -318,19 +319,19 @@ def handle_dynamic_file_table(request, parent, cleanup=Cleanup()):
         i += 1
 
     # Attaching other files.
-    file_numbers = [x for x in list(request.POST.keys()) if x.startswith('files_parent_')]
+    file_numbers = [x for x in list(post_dict.keys()) if x.startswith('files_parent_') and post_dict[x] == 'piece']
     for postfile in file_numbers:
-        if request.POST.get(postfile) == 'piece':
+        if post_dict.get(postfile) == 'piece':
             # This attaches files to the piece itself - is pretty
             # straightforward.
             num = postfile.split('files_parent_')[-1]
             attachments.extend(handle_attachments(request, parent, cleanup, "files_files_" + num,
-                                                  request.POST.get('files_source_' + num)))
+                                                  post_dict.get('files_source_' + num)))
         else:
             """
             This attaches new files to an existing movement and is *very* hacky.
             It finds the html-id of the row of the movement table it is
-            attached to (request.POST.get(postfile)), then parses
+            attached to (post_dict.get(postfile)), then parses
             the number of that movement-id, then attaches to the [n-1]'th
             movement of the piece.
             This works because:
@@ -344,12 +345,12 @@ def handle_dynamic_file_table(request, parent, cleanup=Cleanup()):
             By the above logic, the [n-1]'th movement in the table on the
             frontend will be the n'th movement on the backend - so this works.
             """
-            movnum = int(re.findall(r'\d+', request.POST.get(postfile))[0])
+            movnum = int(re.findall(r'\d+', post_dict.get(postfile))[0])
             mov = parent.movements.all()[movnum - 1]
             num = postfile.split('files_parent_')[-1]
             mov.save()
             attachments.extend(handle_attachments(request, mov, cleanup, "files_files_" + num,
-                                                  request.POST.get('files_source_' + num)))
+                                                  post_dict.get('files_source_' + num)))
 
     results.extend(attachments)
     return results
