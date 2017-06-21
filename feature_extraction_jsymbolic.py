@@ -4,7 +4,9 @@ import json
 import pickle
 import argparse
 import time
-
+import urllib.request
+import re
+import os
 from requests_file import FileAdapter
 
 
@@ -23,7 +25,7 @@ Gets the urls of midi and mei and xml files currently in the elvis database.
 """
 def get_from_elvis(username, password):
     midimei_files_urls = []
-    resp = requests.get('http://132.206.14.132/search/?filefilt=.midi&filefilt=.mei&filefilt=.xml&filefilt=.mid', auth = (username, password))
+    resp = requests.get('http://132.206.14.132/search/?filefilt=.midi&filefilt=.mei&filefilt=.mid&filefilt=.xml', auth = (username, password))
     pages = json.loads(resp.text)['paginator']['total_pages']
     for page in range(1,pages+1):
         print(page)
@@ -41,6 +43,20 @@ def get_from_elvis(username, password):
                         midimei_files_urls.append([attachment['url'], attachment['extension']])
     with open('midi_urls', 'wb') as out_file:
             pickle.dump(midimei_files_urls, out_file)
+    pattern = re.compile(r'\d/[A-Za-z]')
+    for url in midimei_files_urls:
+        if(type(url) == str):
+            match = pattern.search(url)
+            ptr = int((match.span()[0] + match.span()[1]) /2)
+            urllib.request.urlretrieve('http://132.206.14.132'+url, url[ptr + 1:])
+        else:
+            urll = url[0]
+            match = pattern.search(urll)
+            if(match != None):
+                ptr = int((match.regs[0][0] + match.regs[0][1]) / 2)
+                urllib.request.urlretrieve('http://132.206.14.132' + urll, urll[ptr + 1:])
+            else:
+                urllib.request.urlretrieve('http://132.206.14.132' + urll, urll[41:])
     return midimei_files_urls
 
 """
