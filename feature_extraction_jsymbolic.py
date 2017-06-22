@@ -23,11 +23,55 @@ def get_rodan_token(username, password):
 """
 Gets the urls of midi and mei and xml files currently in the elvis database.
 """
-def get_from_elvis(username, password):
+
+
+def get_from_elvis_prod(username, password):
+    midimei_files_urls = []
+    resp = requests.get('http://database.elvisproject.ca/search/?filefilt=.midi&filefilt=.mei&filefilt=.mid&filefilt=.xml', auth = (username, password))
+    pages = json.loads(resp.text)['paginator']['total_pages']
+    for page in range(1, pages+1):
+        print(page)
+        if(page == 5):
+            print('debug')
+        search = requests.get('http://database.elvisproject.ca/search/?filefilt[]=.midi&filefilt[]=.mei&filefilt[]=.xml&filefilt[]=.mid&page='+str(page), auth = (username, password))
+        for object in json.loads(search.text)['object_list']:
+            if 'pieces_searchable' in object.keys():
+                piece = requests.get('http://database.elvisproject.ca/piece/'+str(object['id'])+'?format=json', auth=(username, password))
+                #print(json.loads(piece.text))
+                if(piece.text.find('Not found')):  # need to write in a log file, though
+                    continue
+                for attachment in json.loads(piece.text)['attachments']:
+                    if attachment['extension'] == ".midi" or attachment['extension'] == ".mei" or attachment['extension'] == ".xml" or attachment['extension'] == ".mid":
+                        midimei_files_urls.append(attachment['url'])
+            else:
+                movement = requests.get('http://database.elvisproject.ca/movement/'+str(object['id'])+'?format=json', auth=(username, password))
+                for attachment in json.loads(movement.text)['attachments']:
+                    if attachment['extension'] == ".midi" or attachment['extension'] == ".mei" or attachment['extension'] == ".xml" or attachment['extension'] == ".mid":
+                        midimei_files_urls.append([attachment['url'], attachment['extension']])
+    with open('midi_urls', 'wb') as out_file:
+            pickle.dump(midimei_files_urls, out_file)
+    pattern = re.compile(r'\d/[A-Za-z]')
+    for url in midimei_files_urls:
+        if(type(url) == str):
+            match = pattern.search(url)
+            ptr = int((match.span()[0] + match.span()[1]) /2)
+            urllib.request.urlretrieve('http://database.elvisproject.ca'+url, os.getcwd() + url[ptr + 1:])
+        else:
+            urll = url[0]
+            match = pattern.search(urll)
+            if(match != None):
+                ptr = int((match.regs[0][0] + match.regs[0][1]) / 2)
+                urllib.request.urlretrieve('http://database.elvisproject.ca' + urll, os.getcwd() + urll[ptr + 1:])
+            else:
+                urllib.request.urlretrieve('http://database.elvisproject.ca' + urll, os.getcwd() + urll[41:])
+    return midimei_files_urls
+
+
+def get_from_elvis_dev(username, password):
     midimei_files_urls = []
     resp = requests.get('http://132.206.14.132/search/?filefilt=.midi&filefilt=.mei&filefilt=.mid&filefilt=.xml', auth = (username, password))
     pages = json.loads(resp.text)['paginator']['total_pages']
-    for page in range(1,pages+1):
+    for page in range(1,page + 1):
         print(page)
         search = requests.get('http://132.206.14.132/search/?filefilt[]=.midi&filefilt[]=.mei&filefilt[]=.xml&filefilt[]=.mid&page='+str(page), auth = (username, password))
         for object in json.loads(search.text)['object_list']:
@@ -56,8 +100,10 @@ def get_from_elvis(username, password):
                 ptr = int((match.regs[0][0] + match.regs[0][1]) / 2)
                 urllib.request.urlretrieve('http://132.206.14.132' + urll, urll[ptr + 1:])
             else:
-                urllib.request.urlretrieve('http://132.206.14.132' + urll, urll[41:])
+                urllib.request.urlretrieve('http://132.206.14.132' + urll, urll[41:])  # exceptions: the file name begin with a digit
+
     return midimei_files_urls
+
 
 """
 Pushes the resulting feature files from the jsymbolic run into the appropriate places in the database
@@ -180,7 +226,7 @@ if __name__ == "__main__":
     #parser.add_argument("workflow_url")
     args = parser.parse_args()
     #token = get_rodan_token(args.rodan_username, args.rodan_password)
-    elvis_urls = get_from_elvis(args.elvis_username, args.elvis_password)
+    elvis_urls = get_from_elvis_dev(args.elvis_username, args.elvis_password)
     print('the number of files found:', len(elvis_urls))
 
     for i in elvis_urls:
