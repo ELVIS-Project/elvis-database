@@ -38,7 +38,6 @@ def get_from_elvis_prod(username, password):
         for object in json.loads(search.text)['object_list']:
             if 'pieces_searchable' in object.keys():
                 piece = requests.get('http://database.elvisproject.ca/piece/'+str(object['id'])+'?format=json', auth=(username, password))
-                #print(json.loads(piece.text))
                 if(piece.text.find('Not found') != -1):  # need to write in a log file, though
                     print('-------------------------' , end='\n', file=flog)
                     print('Title: ' + object['title'], end='\n', file=flog)
