@@ -26,6 +26,7 @@ Gets the urls of midi and mei and xml files currently in the elvis database.
 
 
 def get_from_elvis_prod(username, password):
+    flog = open('download_log.txt','w')
     midimei_files_urls = []
     resp = requests.get('http://database.elvisproject.ca/search/?filefilt=.midi&filefilt=.mei&filefilt=.mid&filefilt=.xml', auth = (username, password))
     pages = json.loads(resp.text)['paginator']['total_pages']
@@ -38,7 +39,13 @@ def get_from_elvis_prod(username, password):
             if 'pieces_searchable' in object.keys():
                 piece = requests.get('http://database.elvisproject.ca/piece/'+str(object['id'])+'?format=json', auth=(username, password))
                 #print(json.loads(piece.text))
-                if(piece.text.find('Not found')):  # need to write in a log file, though
+                if(piece.text.find('Not found') != -1):  # need to write in a log file, though
+                    print('-------------------------' , end='\n', file=flog)
+                    print('Title: ' + object['title'], end='\n', file=flog)
+                    print('Status code: ' + str(piece.status_code), end='\n', file=flog)
+                    print('-------------------------')
+                    print('Title: ' + object['title'])
+                    print('Status code: ' + str(piece.status_code))
                     continue
                 for attachment in json.loads(piece.text)['attachments']:
                     if attachment['extension'] == ".midi" or attachment['extension'] == ".mei" or attachment['extension'] == ".xml" or attachment['extension'] == ".mid":
@@ -64,6 +71,7 @@ def get_from_elvis_prod(username, password):
                 urllib.request.urlretrieve('http://database.elvisproject.ca' + urll, os.getcwd() + urll[ptr + 1:])
             else:
                 urllib.request.urlretrieve('http://database.elvisproject.ca' + urll, os.getcwd() + urll[41:])
+    flog.close()
     return midimei_files_urls
 
 
@@ -71,7 +79,7 @@ def get_from_elvis_dev(username, password):
     midimei_files_urls = []
     resp = requests.get('http://132.206.14.132/search/?filefilt=.midi&filefilt=.mei&filefilt=.mid&filefilt=.xml', auth = (username, password))
     pages = json.loads(resp.text)['paginator']['total_pages']
-    for page in range(1,page + 1):
+    for page in range(1,pages + 1):
         print(page)
         search = requests.get('http://132.206.14.132/search/?filefilt[]=.midi&filefilt[]=.mei&filefilt[]=.xml&filefilt[]=.mid&page='+str(page), auth = (username, password))
         for object in json.loads(search.text)['object_list']:
@@ -226,7 +234,7 @@ if __name__ == "__main__":
     #parser.add_argument("workflow_url")
     args = parser.parse_args()
     #token = get_rodan_token(args.rodan_username, args.rodan_password)
-    elvis_urls = get_from_elvis_dev(args.elvis_username, args.elvis_password)
+    elvis_urls = get_from_elvis_prod(args.elvis_username, args.elvis_password)
     print('the number of files found:', len(elvis_urls))
 
     for i in elvis_urls:
