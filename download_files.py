@@ -99,15 +99,15 @@ def get_from_elvis_dev(username, password):
         if(type(url) == str):
             match = pattern.search(url)
             ptr = int((match.span()[0] + match.span()[1]) /2)
-            urllib.request.urlretrieve('http://132.206.14.132'+url, url[ptr + 1:])
+            urllib.request.urlretrieve('http://132.206.14.132'+url, './downloaded_files/' + url[ptr + 1:])
         else:
             urll = url[0]
             match = pattern.search(urll)
             if(match != None):
                 ptr = int((match.regs[0][0] + match.regs[0][1]) / 2)
-                urllib.request.urlretrieve('http://132.206.14.132' + urll, urll[ptr + 1:])
+                urllib.request.urlretrieve('http://132.206.14.132' + urll, './downloaded_files/' + urll[ptr + 1:])
             else:
-                urllib.request.urlretrieve('http://132.206.14.132' + urll, urll[41:])  # exceptions: the file name begin with a digit
+                urllib.request.urlretrieve('http://132.206.14.132' + urll, './downloaded_files/' + urll[41:])  # exceptions: the file name begin with a digit
 
     return midimei_files_urls
 
@@ -233,7 +233,7 @@ if __name__ == "__main__":
     #parser.add_argument("workflow_url")
     args = parser.parse_args()
     #token = get_rodan_token(args.rodan_username, args.rodan_password)
-    elvis_urls = get_from_elvis_prod(args.elvis_username, args.elvis_password)
+    elvis_urls = get_from_elvis_dev(args.elvis_username, args.elvis_password)
     print('the number of files found:', len(elvis_urls))
 
     for i in elvis_urls:
