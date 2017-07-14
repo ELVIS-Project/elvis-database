@@ -17,11 +17,11 @@ def modifying_MEI():
                 dur = note.getAttribute('dur')
                 if(dur.getValue() == 'breve'):  # copy the note, change the duration into whole and tie them together
                     layer = note.getAncestor('layer')
-                    note.addAttribute('dur', 'whole')
+                    note.addAttribute('dur', '1')
                     newnote = pymei.MeiElement('note')
                     newnote.addAttribute('pname', note.getAttribute('pname').getValue())
                     newnote.addAttribute('oct', note.getAttribute('oct').getValue())
-                    newnote.addAttribute('dur', 'whole')
+                    newnote.addAttribute('dur', '1')
                     dots = note.getAttribute('dots')
                     if(dots != None):
                         newnote.addAttribute('dots', dots.getValue())
@@ -43,9 +43,9 @@ def modifying_MEI():
                 if (dur != None):
                     if (dur.getValue() == 'breve'):  # copy the note, change the duration into whole and tie them together
                         layer = rest.getAncestor('layer')
-                        rest.addAttribute('dur', 'whole')
+                        rest.addAttribute('dur', '1')
                         newrest = pymei.MeiElement('rest')
-                        newrest.addAttribute('dur', 'whole')
+                        newrest.addAttribute('dur', '1')
                         dots = rest.getAttribute('dots')
                         if (dots != None):
                             newrest.addAttribute('dots', dots.getValue())
