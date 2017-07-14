@@ -25,10 +25,10 @@ def modifying_MEI():
                     dots = note.getAttribute('dots')
                     if(dots != None):
                         newnote.addAttribute('dots', dots.getValue())
-                    #if(i + 1 < len(notes)):
-                        #layer.addChildBefore(notes[i + 1], newnote)
-                    #else:
-                    layer.addChild(newnote)
+                    if(i + 1 < len(notes)):
+                        layer.addChildBefore(note, newnote)
+                    else:
+                        layer.addChild(newnote)
                     id1 = note.getId()
                     newnote.setId(id1 + 'copy')
                     id2 = newnote.getId()
@@ -49,10 +49,10 @@ def modifying_MEI():
                         dots = rest.getAttribute('dots')
                         if (dots != None):
                             newrest.addAttribute('dots', dots.getValue())
-                            # if(i + 1 < len(notes)):
-                            # layer.addChildBefore(notes[i + 1], newnote)
-                        # else:
-                        layer.addChild(newrest)
+                        if(i + 1 < len(rests)):
+                            layer.addChildBefore(rest, newrest)
+                        else:
+                            layer.addChild(newrest)
                         id1 = rest.getId()
                         newrest.setId(id1 + 'copy')
                         id2 = newrest.getId()
