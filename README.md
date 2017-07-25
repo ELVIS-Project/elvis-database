@@ -38,11 +38,8 @@ In order to extract features from these `.mei` files, we need to run `correcting
 
 The script will find all the `.mei` files in the `downloaded_files/MEI` folder, where the downloaded files are stored, and modify the `.mei` files which have `breve` value. The script will create a new `.mei` file, appending `NEW` to the end of file name, and these files can be parsed by jsymbolic2 now (Unfortunately, some of them still cannot be parsed, but we will deal with them later), and these files will be stored under the directory of `downloaded_files/MEI/NEW`.
 
-Now, it is time to run `feature_extraction_jsymbolic2.py`. The script will first convert all xml files to midi using music21, and stored `.midi` files under `downloaded_files/XML/MIDI` directory.
+Now, it is time to run `feature_extraction_jsymbolic2.py`. The script will ask you to provide the path you use to store jsymbolic jar file. Afterward, the script will first convert all xml files to midi using music21, and stored `.midi` files under `downloaded_files/XML/MIDI` directory.
 
 After this, the script will extract features from all `.mid` and `.midi` files which are stored under `downloaded_files`, and all the `.midi` files from `downloaded_files/XML/MIDI`, which are converted from `.xml` files, and all `.mei` files which are stored under `downloaded_files/MEI/NEW`. The extracted feature will be stored under the directories of `downloaded_files/extracted_features`, `downloaded_files/XML/MIDI/extracted_features`, and `downloaded_files/MEI/NEW/extracted_features`, respectively.
 
 After this step, all the files are extracted, and they are ready to upload to ELVIS database (to be continued).
-
-The script will ask you to provide the path you use to store jsymbolic jar file
-
