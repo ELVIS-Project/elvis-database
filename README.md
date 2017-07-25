@@ -24,3 +24,21 @@ See GitHub issues.
 
 ## Content Related Issues
 Please file content related issues at [https://github.com/ELVIS-Project/ELVIS-Database-Content](https://github.com/ELVIS-Project/ELVIS-Database-Content) (i.e. your Palestrina Mass is actually by Lassus).
+
+## Extracting the features for the all symbolic files on ELVIS
+This section contains three parts: (1) Downloading all the files from ELVIS (`download_files.py`) (2) Extracting features from the downloaded files (`feature_extraction_jsymbolic2.py`) (3) Upload all the feature files to ELVIS.
+
+The scripts are fully test and run on masOS Sierra, version of 10.12.5.
+
+First, run `download_files.py` to get all the symbolic files from ELVIS database. To do this, you need to (1) First create an account on [ELVIS database](https://database.elvisproject.ca), then provide your username and password when running the script. (2) In your working directory where the script is stored, create a folder called `downloaded_files`, this is the place where all the downloaded files will be saved. (3) Run the script to download all the files. When running the script, it will download all the symbolic files with `.mid`, `.midi`, `.mei` and `.xml` extensions. 
+
+Second, we need to use `feature_extraction_jsymbolic2.py`, which use jsymbolic2 to extract features. Note that jsymbolic2 now can only extract features from valid `.mid`, `.midi` and `.mei` files. However, many `.mei` files on ELVIS database are not parsable by jsymbolic, since many of them use `breve` value as duration which is not supported by jsymbolic.
+
+In order to extract features from these `.mei` files, we need to run `correcting_MEI_files.py` first. This script uses `pymei`, which is a library to create and modify `.mei` files. In order to install `pymei`, please follow the instructions [here](https://github.com/DDMAL/libmei/wiki). After installing `pymei`, you need to add the path where you install `pymei` to the script. Please see the line No.2, this is an example of where my `pymei` is stored. Just replace with the path you use to store `pymei`. 
+
+The script will find all the `.mei` files in the `downloaded_files` folder, where the downloaded files are stored, and modify the `.mei` files which have `breve` value. The script will create a new `.mei` file, appending `NEW` to the end of file name, and these files can be parsed by jsymbolic2 now (Unfortunately), some of them still cannot be parsed, but we will deal with them later.
+
+
+
+The script will ask you to provide the path you use to store jsymbolic jar file
+
