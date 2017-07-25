@@ -225,6 +225,15 @@ def get_from_elvis_prod(username, password):
             else:
                 download_with_requests('http://database.elvisproject.ca' + urll, './' + save_dir + '/' + urll[41:], username, password)
     flog.close()
+    for fn in os.listdir('./' + save_dir + '/'):  # move musicxml and MEI files into seperate folders
+        if(fn[-3:] == 'xml'):
+            if os.path.exists('./' + save_dir + '/' + 'XML/') is False:
+                os.mkdir('./' + save_dir + '/' + 'XML/')
+            os.rename('./' + save_dir + '/' + fn, './' + save_dir + '/' + 'XML/' + fn)
+        elif(fn[-3:] == 'mei'):
+            if os.path.exists('./' + save_dir + '/' + 'MEI/') is False:
+                os.mkdir('./' + save_dir + '/' + 'MEI/')
+            os.rename('./' + save_dir + '/' + fn, './' + save_dir + '/' + 'MEI/' + fn)
     return midimei_files_urls
 
 
