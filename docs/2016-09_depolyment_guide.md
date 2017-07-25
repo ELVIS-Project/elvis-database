@@ -222,9 +222,9 @@ That should be about it! If you look at the config file, you'll notice all we're
 ## Setting up nginx
 nginx should already be running having been installed when you downloaded all the dependencies. You can check that it is running using `sudo systemctl status nginx`. 
 
-We save site definitions in `/etc/nginx/sites-avaliable`, then make a link to the sites we wish to actually serve in `/etc/nginx/sites-enabled`.
+We save site definitions in `/etc/nginx/sites-available`, then make a link to the sites we wish to actually serve in `/etc/nginx/sites-enabled`.
 
-Save the following into a file called `/etc/nginx/sites-avaliable/database.elvisproject.ca`.
+Save the following into a file called `/etc/nginx/sites-available/database.elvisproject.ca`.
 ```
 upstream elvisdb_server {
   server unix:/var/run/elvisdb.sock fail_timeout=0;
@@ -263,7 +263,7 @@ Note also that encryption is not handled anywhere in this config file. We deploy
 Now, link this new config file in `sites-enabled`, run a config test, and reload the nginx service if everything is ok.
 ```
 > cd /etc/nginx/sites-enabled
-> sudo ln -s /etc/nginx/sites-avaliable/database.elvisproject.ca 
+> sudo ln -s /etc/nginx/sites-available/database.elvisproject.ca 
 > sudo service nginx configtest
  * Testing nginx configuration
    ...done.
