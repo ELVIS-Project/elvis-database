@@ -1,17 +1,19 @@
 import os, sys
 sys.path.append('/Users/yaolongju/Documents/Projects/libmei/python')
 import pymei
-
+import os
 
 def modifying_MEI():
     """
     Remove 'breve' attribute which is not supported by jsymbolic2
     :return:
     """
-    for id, fn in enumerate(os.listdir('./downloaded_files/')):
+    if os.path.exists('./downloaded_files/MEI/NEW/') is False:
+        os.mkdir('./downloaded_files/MEI/NEW/')
+    for id, fn in enumerate(os.listdir('./downloaded_files/MEI/')):
         if (fn[-3:] == 'mei' and fn.find('NEW') == -1):
             print(fn)
-            doc = pymei.documentFromFile('./downloaded_files/' + fn).getMeiDocument()
+            doc = pymei.documentFromFile('./downloaded_files/MEI/' + fn).getMeiDocument()
             notes = doc.getElementsByName('note')
             for i, note in enumerate(notes):
                 dur = note.getAttribute('dur')
@@ -61,7 +63,7 @@ def modifying_MEI():
                         tie.addAttribute('startid', id1)
                         tie.addAttribute('endid', id2)
                         measure.addChild(tie)
-            pymei.documentToFile(doc, './downloaded_files/' + fn[:-4] + 'NEW' + '.mei')
+            pymei.documentToFile(doc, './downloaded_files/MEI/NEW/' + fn[:-4] + 'NEW' + '.mei')
 
 
 

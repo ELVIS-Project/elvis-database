@@ -182,7 +182,7 @@ def get_from_elvis_prod(username, password):
                         '&filefilt=.MIDI&filefilt=.MEI&filefilt=.MID&filefilt=.XML', auth = (username, password))
     # just in case there are files with upper case extensions
     pages = json.loads(resp.text)['paginator']['total_pages']
-    for page in range(1, pages+1):
+    for page in range(1, 5):#pages+1):
         print(page)
         if(page == 5):
             print('debug')
