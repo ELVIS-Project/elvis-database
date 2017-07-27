@@ -15,5 +15,5 @@ def validation(rngpath):
 
 if __name__ == "__main__":
     #rng_path = input('please input the schema file you want to validate the MEI files')
-    rng_path = '/Users/yaolongju/Documents/Parser_for_medieval_chants/MEI/mei-all.rng.xml'
+    rng_path = '/Users/yaolongju/Documents/Projects/mei-all.rng'
     validation(rng_path)

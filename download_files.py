@@ -201,29 +201,45 @@ def get_from_elvis_prod(username, password):
                     print('Status code: ' + str(piece.status_code))
                     continue
                 for attachment in json.loads(piece.text)['attachments']:
-                    if attachment['extension'] == ".midi" or attachment['extension'] == ".mei" or attachment['extension'] == ".xml" or attachment['extension'] == ".mid":
+                    if attachment['extension'] == ".midi" or attachment['extension'] == ".mei" or attachment['extension'] == ".xml" or attachment['extension'] == ".mid" \
+                            or attachment['extension'] == ".MIDI" or attachment['extension'] == ".MEI" or attachment['extension'] == ".XML" or attachment['extension'] == ".MID":
                         midimei_files_urls.append(attachment['url'])
             else:
                 movement = requests.get('http://database.elvisproject.ca/movement/'+str(object['id'])+'?format=json', auth=(username, password))
                 for attachment in json.loads(movement.text)['attachments']:
-                    if attachment['extension'] == ".midi" or attachment['extension'] == ".mei" or attachment['extension'] == ".xml" or attachment['extension'] == ".mid":
+                    if attachment['extension'] == ".midi" or attachment['extension'] == ".mei" or attachment['extension'] == ".xml" or attachment['extension'] == ".mid" \
+                            or attachment['extension'] == ".MIDI" or attachment['extension'] == ".MEI" or attachment['extension'] == ".XML" or attachment['extension'] == ".MID":
                         midimei_files_urls.append([attachment['url'], attachment['extension']])
     with open('midi_urls', 'wb') as out_file:
-            pickle.dump(midimei_files_urls, out_file)
+        pickle.dump(midimei_files_urls, out_file)
     pattern = re.compile(r'\d/[A-Za-z]')
     for url in midimei_files_urls:
         if(type(url) == str):
             match = pattern.search(url)
             ptr = int((match.span()[0] + match.span()[1]) /2)
-            download_with_requests('http://database.elvisproject.ca'+url, './' + save_dir + '/' + url[ptr + 1:], username, password)
+            if os.path.isfile('./' + save_dir + '/' + url[ptr + 1:]) == False:
+                download_with_requests('http://database.elvisproject.ca'+url, './' + save_dir + '/' + url[ptr + 1:], username, password)
+            else:
+                download_with_requests('http://database.elvisproject.ca' + url, './' + save_dir + '/' + url[25:40] + '_' + url[ptr + 1:],
+                                       username, password)
         else:
             urll = url[0]
             match = pattern.search(urll)
             if(match != None):
                 ptr = int((match.regs[0][0] + match.regs[0][1]) / 2)
-                download_with_requests('http://database.elvisproject.ca' + urll, './' + save_dir + '/' + urll[ptr + 1:], username, password)
+                if os.path.isfile('./' + save_dir + '/' + url[ptr + 1:]) == False:
+                    download_with_requests('http://database.elvisproject.ca' + urll, './' + save_dir + '/' + urll[ptr + 1:], username, password)
+                else:
+                    download_with_requests('http://database.elvisproject.ca' + url,
+                                           './' + save_dir + '/' + url[25:40]  + '_' + url[ptr + 1:],
+                                           username, password)
             else:
-                download_with_requests('http://database.elvisproject.ca' + urll, './' + save_dir + '/' + urll[41:], username, password)
+                if os.path.isfile('./' + save_dir + '/' + url[ptr + 1:]) == False:
+                    download_with_requests('http://database.elvisproject.ca' + urll, './' + save_dir , username, password)
+                else:
+                    download_with_requests('http://database.elvisproject.ca' + url,
+                                           './' + save_dir + '/' + url[25:40] + '_' + url[ptr + 1:] ,
+                                           username, password)
     flog.close()
     for fn in os.listdir('./' + save_dir + '/'):  # move musicxml and MEI files into seperate folders
         if(fn[-3:] == 'xml'):
@@ -237,6 +253,23 @@ def get_from_elvis_prod(username, password):
     return midimei_files_urls
 
 
+def is_file_name_same(list):
+    """
+    check whether the file name is the same or not
+    :param list:
+    :return:
+    """
+    for i, item in enumerate(list):
+        for j in range(0, i):
+            if(list[j][41:] == item[41:]):
+                print('same file name!')
+                print(list[j][41:])
+                print(item[41:])
+        for j in range(i + 1, len(list)):
+            if (list[j][41:] == item[41:]):
+                print('same file name!')
+                print(list[j][41:])
+                print(item[41:])
 if __name__ == "__main__":
 
     parser = argparse.ArgumentParser()
@@ -247,6 +280,8 @@ if __name__ == "__main__":
     print('the number of files found:', len(elvis_urls))
     for i in elvis_urls:
         print(i)
+    #is_file_name_same(elvis_urls)
+
 
 
 

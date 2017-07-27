@@ -2,6 +2,7 @@ import os
 from music21 import *
 import sys
 from correcting_MEI_files import modifying_MEI
+from validating_MEI_files import validation
 
 
 def convert_xml_into_midi():
@@ -32,7 +33,7 @@ def extract_features_per_folder(filepath, featurepath, path):
         os.mkdir(featurepath)
     for id, fn in enumerate(os.listdir(filepath)):  # extract features for all the original midi files
         print(fn)
-        os.system('java -Xmx4096m -jar ' + path + ' -configrun jSymbolicDefaultConfigs.txt ' + filepath +  fn + ' ' +
+        os.system('java -Xmx8192m -jar ' + path + ' -configrun jSymbolicDefaultConfigs.txt ' + filepath +  fn + ' ' +
                   featurepath + fn + '_feature_values.xml ' +
                     featurepath + fn + '_feature_descriptions.xml >>' + featurepath + 'extract_features_log.txt 2'
                     '>>' + featurepath + 'extract_features_error_log.txt')
@@ -47,6 +48,8 @@ def extract_features(path):
 if __name__ == "__main__":
     #jsymbolic_path = input('please specify jsymbolic path')
     jsymbolic_path = '/Users/yaolongju/Downloads/jMIR_3_0_developer/jSymbolic2/dist/jSymbolic2.jar'
+    rng_path = '/Users/yaolongju/Documents/Parser_for_medieval_chants/MEI/mei-all.rng.xml'
     convert_xml_into_midi()
+    validation(rng_path)
     modifying_MEI()
     extract_features(jsymbolic_path)

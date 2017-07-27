@@ -3,6 +3,7 @@ sys.path.append('/Users/yaolongju/Documents/Projects/libmei/python')
 import pymei
 import os
 
+
 def modifying_MEI():
     """
     Remove 'breve' attribute which is not supported by jsymbolic2
