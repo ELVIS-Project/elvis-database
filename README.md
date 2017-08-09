@@ -30,6 +30,8 @@ This section contains three parts: (1) Downloading all the files from ELVIS (`do
 
 The scripts are fully test and run on masOS Sierra, version of 10.12.5.
 
+All output of any executed step, including `stdout` and `stderr`, will be recorded into a log file, which will be explained in the last paragraph of each step. 
+
 ### Download files using 'download_files.py'
 
 First, run `download_files.py` to get all the symbolic files from ELVIS database. To do this, you need to (1) First create an account on [ELVIS database](https://database.elvisproject.ca), then provide your username and password when running the script. (2) In your working directory where the script is stored, a folder called `downloaded_files` will be created, and this is the place where all the downloaded files will be saved. (3) Run the script to download all the files. When running the script, it will download all the symbolic files with `.mid`, `.midi`, `.mei` and `.xml` (musicxml) extensions. `.midi` and `.mid` files will be stored under `downloaded_files` directory, and `.mei` will be stored under `downloaded_files/MEI` directory, and `.xml` will stored under `downloaded_files/XML` directory. 
