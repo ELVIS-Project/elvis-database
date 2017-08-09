@@ -34,7 +34,9 @@ All output of any executed step, including `stdout` and `stderr`, will be record
 
 ### Download files using 'download_files.py'
 
-First, run `download_files.py` to get all the symbolic files from ELVIS database. To do this, you need to (1) First create an account on [ELVIS database](https://database.elvisproject.ca), then provide your username and password when running the script. (2) In your working directory where the script is stored, a folder called `downloaded_files` will be created, and this is the place where all the downloaded files will be saved. (3) Run the script to download all the files. When running the script, it will download all the symbolic files with `.mid`, `.midi`, `.mei` and `.xml` (musicxml) extensions. `.midi` and `.mid` files will be stored under `downloaded_files` directory, and `.mei` will be stored under `downloaded_files/MEI` directory, and `.xml` will stored under `downloaded_files/XML` directory. 
+First, run `download_files.py` to get all the symbolic files from ELVIS database. To do this, you need to (1) First create an account on [ELVIS database](https://database.elvisproject.ca), then provide your username and password when running the script. (2) In your working directory where the script is stored, a folder called `downloaded_files` will be created, and this is the place where all the downloaded files will be saved. (3) Run the script to download all the files. When running the script, it will download all the symbolic files with `.mid`, `.midi`, `.mei` and `.xml` (musicxml) extensions. `.midi` and `.mid` files will be stored under `./downloaded_files/` directory, and `.mei` will be stored under `./downloaded_files/MEI/` directory, and `.xml` will stored under `./downloaded_files/XML/` directory. 
+
+A log file, which records all the files that cannot be downloaded, is stored under `./downloaded_files/` directory, called `download_log.txt`. There is only one file which cannot be downloaded.
 
 ### Extracting features using 'feature_extraction_jsymbolic2.py'
 
@@ -42,7 +44,9 @@ First, run `download_files.py` to get all the symbolic files from ELVIS database
 
 #### 1.Converting XML into MIDI
 
-Now, it is time to run `feature_extraction_jsymbolic2.py`. The script will ask you to provide the path you use to store jsymbolic jar file. Afterward, the script will first convert all xml files to midi using music21, and stored `.midi` files under `downloaded_files/XML/MIDI` directory.
+Now, it is time to run `feature_extraction_jsymbolic2.py`. The script will ask you to provide the path you use to store jsymbolic jar file. Afterward, the script will first convert all xml files to midi using music21, and stored `.midi` files under `./downloaded_files/XML/MIDI/` directory.
+
+A log file, which records all the files that cannot be converted, is stored under `./downloaded_files/XML/MIDI/` directory, called `xml_to_midi_log.txt`. There are 4 files which cannot be processed.
 
 #### 2.Validating MEI files
 
@@ -50,15 +54,19 @@ At the same time, we are concerned that are those MEI file valid or not. The scr
 
 Since most of the MEI files from ELVIS uses `2011-05`, and since the schemata file does not support backward compatibility, using `2011-05` schemata file will be the optimal choice. 
 
+Two log files, which record all the files that cannot be converted, are stored under `./downloaded_files/MEI/` directory, called `validation_error_log.txt` and `validation_log.txt`. Surprisingly enough, none of the MEI files validates.
+
 #### 3.Converting MEI into a version which jsymbolic2 can parse
 
 Second, the script uses jsymbolic2 to extract features. Note that jsymbolic2 now can only extract features from valid `.mid`, `.midi` and `.mei` files. However, many `.mei` files on ELVIS database are not parsable by jsymbolic, since many of them use `breve` value as duration which is not supported by jsymbolic.
 
 Third, in order to extract features from these `.mei` files, the script runs `modifying_MEI` function automatically. This function uses `pymei`, which is a library to create and modify `.mei` files. In order to install `pymei`, please follow the instructions [here](https://github.com/DDMAL/libmei/wiki). After installing `pymei`, you need to add the path where you install `pymei` to the script. Please see the line 2 of the script, this is an example of where my `pymei` is stored. Just replace with the path you use to store `pymei`. 
 
-`modifying_MEI` function will find all the `.mei` files in the `downloaded_files/MEI` folder, where the downloaded files are stored, and modify the `.mei` files which have `breve` value. The script will create a new `.mei` file, appending `NEW` to the end of file name, and these files can be parsed by jsymbolic2 now (Unfortunately, some of them still cannot be parsed, but we will deal with them later), and these files will be stored under the directory of `downloaded_files/MEI/NEW`. 
+`modifying_MEI` function will find all the `.mei` files in the `./downloaded_files/MEI` folder, where the downloaded files are stored, and modify the `.mei` files which have `breve` value. The script will create a new `.mei` file, appending `NEW` to the end of file name, and these files can be parsed by jsymbolic2 now (Unfortunately, some of them still cannot be parsed, but we will deal with them later), and these files will be stored under the directory of `./downloaded_files/MEI/NEW`. 
 
 #### 4. Converting MEI into midi
+
+Since half of the files still cannot be processed by midi, we are going to try to convert them into midi using music21, by calling `convert_MEI_into_midi` function. 
 
 #### 5. Extracting features from all symbolic files
 
