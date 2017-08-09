@@ -30,15 +30,35 @@ This section contains three parts: (1) Downloading all the files from ELVIS (`do
 
 The scripts are fully test and run on masOS Sierra, version of 10.12.5.
 
-First, run `download_files.py` to get all the symbolic files from ELVIS database. To do this, you need to (1) First create an account on [ELVIS database](https://database.elvisproject.ca), then provide your username and password when running the script. (2) In your working directory where the script is stored, a folder called `downloaded_files` will be created, and this is the place where all the downloaded files will be saved. (3) Run the script to download all the files. When running the script, it will download all the symbolic files with `.mid`, `.midi`, `.mei` and `.xml` (musicxml) extensions. `.midi` and `.mid` files will be stored under `downloaded_files` directory, and `.mei` will be stored under `downloaded_files/MEI` directory, and `.xml` will stored under `downloaded_files/XML` directory.
+### Download files using 'download_files.py'
 
-Second, we need to use `feature_extraction_jsymbolic2.py`, which use jsymbolic2 to extract features. Note that jsymbolic2 now can only extract features from valid `.mid`, `.midi` and `.mei` files. However, many `.mei` files on ELVIS database are not parsable by jsymbolic, since many of them use `breve` value as duration which is not supported by jsymbolic.
+First, run `download_files.py` to get all the symbolic files from ELVIS database. To do this, you need to (1) First create an account on [ELVIS database](https://database.elvisproject.ca), then provide your username and password when running the script. (2) In your working directory where the script is stored, a folder called `downloaded_files` will be created, and this is the place where all the downloaded files will be saved. (3) Run the script to download all the files. When running the script, it will download all the symbolic files with `.mid`, `.midi`, `.mei` and `.xml` (musicxml) extensions. `.midi` and `.mid` files will be stored under `downloaded_files` directory, and `.mei` will be stored under `downloaded_files/MEI` directory, and `.xml` will stored under `downloaded_files/XML` directory. 
 
-In order to extract features from these `.mei` files, we need to run `correcting_MEI_files.py` first. This script uses `pymei`, which is a library to create and modify `.mei` files. In order to install `pymei`, please follow the instructions [here](https://github.com/DDMAL/libmei/wiki). After installing `pymei`, you need to add the path where you install `pymei` to the script. Please see the line 2 of the script, this is an example of where my `pymei` is stored. Just replace with the path you use to store `pymei`. 
+### Extracting features using 'feature_extraction_jsymbolic2.py'
 
-The script will find all the `.mei` files in the `downloaded_files/MEI` folder, where the downloaded files are stored, and modify the `.mei` files which have `breve` value. The script will create a new `.mei` file, appending `NEW` to the end of file name, and these files can be parsed by jsymbolic2 now (Unfortunately, some of them still cannot be parsed, but we will deal with them later), and these files will be stored under the directory of `downloaded_files/MEI/NEW`.
+`feature_extraction_jsymbolic2.py` has several functions to run in order to extract features properly from all the downloaded files, and each of them will be explained as follows.
+
+#### 1.Converting XML into MIDI
 
 Now, it is time to run `feature_extraction_jsymbolic2.py`. The script will ask you to provide the path you use to store jsymbolic jar file. Afterward, the script will first convert all xml files to midi using music21, and stored `.midi` files under `downloaded_files/XML/MIDI` directory.
+
+#### 2.Validating MEI files
+
+At the same time, we are concerned that are those MEI file valid or not. The script runs `validation` function, where you have to specify the schemata file you use (the default file path will probably fail to work). To find a schemata file, there are several versions: [3.0.0](http://www.music-encoding.org/schema/current/mei-all.rng), [2013](http://music-encoding.org/schema/2.1.1/mei-all.rng), [2012 (it is a zip file, so you need to unzip it and use the `rng` file inside of it)](https://music-encoding.googlecode.com/files/MEI2012_v2.0.0.zip), [2011-05](http://music-encoding.org/wp-content/uploads/2015/04/MEI2011-05.zip), [2010-05](http://music-encoding.org/wp-content/uploads/2015/04/MEI2010-05.rng_.zip).
+
+Since most of the MEI files from ELVIS uses `2011-05`, and since the schemata file does not support backward compatibility, using `2011-05` schemata file will be the optimal choice. 
+
+#### 3.Converting MEI into a version which jsymbolic2 can parse
+
+Second, the script uses jsymbolic2 to extract features. Note that jsymbolic2 now can only extract features from valid `.mid`, `.midi` and `.mei` files. However, many `.mei` files on ELVIS database are not parsable by jsymbolic, since many of them use `breve` value as duration which is not supported by jsymbolic.
+
+Third, in order to extract features from these `.mei` files, the script runs `modifying_MEI` function automatically. This function uses `pymei`, which is a library to create and modify `.mei` files. In order to install `pymei`, please follow the instructions [here](https://github.com/DDMAL/libmei/wiki). After installing `pymei`, you need to add the path where you install `pymei` to the script. Please see the line 2 of the script, this is an example of where my `pymei` is stored. Just replace with the path you use to store `pymei`. 
+
+`modifying_MEI` function will find all the `.mei` files in the `downloaded_files/MEI` folder, where the downloaded files are stored, and modify the `.mei` files which have `breve` value. The script will create a new `.mei` file, appending `NEW` to the end of file name, and these files can be parsed by jsymbolic2 now (Unfortunately, some of them still cannot be parsed, but we will deal with them later), and these files will be stored under the directory of `downloaded_files/MEI/NEW`. 
+
+#### 4. Converting MEI into midi
+
+#### 5. Extracting features from all symbolic files
 
 After this, the script will extract features from all `.mid` and `.midi` files which are stored under `downloaded_files`, and all the `.midi` files from `downloaded_files/XML/MIDI`, which are converted from `.xml` files, and all `.mei` files which are stored under `downloaded_files/MEI/NEW`. The extracted feature will be stored under the directories of `downloaded_files/extracted_features`, `downloaded_files/XML/MIDI/extracted_features`, and `downloaded_files/MEI/NEW/extracted_features`, respectively.
 
