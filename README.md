@@ -46,7 +46,7 @@ A log file, which records all the files that cannot be downloaded, is stored und
 
 Now, it is time to run `feature_extraction_jsymbolic2.py`. The script will ask you to provide the path you use to store jsymbolic jar file. Afterward, the script will first convert all xml files to midi using music21, and stored `.midi` files under `./downloaded_files/XML/MIDI/` directory.
 
-A log file, which records all the files that cannot be converted, is stored under `./downloaded_files/XML/MIDI/` directory, called `xml_to_midi_log.txt`. There are 4 files which cannot be processed.
+A log file, which records all the files that cannot be converted, is stored under `./downloaded_files/XML/MIDI/` directory, called `xml_to_midi_log.txt`. There are 4/872 files which cannot be processed.
 
 #### 2.Validating MEI files
 
@@ -54,7 +54,7 @@ At the same time, we are concerned that are those MEI file valid or not. The scr
 
 Since most of the MEI files from ELVIS uses `2011-05`, and since the schemata file does not support backward compatibility, using `2011-05` schemata file will be the optimal choice. 
 
-Two log files, which record all the files that cannot be converted, are stored under `./downloaded_files/MEI/` directory, called `validation_error_log.txt` and `validation_log.txt`. Surprisingly enough, none of the MEI files validates.
+Two log files, which record all the files that cannot be converted, are stored under `./downloaded_files/MEI/` directory, called `validation_error_log.txt` and `validation_log.txt`. Surprisingly enough, none of the MEI files validates. There are 378 MEI files, none of them validates.
 
 #### 3.Converting MEI into a version which jsymbolic2 can parse
 
@@ -64,12 +64,14 @@ Third, in order to extract features from these `.mei` files, the script runs `mo
 
 `modifying_MEI` function will find all the `.mei` files in the `./downloaded_files/MEI` folder, where the downloaded files are stored, and modify the `.mei` files which have `breve` value. The script will create a new `.mei` file, appending `NEW` to the end of file name, and these files can be parsed by jsymbolic2 now (Unfortunately, some of them still cannot be parsed, but we will deal with them later), and these files will be stored under the directory of `./downloaded_files/MEI/NEW`. 
 
-#### 4. Converting MEI into midi
-
-Since half of the files still cannot be processed by midi, we are going to try to convert them into midi using music21, by calling `convert_MEI_into_midi` function. 
-
-#### 5. Extracting features from all symbolic files
+#### 4. Extracting features from all symbolic files
 
 After this, the script will extract features from all `.mid` and `.midi` files which are stored under `downloaded_files`, and all the `.midi` files from `downloaded_files/XML/MIDI`, which are converted from `.xml` files, and all `.mei` files which are stored under `downloaded_files/MEI/NEW`. The extracted feature will be stored under the directories of `downloaded_files/extracted_features`, `downloaded_files/XML/MIDI/extracted_features`, and `downloaded_files/MEI/NEW/extracted_features`, respectively.
+
+In each folder, there are two log files: `extract_features_log.txt` and `extract_features_error_log.txt`, which records `stdout` and `stderr` of the feature extraction command.
+
+#### 5. Converting MEI into midi
+
+Since half of the files still cannot be processed by midi, we are going to try to convert them into midi using music21, by calling `convert_MEI_into_midi` function. 
 
 After this step, all the files are extracted, and they are ready to upload to ELVIS database (to be continued).
