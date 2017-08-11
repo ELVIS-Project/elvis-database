@@ -70,7 +70,11 @@ After this, the script will extract features from all `.mid` and `.midi` files w
 
 In each folder, there are two log files: `extract_features_log.txt` and `extract_features_error_log.txt`, which records `stdout` and `stderr` of the feature extraction command.
 
+##### Summary
+
 There are 378 MEI files, 158 can manage to extract features; there are 4210 midi files, 4206 can manage to extract features; there are 872 MusicXML files, 868 manage to convert; 868 manage to extract features (These statistics are derived from all the error log files mentioned above). 
+ 
+There are altogether 5460 symbolic files, downloaded from ELVIS database. 5232 managed to extract features.
 
 #### 5. Converting MEI into midi
 
