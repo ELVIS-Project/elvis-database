@@ -70,8 +70,10 @@ After this, the script will extract features from all `.mid` and `.midi` files w
 
 In each folder, there are two log files: `extract_features_log.txt` and `extract_features_error_log.txt`, which records `stdout` and `stderr` of the feature extraction command.
 
+There are 378 MEI files, 158 can manage to extract features; there are 4210 midi files, 4206 can manage to extract features; there are 872 MusicXML files, 868 manage to convert; 868 manage to extract features (These statistics are derived from all the error log files mentioned above). 
+
 #### 5. Converting MEI into midi
 
-Since half of the files still cannot be processed by midi, we are going to try to convert them into midi using music21, by calling `convert_MEI_into_midi` function. 
+Since 220/378 of the `.mei` files still cannot be processed by jsymbolic2 to extract features, we are going to try to convert them into midi using music21, by calling `convert_MEI_into_midi` function. Unfortunately, none of them can be converted into midi and extract features. You can find the name of these 220 files under `./downloaded_files/MEI/NEW/extracted_features/` folder, and `extract_features_error_log.txt` file. 
 
 After this step, all the files are extracted, and they are ready to upload to ELVIS database (to be continued).
