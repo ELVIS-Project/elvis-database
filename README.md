@@ -28,19 +28,19 @@ Please file content related issues at [https://github.com/ELVIS-Project/ELVIS-Da
 ## Extracting the features for the all symbolic files on ELVIS
 This section contains three parts: (1) Downloading all the files from ELVIS (`download_files.py`) (2) Extracting features from the downloaded files (`feature_extraction_jsymbolic2.py`) (3) Upload all the feature files to ELVIS.
 
-The scripts are fully test and run on masOS Sierra, version of 10.12.5.
+The scripts are fully test and run on masOS Sierra, version of 10.12.5. All required packages are specified in `requirements.txt`. You can install all the required packages in the terminal with `pip install -r [the path where you store requirements.txt]`.
 
 All output of any executed step, including `stdout` and `stderr`, will be recorded into a log file, which will be explained in the last paragraph of each step. 
 
 ### Download files using 'download_files.py'
 
-First, run `download_files.py` to get all the symbolic files from ELVIS database. To do this, you need to (1) First create an account on [ELVIS database](https://database.elvisproject.ca), then provide your username and password when running the script. (2) In your working directory where the script is stored, a folder called `downloaded_files` will be created, and this is the place where all the downloaded files will be saved. (3) Run the script to download all the files. When running the script, it will download all the symbolic files with `.mid`, `.midi`, `.mei` and `.xml` (musicxml) extensions. `.midi` and `.mid` files will be stored under `./downloaded_files/` directory, and `.mei` will be stored under `./downloaded_files/MEI/` directory, and `.xml` will stored under `./downloaded_files/XML/` directory. 
+First, run `download_files.py` to get all the symbolic files from ELVIS database. To do this, you need to (1) First create an account on [ELVIS database](https://database.elvisproject.ca), then provide your username and password when running the script. An example would be: `python3 [the path of your script] [your username] [your password]`. (2) In your working directory where the script is stored, a folder called `downloaded_files` will be created, and this is the place where all the downloaded files will be saved. (3) Run the script to download all the files. When running the script, it will download all the symbolic files with `.mid`, `.midi`, `.mei` and `.xml` (musicxml) extensions. `.midi` and `.mid` files will be stored under `./downloaded_files/` directory, and `.mei` will be stored under `./downloaded_files/MEI/` directory, and `.xml` will stored under `./downloaded_files/XML/` directory. 
 
 A log file, which records all the files that cannot be downloaded, is stored under `./downloaded_files/` directory, called `download_log.txt`. There is only one file which cannot be downloaded.
 
 ### Extracting features using 'feature_extraction_jsymbolic2.py'
 
-`feature_extraction_jsymbolic2.py` has several functions to run in order to extract features properly from all the downloaded files, and each of them will be explained as follows.
+`feature_extraction_jsymbolic2.py` has several functions to run in order to extract features properly from all the downloaded files, and each of them will be explained as follows. To run the script, just simply type `python3 [the path of your script]`.
 
 #### 1.Converting XML into MIDI
 
