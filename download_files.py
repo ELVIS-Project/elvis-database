@@ -163,6 +163,14 @@ def get_from_elvis_dev(username, password):
 
 
 def download_with_requests(url, filename, username, password):
+    """
+    A mini function that will download the file from the provided url and authenticate.
+    :param url:
+    :param filename:
+    :param username:
+    :param password:
+    :return:
+    """
     r = requests.get(url, auth=(username, password))
     with open(filename, "wb") as code:
         code.write(r.content)
@@ -173,6 +181,12 @@ Gets the urls of midi and mei and xml files currently in the elvis database.
 
 
 def get_from_elvis_prod(username, password):
+    """
+    Mega function that downloads symbolic music files (mei, mid, midi, xml) from ELVIS Database (production version).
+    :param username:
+    :param password:
+    :return:
+    """
     save_dir = 'downloaded_files'
     if os.path.exists(save_dir) is False:
         os.mkdir(save_dir)
@@ -182,7 +196,7 @@ def get_from_elvis_prod(username, password):
                         '&filefilt=.MIDI&filefilt=.MEI&filefilt=.MID&filefilt=.XML', auth = (username, password))
     # just in case there are files with upper case extensions
     pages = json.loads(resp.text)['paginator']['total_pages']
-    for page in range(1, 5):#pages+1):
+    for page in range(1, pages+1):
         print(page)
         if(page == 5):
             print('debug')
@@ -204,12 +218,16 @@ def get_from_elvis_prod(username, password):
                     if attachment['extension'] == ".midi" or attachment['extension'] == ".mei" or attachment['extension'] == ".xml" or attachment['extension'] == ".mid" \
                             or attachment['extension'] == ".MIDI" or attachment['extension'] == ".MEI" or attachment['extension'] == ".XML" or attachment['extension'] == ".MID":
                         midimei_files_urls.append(attachment['url'])
+                    else:
+                        print("Other file types:" + attachment['url'])
             else:
                 movement = requests.get('http://database.elvisproject.ca/movement/'+str(object['id'])+'?format=json', auth=(username, password))
                 for attachment in json.loads(movement.text)['attachments']:
                     if attachment['extension'] == ".midi" or attachment['extension'] == ".mei" or attachment['extension'] == ".xml" or attachment['extension'] == ".mid" \
                             or attachment['extension'] == ".MIDI" or attachment['extension'] == ".MEI" or attachment['extension'] == ".XML" or attachment['extension'] == ".MID":
                         midimei_files_urls.append([attachment['url'], attachment['extension']])
+                    else:
+                        print("Other file types:" + attachment['url'])
     with open('midi_urls', 'wb') as out_file:
         pickle.dump(midimei_files_urls, out_file)
     pattern = re.compile(r'\d/[A-Za-z]')
@@ -218,7 +236,9 @@ def get_from_elvis_prod(username, password):
             match = pattern.search(url)
             ptr = int((match.span()[0] + match.span()[1]) /2)
             if os.path.isfile('./' + save_dir + '/' + url[ptr + 1:]) == False:
-                download_with_requests('http://database.elvisproject.ca'+url, './' + save_dir + '/' + url[ptr + 1:], username, password)
+                download_with_requests('http://database.elvisproject.ca' + url,
+                                       './' + save_dir + '/' + url[25:40] + '_' + url[ptr + 1:],
+                                       username, password)
             else:
                 download_with_requests('http://database.elvisproject.ca' + url, './' + save_dir + '/' + url[25:40] + '_' + url[ptr + 1:],
                                        username, password)
@@ -227,18 +247,12 @@ def get_from_elvis_prod(username, password):
             match = pattern.search(urll)
             if(match != None):
                 ptr = int((match.regs[0][0] + match.regs[0][1]) / 2)
-                if os.path.isfile('./' + save_dir + '/' + url[ptr + 1:]) == False:
-                    download_with_requests('http://database.elvisproject.ca' + urll, './' + save_dir + '/' + urll[ptr + 1:], username, password)
-                else:
-                    download_with_requests('http://database.elvisproject.ca' + url,
-                                           './' + save_dir + '/' + url[25:40]  + '_' + url[ptr + 1:],
+                download_with_requests('http://database.elvisproject.ca' + urll,
+                                           './' + save_dir + '/' + urll[25:40]  + '_' + urll[ptr + 1:],
                                            username, password)
             else:
-                if os.path.isfile('./' + save_dir + '/' + url[ptr + 1:]) == False:
-                    download_with_requests('http://database.elvisproject.ca' + urll, './' + save_dir , username, password)
-                else:
-                    download_with_requests('http://database.elvisproject.ca' + url,
-                                           './' + save_dir + '/' + url[25:40] + '_' + url[ptr + 1:] ,
+                download_with_requests('http://database.elvisproject.ca' + urll,
+                                           './' + save_dir + '/' + urll[25:40] + '_' + urll[ptr + 1:] ,
                                            username, password)
     flog.close()
     for fn in os.listdir('./' + save_dir + '/'):  # move musicxml and MEI files into seperate folders
@@ -250,6 +264,14 @@ def get_from_elvis_prod(username, password):
             if os.path.exists('./' + save_dir + '/' + 'MEI/') is False:
                 os.mkdir('./' + save_dir + '/' + 'MEI/')
             os.rename('./' + save_dir + '/' + fn, './' + save_dir + '/' + 'MEI/' + fn)
+        elif(fn[-3:] == 'mid' or fn[-3:] == 'midi'):
+            if os.path.exists('./' + save_dir + '/' + 'MID/') is False:
+                os.mkdir('./' + save_dir + '/' + 'MID/')
+            os.rename('./' + save_dir + '/' + fn, './' + save_dir + '/' + 'MID/' + fn)
+        else:
+            if os.path.exists('./' + save_dir + '/' + 'OTHER/') is False:
+                os.mkdir('./' + save_dir + '/' + 'OTHER/')
+            os.rename('./' + save_dir + '/' + fn, './' + save_dir + '/' + 'OTHER/' + fn)
     return midimei_files_urls
 
 
@@ -271,7 +293,6 @@ def is_file_name_same(list):
                 print(list[j][41:])
                 print(item[41:])
 if __name__ == "__main__":
-
     parser = argparse.ArgumentParser()
     parser.add_argument("elvis_username")
     parser.add_argument("elvis_password")

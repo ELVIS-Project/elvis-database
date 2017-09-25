@@ -5,21 +5,21 @@ from correcting_MEI_files import modifying_MEI
 from validating_MEI_files import validation
 
 
-def convert_MEI_into_midi():
+def convert_MEI_into_midi(meipath):
     """
     Convert the corrected MEI files into midi, so that jsymbolic2 can process all MEI files and extract features
     :return:
     """
-    if os.path.exists('./downloaded_files/MEI/NEW/MIDI/') is False:
-        os.mkdir('./downloaded_files/MEI/NEW/MIDI/')
-    flog = open('./downloaded_files/MEI/NEW/MIDI/MEI_to_midi_log.txt', 'w')
-    for id, fn in enumerate(os.listdir('./downloaded_files/MEI/NEW/')):
+    if os.path.exists(meipath + 'MIDI/') is False:
+        os.mkdir(meipath + 'MIDI/')
+    flog = open(meipath + 'MEI_to_midi_log.txt', 'w')
+    for id, fn in enumerate(os.listdir(meipath)):
         if (fn[-3:] != 'mei'):
             continue  # only convert xml into midi
         print(fn)
         try:
-            s = converter.parse('./downloaded_files/MEI/NEW/' + fn)
-            s.write('midi', fp = './downloaded_files/MEI/NEW/MIDI/' + fn + '.midi')
+            s = converter.parse(meipath + fn)
+            s.write('midi', fp = meipath +'MIDI/' + fn + '.midi')
         #s.write('xml', fp='./downloaded_files/MEI/NEW/MIDI/' + fn + '.xml')
         except:
             print(fn, file=flog)
@@ -59,9 +59,9 @@ def extract_features_per_folder(filepath, featurepath, path):
 
 
 def extract_features(path):
-    #extract_features_per_folder('./downloaded_files/', './downloaded_files/extracted_features/', path)
+    extract_features_per_folder('./downloaded_files/', './downloaded_files/extracted_features/', path)
     extract_features_per_folder('./downloaded_files/MEI/NEW/', './downloaded_files/MEI/NEW/extracted_features/', path)
-    #extract_features_per_folder('./downloaded_files/XML/MIDI/', './downloaded_files/XML/MIDI/extracted_features/', path)
+    extract_features_per_folder('./downloaded_files/XML/MIDI/', './downloaded_files/XML/MIDI/extracted_features/', path)
     extract_features_per_folder('./downloaded_files/MEI/NEW/MIDI/', './downloaded_files/MEI/NEW/MIDI/extracted_features/',
                                 path)
 
@@ -69,9 +69,11 @@ def extract_features(path):
 if __name__ == "__main__":
     #jsymbolic_path = input('please specify jsymbolic path')
     jsymbolic_path = './jMIR_3_0_developer/jSymbolic2/dist/jSymbolic2.jar'
-    rng_path = './MEI_schemata_files/mei-all.rng'
-    #convert_xml_into_midi()
-    #validation(rng_path)
+    rng_path = rng_path = ['./MEI_schemata_files/mei-all-3.0.0.rng', './MEI_schemata_files/mei-all-2013.rng', './MEI_schemata_files/MEI2010-05.rng', './MEI_schemata_files/MEI2011-05.rng']
+    mei_path = './downloaded_files/MEI/NEW/'
+    #mei_path = './downloaded_files_2/'
+    convert_xml_into_midi()
     modifying_MEI()
-    convert_MEI_into_midi()
+    #validation(rng_path[3], mei_path)
+    convert_MEI_into_midi(mei_path)
     extract_features(jsymbolic_path)
