@@ -67,8 +67,8 @@ def extract_features(path):
 
 
 if __name__ == "__main__":
-    #jsymbolic_path = input('please specify jsymbolic path')
-    jsymbolic_path = './jMIR_3_0_developer/jSymbolic2/dist/jSymbolic2.jar'
+    jsymbolic_path = input('please specify jsymbolic path (.jar file)')
+    #jsymbolic_path = './jMIR_3_0_developer/jSymbolic2/dist/jSymbolic2.jar'
     rng_path = rng_path = ['./MEI_schemata_files/mei-all-3.0.0.rng', './MEI_schemata_files/mei-all-2013.rng', './MEI_schemata_files/MEI2010-05.rng', './MEI_schemata_files/MEI2011-05.rng']
     mei_path = './downloaded_files/MEI/NEW/'
     #mei_path = './downloaded_files_2/'
