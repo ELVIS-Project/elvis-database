@@ -28,19 +28,19 @@ Please file content related issues at [https://github.com/ELVIS-Project/ELVIS-Da
 ## Extracting the features for the all symbolic files on ELVIS
 This section contains three parts: (1) Downloading all the files from ELVIS (`download_files.py`) (2) Extracting features from the downloaded files (`feature_extraction_jsymbolic2.py`) (3) Upload all the feature files to ELVIS.
 
-The scripts are fully test and run on masOS Sierra, version of 10.12.5.
+The scripts are fully test and run on masOS Sierra, version of 10.12.5. All required packages are specified in `requirements.txt`. You can install all the required packages in the terminal with `pip install -r [the path where you store requirements.txt]`, except for `pymei` which will be addressed in Section 3. 
 
 All output of any executed step, including `stdout` and `stderr`, will be recorded into a log file, which will be explained in the last paragraph of each step. 
 
 ### Download files using 'download_files.py'
 
-First, run `download_files.py` to get all the symbolic files from ELVIS database. To do this, you need to (1) First create an account on [ELVIS database](https://database.elvisproject.ca), then provide your username and password when running the script. (2) In your working directory where the script is stored, a folder called `downloaded_files` will be created, and this is the place where all the downloaded files will be saved. (3) Run the script to download all the files. When running the script, it will download all the symbolic files with `.mid`, `.midi`, `.mei` and `.xml` (musicxml) extensions. `.midi` and `.mid` files will be stored under `./downloaded_files/` directory, and `.mei` will be stored under `./downloaded_files/MEI/` directory, and `.xml` will stored under `./downloaded_files/XML/` directory. 
+First, run `download_files.py` to get all the symbolic files from ELVIS database. To do this, you need to (1) First create an account on [ELVIS database](https://database.elvisproject.ca), then provide your username and password when running the script. An example would be: `python3 [the path of your script] [your username] [your password]`. (2) In your working directory where the script is stored, a folder called `downloaded_files` will be created, and this is the place where all the downloaded files will be saved. (3) Run the script to download all the files. When running the script, it will download all the symbolic files with `.mid`, `.midi`, `.mei` and `.xml` (musicxml) extensions. `.midi` and `.mid` files will be stored under `./downloaded_files/` directory, and `.mei` will be stored under `./downloaded_files/MEI/` directory, and `.xml` will stored under `./downloaded_files/XML/` directory. 
 
 A log file, which records all the files that cannot be downloaded, is stored under `./downloaded_files/` directory, called `download_log.txt`. There is only one file which cannot be downloaded.
 
 ### Extracting features using 'feature_extraction_jsymbolic2.py'
 
-`feature_extraction_jsymbolic2.py` has several functions to run in order to extract features properly from all the downloaded files, and each of them will be explained as follows.
+`feature_extraction_jsymbolic2.py` has several functions to run in order to extract features properly from all the downloaded files, and each of them will be explained as follows. To run the script, just simply type `python3 [the path of your script]`.
 
 #### 1.Converting XML into MIDI
 
@@ -52,7 +52,7 @@ A log file, which records all the files that cannot be converted, is stored unde
 
 At the same time, we are concerned that are those MEI file valid or not. The script runs `validation` function, where you have to specify the schemata file you use (the default file path will probably fail to work). To find a schemata file, there are several versions: [3.0.0](http://www.music-encoding.org/schema/current/mei-all.rng), [2013](http://music-encoding.org/schema/2.1.1/mei-all.rng), [2012 (it is a zip file, so you need to unzip it and use the `rng` file inside of it)](https://music-encoding.googlecode.com/files/MEI2012_v2.0.0.zip), [2011-05](http://music-encoding.org/wp-content/uploads/2015/04/MEI2011-05.zip), [2010-05](http://music-encoding.org/wp-content/uploads/2015/04/MEI2010-05.rng_.zip).
 
-Since most of the MEI files from ELVIS uses `2011-05`, and since the schemata file does not support backward compatibility, using `2011-05` schemata file will be the optimal choice. 
+Since most of the MEI files from ELVIS uses `2011-05`, and since the schemata file does not support backward compatibility, using `2011-05` schemata file will be the optimal choice. If you want to validate a file from the terminal, simply run `xmllint --noout --relaxng [the path of the schemata file] [the path of the file you want to validate]`. FYI, you can also convert the old MEI file into the newer one using the [tool](https://github.com/music-encoding/encoding-tools).  
 
 Two log files, which record all the files that cannot be converted, are stored under `./downloaded_files/MEI/` directory, called `validation_error_log.txt` and `validation_log.txt`. Surprisingly enough, none of the MEI files validates. There are 378 MEI files, none of them validates.
 
