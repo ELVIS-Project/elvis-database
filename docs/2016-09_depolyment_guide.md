@@ -159,7 +159,7 @@ You must now obtain a dump of the database and a set of its media files. These c
 
 Move all the media folders (`attachments`, `user_downloads`, etc) to `$ELVIS_HOME/media/`. You also want to set all the files to have 664 permissions. You can do this with a command like `find $ELVIS_HOME/media -type f -exec chmod 644 {} \;`. Note, we can not simply run `chmod -R` on this directory tree, as we don't want to remove the executable permission from directories.
 
-You should also have a .json dump of the database available. You can load this into postgres using djangos management utility. Assuming the backup is in your home folder and named `elvis_backup.json`, run the following from `$ELVIS_HOME`.
+You should also have a .json dump of the database available, which is available on `DDMAL Share/Archives/Misc/ELVIS Database Backup/`. You can load this into postgres using djangos management utility. Assuming the backup is in your home folder and named `elvis_backup.json`, run the following from `$ELVIS_HOME`.
 
 ```
 python manage.py loaddata ~/elvis_backup.json
