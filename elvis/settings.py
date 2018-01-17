@@ -8,10 +8,7 @@ For the full list of settings and their values, see
 https://docs.djangoproject.com/en/1.6/ref/settings/
 """
 
-from celery import schedules
 import os
-import re
-from kombu import Exchange, Queue
 
 """
 These are pre-defined setting levels. You set SETTING_TYPE
@@ -39,7 +36,11 @@ DEVELOPMENT = 1
 LOCAL = 2
 
 # Specify which of the above setting types you wish to use here.
+<<<<<<< HEAD
 SETTING_TYPE = DEVELOPMENT
+=======
+SETTING_TYPE = PRODUCTION
+>>>>>>> f2bddd2d7100f8c36d948150cc2685715c8c6c73
 assert SETTING_TYPE in [PRODUCTION, DEVELOPMENT, LOCAL], "Must choose a legal setting type."
 
 if SETTING_TYPE is not PRODUCTION:
@@ -60,6 +61,7 @@ RECAPTCHA_KEY_PATH = '/srv/webapps/elvisdb/config/recaptcha_priv_key'
 # ===============
 ALLOWED_HOSTS = ['database.elvisproject.ca', 'dev-database.elvisproject.ca']
 
+INTERNAL_IPS = ['127.0.0.1']
 
 if SETTING_TYPE is not LOCAL:
     with open(SECRET_KEY_PATH) as f:
@@ -83,6 +85,7 @@ INSTALLED_APPS = (
     'django.contrib.staticfiles',
     'django.contrib.sites',
     'django.contrib.flatpages',
+    'debug_toolbar',
     'rest_framework',
     'rest_framework.authtoken',
     'django_extensions',
@@ -91,6 +94,7 @@ INSTALLED_APPS = (
 )
 
 MIDDLEWARE_CLASSES = (
+    'debug_toolbar.middleware.DebugToolbarMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
@@ -187,7 +191,7 @@ if SETTING_TYPE is not LOCAL:
         'default': {
             'ENGINE': 'django.db.backends.postgresql_psycopg2',
             'NAME': 'elvis_database',
-            'USER': 'elvis',
+            'USER': 'elvisdb',
             'PASSWORD': DB_PASS,
             'HOST': 'localhost',
             'TEST': {
@@ -234,10 +238,10 @@ USE_TZ = True
 # CRA: we used to have composer images and user profile images; if we need
 #      them back, check commit dc8f8afe75b7137440c6488483566b8e2c366379
 MEDIA_URL = '/media/'
-MEDIA_ROOT = '/srv/webapps/elvisdb/media'
+MEDIA_ROOT = '/media/elvisdb/media'
 
 STATIC_URL = '/static/'
-STATIC_ROOT = '/srv/webapps/elvisdb/static'
+STATIC_ROOT = '/media/elvisdb/static'
 
 if SETTING_TYPE in [DEVELOPMENT, LOCAL]:
     COMPRESS_ENABLED = False
@@ -278,6 +282,15 @@ TYPE_NAMES={
     'elvis_collection': "Collections",
 }
 
+SOLR_SUGGESTERS = ['composerSuggest',
+                   'pieceSuggest',
+                   'collectionSuggest',
+                   'languageSuggest',
+                   'genreSuggest',
+                   'locationSuggest',
+                   'sourceSuggest',
+                   'instrumentSuggest',
+                   'tagSuggest']
 # Celery Settings
 # ===============
 BROKER_URL = 'amqp://'
