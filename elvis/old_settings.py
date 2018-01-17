@@ -207,8 +207,7 @@ if os.path.exists(EMAIL_CREDS_PATH):
     with open(EMAIL_CREDS_PATH) as f:
         EMAIL_HOST_USER, EMAIL_HOST_PASSWORD, _ = (x.strip() for x in f.read().split('\n'))
 else:
-    EMAIL_HOST_USER, EMAIL_HOST_PASSWORD = "", ""
-
+    EMAIL_HOST_PASSWORD = ""
 
 # Captcha Settings
 # ================

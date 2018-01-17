@@ -1,6 +1,6 @@
 from django.contrib.auth.models import User
 from django.db import models
-
+from django.db.models.signals import post_save
 
 # TODO: Fix it so a UserProfile is generated with each new user.
 class UserProfile(models.Model):
@@ -14,3 +14,8 @@ class UserProfile(models.Model):
 
     def __repr__(self):
         return "<UserProfile: {}>".format(self.username)
+def create_user_profile(sender, instance, created, **kwargs):
+    if created:
+        UserProfile.objects.create(user=instance)
+
+post_save.connect(create_user_profile, sender=User)
