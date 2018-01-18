@@ -220,7 +220,7 @@ That should be about it! If you look at the config file, you'll notice all we're
 
 
 ## Setting up nginx
-nginx should already be running having been installed when you downloaded all the dependencies. You can check that it is running using `sudo systemctl status nginx`. 
+nginx should be already running as it has been installed when you downloaded all the dependencies. You can check that it is running using `sudo systemctl status nginx`. 
 
 We save site definitions in `/etc/nginx/sites-available`, then make a link to the sites we wish to actually serve in `/etc/nginx/sites-enabled`.
 
@@ -257,10 +257,10 @@ server {
 }
 ```
 
-This is a fairly simple config, which takes requests on port 80 and sends them to the socket opened up by gunicorn (you may have noticed the location of this socket being defined in `$ELVIS_HOME/gunicorn_start.sh`). If a static or media file is being requests, nginx will serve those straight off the file system without having to clog up a thread in the web app. Note the 'internal' keyword for the `/media_serve/` location. This means this point can only be accessed by requests that the originate from the server itself. We use this to check that a user is logged in when they access a point under `/media/`, then redirect their request to `/media_serve/`.
-Note also that encryption is not handled anywhere in this config file. We deploy the elvis database on server without a public IP. Traffic is directed to it through a routing server on the same network which handles encryption with clients.
+This is a fairly simple config, which takes requests on port 80 and sends them to the socket opened up by gunicorn (you may have noticed the location of this socket being defined in `$ELVIS_HOME/gunicorn_start.sh`). If a static or media file is being requested, nginx will serve it straight off the file system without having to clog up a thread in the web app. Note the 'internal' keyword for the `/media_serve/` location. This means this point can only be accessed by requests that originate from the server itself. We use this to check that a user is logged in when they access a point under `/media/`, then redirect their request to `/media_serve/`.
+Note also that encryption is not handled anywhere in this config file. We deploy the elvis database on a server without a public IP. Traffic is directed to it through a routing server on the same network which handles encryption with clients.
 
-Now, link this new config file in `sites-enabled`, run a config test, and reload the nginx service if everything is ok.
+Now, link this new config file in `sites-enabled`, run a config test, and reload the nginx service to check if everything is ok.
 ```
 > cd /etc/nginx/sites-enabled
 > sudo ln -s /etc/nginx/sites-available/database.elvisproject.ca 
@@ -274,7 +274,7 @@ If for whatever reason the configtest fails, you will find the errors it raised 
 
 # Extra: Moving data to mounted storage.
 
-After deploying the server, we had a need to move all data on the server on to externally mounted storage drive. This was to simplify the process of redeploying and making backups of all data.
+After deploying the server, we had the need to move all the data on the server to an externally mounted storage drive. This was to simplify the process of redeploying and making backups of all data.
 
 To see the list of external drives mounted at startup, open `/etc/fstab` in a text editor. On the elvis production server, you will notice `/dev/vdc` is mounted to `/media` at startup. This is our external drive. Here you can find all the media files for the database, as well as the data stores for postgres and solr.
 
