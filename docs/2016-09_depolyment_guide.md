@@ -20,7 +20,7 @@ If your system does not have nice shell defaults for new users, you might be abl
 sudo cp -r /home/ubuntu/{.profile,.bashrc} /home/elvisdb
 ```
 
-Itf you decide to give the `elvisdb` user sudo power to aid with the installation process, you might want to consider revoking it before going into production. Whether or not this makes sense will depend on how you access the server (local or ssh), whether or not you are using public keys (you should), and on which network the machine is deployed. Since the machine on compute canada is deployed on a private network, behind a proxy-machine which only lets through requests on port 80, it should be fairly safe to give the `elvisdb` user sudo power.
+If you decide to give the `elvisdb` user sudo power to aid with the installation process, you might want to consider revoking it before going into production. Whether or not this makes sense will depend on how you access the server (local or ssh), whether or not you are using public keys (you should), and on which network the machine is deployed. Since the machine on compute canada is deployed on a private network, behind a proxy-machine which only lets through requests on port 80, it should be fairly safe to give the `elvisdb` user sudo power.
 
 # Required Software
 
