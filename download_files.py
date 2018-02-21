@@ -264,7 +264,7 @@ def get_from_elvis_prod(username, password):
             if os.path.exists('./' + save_dir + '/' + 'MEI/') is False:
                 os.mkdir('./' + save_dir + '/' + 'MEI/')
             os.rename('./' + save_dir + '/' + fn, './' + save_dir + '/' + 'MEI/' + fn)
-        elif(fn[-3:] == 'mid' or fn[-3:] == 'midi'):
+        elif(fn[-3:].lower() == 'mid' or fn[-4:].lower() == 'midi'):
             if os.path.exists('./' + save_dir + '/' + 'MID/') is False:
                 os.mkdir('./' + save_dir + '/' + 'MID/')
             os.rename('./' + save_dir + '/' + fn, './' + save_dir + '/' + 'MID/' + fn)
