@@ -81,3 +81,7 @@ There are altogether 5460 symbolic files, downloaded from ELVIS database. 5232 m
 Since 220/378 of the `.mei` files still cannot be processed by jsymbolic2 to extract features, we are going to try to convert them into midi using music21, by calling `convert_MEI_into_midi` function. Unfortunately, none of them can be converted into midi and extract features. You can find the name of these 220 files under `./downloaded_files/MEI/NEW/extracted_features/` folder, and `extract_features_error_log.txt` file. 
 
 After this step, all the files are extracted, and they are ready to upload to ELVIS database (to be continued).
+
+#### NOTES
+
+When running `feature_extraction_jsymbolic2.py`, the script will ask you to provide the paths of (1) Jsymbolic `.jar` file. This file exist in a zip file of jsymbolic, which can be downloaded from [here](https://sourceforge.net/projects/jmir/files/jSymbolic/jSymbolic%202.0/). Download `jSymbolic_2_0_developer.zip`, unzip the file, and the `.jar` file is located in `/jSymbolic_2_0_developer/jSymbolic2/dist/jSymbolic2.jar`. (2) Jsymbolic config file, which directs jsymbolic what kind of features to extract. It can be downloaded from [here](https://www.dropbox.com/s/cl4vyp516jh6p4h/jSymbolicDefaultConfigs.txt?dl=0). (3) MEI schemata file to validate MEI files, which can be downloaded from [3.0.0](http://www.music-encoding.org/schema/current/mei-all.rng).
