@@ -24,6 +24,8 @@ def convert_MEI_into_midi(meipath):
         except:
             print(fn, file=flog)
             print(sys.exc_info()[0], file=flog)
+
+
 def convert_xml_into_midi():
     if os.path.exists('./downloaded_files/XML/MIDI/') is False:
         os.mkdir('./downloaded_files/XML/MIDI/')
@@ -40,7 +42,7 @@ def convert_xml_into_midi():
             print(sys.exc_info()[0], file=flog)
 
 
-def extract_features_per_folder(filepath, featurepath, path):
+def extract_features_per_folder(filepath, featurepath, path, config_path):
     """
     Create the folder for the features, and then extract features and store them
     :param filepath: original file path
@@ -50,30 +52,37 @@ def extract_features_per_folder(filepath, featurepath, path):
     """
     if os.path.exists(featurepath) is False:
         os.mkdir(featurepath)
+    if os.path.isfile(featurepath + 'extract_features_log.txt'):  # remove the old log file, create the new one
+        os.remove(featurepath + 'extract_features_log.txt')
+    if os.path.isfile(featurepath + 'extract_features_error_log.txt'):
+        os.remove(featurepath + 'extract_features_error_log.txt')
     for id, fn in enumerate(os.listdir(filepath)):  # extract features for all the original midi files
         print(fn)
-        os.system('java -Xmx8192m -jar ' + path + ' -configrun jSymbolicDefaultConfigs.txt ' + filepath +  fn + ' ' +
+        os.system('java -Xmx8192m -jar ' + path + ' -configrun ' + config_path + ' ' + filepath +  fn + ' ' +
                   featurepath + fn + '_feature_values.xml ' +
                     featurepath + fn + '_feature_descriptions.xml >>' + featurepath + 'extract_features_log.txt 2'
                     '>>' + featurepath + 'extract_features_error_log.txt')
 
 
-def extract_features(path):
-    extract_features_per_folder('./downloaded_files/', './downloaded_files/extracted_features/', path)
-    extract_features_per_folder('./downloaded_files/MEI/NEW/', './downloaded_files/MEI/NEW/extracted_features/', path)
-    extract_features_per_folder('./downloaded_files/XML/MIDI/', './downloaded_files/XML/MIDI/extracted_features/', path)
+def extract_features(path, config_path):
+    #extract_features_per_folder('./downloaded_files/', './downloaded_files/extracted_features/', path, config_path)
+    extract_features_per_folder('./downloaded_files/MEI/NEW/', './downloaded_files/MEI/NEW/extracted_features/', path, config_path)
+    extract_features_per_folder('./downloaded_files/XML/MIDI/', './downloaded_files/XML/MIDI/extracted_features/', path, config_path)
     extract_features_per_folder('./downloaded_files/MEI/NEW/MIDI/', './downloaded_files/MEI/NEW/MIDI/extracted_features/',
-                                path)
+                                path, config_path)
 
 
 if __name__ == "__main__":
-    jsymbolic_path = input('please specify jsymbolic path (.jar file)')
-    #jsymbolic_path = './jMIR_3_0_developer/jSymbolic2/dist/jSymbolic2.jar'
-    rng_path = rng_path = ['./MEI_schemata_files/mei-all-3.0.0.rng', './MEI_schemata_files/mei-all-2013.rng', './MEI_schemata_files/MEI2010-05.rng', './MEI_schemata_files/MEI2011-05.rng']
+    jsymbolic_file = input('please specify jsymbolic .jar file')
+    jsymbolic_config_file = input('please specify jsymbolic config file')
     mei_path = './downloaded_files/MEI/NEW/'
+    rng_path = input('please provide MEI schemata file')
+    # jsymbolic_file = '/Users/yaolongju/PycharmProjects/jMIR_3_0_developer/jSymbolic2/dist/jSymbolic2.jar'
+    # jsymbolic_config_file = '/Users/yaolongju/PycharmProjects/jMIR_3_0_developer/jSymbolic2/jSymbolicDefaultConfigs.txt'
+    #rng_path = '/Users/yaolongju/PycharmProjects/libmei/MEI_shemata_files/mei-all.rng'
     #mei_path = './downloaded_files_2/'
     convert_xml_into_midi()
     modifying_MEI()
-    #validation(rng_path[3], mei_path)
+    #validation(rng_path, mei_path)  # skipped since no MEI file validates at this point
     convert_MEI_into_midi(mei_path)
-    extract_features(jsymbolic_path)
+    extract_features(jsymbolic_file, jsymbolic_config_file)

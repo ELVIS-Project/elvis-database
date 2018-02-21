@@ -1,6 +1,5 @@
 import os, sys
-sys.path.append('/Users/yaolongju/Documents/Projects/libmei/python')
-import pymei
+#sys.path.append('/Users/yaolongju/Documents/Projects/libmei/python')
 import os
 
 
@@ -9,6 +8,10 @@ def modifying_MEI():
     Remove 'breve' attribute which is not supported by jsymbolic2
     :return:
     """
+    pymei_location = input('please provide libmei/python directory to use pymei')
+    #pymei_location = '/Users/yaolongju/PycharmProjects/libmei/python'
+    sys.path.append(pymei_location)
+    import pymei
     if os.path.exists('./downloaded_files/MEI/NEW/') is False:
         os.mkdir('./downloaded_files/MEI/NEW/')
     for id, fn in enumerate(os.listdir('./downloaded_files/MEI/')):
