@@ -1,0 +1,16 @@
+{% extends 'blog/base.html' %}
+
+{% block content %}
+    <h1>New post</h1>
+
+    <form method="POST" class="post-form">
+    {% csrf_token %}
+    {{form.as_p}}  <!-- how does this part unfolds as author, title and text? -->
+        <!-- 1. this triggers post/new url 2. Go to CreatePostView, where it creates a new PostForm 3. PostForm has author, title and text, and it will
+        display them out 4. and it redirect to post_detail of that post, defined in CreatePostView-->
+    <button type="submit" class="save btn btn-default">Save</button>
+    </form>
+
+    <script>var editor = new MediumEditor('.editable');</script>  <!-- This is the medium editor we use to set up to get that style in input textbox-->
+
+{% endblock %}

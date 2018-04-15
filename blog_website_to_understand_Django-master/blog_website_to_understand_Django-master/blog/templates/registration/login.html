@@ -1,0 +1,21 @@
+{% extends 'blog/base.html' %}  <!--this is django template language: http://www.runoob.com/django/django-template.html-->
+
+{% block content %}
+<!--# see explanation here: https://tutorial.djangogirls.org/zh/template_extending/-->
+<div class="jumbotron">  <!--# big screen, it is a config from bootstrap, a framework to use CSS more easily-->
+    <h2>Please Login:</h2>
+    <h3>(Must be SuperUser, please check with the site admin)</h3>
+
+    {% if form.errors %}
+        <p>Your username and password didn't match! Please try again.</p>
+    {% endif %}
+
+    <form action="{% url 'login' %}" method = "POST">  <!--# blog:login is used as a tag if this name is defined in blog/urls.py-->
+        {% csrf_token %}
+            {{ form.as_p }}
+            <input type="submit" class="btn btn-primary" name="" value="Login">
+            <input type="hidden" name="next" value="{{next}}">  <!--  what does next mean it is taken care by view.login -->
+
+    </form>
+</div>
+{% endblock %}
