@@ -96,15 +96,15 @@ class SolrSearch(object):
                 self.solr_params['fq'].append(filter_string)
 
             elif k == 'datefiltf':
-                from_date = " {0}-00-00T00:00:00Z ".format(str(int(qdict.get('datefiltf')) + 1))
+                from_date = " {0}-01-01T00:00:00Z ".format(str(int(qdict.get('datefiltf')) + 1))
                 if qdict.get('datefiltt'):
-                    to_date = " {0}-00-00T00:00:00Z ".format(str(int(qdict.get('datefiltt')) + 1))
+                    to_date = " {0}-01-01T00:00:00Z ".format(str(int(qdict.get('datefiltt')) + 1))
                     date_filt = "(date_general:[{0} TO {1}] OR date_general2:[{0} TO {1}])".format(from_date, to_date)
                 else:
                     date_filt = "(date_general:[{0} TO *] OR date_general2:[{0} TO *])".format(from_date)
                 self.solr_params['fq'].append(date_filt)
             elif k == 'datefiltt':
-                to_date = " {0}-00-00T00:00:00Z ".format(str(int(qdict.get('datefiltt')) + 1))
+                to_date = " {0}-01-01T00:00:00Z ".format(str(int(qdict.get('datefiltt')) + 1))
                 date_filt = "(date_general:[* TO {0}] OR date_general2:[* TO {0}])".format(to_date)
                 self.solr_params['fq'].append(date_filt)
 
