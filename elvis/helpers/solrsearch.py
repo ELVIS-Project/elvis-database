@@ -96,7 +96,7 @@ class SolrSearch(object):
                 self.solr_params['fq'].append(filter_string)
 
             elif k == 'datefiltf':
-                from_date = " {0}-01-01T00:00:00Z ".format(str(int(qdict.get('datefiltf')) + 1))
+                from_date = " {0}-01-01T00:00:00Z ".format(str(int(qdict.get('datefiltf')) + 1)) # original codings are wrong
                 if qdict.get('datefiltt'):
                     to_date = " {0}-01-01T00:00:00Z ".format(str(int(qdict.get('datefiltt')) + 1))
                     date_filt = "(date_general:[{0} TO {1}] OR date_general2:[{0} TO {1}])".format(from_date, to_date)
