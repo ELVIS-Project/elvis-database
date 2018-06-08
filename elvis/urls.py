@@ -93,3 +93,7 @@ urlpatterns += staticfiles_urlpatterns()
 # Only add admin if it's enabled
 if 'django.contrib.admin' in settings.INSTALLED_APPS:
     urlpatterns.append(url(r'^admin/', include(admin.site.urls)))
+
+if settings.DEBUG:
+        import debug_toolbar
+        urlpatterns = [url(r'^__debug__/', include(debug_toolbar.urls))] + urlpatterns
