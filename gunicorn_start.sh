@@ -3,7 +3,7 @@
 NAME="elvisdb"                                             # name of the application
 VIRTUAL_ENV=/srv/webapps/elvisdb/elvis-database/.env       # name of virtual_env directory
 DJANGODIR=/srv/webapps/elvisdb/elvis-database/             # Django project directory
-SOCKFILE=/var/run/elvisdb/elvisdb.sock                     # we will communicte using this unix socket
+SOCKFILE=/var/run/elvisdb.sock                             # we will communicte using this unix socket
 USER=elvisdb                                               # the user to run as
 GROUP=elvisdb                                              # the group to run as
 NUM_WORKERS=3                                              # how many worker processes should Gunicorn spawn
