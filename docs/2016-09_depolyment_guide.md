@@ -20,7 +20,7 @@ If your system does not have nice shell defaults for new users, you might be abl
 sudo cp -r /home/ubuntu/{.profile,.bashrc} /home/elvisdb
 ```
 
-Itf you decide to give the `elvisdb` user sudo power to aid with the installation process, you might want to consider revoking it before going into production. Whether or not this makes sense will depend on how you access the server (local or ssh), whether or not you are using public keys (you should), and on which network the machine is deployed. Since the machine on compute canada is deployed on a private network, behind a proxy-machine which only lets through requests on port 80, it should be fairly safe to give the `elvisdb` user sudo power.
+If you decide to give the `elvisdb` user sudo power to aid with the installation process, you might want to consider revoking it before going into production. Whether or not this makes sense will depend on how you access the server (local or ssh), whether or not you are using public keys (you should), and on which network the machine is deployed. Since the machine on compute canada is deployed on a private network, behind a proxy-machine which only lets through requests on port 80, it should be fairly safe to give the `elvisdb` user sudo power.
 
 # Required Software
 
@@ -155,7 +155,7 @@ python manage.py migrate
 
 If this command fails, you will need to figure out some error in your database setup up or your `$ELVIS_HOME/elvis-database/elvis/settings.py` file.
 
-You must now obtain a dump of the database and a set of its media files. These can be found on our backup server (TODO: WIKI LINK TO BACKUP SERVER DOCS HERE), as well as on the production server.
+You must now obtain a dump of the database and a set of its media files. These can be found on our [backup server](http://132.206.14.10/doku.php?id=backups:start), as well as on the production server.
 
 Move all the media folders (`attachments`, `user_downloads`, etc) to `$ELVIS_HOME/media/`. You also want to set all the files to have 664 permissions. You can do this with a command like `find $ELVIS_HOME/media -type f -exec chmod 644 {} \;`. Note, we can not simply run `chmod -R` on this directory tree, as we don't want to remove the executable permission from directories.
 
@@ -193,7 +193,6 @@ To tell supervisor to run these scripts, we need to create a file in supervisor'
 ```
 [program:elvisdb]
 command=/srv/webapps/elvisdb/elvis-database/gunicorn_start.sh
-user=elvisdb
 autostart=true
 autorestart=true
 stdout_logfile=/var/log/elvisdb/gunicorn.log
@@ -219,43 +218,16 @@ supervisor> reload
 
 That should be about it! If you look at the config file, you'll notice all we're doing is telling supervisor to run the scripts that came with the project, to automatically start them and attempt to restart them if the crash, and where to log their stdout and stderr.
 
-You may have noticed in the script files `$ELVIS_HOME/elvis-database/{celery_start.sh,gunicorn_start.sh}`, we refer to files in `/var/run/elvisdb`. This is a great place to put socket files, because `/var/run` is a temporary in-memory file system designed to look like the regular file system. Unfortunately, this means anything you put in `/var/run` will be deleted on reboot. This means our custom `elvisdb` directory in `/var/run` does not exist when we start the machine. In order to fix this, the easiest thing to do is to create an init script which will create the directory everytime the machine is booted.
-
-Create a file called `/etc/init.d/elvisdb` with the following contents:
-
-```
-#!/bin/bash
-
-### BEGIN INIT INFO
-# Provides:       elvisdb
-# Required-Start:    $local_fs $remote_fs $network $syslog $named
-# Required-Stop:     $local_fs $remote_fs $network $syslog $named
-# Default-Start:     2 3 4 5
-# Default-Stop:      0 1 6
-### END INIT INFO
-
-mkdir /var/run/elvisdb
-chown elvisdb:elvisdb /var/run/elvisdb
-```
-
-Don't worry too much about the init info here. The important part is the two last commands, which creates the needed directory and sets the elvisdb user as its owner. Run the following to set this script as a default startup service:
-
-```
-sudo chmod +x /etc/init.d/elvisdb
-sudo update-rc.d elvisdb defaults
-```
-
-This should be all you need to do to set up the supervisor managed services.
 
 ## Setting up nginx
-nginx should already be running having been installed when you downloaded all the dependencies. You can check that it is running using `sudo systemctl status nginx`. 
+nginx should be already running as it has been installed when you downloaded all the dependencies. You can check that it is running using `sudo systemctl status nginx`. 
 
-We save site definitions in `/etc/nginx/sites-avaliable`, then make a link to the sites we wish to actually serve in `/etc/nginx/sites-enabled`.
+We save site definitions in `/etc/nginx/sites-available`, then make a link to the sites we wish to actually serve in `/etc/nginx/sites-enabled`.
 
-Save the following into a file called `/etc/nginx/sites-avaliable/database.elvisproject.ca`.
+Save the following into a file called `/etc/nginx/sites-available/database.elvisproject.ca`.
 ```
 upstream elvisdb_server {
-  server unix:/var/run/elvisdb/elvisdb.sock fail_timeout=0;
+  server unix:/var/run/elvisdb.sock fail_timeout=0;
 }
 
 server {
@@ -285,13 +257,13 @@ server {
 }
 ```
 
-This is a fairly simple config, which takes requests on port 80 and sends them to the socket opened up by gunicorn (you may have noticed the location of this socket being defined in `$ELVIS_HOME/gunicorn_start.sh`). If a static or media file is being requests, nginx will serve those straight off the file system without having to clog up a thread in the web app. Note the 'internal' keyword for the `/media_serve/` location. This means this point can only be accessed by requests that the originate from the server itself. We use this to check that a user is logged in when they access a point under `/media/`, then redirect their request to `/media_serve/`.
-Note also that encryption is not handled anywhere in this config file. We deploy the elvis database on server without a public IP. Traffic is directed to it through a routing server on the same network which handles encryption with clients.
+This is a fairly simple config, which takes requests on port 80 and sends them to the socket opened up by gunicorn (you may have noticed the location of this socket being defined in `$ELVIS_HOME/gunicorn_start.sh`). If a static or media file is being requested, nginx will serve it straight off the file system without having to clog up a thread in the web app. Note the 'internal' keyword for the `/media_serve/` location. This means this point can only be accessed by requests that originate from the server itself. We use this to check that a user is logged in when they access a point under `/media/`, then redirect their request to `/media_serve/`.
+Note also that encryption is not handled anywhere in this config file. We deploy the elvis database on a server without a public IP. Traffic is directed to it through a routing server on the same network which handles encryption with clients.
 
-Now, link this new config file in `sites-enabled`, run a config test, and reload the nginx service if everything is ok.
+Now, link this new config file in `sites-enabled`, run a config test, and reload the nginx service to check if everything is ok.
 ```
 > cd /etc/nginx/sites-enabled
-> sudo ln -s /etc/nginx/sites-avaliable/database.elvisproject.ca 
+> sudo ln -s /etc/nginx/sites-available/database.elvisproject.ca 
 > sudo service nginx configtest
  * Testing nginx configuration
    ...done.
@@ -299,6 +271,16 @@ Now, link this new config file in `sites-enabled`, run a config test, and reload
 ```
 
 If for whatever reason the configtest fails, you will find the errors it raised in `/var/log/nginx/error.log`. Use this output to debug your configuration!
+
+# Extra: Moving data to mounted storage.
+
+After deploying the server, we had the need to move all the data on the server to an externally mounted storage drive. This was to simplify the process of redeploying and making backups of all data.
+
+To see the list of external drives mounted at startup, open `/etc/fstab` in a text editor. On the elvis production server, you will notice `/dev/vdc` is mounted to `/media` at startup. This is our external drive. Here you can find all the media files for the database, as well as the data stores for postgres and solr.
+
+The solr data location can be changed simply by shutting down solr, moving the data store, and changing the key `dataDir` in `solrconfig.xml` of every solr core to point to the new location.
+
+[Here is a nice guide for moving the postgres data store](https://www.digitalocean.com/community/tutorials/how-to-move-a-postgresql-data-directory-to-a-new-location-on-ubuntu-16-04).
 
 # Conclusion
 After completing these steps, you should have a fully functional elvis database deployment. You will still need to point the DNS record to the new server's IP in order to access the site online, but that is beyond the scope of this guide.

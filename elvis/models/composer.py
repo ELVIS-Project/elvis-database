@@ -14,11 +14,11 @@ class Composer(ElvisModel):
 
     @property
     def piece_count(self):
-        return self.pieces.all().count()
+        return self.pieces.count()
 
     @property
     def movement_count(self):
-        return self.movements.all().count()
+        return self.movements.count()
 
     @property
     def free_movements(self):

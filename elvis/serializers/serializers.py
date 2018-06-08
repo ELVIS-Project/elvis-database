@@ -126,14 +126,20 @@ class URLNormalizingCacherMixin:
             return result
         user = request.user
 
-        if user.is_superuser or instance.creator == user:
-            perms = {'can_edit': True, 'can_view': True}
-        elif not instance.__dict__.get('public', True):
-            perms = {'can_edit': False, 'can_view': False}
-        elif instance.__dict__.get('hidden', False):
-            perms = {'can_edit': False, 'can_view': False}
+        if user.is_anonymous():
+            if not instance.__dict__.get('public', True) or instance.__dict__.get('hidden', False):
+                perms = {'can_edit': False, 'can_view': False}
+            else:
+                perms = {'can_edit': False, 'can_view': True}
         else:
-            perms = {'can_edit': False, 'can_view': True}
+            if user.is_superuser or instance.creator == user:
+                perms = {'can_edit': True, 'can_view': True}
+            elif not instance.__dict__.get('public', True):
+                perms = {'can_edit': False, 'can_view': False}
+            elif instance.__dict__.get('hidden', False):
+                perms = {'can_edit': False, 'can_view': False}
+            else:
+                perms = {'can_edit': False, 'can_view': True}
 
         result.update(perms)
         #print(perms)
