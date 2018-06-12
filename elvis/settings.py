@@ -36,7 +36,9 @@ DEVELOPMENT = 1
 LOCAL = 2
 
 # Specify which of the above setting types you wish to use here.
+
 SETTING_TYPE = PRODUCTION
+
 assert SETTING_TYPE in [PRODUCTION, DEVELOPMENT, LOCAL], "Must choose a legal setting type."
 
 if SETTING_TYPE is not PRODUCTION:
