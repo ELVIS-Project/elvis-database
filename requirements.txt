@@ -40,4 +40,4 @@ solrpy3==0.1
 sqlparse==0.2.3
 traitlets==4.0.0
 ujson==1.35
-Werkzeug==0.11.3
+Werkzeug==0.15.5
