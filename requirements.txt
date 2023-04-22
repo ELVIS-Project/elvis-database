@@ -37,7 +37,7 @@ selenium==2.49.0
 simplegeneric==0.8.1
 six==1.10.0
 solrpy3==0.1
-sqlparse==0.2.3
+sqlparse==0.4.4
 traitlets==4.0.0
 ujson==1.35
 Werkzeug==2.2.3
