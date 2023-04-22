@@ -31,7 +31,7 @@ pyprof2calltree==1.4.0
 pytz==2015.7
 rcssmin==1.0.6
 redis==4.4.4
-requests==2.9.1
+requests==2.20.0
 rjsmin==1.0.12
 selenium==2.49.0
 simplegeneric==0.8.1
