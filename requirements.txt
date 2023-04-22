@@ -11,7 +11,7 @@ django-compressor==2.0
 django-debug-toolbar==1.11.1
 django-extensions==1.6.1
 django-redis==4.3.0
-djangorestframework==3.3.2
+djangorestframework==3.11.2
 funcsigs==0.4
 gnureadline==6.3.3
 gunicorn==19.5.0
