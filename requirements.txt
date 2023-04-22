@@ -15,7 +15,7 @@ djangorestframework==3.3.2
 funcsigs==0.4
 gnureadline==6.3.3
 gunicorn==19.5.0
-ipython==4.0.1
+ipython==8.10.0
 ipython-genutils==0.1.0
 kombu==3.0.32
 MarkupSafe==0.23
