@@ -39,5 +39,5 @@ six==1.10.0
 solrpy3==0.1
 sqlparse==0.4.4
 traitlets==4.0.0
-ujson==1.35
+ujson==5.4.0
 Werkzeug==2.2.3
