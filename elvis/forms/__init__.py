@@ -1,2 +1,2 @@
-from elvis.forms.user import UserForm, InviteUserForm, UserChangeForm
+from elvis.forms.user import ElvisUserCreationForm, ElvisUserChangeForm
 from elvis.forms.create import PieceForm
